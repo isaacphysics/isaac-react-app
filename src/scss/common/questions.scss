@@ -400,24 +400,6 @@ $inline-feedback-padding: 2px;
 
 .validation-response-panel {
   text-align: center;
-  border-top: solid 1px $gray-107;
-  border-bottom: solid 1px $gray-107;
-  &.correct, &.almost {
-    background: $primary;
-    color: black;
-    margin-left: -3rem;
-    margin-right: -3rem;
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
-    @include media-breakpoint-down(md) {
-      margin-left: -1rem;
-      margin-right: -1rem;
-      margin-bottom: -1rem;
-    }
-  }
-  &.correct {
-    margin-bottom: -3rem;
-  }
   p {
     margin-bottom: 0;
   }
@@ -583,6 +565,10 @@ p > .katex, .katex-display {
       right: 75px;
     }
   }
+}
+
+.unit-selection .dropdown button.feedback-zone.feedback-showing {
+  border-color: $form-invalid-border-color;
 }
 
 .question-actions {

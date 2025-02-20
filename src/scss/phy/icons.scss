@@ -57,6 +57,24 @@
   background-image: url(/assets/phy/ru.png) !important;
 }
 
+.icon-correct {
+  background-image: url('/assets/phy/icons/redesign/status-correct.svg');
+  width: 16px;
+  height: 16px;
+}
+
+.icon-incorrect {
+  background-image: url('/assets/phy/icons/redesign/status-incorrect.svg');
+  width: 16px;
+  height: 16px;
+}
+
+.icon-in-progress {
+  background-image: url('/assets/phy/icons/redesign/status-in-progress.svg');
+  width: 16px;
+  height: 16px;
+}
+
 .icon-menu {
   @include svg-icon('/assets/phy/icons/redesign/menu.svg', 16px, 16px, 14px 12px);
 }
@@ -79,6 +97,10 @@
 
 .icon-search {
   @include svg-icon('/assets/phy/icons/redesign/search.svg', 16px, 16px);
+}
+
+.icon-info {
+  @include svg-icon('/assets/phy/icons/redesign/info.svg', 16px, 16px);
 }
 
 .icon-sidebar {
@@ -223,4 +245,8 @@ svg {
 // the default icon colour for `neutral` is $color-theme-500 (green), but we use black icons in a few places across e.g. navigation
 i.icon.icon-color-black {
   background-color: black;
+}
+
+i.icon.icon-color-grey {
+  background-color: $color-neutral-500;
 }

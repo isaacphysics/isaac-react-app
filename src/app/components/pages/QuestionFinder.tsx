@@ -7,6 +7,7 @@ import {
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     isAda,
+    isDefinedContext,
     isLoggedIn,
     isPhy,
     Item,
@@ -27,7 +28,7 @@ import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {RouteComponentProps, useHistory, withRouter} from "react-router";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
@@ -107,7 +108,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
-    const pageContext = useUrlPageTheme();
+    const pageContext = useUrlPageTheme({resetIfNotFound: true});
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
@@ -393,9 +394,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <IsaacSpinner />
     </div>;
 
+    const crumb = isPhy && isDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
+
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
-            currentPageTitle={siteSpecific("Question Finder", "Questions")} 
+            currentPageTitle={siteSpecific("Question Finder", "Questions")}
+            intermediateCrumbs={crumb ? [crumb] : []}
             help={pageHelp}
             icon={{type: "hex", icon: "page-icon-finder"}}
         />

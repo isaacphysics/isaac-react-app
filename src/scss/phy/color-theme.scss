@@ -41,6 +41,8 @@
     // NAVIGATION
     --nav-primary: #{map.get($subject-colors, 500)};
     --nav-secondary: #{map.get($subject-colors, 400)};
+    --sidebar-tab-active: #{map.get($subject-colors, 500)};
+    --sidebar-tab-hover: #{map.get($subject-colors, 300)};
 
     // ICONS
     --icon-primary: #{map.get($subject-colors, 500)};
@@ -71,6 +73,8 @@
       --buttons-light-hover-prefix: #{$color-neutral-200};
 
       --nav-primary: #{$color-brand-500};
+      --sidebar-tab-active: #{$color-brand-500};
+      --sidebar-tab-hover: #{$color-neutral-300};
 
       --icon-primary: #{$color-brand-500};
 
@@ -89,6 +93,8 @@
   --forms-colour-input-text: #{$color-neutral-900};
 
   --border-light: #F5F4F0;
+
+  --sidebar-tab-disabled: #{$color-neutral-300};
 
   /* number */
   --buttons-padding-v-sm: 0.6875rem;
@@ -124,10 +130,6 @@
     .phy-hex-icon-sm {
       @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), 60px, 60px, 60px);
       position: absolute;
-    }
-    
-    .text-bg-theme {
-      @extend .text-bg-#{$palette};
     }
 
     .alert-secondary {

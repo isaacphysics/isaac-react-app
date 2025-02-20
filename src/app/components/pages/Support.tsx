@@ -1,14 +1,16 @@
 import React from "react";
-import {Col, Container, Row} from "reactstrap";
+import {Col, Container, Row, TabContent, TabPane} from "reactstrap";
 import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history, isDefined, siteSpecific} from "../../services";
+import {history, ifKeyIsEnter, isDefined, siteSpecific} from "../../services";
 import fromPairs from "lodash/fromPairs";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
 import {MetaDescription} from "../elements/MetaDescription";
+import { FAQSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
 
 type SupportType = "student" | "teacher" | "tutor";
 
@@ -108,18 +110,14 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
     }
 
     const categoryNames = Object.keys(section.categories);
-    const categoryIndex = categoryNames.indexOf(category);
+    const categoryIndex = siteSpecific(categoryNames.indexOf(category), categoryNames.indexOf(category) + 1);
 
     if (categoryIndex == -1) {
         return <Route component={NotFound} />;
     }
 
     function activeTabChanged(tabIndex: number) {
-        history.push(supportPath(type, categoryNames[tabIndex - 1]));
-    }
-
-    function tabTitleClass(_tabName: string, tabIndex: number) {
-        return "support-tab-" + section?.categories[categoryNames[tabIndex - 1]].icon;
+        history.push(supportPath(type, siteSpecific(categoryNames[tabIndex], categoryNames[tabIndex - 1])));
     }
 
     const metaDescriptionMap = siteSpecific(
@@ -132,7 +130,36 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
             "teacher": "Got a question about Ada Computer Science? Read our teacher FAQs. Get GCSE and A level support today!",
         });
 
-    return <Container>
+    const SupportPhy = <Container>
+        <TitleAndBreadcrumb 
+            currentPageTitle={type[0].toUpperCase() + type.slice(1) + " FAQs"}
+            icon={{type: "hex", icon: "page-icon-finder"}}
+        />  {/* TODO replace this icon */}
+        <SidebarLayout>
+            <FAQSidebar>
+                {Object.values(section.categories).map((category, index) => 
+                    <StyledTabPicker
+                        key={index} id={category.category} tabIndex={0} checkboxTitle={category.title} checked={categoryIndex === index}
+                        onClick={() => activeTabChanged(index)} onKeyDown={ifKeyIsEnter(() => activeTabChanged(index))}
+                    />
+                )}
+            </FAQSidebar>
+            <MainContent>
+                <TabContent activeTab={categoryIndex}>
+                    {Object.values(section.categories).map((category, index) => 
+                        <TabPane key={index} tabId={index}>
+                            <h2 className="mt-5">{category.title}</h2>
+                            <div className="accordion-background">
+                                <PageFragment fragmentId={`support_${type}_${category.category}`} />
+                            </div>
+                        </TabPane>
+                    )}
+                </TabContent>
+            </MainContent>
+        </SidebarLayout>
+    </Container>;
+
+    const SupportAda = <Container>
         <Row>
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={section.title} />
@@ -142,8 +169,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         <Row>
             <Col className="pt-4 pb-5">
                 <Tabs
-                    activeTabOverride={categoryIndex + 1} onActiveTabChange={activeTabChanged}
-                    tabTitleClass={tabTitleClass} tabContentClass="pt-4"
+                    activeTabOverride={categoryIndex} onActiveTabChange={activeTabChanged} tabContentClass="pt-4"
                 >
                     {fromPairs(Object.values(section.categories).map((category, index) => {
                         return [category.title, <PageFragment key={index} fragmentId={`support_${type}_${category.category}`} />];
@@ -152,6 +178,8 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
             </Col>
         </Row>
     </Container>;
+
+    return siteSpecific(SupportPhy, SupportAda);
 };
 
 export const Support = withRouter(SupportPageComponent);

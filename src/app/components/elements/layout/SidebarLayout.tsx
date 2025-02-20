@@ -1,18 +1,19 @@
-import React, { ChangeEvent, ReactNode, RefObject, useEffect, useRef, useState } from "react";
-import { Col, ColProps, RowProps, Input, Label, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
+import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
+import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { getHumanContext } from "../../../services/pageContext";
 import { AssignmentState } from "../../pages/MyAssignments";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
+import { StyledTabPicker } from "../inputs/StyledTabPicker";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -140,7 +141,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
             </ul>
         </>}
         {relatedQuestions && relatedQuestions.length > 0 && <>
-            {pageContextStage === "all" || !pageContextStage || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
+            {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
                 ? <>
                     <div className="section-divider"/>
                     <h5>Related questions</h5>
@@ -150,7 +151,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
                 </>
                 : <>
                     <div className="section-divider"/>
-                    <h5>Related {stageLabelMap[pageContextStage]} questions</h5>
+                    <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
                     <ul>
                         {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
                     </ul>
@@ -179,23 +180,7 @@ export const ConceptSidebar = (props: QuestionSidebarProps) => {
     return <QuestionSidebar {...props} />;
 };
 
-interface FilterCheckboxBaseProps extends React.HTMLAttributes<HTMLLabelElement> {
-    id: string;
-    checked?: boolean;
-    onInputChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
-    filterTitle: ReactNode;
-    conceptFilters?: Tag[];
-    count?: number;
-}
 
-const FilterCheckboxBase = (props: FilterCheckboxBaseProps) => {
-    const { id, checked, onInputChange, filterTitle, count, ...rest } = props;
-    return <Label {...rest} className="d-flex align-items-center filters-checkbox py-2 mb-1">
-        <Input id={`problem-search-${id}`} type="checkbox" checked={checked ?? false} onChange={onInputChange} />
-        <span className="ms-3">{filterTitle}</span>
-        {isDefined(count) && <span className="badge rounded-pill ms-2">{count}</span>}
-    </Label>;
-};
 
 interface FilterCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
     tag: Tag;
@@ -212,17 +197,17 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
         setChecked(conceptFilters.includes(tag));
     }, [conceptFilters, tag]);
 
-    return <FilterCheckboxBase {...rest} id={tag.id} checked={checked} 
+    return <StyledTabPicker {...rest} id={tag.id} checked={checked} 
         onInputChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilters(f => e.target.checked ? [...f, tag] : f.filter(c => c !== tag))}
-        filterTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
+        checkboxTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
     />;
 };
 
 const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag">) => {
     const { conceptFilters, setConceptFilters, tagCounts, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<Tag[]>([]);
-    return <FilterCheckboxBase {...rest} 
-        id="all" checked={!conceptFilters.length} filterTitle="All" count={tagCounts && Object.values(tagCounts).reduce((a, b) => a + b, 0)}
+    return <StyledTabPicker {...rest} 
+        id="all" checked={!conceptFilters.length} checkboxTitle="All" count={tagCounts && Object.values(tagCounts).reduce((a, b) => a + b, 0)}
         onInputChange={(e) => {
             if (e.target.checked) {
                 setPreviousFilters(conceptFilters);
@@ -303,6 +288,14 @@ export const LessonsAndRevisionSidebar = (props: SidebarProps) => {
     return <ContentSidebar {...props}/>;
 };
 
+export const FAQSidebar = (props: SidebarProps) => {
+    return <ContentSidebar buttonTitle="Select a topic" {...props}>
+        <div className="section-divider mb-3"/>
+        <h5 className="mb-3">Select a topic</h5>
+        {props.children}
+    </ContentSidebar>;
+};
+
 interface AssignmentStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
     status: AssignmentState;
     statusFilter: AssignmentState[];
@@ -312,8 +305,8 @@ interface AssignmentStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelEl
 
 const AssignmentStatusCheckbox = (props: AssignmentStatusCheckboxProps) => {
     const {status, statusFilter, setStatusFilter, count, ...rest} = props;
-    return <FilterCheckboxBase 
-        id={status ?? ""} filterTitle={status}
+    return <StyledTabPicker 
+        id={status ?? ""} checkboxTitle={status}
         onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== AssignmentState.ALL), status]) : setStatusFilter(c => c.filter(s => s !== status))}
         checked={statusFilter.includes(status)}
         count={count} {...rest}
@@ -323,8 +316,8 @@ const AssignmentStatusCheckbox = (props: AssignmentStatusCheckboxProps) => {
 const AssignmentStatusAllCheckbox = (props: Omit<AssignmentStatusCheckboxProps, "status">) => {
     const { statusFilter, setStatusFilter, count, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<AssignmentState[]>([]);
-    return <FilterCheckboxBase 
-        id="all" filterTitle="All"
+    return <StyledTabPicker 
+        id="all" checkboxTitle="All"
         onInputChange={(e) => {
             if (e.target.checked) {
                 setPreviousFilters(statusFilter);
@@ -504,5 +497,25 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
 export const MyAccountSidebar = (props: SidebarProps) => {
     return <ContentSidebar buttonTitle="Account settings" {...props}>
         {props.children}
+    </ContentSidebar>;
+};
+
+export const SignupSidebar = ({activeTab} : {activeTab: number}) => {
+    const history = useHistory();
+
+    const goBack = (path: string) => {
+        confirmThen(
+            "Are you sure you want go back? Any information you have entered will be lost.",
+            () => history.push(path));
+    };
+
+    return <ContentSidebar buttonTitle="Create an account">
+        <div className="section-divider mt-4"/>
+        <h5 className="mt-1">Create an account</h5>
+        {/* Tabs are clickable iff their page could be reached with a Back buttons */}
+        <StyledTabPicker checkboxTitle={"Sign-up method"} checked={activeTab === 0} disabled={activeTab > 2} onClick={() => (activeTab === 1 || activeTab === 2) && goBack("/register")}/>
+        <StyledTabPicker checkboxTitle={"Age verification"} checked={activeTab === 1} disabled={activeTab < 1 || activeTab > 2} onClick={() => activeTab === 2 && goBack("age")}/>
+        <StyledTabPicker checkboxTitle={"Account details"} checked={activeTab === 2} disabled={activeTab !== 2}/>
+        <StyledTabPicker checkboxTitle={"Preferences"} checked={activeTab === 3} disabled={activeTab !== 3}/>
     </ContentSidebar>;
 };

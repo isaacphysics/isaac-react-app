@@ -463,11 +463,35 @@ export enum LEARNING_STAGE {
     UNIVERSITY = "university",
 }
 
+export const Subjects = ["physics", "maths", "chemistry", "biology"] as const;
+export type Subject = typeof Subjects[number];
+export type SiteTheme = Subject | "neutral";
+
+export const LearningStages = ["11_14", "gcse", "a_level", "university"] as const;
+export type LearningStage = typeof LearningStages[number];
+
+export const STAGE_TO_LEARNING_STAGE: {[stage in STAGE]: LearningStage | undefined} = {
+    year_7_and_8: "11_14",
+    year_9: "11_14",
+    gcse: "gcse",
+    a_level: "a_level",
+    further_a: "a_level",
+    university: "university",
+    all: undefined,
+
+    // ada-only stages need to be here for typing, but shouldn't be used
+    scotland_national_5: "gcse",
+    scotland_higher: "a_level",
+    scotland_advanced_higher: "a_level",
+    core: "gcse",
+    advanced: "a_level",
+};
+
 export const HUMAN_STAGES: {[key: string]: string} = {
-    [LEARNING_STAGE["11_TO_14"]]: "11-14",
-    [LEARNING_STAGE.GCSE]: "GCSE",
-    [LEARNING_STAGE.A_LEVEL]: "A Level",
-    [LEARNING_STAGE.UNIVERSITY]: "University",
+    "11_14": "11-14",
+    "gcse": "GCSE",
+    "a_level": "A\u00A0Level",
+    "university": "University",
 };
 
 export const PHY_NAV_SUBJECTS = {
@@ -874,6 +898,8 @@ export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
+export const GENERIC_QUESTION_CRUMB = {title: "Questions", to: "/questions"};
+export const GENERIC_CONCEPT_CRUMB = {title: "Concepts", to: "/concepts"};
 export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "Assignment Progress", to: "/assignment_progress"},
     {title: "Markbook", to: "/my_markbook"}

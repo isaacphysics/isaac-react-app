@@ -87,7 +87,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     const Options = fastTrackInfo.isFastTrackPage ? FastTrackOptions : (recordConfidence ? ConfidenceOptions : DefaultOptions);
 
     return <form onSubmit={e => e.preventDefault()}>
-        <div className={`question-component ${siteSpecific("p-md-5", "p-md-4")}`}>
+        <div className={classNames("question-component", {"p-md-4": isAda})}>
             <div className={classNames({"quick-question": !fastTrackInfo.isFastTrackPage})}>
                 {isAda &&
                     <div className="quick-question-title">

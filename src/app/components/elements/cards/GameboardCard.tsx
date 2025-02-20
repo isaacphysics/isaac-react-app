@@ -1,8 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { GameboardDTO } from "../../../../IsaacApiTypes";
 import { Row, Col, Button, Label, Collapse } from "reactstrap";
-import { Subject } from "../../../../IsaacAppTypes";
-import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize } from "../../../services";
+import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { Link } from "react-router-dom";
 import classNames from "classnames";

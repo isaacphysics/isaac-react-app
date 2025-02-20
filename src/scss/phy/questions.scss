@@ -49,35 +49,37 @@
   background: $gray-103;
   .card-body > .content-chunk > .content-value {
     @extend .px-md-5;
-    font-size: 1.25rem;
-    line-height: 1.6;
+    font-size: $question-font-size;
+    line-height: $question-line-height;
   }
+
+  // Fluent redesign
+  .card-body:has(.question-component) {
+    padding: 0;
+  }
+
+  .question-component {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    padding: 1rem 1.5rem 0;
+    background-color: var(--subject-color-50);
+    border: 1px solid var(--subject-color-100);
+    border-radius: 4px;
+  }
+
   // Make sure that reorder questions have a background when they expand on Phy
   .question-component:not(.expansion-layout) {
-    background: none;
     box-shadow: none;
-    padding: 0 !important;
     margin-bottom: 1.5rem;
-    @include media-breakpoint-up(md) {
-      padding-left: 3rem !important;
-      padding-right: 3rem !important;
-    }
   }
   // Make sure the banner does not overflow on reorder questions on Phy
   div:not(.expansion-layout) > .validation-response-panel {
+    border-radius: 0 0 8px 8px;
     &.correct, &.almost {
-      margin-left: -1rem;
-      margin-right: -1rem;
-      padding-left: 1.5rem !important;
-      padding-right: 1.5rem !important;
-      @include media-breakpoint-up(md) {
-        margin-left: -4rem;
-        margin-right: -4rem;
-      }
-    }
-    &.correct {
-      // correct (only) hides the "Check my answer" button, so does not need the bottom spacing
-      margin-bottom: -2.75rem;
+      margin-left: -1.5rem;
+      margin-right: -1.5rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
     }
   }
 
@@ -143,17 +145,46 @@
   }
 }
 
-.numeric-question .unit-selection {
-  .display-unit {
-    opacity: 1 !important;
+.numeric-question {
+  .numeric-help.numeric-help {
+    color: $color-neutral-900;
   }
-  .dropdown-item {
-    &:active {
-      background-color: var(--subject-color-500);
-      color: white;
+
+  .unit-selection {
+    .display-unit {
+      opacity: 1 !important;
     }
-    &:focus {
-      box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--subject-color-500) 25%, transparent);
+    .dropdown-item {
+      &:active {
+        background-color: var(--subject-color-500);
+        color: white;
+      }
+      &:focus {
+        box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--subject-color-500) 25%, transparent);
+      }
     }
   }
+}
+
+// styling for question components outside an accordion
+.question-component {
+  border: 2px solid var(--nav-primary);
+  padding: 0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+
+  > div:first-child {
+    padding: 2rem 2rem 0.5rem;
+
+    &:last-child {
+      padding-bottom: 3rem;
+    }
+  }
+}
+
+// any such styling that should not be present in an accordion
+.isaac-accordion .question-component {
+  border: unset;
+  // padding is overridden above
+  border-radius: unset;
 }

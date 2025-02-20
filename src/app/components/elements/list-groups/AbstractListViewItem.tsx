@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
-import { Subject, ViewingContext} from "../../../../IsaacAppTypes";
+import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Button, Col, ListGroupItem, ListGroupItemProps, Row } from "reactstrap";
 import { Spacer } from "../Spacer";
 import { CompletionState } from "../../../../IsaacApiTypes";
-import { below, isPhy, useDeviceSize } from "../../../services";
+import { below, isPhy, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 
