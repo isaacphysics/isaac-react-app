@@ -7,6 +7,7 @@ import {
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     groupTagSelectionsByParent,
+    ISAAC_BOOKS,
     isAda,
     isPhy,
     Item,
@@ -29,24 +30,6 @@ import { HierarchyFilterTreeList, Tier } from "../svg/HierarchyFilter";
 import { openActiveModal, useAppDispatch } from "../../../state";
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
-import { Subject } from "../../../services";
-
-const bookOptions: Partial<Record<Subject, Item<string>[]>> = {
-    "physics": [
-        {value: "phys_book_step_up", label: "Step Up to GCSE Physics"},
-        {value: "phys_book_gcse", label: "GCSE Physics"},
-        {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
-        {value: "physics_linking_concepts", label: "Linking Concepts in Pre-Uni Physics"}
-    ],
-    "maths": [
-        {value: "maths_book_gcse", label: "GCSE Maths"},
-        {value: "maths_book_2e", label: "Pre-Uni Maths (2nd edition)"},
-        {value: "maths_book", label: "Pre-Uni Maths (1st edition)"}
-    ],
-    "chemistry": [
-        {value: "chemistry_16", label: "A-Level Physical Chemistry"}
-    ],
-};
 
 const sublistDelimiter = " >>> ";
 type TopLevelListsState = {
@@ -176,7 +159,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
     const pageContext = useUrlPageTheme();
-    const contextBookOptions: Item<string>[] = pageContext?.subject ? bookOptions[pageContext.subject] ?? [] : Object.values(bookOptions).flat();
+    const bookOptions = ISAAC_BOOKS.filter(book => !pageContext?.subject || book.subject === pageContext?.subject);
 
     const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));
 
@@ -334,7 +317,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     </div>
                 ))}
             </CollapsibleList>
-            {isPhy && contextBookOptions.length > 0 && <CollapsibleList
+            {isPhy && bookOptions.length > 0 && <CollapsibleList
                 title={listTitles.books} expanded={listState.books.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "books", focus: below["md"](deviceSize)})}
                 numberSelected={excludeBooks ? 1 : searchBooks.length}
@@ -348,7 +331,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             label={<span className="me-2">Exclude skills book questions</span>}
                         />
                     </div>
-                    {contextBookOptions.map((book, index) => (
+                    {bookOptions.map((book, index) => (
                         <div className={classNames("w-100 ps-3 py-1 ms-2", {"checkbox-region": searchBooks.includes(book.value) && !excludeBooks})} key={index}>
                             <StyledCheckbox
                                 color="primary" disabled={excludeBooks}
@@ -358,7 +341,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                         ? s.filter(v => v !== book.value)
                                         : [...s, book.value]
                                 )}
-                                label={<span className="me-2">{book.label}</span>}
+                                label={<span className="me-2">{book.label ?? book.title}</span>}
                             />
                         </div>
                     ))}
