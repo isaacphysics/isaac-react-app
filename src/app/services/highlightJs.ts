@@ -8,6 +8,8 @@ import java from 'highlight.js/lib/languages/java';
 import vbnet from 'highlight.js/lib/languages/vbnet';
 import haskell from 'highlight.js/lib/languages/haskell';
 import {LanguageFn} from "highlight.js";
+import xmlhtml from 'highlight.js/lib/languages/xml';
+import css from 'highlight.js/lib/languages/css';
 
 const importHljsCore = import("highlight.js/lib/core");
 
@@ -23,6 +25,8 @@ function registerLanguages() {
         hljs.registerLanguage('plaintext', plaintext);
         hljs.registerLanguage('assembly', plaintext);
         hljs.registerLanguage('sql', sql);
+        hljs.registerLanguage('html', xmlhtml);
+        hljs.registerLanguage('css', css);
         hljs.registerLanguage('pseudocode', isaacPseudocodeHighlightDefinition);
     });
 }
