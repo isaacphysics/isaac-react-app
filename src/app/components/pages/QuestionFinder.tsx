@@ -161,7 +161,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : params.stages) as STAGE[]);
+    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages).concat(pageContext?.stage ?? pageStageToSearchStage(pageContext?.stage)) as STAGE[]);
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
@@ -201,7 +201,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const [selections, setSelections] = useState<ChoiceTree[]>(
         processTagHierarchy(
-            arrayFromPossibleCsv(pageContext?.subject ? [pageContext.subject] : params.subjects), 
+            arrayFromPossibleCsv(params.subjects).concat(pageContext?.subject ? [pageContext.subject] : []), 
             arrayFromPossibleCsv(params.fields), 
             arrayFromPossibleCsv(params.topics))  
     );
@@ -315,7 +315,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         );
 
         const params: {[key: string]: string} = {};
-        if (searchStages.length) params.stages = toSimpleCSV(searchStages);
+        if (searchStages.length) {
+            params.stages = toSimpleCSV(searchStages
+                .filter(s => !pageStageToSearchStage(pageContext?.stage).includes(s)));
+            if (params.stages === "") delete params.stages;
+        }
         if (searchDifficulties.length) params.difficulties = toSimpleCSV(searchDifficulties);
         if (searchQuery.length) params.query = encodeURIComponent(searchQuery);
         if (searchTopics.length) params.topics = toSimpleCSV(searchTopics);
@@ -335,7 +339,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 if (!selections[i] || Object.keys(selections[i]).length === 0) {
                     return;
                 }
-                params[tier.id] = Object.values(selections[i]).flat().map(item => item.value).join(",");
+                params[tier.id] = Object.values(selections[i])
+                    .flat().map(item => item.value)
+                    .filter(v => v !== pageContext?.subject).join(",");
+                if (params[tier.id] === "") delete params[tier.id];
             });
         }
 
