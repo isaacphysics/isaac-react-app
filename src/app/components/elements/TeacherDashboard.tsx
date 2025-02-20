@@ -158,7 +158,7 @@ const BooksPanel = () => {
         <div className="mb-3 w-50">
             <StyledDropdown value={subject}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSubject(e.target.value as Subject)}>
-                <option value="all">All subjects</option>
+                <option value="all">All</option>
                 <option value="physics">Physics</option>
                 <option value="maths">Maths</option>
                 <option value="chemistry">Chemistry</option>
