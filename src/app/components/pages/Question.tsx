@@ -92,12 +92,11 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
         return <GameboardContext.Provider value={navigation.currentGameboard}>
             <Container className={classNames("no-shadow")} data-bs-theme={prevPageContext?.subject ?? doc.subjectId}>
                 <TitleAndBreadcrumb
-                    // currentPageTitle={siteSpecific("Question", generateQuestionTitle(doc))}
+                    currentPageTitle={siteSpecific("Question", generateQuestionTitle(doc))}
                     subTitle={siteSpecific(undefined, doc.subtitle)}
-                    currentPageTitle={generateQuestionTitle(doc)}
-                    // subTitle={doc.subtitle}
                     intermediateCrumbs={siteSpecific([...navigation.breadcrumbHistory], [...navigation.breadcrumbHistory, ...getTags(doc.tags)])}
                     collectionType={navigation.collectionType}
+                    audienceViews={siteSpecific(undefined, determineAudienceViews(doc.audience, navigation.creationContext))}
                     preview={preview} icon={{type: "hex", subject: doc.subjectId as Subject, icon: "page-icon-question"}}
                 />
                 {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
@@ -106,22 +105,30 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                     <MainContent>
                         {!preview && <CanonicalHrefElement />}
 
-                        <div className="no-print d-flex flex-wrap align-items-center mt-3">
-                            {isAda && pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
-                            {/* {isPhy && <div>
-                                <h2 className="text-theme-dark mb-4">{generateQuestionTitle(doc)}</h2>
-                                {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
-                            </div>} */}
-                            {/* <div className="d-flex gap-2 ms-auto">
-                                <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
-                                <PrintButton questionPage />
-                                <ReportButton pageId={questionId}/>
-                            </div> */}
+                        <div className="no-print d-flex align-items-center mt-3">
+                            {isAda && <>
+                                {pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
+                                <EditContentButton doc={doc} />
+                                <div className="d-flex ms-auto">
+                                    <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
+                                    <PrintButton questionPage />
+                                    <ReportButton pageId={questionId}/>
+                                </div>
+                            </>}
+                            {isPhy && <>
+                                <div>
+                                    <h2 className="text-theme-dark mb-4">{generateQuestionTitle(doc)}</h2>
+                                    {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
+                                </div>
+                                <div className="d-flex gap-2 ms-auto">
+                                    <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
+                                    <PrintButton questionPage />
+                                    <ReportButton pageId={questionId}/>
+                                </div>
+                            </>}
                         </div>
                         
-                        <Row className="question-metadata d-flex row-gap-4">
-                            {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
-
+                        {isPhy && <Row className="question-metadata d-flex row-gap-4">
                             <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3">
                                 <span>Subject & topics</span>
                                 <div className="d-flex align-items-center">
@@ -145,18 +152,9 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                         : <div className="d-flex align-items-center"><span className="icon-not-started me-2"/> Not Started</div>
                                 }
                             </Col>
-                        </Row>
+                        </Row>}
 
-                        {/* <EditContentButton doc={doc} /> */}
-
-                        <div className="d-flex">
-                            <EditContentButton doc={doc} />
-                            <div className="d-inline-flex gap-2 ms-auto">
-                                <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
-                                <PrintButton questionPage />
-                                <ReportButton pageId={questionId}/>
-                            </div>
-                        </div>
+                        {isPhy && <EditContentButton doc={doc} />}
 
                         <Row className="question-content-container">
                             <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
