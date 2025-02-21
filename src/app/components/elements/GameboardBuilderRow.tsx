@@ -23,7 +23,7 @@ import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 import { Spacer } from "./Spacer";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
-import { Input } from "reactstrap";
+import { StyledCheckbox } from "./inputs/StyledCheckbox";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -67,13 +67,11 @@ const GameboardBuilderRow = (
         {i === 0 && <>
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
-                    <Input
-                        type="checkbox"
+                    <StyledCheckbox
                         id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                         aria-label={!isSelected ? "Select question" : "Deselect question"}
                         title={!isSelected ? "Select question" : "Deselect question"}
-                        color="secondary"
-                        className={!provided ? "isaac-checkbox mt-1" : undefined}
+                        color="primary"
                         checked={isSelected}
                         onChange={() => {
                             if (question.id) {
