@@ -444,7 +444,7 @@ export function audienceStyle(audienceString: string): string {
         : new Set(stageLabels.map(v => v === "stage-label-higher" ? "stage-label-advanced" : v));
 
     // If only one group exists use that colour, otherwise, use the mixed colour
-    return uniqueLabels.size === 1 ? uniqueLabels.values().next().value : "stage-label-all";
+    return uniqueLabels.size === 1 ? uniqueLabels.values().next().value as string : "stage-label-all";
 }
 
 export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType, intendedAudience: boolean): string {

@@ -389,8 +389,13 @@ iframe.email-html {
     }
   }
 
-  &:hover:not(:has(> input:checked)) {
+  &:hover:not(:has(> input:checked, > input:disabled)) {
     border-left: solid 2px var(--sidebar-tab-hover);
+  }
+
+  &:has(> input:disabled) {
+    color: var(--sidebar-tab-disabled);
+    cursor: not-allowed;
   }
 
   &:has(> input:focus-visible) {

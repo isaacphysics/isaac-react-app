@@ -5,7 +5,9 @@
     box-shadow: 0 0 0 0.2rem $focus-blue;
   }
   .select__control, .select__control:hover {
-    border-color: $black;
+    height: 2.6rem;
+    border: 1px solid $color-neutral-300;
+    border-radius: 8px;
 
     .select__value-container {
       padding: 0 0 0 1.2em;
@@ -102,8 +104,11 @@ select {
   }
 }
 
-.school-input {
-  height: 2.6rem;
+input[color='primary']:checked {
+  background-color: $color-brand-500;
+}
+
+.inline-form-input-btn {
   border: 1px solid $color-neutral-300;
-  border-radius: 8px;
+  width: 55px;
 }
