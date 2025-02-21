@@ -533,7 +533,8 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
 
     return <Card className={classNames({"groups-sidebar": sidebarStyle})}>
         <CardBody>
-            {showCreateGroup && isDefined(createNewGroup) && <><MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
+            {showCreateGroup && isDefined(createNewGroup) && <>
+                <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
                 <div className="d-none d-lg-block mb-3">
                     <Link to="/groups" className="w-100" style={{textDecoration: "none"}}>
                         <Button block color={siteSpecific("secondary", "primary")} outline={isAda} onClick={() => {
@@ -592,6 +593,9 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                             aria-label="Delete group" className={classNames("ms-1", siteSpecific("icon-close", "bin-icon"))} title={"Delete group"}/>
                                     }
                                 </div>
+                                {isAda && isDefined(createNewGroup) && selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
+                                    <GroupEditor user={user} group={selectedGroup} allGroups={allGroups} createNewGroup={createNewGroup}/>
+                                </div>}
                             </div>
                     )
                     : <div className={"group-item p-2"}>No {showArchived ? "archived" : "active"} groups</div>
