@@ -24,6 +24,7 @@ import classNames from "classnames";
 import { Spacer } from "./Spacer";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
 import { StyledCheckbox } from "./inputs/StyledCheckbox";
+import { Markup } from "./markup";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -101,7 +102,7 @@ const GameboardBuilderRow = (
                     <div>
                         <div className="d-flex">
                             <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
-                                {generateQuestionTitle(question)}
+                                <Markup encoding="latex">{generateQuestionTitle(question)}</Markup>
                             </a>
                             <input
                                 type="image" src="/assets/common/icons/new-tab.svg" alt="Preview question" title="Preview question in modal"
