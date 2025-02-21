@@ -585,9 +585,9 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                             </li>
                             : <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                 <div className="d-flex justify-content-between align-items-center group-name-buttons">
-                                    <Link to={`/groups#${g.id}`} title={isStaff(user) ? `Group id: ${g.id}` : undefined} data-testid={"select-group"} className="text-start px-1 py-1 group-name d-flex flex-fill">
+                                    <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
                                         {g.groupName}
-                                    </Link>
+                                    </Button>
                                     {showArchived &&
                                         <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
                                             aria-label="Delete group" className={classNames("ms-1", siteSpecific("icon-close", "bin-icon"))} title={"Delete group"}/>
@@ -629,14 +629,6 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
         const tab = hashAnchor ? parseInt(hashAnchor) : undefined;
         setSelectedGroupId(tab);
     }, [hashAnchor]);
-
-    useEffect(() => {
-        if (isDefined(selectedGroupId)) {
-            window.location.hash = selectedGroupId.toString();
-        } else {
-            history.replaceState("", document.title, window.location.pathname + window.location.search);
-        }
-    }, [selectedGroupId]);
     
     const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
 
@@ -646,8 +638,6 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
             if (mutationSucceeded(result)) {
                 const group = result.data;
                 if (!group.id) return false;
-                // setting the hash early here prevents the useEffect from changing the hash and causing a reload after the modal is dispatched, which would remove it.
-                window.location.hash = group.id.toString(); 
                 dispatch(showGroupInvitationModal({group, user, firstTime: true, backToCreateGroup: () => setSelectedGroupId(undefined)}));
                 setSelectedGroupId(group.id);
                 return true;
