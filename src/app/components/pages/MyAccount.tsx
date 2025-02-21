@@ -328,16 +328,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <SidebarLayout>
-                    <MyAccountSidebar>
-                        <div className="section-divider mt-0"/>
-                        <h5>Account settings</h5>
-                        {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
-                            <StyledTabPicker
-                                key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
-                                onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
-                            />
-                        )}
-                    </MyAccountSidebar>
+                    <MyAccountSidebar editingOtherUser={editingOtherUser} activeTab={activeTab} setActiveTab={setActiveTab}/>
                     <MainContent className="w-lg-50">
                         <Form name="my-account" onSubmit={updateAccount}>
                             {error?.type == "generalError" &&

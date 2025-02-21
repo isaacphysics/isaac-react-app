@@ -6,15 +6,18 @@
     margin-bottom: 0;
     
     li {
-      padding-left: 1rem;
       border-radius: 0.2rem;
 
       .link-title {
         font-size: 16px;
       }
     }
+  }
 
-    li:hover {
+  ul.link-list li {
+    padding-left: 1rem;
+
+    &:hover {
       background-color: $color-neutral-100;
     }
   }
