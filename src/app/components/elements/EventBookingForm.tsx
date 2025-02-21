@@ -193,6 +193,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     </Row>}
                 </div>}
                 {targetUser.role != 'STUDENT' && <React.Fragment>
+                    <h3>Experience</h3>
                     <Label htmlFor="experience-level">Level of teaching experience</Label>
                     <Input
                         id="experience-level" name="experience-level" type="text" value={additionalInformation.experienceLevel  || ""}

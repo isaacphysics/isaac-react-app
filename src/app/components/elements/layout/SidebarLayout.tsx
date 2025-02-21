@@ -542,7 +542,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                                     <Input                                   
                                         id={statusValue}
                                         name="event-status"
-                                        color="secondary"
+                                        color="primary"
                                         type="radio"
                                         defaultChecked={statusValue === EventStatusFilter["Upcoming events"]}
                                         onChange={() => {
@@ -565,14 +565,14 @@ export const EventsSidebar = (props: SidebarProps) => {
 
             <div className="section-divider"/>
             <h5>Groups</h5>
-            <ul>               
+            <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                     <li className="list-unstyled" key={typeValue}>
                         <Label className="label-radio multichoice-option d-flex">
                             <Input                                   
                                 id={typeValue}
                                 name="event-type"
-                                color="secondary"
+                                color="primary"
                                 type="radio"
                                 defaultChecked={typeValue === EventTypeFilter["All events"]}
                                 onChange={() => {
@@ -598,7 +598,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                             <Input                                   
                                 id={value}
                                 name="event-stage"
-                                color="secondary"
+                                color="primary"
                                 type="radio"
                                 defaultChecked={value === STAGE.ALL}
                                 onChange={() => {
