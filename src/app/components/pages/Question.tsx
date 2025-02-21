@@ -186,6 +186,8 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                 </p>}
 
                                 <NavigationLinks navigation={navigation}/>
+
+                                {isAda && doc.relatedContent && !isFastTrack && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                             </Col>
                         </Row>
                     </MainContent>

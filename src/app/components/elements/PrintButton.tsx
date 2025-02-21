@@ -18,7 +18,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
             {siteSpecific(
                 <IconButton
                     icon="icon-print"
-                    className="w-max-content h-max-content"
+                    className="w-max-content h-max-content not-mobile"
                     affixClassName="icon-color-black"
                     aria-label="Print page" 
                     title="Print page"
@@ -27,12 +27,12 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                     onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
                 />,
                 <button
-                    className="print-icon btn-action"
+                    className="print-icon btn-action not-mobile"
                     onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
                     aria-label="Print page"
                 />
             )}
-            {questionPrintOpen && <div className="question-actions-link-box">
+            {questionPrintOpen && <div className="question-actions-link-box not-mobile">
                 <div className="question-actions-link text-nowrap">
                     <Button
                         size={"sm"}
@@ -63,7 +63,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
         siteSpecific(
             <IconButton
                 icon="icon-print"
-                className="w-max-content h-max-content"
+                className="w-max-content h-max-content not-mobile"
                 affixClassName="icon-color-black"
                 aria-label="Print page" 
                 title="Print page"
@@ -75,7 +75,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                 }}
             />,
             <button
-                className="print-icon btn-action"
+                className="print-icon btn-action not-mobile"
                 onClick={() => {
                     dispatch(printingSettingsSlice.actions.enableHints(false));
                     setTimeout(window.print, 100);
