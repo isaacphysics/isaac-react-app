@@ -37,6 +37,7 @@ import {Loading} from "../../handlers/IsaacSpinner";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { SortItemHeader } from "../SortableItemHeader";
 import { Input, Row, Col, Label, Form, Table } from "reactstrap";
+import classNames from "classnames";
 
 // Immediately load GameboardBuilderRow, but allow splitting
 const importGameboardBuilderRow = import("../GameboardBuilderRow");
@@ -67,6 +68,8 @@ export const QuestionSearchModal = (
         if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
     }, [userContext.examBoard]);
 
+    const [isSearching, setIsSearching] = useState(false);
+
     const [searchBook, setSearchBook] = useState<string[]>([]);
     const isBookSearch = searchBook.length > 0;
 
@@ -87,6 +90,10 @@ export const QuestionSearchModal = (
     const {results: questions} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const user = useAppSelector((state: AppState) => state && state.user);
 
+    useEffect(() => {
+        setIsSearching(false);
+    }, [questions]);
+
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number) => {
             // Clear front-end sorting so as not to override ElasticSearch's match ranking
@@ -101,6 +108,8 @@ export const QuestionSearchModal = (
 
             const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ");
             const examBoardString = examBoards.join(",");
+
+            setIsSearching(true);
 
             dispatch(searchQuestions({
                 searchString: searchString,
@@ -159,7 +168,7 @@ export const QuestionSearchModal = (
                 type="button"
                 value={siteSpecific("Add Selections to Gameboard", "Add selections to quiz")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
-                className={"btn w-100 btn-secondary border-0"}
+                className={classNames("btn w-100 border-0", siteSpecific("btn-keyline", "btn-secondary"))}
                 onClick={() => {
                     undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
                     currentQuestions.setSelectedQuestions(modalQuestions.selectedQuestions);
@@ -270,7 +279,7 @@ export const QuestionSearchModal = (
                     </tr>
                 </thead>
                 <tbody>
-                    {sortedQuestions?.map(question =>
+                    {isSearching ? <tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr> : sortedQuestions?.map(question =>
                         <GameboardBuilderRow
                             key={`question-search-modal-row-${question.id}`} 
                             question={question}
