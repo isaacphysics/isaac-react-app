@@ -1,9 +1,9 @@
 import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
-import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
+import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, isAda, isDefined, isTeacherOrAbove, siteSpecific, STAGE, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
@@ -14,6 +14,8 @@ import { AssignmentState } from "../../pages/MyAssignments";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
+import queryString from "query-string";
+import { EventsPageQueryParams } from "../../pages/Events";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -512,10 +514,107 @@ export const SignupSidebar = ({activeTab} : {activeTab: number}) => {
     return <ContentSidebar buttonTitle="Create an account">
         <div className="section-divider mt-4"/>
         <h5 className="mt-1">Create an account</h5>
-        {/* Tabs are clickable iff their page could be reached with a Back buttons */}
+        {/* Tabs are clickable iff their page could be reached with a Back button */}
         <StyledTabPicker checkboxTitle={"Sign-up method"} checked={activeTab === 0} disabled={activeTab > 2} onClick={() => (activeTab === 1 || activeTab === 2) && goBack("/register")}/>
         <StyledTabPicker checkboxTitle={"Age verification"} checked={activeTab === 1} disabled={activeTab < 1 || activeTab > 2} onClick={() => activeTab === 2 && goBack("age")}/>
         <StyledTabPicker checkboxTitle={"Account details"} checked={activeTab === 2} disabled={activeTab !== 2}/>
         <StyledTabPicker checkboxTitle={"Preferences"} checked={activeTab === 3} disabled={activeTab !== 3}/>
+    </ContentSidebar>;
+};
+
+export const EventsSidebar = (props: SidebarProps) => {
+    const history = useHistory();
+    const query: EventsPageQueryParams = queryString.parse(history.location.search);
+    const user = useAppSelector(selectors.user.orNull);
+
+    return <ContentSidebar buttonTitle="Filter events" {...props}>
+        <Form>
+            <div className="section-divider"/>
+            <h5>Event type</h5>
+            <Form>
+                <ul>               
+                    {Object.entries(EventStatusFilter)
+                        .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
+                        .filter(([_statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])
+                        .map(([statusLabel, statusValue]) =>
+                            <li className="list-unstyled" key={statusValue}>
+                                <Label className="label-radio multichoice-option d-flex">
+                                    <Input                                   
+                                        id={statusValue}
+                                        name="event-status"
+                                        color="secondary"
+                                        type="radio"
+                                        defaultChecked={statusValue === EventStatusFilter["Upcoming events"]}
+                                        onChange={() => {
+                                            const selectedFilter = statusValue;
+                                            query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
+                                            query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
+                                            query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
+                                            history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                                        }}
+                                    />
+                                    <div className="flex-fill overflow-x-auto">
+                                        <span>{statusLabel}</span>
+                                    </div>
+                                </Label>
+                            </li>
+                        )
+                    }
+                </ul>
+            </Form>
+
+            <div className="section-divider"/>
+            <h5>Groups</h5>
+            <ul>               
+                {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
+                    <li className="list-unstyled" key={typeValue}>
+                        <Label className="label-radio multichoice-option d-flex">
+                            <Input                                   
+                                id={typeValue}
+                                name="event-type"
+                                color="secondary"
+                                type="radio"
+                                defaultChecked={typeValue === EventTypeFilter["All events"]}
+                                onChange={() => {
+                                    const selectedType = typeValue;
+                                    query.types = selectedType !== EventTypeFilter["All events"] ? selectedType : undefined;
+                                    history.push({pathname: location.pathname, search: queryString.stringify(query as any)});}}
+                            />
+                            <div className="flex-fill overflow-x-auto">
+                                <span>{typeLabel}</span>
+                            </div>
+                        </Label>
+                    </li>
+                )
+                }
+            </ul>
+
+            <div className="section-divider"/>
+            <h5>Stages</h5>
+            <ul>               
+                {Object.entries(EventStageMap).map(([label, value]) =>
+                    <li className="list-unstyled" key={value}>
+                        <Label className="label-radio multichoice-option d-flex">
+                            <Input                                   
+                                id={value}
+                                name="event-stage"
+                                color="secondary"
+                                type="radio"
+                                defaultChecked={value === STAGE.ALL}
+                                onChange={() => {
+                                    const selectedStage = value as STAGE;
+                                    query.show_stage_only = selectedStage !== STAGE.ALL ? selectedStage : undefined;
+                                    history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                                }}
+                            />
+                            <div className="flex-fill overflow-x-auto">
+                                <span>{label}</span>
+                            </div>
+                        </Label>
+                    </li>
+                )
+                }
+            </ul>
+        </Form>
     </ContentSidebar>;
 };
