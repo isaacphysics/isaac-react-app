@@ -3,6 +3,7 @@ import { Col, Row } from "reactstrap";
 import { Spacer } from "./Spacer";
 import { FilterCount } from "./svg/FilterCount";
 import classNames from "classnames";
+import { isAda, isPhy } from "../../services";
 
 export interface CollapsibleListProps {
     title?: string;
@@ -37,7 +38,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
 
     return <Col className={props.className} data-targetHeight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
         <div className="row collapsible-head" ref={headRef}>
-            <button className={classNames("w-100 d-flex align-items-center p-3 bg-white text-start", {"ps-4": props.asSubList})} onClick={toggle}>
+            <button className={classNames("w-100 d-flex align-items-center p-3 text-start", {"bg-white": isAda, "bg-transparent": isPhy, "ps-4": props.asSubList})} onClick={toggle}>
                 {title && <span>{title}</span>}
                 <Spacer/>
                 {(props.numberSelected ?? 0) > 0

@@ -66,13 +66,13 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                     <ul className="no-bullet px-2 mb-4">
                         <li>
                             <StyledCheckbox
-                                id="disagree"  label={<p>Disagree</p>} className='"mb-4'
+                                id="disagree"  label={<p>Disagree</p>}
                                 checked={feedback.disagree} onChange={() => setFeedback({...noFeedback, disagree: !feedback.disagree})}
                             />
                         </li>
                         <li>
                             <StyledCheckbox
-                                id="partlyAgree" label={<p>Partly agree</p>} className='"mb-4'
+                                id="partlyAgree" label={<p>Partly agree</p>}
                                 checked={feedback.partlyAgree} onChange={() => setFeedback({...noFeedback, partlyAgree: !feedback.partlyAgree})}
                             />
                         </li>
