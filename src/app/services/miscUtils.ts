@@ -145,3 +145,16 @@ export const confirmThen = <T, R>(prompt: string, confirmCallback: () => T, canc
     }
     return cancelCallback?.();
 };
+
+export const interleave = <T>(...lists: T[][]): T[] => {
+    const maxLength = Math.max(...lists.map(list => list.length));
+    const result = [];
+    for (let i = 0; i < maxLength; i++) {
+        for (const list of lists) {
+            if (list[i] !== undefined) {
+                result.push(list[i]);
+            }
+        }
+    }
+    return result;
+};
