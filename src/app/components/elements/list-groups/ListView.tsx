@@ -3,7 +3,7 @@ import { AbstractListViewItem, ListViewTagProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
 import { DOCUMENT_TYPE, documentTypePathPrefix, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
-import { ListGroup, ListGroupItemProps } from "reactstrap";
+import { ListGroup, ListGroupItem, ListGroupItemProps } from "reactstrap";
 import { TitleIconProps } from "../PageTitle";
 import { AffixButton } from "../AffixButton";
 import { QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -156,9 +156,9 @@ export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
     />;
 };
 
-export const ListViewCards = ({cards}: {cards: ListViewCardProps[]}) => {
+export const ListViewCards = ({cards}: {cards: (ListViewCardProps | null)[]}) => {
     return <ListGroup className="list-view-card-container link-list list-group-links p-0 m-0 flex-row row-cols-1 row-cols-lg-2 row">
-        {cards.map((card, index) => <ListViewCard key={index} {...card}/>)}
+        {cards.map((card, index) => card ? <ListViewCard key={index} {...card}/> : <ListGroupItem key={index}/>)}
     </ListGroup>;
 };
 
