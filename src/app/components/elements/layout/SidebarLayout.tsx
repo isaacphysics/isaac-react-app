@@ -543,7 +543,12 @@ export const EventsSidebar = (props: SidebarProps) => {
                                         name="event-status"
                                         color="primary"
                                         type="radio"
-                                        defaultChecked={statusValue === EventStatusFilter["Upcoming events"]}
+                                        checked={
+                                            (!isDefined(query.event_status) && statusValue === EventStatusFilter["Upcoming events"]) ||
+                                            (query.show_booked_only && statusValue === EventStatusFilter["My booked events"]) ||
+                                            (query.show_reservations_only && statusValue === EventStatusFilter["My event reservations"]) ||
+                                            (query.event_status === "all" && statusValue === EventStatusFilter["All events"])
+                                        }
                                         onChange={() => {
                                             const selectedFilter = statusValue;
                                             query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
@@ -573,7 +578,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                                 name="event-type"
                                 color="primary"
                                 type="radio"
-                                defaultChecked={typeValue === EventTypeFilter["All events"]}
+                                checked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All events"]}
                                 onChange={() => {
                                     const selectedType = typeValue;
                                     query.types = selectedType !== EventTypeFilter["All events"] ? selectedType : undefined;
@@ -599,10 +604,9 @@ export const EventsSidebar = (props: SidebarProps) => {
                                 name="event-stage"
                                 color="primary"
                                 type="radio"
-                                defaultChecked={value === STAGE.ALL}
+                                checked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
                                 onChange={() => {
-                                    const selectedStage = value as STAGE;
-                                    query.show_stage_only = selectedStage !== STAGE.ALL ? selectedStage : undefined;
+                                    query.show_stage_only = value !== STAGE.ALL ? value : undefined;
                                     history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
                                 }}
                             />
