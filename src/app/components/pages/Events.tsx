@@ -125,10 +125,10 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
 
                             return <div className="my-4">
                                 <div className="d-flex flex-col justify-content-end">
-                                    <b>Showing {numberOfLoadedEvents} of ?</b> {/* TODO get total here */}
+                                    <b>Showing {numberOfLoadedEvents} of {total}</b>
                                 </div>
 
-                                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1", "row-cols-lg-3")}`}>
+                                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1 row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
                                     {events.map(event => <div key={event.id} className="my-3 px-3">
                                         {above["md"](deviceSize) && <div className="section-divider mb-3"/>}
                                         <EventCard event={event} />
@@ -136,7 +136,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                                 </Row>
 
                                 {/* Load More Button */}
-                                {numberOfLoadedEvents < total && <div className="text-center mb-5">
+                                {numberOfLoadedEvents < total && <div className="text-center mt-3 mb-5">
                                     <Button onClick={() => {
                                         getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
                                     }}>

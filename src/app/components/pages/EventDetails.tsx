@@ -42,7 +42,8 @@ import {
     isEventLeader,
     isPhy,
     userBookedReservedOrOnWaitingList, confirmThen,
-    siteSpecific
+    siteSpecific,
+    isAda
 } from "../../services";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -151,7 +152,6 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             }
 
             function openAndScrollToBookingForm() {
-                document.getElementById("open_booking_form_button")?.scrollIntoView({behavior: 'smooth'});
                 document.getElementById("booking_form")?.scrollIntoView({behavior: 'smooth'});
                 setBookingFormOpen(true);
             }
@@ -167,7 +167,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
 
             const KeyEventInfo = () => {
-                return <Table borderless className="event-key-info mb-4">
+                return <Table borderless className="my-3">
                     <tbody>
                         <tr>
                             <td>When:</td>
@@ -186,7 +186,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                             <td>Location:</td>
                             <td>Online</td>
                         </tr>}
-                        {event.isNotClosed && !event.hasExpired && <tr>
+                        {isAda && event.isNotClosed && !event.hasExpired && <tr>
                             <td>Availability:</td>
                             <td>
                                 {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
@@ -229,7 +229,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             };
 
             const BookingForm = () => {
-                return <>
+                return <div id="booking_form">
                     {bookingFormOpen && user?.loggedIn && 'CONFIRMED' !== event.userBookingStatus && <span>
                         <Card className="mb-4">
                             <CardBody>
@@ -254,11 +254,11 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                             </small>
                                         </p>
 
-                                        <div className="text-center mt-4 mb-2">
+                                        <div className="mt-4 mb-2 d-flex justify-content-center">
                                             <Input
                                                 type="submit"
                                                 value={formatBookingModalConfirmMessage(event, canMakeABooking)}
-                                                className="btn btn-xl btn-secondary border-0"
+                                                className="w-25 btn btn-solid border-0"
                                             />
                                         </div>
                                     </div>
@@ -268,57 +268,139 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                     </span>}
 
                     {/* Buttons */}
-                    <div>
-                        {/* Options for un-logged-in users */}
-                        {!isLoggedIn(user) && event.isNotClosed && !event.hasExpired &&
-                            <Button onClick={loginAndReturn}>
-                                {atLeastOne(event.placesAvailable) && event.isWithinBookingDeadline ?
-                                    "Login to book" :
-                                    "Login to apply"
-                                }
-                            </Button>
-                        }
+                    <div className="d-flex flex-column">
+                        <div>
+                            {/* Options for un-logged-in users */}
+                            {!isLoggedIn(user) && event.isNotClosed && !event.hasExpired &&
+                                <Button onClick={loginAndReturn}>
+                                    {atLeastOne(event.placesAvailable) && event.isWithinBookingDeadline ?
+                                        "Login to book" :
+                                        "Login to apply"
+                                    }
+                                </Button>
+                            }
 
-                        {/* Options for logged-in users */}
-                        {isLoggedIn(user) && !event.hasExpired && <>
-                            {event.isReservationOnly && !canReserveSpaces && !isTeacherOrAbove(user) && !userBookedReservedOrOnWaitingList(user, event) && <Alert color={"warning"}>
-                                Places on this event can only be reserved by teachers.{" "}
-                                Please ask your teacher to reserve a place for you.{" "}
-                                You will need to be accompanied by a teacher to the event.{" "}
-                            </Alert>
-                            }
-                            {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
-                            <Button color="primary" className="btn btn-solid mb-3 me-3" onClick={() => {
-                                setBookingFormOpen(true);
-                            }}>
-                                {formatMakeBookingButtonMessage(event)}
-                            </Button>
-                            }
-                            {canReserveSpaces &&
-                            <Button className="btn btn-solid mb-3 me-3" onClick={() => {
-                                dispatch(openActiveModal(reservationsModal({event})));
-                            }}>
-                                Manage reservations
-                            </Button>
-                            }
-                            {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
-                            <Button className="btn btn-solid mb-3 me-3" outline onClick={() =>
-                                confirmThen(
-                                    "Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.",
-                                    () => cancelMyBooking(eventId)
-                                )
-                            }>
-                                {formatCancelBookingButtonMessage(event)}
-                            </Button>
-                            }
-                        </>}
-                        <Button tag={Link} to="/events" className="btn btn-keyline mb-3">
-                            More events
-                        </Button>
+                            {/* Options for logged-in users */}
+                            {isLoggedIn(user) && !event.hasExpired && <>
+                                {event.isReservationOnly && !canReserveSpaces && !isTeacherOrAbove(user) && !userBookedReservedOrOnWaitingList(user, event) && <Alert color={"warning"}>
+                                    Places on this event can only be reserved by teachers.{" "}
+                                    Please ask your teacher to reserve a place for you.{" "}
+                                    You will need to be accompanied by a teacher to the event.{" "}
+                                </Alert>
+                                }
+                                {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
+                                <Button color="primary" className="mb-3 me-3" onClick={() => {
+                                    setBookingFormOpen(true);
+                                }}>
+                                    {formatMakeBookingButtonMessage(event)}
+                                </Button>
+                                }
+                                {canReserveSpaces &&
+                                <Button className="mb-3 me-3" onClick={() => {
+                                    dispatch(openActiveModal(reservationsModal({event})));
+                                }}>
+                                    Manage reservations
+                                </Button>
+                                }
+                                {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
+                                <Button className="mb-3 me-3" outline onClick={() =>
+                                    confirmThen(
+                                        "Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.",
+                                        () => cancelMyBooking(eventId)
+                                    )
+                                }>
+                                    {formatCancelBookingButtonMessage(event)}
+                                </Button>
+                                }
+                            </>}
+                        </div>
+                        <div className="align-self-end">
+                            <Link to="/events" className="btn-more-events mb-3">
+                                More events
+                            </Link>
+                        </div>
                     </div>
-                </>;
+                </div>;
             };
 
+            const PhyEventDetails = <Container>
+                <TitleAndBreadcrumb
+                    currentPageTitle="Events" icon={{type: "hex", icon: "page-icon-events"}}
+                    breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
+                />
+                <EditContentButton doc={event}/>
+                <Row className="mb-4">
+                    <Col className="col-3 col-sm-2 col-lg-1 me-3 pt-2">
+                        {isTeacherEvent &&
+                        <span className={"event-type-hex"}>
+                            <b>TEACHER EVENT</b>
+                            <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
+                        </span>}
+                        {isStudentEvent &&
+                        <span className={"event-type-hex"}>
+                            <b>STUDENT EVENT</b>
+                            <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
+                        </span>}
+                    </Col>
+                    <Col>
+                        <h3 className="event-title">{event.title}</h3>
+                        <span className="event-subtitle">{event.subtitle}</span>
+                    </Col>
+                </Row>
+                <Row className="mb-3 event-bg-grey">
+                    <Col className="event-key-info">
+                        <KeyEventInfo/>
+                    </Col>
+                    <Col className="d-flex justify-content-end col-3 col-lg-2">
+                        {isLoggedIn(user) && !event.hasExpired && (canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
+                        <div className="d-flex flex-column justify-content-end mb-4 me-2">
+                            <Button color="primary" onClick={openAndScrollToBookingForm} className="text-nowrap">
+                                {formatMakeBookingButtonMessage(event)}
+                            </Button>
+                        </div>}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="col-7 col-lg-8 col-xxl-9">
+                        <IsaacContent doc={event}/>
+                    </Col>
+                    <Col className="col-5 col-lg-4 col-xxl-3">
+                        <Row>
+                            {event.eventThumbnail && <div className="mt-2 px-0">
+                                <CardImg
+                                    aria-hidden={true}
+                                    alt={""}
+                                    className="my-3" src={event.eventThumbnail.src}
+                                />
+                            </div>}
+                        </Row>
+                        <Row>
+                            {isDefined(event.location) 
+                            && isDefined(event.location?.latitude) 
+                            && isDefined(event.location?.longitude) 
+                            && <div className="mt-3 px-0">
+                                <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13}>
+                                    <TileLayer
+                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                        attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                    />
+                                    <Marker position={[event.location.latitude, event.location.longitude]} icon={icon}>
+                                        <Popup>
+                                            {event.location?.address?.addressLine1}<br/>{event.location?.address?.addressLine2}<br/>{event.location?.address?.town}<br/>{event.location?.address?.postalCode}
+                                        </Popup>
+                                    </Marker>
+                                </MapContainer>
+                            </div>
+                            }
+                        </Row>
+                    </Col>
+                </Row>
+                <Row>
+                    <BookingForm/>
+                </Row>
+            </Container>;
+            
+            // Keep old-style physics layout for potential use on Ada
             const AdaEventDetails = <Container className="events mb-5">
                 <TitleAndBreadcrumb
                     currentPageTitle={event.title as string} subTitle={event.subtitle}
@@ -383,75 +465,6 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                         </Row>
                     </CardBody>
                 </Card>
-            </Container>;
-
-            const PhyEventDetails = <Container>
-                <TitleAndBreadcrumb
-                    currentPageTitle="Events" icon={{type: "hex", icon: "page-icon-events"}}
-                    breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
-                />
-                <EditContentButton doc={event}/>
-                <Row>
-                    <Col className="col-1 me-2">
-                        {isTeacherEvent &&
-                            <span className={"event-pod-hex"}>
-                                <b>TEACHER EVENT</b>
-                                <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
-                            </span>}
-                        {isStudentEvent &&
-                            <span className={"event-pod-hex"}>
-                                <b>STUDENT EVENT</b>
-                                <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
-                            </span>}
-                    </Col>
-                    <Col>
-                        <h3>{event.title}</h3>
-                        <h5>{event.subtitle}</h5>
-                    </Col>
-                </Row>
-                <Row>
-                    <KeyEventInfo/>
-                    {isLoggedIn(user) && !event.hasExpired && (canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
-                        <Button onClick={() => {
-                            setBookingFormOpen(true);
-                        }}>
-                            {formatMakeBookingButtonMessage(event)}
-                        </Button>}
-                </Row>
-                <Row>
-                    <Col className="col-9">
-                        <IsaacContent doc={event}/>
-                    </Col>
-                    <Col className="col-3">
-                        {event.eventThumbnail && <div className="mt-2">
-                            <CardImg
-                                aria-hidden={true}
-                                alt={""}
-                                className="my-3" src={event.eventThumbnail.src}
-                            />
-                        </div>}
-                        {isDefined(event.location) 
-                            && isDefined(event.location?.latitude) 
-                            && isDefined(event.location?.longitude) 
-                            && <div className="border px-2 py-1 mt-3 bg-light">
-                                <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13}>
-                                    <TileLayer
-                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                        attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                    />
-                                    <Marker position={[event.location.latitude, event.location.longitude]} icon={icon}>
-                                        <Popup>
-                                            {event.location?.address?.addressLine1}<br/>{event.location?.address?.addressLine2}<br/>{event.location?.address?.town}<br/>{event.location?.address?.postalCode}
-                                        </Popup>
-                                    </Marker>
-                                </MapContainer>
-                            </div>
-                        }
-                    </Col>
-                </Row>
-                <Row>
-                    <BookingForm/>
-                </Row>
             </Container>;
          
             return siteSpecific(PhyEventDetails, AdaEventDetails);

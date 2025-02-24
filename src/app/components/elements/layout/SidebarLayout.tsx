@@ -527,9 +527,8 @@ export const EventsSidebar = (props: SidebarProps) => {
     const query: EventsPageQueryParams = queryString.parse(history.location.search);
     const user = useAppSelector(selectors.user.orNull);
 
-    return <ContentSidebar buttonTitle="Filter events" {...props}>
+    return <ContentSidebar style={{marginTop: "65px"}} buttonTitle="Filter events" {...props}>
         <Form>
-            <div className="section-divider"/>
             <h5>Event type</h5>
             <Form>
                 <ul>               
