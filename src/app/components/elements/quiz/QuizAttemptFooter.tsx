@@ -100,7 +100,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
     // Empty sidebar to match layout of quiz attempt component
     return <SidebarLayout className="d-flex flex-column align-items-end">
         <MainContent>
-            {prequel}
+            {isAda || (below["md"](deviceSize)) && prequel}
             <div className="d-flex border-top pt-2 my-2 align-items-center">
                 {controls}
             </div>
