@@ -937,10 +937,10 @@ export enum sortIcon {
 }
 
 export enum EventStatusFilter {
-    "All events" = "all",
     "Upcoming events" = "upcoming",
     "My booked events" = "showBookedOnly",
-    "My event reservations" = "showReservationsOnly"
+    "My event reservations" = "showReservationsOnly",
+    "All events" = "all"
 }
 export enum EventTypeFilter {
     "All events" = "all",
