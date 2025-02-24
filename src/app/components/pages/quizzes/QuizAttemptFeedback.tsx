@@ -15,7 +15,6 @@ import {Alert, Button, Container} from "reactstrap";
 
 function QuizFooter(props: QuizAttemptProps) {
     const {page, pageLink, studentUser} = props;
-
     let controls;
     let prequel = null;
     if (page === null) {
