@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
 import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQuery, useGetSingleSetAssignmentQuery } from '../../state';
 import { skipToken } from '@reduxjs/toolkit/query';
-import { Button, Card, Col, Row } from 'reactstrap';
+import { Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { above, isDefined, isLoggedIn, isTutorOrAbove, Subject, TAG_ID, tags, useDeviceSize } from '../../services';
+import { isDefined, isLoggedIn, isTutorOrAbove, Subject, useDeviceSize } from '../../services';
 import { BookInfo, isaacBooks } from './modals/IsaacBooksModal';
 import { AssignmentDTO, RegisteredUserDTO } from '../../../IsaacApiTypes';
 import { GroupSelector } from '../pages/Groups';
@@ -35,49 +35,24 @@ interface AssignmentCardProps {
 }
 
 const AssignmentCard = ({assignmentId, groupName}: AssignmentCardProps) => {
-    const deviceSize = useDeviceSize();
-
     // Query single assignment for each card because useGetMySetAssignmentsQuery doesn't return gameboard info
     const assignmentQuery = useGetSingleSetAssignmentQuery(assignmentId || skipToken);
     const { data: assignment } = assignmentQuery;
-    const gameboard = assignment?.gameboard;
-
-    const [showMore, setShowMore] = useState(false);
-
-    const topics = tags.getTopicTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
-        if (isDefined(c.tags) && c.tags.length > 0) {
-            return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
-        }
-        return a;
-    }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
 
     if (isDefined(assignment)) {
-        return <Link to={`/assignment_progress/${assignmentId}`} className="plain-link">
-            <Card key={assignmentId} className="p-3 my-2 w-100 assignment-card">
-                <Row>
+        const today = new Date();
+        const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
+        const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
+        return <Link to={`/assignment_progress/${assignmentId}`} className="plain-link mb-3">
+            <Card className="assignment-card px-3">
+                <div className="d-flex flex-row h-100">
                     <i className="icon icon-question-pack" />
-                    <Col>
-                        <div>
-                            <h5>{gameboard?.title ?? ""}</h5>
-                        </div>
-                        <div>
-                            Assigned to <b>{groupName}</b>
-                        </div>
-                        <div>
-                            {assignment.dueDate && <>Due <b>{new Date(assignment.dueDate).toLocaleDateString()}</b></>}
-                        </div>
-                        {above['md'](deviceSize) && <Button className="my-2 btn-underline" style={{fontSize: "14px"}} color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
-                            {showMore ? "Hide details" : "Show details"}
-                        </Button>}
-                        {showMore && <div>
-                            <p className="mb-0"><strong>Questions:</strong> {gameboard?.contents?.length || "0"}</p>
-                            {isDefined(topics) && topics.length > 0 && <p className="mb-0">
-                                <strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong>{" "}
-                                {topics.join(", ")}
-                            </p>}
-                        </div>}
-                    </Col>
-                </Row>
+                    <div className="flex-grow-1 ms-2 me-3">
+                        <h5>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h5>
+                        {isDefined(groupName) && groupName}
+                    </div>
+                    <span className="align-self-end">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>
+                </div>
             </Card>
         </Link>;
     }
@@ -100,11 +75,11 @@ const AssignmentsPanel = () => {
     const sortedAssignments = getSortedAssignments(assignmentsSetByMe);
     const upcomingAssignments = sortedAssignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
 
-    return <div className="dashboard-panel scrollable-panel">
+    return <div className="dashboard-panel">
         <Link to="/assignment_schedule"  className="plain-link">
             <h4>Assignment schedule</h4>
         </Link>
-        {upcomingAssignments && upcomingAssignments.map(({id, groupName}) => <AssignmentCard key={id} assignmentId={id} groupName={groupName} />)}
+        {upcomingAssignments && upcomingAssignments.slice(0, 4).map(({id, groupName}) => <AssignmentCard key={id} assignmentId={id} groupName={groupName} />)}
     </div>;
 };
 
@@ -183,13 +158,13 @@ export const TeacherDashboard = () => {
             {deviceSize === "lg"
                 ? <>
                     <Row className="row-cols-3">
-                        <Col className="mt-4">
+                        <Col className="mt-4 col-4">
                             <GroupsPanel />
                         </Col>
-                        <Col className="mt-4 panel-streak">
+                        <Col className="mt-4 col-5">
                             <AssignmentsPanel />
                         </Col>
-                        <Col className="mt-4">
+                        <Col className="mt-4 col-3">
                             <MyIsaacPanel />
                         </Col>
                     </Row>
