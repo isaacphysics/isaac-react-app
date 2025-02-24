@@ -10,7 +10,7 @@ import React from "react";
 import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
-import {confirmThen, siteSpecific} from "../../../services";
+import {below, confirmThen, isAda, siteSpecific, useDeviceSize} from "../../../services";
 import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
@@ -20,6 +20,7 @@ function extractSectionIdFromQuizQuestionId(questionId: string) {
 
 export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: string}) {
     const {attempt, page, sections, questions, pageLink} = props;
+    const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
     const history = useHistory();
 
