@@ -158,5 +158,5 @@ export function isSingleStageContext(context?: PageContextState): boolean {
 }
 
 export function isValidStageSubjectPair(subject: Subject, stage: LearningStage): boolean {
-    return (PHY_NAV_SUBJECTS[subject] as LearningStage[]).includes(stage);
+    return (PHY_NAV_SUBJECTS[subject] as readonly LearningStage[]).includes(stage);
 }

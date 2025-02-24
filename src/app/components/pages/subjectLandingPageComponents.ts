@@ -1,5 +1,5 @@
 import { PageContextState } from "../../../IsaacAppTypes";
-import { getHumanContext, interleave, isDefinedContext, isSingleStageContext } from "../../services";
+import { getHumanContext, interleave, isDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS } from "../../services";
 import { ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
 import { ListViewCardProps } from "../elements/list-groups/ListView";
 
@@ -103,13 +103,11 @@ const BiologyStretchQuestionsCard = (context: NonNullable<Required<PageContextSt
 // TODOs:
 // - where on earth the above arbitrary page link cards point
 // - additional tags for lessons and revision
-// - "quick switch" in navbar
 // - icons for glossary page and arbitrary pages
 // - the rest of the page; random question, related concepts, events, books, mentoring scheme?
 
 
-// TODO: type according to constants.ts' PHY_NAV_SUBJECTS
-const subjectSpecificCardsMap: {[subject: string]: {[stage: string]: (LandingPageCard | null)[]}} = {
+const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
     "physics": {
         "11_14": [BoardsByTopicCard, null, null],
         "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, QuickQuizzesCard],
@@ -122,7 +120,6 @@ const subjectSpecificCardsMap: {[subject: string]: {[stage: string]: (LandingPag
         "university": [BoardsByTopicCard, null, null],
     },
     "maths": {
-        "11_14": [BoardsByTopicCard, null, null],
         "gcse": [AnvilAppsCard, BoardsByTopicCard, null],
         // "practice maths" is boards by topic for maths – needs renaming
         "a_level": [BoardsByTopicCard, MathsSkillsQuestionsCard, null],
@@ -149,7 +146,7 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
         PracticeTestsCard
     ];
 
-    const subjectSpecificCards = subjectSpecificCardsMap[context.subject]?.[context.stage[0]] || [];
+    const subjectSpecificCards = subjectSpecificCardsMap[context.subject]?.[context.stage[0] as keyof typeof subjectSpecificCardsMap[typeof context.subject]] || [];
 
     return applyContext(context, stacked ? [...baseCards, ...subjectSpecificCards] : interleave(baseCards, subjectSpecificCards)); // base cards always appear on the left
 };
