@@ -172,6 +172,22 @@
   );
 }
 
+.page-icon-tests {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-tests-fg.svg', 
+    '/assets/phy/icons/redesign/page-tests-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
+.page-icon-quiz {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-quiz-fg.svg', 
+    '/assets/phy/icons/redesign/page-quiz-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
 .page-icon-lessons {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-lessons-fg.svg', 
