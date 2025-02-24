@@ -188,3 +188,21 @@
   // padding is overridden above
   border-radius: unset;
 }
+
+.question-metadata {
+  background-color: $color-neutral-100;
+  border: 1px solid $color-neutral-200;
+  border-radius: 4px;
+  padding: 1rem 0.5rem;
+  margin: 1rem 0;
+  font-size: 14px;
+
+  > div > span:first-child {
+    color: $color-neutral-800;
+    margin-bottom: 0.4rem;
+  }
+
+  > div + div {
+    border-left: 1px solid $color-neutral-200;
+  }
+}
