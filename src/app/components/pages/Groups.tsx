@@ -1,4 +1,5 @@
 import React, {MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
+import {connect} from "react-redux";
 import {
     Button,
     ButtonDropdown,
@@ -21,16 +22,19 @@ import {
     UncontrolledButtonDropdown,
     UncontrolledTooltip
 } from "reactstrap";
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import {
+    AppState,
     mutationSucceeded,
     resetMemberPassword,
+    selectors,
     showAdditionalManagerSelfRemovalModal,
     showErrorToast,
     showGroupEmailModal,
     showGroupInvitationModal,
     showGroupManagersModal,
     useAppDispatch,
+    useAppSelector,
     useCreateGroupMutation,
     useDeleteGroupMemberMutation,
     useDeleteGroupMutation,
@@ -448,26 +452,28 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
     </Row>;
 };
 
-export const Groups = ({user}: {user: RegisteredUserDTO}) => {
+interface GroupSelectorProps {
+    user: RegisteredUserDTO;
+    groups?: AppGroup[];
+    allGroups: AppGroup[];
+    selectedGroup?: AppGroup;
+    setSelectedGroupId: React.Dispatch<React.SetStateAction<number | undefined>>;
+    showArchived: boolean;
+    setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
+    groupNameInputRef: React.RefObject<HTMLInputElement>;
+    createNewGroup?: (newGroupName: string) => Promise<boolean>;
+    showCreateGroup?: boolean;
+}
+
+export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, showCreateGroup}: GroupSelectorProps) => {
     const dispatch = useAppDispatch();
-    const [showArchived, setShowArchived] = useState(false);
-    const groupQuery = useGetGroupsQuery(showArchived);
-    const { currentData: groups, isLoading, isFetching } = groupQuery;
-    const otherGroups = useGetGroupsQuery(!showArchived);
-
-    const allGroups = [...(groups ?? []) , ...(otherGroups.currentData ?? [])];
-
-    const [createGroup] = useCreateGroupMutation();
-    const [deleteGroup] = useDeleteGroupMutation();
-
-    const [selectedGroupId, setSelectedGroupId] = useState<number>();
-    const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
 
     // Clear the selected group when switching between tabs
     const switchTab = (archived: boolean) => {
         setShowArchived(archived);
         setSelectedGroupId(undefined);
     };
+
     const tabs = [
         {
             name: "Active",
@@ -496,20 +502,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
         }
     }, [groups, sortOrder]);
 
-    const createNewGroup: (newGroupName: string) => Promise<boolean> = async (newGroupName: string) => {
-        setShowArchived(false);
-        return createGroup(newGroupName).then(async (result) => {
-            if (mutationSucceeded(result)) {
-                const group = result.data;
-                if (!group.id) return false;
-                dispatch(showGroupInvitationModal({group, user, firstTime: true, backToCreateGroup: () => setSelectedGroupId(undefined)}));
-                setSelectedGroupId(group.id);
-                return true;
-            }
-            return false;
-        });
-    };
-
+    const [deleteGroup] = useDeleteGroupMutation();
     const confirmDeleteGroup = (groupToDelete: AppGroup) => {
         if (user.id === groupToDelete.ownerId) {
             if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nThis action cannot be undone!")) {
@@ -524,6 +517,111 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                 dispatch(showAdditionalManagerSelfRemovalModal({group: groupToDelete, user}));
             }
         }
+    };
+
+    return <Card>
+        <CardBody>
+            {showCreateGroup && isDefined(createNewGroup) && <><MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
+                <div className="d-none d-lg-block mb-3">
+                    <Link to="/groups" className="w-100" style={{textDecoration: "none"}}>
+                        <Button block color="primary" outline onClick={() => {
+                            setSelectedGroupId(undefined);
+                            if (groupNameInputRef.current) {
+                                groupNameInputRef.current.focus();
+                            }
+                        }}>Create new group</Button>
+                    </Link>
+                </div>
+                {siteSpecific(<div className="section-divider"/>, <hr/>)}
+            </>}
+            <div className={classNames("text-start", {"mt-3": showCreateGroup})}>
+                <strong className={"me-2"}>Groups:</strong>
+                <UncontrolledButtonDropdown size="sm">
+                    <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={"sm"}>
+                        {sortOrder}
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        {Object.values(SortOrder).map(item =>
+                            <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
+                        )}
+                    </DropdownMenu>
+                </UncontrolledButtonDropdown>
+            </div>
+            <Nav tabs className={classNames("d-flex flex-nowrap guaranteed-single-line mt-3", {"mb-3": isPhy})}>
+                {tabs.map((tab, index) => {
+                    return <NavItem key={index} className={classNames({"px-2": isPhy, "active": tab.active()})}>
+                        <NavLink
+                            className={classNames("text-center", {"group-nav-tab": isPhy}, {"px-2": isAda})} tabIndex={0}
+                            onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
+                        >
+                            {tab.name}
+                        </NavLink>
+                    </NavItem>;
+                })}
+            </Nav>
+            <div className="mt-3 mt-lg-0">
+                {sortedGroups && sortedGroups.length > 0
+                    ? sortedGroups.map((g: AppGroup) =>
+                        <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
+                            <div className="d-flex justify-content-between align-items-center group-name-buttons">
+                                <Link to={`/groups#${g.id}`} title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 group-name d-flex flex-fill">
+                                    {g.groupName}
+                                </Link>
+                                {showArchived &&
+                                <button
+                                    onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
+                                    aria-label="Delete group" className="bin-icon ms-1" title={"Delete group"}
+                                >
+                                </button>
+                                }
+                            </div>
+                            {createNewGroup && selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
+                                <GroupEditor user={user} group={selectedGroup} allGroups={allGroups} createNewGroup={createNewGroup}/>
+                            </div>}
+                        </div>)
+                    : <div className={"group-item p-2"}>No {showArchived ? "archived" : "active"} groups</div>
+                }
+            </div>
+        </CardBody>
+    </Card>;
+};
+
+const stateToProps = (_state: AppState, props: any) => {
+    const {location: {hash}} = props;
+    return {hashAnchor: hash?.slice(1) ?? null};
+};
+
+const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAnchor: number}) => {
+    const dispatch = useAppDispatch();
+    const [showArchived, setShowArchived] = useState(false);
+    const groupQuery = useGetGroupsQuery(showArchived);
+    const { currentData: groups, isLoading, isFetching } = groupQuery;
+    const otherGroups = useGetGroupsQuery(!showArchived);
+
+    const allGroups = [...(groups ?? []) , ...(otherGroups.currentData ?? [])];
+
+    const [createGroup] = useCreateGroupMutation();
+
+    const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>();
+    useEffect(() => {
+        // @ts-ignore
+        const tab: number = hashAnchor && parseInt(hashAnchor);
+        setSelectedGroupId(tab);
+    }, [hashAnchor]);
+    const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
+
+    const createNewGroup: (newGroupName: string) => Promise<boolean> = async (newGroupName: string) => {
+        setShowArchived(false);
+        return createGroup(newGroupName).then(async (result) => {
+            if (mutationSucceeded(result)) {
+                const group = result.data;
+                if (!group.id) return false;
+                dispatch(showGroupInvitationModal({group, user, firstTime: true, backToCreateGroup: () => setSelectedGroupId(undefined)}));
+                setSelectedGroupId(group.id);
+                return true;
+            }
+            return false;
+        });
     };
 
     // Get member data for selected group
@@ -548,68 +646,8 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <Row className="mb-5">
                 <Col lg={4}>
-                    <Card>
-                        <CardBody>
-                            <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
-                            <div className="d-none d-lg-block mb-3">
-                                <Button block color="primary" outline onClick={() => {
-                                    setSelectedGroupId(undefined);
-                                    if (groupNameInputRef.current) {
-                                        groupNameInputRef.current.focus();
-                                    }
-                                }}>Create new group</Button>
-                            </div>
-                            <hr/>
-                            <div className="text-start mt-3">
-                                <strong className={"me-2"}>Groups:</strong>
-                                <UncontrolledButtonDropdown size="sm">
-                                    <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={"sm"}>
-                                        {sortOrder}
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        {Object.values(SortOrder).map(item =>
-                                            <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
-                                        )}
-                                    </DropdownMenu>
-                                </UncontrolledButtonDropdown>
-                            </div>
-                            <Nav tabs className={classNames("d-flex flex-wrap guaranteed-single-line mt-3", {"mb-3": isPhy})}>
-                                {tabs.map((tab, index) => {
-                                    return <NavItem key={index} className={classNames({"px-2": isPhy, "active": tab.active()})}>
-                                        <NavLink
-                                            className={classNames("text-center", {"px-2": isAda})} tabIndex={0}
-                                            onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
-                                        >
-                                            {tab.name}
-                                        </NavLink>
-                                    </NavItem>;
-                                })}
-                            </Nav>
-                            <div className="mt-3 mt-lg-0">
-                                {sortedGroups && sortedGroups.length > 0
-                                    ? sortedGroups.map((g: AppGroup) =>
-                                        <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
-                                            <div className="d-flex justify-content-between align-items-center group-name-buttons">
-                                                <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
-                                                    {g.groupName}
-                                                </Button>
-                                                {showArchived &&
-                                                    <button
-                                                        onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
-                                                        aria-label="Delete group" className="bin-icon ms-1" title={"Delete group"}
-                                                    >
-                                                    </button>
-                                                }
-                                            </div>
-                                            {selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
-                                                <GroupEditor user={user} group={selectedGroup} allGroups={allGroups} createNewGroup={createNewGroup}/>
-                                            </div>}
-                                        </div>)
-                                    : <div className={"group-item p-2"}>No {showArchived ? "archived" : "active"} groups</div>
-                                }
-                            </div>
-                        </CardBody>
-                    </Card>
+                    <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
+                        showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true}/>
                 </Col>
                 <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
                     <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
@@ -618,3 +656,5 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
         </ShowLoadingQuery>
     </Container>;
 };
+
+export const Groups = withRouter(connect(stateToProps)(GroupsComponent));
