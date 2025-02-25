@@ -49,7 +49,6 @@ import { AuthError } from "../pages/AuthError";
 import { SessionExpired } from "../pages/SessionExpired";
 import { ConsistencyErrorModal } from "./ConsistencyErrorModal";
 import { Search } from "../pages/Search";
-import { CookieBanner } from "./CookieBanner";
 import { EmailVerificationBanner } from "./EmailVerificationBanner";
 import { Toasts } from "./Toasts";
 import { AdminUserManager } from "../pages/AdminUserManager";
@@ -161,7 +160,6 @@ export const IsaacApp = () => {
       <Header />
       <Toasts />
       <ActiveModals />
-      <CookieBanner />
       <UnsupportedBrowserBanner />
       <DowntimeWarningBanner />
       <EmailVerificationBanner />
