@@ -544,6 +544,14 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
                             suffix={{icon: progressIcon(section), info: sectionStates[section]}}/>
                     </li>)}
             </ul>
+
+            <div className="section-divider"/>
+
+            <div className="d-flex flex-column sidebar-key">
+                Key
+                <KeyItem icon="status-in-progress" text="Section in progress"/>
+                <KeyItem icon="status-correct" text="Section completed"/>
+            </div>
         </ContentSidebar>;
     };
 
