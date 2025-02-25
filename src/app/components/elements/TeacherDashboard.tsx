@@ -3,8 +3,7 @@ import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQue
 import { skipToken } from '@reduxjs/toolkit/query';
 import { Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { isDefined, isLoggedIn, isTutorOrAbove, Subject, useDeviceSize } from '../../services';
-import { BookInfo, isaacBooks } from './modals/IsaacBooksModal';
+import { BookInfo, ISAAC_BOOKS, isDefined, isLoggedIn, isTutorOrAbove, Subject, useDeviceSize } from '../../services';
 import { AssignmentDTO, RegisteredUserDTO } from '../../../IsaacApiTypes';
 import { GroupSelector } from '../pages/Groups';
 import { StyledDropdown } from './inputs/DropdownInput';
@@ -141,7 +140,7 @@ const BooksPanel = () => {
             </StyledDropdown>
         </div>
         <Row className="row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-3 flex-nowrap book-panel">
-            {isaacBooks.filter(book => book.subject === subject || subject === "all")
+            {ISAAC_BOOKS.filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2 me-1 p-0">
                         <BookCard {...book}/>
