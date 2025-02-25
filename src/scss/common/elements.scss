@@ -398,12 +398,17 @@ iframe.email-html {
     cursor: not-allowed;
   }
 
+  &:has(> input:focus-visible) {
+    // TODO: find-replace all instances of this with some SCSS vars defined in isaac.scss
+    box-shadow: 0 0 0 2pt black !important;
+  }
+
   &:focus:not(:focus-visible) {
     outline: none;
   }
 
   > input {
-    display: none;
+    @extend .visually-hidden;
   }
 }
 
