@@ -268,10 +268,12 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
     const questionNumbers = Object.assign({}, ...questions.map((q, i) => ({[q.id as string]: i + 1})));
     const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
     const sectionCount = Object.keys(sections).length;
+    const sectionTitles = Object.keys(sections).map(k => sections[k].title || "Section " + k);
+
     return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
         <QuizTitle {...props} />
         <SidebarLayout>
-            <QuizSidebar attempt={attempt} viewingAsSomeoneElse={viewingAsSomeoneElse} totalSections={sectionCount} currentSection={page ? page : undefined}/>
+            <QuizSidebar attempt={attempt} viewingAsSomeoneElse={viewingAsSomeoneElse} totalSections={sectionCount} currentSection={page ? page : undefined} sectionTitles={sectionTitles}/>
             <MainContent>
                 {page === null ?
                     <div className="mt-4">

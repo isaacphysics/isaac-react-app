@@ -500,10 +500,11 @@ interface QuizSidebarProps extends SidebarProps {
     viewingAsSomeoneElse: boolean;
     totalSections: number;
     currentSection?: number;
+    sectionTitles: string[];
 }
 
 export const QuizSidebar = (props: QuizSidebarProps) => {
-    const { attempt, viewingAsSomeoneElse, totalSections, currentSection } = props;
+    const { attempt, viewingAsSomeoneElse, totalSections, currentSection, sectionTitles } = props;
     const deviceSize = useDeviceSize();
     const history = useHistory();
     const location = history.location.pathname;
@@ -529,9 +530,9 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
                 <li>
                     <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
                 </li>
-                {Array.from({length: totalSections}, (_, i) => i + 1).map(section => 
+                {Array.from({length: totalSections}, (_, i) => i).map(section => 
                     <li key={section}>
-                        <StyledTabPicker key={section} checkboxTitle={`Section ${section}`} checked={currentSection === section} onClick={() => switchToPage(String(section))}/>
+                        <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section + 1} onClick={() => switchToPage(String(section + 1))}/>
                     </li>)}
             </ul>
         </ContentSidebar>;
