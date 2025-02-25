@@ -59,8 +59,7 @@ div:not(.no-horizontal):has(> .pod) {
 
     .event-pod-badge {
       position: absolute;
-      bottom: 3%;
-      left: 3%;
+      margin: 3%;
     }
 
     .event-pod-hex {
@@ -77,5 +76,9 @@ div:not(.no-horizontal):has(> .pod) {
         padding-top: 5px;
       }
     }
+  }
+
+  .expired {
+    filter: grayscale(1);
   }
 }

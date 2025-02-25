@@ -6,9 +6,10 @@ import {DateString} from "../DateString";
 import {formatEventCardDate, siteSpecific} from "../../../services";
 import { Card, CardImg, CardBody, CardTitle, Badge, CardText } from "reactstrap";
 import { Spacer } from "../Spacer";
+import classNames from "classnames";
 
 export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
-    const {id, title, subtitle, eventThumbnail, location, date} = event;
+    const {id, title, subtitle, eventThumbnail, location, date, hasExpired} = event;
 
     const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
@@ -16,19 +17,23 @@ export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
 
     return <Card className="pod">
         {eventThumbnail &&
-            <a className={"pod-img event-pod-img"} href={`/events/${id}`}>
+            <a className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} href={`/events/${id}`}>
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
+                {hasExpired &&
+                    <div className="event-pod-badge">
+                        <Badge className="badge rounded-pill" color="primary">EXPIRED</Badge>
+                    </div>}
                 {isVirtualEvent &&
-                    <div className={"event-pod-badge"}>
+                    <div className="event-pod-badge align-self-end">
                         <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
                     </div>}
                 {isTeacherEvent &&
-                    <div className={"event-pod-hex"}>
+                    <div className="event-pod-hex">
                         <b>TEACHER EVENT</b>
                         <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
                     </div>}
                 {isStudentEvent &&
-                    <div className={"event-pod-hex"}>
+                    <div className="event-pod-hex">
                         <b>STUDENT EVENT</b>
                         <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
                     </div>}
