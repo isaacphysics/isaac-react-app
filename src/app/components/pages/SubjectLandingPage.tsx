@@ -1,21 +1,24 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Button, Card, Col, Container, Row } from "reactstrap";
+import { Card, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { below, DOCUMENT_TYPE, useDeviceSize } from "../../services";
+import { above, below, DOCUMENT_TYPE, useDeviceSize } from "../../services";
 import { PageContextState } from "../../../IsaacAppTypes";
 import { PhyHexIcon } from "../elements/svg/PhyHexIcon";
 import { AudienceContext } from "../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
+import { AffixButton } from "../elements/AffixButton";
 
 const handleGetDifferentQuestion = () => {
     // TODO
 };
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
+    const deviceSize = useDeviceSize();
+
     if (!context || !isDefinedContext(context) || !isSingleStageContext(context)) {
         return null;
     }
@@ -44,7 +47,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
         ]
     };
 
-    return <Container className="py-4 container-override random-question-panel">
+    return <div className="py-4 container-override random-question-panel">
         <Row className="my-3">
             <Col lg={7}>
                 <div className="d-flex justify-content-between align-items-center">
@@ -68,23 +71,27 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                     }]}/>
                 </Card>
             </Col>
-            <Col lg={5} className="ps-5">
+            <Col lg={5} className="ps-lg-5 m-3 m-lg-0">
                 <div className="d-flex align-items-center">
-                    <PhyHexIcon className="w-min-content" icon={"page-icon-concept"} />
+                    {above['lg'](deviceSize) && <PhyHexIcon className="w-min-content" icon={"page-icon-concept"} />}
                     <h5 className="m-0">Explore related concepts:</h5>
                 </div>
                 <div className="d-flex flex-wrap gap-2 mt-3">
                     {question.relatedContent.filter(rc => rc.type === "isaacConceptPage").slice(0, 5).map((rc, i) => (
                         <Link to={`/concepts/${rc.id}`} key={i}>
-                            <Button key={i} color="keyline" className="px-3 py-2">
+                            <AffixButton key={i} color="keyline" className="px-3 py-2" affix={{
+                                affix: "icon-lightbulb",
+                                position: "prefix",
+                                type: "icon"
+                            }}>
                                 {rc.title}
-                            </Button>
+                            </AffixButton>
                         </Link>
                     ))}
                 </div>
             </Col>
         </Row>
-    </Container>;
+    </div>;
 };
 
 export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
