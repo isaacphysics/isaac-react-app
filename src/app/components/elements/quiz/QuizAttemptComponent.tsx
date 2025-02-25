@@ -261,6 +261,12 @@ export function QuizPagination({page, sections, pageLink, finalLabel}: QuizAttem
     </div>;
 }
 
+export enum SectionProgress {
+    NOT_STARTED = "Not started",
+    STARTED = "Started",
+    COMPLETED = "Completed"
+}
+
 export function QuizAttemptComponent(props: QuizAttemptProps) {
     const {page, questions, studentUser, user, quizAssignmentId, sections, attempt} = props;
     // Assumes that ids of questions are defined - I don't know why this is not enforced in the editor/backend, because
@@ -272,8 +278,9 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
 
     const sectionState = (section: IsaacQuizSectionDTO) => {
         const sectionQs = section ? inSection(section, questions) : undefined;
+        const isStarted = sectionQs?.some(q => q.bestAttempt !== undefined);
         const isCompleted = sectionQs?.every(q => q.bestAttempt !== undefined);
-        return isCompleted ? "Completed" : sectionQs?.filter(q => q.bestAttempt !== undefined).length + "/" + sectionQs?.length;
+        return isCompleted ? SectionProgress.COMPLETED : isStarted ? SectionProgress.STARTED : SectionProgress.NOT_STARTED;
     };
 
     const sectionStates = Object.values(sections).map(section => sectionState(section));
