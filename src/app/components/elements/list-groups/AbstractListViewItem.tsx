@@ -145,7 +145,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
 
     return <ListGroupItem {...rest} className={classNames("content-summary-item", rest.className)} data-bs-theme={subject}>
         {url ? 
-            <Link to={{pathname: url}}> {cardBody} </Link> : 
+            <Link to={{pathname: url}} className="w-100"> {cardBody} </Link> : 
             <div> {cardBody} </div>}
     </ListGroupItem>;
 };

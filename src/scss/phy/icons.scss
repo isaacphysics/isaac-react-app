@@ -103,6 +103,10 @@
   @include svg-icon('/assets/phy/icons/redesign/info.svg', 16px, 16px);
 }
 
+.icon-refresh {
+  @include svg-icon('/assets/phy/icons/redesign/refresh.svg', 16px, 16px);
+}
+
 .icon-sidebar {
   @include svg-icon('/assets/phy/icons/redesign/sidebar.svg', 16px, 16px);
 }
