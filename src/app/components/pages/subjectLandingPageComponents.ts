@@ -1,7 +1,8 @@
 import { PageContextState } from "../../../IsaacAppTypes";
-import { getHumanContext, interleave, isDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS } from "../../services";
+import { getHumanContext, interleave, isDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS, Writeable } from "../../services";
 import { ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
 import { ListViewCardProps } from "../elements/list-groups/ListView";
+import { BookInfo, isaacBooks } from "../elements/modals/IsaacBooksModal";
 
 const extendUrl = (context: NonNullable<Required<PageContextState>>, page: string) => {
     return `/${context.subject}/${context.stage}/${page}`;
@@ -130,6 +131,17 @@ const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
     }
 };
 
+// constructs a map similar to above for relevant books (pulled from isaacBooks).
+const subjectSpecificBooksMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: BookInfo[]}} = (
+    Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
+        acc[subject as keyof typeof PHY_NAV_SUBJECTS] = stages.reduce((stageAcc, stage) => {
+            stageAcc[stage] = isaacBooks.filter(book => book.subject === subject && book.stages.includes(stage));
+            return stageAcc;
+        }, {} as {[stage in typeof stages[number]]: BookInfo[]});
+        return acc;
+    }, {} as Writeable<{[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: BookInfo[]}}>)
+);
+
 type LandingPageCard =  ((context: NonNullable<Required<PageContextState>>) => ListViewCardProps);
 
 const applyContext = (context: NonNullable<Required<PageContextState>>, cards: (LandingPageCard | null)[]): (ListViewCardProps | null)[] => {
@@ -149,4 +161,11 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
     const subjectSpecificCards = subjectSpecificCardsMap[context.subject]?.[context.stage[0] as keyof typeof subjectSpecificCardsMap[typeof context.subject]] || [];
 
     return applyContext(context, stacked ? [...baseCards, ...subjectSpecificCards] : interleave(baseCards, subjectSpecificCards)); // base cards always appear on the left
+};
+
+export const getBooksForContext = (context: PageContextState): BookInfo[] => {
+    if (!isDefinedContext(context)) return [];
+    if (!isSingleStageContext(context)) return [];
+
+    return subjectSpecificBooksMap[context.subject][context.stage[0] as keyof typeof subjectSpecificBooksMap[typeof context.subject]] || [];
 };

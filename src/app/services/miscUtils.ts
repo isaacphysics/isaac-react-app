@@ -8,6 +8,8 @@ export function isDefined<T>(value: T | undefined | null): value is NonNullable<
     return <T>value !== undefined && <T>value !== null;
 }
 
+export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
+
 /**
  * This function is used to check if a string contains all the words in a search phease, in any order.
  * 
@@ -157,4 +159,11 @@ export const interleave = <T>(...lists: T[][]): T[] => {
         }
     }
     return result;
+};
+
+export const padArray = <T>(array: T[], length: number, padValue?: undefined): T[] => {
+    if (array.length >= length) {
+        return array;
+    }
+    return array.concat(Array(length - array.length).fill(padValue));
 };

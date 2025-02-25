@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Card, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
-import { getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { above, below, DOCUMENT_TYPE, useDeviceSize } from "../../services";
+import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
+import { above, below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, padArray, STAGE, useDeviceSize } from "../../services";
 import { PageContextState } from "../../../IsaacAppTypes";
 import { PhyHexIcon } from "../elements/svg/PhyHexIcon";
 import { AudienceContext } from "../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
 import { AffixButton } from "../elements/AffixButton";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { useLazyGetEventsQuery } from "../../state";
+import { EventCard } from "../elements/cards/EventCard";
 
 const handleGetDifferentQuestion = () => {
     // TODO
@@ -98,6 +101,13 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
 
+    const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
+    useEffect(() => {
+        getEventsList({startIndex: 0, limit: 10, typeFilter: EventTypeFilter["All events"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
+    }, []);
+
+    const books = getBooksForContext(pageContext);
+
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb 
             currentPageTitle={getHumanContext(pageContext)}
@@ -113,5 +123,40 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
         <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} className="my-5" />
         <hr/>
 
+        <Row className="mt-5 row-cols-1 row-cols-lg-2">
+            <div className="d-flex flex-column mt-3">
+                <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
+                    <h4 className="m-0">Events</h4>
+                    <div className="section-divider"/>
+                </div>
+                <ShowLoadingQuery
+                    query={eventsQuery}
+                    defaultErrorTitle={"Error loading events list"}
+                    thenRender={({events}) => {
+                        return <Row className="h-100">
+                            {events.filter(event => pageContext?.subject && event.tags?.includes(pageContext.subject)).slice(0, 2).map((event, i) => 
+                                <Col xs={6} key={i}>
+                                    {event && <EventCard event={event} />}
+                                </Col>
+                            )}
+                        </Row>;
+                    }}
+                />
+            </div>
+            <div className="d-flex flex-column mt-3"> 
+                <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
+                    <h4 className="m-0">{getHumanContext(pageContext)} books</h4>
+                    <div className="section-divider"/>
+                </div>
+                <Row className="h-100 row-gap-3">
+                    {books.slice(0, 4).map(book => <Col xs={6} key={book.title}>
+                        <Link to={book.path} className="book d-flex invert-underline">
+                            <img src={book.image} alt={book.title} className="w-40"/>
+                            <h5 className="p-2 pb-3 m-0 align-self-center">{book.title}</h5>
+                        </Link>
+                    </Col>)}
+                </Row>
+            </div>
+        </Row>
     </Container>;
 });

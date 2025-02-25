@@ -208,14 +208,6 @@
         text-decoration: none;
       }
     }
-
-    &.invert-underline {
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
   }
 
   //Button - Primary Outline
@@ -502,4 +494,12 @@ button.close { // default <button class="close"/> components;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-color: transparent;
+}
+
+.invert-underline {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
