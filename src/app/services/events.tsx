@@ -1,5 +1,6 @@
 import {
     atLeastOne,
+    isAda,
     isDefined,
     isTeacherOrAbove,
     zeroOrLess
@@ -69,7 +70,10 @@ export const formatMakeBookingButtonMessage = (event: AugmentedEvent) => {
     if (zeroOrLess(event.placesAvailable)) {
         return "Join waiting list";
     }
-    return "Book a place";
+    if (isAda) {
+        return "Book a place";
+    }
+    return "Book event";
 };
 
 export const formatCancelBookingButtonMessage = (event: AugmentedEvent) => {
