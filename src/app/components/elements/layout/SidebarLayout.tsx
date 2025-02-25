@@ -543,7 +543,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                                         name="event-status"
                                         color="primary"
                                         type="radio"
-                                        checked={
+                                        defaultChecked={
                                             (!isDefined(query.event_status) && statusValue === EventStatusFilter["Upcoming events"]) ||
                                             (query.show_booked_only && statusValue === EventStatusFilter["My booked events"]) ||
                                             (query.show_reservations_only && statusValue === EventStatusFilter["My event reservations"]) ||
@@ -578,7 +578,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                                 name="event-type"
                                 color="primary"
                                 type="radio"
-                                checked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All events"]}
+                                defaultChecked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All events"]}
                                 onChange={() => {
                                     const selectedType = typeValue;
                                     query.types = selectedType !== EventTypeFilter["All events"] ? selectedType : undefined;
@@ -604,7 +604,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                                 name="event-stage"
                                 color="primary"
                                 type="radio"
-                                checked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
+                                defaultChecked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
                                 onChange={() => {
                                     query.show_stage_only = value !== STAGE.ALL ? value : undefined;
                                     history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
