@@ -73,7 +73,7 @@ export function HierarchyFilterTreeList({tier, index, tiers, choices, selections
                 setSelections(newSelections);
             };
 
-            return <div key={choice.value} className={classNames("ps-2", {"search-field": tier===2, "checkbox-region": isSelected, "hierarchy-true-root": root && tier === 0})}>
+            return <div key={choice.value} className={classNames("ps-2", {"search-field": tier===2, "checkbox-region": isSelected && tier !== 2, "hierarchy-true-root": root && tier === 0})}>
                 <div className="d-flex align-items-center">
                     <StyledCheckbox
                         color="white"
