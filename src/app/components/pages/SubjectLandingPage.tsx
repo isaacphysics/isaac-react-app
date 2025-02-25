@@ -5,7 +5,7 @@ import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { above, below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, padArray, STAGE, useDeviceSize } from "../../services";
+import { above, below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, STAGE, useDeviceSize } from "../../services";
 import { PageContextState } from "../../../IsaacAppTypes";
 import { PhyHexIcon } from "../elements/svg/PhyHexIcon";
 import { AudienceContext } from "../../../IsaacApiTypes";

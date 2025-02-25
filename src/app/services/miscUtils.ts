@@ -160,10 +160,3 @@ export const interleave = <T>(...lists: T[][]): T[] => {
     }
     return result;
 };
-
-export const padArray = <T>(array: T[], length: number, padValue?: undefined): T[] => {
-    if (array.length >= length) {
-        return array;
-    }
-    return array.concat(Array(length - array.length).fill(padValue));
-};
