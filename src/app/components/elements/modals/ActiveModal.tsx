@@ -24,7 +24,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
         };
     });
 
-    return <Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={(activeModal && activeModal.size) || "lg"} centered={activeModal?.centered}>
+    return <Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={(activeModal && activeModal.size) || "lg"} centered={activeModal?.centered} data-bs-theme="neutral">
         {activeModal && <React.Fragment>
             {<ModalHeader
                 data-testid={"modal-header"}
