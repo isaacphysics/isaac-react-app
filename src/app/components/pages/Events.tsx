@@ -44,7 +44,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
         (user && user.loggedIn && query.show_reservations_only && EventStatusFilter["My event reservations"]) ||
         (query.event_status === "all" && EventStatusFilter["All events"]) ||
         EventStatusFilter["Upcoming events"];
-    const typeFilter = query.types || EventTypeFilter["All events"];
+    const typeFilter = query.types || EventTypeFilter["All groups"];
     const stageFilter = useMemo(() => query.show_stage_only?.split(',') as STAGE[] || [STAGE.ALL], [query.show_stage_only]);
 
     useEffect(() => {
@@ -83,7 +83,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                     </Input>
                     <Input id="event-type-filter" className="ms-2 me-3" type="select" value={typeFilter} onChange={e => {
                         const selectedType = e.target.value as EventTypeFilter;
-                        query.types = selectedType !== EventTypeFilter["All events"] ? selectedType : undefined;
+                        query.types = selectedType !== EventTypeFilter["All groups"] ? selectedType : undefined;
                         history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
                     }}>
                         {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
@@ -124,22 +124,21 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                             const numberOfLoadedEvents = events.length;
 
                             return <div className="my-4">
-                                <div className="d-flex flex-col justify-content-end">
-                                    <b>Showing {numberOfLoadedEvents} of {total}</b>
+                                <div className="d-flex flex-col justify-content-end mb-2">
+                                    Showing {numberOfLoadedEvents} of {total}
                                 </div>
 
                                 <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1 row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
-                                    {events.map(event => <div key={event.id} className="my-3 px-3">
-                                        {above["md"](deviceSize) && <div className="section-divider mb-3"/>}
+                                    {events.map(event => <div key={event.id} className="my-2 px-3">
+                                        {deviceSize==="md" && <div className="section-divider mb-4"/>}
                                         <EventCard event={event} />
                                     </div>)}
                                 </Row>
 
                                 {/* Load More Button */}
-                                {numberOfLoadedEvents < total && <div className="text-center mt-3 mb-5">
-                                    <Button onClick={() => {
-                                        getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
-                                    }}>
+                                {numberOfLoadedEvents < total && <div className="text-center mt-4 mb-5">
+                                    <Button color="primary"
+                                        onClick={() => {getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});}}>
                                         Load more events
                                     </Button>
                                 </div>}

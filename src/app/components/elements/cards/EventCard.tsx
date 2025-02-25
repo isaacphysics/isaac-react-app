@@ -21,7 +21,7 @@ export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
                 {hasExpired &&
                     <div className="event-pod-badge">
-                        <Badge className="badge rounded-pill" color="primary">EXPIRED</Badge>
+                        <Badge className="badge rounded-pill">EXPIRED</Badge>
                     </div>}
                 {isVirtualEvent &&
                     <div className="event-pod-badge align-self-end">

@@ -943,7 +943,7 @@ export enum EventStatusFilter {
     "All events" = "all"
 }
 export enum EventTypeFilter {
-    "All events" = "all",
+    "All groups" = "all",
     "Student events" = "student",
     "Teacher events" = "teacher",
     "Online tutorials" = "virtual",

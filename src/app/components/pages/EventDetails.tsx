@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from "react";
-import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Table, Alert} from "reactstrap";
+import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Table, Alert, Badge} from "reactstrap";
 import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
@@ -133,6 +133,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             const canBeAddedToWaitingList = userCanBeAddedToEventWaitingList(user, event);
             const canReserveSpaces = userCanReserveEventSpaces(user, event);
 
+            const hasExpired = event.hasExpired;
             const isVirtual = event.tags?.includes("virtual");
 
             function submitBooking(formEvent?: React.FormEvent<HTMLFormElement>) {
@@ -173,7 +174,9 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                             <td>When:</td>
                             <td>
                                 {formatEventDetailsDate(event)}
-                                {event.hasExpired && <div className="alert-danger text-center">This event is in the past.</div>}
+                                {event.hasExpired && <div>
+                                    <b>This event is in the past.</b>
+                                </div>}
                             </td>
                         </tr>
                         {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <tr>
@@ -332,18 +335,22 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                 <Row className="mb-4">
                     <Col className="col-3 col-sm-2 col-lg-1 me-3 pt-2">
                         {isTeacherEvent &&
-                        <span className={"event-type-hex"}>
-                            <b>TEACHER EVENT</b>
-                            <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
-                        </span>}
+                            <span className={"event-type-hex"}>
+                                <b>TEACHER EVENT</b>
+                                <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
+                            </span>}
                         {isStudentEvent &&
-                        <span className={"event-type-hex"}>
-                            <b>STUDENT EVENT</b>
-                            <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
-                        </span>}
+                            <span className={"event-type-hex"}>
+                                <b>STUDENT EVENT</b>
+                                <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
+                            </span>}
                     </Col>
                     <Col>
                         <h3 className="event-title">{event.title}</h3>
+                        {hasExpired &&
+                            <span className="event-pod-badge me-2">
+                                <Badge className="badge rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>EXPIRED</Badge>
+                            </span>}
                         <span className="event-subtitle">{event.subtitle}</span>
                     </Col>
                 </Row>
@@ -353,11 +360,11 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                     </Col>
                     <Col className="d-flex justify-content-end col-3 col-lg-2">
                         {isLoggedIn(user) && !event.hasExpired && (canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
-                        <div className="d-flex flex-column justify-content-end mb-4 me-2">
-                            <Button color="primary" onClick={openAndScrollToBookingForm} className="text-nowrap">
-                                {formatMakeBookingButtonMessage(event)}
-                            </Button>
-                        </div>}
+                            <div className="d-flex flex-column justify-content-end mb-4 me-2">
+                                <Button color="primary" onClick={openAndScrollToBookingForm} className="text-nowrap">
+                                    {formatMakeBookingButtonMessage(event)}
+                                </Button>
+                            </div>}
                     </Col>
                 </Row>
                 <Row>

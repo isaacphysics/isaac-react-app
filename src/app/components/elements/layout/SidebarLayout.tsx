@@ -530,58 +530,56 @@ export const EventsSidebar = (props: SidebarProps) => {
     return <ContentSidebar style={{marginTop: "65px"}} buttonTitle="Filter events" {...props}>
         <Form>
             <h5>Event type</h5>
-            <Form>
-                <ul>               
-                    {Object.entries(EventStatusFilter)
-                        .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
-                        .filter(([_statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])
-                        .map(([statusLabel, statusValue]) =>
-                            <li className="list-unstyled" key={statusValue}>
-                                <Label className="label-radio multichoice-option d-flex">
-                                    <Input                                   
-                                        id={statusValue}
-                                        name="event-status"
-                                        color="primary"
-                                        type="radio"
-                                        defaultChecked={
-                                            (!isDefined(query.event_status) && statusValue === EventStatusFilter["Upcoming events"]) ||
-                                            (query.show_booked_only && statusValue === EventStatusFilter["My booked events"]) ||
-                                            (query.show_reservations_only && statusValue === EventStatusFilter["My event reservations"]) ||
-                                            (query.event_status === "all" && statusValue === EventStatusFilter["All events"])
-                                        }
-                                        onChange={() => {
-                                            const selectedFilter = statusValue;
-                                            query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
-                                            query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
-                                            query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
-                                            history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
-                                        }}
-                                    />
-                                    <div className="flex-fill overflow-x-auto">
-                                        <span>{statusLabel}</span>
-                                    </div>
-                                </Label>
-                            </li>
-                        )
-                    }
-                </ul>
-            </Form>
+            <ul>               
+                {Object.entries(EventStatusFilter)
+                    .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
+                    .filter(([_statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])
+                    .map(([statusLabel, statusValue]) =>
+                        <li className="list-unstyled" key={statusValue}>
+                            <Label className="label-radio d-flex">
+                                <Input                                   
+                                    id={statusValue}
+                                    name="event-status"
+                                    color="primary"
+                                    type="radio"
+                                    defaultChecked={
+                                        (!isDefined(query.event_status) && statusValue === EventStatusFilter["Upcoming events"]) ||
+                                        (query.show_booked_only && statusValue === EventStatusFilter["My booked events"]) ||
+                                        (query.show_reservations_only && statusValue === EventStatusFilter["My event reservations"]) ||
+                                        (query.event_status === "all" && statusValue === EventStatusFilter["All events"])
+                                    }
+                                    onChange={() => {
+                                        const selectedFilter = statusValue;
+                                        query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
+                                        query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
+                                        query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
+                                        history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                                    }}
+                                />
+                                <div className="flex-fill overflow-x-auto">
+                                    <span>{statusLabel}</span>
+                                </div>
+                            </Label>
+                        </li>
+                    )
+                }
+            </ul>
 
             <div className="section-divider"/>
             <h5>Groups</h5>
             <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                     <li className="list-unstyled" key={typeValue}>
-                        <Label className="label-radio multichoice-option d-flex">
+                        <Label className="label-radio d-flex">
                             <Input                                   
                                 id={typeValue}
                                 name="event-type"
                                 color="primary"
                                 type="radio"
-                                defaultChecked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All events"]}
+                                defaultChecked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All groups"]}
                                 onChange={() => {
                                     const selectedType = typeValue;
-                                    query.types = selectedType !== EventTypeFilter["All events"] ? selectedType : undefined;
+                                    query.types = selectedType !== EventTypeFilter["All groups"] ? selectedType : undefined;
                                     history.push({pathname: location.pathname, search: queryString.stringify(query as any)});}}
                             />
                             <div className="flex-fill overflow-x-auto">
@@ -598,7 +596,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             <ul>               
                 {Object.entries(EventStageMap).map(([label, value]) =>
                     <li className="list-unstyled" key={value}>
-                        <Label className="label-radio multichoice-option d-flex">
+                        <Label className="label-radio d-flex">
                             <Input                                   
                                 id={value}
                                 name="event-stage"
