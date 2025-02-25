@@ -53,6 +53,7 @@ type StringNot<X extends string, Y> =
 interface BaseMarkupProps {
     className?: string;
     children: string | undefined;
+    forceMathsAltText?: boolean;
 }
 
 type MarkupProps<T extends string> = {
@@ -74,8 +75,8 @@ type TrustedMarkupProps = {
 //  - `unknown`:   HTML is escaped, and markup is rendered alongside a warning that the encoding is unknown.
 //
 // You can pass in an encoding other than these, and the encoding will be treated the same as as `unknown`.
-export function Markup<T extends string>({encoding, "trusted-markup-encoding": trustedMarkupEncoding, className, children}: MarkupProps<T> | TrustedMarkupProps) {
-    const renderKaTeX = useRenderKatex();
+export function Markup<T extends string>({encoding, "trusted-markup-encoding": trustedMarkupEncoding, forceMathsAltText, className, children}: MarkupProps<T> | TrustedMarkupProps) {
+    const renderKaTeX = useRenderKatex(forceMathsAltText);
 
     if (!isDefined(children)) return null;
 
