@@ -24,7 +24,6 @@ import {
 } from "reactstrap";
 import {Link, withRouter} from "react-router-dom";
 import {
-    AppState,
     mutationSucceeded,
     resetMemberPassword,
     showAdditionalManagerSelfRemovalModal,
@@ -33,10 +32,8 @@ import {
     showGroupInvitationModal,
     showGroupManagersModal,
     useAppDispatch,
-    useCreateGroupMutation,
     useDeleteGroupMemberMutation,
     useDeleteGroupMutation,
-    useGetGroupsQuery,
     useLazyGetGroupMembersQuery,
     useUpdateGroupMutation
 } from "../../state";
@@ -687,8 +684,6 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <Row className="mb-5">
                 <Col lg={4}>
-                    <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                        showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true}/>
                     <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
                         showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true}/>
                 </Col>
