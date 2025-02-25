@@ -25,7 +25,7 @@ const GroupsPanel = () => {
             <h4>Manage my groups</h4>
         </Link>
         <GroupSelector allGroups={allGroups} groupNameInputRef={groupNameInputRef} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
-            setShowArchived={setShowArchived} groups={groups} user={user} selectedGroup={selectedGroup} showCreateGroup={false} />
+            setShowArchived={setShowArchived} groups={groups} user={user} selectedGroup={selectedGroup} showCreateGroup={false} useHashAnchor={true} />
     </div>;
 };
 
