@@ -15,7 +15,7 @@ import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
-import { QuizRubricButton } from "../quiz/QuizAttemptComponent";
+import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -501,11 +501,12 @@ interface QuizSidebarProps extends SidebarProps {
     viewingAsSomeoneElse: boolean;
     totalSections: number;
     currentSection?: number;
+    sectionStates: SectionProgress[];
     sectionTitles: string[];
 }
 
 export const QuizSidebar = (props: QuizSidebarProps) => {
-    const { attempt, viewingAsSomeoneElse, totalSections, currentSection, sectionTitles } = props;
+    const { attempt, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles } = props;
     const deviceSize = useDeviceSize();
     const history = useHistory();
     const location = history.location.pathname;
@@ -513,6 +514,12 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
         viewingAsSomeoneElse ? location.split("/").slice(0, 6).join("/") :
             attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
                 location.split("/page")[0];
+
+    const progressIcon = (section: number) => {
+        return sectionStates[section] === SectionProgress.COMPLETED ? "icon-correct"
+            : sectionStates[section] === SectionProgress.STARTED ? "icon-in-progress"
+                : "";
+    };
 
     const switchToPage = (page: string) => {
         if (viewingAsSomeoneElse || attempt.feedbackMode) {
@@ -533,7 +540,8 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
                 </li>
                 {Array.from({length: totalSections}, (_, i) => i).map(section => 
                     <li key={section}>
-                        <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section + 1} onClick={() => switchToPage(String(section + 1))}/>
+                        <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section+1} onClick={() => switchToPage(String(section+1))}
+                            suffix={{icon: progressIcon(section), info: sectionStates[section]}}/>
                     </li>)}
             </ul>
         </ContentSidebar>;

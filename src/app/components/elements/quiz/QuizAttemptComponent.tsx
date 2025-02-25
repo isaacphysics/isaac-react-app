@@ -261,6 +261,12 @@ export function QuizPagination({page, sections, pageLink, finalLabel}: QuizAttem
     </div>;
 }
 
+export enum SectionProgress {
+    NOT_STARTED = "Not started",
+    STARTED = "Started",
+    COMPLETED = "Completed"
+}
+
 export function QuizAttemptComponent(props: QuizAttemptProps) {
     const {page, questions, studentUser, user, quizAssignmentId, sections, attempt} = props;
     // Assumes that ids of questions are defined - I don't know why this is not enforced in the editor/backend, because
@@ -270,10 +276,19 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
     const sectionCount = Object.keys(sections).length;
     const sectionTitles = Object.keys(sections).map(k => sections[k].title || "Section " + k);
 
+    const sectionState = (section: IsaacQuizSectionDTO) => {
+        const sectionQs = section ? inSection(section, questions) : undefined;
+        const isStarted = sectionQs?.some(q => q.bestAttempt !== undefined);
+        const isCompleted = sectionQs?.every(q => q.bestAttempt !== undefined);
+        return isCompleted ? SectionProgress.COMPLETED : isStarted ? SectionProgress.STARTED : SectionProgress.NOT_STARTED;
+    };
+
+    const sectionStates = Object.values(sections).map(section => sectionState(section));
+
     return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
         <QuizTitle {...props} />
         <SidebarLayout>
-            <QuizSidebar attempt={attempt} viewingAsSomeoneElse={viewingAsSomeoneElse} totalSections={sectionCount} currentSection={page ? page : undefined} sectionTitles={sectionTitles}/>
+            <QuizSidebar attempt={attempt} viewingAsSomeoneElse={viewingAsSomeoneElse} totalSections={sectionCount} currentSection={page ? page : undefined} sectionStates={sectionStates} sectionTitles={sectionTitles}/>
             <MainContent>
                 {page === null ?
                     <div className="mt-4">
