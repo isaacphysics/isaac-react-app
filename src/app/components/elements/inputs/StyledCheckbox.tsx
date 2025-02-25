@@ -24,7 +24,7 @@ export const StyledCheckbox = (props: InputProps) => {
     }, [props.checked]);
 
     return <div className={classNames("styled-checkbox-wrapper", {"is-invalid": props.invalid, "checkbox-small": bsSize === "sm"})}>
-        <div className="me-2 my-2">
+        <div className={classNames({"me-2 my-2": label})}>
             {isAda && checked && <div className="tick"/>}
             <input {...rest} id={id} type="checkbox" className={classNames(className ?? "", "d-block", {"checked": checked, "icon-checkbox-off": !className && !checked, "icon-checkbox-selected": !className && checked})}
                 onChange={(e) => onCheckChange(e)}

@@ -2,12 +2,12 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
-import { AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
+import { AppGroup, AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { getHumanContext } from "../../../services/pageContext";
 import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
@@ -15,6 +15,7 @@ import { AssignmentState } from "../../pages/MyAssignments";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
+import { GroupSelector } from "../../pages/Groups";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -137,7 +138,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
         {relatedConcepts && relatedConcepts.length > 0 && <>
             <div className="section-divider"/>
             <h5>Related concepts</h5>
-            <ul>
+            <ul className="link-list">
                 {relatedConcepts.map((concept, i) => <ConceptLink key={i} concept={concept} sidebarRef={sidebarRef} />)}
             </ul>
         </>}
@@ -146,19 +147,19 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
                 ? <>
                     <div className="section-divider"/>
                     <h5>Related questions</h5>
-                    <ul>
+                    <ul className="link-list">
                         {relatedQuestions.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
                     </ul>
                 </>
                 : <>
                     <div className="section-divider"/>
                     <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
-                    <ul>
+                    <ul className="link-list">
                         {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
                     </ul>
                     <div className="section-divider"/>
                     <h5>Related questions for other learning stages</h5>
-                    <ul>
+                    <ul className="link-list">
                         {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
                     </ul>
                 </>
@@ -535,9 +536,45 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
     </ContentSidebar>;
 };
 
-export const MyAccountSidebar = (props: SidebarProps) => {
+interface MyAccountSidebarProps extends SidebarProps {
+    editingOtherUser: boolean;
+    activeTab: ACCOUNT_TAB;
+    setActiveTab: React.Dispatch<React.SetStateAction<ACCOUNT_TAB>>;
+}
+
+export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
+    const { editingOtherUser, activeTab, setActiveTab } = props;
     return <ContentSidebar buttonTitle="Account settings" {...props}>
-        {props.children}
+        <div className="section-divider mt-0"/>
+        <h5>Account settings</h5>
+        {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
+            <StyledTabPicker
+                key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
+                onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
+            />
+        )}
+    </ContentSidebar>;
+};
+
+interface GroupsSidebarProps extends SidebarProps {
+    user: RegisteredUserDTO;
+    groups: AppGroup[] | undefined;
+    allGroups: AppGroup[];
+    selectedGroup: AppGroup | undefined;
+    setSelectedGroupId: React.Dispatch<React.SetStateAction<number | undefined>>;
+    showArchived: boolean;
+    setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
+    groupNameInputRef: RefObject<HTMLInputElement>;
+    createNewGroup: (newGroupName: string) => Promise<boolean>;
+}
+
+export const GroupsSidebar = (props: GroupsSidebarProps) => {
+    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, ...rest } = props;
+    return <ContentSidebar buttonTitle="Select or create a group" {...rest}>
+        <div className="section-divider"/>
+        <h5>Select a group</h5>
+        <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
+            setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true} sidebarStyle={true} useHashAnchor={false}/>
     </ContentSidebar>;
 };
 
