@@ -131,7 +131,7 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
         <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} className="my-5" />
         <hr/>
 
-        <Row className="mt-5 row-cols-1 row-cols-lg-2">
+        <Row className={classNames("mt-5 py-4 row-cols-1", {"row-cols-lg-2": books.length > 0})}>
             <div className="d-flex flex-column mt-3">
                 <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                     <h4 className="m-0">Events</h4>
@@ -141,17 +141,21 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
                     query={eventsQuery}
                     defaultErrorTitle={"Error loading events list"}
                     thenRender={({events}) => {
+                        const relevantEvents = events.filter(event => pageContext?.subject && event.tags?.includes(pageContext.subject)).slice(0, 2);
                         return <Row className="h-100">
-                            {events.filter(event => pageContext?.subject && event.tags?.includes(pageContext.subject)).slice(0, 2).map((event, i) => 
-                                <Col xs={6} key={i}>
-                                    {event && <EventCard event={event} />}
-                                </Col>
-                            )}
+                            {relevantEvents.length 
+                                ? relevantEvents.map((event, i) => 
+                                    <Col xs={6} key={i}>
+                                        {event && <EventCard event={event} />}
+                                    </Col>
+                                ) 
+                                : <Col className="pt-3 pb-5">No events found for {getHumanContext(pageContext)}. Check back soon!</Col>
+                            }
                         </Row>;
                     }}
                 />
             </div>
-            <div className="d-flex flex-column mt-3"> 
+            {books.length > 0 && <div className="d-flex flex-column mt-3"> 
                 <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                     <h4 className="m-0">{getHumanContext(pageContext)} books</h4>
                     <div className="section-divider"/>
@@ -164,7 +168,7 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
                         </Link>
                     </Col>)}
                 </Row>
-            </div>
+            </div>}
         </Row>
     </Container>;
 });
