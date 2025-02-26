@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Card, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
@@ -8,12 +8,13 @@ import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLand
 import { above, below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, STAGE, useDeviceSize } from "../../services";
 import { PageContextState } from "../../../IsaacAppTypes";
 import { PhyHexIcon } from "../elements/svg/PhyHexIcon";
-import { AudienceContext } from "../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
-import { AffixButton } from "../elements/AffixButton";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
-import { useLazyGetEventsQuery } from "../../state";
+import { searchQuestions, useAppDispatch, useAppSelector, useLazyGetEventsQuery } from "../../state";
 import { EventCard } from "../elements/cards/EventCard";
+import { debounce } from "lodash";
+import { Loading } from "../handlers/IsaacSpinner";
+import classNames from "classnames";
 
 const handleGetDifferentQuestion = () => {
     // TODO
@@ -21,34 +22,38 @@ const handleGetDifferentQuestion = () => {
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const deviceSize = useDeviceSize();
+    const dispatch = useAppDispatch();
+
+    const searchDebounce = useCallback(debounce(() => {
+        dispatch(searchQuestions({
+            searchString: "",
+            tags: "",
+            fields: undefined,
+            subjects: context?.subject,
+            topics: undefined,
+            books: undefined,
+            stages: context?.stage?.join(','),
+            difficulties: undefined,
+            examBoards: undefined,
+            questionCategories: "problem_solving,book",
+            statuses: undefined,
+            fasttrack: false,
+            startIndex: undefined,
+            limit: 1
+        }));
+    }), [dispatch, context]);
+
+    const {results: questions} = useAppSelector((state) => state && state.questionSearchResult) || {};
+
+    useEffect(() => {
+        searchDebounce();
+    }, [searchDebounce]);
 
     if (!context || !isDefinedContext(context) || !isSingleStageContext(context)) {
         return null;
     }
 
-    const question = {
-        title: "Random question",
-        tags: [context.subject],
-        id: "question_id",
-        audience: [{stage: ["gcse"], difficulty: ["practice_2"]}] as AudienceContext[],
-        relatedContent: [
-            {
-                id: "concept_id",
-                title: "Concept title 1",
-                type: "isaacConceptPage",
-            }, 
-            {
-                id: "concept_id_2",
-                title: "Longer concept title 2",
-                type: "isaacConceptPage",
-            }, 
-            {
-                id: "concept_id_3",
-                title: "Concept 3",
-                type: "isaacConceptPage",
-            }
-        ]
-    };
+    const question = questions?.[0];
 
     return <div className="py-4 container-override random-question-panel">
         <Row className="my-3">
@@ -65,13 +70,15 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
         <Row>
             <Col lg={7}>
                 <Card>
-                    <ListView items={[{
-                        type: DOCUMENT_TYPE.QUESTION,
-                        title: question.title,
-                        tags: question.tags,
-                        id: question.id,
-                        audience: question.audience,
-                    }]}/>
+                    {question 
+                        ? <ListView items={[{
+                            type: DOCUMENT_TYPE.QUESTION,
+                            title: question.title,
+                            tags: question.tags,
+                            id: question.id,
+                            audience: question.audience,
+                        }]}/>
+                        : <Loading />}
                 </Card>
             </Col>
             <Col lg={5} className="ps-lg-5 m-3 m-lg-0">
@@ -80,7 +87,8 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                     <h5 className="m-0">Explore related concepts:</h5>
                 </div>
                 <div className="d-flex flex-wrap gap-2 mt-3">
-                    {question.relatedContent.filter(rc => rc.type === "isaacConceptPage").slice(0, 5).map((rc, i) => (
+                    {/* TODO: replace this with "recommended content" or similar */}
+                    {/* {question?.relatedContent.filter(rc => rc.type === "isaacConceptPage").slice(0, 5).map((rc, i) => (
                         <Link to={`/concepts/${rc.id}`} key={i}>
                             <AffixButton key={i} color="keyline" className="px-3 py-2" affix={{
                                 affix: "icon-lightbulb",
@@ -90,7 +98,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                                 {rc.title}
                             </AffixButton>
                         </Link>
-                    ))}
+                    ))} */}
                 </div>
             </Col>
         </Row>
