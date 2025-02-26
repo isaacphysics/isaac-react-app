@@ -2,8 +2,8 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
@@ -15,6 +15,7 @@ import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
+import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -493,6 +494,80 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
             {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
         </Input>
     </ContentSidebar>;
+};
+
+interface QuizSidebarProps extends SidebarProps {
+    attempt: QuizAttemptDTO;
+    viewingAsSomeoneElse: boolean;
+    totalSections: number;
+    currentSection?: number;
+    sectionStates: SectionProgress[];
+    sectionTitles: string[];
+}
+
+export const QuizSidebar = (props: QuizSidebarProps) => {
+    const { attempt, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles } = props;
+    const deviceSize = useDeviceSize();
+    const history = useHistory();
+    const location = history.location.pathname;
+    const rubricPath = 
+        viewingAsSomeoneElse ? location.split("/").slice(0, 6).join("/") :
+            attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
+                location.split("/page")[0];
+
+    const progressIcon = (section: number) => {
+        return sectionStates[section] === SectionProgress.COMPLETED ? "icon-correct"
+            : sectionStates[section] === SectionProgress.STARTED ? "icon-in-progress"
+                : "";
+    };
+
+    const switchToPage = (page: string) => {
+        if (viewingAsSomeoneElse || attempt.feedbackMode) {
+            history.push(rubricPath.concat("/", page));
+        }
+        else {
+            history.push(rubricPath.concat("/page/", page));
+        }
+    };
+
+    const SidebarContents = () => {
+        return <ContentSidebar buttonTitle="Sections">
+            <div className="section-divider"/>
+            <h5 className="mb-3">Sections</h5>
+            <ul>
+                <li>
+                    <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
+                </li>
+                {Array.from({length: totalSections}, (_, i) => i).map(section => 
+                    <li key={section}>
+                        <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section+1} onClick={() => switchToPage(String(section+1))}
+                            suffix={{icon: progressIcon(section), info: sectionStates[section]}}/>
+                    </li>)}
+            </ul>
+
+            <div className="section-divider"/>
+
+            <div className="d-flex flex-column sidebar-key">
+                Key
+                <KeyItem icon="status-in-progress" text="Section in progress"/>
+                <KeyItem icon="status-correct" text="Section completed"/>
+            </div>
+        </ContentSidebar>;
+    };
+
+    return <>
+        {below["md"](deviceSize) ?
+            <Row className="d-flex align-items-center">
+                <Col>
+                    <SidebarContents/>
+                </Col>
+                <Col className="d-flex justify-content-end">
+                    <QuizRubricButton attempt={attempt}/>
+                </Col>
+            </Row> :
+            <SidebarContents/>
+        }
+    </>;
 };
 
 interface MyAccountSidebarProps extends SidebarProps {
