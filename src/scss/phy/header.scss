@@ -74,7 +74,30 @@ header {
     }
 
     li.dropdown {
-      &.hoverable {
+
+      div.dropdown-menu:has(> .quick-switch) {
+        padding-top: 2px;
+      }
+
+      .quick-switch {
+        background-color: var(--subject-color-700);
+        
+        span:first-child {
+          color: var(--subject-color-100);
+          font-size: 13px;
+        }
+        
+        span:last-child {
+          color: white;
+          font-size: 14px;
+        }
+
+        &:hover {
+          background-color: var(--subject-color-800);
+        }
+      }
+
+      &.hoverable:not(.quick-switch) {
         &::after {
           @include pseudo-element;
           width: 16px;
@@ -141,7 +164,7 @@ header {
           min-width: 268px;
           font-size: 14px;
           text-decoration: none;
-          &:hover {
+          &:not(.quick-switch):hover {
             background-color: $color-neutral-100;
           }
         }

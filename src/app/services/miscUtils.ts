@@ -8,6 +8,8 @@ export function isDefined<T>(value: T | undefined | null): value is NonNullable<
     return <T>value !== undefined && <T>value !== null;
 }
 
+export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
+
 /**
  * This function is used to check if a string contains all the words in a search phease, in any order.
  * 
@@ -144,4 +146,17 @@ export const confirmThen = <T, R>(prompt: string, confirmCallback: () => T, canc
         return confirmCallback();
     }
     return cancelCallback?.();
+};
+
+export const interleave = <T>(...lists: T[][]): T[] => {
+    const maxLength = Math.max(...lists.map(list => list.length));
+    const result = [];
+    for (let i = 0; i < maxLength; i++) {
+        for (const list of lists) {
+            if (list[i] !== undefined) {
+                result.push(list[i]);
+            }
+        }
+    }
+    return result;
 };

@@ -497,14 +497,14 @@ export const HUMAN_STAGES: {[key: string]: string} = {
 export const PHY_NAV_SUBJECTS = {
     [SUBJECTS.PHYSICS]: [LEARNING_STAGE["11_TO_14"], LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
     [SUBJECTS.MATHS]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
-    [SUBJECTS.CHEMISTRY]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
-    [SUBJECTS.BIOLOGY]: [LEARNING_STAGE.A_LEVEL]
-} as {[subject in SUBJECTS]: LEARNING_STAGE[]};
+    [SUBJECTS.CHEMISTRY]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
+    [SUBJECTS.BIOLOGY]: [LEARNING_STAGE.A_LEVEL],
+} as const;
 
 export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) => {
-    acc[stage.valueOf()] = Object.keys(PHY_NAV_SUBJECTS).filter(subject => (PHY_NAV_SUBJECTS[subject as keyof typeof PHY_NAV_SUBJECTS] as LEARNING_STAGE[]).includes(stage as LEARNING_STAGE)) as SUBJECTS[];
+    acc[stage.valueOf() as LEARNING_STAGE] = Object.keys(PHY_NAV_SUBJECTS).filter(subject => (PHY_NAV_SUBJECTS[subject as keyof typeof PHY_NAV_SUBJECTS] as readonly LEARNING_STAGE[]).includes(stage as LEARNING_STAGE)) as Exclude<SUBJECTS, SUBJECTS.CS>[];
     return acc;
-}, {} as {[stage : string]: SUBJECTS[]});
+}, {} as {[stage in LEARNING_STAGE]: Exclude<SUBJECTS, SUBJECTS.CS>[]});
 
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',

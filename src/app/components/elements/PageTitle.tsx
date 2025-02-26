@@ -119,7 +119,7 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
         }));
     }
 
-    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-4": isPhy}, className)}>
+    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-4 mb-0": isPhy}, className)}>
         {icon && (
             icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
                 : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject}/> : undefined)}
