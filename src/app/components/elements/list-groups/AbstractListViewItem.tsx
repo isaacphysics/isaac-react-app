@@ -9,6 +9,7 @@ import { CompletionState } from "../../../../IsaacApiTypes";
 import { below, isPhy, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
+import { Markup } from "../markup";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -95,7 +96,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
             </div>
             <div className="align-content-center">
                 <div className="d-flex">
-                    <span className="question-link-title">{title}</span>
+                    <span className="question-link-title"><Markup encoding="latex">{title}</Markup></span>
                     {quizTag && <span className="quiz-level-1-tag ms-sm-2">{quizTag}</span>}
                     {isPhy && <div className="d-flex flex-column justify-self-end">
                         {supersededBy && <a 
