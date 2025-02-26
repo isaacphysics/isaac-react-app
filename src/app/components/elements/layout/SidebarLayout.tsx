@@ -10,6 +10,7 @@ import { Link, useHistory } from "react-router-dom";
 import { AppGroup, AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { getHumanContext } from "../../../services/pageContext";
+import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
 import { AssignmentState } from "../../pages/MyAssignments";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
@@ -114,7 +115,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     </>;
 };
 
-const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
+export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
     const { icon, text, ...rest } = props;
     return <span {...rest} className={classNames(rest.className, "d-flex align-items-center pt-2")}><img className="pe-2" src={`/assets/phy/icons/redesign/${icon}.svg`} alt=""/> {text}</span>;
 };
@@ -275,9 +276,49 @@ export const GenericConceptsSidebar = (props: SidebarProps) => {
     return <ContentSidebar {...props}/>;
 };
 
-export const QuestionFinderSidebar = (props: SidebarProps) => {
-    // TODO
-    return <ContentSidebar {...props}/>;
+interface QuestionFinderSidebarProps extends SidebarProps {
+    searchText: string;
+    setSearchText: React.Dispatch<React.SetStateAction<string>>;
+    questionFilters: Tag[];
+    setQuestionFilters: React.Dispatch<React.SetStateAction<Tag[]>>;
+    topLevelFilters: string[];
+    tagCounts?: Record<string, number>;
+    questionFinderFilterPanelProps: QuestionFinderFilterPanelProps
+}
+
+export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
+    const { searchText, setSearchText, questionFilters, setQuestionFilters, topLevelFilters, tagCounts, questionFinderFilterPanelProps, ...rest } = props;
+
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
+    return <ContentSidebar {...rest}>
+        <div className="section-divider"/>
+        <h5>Search Questions</h5>
+        <Input
+            className='search--filter-input my-4'
+            type="search" value={searchText || ""}
+            placeholder="e.g. Man vs. Horse"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+        />
+
+        <QuestionFinderFilterPanel {...questionFinderFilterPanelProps} />
+
+        {pageContext?.subject && pageContext?.stage && <>
+            <div className="section-divider"/>
+
+            <div className="sidebar-help">
+                <p>The questions shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                <p>If you want to explore our full range of questions across multiple subjects or learning stages, you can use the main question finder:</p>
+                <AffixButton size="md" color="keyline" tag={Link} to="/questions" affix={{
+                    affix: "icon-right",
+                    position: "suffix",
+                    type: "icon"
+                }}>
+                    Browse all questions
+                </AffixButton>
+            </div>
+        </>}
+    </ContentSidebar>;
 };
 
 export const PracticeQuizzesSidebar = (props: SidebarProps) => {

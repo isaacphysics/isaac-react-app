@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+/*import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
     AppState,
     extractDataFromQueryResponse,
@@ -38,7 +38,8 @@ import {
     toSimpleCSV,
     arrayFromPossibleCsv,
     itemiseByValue,
-    itemiseTag
+    itemiseTag,
+    TAG_LEVEL
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer, GameboardViewerInner} from './Gameboard';
@@ -156,12 +157,12 @@ function stripSoftHyphens(input: string): string {
 
 // Shared props that both PHY and CS question filters use
 interface FilterProps {
-    selections : Item<TAG_ID>[][];
-    setSelections : React.Dispatch<React.SetStateAction<Item<TAG_ID>[][]>>;
-    stages : Item<string>[];
-    setStages : React.Dispatch<React.SetStateAction<Item<string>[]>>;
-    difficulties : Item<string>[];
-    setDifficulties : React.Dispatch<React.SetStateAction<Item<string>[]>>;
+    selections: Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>[];
+    setSelections: React.Dispatch<React.SetStateAction<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>[]>>;
+    stages: Item<string>[];
+    setStages: React.Dispatch<React.SetStateAction<Item<string>[]>>;
+    difficulties: Item<string>[];
+    setDifficulties: React.Dispatch<React.SetStateAction<Item<string>[]>>;
     scrollToQuestions: () => void;
     previousBoard?: () => void;
     refresh: () => void;
@@ -244,7 +245,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
                             </UncontrolledTooltip>
                         </Label>
                         <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
-                        {/*<StyledSelect id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
+                        {/*<StyledSelect id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />* /}
                     </div>
                 </Col>
                 <Col lg={8}>
@@ -265,7 +266,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
                 <Label for="show-book-questions-checkbox" className="ms-2">Include Isaac book questions</Label>
             </Col>
 
-            {/* Buttons */}
+            {/* Buttons * /}
             <Row className="mt-4">
                 <Col>
                     {previousBoard && <Button className="w-100 w-sm-auto h-100 h-sm-auto" size="sm" color="primary" outline onClick={previousBoard}>
@@ -429,7 +430,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 </Col>
             </Row>
 
-            {/* Buttons */}
+            {/* Buttons * /}
             <Row className={"mt-4"}>
                 <Col>
                     {previousBoard && <Button size="sm" color="secondary" outline onClick={previousBoard}>
@@ -641,7 +642,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
         <QuestionFinderBanner />
 
-        {/* The site-specific question filtering UI */}
+        {/* The site-specific question filtering UI * /}
         {siteSpecific(
             <PhysicsFilter {...filterProps} tiers={tiers} choices={choices} showBookQuestions={showBookQuestions} setShowBookQuestions={setShowBookQuestions}/>,
             <CSFilter
@@ -719,3 +720,10 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
     </Container>;
 });
+*/
+
+import React from "react";
+
+export const GameboardFilter = () => {
+    return <div> Not functional with redesign changes. Intended to be deprecated anyway. </div>;
+};
