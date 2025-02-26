@@ -101,13 +101,6 @@ const BiologyStretchQuestionsCard = (context: NonNullable<Required<PageContextSt
     return ArbitraryPageLinkCard("Stretch questions", "Explore our stretch questions.", [{tag: "View stretch questions", url: extendUrl(context, 'stretch_questions')}])(context);
 };
 
-// TODOs:
-// - where on earth the above arbitrary page link cards point
-// - additional tags for lessons and revision
-// - icons for glossary page and arbitrary pages
-// - the rest of the page; random question, related concepts, events, books, mentoring scheme?
-
-
 const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
     "physics": {
         "11_14": [BoardsByTopicCard, null, null],
