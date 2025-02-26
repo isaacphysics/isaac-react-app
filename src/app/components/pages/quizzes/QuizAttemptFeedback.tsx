@@ -11,9 +11,11 @@ import {
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {Alert, Button, Container} from "reactstrap";
+import {Alert, Button, Col, Container} from "reactstrap";
+import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
+import classNames from "classnames";
 
-function QuizFooter(props: QuizAttemptProps) {
+function QuizAttemptFeedbackFooter(props: QuizAttemptProps) {
     const {page, pageLink, studentUser} = props;
     let controls;
     let prequel = null;
@@ -65,7 +67,12 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
         <ShowLoading until={attempt || error}>
             {isDefined(attempt) && <>
                 <QuizAttemptComponent {...subProps} />
-                {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizFooter {...subProps} />}
+                <SidebarLayout>
+                    <Col lg={4} xl={3} className={classNames("d-none d-lg-flex flex-column sidebar p-4 order-0")} />
+                    <MainContent>
+                        {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizAttemptFeedbackFooter {...subProps} />}
+                    </MainContent>
+                </SidebarLayout>
             </>}
             {isDefined(error) && <>
                 <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} />
