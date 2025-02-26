@@ -202,7 +202,26 @@
     margin-bottom: 0.4rem;
   }
 
-  > div + div {
-    border-left: 1px solid $color-neutral-200;
+  @include media-breakpoint-up(md) {
+    > div + div {
+      border-left: 1px solid $color-neutral-200;
+    }
   }
+
+  @include media-breakpoint-only(sm) {
+    > div:first-child {
+      border-bottom: 1px solid $color-neutral-200;
+    }
+
+    > div.col-sm-6 + div {
+      border-left: 1px solid $color-neutral-200;
+    }
+  }
+
+  @include media-breakpoint-only(xs) {
+    > div:has(+ div) {
+      border-bottom: 1px solid $color-neutral-200;
+    }
+  }
+  
 }

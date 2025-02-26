@@ -128,8 +128,8 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                             </>}
                         </div>
                         
-                        {isPhy && <Row className="question-metadata d-flex row-gap-4">
-                            <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3">
+                        {isPhy && <Row className="question-metadata d-flex">
+                            <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
                                 <span>Subject & topics</span>
                                 <div className="d-flex align-items-center">
                                     <i className="icon icon-hexagon me-2"/>
@@ -139,11 +139,11 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                     </>)}
                                 </div>
                             </Col>
-                            <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3">
+                            <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0 pb-sm-0">
                                 <span>Stage & difficulty</span>
                                 <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/> 
                             </Col>
-                            <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3">
+                            <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0">
                                 <span>Status</span>
                                 {allQuestionsCorrect 
                                     ? <div className="d-flex align-items-center"><span className="icon-correct me-2"/> Correct</div>
