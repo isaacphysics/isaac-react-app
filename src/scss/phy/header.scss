@@ -164,7 +164,7 @@ header {
 
 #header-offcanvas {
   .explore-group {
-    border-top: none;
+    border: none;
 
     &.accordion, .accordion-item, .accordion-header, .accordion-button {
       background: $color-neutral-50;
@@ -188,17 +188,22 @@ header {
       color: $color-neutral-900;
     }
 
-    .accordion-body > a:hover {
-      background: $color-neutral-100;
-      text-decoration: none;
-    }
+    .accordion-body {
+      background: $color-neutral-50;
+      padding-top: 1rem;
 
-    .accordion-body h5 {
-      font-size: 14px;
-      font-family: $primary-font;
-      color: $color-neutral-500;
-      line-height: 1.1;
-      margin-left: 23px;
+      > a:hover {
+        background: $color-neutral-100;
+        text-decoration: none;
+      }
+      
+      h5 {
+        font-size: 14px;
+        font-family: $primary-font;
+        color: $color-neutral-500;
+        line-height: 1.1;
+        margin-left: 23px;
+      }
     }
   }
 }

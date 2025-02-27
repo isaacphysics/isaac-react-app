@@ -15,3 +15,7 @@
     transform: rotate3d(1, 0, 0, 180deg);
   }
 }
+
+.accordion .accordion-button::after {
+  @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
+}
