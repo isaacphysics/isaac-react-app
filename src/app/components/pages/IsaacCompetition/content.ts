@@ -206,6 +206,7 @@ export default {
           "TC",
         ],
         "",
+        "A big thank you to Birmingham City University for giving us space to host the finals. The University has offered continuous support throughout the competition, and we are excited to partner with them and be a part of the Innovation Fest 19th May - 23rd May 2025.",
       ],
     },
     termsAndConditions: {
