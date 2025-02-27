@@ -39,6 +39,18 @@ export const getThemeFromContextAndTags = (element: React.RefObject<HTMLElement>
 };
 
 /**
+ * Gets the subject theme (`"physics" | "maths" | "chemistry" | "biology" | "neutral"`) for a content object from its tags.
+ * @param tags - The content object tags in which to search for a subject.
+ * @returns The most relevant theme.
+ */
+export const getThemeFromTags = (tags?: (TAG_ID | string)[]): SiteTheme => {
+    if (!tags) return "neutral";
+    
+    const subjectTags = filterBySubjects(tags);
+    return subjectTags[0] || "neutral";
+};
+
+/**
  * Gets the page context for the current page, based on the previous page context, the user's registered contexts, and the audience and tags of the current page.
  * 
  * As a general rule, if the previous context can be maintained, it will be. 
