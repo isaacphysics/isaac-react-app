@@ -32,7 +32,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
             subjects: context?.subject,
             topics: undefined,
             books: undefined,
-            stages: context?.stage?.join(','),
+            stages: context?.stage?.map(s => s === "11_14" ? "year_7_and_8,year_9" : s).join(','),
             difficulties: undefined,
             examBoards: undefined,
             questionCategories: "problem_solving,book",
