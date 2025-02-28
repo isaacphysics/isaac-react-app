@@ -16,6 +16,8 @@ import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     above,
     below, confirmThen,
+    generateGameboardSubjectHexagons,
+    HUMAN_SUBJECTS,
     ifKeyIsEnter,
     isAda,
     isDefined,
@@ -24,6 +26,7 @@ import {
     MANAGE_QUIZ_TAB,
     nthHourOf, persistence,
     siteSpecific,
+    Subject,
     tags,
     TODAY,
     useDeviceSize,
@@ -37,9 +40,11 @@ import {RenderNothing} from "../../elements/RenderNothing";
 import { useHistoryState } from "../../../state/actions/history";
 import classNames from "classnames";
 import { ExtendDueDateModal } from "../../elements/modals/ExtendDueDateModal";
-import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Container, ListGroup, ListGroupItem, Col, Alert, Input, UncontrolledDropdown } from "reactstrap";
+import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Container, ListGroup, ListGroupItem, Col, Alert, Input, UncontrolledDropdown, Label } from "reactstrap";
 import { ListView } from "../../elements/list-groups/ListView";
 import { MainContent, ManageQuizzesSidebar, SetQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
+import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
+import { AffixButton } from "../../elements/AffixButton";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -137,10 +142,10 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     );
 
     const determineQuizSubjects = (quizSummary?: QuizSummaryDTO) => {
-        return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `subject-${tag.toLowerCase()} `, "");
+        return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `${tag.toLowerCase()}`, "");
     };
 
-    const subjects = determineQuizSubjects(assignment.quizSummary) || "subject-physics";
+    const subjects = determineQuizSubjects(assignment.quizSummary) || "physics";
 
     const innerTableHeaders : InnerTableHeader[] = [
         {title: "Group name", sort: compareGroupNames},
@@ -159,42 +164,65 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
         <tr className={`bg-white set-quiz-table-dropdown p-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0}
             onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))}
         >
-            {isPhy && <td className="p-0 align-content-center">
-                <div className="board-subject-hexagon-size m-auto">
-                    <div id={"group-hex-" + index} className="board-subject-hexagon-container">
-                        <div className={`board-subject-hexagon ${subjects} d-flex justify-content-center align-items-center`}>
-                            <span className="set-quiz-table-group-hex" title={"Number of groups assigned"}>
-                                <strong>{assignedGroups.length}</strong>
-                                group{(!assignedGroups || assignedGroups.length != 1) && "s"}
-                                <UncontrolledTooltip placement={"top"} target={"#group-hex-" + index}>{assignedGroups.length === 0 ?
-                                    "No groups have been assigned."
-                                    : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
-                                </UncontrolledTooltip>
-                            </span>
+            {siteSpecific(
+                <>
+                    <td className="d-flex flex-column align-items-center">
+                        <div className="d-flex justify-content-center board-subject-hexagon-size my-2 ms-2 me-3">
+                            <div className="board-subject-hexagon-container justify-content-center">
+                                {generateGameboardSubjectHexagons([subjects as Subject])}
+                            </div>
+                            {/* Quizzes only have one subject */}
+                            <PhyHexIcon icon="page-icon-quiz" subject={subjects as Subject} className="assignment-hex ps-3"/>
                         </div>
-                    </div>
-                </div>
-            </td>}
-            {isAda && <td id={"group-td-" + index} className="group-counter">
-                <span><strong>{assignedGroups.length}</strong>&nbsp;</span><br/>
-                <span>group{(!assignedGroups || assignedGroups.length != 1) && "s"}</span>
-                <UncontrolledTooltip placement={"top"} target={"#group-td-" + index}>{assignedGroups.length === 0 ?
-                    "No groups have been assigned."
-                    : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
-                </UncontrolledTooltip>
-            </td>}
-            <td className={classNames("set-quiz-table-title align-middle ", {"ps-4": isAda})}>{quizTitle}</td>
-            <td className="align-middle pe-0 d-none d-sm-table-cell">
-                <Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
-                    onClick={(e) => {
-                        assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
-                        e.stopPropagation();
-                    }}
-                >
-                    {siteSpecific("Set Test", "Set test")}
-                </Button>
-            </td>
-            <td className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
+                    </td>
+                    <td>
+                        <div className="d-flex align-items-center">
+                            <h4 className="me-2">{quizTitle}</h4>
+                            <span className="badge rounded-pill bg-theme" data-bs-theme={subjects}>{HUMAN_SUBJECTS[subjects]}</span>
+                        </div>
+                        {<AffixButton size="sm"  affix={{ affix: "icon-right", position: "suffix", type: "icon" }}
+                            onClick={(e) => {
+                                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                                assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
+                                e.stopPropagation();}}>
+                            Set Test
+                        </AffixButton>}
+                    </td>
+                    <td className="align-middle pe-0 d-none d-sm-table-cell">                
+                        <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1">
+                            Assigned to
+                            <div className="board-bubble-info">{assignedGroups.length}</div>
+                            group{assignedGroups.length !== 1 && "s"}
+                        </Label>
+                    </td>
+                    <td className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
+                </>,
+
+                <>
+                    <td id={"group-td-" + index} className="group-counter">
+                        <span><strong>{assignedGroups.length}</strong>&nbsp;</span><br/>
+                        <span>group{(!assignedGroups || assignedGroups.length != 1) && "s"}</span>
+                        <UncontrolledTooltip placement={"top"} target={"#group-td-" + index}>{assignedGroups.length === 0 ?
+                            "No groups have been assigned."
+                            : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
+                        </UncontrolledTooltip>
+                    </td>
+                    <td className={classNames("set-quiz-table-title align-middle ps-4")}>{quizTitle}</td>
+                    <td className="align-middle pe-0 d-none d-sm-table-cell">
+                        <Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
+                            onClick={(e) => {
+                                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                                assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
+                                e.stopPropagation();
+                            }}
+                        >
+                            Set test
+                        </Button>
+                    </td>
+                    <td className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
+                </>
+            )}
+
         </tr>
         {isExpanded && <tr>
             <td colSpan={4} className={classNames("bg-white border-0", {"px-2 pb-2": isPhy})}>
@@ -364,7 +392,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </div>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "page-icon-quiz"}} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} />
         <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
         <SidebarLayout>
             {activeTab === MANAGE_QUIZ_TAB.set
