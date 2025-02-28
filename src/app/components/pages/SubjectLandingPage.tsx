@@ -129,13 +129,12 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
         <RandomQuestionBanner context={pageContext} />
 
         <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} className="my-5" />
-        <hr/>
 
         <Row className={classNames("mt-5 py-4 row-cols-1", {"row-cols-lg-2": books.length > 0})}>
             <div className="d-flex flex-column mt-3">
                 <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                     <h4 className="m-0">Events</h4>
-                    <div className="section-divider"/>
+                    <div className="section-divider-bold"/>
                 </div>
                 <ShowLoadingQuery
                     query={eventsQuery}
@@ -158,7 +157,7 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
             {books.length > 0 && <div className="d-flex flex-column mt-3"> 
                 <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                     <h4 className="m-0">{getHumanContext(pageContext)} books</h4>
-                    <div className="section-divider"/>
+                    <div className="section-divider-bold"/>
                 </div>
                 <Row className="h-100 row-gap-3">
                     {books.slice(0, 4).map(book => <Col xs={6} key={book.title}>
