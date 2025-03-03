@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from "react";
 import {getRTKQueryErrorMessage, useGetQuizPreviewQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {isDefined, tags, useQuizQuestions, useQuizSections} from "../../../services";
+import {getThemeFromTags, isDefined, tags, useQuizQuestions, useQuizSections} from "../../../services";
 import {
     myQuizzesCrumbs,
     QuizAttemptComponent,
@@ -64,7 +64,7 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
         </Alert>
     </>;
 
-    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
+    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`} data-bs-theme={getThemeFromTags(quiz?.tags)}>
         <ShowLoadingQuery query={quizPreviewQuery} ifError={buildErrorComponent}>
             <QuizAttemptComponent preview {...subProps} />
             <QuizFooter {...subProps} />
