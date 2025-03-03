@@ -159,14 +159,20 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
                     <h4 className="m-0">{getHumanContext(pageContext)} books</h4>
                     <div className="section-divider-bold"/>
                 </div>
-                <Row className="h-100 row-gap-3">
-                    {books.slice(0, 4).map(book => <Col xs={6} key={book.title}>
-                        <Link to={book.path} className="book d-flex invert-underline">
-                            <img src={book.image} alt={book.title} className="w-40"/>
-                            <h5 className="p-2 pb-3 m-0 align-self-center">{book.title}</h5>
-                        </Link>
-                    </Col>)}
-                </Row>
+                <Col className="d-flex flex-column">
+                    {books.slice(0, 4).map((book, index) => <Link key={index} to={book.path} className="book-container d-flex p-2 gap-3">
+                        <div className="book-image-container">
+                            <img src={book.image} alt={book.title} className="h-100"/>
+                        </div>
+                        <div className="d-flex flex-column">
+                            <h5 className="pt-2 pt-2 pb-1 m-0">{book.title}</h5>
+                            <div className="section-divider"/>
+                            <span className="text-decoration-none">
+                                This is some explanatory text about the book. It could be a brief description of the book, or a list of topics covered.
+                            </span>
+                        </div>
+                    </Link>)}
+                </Col>
             </div>}
         </Row>
     </Container>;
