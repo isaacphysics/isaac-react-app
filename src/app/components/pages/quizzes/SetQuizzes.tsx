@@ -164,9 +164,9 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
         >
             {siteSpecific(
                 <>
-                    <td className="align-middle">                       
+                    {above["md"](deviceSize) && <td className="align-middle">                       
                         <PhyHexIcon size="sm" icon="list-icon-quiz" subject={subject as Subject} className="assignment-hex"/>                       
-                    </td>
+                    </td>}
                     <td className="align-middle">
                         <span className="manage-quiz-title me-3">{quizTitle}</span>
                     </td>
@@ -179,13 +179,13 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                             Set Test
                         </AffixButton>
                     </td>
-                    <td className="align-middle d-none d-sm-table-cell">
+                    {above["lg"](deviceSize) && <td className="align-middle d-none d-sm-table-cell">
                         <Label className="d-block w-max-content text-center text-nowrap">
                             Assigned to
                             <div className="board-bubble-info-sm">{assignedGroups.length}</div>
                             group{assignedGroups.length !== 1 && "s"}
                         </Label>
-                    </td>
+                    </td>}
                     <td className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
                 </>,
 
@@ -525,12 +525,12 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                     return <>
                                         {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
                                         {quizAssignments.length > 0 && <Table borderless={isAda} className="w-100 set-quiz-table">
-                                            <colgroup>
-                                                <col width={isPhy ? "90px" : isAda ? "120px" : "auto"}/>
+                                            {isAda && <colgroup>
+                                                <col width={"120px"}/>
                                                 <col width={"auto"}/>
                                                 {below["xs"](deviceSize) ? <></> : below["lg"](deviceSize) ? <col width="90px"/> : <col width="160px"/>}
                                                 <col width={"60px"}/>
-                                            </colgroup>
+                                            </colgroup>}
                                             <tbody>
                                                 {quizAssignment.map((g, i) => <QuizAssignment key={g.assignedGroups?.[0].assignment.id ?? 0} user={g.user} assignedGroups={g.assignedGroups} index={i} />)}
                                             </tbody>
