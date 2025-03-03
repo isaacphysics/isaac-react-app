@@ -10,18 +10,18 @@ const extendUrl = (context: NonNullable<Required<PageContextState>>, page: strin
 
 const QuestionFinderCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
-        title: "Find more practice questions",
-        subtitle: `Our ${getHumanContext(context)} question finder can help you find the practice questions you need by topic, difficulty level and more.`
+        title: "Question finder",
+        subtitle: `Find ${getHumanContext(context)} questions you need by topic and difficulty level.`
     },
     icon: {type: "hex", icon: "page-icon-finder"},
     subject: context.subject,
-    linkTags: [{tag: "Search questions", url: extendUrl(context, 'questions')}]
+    linkTags: [{tag: "Find questions", url: extendUrl(context, 'questions')}]
 });
 
 const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
-        title: `Explore ${getHumanContext(context)} concepts`,
-        subtitle: `Refresh your memory on the key concepts for ${getHumanContext(context)}.`
+        title: "Concepts",
+        subtitle: `Review the key concepts for ${getHumanContext(context)}.`
     },
     icon: {type: "hex", icon: "page-icon-concept"},
     subject: context.subject,
@@ -30,29 +30,29 @@ const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): List
 
 const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
-        title: "Try our practice tests",
-        subtitle: "Explore practice tests that are available for you to attempt independently. Test questions cannot be found elsewhere on the platform and once a test is submitted you cannot change your answers."
+        title: "Tests",
+        subtitle: "Use tests to practise a range of topics. These tests are available for you to freely attempt."
     },
     icon: {type: "hex", icon: "page-icon-tests"},
     subject: context.subject,
-    linkTags: [{tag: "Choose practice test", url: extendUrl(context, 'practice_tests')}]
+    linkTags: [{tag: "Find a test", url: extendUrl(context, 'practice_tests')}]
 });
 
 const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
-        title: "Try our sample question packs",
-        subtitle: "You can also work through some of our convenient sample question packs across a wide range of topics."
+        title: "Questions by topic",
+        subtitle: "Practise specific topics by using our ready-made question decks on specific topics."
     },
     icon: {type: "hex", icon: "page-icon-question-pack"},
     subject: context.subject,
-    linkTags: [{tag: "View question packs", url: extendUrl(context, 'question_packs')}]
+    linkTags: [{tag: "Explore topic question decks", url: extendUrl(context, 'question_packs')}]
 });
 
 // TODO: replace the link tags with links to lessons by *field* (see designs)
 const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
-        title: "Lessons and revision",
-        subtitle: "Explore our lessons and revision resources to help you with your studies."
+        title: "Revision",
+        subtitle: "Revise with our summary videos, topic tests and question decks."
     },
     icon: {type: "hex", icon: "page-icon-lessons"},
     subject: context.subject,
@@ -61,8 +61,8 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
 
 const QuickQuizzesCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
-        title: "Test your knowledge with our quick quizzes",
-        subtitle: "The quizzes will help you to revise, rearrange equations, change units and practise extracting the correct information from a question."
+        title: "Core skills practice",
+        subtitle: `Practice core skills required for ${getHumanContext(context)}.`
     },
     icon: {type: "hex", icon: "page-icon-quiz"},
     subject: context.subject,
