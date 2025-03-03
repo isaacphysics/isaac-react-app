@@ -190,7 +190,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                 </>,
 
                 <>
-                    <td id={"group-td-" + index} className="group-counter">
+                    <td id={"group-td-" + index} className="group-counter align-middle">
                         <span><strong>{assignedGroups.length}</strong>&nbsp;</span><br/>
                         <span>group{(!assignedGroups || assignedGroups.length != 1) && "s"}</span>
                         <UncontrolledTooltip placement={"top"} target={"#group-td-" + index}>{assignedGroups.length === 0 ?
