@@ -166,21 +166,12 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
         >
             {siteSpecific(
                 <>
-                    <td className="d-flex flex-column align-items-center">
-                        <div className="d-flex justify-content-center board-subject-hexagon-size my-2 ms-2 me-3">
-                            <div className="board-subject-hexagon-container justify-content-center">
-                                {generateGameboardSubjectHexagons([subjects as Subject])}
-                            </div>
-                            {/* Quizzes only have one subject */}
-                            <PhyHexIcon icon="page-icon-quiz" subject={subjects as Subject} className="assignment-hex ps-3"/>
-                        </div>
+                    <td className="align-middle">                       
+                        <PhyHexIcon size="sm" icon="list-icon-quiz" subject={subjects as Subject} className="assignment-hex"/>                       
                     </td>
-                    <td>
-                        <div className="d-flex align-items-center">
-                            <h4 className="me-2">{quizTitle}</h4>
-                            <span className="badge rounded-pill bg-theme" data-bs-theme={subjects}>{HUMAN_SUBJECTS[subjects]}</span>
-                        </div>
-                        {<AffixButton size="sm"  affix={{ affix: "icon-right", position: "suffix", type: "icon" }}
+                    <td className="align-middle">
+                        <span className="manage-quiz-title me-3">{quizTitle}</span>
+                        {<AffixButton size="sm" affix={{ affix: "icon-right", position: "suffix", type: "icon" }}
                             onClick={(e) => {
                                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                                 assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
@@ -188,10 +179,10 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                             Set Test
                         </AffixButton>}
                     </td>
-                    <td className="align-middle pe-0 d-none d-sm-table-cell">                
-                        <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1">
+                    <td className="align-middle d-none d-sm-table-cell">
+                        <Label className="d-block w-max-content text-center text-nowrap">
                             Assigned to
-                            <div className="board-bubble-info">{assignedGroups.length}</div>
+                            <div className="board-bubble-info-sm">{assignedGroups.length}</div>
                             group{assignedGroups.length !== 1 && "s"}
                         </Label>
                     </td>

@@ -228,6 +228,14 @@
   );
 }
 
+.list-icon-quiz {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/quiz-fg.svg', 
+    '/assets/phy/icons/redesign/quiz-bg.svg',
+    60px, 60px, 36px
+  );
+}
+
 .list-icon-events {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-event-fg.svg',

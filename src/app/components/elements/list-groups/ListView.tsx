@@ -90,7 +90,7 @@ export const QuizListViewItem = ({item, isQuizSetter, ...rest}: {item: QuizSumma
         </AffixButton>;
 
     return <AbstractListViewItem 
-        icon={{type: "hex", icon: "list-icon-lessons", size: "sm"}}
+        icon={{type: "hex", icon: "list-icon-quiz", size: "sm"}}
         title={item.title ?? ""}
         subject={itemSubject}
         previewQuizUrl={`/test/preview/${item.id}`}

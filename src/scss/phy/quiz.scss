@@ -1,11 +1,24 @@
 @import "../common/quiz.scss";
 
-.quiz-date-filter-type {
-  button {
-    min-width: unset;
+.quiz-filter-date-span {
+  transform: translateY(3px);
+}
+
+.set-quiz-table-inner {
+  background-color: white;
+  color: black;
+  border: 1px solid $color-neutral-200;
+  tbody tr {
+      background-color: $color-neutral-50;
+  }
+
+  btn {
+    border: none;
   }
 }
 
-.quiz-filter-date-span {
-  transform: translateY(3px);
+.manage-quiz-title {
+  font-size: 1.25rem;
+  font-family: $secondary-font-medium;
+  font-weight: bold;
 }

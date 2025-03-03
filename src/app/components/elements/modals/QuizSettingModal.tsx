@@ -151,6 +151,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate)}
             />
+            {/* TODO update tooltip icon here once we have a consistent style for them */}
             <UncontrolledTooltip placement="top" autohide={false} target={scheduledQuizHelpTooltipId}>
                 You can schedule a test to appear in the future by setting a start date.
                 The test will be visible to students from this date onwards.<br/>
