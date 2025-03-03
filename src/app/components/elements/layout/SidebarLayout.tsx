@@ -404,6 +404,8 @@ interface MyGameboardsSidebarProps extends SidebarProps {
 export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
     const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, boardCreatorFilter, setBoardCreatorFilter, boardCompletionFilter, setBoardCompletionFilter, ...rest } = props;
 
+    const deviceSize = useDeviceSize();
+
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         <div className="section-divider"/>
         <h5>Search gameboards</h5>
@@ -415,12 +417,12 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
         />
         <div className="section-divider"/>
         <h5 className="mb-4">Display</h5>
-        <div className="d-flex">
+        <div className="d-flex flex-xl-column flex-xxl-row">
             <Input className="w-auto" type="select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                 {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
             </Input>
-            <Spacer/>
-            <div className="select-pretext">Limit:</div>
+            {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
+            <div className="select-pretext me-2">Limit:</div>
             <Input className="w-auto" type="select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                 {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
             </Input>
