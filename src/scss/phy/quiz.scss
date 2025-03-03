@@ -1,13 +1,15 @@
 @import "../common/quiz.scss";
 
 .quiz-filter-date-span {
-  transform: translateY(3px);
+  font-size: 1rem;
+  z-index: 5;
 }
 
 .set-quiz-table-inner {
   background-color: white;
   color: black;
   border: 1px solid $color-neutral-200;
+
   tbody tr {
       background-color: $color-neutral-50;
   }

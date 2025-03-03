@@ -565,9 +565,11 @@ interface SetQuizzesSidebarProps extends SidebarProps {
 
 export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
     const { titleFilter, setTitleFilter } = props;
+    const deviceSize = useDeviceSize();
+
     return <ContentSidebar buttonTitle="Search & Filter">
-        <div className="section-divider mt-5"/>
-        <h5>Search & Filter</h5>
+        {above["lg"](deviceSize) && <div className="section-divider mt-5"/>}
+        <h5>Search &amp; Filter</h5>
         <span className="quiz-filter-date-span">Title</span>
         <Input
             id="available-quizzes-title-filter" type="search"
@@ -596,9 +598,11 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
     const { manageQuizzesTitleFilter, setManageQuizzesTitleFilter, quizStartDate, setQuizStartDate,
         quizSetDateFilterType, setQuizSetDateFilterType, quizDueDate, setQuizDueDate, quizDueDateFilterType,
         setQuizDueDateFilterType, manageQuizzesGroupNameFilter, setManageQuizzesGroupNameFilter} = props;
+
+    const deviceSize = useDeviceSize();
     
     const dateFilterTypeSelector = (dateFilterType: string, setDateFilterType: React.Dispatch<React.SetStateAction<string>>) => <UncontrolledDropdown>
-        <DropdownToggle className="bg-transparent border-0" caret>{dateFilterType}</DropdownToggle>
+        <DropdownToggle className="bg-transparent border-0 px-2" caret>{dateFilterType}</DropdownToggle>
         <DropdownMenu>
             <DropdownItem onClick={() => setDateFilterType('after')}>
                 after
@@ -631,7 +635,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
     </div>;
 
     const setDateFilterInput = <div className="my-2">
-        <div className="d-flex align-items-baseline">
+        <div className="d-flex align-items-center">
             <span className="quiz-filter-date-span">Starting</span>
             {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
         </div>
@@ -643,7 +647,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
     </div>;
 
     const dueDateFilterInput = <div className="my-2">
-        <div className="d-flex align-items-baseline">
+        <div className="d-flex align-items-center">
             <span className="quiz-filter-date-span">Due</span>
             {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
         </div>
@@ -655,7 +659,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
     </div>;
 
     return <ContentSidebar buttonTitle="Search & Filter">
-        <div className="section-divider mt-5"/>
+        {above["lg"](deviceSize) && <div className="section-divider mt-5"/>}
         <h5>Search & Filter</h5>
         {titleFilterInput}
         {groupFilterInput}

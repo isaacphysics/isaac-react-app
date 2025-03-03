@@ -16,8 +16,6 @@ import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     above,
     below, confirmThen,
-    generateGameboardSubjectHexagons,
-    HUMAN_SUBJECTS,
     ifKeyIsEnter,
     isAda,
     isDefined,
@@ -141,11 +139,11 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
         () => markQuizAsCancelled(assignment.id as number)
     );
 
-    const determineQuizSubjects = (quizSummary?: QuizSummaryDTO) => {
+    const determineQuizSubject = (quizSummary?: QuizSummaryDTO) => {
         return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `${tag.toLowerCase()}`, "");
     };
 
-    const subjects = determineQuizSubjects(assignment.quizSummary) || "physics";
+    const subject = determineQuizSubject(assignment.quizSummary) || "physics";
 
     const innerTableHeaders : InnerTableHeader[] = [
         {title: "Group name", sort: compareGroupNames},
@@ -167,17 +165,19 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
             {siteSpecific(
                 <>
                     <td className="align-middle">                       
-                        <PhyHexIcon size="sm" icon="list-icon-quiz" subject={subjects as Subject} className="assignment-hex"/>                       
+                        <PhyHexIcon size="sm" icon="list-icon-quiz" subject={subject as Subject} className="assignment-hex"/>                       
                     </td>
                     <td className="align-middle">
                         <span className="manage-quiz-title me-3">{quizTitle}</span>
-                        {<AffixButton size="sm" affix={{ affix: "icon-right", position: "suffix", type: "icon" }}
+                    </td>
+                    <td className="align-middle">
+                        <AffixButton size="sm" affix={{ affix: "icon-right", position: "suffix", type: "icon" }}
                             onClick={(e) => {
                                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                                 assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
                                 e.stopPropagation();}}>
                             Set Test
-                        </AffixButton>}
+                        </AffixButton>
                     </td>
                     <td className="align-middle d-none d-sm-table-cell">
                         <Label className="d-block w-max-content text-center text-nowrap">
@@ -383,7 +383,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </div>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "page-icon-quiz"}} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={siteSpecific({type: "hex", icon: "page-icon-quiz"}, undefined)} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} />
         <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
         <SidebarLayout>
             {activeTab === MANAGE_QUIZ_TAB.set
