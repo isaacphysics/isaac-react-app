@@ -164,8 +164,8 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
                                 <div className="section-divider-bold"/>
                             </div>
                             {news && <Row className="h-100">
-                                {news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>
-                                    <NewsCard newsItem={newsItem} />
+                                {news.slice(0, 2).map(newsItem => <Col xs={12} key={newsItem.id}>
+                                    <NewsCard newsItem={newsItem} className="force-horizontal p-2" />
                                 </Col>)}
                             </Row>}
                         </div>
@@ -186,8 +186,8 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
                         return <Row className="h-100">
                             {relevantEvents.length 
                                 ? relevantEvents.map((event, i) => 
-                                    <Col xs={6} key={i}>
-                                        {event && <EventCard event={event} />}
+                                    <Col key={i}>
+                                        {event && <EventCard event={event} className="force-horizontal p-2" />}
                                     </Col>
                                 ) 
                                 : <Col className="pt-3 pb-5">No events found for {getHumanContext(pageContext)}. Check back soon!</Col>
