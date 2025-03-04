@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from "react";
 import {clearQuizAttempt, loadQuizAssignmentAttempt, useAppDispatch} from "../../../state";
 import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {isDefined, useCurrentQuizAttempt} from "../../../services";
+import {getThemeFromTags, isDefined, useCurrentQuizAttempt} from "../../../services";
 import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps} from "../../elements/quiz/QuizAttemptComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
@@ -38,7 +38,7 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
     // Importantly, these are only used if attempt is defined
     const subProps: QuizAttemptProps & {feedbackLink: string} = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user, feedbackLink};
 
-    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
+    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`} data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
         <ShowLoading until={attempt || error}>
             {attempt && <>
                 <QuizAttemptComponent {...subProps} />

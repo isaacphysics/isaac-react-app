@@ -92,9 +92,10 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             transformResponse: (data: {results: IsaacEventPageDTO[], totalResults: number}) => ({events: data.results.map(augmentEvent), total: data.totalResults}),
             // i.e. choose the query args to use as the cache key - ones that, if changed, will start a new request
             // in a new cache entry.
+            // this previously did not contain `limit` or `startIndex` which caused the cache to be shared across different use cases;
+            // as such, a query with e.g. `limit=2` was being ignored if more than 2 events were already in the cache.
             serializeQueryArgs: ({queryArgs}) => {
-                const {stageFilter, statusFilter, typeFilter} = queryArgs;
-                return {stageFilter, statusFilter, typeFilter};
+                return queryArgs;
             },
             merge: ({events: currentEvents}, {events: newEvents, total}) => {
                 return {events: Array.from(new Set([...currentEvents, ...newEvents])), total};
@@ -102,7 +103,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             // i.e. choose the query args that cause the query to be rerun, to update what is currently in the cache.
             // As far as I can tell, forceRefetch should be entirely disjoint from serializeQueryArgs (and visa versa).
             forceRefetch: ({currentArg, previousArg}) => {
-                return currentArg?.startIndex !== previousArg?.startIndex || currentArg?.limit !== previousArg?.limit;
+                return currentArg !== previousArg;
             },
             providesTags: ["EventsList"],
             onQueryStarted: onQueryLifecycleEvents({

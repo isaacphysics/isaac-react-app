@@ -115,7 +115,7 @@ header {
             position: relative;
             vertical-align: middle;
             margin-left: 0.5rem;
-            @include svg-icon('/assets/common/icons/chevron_down.svg', 16px, 16px);
+            @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
             transform: rotate3d(1, 0, 0, 0deg);
             transition: transform 0.21s ease-in-out;
           }
@@ -164,7 +164,7 @@ header {
 
 #header-offcanvas {
   .explore-group {
-    border-top: none;
+    border: none;
 
     &.accordion, .accordion-item, .accordion-header, .accordion-button {
       background: $color-neutral-50;
@@ -188,17 +188,23 @@ header {
       color: $color-neutral-900;
     }
 
-    .accordion-body > a:hover {
-      background: $color-neutral-100;
-      text-decoration: none;
-    }
+    .accordion-body {
+      background: $color-neutral-50;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
 
-    .accordion-body h5 {
-      font-size: 14px;
-      font-family: $primary-font;
-      color: $color-neutral-500;
-      line-height: 1.1;
-      margin-left: 23px;
+      > a:hover {
+        background: $color-neutral-100;
+        text-decoration: none;
+      }
+      
+      h5 {
+        font-size: 14px;
+        font-family: $primary-font;
+        color: $color-neutral-500;
+        line-height: 1.1;
+        margin-left: 23px;
+      }
     }
   }
 }
