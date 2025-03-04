@@ -23,7 +23,7 @@ interface StyledTabPickerProps extends React.HTMLAttributes<HTMLLabelElement> {
     count?: number;
     suffix?: {
         icon: string;
-        action: (e: React.MouseEvent<HTMLButtonElement>) => void;
+        action?: (e: React.MouseEvent<HTMLButtonElement>) => void;
         info: string;
     }
 }
@@ -43,7 +43,7 @@ export const StyledTabPicker = (props: StyledTabPickerProps): JSX.Element => {
         {isDefined(count) && <span className="badge rounded-pill ms-2">{count}</span>}
         <Spacer/>
         {suffix && <button type="button" className="px-2 py-1 bg-transparent" onClick={suffix.action} aria-label={suffix.info} title={suffix.info} disabled={disabled}>
-            <i className={`icon ${suffix.icon} d-block`}/>
+            <i className={`${suffix.icon} d-block`}/>
         </button>}
     </Label>;
 };

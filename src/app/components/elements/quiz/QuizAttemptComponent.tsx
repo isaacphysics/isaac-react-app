@@ -8,6 +8,7 @@ import {
 } from "../../../../IsaacApiTypes";
 import React from "react";
 import {
+    above,
     below,
     extractTeacherName,
     isAda,
@@ -31,6 +32,7 @@ import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChil
 import {EditContentButton} from "../EditContentButton";
 import {Markup} from "../markup";
 import classNames from "classnames";
+import { MainContent, QuizSidebar, SidebarLayout } from "../layout/SidebarLayout";
 
 type PageLinkCreator = (page?: number) => string;
 
@@ -156,13 +158,10 @@ function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
     </div>;
 }
 
-function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizAttemptProps & {page: number}) {
-    const sections = attempt.quiz?.children;
-    const section = sections && sections[page - 1];
-    const rubric = attempt.quiz?.rubric;
-    const attribution = attempt.quiz?.attribution;
-    const renderRubric = (rubric?.children || []).length > 0 && (isPhy || !isDefined(attempt.completedDate));
+export function QuizRubricButton({attempt}: {attempt: QuizAttemptDTO}) {
     const dispatch = useAppDispatch();
+    const rubric = attempt.quiz?.rubric;
+    const renderRubric = (rubric?.children || []).length > 0 && (isPhy || !isDefined(attempt.completedDate));
 
     const openQuestionModal = (attempt: QuizAttemptDTO) => {
         dispatch(openActiveModal({
@@ -171,6 +170,18 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
         }));
     };
 
+    if (rubric && renderRubric) {
+        return <Button color={siteSpecific("secondary", "tertiary")} outline={isAda} className={siteSpecific("btn-btn-keyline", "mb-4 bg-light")}
+            alt="Show instructions" title="Show instructions in a modal" onClick={() => {openQuestionModal(attempt);}}> Show instructions
+        </Button>;
+    }
+}
+
+function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizAttemptProps & {page: number}) {
+    const deviceSize = useDeviceSize();
+    const sections = attempt.quiz?.children;
+    const section = sections && sections[page - 1];
+    const attribution = attempt.quiz?.attribution;
     const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
 
     return section ?
@@ -180,13 +191,11 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
                     You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
                 </div>}
                 <Row>
-                    {rubric && renderRubric && <Col className="text-end">
-                        <Button color="tertiary" outline className="mb-4 bg-light"
-                            alt="Show instructions" title="Show instructions in a modal"
-                            onClick={() => {rubric && openQuestionModal(attempt);}}>
-                            Show instructions
-                        </Button>
-                    </Col>}
+                    <Col className="d-flex flex-column align-items-end">
+                        {(isAda || above["lg"](deviceSize)) && <div className="mb-3">
+                            <QuizRubricButton attempt={attempt}/>
+                        </div>}
+                    </Col>
                 </Row>
 
                 <WithFigureNumbering doc={section}>
@@ -246,31 +255,54 @@ export function QuizPagination({page, sections, pageLink, finalLabel}: QuizAttem
     const nextLink = pageLink(!finalSection ? page + 1 : undefined);
 
     return <div className="d-flex w-100 justify-content-between align-items-center">
-        <Button color="primary" outline size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} replace to={backLink}>Back</Button>
+        <Button color="primary" outline={isAda} size={below["sm"](deviceSize) ? "sm" : ""} className={classNames({"btn btn-keyline": isPhy})} tag={Link} replace to={backLink}>Back</Button>
         <div className="d-none d-md-block">Section {page} / {sectionCount}</div>
         <Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} replace to={nextLink}>{finalSection ? finalLabel : "Next"}</Button>
     </div>;
 }
 
+export enum SectionProgress {
+    NOT_STARTED = "Not started",
+    STARTED = "Started",
+    COMPLETED = "Completed"
+}
+
 export function QuizAttemptComponent(props: QuizAttemptProps) {
-    const {page, questions, studentUser, user, quizAssignmentId} = props;
+    const {page, questions, studentUser, user, quizAssignmentId, sections, attempt} = props;
     // Assumes that ids of questions are defined - I don't know why this is not enforced in the editor/backend, because
     // we do unchecked casts of "possibly undefined" content ids to strings almost everywhere
     const questionNumbers = Object.assign({}, ...questions.map((q, i) => ({[q.id as string]: i + 1})));
     const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
+    const sectionCount = Object.keys(sections).length;
+    const sectionTitles = Object.keys(sections).map(k => sections[k].title || "Section " + k);
+
+    const sectionState = (section: IsaacQuizSectionDTO) => {
+        const sectionQs = section ? inSection(section, questions) : undefined;
+        const isStarted = sectionQs?.some(q => q.bestAttempt !== undefined);
+        const isCompleted = sectionQs?.every(q => q.bestAttempt !== undefined);
+        return isCompleted ? SectionProgress.COMPLETED : isStarted ? SectionProgress.STARTED : SectionProgress.NOT_STARTED;
+    };
+
+    const sectionStates = Object.values(sections).map(section => sectionState(section));
+
     return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
         <QuizTitle {...props} />
-        {page === null ?
-            <div className="mt-4">
-                {!isDefined(studentUser?.id) && <QuizHeader {...props} />}
-                {viewingAsSomeoneElse && <div className="mb-2">
-                    You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
-                </div>}
-                <QuizRubric {...props}/>
-                <QuizContents {...props} />
-            </div>
-            :
-            <QuizSection {...props} page={page}/>
-        }
+        <SidebarLayout>
+            <QuizSidebar attempt={attempt} viewingAsSomeoneElse={viewingAsSomeoneElse} totalSections={sectionCount} currentSection={page ? page : undefined} sectionStates={sectionStates} sectionTitles={sectionTitles}/>
+            <MainContent>
+                {page === null ?
+                    <div className="mt-4">
+                        {!isDefined(studentUser?.id) && <QuizHeader {...props} />}
+                        {viewingAsSomeoneElse && <div className="mb-2">
+                            You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
+                        </div>}
+                        <QuizRubric {...props}/>
+                        <QuizContents {...props} />
+                    </div>
+                    :
+                    <QuizSection {...props} page={page}/>
+                }
+            </MainContent>
+        </SidebarLayout>
     </QuizAttemptContext.Provider>;
 }

@@ -16,6 +16,7 @@ export interface ListViewCardProps extends ListGroupItemProps {
     icon: TitleIconProps;
     subject?: Subject;
     linkTags?: ListViewTagProps[];
+    url?: string;
 }
 
 export const ListViewCard = ({item, icon, subject, linkTags, ...rest}: ListViewCardProps) => {
