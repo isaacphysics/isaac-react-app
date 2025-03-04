@@ -161,10 +161,10 @@ export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
     />;
 };
 
-export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & ListGroupProps) => {
-    const { cards, ...rest } = props;
+export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & {showBlanks?: boolean} & ListGroupProps) => {
+    const { cards, showBlanks, ...rest } = props;
     return <ListGroup {...rest} className={classNames("list-view-card-container link-list list-group-links p-0 m-0 flex-row row-cols-1 row-cols-lg-2 row", rest.className)}>
-        {cards.map((card, index) => card ? <ListViewCard key={index} {...card}/> : <ListGroupItem key={index}/>)}
+        {cards.map((card, index) => card ? <ListViewCard key={index} {...card}/> : (showBlanks ? <ListGroupItem key={index}/> : null))}
     </ListGroup>;
 };
 

@@ -131,7 +131,7 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
 
         <RandomQuestionBanner context={pageContext} />
 
-        <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} className="my-5" />
+        <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-5" />
 
         <Row className={classNames("mt-5 py-4 row-cols-1 row-cols-md-2")}>
             <div className="d-flex flex-column mt-3"> 
