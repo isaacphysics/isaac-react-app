@@ -133,7 +133,7 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
 
         <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} className="my-5" />
 
-        <Row className={classNames("mt-5 py-4 row-cols-2")}>
+        <Row className={classNames("mt-5 py-4 row-cols-1 row-cols-md-2")}>
             <div className="d-flex flex-column mt-3"> 
                 {/* if there are books, display books. otherwise, display news */}
                 {books.length > 0
