@@ -186,7 +186,7 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
                         return <Row className="h-100">
                             {relevantEvents.length 
                                 ? relevantEvents.map((event, i) => 
-                                    <Col xs={6} md={4} lg={books.length > 0 ? 6 : 4} key={i}>
+                                    <Col xs={6} key={i}>
                                         {event && <EventCard event={event} />}
                                     </Col>
                                 ) 
