@@ -106,18 +106,85 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     </div>;
 };
 
-export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
-    const pageContext = useUrlPageTheme();
-    const deviceSize = useDeviceSize();
-
+export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
     useEffect(() => {
         getEventsList({startIndex: 0, limit: 10, typeFilter: EventTypeFilter["All events"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
     }, []);
 
-    const books = getBooksForContext(pageContext);
+    const books = getBooksForContext(context);
     // TODO: are we going to make subject-specific news?
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
+    
+    return <Row className={classNames("mt-5 py-4 row-cols-1 row-cols-md-2")}>
+        <div className="d-flex flex-column mt-3"> 
+            {/* if there are books, display books. otherwise, display news */}
+            {books.length > 0
+                ? <>
+                    <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
+                        <h4 className="m-0">{getHumanContext(context)} books</h4>
+                        <div className="section-divider-bold"/>
+                    </div>
+                    <Col className="d-flex flex-column">
+                        {books.slice(0, 4).map((book, index) => <Link key={index} to={book.path} className="book-container d-flex p-2 gap-3">
+                            <div className="book-image-container">
+                                <img src={book.image} alt={book.title} className="h-100"/>
+                            </div>
+                            <div className="d-flex flex-column">
+                                <h5 className="pt-2 pt-2 pb-1 m-0">{book.title}</h5>
+                                <div className="section-divider"/>
+                                <span className="text-decoration-none">
+                                    This is some explanatory text about the book. It could be a brief description of the book, or a list of topics covered.
+                                </span>
+                            </div>
+                        </Link>)}
+                    </Col>
+                </> 
+                : <>
+                    <div className="d-flex flex-column"> 
+                        <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
+                            <h4>News & Features</h4>
+                            <div className="section-divider-bold"/>
+                        </div>
+                        {news && <Row className="h-100">
+                            {news.slice(0, 2).map(newsItem => <Col xs={12} key={newsItem.id}>
+                                <NewsCard newsItem={newsItem} className="force-horizontal p-2" />
+                            </Col>)}
+                        </Row>}
+                    </div>
+                </>
+            }
+        </div>
+        <div className="d-flex flex-column mt-3">
+            <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
+                <h4 className="m-0">Events</h4>
+                <div className="section-divider-bold"/>
+            </div>
+            <ShowLoadingQuery
+                query={eventsQuery}
+                defaultErrorTitle={"Error loading events list"}
+                thenRender={({events}) => {
+                    // TODO: filter by audience, once that data is available
+                    const relevantEvents = events.filter(event => context?.subject && event.tags?.includes(context.subject)).slice(0, 2);
+                    return <Row className="h-100">
+                        {relevantEvents.length 
+                            ? relevantEvents.map((event, i) => 
+                                <Col key={i}>
+                                    {event && <EventCard event={event} className="force-horizontal p-2" />}
+                                </Col>
+                            ) 
+                            : <Col className="pt-3 pb-5">No events found for {getHumanContext(context)}. Check back soon!</Col>
+                        }
+                    </Row>;
+                }}
+            />
+        </div>
+    </Row>;
+};
+
+export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
+    const pageContext = useUrlPageTheme();
+    const deviceSize = useDeviceSize();
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb 
@@ -133,69 +200,8 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
 
         <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-5" />
 
-        <Row className={classNames("mt-5 py-4 row-cols-1 row-cols-md-2")}>
-            <div className="d-flex flex-column mt-3"> 
-                {/* if there are books, display books. otherwise, display news */}
-                {books.length > 0
-                    ? <>
-                        <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                            <h4 className="m-0">{getHumanContext(pageContext)} books</h4>
-                            <div className="section-divider-bold"/>
-                        </div>
-                        <Col className="d-flex flex-column">
-                            {books.slice(0, 4).map((book, index) => <Link key={index} to={book.path} className="book-container d-flex p-2 gap-3">
-                                <div className="book-image-container">
-                                    <img src={book.image} alt={book.title} className="h-100"/>
-                                </div>
-                                <div className="d-flex flex-column">
-                                    <h5 className="pt-2 pt-2 pb-1 m-0">{book.title}</h5>
-                                    <div className="section-divider"/>
-                                    <span className="text-decoration-none">
-                                        This is some explanatory text about the book. It could be a brief description of the book, or a list of topics covered.
-                                    </span>
-                                </div>
-                            </Link>)}
-                        </Col>
-                    </> 
-                    : <>
-                        <div className="d-flex flex-column"> 
-                            <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                                <h4>News & Features</h4>
-                                <div className="section-divider-bold"/>
-                            </div>
-                            {news && <Row className="h-100">
-                                {news.slice(0, 2).map(newsItem => <Col xs={12} key={newsItem.id}>
-                                    <NewsCard newsItem={newsItem} className="force-horizontal p-2" />
-                                </Col>)}
-                            </Row>}
-                        </div>
-                    </>
-                }
-            </div>
-            <div className="d-flex flex-column mt-3">
-                <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                    <h4 className="m-0">Events</h4>
-                    <div className="section-divider-bold"/>
-                </div>
-                <ShowLoadingQuery
-                    query={eventsQuery}
-                    defaultErrorTitle={"Error loading events list"}
-                    thenRender={({events}) => {
-                        // TODO: filter by audience, once that data is available
-                        const relevantEvents = events.filter(event => pageContext?.subject && event.tags?.includes(pageContext.subject)).slice(0, 2);
-                        return <Row className="h-100">
-                            {relevantEvents.length 
-                                ? relevantEvents.map((event, i) => 
-                                    <Col key={i}>
-                                        {event && <EventCard event={event} className="force-horizontal p-2" />}
-                                    </Col>
-                                ) 
-                                : <Col className="pt-3 pb-5">No events found for {getHumanContext(pageContext)}. Check back soon!</Col>
-                            }
-                        </Row>;
-                    }}
-                />
-            </div>
-        </Row>
+        <LandingPageFooter context={pageContext} />
+
+        
     </Container>;
 });

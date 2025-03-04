@@ -6,6 +6,7 @@ import { useUrlPageTheme } from "../../services/pageContext";
 import { HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, Subject } from "../../services";
 import { PageContextState } from "../../../IsaacAppTypes";
 import { ListViewCards } from "../elements/list-groups/ListView";
+import { LandingPageFooter } from "./SubjectLandingPage";
 
 const SubjectCards = ({context}: { context: PageContextState }) => {
     if (!isDefined(context?.subject)) return null;
@@ -103,7 +104,7 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
 
             {/* <ExampleQuestions/> */}
 
-            {/* copy subject landing page books/news/events when merged */}
+            <LandingPageFooter context={pageContext} />
         </div>}
     </Container>;
 });
