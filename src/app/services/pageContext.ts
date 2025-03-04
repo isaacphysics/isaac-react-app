@@ -164,12 +164,16 @@ export function useUrlPageTheme(params?: {resetIfNotFound?: boolean}): PageConte
     return determinePageContextFromUrl(location.pathname);
 }
 
-export function isDefinedContext(context?: PageContextState): context is NonNullable<Required<PageContextState>> {
+export function isDefinedContext(context?: PageContextState): context is NonNullable<PageContextState> {
+    return isDefined(context) && (isDefined(context.subject) || isDefined(context.stage));
+}
+
+export function isFullyDefinedContext(context?: PageContextState): context is NonNullable<Required<PageContextState>> {
     return isDefined(context) && isDefined(context.subject) && isDefined(context.stage);
 }
 
 export function isSingleStageContext(context?: PageContextState): boolean {
-    return isDefinedContext(context) && context.stage.length === 1;
+    return isFullyDefinedContext(context) && context.stage.length === 1;
 }
 
 export function isValidStageSubjectPair(subject: Subject, stage: LearningStage): boolean {

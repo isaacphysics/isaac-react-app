@@ -7,7 +7,7 @@ import {
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     isAda,
-    isDefinedContext,
+    isFullyDefinedContext,
     isLoggedIn,
     isPhy,
     Item,
@@ -394,7 +394,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <IsaacSpinner />
     </div>;
 
-    const crumb = isPhy && isDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
+    const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Card, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { getHumanContext, isDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
+import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
 import { above, below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, STAGE, useDeviceSize } from "../../services";
@@ -50,7 +50,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
         searchDebounce();
     }, [searchDebounce]);
 
-    if (!context || !isDefinedContext(context) || !isSingleStageContext(context)) {
+    if (!context || !isFullyDefinedContext(context) || !isSingleStageContext(context)) {
         return null;
     }
 
