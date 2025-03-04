@@ -33,7 +33,7 @@ export const TeacherFeatures = () => {
         </Link>;
     };
 
-    return<Container>
+    return <Container>
         <Row className="mb-4">
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={"Teacher Features"} />
@@ -43,11 +43,11 @@ export const TeacherFeatures = () => {
             {isDisabled ?
                 <Col md={6}>
                     <p className="subtitle">
-                    Isaac Physics provides you with a huge range of resources to support your teaching of Physics – all for free.                 </p>
+                    Isaac provides you with a huge range of resources to support your teaching of Science subjects – all for free.                 </p>
                 </Col>:
                 <Col>
                     <p className="subtitle">
-                        Isaac Physics provides you with a huge range of resources to support your teaching of Physics – all for free.                 </p>
+                        Isaac provides you with a huge range of resources to support your teaching of Science subjects – all for free.                 </p>
                 </Col>}
             {isDisabled && <Col md={6} className="text-center text-md-end">
                 <Button tag={Link} size="lg" color="secondary" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
@@ -102,7 +102,7 @@ export const TeacherFeatures = () => {
                     url = "/events?types=teacher"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#use-with-class"
                     title = "Teacher CPD"
-                    subtitle = "Free short courses to help you use Isaac Physics: by topic or by level of experience with Isaac."
+                    subtitle = "Free short courses to help you use Isaac: by topic or by level of experience with Isaac."
                 />
             </Col>
             <Col xs={0} sm={3} className="d-md-none"/>
@@ -124,7 +124,7 @@ export const TeacherFeatures = () => {
                 <TeacherFeatureCard
                     url = "/pages/order_books"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#skills-book-cover"
-                    title = "Isaac Physics Books"
+                    title = "Isaac Books"
                     subtitle = "Buy one of our Skills Mastery books at cost."
                 />
             </Col>
