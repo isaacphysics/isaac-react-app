@@ -127,6 +127,9 @@ function isValidIsaacStage(stage?: string): stage is LearningStage {
 
 function determinePageContextFromUrl(url: string): PageContextState {
     const [subject, stage] = url.split("/").filter(Boolean);
+    if (isValidIsaacSubject(subject) && stage === undefined) {
+        return {subject, stage: []};
+    }
     if (isValidIsaacSubject(subject) && isValidIsaacStage(stage)) {
         return {subject, stage: [stage]};
     }
@@ -146,7 +149,7 @@ export function useUrlPageTheme(params?: {resetIfNotFound?: boolean}): PageConte
 
     useEffect(() => {
         const urlContext = determinePageContextFromUrl(location.pathname);
-        if (urlContext?.subject && urlContext?.stage) {
+        if (urlContext?.subject || urlContext?.stage) {
             dispatch(pageContextSlice.actions.updatePageContext({
                 subject: urlContext.subject, 
                 stage: urlContext.stage
