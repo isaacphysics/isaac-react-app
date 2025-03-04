@@ -86,9 +86,7 @@ export const TeacherFeatures = () => {
             </Col>
         </Row>
         <Row className="my-4">
-            <Col>
-                <h3 className="h-title text-center">Teacher Support</h3>
-            </Col>
+            <h4>Teacher Support</h4>
         </Row>
         <Row className="isaac-cards-body mt-2 px-3">
             <Col sm={6} md={4} className="mb-3 mb-md-0">
@@ -119,9 +117,7 @@ export const TeacherFeatures = () => {
             </Col>
         </Row>
         <Row className="my-4">
-            <Col>
-                <h3 className="h-title text-end">Teacher Resources</h3>
-            </Col>
+            <h4>Teacher Resources</h4>
         </Row>
         <Row className="isaac-cards-body mb-5 mt-2 px-3">
             <Col sm={6} md={4} className="mb-3 mb-md-0">
