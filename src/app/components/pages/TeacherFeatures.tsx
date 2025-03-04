@@ -23,7 +23,7 @@ export const TeacherFeatures = () => {
     const TeacherFeatureCard = (props: TeacherFeatureCardProps) => {
         const {url, imgSrc, title, subtitle, disabled} = props;
         return <Link to={url} className="h-100 w-100" aria-label={title} aria-disabled={disabled} style={{textDecoration: "none"}}>
-            <Card className={classNames("p-3 teacher-features", {"disabled": disabled})}>
+            <Card className={classNames("p-3 teacher-features h-100", {"disabled": disabled})}>
                 <div className="d-flex justify-content-between">
                     <h5 className="mt-3 me-2">{title}</h5>
                     <img src={imgSrc} alt=""/>
