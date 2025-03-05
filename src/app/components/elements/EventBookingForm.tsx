@@ -113,7 +113,12 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             id="job-title" name="job-title" type="text" value={additionalInformation.jobTitle  || ""}
                             onChange={event => updateAdditionalInformation({jobTitle: event.target.value})}
                         />
-                    </React.Fragment>}
+                        <Label htmlFor="experience-level">Level of teaching experience</Label>
+                        <Input
+                            id="experience-level" name="experience-level" type="text" value={additionalInformation.experienceLevel  || ""}
+                            onChange={event => updateAdditionalInformation({experienceLevel: event.target.value})}
+                        />
+                    </React.Fragment>}                   
                     {targetUser.role == 'STUDENT' && <React.Fragment>
                         <Label htmlFor="year-group" className="form-required">
                             {/* Based on the options, if only teacher roles are avalable use "Role" */}
@@ -170,7 +175,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
 
                     {additionalInformation.yearGroup != 'TEACHER' && additionalInformation.yearGroup != 'OTHER' && <Row>
                         <Col xs={12}>
-                            <h3>Emergency contact details</h3>
+                            <h5 className="mt-3">Emergency contact details</h5>
                         </Col>
                         <Col md={6}>
                             <Label htmlFor="emergency-name" className="form-required">
@@ -192,13 +197,6 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         </Col>
                     </Row>}
                 </div>}
-                {targetUser.role != 'STUDENT' && <React.Fragment>
-                    <Label htmlFor="experience-level">Level of teaching experience</Label>
-                    <Input
-                        id="experience-level" name="experience-level" type="text" value={additionalInformation.experienceLevel  || ""}
-                        onChange={event => updateAdditionalInformation({experienceLevel: event.target.value})}
-                    />
-                </React.Fragment>}
             </CardBody>
         </Card>
     </>;
