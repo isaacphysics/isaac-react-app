@@ -99,7 +99,7 @@ $inline-feedback-padding: 2px;
 
 .inline-container {
   display: inline-flex;
-  border-radius: var(--bs-border-radius);
+  border-radius: $border-radius-lg;
   width: 100%;
   
   .feedback-wrapper {
@@ -184,7 +184,7 @@ $inline-feedback-padding: 2px;
 
   @media screen {
     .units-shown {
-      border-radius: 5px 0 0 5px !important;
+      border-radius: $border-radius-lg 0 0 $border-radius-lg !important;
     }
   }
 
@@ -193,11 +193,7 @@ $inline-feedback-padding: 2px;
       display: block;
       height: 100%;
       min-width: 36px !important;
-      border-radius: 0 5px 5px 0;
-      border: none;
-      &:active {
-        border: none !important;
-      }
+      border-radius: 0 $border-radius-lg $border-radius-lg 0;
       &.feedback-shown {
         padding-right: 36px !important;
       }
@@ -205,7 +201,6 @@ $inline-feedback-padding: 2px;
       > div {
         // force contents of button to fit in $inline-feedback-size, so we can use it at all sizes
         height: $inline-feedback-size;
-        margin-top: -9.5px; 
       }
     }
     &.display-unit {

@@ -3,7 +3,7 @@ import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Dropdown, Dro
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
-import { HUMAN_STAGES, HUMAN_SUBJECTS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, above, isTeacherOrAbove, useDeviceSize } from "../../../services";
+import { HUMAN_STAGES, HUMAN_SUBJECTS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, above, below, isTeacherOrAbove, useDeviceSize } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
@@ -113,7 +113,7 @@ const StaticNavigationDropdown = (props: NavigationDropdownProps) => {
         <DropdownToggle nav className="py-4 px-3 px-lg-4" tabIndex={0}>
             {title}
         </DropdownToggle>
-        <DropdownMenu>
+        <DropdownMenu onClick={() => toggle()}>
             {children}
         </DropdownMenu>
     </Dropdown>;
@@ -235,7 +235,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
     const deviceSize = useDeviceSize();
 
     const NavigationItemClose = (props: NavigationItemProps) => {
-        return <NavigationItem {...props} onClick={toggleMenu} />;
+        return <NavigationItem {...props} onClick={() => below['sm'](deviceSize) && toggleMenu()} />;
     };
 
     const profileTabContents = <>

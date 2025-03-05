@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardProps, CardText, CardTitle, Col, Container, Row} from "reactstrap";
-import {above, EventStatusFilter, EventTypeFilter, HUMAN_STAGES, HUMAN_SUBJECTS, isLoggedIn, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, Subject, useDeviceSize} from "../../../services";
+import {above, EventStatusFilter, EventTypeFilter, extractTeacherName, HUMAN_STAGES, HUMAN_SUBJECTS, isLoggedIn, isTutorOrAbove, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, Subject, useDeviceSize} from "../../../services";
 import { NewsCard } from "../../elements/cards/NewsCard";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { EventCard } from "../../elements/cards/EventCard";
@@ -10,6 +10,9 @@ import { StudentDashboard } from "../../elements/StudentDashboard";
 import { ShortcutResponse } from "../../../../IsaacAppTypes";
 import { ListViewCardProps, ListViewCards } from "../../elements/list-groups/ListView";
 import { Spacer } from "../../elements/Spacer";
+import { TeacherDashboard } from "../../elements/TeacherDashboard";
+import StyledToggle from "../../elements/inputs/StyledToggle";
+import { UserSummaryDTO } from "../../../../IsaacApiTypes";
 
 interface HomepageHeroCardProps extends CardProps {
     title?: string;
@@ -73,6 +76,30 @@ const HomepageHero = () => {
     }
 };
 
+const Dashboard = () => {
+    const user = useAppSelector(selectors.user.orNull);
+    const [studentView, setStudentView] = useState(false);
+    if (isLoggedIn(user)) {
+        if (isTutorOrAbove(user)) {
+            return <>
+                <div className="dashboard-toggle">
+                    Dashboard view <Spacer />
+                    <StyledToggle
+                        checked={studentView}
+                        falseLabel="Teacher"
+                        trueLabel="Student"
+                        onChange={() => setStudentView(studentView => !studentView)}             
+                    />
+                </div>
+                {studentView ? <StudentDashboard /> : <TeacherDashboard />}
+            </>;
+        }
+        else {
+            return <StudentDashboard />;
+        }
+    }
+};
+
 type subjectCategory = {subject: string, humanSubject: string, subcategories: {humanStage: string, href: string}[]};
 const subjectCategories = Object.entries(PHY_NAV_SUBJECTS).map(([subject, stages]) => {
     return {
@@ -97,7 +124,8 @@ const getListViewSubjectCard = (sc: subjectCategory) => {
         item: item,
         icon: {type: "img", icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`},
         subject: sc.subject as Subject,
-        linkTags: sc.subcategories.map((subcat) => ({tag: subcat.humanStage, url: subcat.href}))
+        linkTags: sc.subcategories.map((subcat) => ({tag: subcat.humanStage, url: subcat.href})),
+        url: `/${sc.subject}`,
     };
 
     return listViewSubjectCard;
@@ -109,6 +137,8 @@ export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
 
     const user = useAppSelector(selectors.user.orNull);
+    const nameToDisplay = isLoggedIn(user) && (isTutorOrAbove(user) ? extractTeacherName(user as UserSummaryDTO) : user.givenName);
+    
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
 
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
@@ -118,8 +148,9 @@ export const HomepagePhy = () => {
     
     return <>
         <div id="homepage" className="homepage pb-5">
-            <section id="student-dashboard">
-                <StudentDashboard />
+            <section id="dashboard">
+                {nameToDisplay && <div className="welcome-text">Welcome back, {nameToDisplay}!</div>}
+                <Dashboard />
             </section>
             <section id="homepage-hero">               
                 {!isLoggedIn(user) && <HomepageHero />}

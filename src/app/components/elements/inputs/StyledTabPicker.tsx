@@ -2,6 +2,7 @@ import React from "react";
 import { ReactNode } from "react";
 import { Label, Input } from "reactstrap";
 import { isDefined } from "../../../services";
+import { Spacer } from "../Spacer";
 import classNames from "classnames";
 
 /**
@@ -20,6 +21,11 @@ interface StyledTabPickerProps extends React.HTMLAttributes<HTMLLabelElement> {
     onInputChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
     checkboxTitle: ReactNode;
     count?: number;
+    suffix?: {
+        icon: string;
+        action?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+        info: string;
+    }
 }
 
 /**
@@ -30,10 +36,14 @@ interface StyledTabPickerProps extends React.HTMLAttributes<HTMLLabelElement> {
  * @returns {JSX.Element}
  */
 export const StyledTabPicker = (props: StyledTabPickerProps): JSX.Element => {
-    const { checked, disabled, onInputChange, checkboxTitle, count, ...rest } = props;
-    return <Label {...rest} className={classNames("d-flex align-items-center tab-picker py-2 mb-1")}>
+    const { checked, disabled, onInputChange, checkboxTitle, count, suffix, ...rest } = props;
+    return <Label {...rest} tabIndex={-1} className={classNames("d-flex align-items-center tab-picker py-2 my-1 w-100")}>
         <Input type="checkbox" checked={checked ?? false} onChange={onInputChange} disabled={disabled} />
         <span className="ms-3">{checkboxTitle}</span>
         {isDefined(count) && <span className="badge rounded-pill ms-2">{count}</span>}
+        <Spacer/>
+        {suffix && <button type="button" className="px-2 py-1 bg-transparent" onClick={suffix.action} aria-label={suffix.info} title={suffix.info} disabled={disabled}>
+            <i className={`${suffix.icon} d-block`}/>
+        </button>}
     </Label>;
 };

@@ -23,7 +23,8 @@ import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 import { Spacer } from "./Spacer";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
-import { Input } from "reactstrap";
+import { StyledCheckbox } from "./inputs/StyledCheckbox";
+import { Markup } from "./markup";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -62,18 +63,16 @@ const GameboardBuilderRow = (
     const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
 
     return filteredAudienceViews.map((view, i, arr) => <tr
-        key={`${question.id} ${i}`} className={classnames({selected: isSelected})}
+        key={`${question.id} ${i}`}
     >
         {i === 0 && <>
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
-                    <Input
-                        type="checkbox"
+                    <StyledCheckbox
                         id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                         aria-label={!isSelected ? "Select question" : "Deselect question"}
                         title={!isSelected ? "Select question" : "Deselect question"}
-                        color="secondary"
-                        className={!provided ? "isaac-checkbox mt-1" : undefined}
+                        color="primary"
                         checked={isSelected}
                         onChange={() => {
                             if (question.id) {
@@ -103,7 +102,7 @@ const GameboardBuilderRow = (
                     <div>
                         <div className="d-flex">
                             <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
-                                {generateQuestionTitle(question)}
+                                <Markup encoding="latex">{generateQuestionTitle(question)}</Markup>
                             </a>
                             <input
                                 type="image" src="/assets/common/icons/new-tab.svg" alt="Preview question" title="Preview question in modal"

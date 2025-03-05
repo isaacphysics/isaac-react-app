@@ -27,7 +27,7 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
         ? "NOT_SUBMITTED" 
         : attempt?.correctValue 
             ? "CORRECT"
-            : attempt?.correctValue === undefined 
+            : attempt?.correctValue === undefined && questionDTO.requireUnits
                 ? "NOT_SUBMITTED"  // this fixes an edge case caused by the value not being marked (i.e. correctValue === undefined) if the units are not answered; we should not colour the value in this case
                 : (attempt?.answer as QuantityDTO | undefined)?.value 
                     ? "INCORRECT" 
