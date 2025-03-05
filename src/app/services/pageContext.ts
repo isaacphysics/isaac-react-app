@@ -23,15 +23,14 @@ const filterBySubjects = (tags: (TAG_ID | string)[]): SiteTheme[] => {
  * 
  * If no subject tags are found, `"neutral"` is returned as a default.
  * 
- * @param element - The element from which to find the active context theme.
+ * @param currentTheme - The current page theme. Find via e.g. `useAppSelector(selectors.pageContext.theme)`.
  * @param tags - The content object tags in which to search for a subject.
  * @returns The most relevant theme.
  */
-export const getThemeFromContextAndTags = (element: React.RefObject<HTMLElement>, tags: (TAG_ID | string)[]): SiteTheme => {
-    const currentTheme = element.current?.closest("[data-bs-theme]")?.getAttribute("data-bs-theme") as SiteTheme;
+export const getThemeFromContextAndTags = (currentTheme: Subject | undefined, tags: (TAG_ID | string)[]): SiteTheme => {
     const subjectTags = filterBySubjects(tags);
 
-    if (currentTheme !== "neutral" && subjectTags.includes(currentTheme)) {
+    if (currentTheme && subjectTags.includes(currentTheme)) {
         return currentTheme;
     }
 

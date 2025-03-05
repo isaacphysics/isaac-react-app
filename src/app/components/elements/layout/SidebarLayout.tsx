@@ -3,13 +3,12 @@ import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHead
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, siteSpecific, SiteTheme, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
 import { AppGroup, AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
-import { getHumanContext } from "../../../services/pageContext";
 import { AssignmentState } from "../../pages/MyAssignments";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
@@ -27,11 +26,12 @@ export const MainContent = (props: ColProps) => {
     return siteSpecific(<Col xs={12} lg={8} xl={9} {...rest} className={classNames(className, "order-0 order-lg-1")} />, props.children);
 };
 
-const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & {question: QuestionDTO, sidebarRef: RefObject<HTMLDivElement>}) => {
-    const { question, sidebarRef, ...rest } = props;
+const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & {question: QuestionDTO}) => {
+    const { question, ...rest } = props;
+    const subject = useAppSelector(selectors.pageContext.subject);
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
                         
-    return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(sidebarRef, question.tags ?? [])}>
+    return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
         <Link to={`/questions/${question.id}`} className="py-2">
             <i className="icon icon-question"/>
             <div className="d-flex flex-column w-100">
@@ -42,10 +42,11 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & {question: Qu
     </li>;
 };
 
-const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: IsaacConceptPageDTO, sidebarRef: RefObject<HTMLDivElement>}) => {
-    const { concept, sidebarRef, ...rest } = props;
+const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: IsaacConceptPageDTO}) => {
+    const { concept, ...rest } = props;
+    const subject = useAppSelector(selectors.pageContext.subject);
     
-    return <li key={concept.id} {...rest} data-bs-theme={getThemeFromContextAndTags(sidebarRef, concept.tags ?? [])}>
+    return <li key={concept.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, concept.tags ?? [])}>
         <Link to={`/concepts/${concept.id}`} className="py-2">
             <i className="icon icon-lightbulb"/>
             <span className="hover-underline link-title">{concept.title}</span>
@@ -139,7 +140,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
             <div className="section-divider"/>
             <h5>Related concepts</h5>
             <ul className="link-list">
-                {relatedConcepts.map((concept, i) => <ConceptLink key={i} concept={concept} sidebarRef={sidebarRef} />)}
+                {relatedConcepts.map((concept, i) => <ConceptLink key={i} concept={concept} />)}
             </ul>
         </>}
         {relatedQuestions && relatedQuestions.length > 0 && <>
@@ -148,19 +149,19 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
                     <div className="section-divider"/>
                     <h5>Related questions</h5>
                     <ul className="link-list">
-                        {relatedQuestions.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
+                        {relatedQuestions.map((question, i) => <QuestionLink key={i} question={question} />)}
                     </ul>
                 </>
                 : <>
                     <div className="section-divider"/>
                     <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
                     <ul className="link-list">
-                        {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
+                        {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} />)}
                     </ul>
                     <div className="section-divider"/>
                     <h5>Related questions for other learning stages</h5>
                     <ul className="link-list">
-                        {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
+                        {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} />)}
                     </ul>
                 </>
             }
