@@ -13,7 +13,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
 
     const humanSubject = context?.subject && HUMAN_SUBJECTS[context.subject];
 
-    return <ListViewCards cards={[
+    return <ListViewCards showBlanks cards={[
         {
             item: {
                 title: "A Level",
@@ -48,6 +48,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
         }
     ]
         .map(({stage, ...card}) => (PHY_NAV_SUBJECTS[context.subject as Subject] as readonly LearningStage[])?.includes(stage) ? card : null)
+        .sort((a, b) => a ? (b ? 0 : -1) : 1) // put nulls at the end
     } />;
 };
 
