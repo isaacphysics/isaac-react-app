@@ -504,7 +504,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             {categories.map(c => <FilterTag key={c.value} tag={c}/>)}
             {categories.length > 0 ?
                 <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
-                    clear all filters
+                    Clear all filters
                 </button>
                 : <div/>}
         </div>;

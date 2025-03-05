@@ -554,7 +554,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
         },
         {
             title: "Pre-University Physical Chemistry", value: "chemistry_16",
-            label: "A-Level Physics Chemistry", image: "assets/phy/books/chemistry_16.jpg",
+            label: "A-Level Physical Chemistry", image: "assets/phy/books/chemistry_16.jpg",
             path: "/books/chemistry_16", subject: "chemistry"
         }
     ],
