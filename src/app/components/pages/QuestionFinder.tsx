@@ -3,22 +3,29 @@ import {AppState, clearQuestionSearch, searchQuestions, useAppDispatch, useAppSe
 import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
+    BookInfo,
+    difficultyShortLabelMap,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     getHumanContext,
+    HUMAN_STAGES,
+    ISAAC_BOOKS,
     isAda,
     isDefinedContext,
     isLoggedIn,
     isPhy,
+    Item,
     itemiseTag,
     LearningStage,
     ListParams,
     SEARCH_CHAR_LENGTH_LIMIT,
     SEARCH_RESULTS_PER_PAGE,
+    simpleDifficultyLabelMap,
     siteSpecific,
     STAGE,
     STAGE_NULL_OPTIONS,
+    stageLabelMap,
     TAG_ID,
     TAG_LEVEL,
     tags,
@@ -465,27 +472,36 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             setSearchBooks(searchBooks.filter(f => f !== filter));
         } else if (searchStatuses[filter as keyof QuestionStatus]) {
             setSearchStatuses({...searchStatuses, [filter as keyof QuestionStatus]: false});
+        } else if (excludeBooks && filter === "excludeBooks") {
+            setExcludeBooks(false);
         }
     };
 
-    const FilterTag = ({name}: {name: string}) => {
+    const FilterTag = ({tag}: {tag: {value: string, label: string}}) => {
         return (
             <div data-bs-theme="neutral" className="filter-tag me-2 mt-1 d-flex align-items-center">
-                {name}
-                <button className="icon icon-close" onClick={() => removeFilterTag(name)} aria-label="Close"/>
+                {tag.label}
+                <button className="icon icon-close" onClick={() => removeFilterTag(tag.value)} aria-label="Close"/>
             </div>
         );
     };
 
     const FilterSummary = () => {
-        const stageList: string[] = searchStages.filter(stage => isSolitaryStage ? !pageStageToSearchStage(pageContext?.stage).includes(stage) : true);
-        const selectionList: string[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext?.subject).map(leaf => leaf.value);
+        const stageList: STAGE[] = searchStages.filter(stage => isSolitaryStage ? !pageStageToSearchStage(pageContext?.stage).includes(stage) : true);
+        const selectionList: Item<TAG_ID>[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext?.subject);
         const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
+        const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.value));
 
-        const categories = [searchDifficulties, stageList, searchExamBoards, statusList, searchBooks, selectionList].flat();
+        const categories = [
+            searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
+            stageList.map(s => {return {value: s, label: stageLabelMap[s]};}),
+            statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
+            excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.value, label: book.label}}),
+            selectionList,
+        ].flat();
 
-        return <div className="d-flex flex-wrap mt-2"> 
-            {categories.map(c => <FilterTag key={c} name={c}/>)}
+        return <div className="d-flex flex-wrap mt-2">
+            {categories.map(c => <FilterTag key={c.value} tag={c}/>)}
             {categories.length > 0 ?
                 <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
                     clear all filters
@@ -493,6 +509,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 : <div/>}
         </div>;
     };
+    
     const crumb = isPhy && isDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
