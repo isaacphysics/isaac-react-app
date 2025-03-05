@@ -1,5 +1,5 @@
 import { PageContextState } from "../../../IsaacAppTypes";
-import { getHumanContext, interleave, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS, Writeable } from "../../services";
+import { getHumanContext, interleave, isDefinedContext, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS, Writeable } from "../../services";
 import { ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
 import { ListViewCardProps } from "../elements/list-groups/ListView";
 import { BookInfo, isaacBooks } from "../elements/modals/IsaacBooksModal";
@@ -157,8 +157,13 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
 };
 
 export const getBooksForContext = (context: PageContextState): BookInfo[] => {
-    if (!isFullyDefinedContext(context)) return [];
+    if (!isDefinedContext(context)) return [];
+    if (!context?.stage?.length) {
+        return isaacBooks.filter(book => book.subject === context.subject);
+    }
+    
+    if (!isFullyDefinedContext(context)) return []; // this is implied by the above, but this has a type guard
     if (!isSingleStageContext(context)) return [];
-
+    
     return subjectSpecificBooksMap[context.subject][context.stage[0] as keyof typeof subjectSpecificBooksMap[typeof context.subject]] || [];
 };
