@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Card, Col, Container, Row } from "reactstrap";
+import { Button, Card, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
@@ -126,7 +126,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                         <div className="section-divider-bold"/>
                     </div>
                     <Col className="d-flex flex-column">
-                        {books.slice(0, 4).map((book, index) => <Link key={index} to={book.path} className="book-container d-flex p-2 gap-3">
+                        {books.slice(0, 2).map((book, index) => <Link key={index} to={book.path} className="book-container d-flex p-2 gap-3">
                             <div className="book-image-container">
                                 <img src={book.image} alt={book.title} className="h-100"/>
                             </div>
@@ -138,6 +138,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                                 </span>
                             </div>
                         </Link>)}
+                        {books.length > 2 && <Button tag={Link} color="keyline" to={`/publications`} className="btn mt-4 mx-5">View more books</Button>}
                     </Col>
                 </> 
                 : <>
@@ -169,7 +170,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                     return <Row className="h-100">
                         {relevantEvents.length 
                             ? relevantEvents.map((event, i) => 
-                                <Col key={i}>
+                                <Col xs={12} key={i}>
                                     {event && <EventCard event={event} className="force-horizontal p-2" />}
                                 </Col>
                             ) 
