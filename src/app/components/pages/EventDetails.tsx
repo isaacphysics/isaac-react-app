@@ -57,6 +57,9 @@ import * as L from "leaflet";
 import {teacherEventConfirmationModal} from "../elements/modals/TeacherEventConfirmationModal";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import { PrintButton } from "../elements/PrintButton";
+import { ReportButton } from "../elements/ReportButton";
+import { ShareLink } from "../elements/ShareLink";
 
 function formatDate(date: Date | number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -352,6 +355,11 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 <Badge className="badge rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>EXPIRED</Badge>
                             </span>}
                         <span className="event-subtitle">{event.subtitle}</span>
+                    </Col>
+                    <Col>
+                        <ShareLink linkUrl={`/events/${eventId}`} clickAwayClose />
+                        <PrintButton/>
+                        <ReportButton pageId={eventId}/> 
                     </Col>
                 </Row>
                 <Row className="mb-3 event-bg-grey">
