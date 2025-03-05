@@ -335,8 +335,8 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                     breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
                 />
                 <EditContentButton doc={event}/>
-                <Row className="mb-4">
-                    <Col className="col-3 col-sm-2 col-lg-1 me-3 pt-2">
+                <div className="d-flex mb-4">
+                    <div className="mt-2 me-4">
                         {isTeacherEvent &&
                             <span className={"event-type-hex"}>
                                 <b>TEACHER EVENT</b>
@@ -347,21 +347,21 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 <b>STUDENT EVENT</b>
                                 <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
                             </span>}
-                    </Col>
-                    <Col>
+                    </div>
+                    <div>
                         <h3 className="event-title">{event.title}</h3>
                         {hasExpired &&
                             <span className="event-pod-badge me-2">
                                 <Badge className="badge rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>EXPIRED</Badge>
                             </span>}
                         <span className="event-subtitle">{event.subtitle}</span>
-                    </Col>
-                    <Col>
+                    </div>
+                    <div className="d-flex flex-nowrap ms-auto">
                         <ShareLink linkUrl={`/events/${eventId}`} clickAwayClose />
                         <PrintButton/>
                         <ReportButton pageId={eventId}/> 
-                    </Col>
-                </Row>
+                    </div>
+                </div>
                 <Row className="mb-3 event-bg-grey">
                     <Col className="event-key-info">
                         <KeyEventInfo/>
