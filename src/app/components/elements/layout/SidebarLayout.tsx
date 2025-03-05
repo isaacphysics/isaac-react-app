@@ -529,14 +529,14 @@ export const EventsSidebar = (props: SidebarProps) => {
 
     return <ContentSidebar style={{marginTop: "65px"}} buttonTitle="Filter events" {...props}>
         <Form>
-            <h5>Event type</h5>
+            <h5 className="mb-3">Event type</h5>
             <ul>               
                 {Object.entries(EventStatusFilter)
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])
                     .map(([statusLabel, statusValue]) =>
                         <li className="list-unstyled" key={statusValue}>
-                            <Label className="label-radio d-flex">
+                            <Label className="py-1 label-radio d-flex">
                                 <Input                                   
                                     id={statusValue}
                                     name="event-status"
@@ -566,11 +566,11 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <h5>Groups</h5>
+            <h5 className="mb-3">Groups</h5>
             <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                     <li className="list-unstyled" key={typeValue}>
-                        <Label className="label-radio d-flex">
+                        <Label className="py-1 label-radio d-flex">
                             <Input                                   
                                 id={typeValue}
                                 name="event-type"
@@ -592,11 +592,11 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <h5>Stages</h5>
+            <h5 className="mb-3">Stages</h5>
             <ul>               
                 {Object.entries(EventStageMap).map(([label, value]) =>
                     <li className="list-unstyled" key={value}>
-                        <Label className="label-radio d-flex">
+                        <Label className="py-1 label-radio d-flex">
                             <Input                                   
                                 id={value}
                                 name="event-stage"
