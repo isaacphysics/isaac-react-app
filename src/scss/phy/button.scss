@@ -368,17 +368,17 @@ a.btn {
 
   button {
     position: relative;
-    z-index: 1002;
+    z-index: 12;
   }
 
   .share-link {
-    z-index: 1001;
+    z-index: 11;
     font-family: $secondary-font !important;
     display: none;
     position: absolute;
     padding: 4px 32px 4px 8px;
-    border: 1px solid gray;
-    transform: translate(calc(25px - 100%), -65px);
+    transform: translate(calc(25px - 100%), -3px);
+    border: 1px solid $color-neutral-300;
     background: #fff;
     height: 58px;
     width: 70%;
@@ -394,7 +394,8 @@ a.btn {
       -ms-user-select: all;
       width: 100%;
       padding-left: 2px;
-      border-width: 1px;
+      border: none;
+      border-bottom: 2px solid $color-neutral-200;
     }
 
     &.double-height {
