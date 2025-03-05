@@ -506,6 +506,61 @@ export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) 
     return acc;
 }, {} as {[stage : string]: SUBJECTS[]});
 
+export interface BookInfo {
+    title: string;
+    value: string;
+    label: string;
+    image: string;
+    path: string;
+    subject: Subject;
+}
+
+export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
+    [
+        {
+            title: "Step up to GCSE Physics", value: "phys_book_step_up",
+            label: "Step up to GCSE Physics", image: "assets/phy/books/step_up_phys.jpg",
+            path: "/books/step_up_phys", subject: "physics"
+        },
+        {
+            title: "GCSE Physics", value: "phys_book_gcse",
+            label: "GCSE Physics", image: "assets/phy/books/phys_book_gcse.jpg",
+            path: "/books/phys_book_gcse", subject: "physics"
+        },
+        {
+            title: "Pre-University Physics", value: "physics_skills_19",
+            label: "A Level Physics (3rd Edition)", image: "assets/phy/books/physics_skills_19.jpg",
+            path: "/books/physics_skills_19", subject: "physics"
+        },
+        {
+            title: "Linking Concepts in Pre-University Physics", value: "physics_linking_concepts",
+            label: "Linking Concepts in Pre-Uni Physics", image: "assets/phy/books/linking_concepts.png",
+            path: "/books/linking_concepts", subject: "physics"
+        },
+        {
+            title: "Using Essential GCSE Mathematics", value: "maths_book_gcse",
+            label: "GCSE Maths", image: "assets/phy/books/2021_maths_book_gcse.jpg",
+            path: "/books/maths_book_gcse", subject: "maths"
+        },
+        {
+            title: "Mathematics for Sciences (2nd edition)", value: "maths_book_2e",
+            label: "Pre-Uni Maths (2nd edition)", image: "assets/phy/books/pre_uni_maths_2e.jpg",
+            path: "/books/pre_uni_maths_2e", subject: "maths"
+        },
+        {
+            title: "Mathematics for Sciences (1st edition)", value: "maths_book",
+            label: "Pre-Uni Maths (1st edition)", image: "assets/phy/books/pre_uni_maths.jpg",
+            path: "/books/pre_uni_maths", subject: "maths"
+        },
+        {
+            title: "Pre-University Physical Chemistry", value: "chemistry_16",
+            label: "A-Level Physical Chemistry", image: "assets/phy/books/chemistry_16.jpg",
+            path: "/books/chemistry_16", subject: "chemistry"
+        }
+    ],
+    []
+);
+
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
