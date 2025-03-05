@@ -96,15 +96,23 @@
   }
 }
 
-.physics-welcome-text {
+.welcome-text {
   font-family: $secondary-font-bold;
   font-size: 24px;
+  background-color: white;
+  padding-left: 30px;
+  padding-top: 20px;
+}
+
+.dashboard-toggle {
+  background-color: white;
+  padding-left: 30px;
+  padding-top: 20px;
 }
 
 .dashboard {
   background-color: white;
-  padding: 50px 30px;
-  margin: 5px 0px;
+  padding: 10px 30px 50px;
 }
 
 $dashboard-panel-size: 120px;
@@ -138,7 +146,12 @@ $dashboard-panel-padding: 30px;
   border: 2px solid $color-neutral-200;
   border-radius: 8px;
   height: 100%;
+  max-height: 450px;
   padding: $dashboard-panel-padding;
+
+  @include media-breakpoint-only(lg) {
+    max-height: 500px;
+  }
 
   h4 {
     color: $color-brand-700;
@@ -152,6 +165,10 @@ $dashboard-panel-padding: 30px;
     font-weight: 600;
   }
   
+  .plain-link {
+    text-decoration: none;
+  }
+
   .panel-link {
     color: $color-neutral-800;
     width: max-content;
@@ -163,6 +180,11 @@ $dashboard-panel-padding: 30px;
 
     &:hover {
       text-decoration: none;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2pt black !important;
+      border-radius: 1px;
     }
   }
 
@@ -188,6 +210,21 @@ $dashboard-panel-padding: 30px;
       line-height: 32px;
       font-weight: 700;
     }
+  }
+}
+
+.scrollable-panel {
+  overflow-y: auto;
+}
+
+.book-panel {
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  .book {
+    font-family: $secondary-font-medium;
+    font-size: 14px;
+    text-decoration: none;
   }
 }
 
@@ -218,5 +255,12 @@ a:has(.assignment-card) {
   &:hover {
     scale: 1.02;
     border-color: $color-neutral-400;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .row-cols-lg-8 > *{
+    flex: 0 0 auto;
+    width: 12.5%;
   }
 }

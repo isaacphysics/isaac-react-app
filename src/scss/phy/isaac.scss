@@ -365,7 +365,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "../common/headings";
 @import "../common/modals";
 @import "forms";
-@import "../common/elements";
+@import "elements";
 @import "breadcrumbs";
 @import "../common/media";
 @import "../common/cookies";
@@ -394,6 +394,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "cards";
 @import "featured-profile";
 @import "../common/code";
+@import "modals";
 
 // Navigation
 @import "footer";
