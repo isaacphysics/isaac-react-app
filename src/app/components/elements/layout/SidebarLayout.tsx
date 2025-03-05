@@ -3,7 +3,7 @@ import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHead
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, QuizStatus, siteSpecific, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
@@ -16,6 +16,7 @@ import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
 import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
+import { DisplayModeToggle, PastTestsToggle, QuizFilters } from "../../pages/quizzes/MyQuizzes";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -631,5 +632,29 @@ export const SignupSidebar = ({activeTab} : {activeTab: number}) => {
         <StyledTabPicker checkboxTitle={"Age verification"} checked={activeTab === 1} disabled={activeTab < 1 || activeTab > 2} onClick={() => activeTab === 2 && goBack("age")}/>
         <StyledTabPicker checkboxTitle={"Account details"} checked={activeTab === 2} disabled={activeTab !== 2}/>
         <StyledTabPicker checkboxTitle={"Preferences"} checked={activeTab === 3} disabled={activeTab !== 3}/>
+    </ContentSidebar>;
+};
+
+interface MyQuizzesSidebarProps extends SidebarProps {
+    showCompleted: boolean;
+    setShowCompleted: (show: boolean) => void;
+    setQuizCreator: (creator: string) => void;
+    setQuizTitleFilter: (title: string) => void;
+    quizStatuses: QuizStatus[];
+    setQuizStatuses: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
+    displayMode: "table" | "cards";
+    setDisplayMode: React.Dispatch<React.SetStateAction<"table" | "cards">>;
+};
+
+export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
+    const { showCompleted, setShowCompleted, setQuizCreator, setQuizTitleFilter, quizStatuses, setQuizStatuses, displayMode, setDisplayMode } = props;
+    return <ContentSidebar buttonTitle="Search & Filter">
+        <div className="section-divider mt-5"/>
+        <h5>Display mode</h5>
+        <DisplayModeToggle displayMode={displayMode} setDisplayMode={setDisplayMode}/>
+        <div className="section-divider"/>
+        <h5>Search &amp; Filter</h5>
+        <QuizFilters setShowCompleted={setShowCompleted} setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter} quizStatuses={quizStatuses} setQuizStatuses={setQuizStatuses} showFilters={true}/>
+        <PastTestsToggle showCompleted={showCompleted} setShowCompleted={setShowCompleted} setQuizStatuses={setQuizStatuses}/>
     </ContentSidebar>;
 };

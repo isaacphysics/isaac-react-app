@@ -16,6 +16,7 @@ import {
     convertAttemptToQuiz,
     DisplayableQuiz,
     extractTeacherName,
+    isAda,
     isPhy,
     isTutorOrAbove,
     QuizStatus,
@@ -33,10 +34,10 @@ import orderBy from "lodash/orderBy";
 import classNames from "classnames";
 import StyledToggle from "../../elements/inputs/StyledToggle";
 import { TrLink } from "../../elements/tables/TableLinks";
-import { StyledDropdown } from "../../elements/inputs/DropdownInput";
 import { StyledSelect } from "../../elements/inputs/StyledSelect";
 import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 import { FilterCount } from "../../elements/svg/FilterCount";
+import { MainContent, MyQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
 
 export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -212,7 +213,7 @@ interface QuizFiltersProps {
     showFilters: boolean;
 }
 
-const QuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, quizStatuses, setQuizStatuses, showFilters}: QuizFiltersProps) => {
+export const QuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, quizStatuses, setQuizStatuses, showFilters}: QuizFiltersProps) => {
     return <CollapsibleContainer expanded={showFilters}>
         <Row>
             <Col xs={6}>
@@ -247,6 +248,38 @@ const QuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, quiz
             </Col>
         </Row>
     </CollapsibleContainer>;
+};
+    
+export const DisplayModeToggle = ({displayMode, setDisplayMode}: {displayMode: "table" | "cards", setDisplayMode: React.Dispatch<React.SetStateAction<"table" | "cards">>}) => {
+    return <div className={classNames("d-flex flex-column align-items-start", {"pb-3 pe-3 col-8 col-sm-6 col-md-3": isAda})}>
+        <span>Display in</span>
+        <div className="d-flex flex-column align-items-center align-self-start w-max-content pb-3 pe-3">
+            <StyledToggle
+                checked={displayMode === "cards"}
+                falseLabel="Table"
+                trueLabel="Cards"
+                onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}
+            />
+        </div>
+    </div>;
+};
+
+export const PastTestsToggle = ({showCompleted, setShowCompleted, setQuizStatuses}: {showCompleted: boolean, setShowCompleted: (show: boolean) => void, setQuizStatuses: React.Dispatch<React.SetStateAction<QuizStatus[]>>}) => {
+    return <div className={classNames("d-flex flex-column align-items-start w-max-content", {"pb-3": isAda})}>
+        <span>Past tests</span>
+        <div className="h-100 align-content-center">
+            <StyledToggle
+                checked={showCompleted}
+                falseLabel="Hidden"
+                trueLabel="Shown"
+                onChange={() => {
+                    const target = !showCompleted;
+                    setShowCompleted(target);
+                    setQuizStatuses(s => target ? [...s, QuizStatus.Complete, QuizStatus.Overdue] : s.filter(status => ![QuizStatus.Complete, QuizStatus.Overdue].includes(status)));
+                }}
+            />
+        </div>
+    </div>;
 };
 
 const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
@@ -315,43 +348,10 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         }
     }, [anchorMap]);
 
-    // TODO: revert to StyledToggle when the component is more widely used (post-redesign)
-
-    // const displayModeToggle = <div className="d-flex flex-column align-items-center align-self-end w-max-content pb-3 pe-3">
-    //     <span>Display mode</span>
-    //     <StyledToggle
-    //         checked={displayMode === "cards"}
-    //         falseLabel="Table"
-    //         trueLabel="Cards"
-    //         onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}
-    //     />
-    const displayModeToggle = <div className="d-flex flex-column align-items-start pb-3 pe-3 col-8 col-sm-6 col-md-3">
-        <span>Display in</span>
-        <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
-            <option value="table">Table View</option>
-            <option value="cards">Card View</option>
-        </StyledDropdown>
-    </div>;
-
-    const pastTestsToggle = <div className="d-flex flex-column align-items-center w-max-content pb-3">
-        <span>Past tests</span>
-        <div className="h-100 align-content-center">
-            <StyledToggle
-                checked={showCompleted}
-                falseLabel="Hidden"
-                trueLabel="Shown"
-                onChange={() => {
-                    const target = !showCompleted;
-                    setShowCompleted(target);
-                    setQuizStatuses(s => target ? [...s, QuizStatus.Complete, QuizStatus.Overdue] : s.filter(status => ![QuizStatus.Complete, QuizStatus.Overdue].includes(status)));
-                }}
-            />
-        </div>
-    </div>;
-
     // +!! converts a string to 0 if null or empty and 1 otherwise
     const filterCount = +!!quizTitleFilter + +!!quizCreatorFilter + quizStatusFilter.length;
 
+    // Ada-only
     const filtersToggle = <Col xs={3} sm={2} md={1} className="pb-3 ms-3">
         <Label className="w-100 d-flex flex-column align-items-center mb-0">
             <span className="text-nowrap">
@@ -364,14 +364,16 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     </Col>;
 
     const tabTopContent = <>
-        <div className="d-flex">
-            {displayModeToggle}
-            <Spacer/>
-            {above["sm"](deviceSize) && pastTestsToggle}
-            {filtersToggle}
-        </div>
-        <QuizFilters setShowCompleted={setShowCompleted} setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter} 
-            quizStatuses={quizStatusFilter} setQuizStatuses={setQuizStatuses} showFilters={showFilters}/>
+        {isAda && <>
+            <div className="d-flex">
+                {<DisplayModeToggle displayMode={displayMode} setDisplayMode={setDisplayMode}/>}
+                <Spacer/>
+                {above["sm"](deviceSize) && <PastTestsToggle showCompleted={showCompleted} setShowCompleted={setShowCompleted} setQuizStatuses={setQuizStatuses}/>}
+                {filtersToggle}
+            </div>
+            <QuizFilters setShowCompleted={setShowCompleted} setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter} 
+                quizStatuses={quizStatusFilter} setQuizStatuses={setQuizStatuses} showFilters={showFilters}/>
+        </>}
     </>;
 
     const emptyAssignedMessage = <span className="text-muted">{!quizAssignments || quizAssignments.length === 0
@@ -387,43 +389,49 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
         <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
-        <Tabs className="mb-5 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
-            history.replace({...history.location, hash: tabAnchors[index - 1]});
-            setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
-        }}>
-            {{
-                [siteSpecific("Assigned Tests", "Assigned tests")]:
-                    <ShowLoading 
-                        until={quizAssignments}
-                        ifNotFound={<Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>}
-                    >
-                        <div className="d-flex flex-column">
-                            {tabTopContent}
-                            {displayMode === "table" ? <Card>
-                                <AssignedQuizTable 
-                                    quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                                    emptyMessage={emptyAssignedMessage}
-                                />
-                            </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} emptyMessage={emptyAssignedMessage}/>}
-                        </div>
-                    </ShowLoading>,
-                [siteSpecific("My Practice Tests", "My practice tests")]:
-                    <ShowLoading 
-                        until={freeAttempts}
-                        ifNotFound={<Alert color="warning">Your practice test attempts failed to load, please try refreshing the page.</Alert>}
-                    >
-                        <div className="d-flex flex-column">
-                            {tabTopContent}
-                            {displayMode === "table" ? <Card>
-                                <PracticeQuizTable 
-                                    quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                                    emptyMessage={emptyPracticeMessage}
-                                />
-                            </Card> : <QuizGrid quizzes={sortedPracticeQuizzes} emptyMessage={emptyPracticeMessage}/>}
-                        </div>
-                    </ShowLoading>,
-            }}
-        </Tabs>
+        <SidebarLayout>
+            <MyQuizzesSidebar showCompleted={showCompleted} setShowCompleted={setShowCompleted} setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter}
+                quizStatuses={quizStatusFilter} setQuizStatuses={setQuizStatuses} displayMode={displayMode} setDisplayMode={setDisplayMode}/>
+            <MainContent>
+                <Tabs className="mb-5 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
+                    history.replace({...history.location, hash: tabAnchors[index - 1]});
+                    setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
+                }}>
+                    {{
+                        [siteSpecific("Assigned Tests", "Assigned tests")]:
+                            <ShowLoading 
+                                until={quizAssignments}
+                                ifNotFound={<Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>}
+                            >
+                                <div className="d-flex flex-column">
+                                    {tabTopContent}
+                                    {displayMode === "table" ? <Card>
+                                        <AssignedQuizTable 
+                                            quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                            emptyMessage={emptyAssignedMessage}
+                                        />
+                                    </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} emptyMessage={emptyAssignedMessage}/>}
+                                </div>
+                            </ShowLoading>,
+                        [siteSpecific("My Practice Tests", "My practice tests")]:
+                            <ShowLoading 
+                                until={freeAttempts}
+                                ifNotFound={<Alert color="warning">Your practice test attempts failed to load, please try refreshing the page.</Alert>}
+                            >
+                                <div className="d-flex flex-column">
+                                    {tabTopContent}
+                                    {displayMode === "table" ? <Card>
+                                        <PracticeQuizTable 
+                                            quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                            emptyMessage={emptyPracticeMessage}
+                                        />
+                                    </Card> : <QuizGrid quizzes={sortedPracticeQuizzes} emptyMessage={emptyPracticeMessage}/>}
+                                </div>
+                            </ShowLoading>,
+                    }}
+                </Tabs>
+            </MainContent>
+        </SidebarLayout>
     </Container>;
 };
 
