@@ -56,7 +56,7 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
     },
     icon: {type: "hex", icon: "page-icon-lessons"},
     subject: context.subject,
-    linkTags: [{tag: "View lessons", url: extendUrl(context, 'lessons')}]
+    linkTags: [{tag: "List of revision areas", url: extendUrl(context, 'lessons')}]
 });
 
 const QuickQuizzesCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
@@ -93,19 +93,23 @@ const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): ListVi
     return ArbitraryPageLinkCard("Practice apps", "Explore dynamically-generated and interactive questions with our practice apps.", [{tag: "View practice apps", url: extendUrl(context, 'apps')}])(context);
 };
 
+const SPCCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard("Senior Physics Challenge", "Take your problem solving skills to the next level in the Senior Physics Challenge, a competition open to all UK resident A Level students.", [{tag: "Find out more", url: extendUrl(context, '/pages/spc')}])(context);
+};
+
 const MathsSkillsQuestionsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
     return ArbitraryPageLinkCard("Maths skills questions", "Explore our maths skills questions.", [{tag: "View maths skills questions", url: extendUrl(context, 'skills_questions')}])(context);
 };
 
-const BiologyStretchQuestionsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Stretch questions", "Explore our stretch questions.", [{tag: "View stretch questions", url: extendUrl(context, 'stretch_questions')}])(context);
+const BiologyExtensionQuestionsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard("Biology extension", "Stretch your understanding of biology with our extension questions that make you think outside the box.", [{tag: "View extension questions", url: "/pages/biology_extension_questions"}])(context);
 };
 
 const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
     "physics": {
         "11_14": [BoardsByTopicCard, null, null],
         "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, QuickQuizzesCard],
-        "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, null],
+        "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, SPCCard],
         "university": [BoardsByTopicCard, null, null],
     },
     "chemistry": {
@@ -120,7 +124,7 @@ const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
         "university": [BoardsByTopicCard, null, null],
     },
     "biology": {
-        "a_level": [BoardsByTopicCard, GlossaryCard, BiologyStretchQuestionsCard],
+        "a_level": [BoardsByTopicCard, GlossaryCard, BiologyExtensionQuestionsCard],
     }
 };
 
