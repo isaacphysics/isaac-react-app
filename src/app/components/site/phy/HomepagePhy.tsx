@@ -171,7 +171,7 @@ export const HomepagePhy = () => {
                             <div className="d-flex">
                                 <h3>Upcoming Events</h3>
                                 <Link to="/events" className="news-events-link">More events</Link>                        
-                                <div className="section-divider"/>
+                                <div className="section-divider-bold"/>
                             </div>
                             <ShowLoadingQuery
                                 query={eventsQuery}
@@ -188,7 +188,7 @@ export const HomepagePhy = () => {
                             <div className="d-flex">
                                 <h3>News & Features</h3>
                                 <Link to="/news" className="news-events-link">More news</Link>                     
-                                <div className="section-divider"/>
+                                <div className="section-divider-bold"/>
                             </div>
                             {news && <Row className="h-100">
                                 {news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>

@@ -1,6 +1,6 @@
 import { ContentBaseDTO, UserContext } from "../../IsaacApiTypes";
 import { PageContextState } from "../../IsaacAppTypes";
-import { LearningStage, LearningStages, SiteTheme, STAGE_TO_LEARNING_STAGE, Subject, Subjects, TAG_ID } from "./constants";
+import { LearningStage, LearningStages, PHY_NAV_SUBJECTS, SiteTheme, STAGE_TO_LEARNING_STAGE, Subject, Subjects, TAG_ID } from "./constants";
 import { isDefined } from "./miscUtils";
 import { useLocation } from "react-router";
 import { HUMAN_STAGES, HUMAN_SUBJECTS } from "./constants";
@@ -167,4 +167,8 @@ export function isDefinedContext(context?: PageContextState): context is NonNull
 
 export function isSingleStageContext(context?: PageContextState): boolean {
     return isDefinedContext(context) && context.stage.length === 1;
+}
+
+export function isValidStageSubjectPair(subject: Subject, stage: LearningStage): boolean {
+    return (PHY_NAV_SUBJECTS[subject] as readonly LearningStage[]).includes(stage);
 }

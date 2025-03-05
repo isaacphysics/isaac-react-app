@@ -120,7 +120,7 @@ export const PageTitle = ({currentPageTitle, subTitle, description, disallowLaTe
         }));
     }
 
-    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-4": isPhy}, className)}>
+    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-4 mb-0": isPhy}, className)}>
         <div className="me-auto">
             <div className="d-sm-flex align-items-center">
                 {icon && (
