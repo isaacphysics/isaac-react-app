@@ -171,30 +171,27 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
 
             const KeyEventInfo = () => {
-                return <Table borderless className="my-3">
-                    <tbody>
-                        <tr>
-                            <td>When:</td>
-                            <td>
-                                {formatEventDetailsDate(event)}
-                                {event.hasExpired && <div>
-                                    <b>This event is in the past.</b>
-                                </div>}
-                            </td>
-                        </tr>
-                        {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <tr>
-                            <td>Location:</td>
-                            <td>
-                                {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
-                            </td>
-                        </tr>}
-                        {isVirtual && <tr>
-                            <td>Location:</td>
-                            <td>Online</td>
-                        </tr>}
-                        {isAda && event.isNotClosed && !event.hasExpired && <tr>
-                            <td>Availability:</td>
-                            <td>
+                return <div className="event-key-info">
+                    <Row className="d-flex align-items-center">
+                        <Col className="col-4 col-sm-3 col-md-2">When:</Col>
+                        <Col>
+                            {formatEventDetailsDate(event)}
+                            {event.hasExpired && <div>
+                                <b>This event is in the past.</b>
+                            </div>}
+                        </Col>
+                    </Row>
+                    {<Row className="d-flex align-items-center">
+                        <Col className="col-4 col-sm-3 col-md-2">Location:</Col>
+                        {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <Col>
+                            {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
+                        </Col>}
+                        {isVirtual && <Col>Online</Col>}
+                    </Row>}
+                    {event.isNotClosed && !event.hasExpired &&
+                        <Row className="d-flex align-items-center">
+                            <Col className="col-4 col-sm-3 col-md-2">Availability:</Col>
+                            <Col>
                                 {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
                                 {zeroOrLess(event.placesAvailable) && <div>
                                     <strong className="text-danger">FULL</strong>
@@ -215,12 +212,12 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                         {studentOnlyEventMessage(eventId)}
                                     </div>
                                 }
-                            </td>
-                        </tr>}
-                        {(!event.isCancelled || isEventLeader(user) || isAdminOrEventManager(user)) && event.bookingDeadline &&
-                        <tr>
-                            <td>Booking Deadline:</td>
-                            <td>
+                            </Col>
+                        </Row>}
+                    {(!event.isCancelled || isEventLeader(user) || isAdminOrEventManager(user)) && event.bookingDeadline &&
+                        <Row className="d-flex align-items-center">
+                            <Col className="col-4 col-sm-3 col-md-2">Booking Deadline:</Col>
+                            <Col>
                                 <DateString>{event.bookingDeadline}</DateString>
                                 {!event.isWithinBookingDeadline 
                                     && !event.hasExpired 
@@ -228,10 +225,9 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                         The booking deadline for this event has passed.
                                     </div>
                                 }
-                            </td>
-                        </tr>}
-                    </tbody>
-                </Table>;
+                            </Col>
+                        </Row>}
+                </div>;
             };
 
             const BookingForm = () => {

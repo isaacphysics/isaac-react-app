@@ -16,10 +16,11 @@
   }
 }
 .event-key-info {
-  tr {
-    td {
+  .row {
+    .col {
       padding: 0.5rem 0.5rem 0.5rem 0;
-      &:last-child {
+      &:first-child {
+        font-weight: bold;
         padding-left: 0.5rem;
         padding-right: 64px;
       }
