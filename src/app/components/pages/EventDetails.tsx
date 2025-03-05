@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from "react";
-import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Table, Alert, Badge} from "reactstrap";
+import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Alert, Badge} from "reactstrap";
 import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
