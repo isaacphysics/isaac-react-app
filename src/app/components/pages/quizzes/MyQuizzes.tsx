@@ -8,7 +8,7 @@ import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-do
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {formatDate} from "../../elements/DateString";
+import {formatDate, getFriendlyDaysUntil} from "../../elements/DateString";
 import {QuizzesBoardOrder} from "../../../../IsaacAppTypes";
 import {
     above,
@@ -16,18 +16,21 @@ import {
     convertAttemptToQuiz,
     DisplayableQuiz,
     extractTeacherName,
+    HUMAN_SUBJECTS,
     isAda,
+    isDefined,
     isPhy,
     isTutorOrAbove,
     QuizStatus,
     selectOnChange,
     siteSpecific,
+    Subject,
+    tags,
     useDeviceSize
 } from "../../../services";
 import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
 import {PageFragment} from "../../elements/PageFragment";
-import { CardGrid } from "../../elements/CardGrid";
 import { SortItemHeader } from "../../elements/SortableItemHeader";
 import { Card, CardBody, Button, Table, Container, Alert, Row, Col, Label, Input } from "reactstrap";
 import orderBy from "lodash/orderBy";
@@ -38,6 +41,8 @@ import { StyledSelect } from "../../elements/inputs/StyledSelect";
 import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 import { FilterCount } from "../../elements/svg/FilterCount";
 import { MainContent, MyQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
+import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
+import { CardGrid } from "../../elements/CardGrid";
 
 export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -47,7 +52,83 @@ interface QuizAssignmentProps {
     quiz: DisplayableQuiz;
 }
 
-function QuizItem({quiz}: QuizAssignmentProps) {
+const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
+    const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
+    const deviceSize = useDeviceSize();
+
+    const determineQuizSubject = (quizSummary?: DisplayableQuiz) => {
+        return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `${tag.toLowerCase()}`, "");
+    };
+    const subject = determineQuizSubject(quiz); 
+
+    return <div className="p-2">
+        <Card className="h-100" style={{borderRadius: "8px"}}>
+            <CardBody className="d-flex flex-column">
+                <Row>
+                    <Col className="d-flex flex-column align-items-start col-8">
+                        <div className="d-flex align-items-center">
+                            <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
+                                <PhyHexIcon icon="page-icon-quiz" subject={subject as Subject} className="assignment-hex ps-3"/>
+                            </div>
+                            <div className="d-flex flex-column flex-grow-1">
+                                <h4>{quiz.title || quiz.id }</h4>
+                                {above['sm'](deviceSize) && isDefined(subject) && <div className="d-flex align-items-center mb-2">
+                                    <span className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>
+                                </div>}
+                            </div>
+                        </div>
+                    </Col>
+                
+                    <Col className="d-flex flex-column justify-content-between col-4">
+                        {quiz.isAssigned
+                            ? quiz.dueDate && <p>Due date: <strong>{getFriendlyDaysUntil(quiz.dueDate)}</strong></p>
+                            : quiz.attempt && siteSpecific(
+                                <p>Freely {quiz.status === QuizStatus.Started ? "attempting" : "attempted"}</p>,
+                                <p>{quiz.status === QuizStatus.Started ? "Attempting" : "Attempted"} independently</p>
+                            )
+                        }
+                        {quiz.isAssigned && <p>
+                            Set: <strong>{getFriendlyDaysUntil(assignmentStartDate as Date)}</strong>
+                            {quiz.assignerSummary && <> by {extractTeacherName(quiz.assignerSummary)}</>}
+                        </p>}
+                        {quiz.attempt && <p>
+                            {quiz.status === QuizStatus.Complete ?
+                                <>Completed: <strong>{getFriendlyDaysUntil(quiz.attempt.completedDate as Date)}</strong></>
+                                : <>Started: <strong>{getFriendlyDaysUntil(quiz.attempt.startDate as Date)}</strong></>
+                            }
+                        </p>}
+                        {quiz.isAssigned ? <>
+                            {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={quiz.link}>
+                                {siteSpecific("Start Test", "Start test")}
+                            </Button>}
+                            {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
+                                {siteSpecific("Continue Test", "Continue test")}
+                            </Button>}
+                            {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
+                                {siteSpecific("Overdue", "Overdue")}
+                            </Button>}
+                            {quiz.status === QuizStatus.Complete && (
+                                <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
+                                    {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
+                                </Button>
+                            )}
+                        </> : quiz.attempt && <>
+                            {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
+                                {siteSpecific("Continue Test", "Continue test")}
+                            </Button>}
+                            {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
+                                {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
+                            </Button>
+                            }
+                        </>}
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>
+    </div>;
+}
+
+const AdaQuizItem = ({quiz}: QuizAssignmentProps) => {
     const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
 
     return <div className="p-2">
@@ -104,7 +185,9 @@ function QuizItem({quiz}: QuizAssignmentProps) {
             </CardBody>
         </Card>
     </div>;
-}
+};
+
+const QuizItem = siteSpecific(PhyQuizItem, AdaQuizItem);
 
 interface AssignmentGridProps {
     quizzes: DisplayableQuiz[];
@@ -114,9 +197,14 @@ interface AssignmentGridProps {
 function QuizGrid({quizzes, emptyMessage}: AssignmentGridProps) {
     return <>
         {quizzes.length === 0 && <p>{emptyMessage}</p>}
-        {quizzes.length > 0 && <CardGrid>
-            {quizzes.map(quiz => <QuizItem key={(quiz.isAssigned ? 'as' : 'at') + quiz.id} quiz={quiz}/>)}
-        </CardGrid>}
+        {quizzes.length > 0 && siteSpecific(
+            <>
+                {quizzes.map(quiz => <QuizItem key={(quiz.isAssigned ? 'as' : 'at') + quiz.id} quiz={quiz}/>)}
+            </>,
+            <CardGrid>
+                {quizzes.map(quiz => <QuizItem key={(quiz.isAssigned ? 'as' : 'at') + quiz.id} quiz={quiz}/>)}
+            </CardGrid>)
+        }
     </>;
 }
 
@@ -204,7 +292,7 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
     </Table>;
 };
 
-interface QuizFiltersProps {
+interface AdaQuizFiltersProps {
     setShowCompleted: (show: boolean) => void;
     setQuizCreator: (creator: string) => void;
     setQuizTitleFilter: (title: string) => void;
@@ -213,19 +301,21 @@ interface QuizFiltersProps {
     showFilters: boolean;
 }
 
-export const QuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, quizStatuses, setQuizStatuses, showFilters}: QuizFiltersProps) => {
+const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, quizStatuses, setQuizStatuses, showFilters}: AdaQuizFiltersProps) => {
     return <CollapsibleContainer expanded={showFilters}>
         <Row>
-            <Col xs={6}>
+            <Col className="col-6">
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by quiz title</span>
-                    <Input type="text" data-testid="title-filter" onChange={(e) => setQuizTitleFilter(e.target.value)} />
+                    <Input type="text" data-testid="title-filter" onChange={(e) => setQuizTitleFilter(e.target.value)} 
+                        placeholder="Search by title" aria-label="Search by title"/>
                 </Label>
             </Col>
-            <Col xs={6}>
+            <Col className={"col-6"}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by assigner</span>
-                    <Input type="text" data-testid="title-filter" onChange={(e) => setQuizCreator(e.target.value)} />
+                    <h5>Filter by assigner</h5>
+                    <Input type="text" onChange={(e) => setQuizCreator(e.target.value)}
+                        placeholder="Search by assigner" aria-label="Search by assigner"/>
                 </Label>
             </Col>
         </Row>
@@ -234,7 +324,7 @@ export const QuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreato
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by status</span>
                     <StyledSelect 
-                        isMulti 
+                        isMulti
                         value={quizStatuses.map(status => ({value: status, label: status}))} 
                         options={Object.values(QuizStatus).map(status => ({value: status, label: status}))}
                         onChange={(newValues) => {
@@ -252,7 +342,7 @@ export const QuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreato
     
 export const DisplayModeToggle = ({displayMode, setDisplayMode}: {displayMode: "table" | "cards", setDisplayMode: React.Dispatch<React.SetStateAction<"table" | "cards">>}) => {
     return <div className={classNames("d-flex flex-column align-items-start", {"pb-3 pe-3 col-8 col-sm-6 col-md-3": isAda})}>
-        <span>Display in</span>
+        {isAda && <span>Display in</span>}
         <div className="d-flex flex-column align-items-center align-self-start w-max-content pb-3 pe-3">
             <StyledToggle
                 checked={displayMode === "cards"}
@@ -322,7 +412,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         if (!quiz) return false;
         const titleMatches = !quizTitleFilter || (quiz.title?.toLowerCase().includes(quizTitleFilter.toLowerCase()) ?? true);
         const creatorMatches = !quizCreatorFilter || (extractTeacherName(quiz.assignerSummary)?.toLowerCase().includes(quizCreatorFilter.toLowerCase()) ?? true);
-        const statusMatches = !quizStatusFilter || (!!quiz.status && quizStatusFilter.includes(quiz.status));
+        const statusMatches = !quizStatusFilter || (!!quiz.status && quizStatusFilter.includes(quiz.status) || quizStatusFilter.includes(QuizStatus.All));
         return titleMatches && creatorMatches && statusMatches;
     };
 
@@ -371,7 +461,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                 {above["sm"](deviceSize) && <PastTestsToggle showCompleted={showCompleted} setShowCompleted={setShowCompleted} setQuizStatuses={setQuizStatuses}/>}
                 {filtersToggle}
             </div>
-            <QuizFilters setShowCompleted={setShowCompleted} setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter} 
+            <AdaQuizFilters setShowCompleted={setShowCompleted} setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter} 
                 quizStatuses={quizStatusFilter} setQuizStatuses={setQuizStatuses} showFilters={showFilters}/>
         </>}
     </>;
@@ -390,7 +480,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
         <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <SidebarLayout>
-            <MyQuizzesSidebar showCompleted={showCompleted} setShowCompleted={setShowCompleted} setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter}
+            <MyQuizzesSidebar setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter}
                 quizStatuses={quizStatusFilter} setQuizStatuses={setQuizStatuses} displayMode={displayMode} setDisplayMode={setDisplayMode}/>
             <MainContent>
                 <Tabs className="mb-5 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {

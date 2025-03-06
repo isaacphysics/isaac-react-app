@@ -288,6 +288,7 @@ export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: Qu
 }
 
 export enum QuizStatus {
+    All = "All",
     Overdue = "Overdue", 
     NotStarted = "Not started", 
     Started = "Started", 
@@ -311,6 +312,7 @@ export interface DisplayableQuiz {
     quizFeedbackMode?: QuizFeedbackMode;
     link?: string;
     status?: QuizStatus;
+    tags?: string[];
 };
 
 export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): DisplayableQuiz | undefined {
@@ -337,7 +339,8 @@ export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): Displaya
         link: status === QuizStatus.Complete ? (assignment.quizFeedbackMode !== "NONE" ? `/test/attempt/${assignment.attempt?.id}/feedback` : undefined)
             : status === QuizStatus.Overdue ? undefined
                 : `/test/assignment/${assignment.id}`,
-        status: status
+        status: status,
+        tags: assignment.quizSummary?.tags
     };
 }
 
@@ -355,5 +358,6 @@ export function convertAttemptToQuiz(attempt: QuizAttemptDTO): DisplayableQuiz |
         quizFeedbackMode: attempt.feedbackMode,
         link: attempt.completedDate ? `/test/attempt/${attempt.id}/feedback` : `/test/attempt/${attempt.quizId}`,
         status: attempt.completedDate ? QuizStatus.Complete : QuizStatus.Started,
+        tags: attempt.quizSummary?.tags
     };
 }

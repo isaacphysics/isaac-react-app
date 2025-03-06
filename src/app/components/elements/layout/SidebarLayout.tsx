@@ -1,5 +1,5 @@
 import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
-import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
@@ -16,7 +16,7 @@ import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
 import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
-import { DisplayModeToggle, PastTestsToggle, QuizFilters } from "../../pages/quizzes/MyQuizzes";
+import { DisplayModeToggle} from "../../pages/quizzes/MyQuizzes";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -635,9 +635,43 @@ export const SignupSidebar = ({activeTab} : {activeTab: number}) => {
     </ContentSidebar>;
 };
 
+interface QuizStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
+    status: QuizStatus;
+    statusFilter: QuizStatus[];
+    setStatusFilter: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
+    count?: number;
+}
+
+const QuizStatusCheckbox = (props: QuizStatusCheckboxProps) => {
+    const {status, statusFilter, setStatusFilter, count, ...rest} = props;
+    return <StyledTabPicker 
+        id={status ?? ""} checkboxTitle={status}
+        onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== QuizStatus.All), status]) : setStatusFilter(c => c.filter(s => s !== status))}
+        checked={statusFilter.includes(status)}
+        count={count} {...rest}
+    />;
+};
+
+const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status">) => {
+    const { statusFilter, setStatusFilter, count, ...rest } = props;
+    const [previousFilters, setPreviousFilters] = useState<QuizStatus[]>([]);
+    return <StyledTabPicker 
+        id="all" checkboxTitle="All"
+        onInputChange={(e) => {
+            if (e.target.checked) {
+                setPreviousFilters(statusFilter);
+                setStatusFilter([QuizStatus.All]);
+            } else {
+                setStatusFilter(previousFilters);
+            }
+        }}
+        checked={statusFilter.includes(QuizStatus.All)}
+        count={count} {...rest}
+    />;
+};
+
+
 interface MyQuizzesSidebarProps extends SidebarProps {
-    showCompleted: boolean;
-    setShowCompleted: (show: boolean) => void;
     setQuizCreator: (creator: string) => void;
     setQuizTitleFilter: (title: string) => void;
     quizStatuses: QuizStatus[];
@@ -647,14 +681,30 @@ interface MyQuizzesSidebarProps extends SidebarProps {
 };
 
 export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
-    const { showCompleted, setShowCompleted, setQuizCreator, setQuizTitleFilter, quizStatuses, setQuizStatuses, displayMode, setDisplayMode } = props;
+    const { setQuizCreator, setQuizTitleFilter, quizStatuses, setQuizStatuses, displayMode, setDisplayMode } = props;
+    const deviceSize = useDeviceSize();
+
     return <ContentSidebar buttonTitle="Search & Filter">
-        <div className="section-divider mt-5"/>
-        <h5>Display mode</h5>
-        <DisplayModeToggle displayMode={displayMode} setDisplayMode={setDisplayMode}/>
+        <div className={classNames("section-divider", {"mt-5": above["lg"](deviceSize)})}/>
+        <Label className="w-100">
+            <h5 className="mb-4">Search tests</h5>
+            <Input type="text" data-testid="title-filter" onChange={(e) => setQuizTitleFilter(e.target.value)} 
+                placeholder="Search by title" aria-label="Search by title"/>
+        </Label>
         <div className="section-divider"/>
-        <h5>Search &amp; Filter</h5>
-        <QuizFilters setShowCompleted={setShowCompleted} setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter} quizStatuses={quizStatuses} setQuizStatuses={setQuizStatuses} showFilters={true}/>
-        <PastTestsToggle showCompleted={showCompleted} setShowCompleted={setShowCompleted} setQuizStatuses={setQuizStatuses}/>
+        <h5 className="mt-2 mb-4">Filter by status</h5>
+        <QuizStatusAllCheckbox statusFilter={quizStatuses} setStatusFilter={setQuizStatuses} count={undefined}/>
+        <div className="section-divider-small"/>
+        {Object.values(QuizStatus).filter(s => s !== QuizStatus.All).map(state => <QuizStatusCheckbox 
+            key={state} status={state} count={undefined}
+            statusFilter={quizStatuses} setStatusFilter={setQuizStatuses} 
+        />)}
+        <Label className="w-100">
+            <h5 className="mt-3">Filter by assigner</h5>
+            <Input type="text" onChange={(e) => setQuizCreator(e.target.value)}
+                placeholder="Search by assigner" aria-label="Search by assigner"/>
+        </Label>
+        <h5 className="my-3">Display mode</h5>
+        <DisplayModeToggle displayMode={displayMode} setDisplayMode={setDisplayMode}/>
     </ContentSidebar>;
 };
