@@ -4,17 +4,18 @@ import {Link} from "react-router-dom";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {DateString} from "../DateString";
 import {formatEventCardDate, siteSpecific} from "../../../services";
-import { Card, CardImg, CardBody, CardTitle, Badge, CardText } from "reactstrap";
+import { Card, CardImg, CardBody, CardTitle, Badge, CardText, CardProps } from "reactstrap";
 import { Spacer } from "../Spacer";
+import classNames from "classnames";
 
-export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
+export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & CardProps) => {
     const {id, title, subtitle, eventThumbnail, location, date} = event;
 
     const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
     const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
 
-    return <Card className="pod">
+    return <Card {...rest} className={classNames("pod", rest.className)}>
         {eventThumbnail &&
             <a className={"pod-img event-pod-img"} href={`/events/${id}`}>
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />

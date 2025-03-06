@@ -3,12 +3,12 @@ import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Dropdown, Dro
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
-import { HUMAN_STAGES, HUMAN_SUBJECTS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, above, below, isTeacherOrAbove, useDeviceSize } from "../../../services";
+import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, Subject, above, below, isDefinedContext, isSingleStageContext, isTeacherOrAbove, isValidStageSubjectPair, useDeviceSize } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
 import { Link } from "react-router-dom";
-import { HoverableNavigationContext } from "../../../../IsaacAppTypes";
+import { HoverableNavigationContext, PageContextState } from "../../../../IsaacAppTypes";
 import max from "lodash/max";
 
 interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
@@ -17,13 +17,15 @@ interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
     ariaTitle?: string;
     toggleClassName?: string;
     ikey: number;
+    isActiveUnderContext?: (context: PageContextState) => boolean;
 }
 
 const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
-    const { className, title, ariaTitle, children, toggleClassName, ikey, ...rest } = props;
+    const { className, title, ariaTitle, children, toggleClassName, ikey, isActiveUnderContext, ...rest } = props;
     const [isOpen, setIsOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
+    const pageContext = useAppSelector(selectors.pageContext.context);
     const hoverContext = useContext(HoverableNavigationContext);
     const timerId = useRef<number | null>(null);
 
@@ -73,7 +75,7 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isHovered]);
 
-    return <Dropdown {...rest} nav inNavbar className={classNames(className, "hoverable", { "active": isOpen })} isOpen={isOpen} 
+    return <Dropdown {...rest} nav inNavbar className={classNames(className, "hoverable", { "active": isOpen || isActiveUnderContext?.(pageContext)})} isOpen={isOpen} 
         onMouseEnter={() => setIsHovered(true)}
         onPointerDown={(e) => {if (e.pointerType === "touch") {
             setIsHovered(true);
@@ -154,11 +156,13 @@ const ContentNavAccordionWrapper = (props : ContentNavWrapperProps) => {
 interface NavigationSubcategory {
     fullTitle: string;
     href: string;
-    theme: string;
+    subject: string;
+    stage: string;
 }
 
 interface NavigationCategory {
     title: string;
+    type: string;
     subcategories: NavigationSubcategory[];
 }
 
@@ -172,6 +176,7 @@ interface NavigationSectionProps extends React.HTMLAttributes<HTMLDivElement> {
 const ContentNavSection = (props: NavigationSectionProps) => {
     const { title, categories, toggleMenu, ...rest } = props;
     const deviceSize = useDeviceSize();
+    const pageContext = useAppSelector(selectors.pageContext.context);
 
     return above["xl"](deviceSize) 
         // full-width, hoverable dropdowns
@@ -179,12 +184,56 @@ const ContentNavSection = (props: NavigationSectionProps) => {
             {categories?.map((category, i, catsArr) => {
                 const keyBase = max(catsArr.map(c => c.subcategories.length)) ?? 0;
                 let sharedTheme = undefined;
-                if (category.subcategories.every((sub, _j, arr) => sub.theme === arr[0].theme)) {
-                    sharedTheme = category.subcategories[0].theme;
+                let quickSwitcher: {subject: Subject, stage: LearningStage} | undefined = undefined;
+
+                if (category.subcategories.every((sub, _j, arr) => sub.subject === arr[0].subject)) {
+                    sharedTheme = category.subcategories[0].subject;
                 }
-                return <HoverableNavigationDropdown key={i} ikey={props.ikey * keyBase + i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}>
+
+                if (category.type === "stage") {
+                    if (isDefinedContext(pageContext) && isSingleStageContext(pageContext) && category.subcategories[0].stage !== pageContext.stage[0]) {
+                        quickSwitcher = {
+                            subject: pageContext.subject,
+                            stage: category.subcategories[0].stage as LearningStage
+                        }; 
+                    }
+                } else if (category.type === "subject") {
+                    if (isDefinedContext(pageContext) && isSingleStageContext(pageContext) && category.subcategories[0].subject !== pageContext.subject) {
+                        quickSwitcher = {
+                            subject: category.subcategories[0].subject as Subject,
+                            stage: pageContext.stage[0]
+                        };
+                    }
+                }
+
+                return <HoverableNavigationDropdown 
+                    key={i} ikey={props.ikey * keyBase + i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}
+                    isActiveUnderContext={(context) => {
+                        if (!isDefinedContext(context) || !isSingleStageContext(context)) return false;
+                        if (category.type === "stage") {
+                            return context.stage[0] === category.subcategories[0].stage;
+                        }
+                        if (category.type === "subject") {
+                            return context.subject === category.subcategories[0].subject;
+                        }
+                        return false;
+                    }}
+                >
+                    {quickSwitcher && isValidStageSubjectPair(quickSwitcher.subject, quickSwitcher.stage) && <NavigationItem
+                        className="quick-switch flex-column"
+                        data-bs-theme={quickSwitcher.subject}
+                        href={`/${quickSwitcher.subject}/${quickSwitcher.stage}`}
+                    >
+                        <span className="mb-1">Quick switch to</span>
+                        <span>
+                            <i className="icon icon-hexagon me-1" />
+                            {`${HUMAN_STAGES[quickSwitcher.stage]} ${HUMAN_SUBJECTS[quickSwitcher.subject]}`}
+                        </span>
+                    </NavigationItem>
+                    
+                    }
                     {category.subcategories.map((subcategory, j) => {
-                        return <NavigationItem key={i * keyBase + j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.theme })}>
+                        return <NavigationItem key={i * keyBase + j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.subject })}>
                             <i className="icon icon-hexagon me-1" />
                             <span>{subcategory.fullTitle}</span>
                         </NavigationItem>;
@@ -201,7 +250,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                             return <div key={i}>
                                 <h5 className="px-4 m-0 py-2">{category.title}</h5>
                                 {category.subcategories.map((subcategory, j) => {
-                                    return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme}>
+                                    return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.subject}>
                                         <i className="icon icon-hexagon me-1" />
                                         <span>{subcategory.fullTitle}</span>
                                     </NavigationItem>;
@@ -218,7 +267,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     return <div key={i}>
                         <h5 className="px-4 m-0 py-2">{category.title}</h5>
                         {category.subcategories.map((subcategory, j) => {
-                            return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme} onClick={toggleMenu}>
+                            return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.subject} onClick={toggleMenu}>
                                 <i className="icon icon-hexagon me-1"/>
                                 <span>{subcategory.fullTitle}</span>
                             </NavigationItem>;
@@ -336,7 +385,7 @@ interface NavigationItemProps extends React.HTMLAttributes<HTMLAnchorElement> {
 
 const NavigationItem = (props: NavigationItemProps) => {
     const { children, href, ...rest } = props;
-    return <NavLink {...rest} to={href} tag={Link} tabIndex={0} role="menuitem" className="d-flex align-items-center px-4 py-2">
+    return <NavLink {...rest} to={href} tag={Link} tabIndex={0} role="menuitem" className={classNames("d-flex px-4 py-2", rest.className)}>
         {children}
     </NavLink>;
 };
@@ -348,31 +397,35 @@ export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
     
     const deviceSize = useDeviceSize();
 
-    const stageCategories = Object.entries(PHY_NAV_STAGES).map(([stage, subjects]) => {
+    const stageCategories : NavigationCategory[] = Object.entries(PHY_NAV_STAGES).map(([stage, subjects]) => {
         const humanStage = HUMAN_STAGES[stage];
         return {
             title: humanStage,
+            type: "stage",
             subcategories: subjects.map((subject) => {
                 const humanSubject = HUMAN_SUBJECTS[subject.valueOf()];
                 return {
                     fullTitle: `${humanStage} ${humanSubject}`,
                     href: `/${subject}/${stage}`,
-                    theme: subject,
+                    subject,
+                    stage,
                 };
             })
         };
     });
 
-    const subjectCategories = Object.entries(PHY_NAV_SUBJECTS).map(([subject, stages]) => {
+    const subjectCategories : NavigationCategory[] = Object.entries(PHY_NAV_SUBJECTS).map(([subject, stages]) => {
         const humanSubject = HUMAN_SUBJECTS[subject];
         return {
             title: humanSubject,
+            type: "subject",
             subcategories: stages.map((stage) => {
                 const humanStage = HUMAN_STAGES[stage.valueOf()];
                 return {
                     fullTitle: `${humanStage} ${humanSubject}`,
                     href: `/${subject}/${stage}`,
-                    theme: subject,
+                    subject,
+                    stage,
                 };
             })
         };
