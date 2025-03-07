@@ -1,3 +1,7 @@
+.rounded-card {
+  border-radius: 8px;
+}
+
 // stylistically this would work better as a class with a @extend of this class in the @container query, 
 // but the generated CSS seemingly ignores the @container condition when using @extend?
 @mixin horizontal-pod-container {

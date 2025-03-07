@@ -19,6 +19,7 @@ import {
 } from "../state";
 import {
     API_PATH,
+    extractTeacherName,
     getValue,
     isDefined,
     isEventLeaderOrStaff,
@@ -288,9 +289,10 @@ export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: Qu
 }
 
 export enum QuizStatus {
+    All = "All",
     Overdue = "Overdue", 
     NotStarted = "Not started", 
-    Started = "Started", 
+    Started = "Started (incomplete)", 
     Complete = "Complete",
 }
 
@@ -311,6 +313,7 @@ export interface DisplayableQuiz {
     quizFeedbackMode?: QuizFeedbackMode;
     link?: string;
     status?: QuizStatus;
+    tags?: string[];
 };
 
 export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): DisplayableQuiz | undefined {
@@ -337,7 +340,8 @@ export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): Displaya
         link: status === QuizStatus.Complete ? (assignment.quizFeedbackMode !== "NONE" ? `/test/attempt/${assignment.attempt?.id}/feedback` : undefined)
             : status === QuizStatus.Overdue ? undefined
                 : `/test/assignment/${assignment.id}`,
-        status: status
+        status: status,
+        tags: assignment.quizSummary?.tags
     };
 }
 
@@ -355,5 +359,19 @@ export function convertAttemptToQuiz(attempt: QuizAttemptDTO): DisplayableQuiz |
         quizFeedbackMode: attempt.feedbackMode,
         link: attempt.completedDate ? `/test/attempt/${attempt.id}/feedback` : `/test/attempt/${attempt.quizId}`,
         status: attempt.completedDate ? QuizStatus.Complete : QuizStatus.Started,
+        tags: attempt.quizSummary?.tags
     };
 }
+
+export const getDistinctQuizSetters = (quizzes: DisplayableQuiz[] | undefined | null): Set<string> => {
+    const distinctFormattedQuizSetters = new Set<string>();
+
+    if (quizzes) {
+        quizzes.forEach(quiz => {
+            const teacherName = extractTeacherName(quiz.assignerSummary);
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            teacherName && distinctFormattedQuizSetters.add(teacherName);
+        });
+    }
+    return distinctFormattedQuizSetters;
+};
