@@ -16,7 +16,7 @@ import {
     HUMAN_SUBJECTS,
     isAda,
     isDefined,
-    isDefinedContext,
+    isFullyDefinedContext,
     isFound,
     isNotPartiallyLoggedIn,
     isPhy,
@@ -51,7 +51,7 @@ const defaultPageNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null, pageCont
 
     if (doc.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.CONCEPT].includes(doc.type as DOCUMENT_TYPE)) {
         // attempt to determine which landing page to return to
-        if (isDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
+        if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
             return {
                 breadcrumbHistory: [
                     {

@@ -97,7 +97,11 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             serializeQueryArgs: ({queryArgs}) => {
                 return queryArgs;
             },
-            merge: ({events: currentEvents}, {events: newEvents, total}) => {
+            merge: ({events: currentEvents}, {events: newEvents, total}, { arg }) => {
+                if (arg.startIndex === 0) {
+                    return {events: newEvents, total};
+                }
+                
                 return {events: Array.from(new Set([...currentEvents, ...newEvents])), total};
             },
             // i.e. choose the query args that cause the query to be rerun, to update what is currently in the cache.

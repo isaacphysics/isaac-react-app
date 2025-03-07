@@ -13,7 +13,7 @@ import classNames from "classnames";
 
 export interface ListViewCardProps extends ListGroupItemProps {
     item: ShortcutResponse;
-    icon: TitleIconProps;
+    icon?: TitleIconProps;
     subject?: Subject;
     linkTags?: ListViewTagProps[];
     url?: string;

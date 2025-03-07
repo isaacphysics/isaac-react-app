@@ -47,6 +47,7 @@ import { QuestionFinder } from "../../pages/QuestionFinder";
 import { QuestionPacks } from "../../pages/QuestionPacks";
 import { QuickQuizzes } from "../../pages/QuickQuizzes";
 import { LessonsAndRevision } from "../../pages/LessonsAndRevision";
+import { SubjectOverviewPage } from "../../pages/SubjectOverviewPage";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -129,7 +130,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/books/step_up_phys" component={StepUpPhys}/>,
     <TrackedRoute key={key++} exact path="/books/linking_concepts" component={LinkingConcepts}/>,
 
-    // Subject-specific pages -- see subjectSpecificPages, defined above
+    // Subject-stage pages -- see subjectSpecificPages, defined above
     ...(Object.entries(subjectSpecificPages).map(([path, component]) => (
         <TrackedRoute key={key++} exact path={Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
             stages.forEach((stage) => {
@@ -137,6 +138,11 @@ export const RoutesPhy = [
             });
             return acc;
         }, [] as string[])} component={component} />
+    ))),
+
+    // Subject overview landing pages
+    ...(Object.keys(PHY_NAV_SUBJECTS).map((subject) => (
+        <TrackedRoute key={key++} exact path={`/${subject}`} component={SubjectOverviewPage} />
     ))),
 
     // Concepts List
