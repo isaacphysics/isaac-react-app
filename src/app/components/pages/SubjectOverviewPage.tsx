@@ -48,6 +48,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
         }
     ]
         .map(({stage, ...card}) => (PHY_NAV_SUBJECTS[context.subject as Subject] as readonly LearningStage[])?.includes(stage) ? card : null)
+        .filter((x, i, a) => x || (i % 2 === 0 ? a[i + 1] : a[i - 1])) // remove pairs of nulls
         .sort((a, b) => a ? (b ? 0 : -1) : 1) // put nulls at the end
     } />;
 };
