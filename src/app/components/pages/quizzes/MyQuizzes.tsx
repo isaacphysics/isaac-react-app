@@ -124,7 +124,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
             </CardBody>
         </Card>
     </div>;
-}
+};
 
 const AdaQuizItem = ({quiz}: QuizAssignmentProps) => {
     const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
