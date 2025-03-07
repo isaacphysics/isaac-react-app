@@ -19,6 +19,7 @@ import {
 } from "../state";
 import {
     API_PATH,
+    extractTeacherName,
     getValue,
     isDefined,
     isEventLeaderOrStaff,
@@ -361,3 +362,16 @@ export function convertAttemptToQuiz(attempt: QuizAttemptDTO): DisplayableQuiz |
         tags: attempt.quizSummary?.tags
     };
 }
+
+export const getDistinctQuizSetters = (quizzes: DisplayableQuiz[] | undefined | null): Set<string> => {
+    const distinctFormattedQuizSetters = new Set<string>();
+
+    if (quizzes) {
+        quizzes.forEach(quiz => {
+            const teacherName = extractTeacherName(quiz.assignerSummary);
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            teacherName && distinctFormattedQuizSetters.add(teacherName);
+        });
+    }
+    return distinctFormattedQuizSetters;
+};

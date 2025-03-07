@@ -1,11 +1,11 @@
 import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
-import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, Label } from "reactstrap";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, QuizStatus, siteSpecific, useDeviceSize } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, DisplayableQuiz, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, QuizStatus, siteSpecific, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
-import { selectors, useAppSelector } from "../../../state";
+import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
 import { AppGroup, AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
@@ -684,27 +684,31 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
     const { setQuizCreator, setQuizTitleFilter, quizStatuses, setQuizStatuses, displayMode, setDisplayMode } = props;
     const deviceSize = useDeviceSize();
 
+    const quizQuery = useGetQuizAssignmentsAssignedToMeQuery();
+
     return <ContentSidebar buttonTitle="Search & Filter">
-        <div className={classNames("section-divider", {"mt-5": above["lg"](deviceSize)})}/>
-        <Label className="w-100">
-            <h5 className="mb-4">Search tests</h5>
-            <Input type="text" data-testid="title-filter" onChange={(e) => setQuizTitleFilter(e.target.value)} 
-                placeholder="Search by title" aria-label="Search by title"/>
-        </Label>
-        <div className="section-divider"/>
-        <h5 className="mt-2 mb-4">Filter by status</h5>
-        <QuizStatusAllCheckbox statusFilter={quizStatuses} setStatusFilter={setQuizStatuses} count={undefined}/>
-        <div className="section-divider-small"/>
-        {Object.values(QuizStatus).filter(s => s !== QuizStatus.All).map(state => <QuizStatusCheckbox 
-            key={state} status={state} count={undefined}
-            statusFilter={quizStatuses} setStatusFilter={setQuizStatuses} 
-        />)}
-        <Label className="w-100">
-            <h5 className="mt-3">Filter by assigner</h5>
-            <Input type="text" onChange={(e) => setQuizCreator(e.target.value)}
-                placeholder="Search by assigner" aria-label="Search by assigner"/>
-        </Label>
-        <h5 className="my-3">Display mode</h5>
-        <DisplayModeToggle displayMode={displayMode} setDisplayMode={setDisplayMode}/>
+        <ShowLoadingQuery query={quizQuery} defaultErrorTitle="" thenRender={(quizzes: QuizAssignmentDTO[]) => {
+            return <>
+                <div className={classNames("section-divider", {"mt-5": above["lg"](deviceSize)})}/>
+                <h5>Search tests</h5>
+                <Input type="text" className="search--filter-input my-4" onChange={(e) => setQuizTitleFilter(e.target.value)} 
+                    placeholder="Search by title" aria-label="Search by title"/>
+                <div className="section-divider"/>
+                <h5 className="mb-4">Filter by status</h5>
+                <QuizStatusAllCheckbox statusFilter={quizStatuses} setStatusFilter={setQuizStatuses} count={undefined}/>
+                <div className="section-divider-small"/>
+                {Object.values(QuizStatus).filter(s => s !== QuizStatus.All).map(state => <QuizStatusCheckbox 
+                    key={state} status={state} count={undefined}
+                    statusFilter={quizStatuses} setStatusFilter={setQuizStatuses} 
+                />)}
+                <h5 className="mt-4 mb-3">Filter by assigner</h5>
+                <Input type="select" onChange={e => setQuizCreator(e.target.value)}>
+                    {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
+                </Input>
+                <div className="section-divider mt-4"/>
+                <h5>Display mode</h5>
+                <DisplayModeToggle displayMode={displayMode} setDisplayMode={setDisplayMode}/>
+            </>;
+        }}/>
     </ContentSidebar>;
 };
