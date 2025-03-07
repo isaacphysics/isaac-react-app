@@ -701,8 +701,7 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                 <QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/>
                 <div className="section-divider-small"/>
                 {statusOptions.map(state => <QuizStatusCheckbox 
-                    key={state} status={state} count={undefined}
-                    statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} 
+                    key={state} status={state} count={undefined} statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} 
                 />)}
                 <h5 className="mt-4 mb-3">Filter by assigner</h5>
                 <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>

@@ -1,3 +1,7 @@
+.rounded-card {
+  border-radius: 8px;
+}
+
 @container pod-parent (min-width: 700px) {
   .pod.card {
     display: flex;

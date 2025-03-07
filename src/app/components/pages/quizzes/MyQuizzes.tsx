@@ -87,7 +87,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
     };
     const subject = determineQuizSubject(quiz); 
     return <div className="p-2">
-        <Card className="h-100" style={{borderRadius: "8px"}}>
+        <Card className="h-100 rounded-card">
             <CardBody className="d-flex flex-column">
                 <Row className="row-cols-1 row-cols-sm-2">
                     <Col className="d-flex flex-column align-items-start col-sm-8">
@@ -272,18 +272,16 @@ interface AdaQuizFiltersProps {
 const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, showFilters}: AdaQuizFiltersProps) => {
     return <CollapsibleContainer expanded={showFilters}>
         <Row>
-            <Col className="col-6">
+            <Col xs={6}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by quiz title</span>
-                    <Input type="text" data-testid="title-filter" onChange={(e) => setQuizTitleFilter(e.target.value)} 
-                        placeholder="Search by title" aria-label="Search by title"/>
+                    <Input type="text" data-testid="title-filter" onChange={(e) => setQuizTitleFilter(e.target.value)}/>
                 </Label>
             </Col>
-            <Col className={"col-6"}>
+            <Col xs={6}>
                 <Label className="w-100">
-                    <h5>Filter by assigner</h5>
-                    <Input type="text" onChange={(e) => setQuizCreatorFilter(e.target.value)}
-                        placeholder="Search by assigner" aria-label="Search by assigner"/>
+                    <span className={"text-nowrap"}>Filter by assigner</span>
+                    <Input type="text" data-testid="title-filter" onChange={(e) => setQuizCreatorFilter(e.target.value)} />
                 </Label>
             </Col>
         </Row>
