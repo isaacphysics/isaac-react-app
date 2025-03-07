@@ -3,7 +3,7 @@ import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHead
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, HUMAN_SUBJECTS, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, siteSpecific, TAG_ID, tags, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
@@ -16,6 +16,7 @@ import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
 import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
+import { StyledCheckbox } from "../inputs/StyledCheckbox";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -186,36 +187,53 @@ export const ConceptSidebar = (props: QuestionSidebarProps) => {
 
 
 
-interface FilterCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
+interface FilterCheckboxProps extends React.HTMLAttributes<HTMLElement> {
     tag: Tag;
     conceptFilters: Tag[];
     setConceptFilters: React.Dispatch<React.SetStateAction<Tag[]>>;
     tagCounts?: Record<string, number>;
+    incompatibleTags?: Tag[]; // tags that are removed when this tag is added
+    dependentTags?: Tag[]; // tags that are removed when this tag is removed
+    baseTag?: Tag; // tag to add when all tags are removed
+    checkboxStyle?: "tab" | "button";
+    bsSize?: "sm" | "lg";
 }
 
 const FilterCheckbox = (props : FilterCheckboxProps) => {
-    const {tag, conceptFilters, setConceptFilters, tagCounts, ...rest} = props;
+    const {tag, conceptFilters, setConceptFilters, tagCounts, checkboxStyle, incompatibleTags, dependentTags, baseTag, ...rest} = props;
     const [checked, setChecked] = useState(conceptFilters.includes(tag));
 
     useEffect(() => {
         setChecked(conceptFilters.includes(tag));
     }, [conceptFilters, tag]);
 
-    return <StyledTabPicker {...rest} id={tag.id} checked={checked} 
-        onInputChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilters(f => e.target.checked ? [...f, tag] : f.filter(c => c !== tag))}
-        checkboxTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
-    />;
+    const handleCheckboxChange = (checked: boolean) => {
+        const newConceptFilters = checked 
+            ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), tag] 
+            : conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c));
+        setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : (baseTag ? [baseTag] : []));
+    };
+
+    return checkboxStyle === "button" 
+        ? <StyledCheckbox {...rest} id={tag.id} checked={checked}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
+            label={<span>{tag.title} {tagCounts && isDefined(tagCounts[tag.id]) && <span className="text-muted">({tagCounts[tag.id]})</span>}</span>}
+        />
+        : <StyledTabPicker {...rest} id={tag.id} checked={checked} 
+            onInputChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
+            checkboxTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
+        />;
 };
 
 const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag">) => {
-    const { conceptFilters, setConceptFilters, tagCounts, ...rest } = props;
-    const [previousFilters, setPreviousFilters] = useState<Tag[]>([]);
+    const { conceptFilters, setConceptFilters, tagCounts, baseTag, ...rest } = props;
+    const [previousFilters, setPreviousFilters] = useState<Tag[]>(baseTag ? [baseTag] : []);
     return <StyledTabPicker {...rest} 
-        id="all" checked={!conceptFilters.length} checkboxTitle="All" count={tagCounts && Object.values(tagCounts).reduce((a, b) => a + b, 0)}
+        id="all" checked={baseTag ? conceptFilters.length === 1 && conceptFilters[0] === baseTag : !conceptFilters.length} checkboxTitle="All" count={tagCounts && Object.values(tagCounts).reduce((a, b) => a + b, 0)}
         onInputChange={(e) => {
             if (e.target.checked) {
                 setPreviousFilters(conceptFilters);
-                setConceptFilters([]);
+                setConceptFilters(baseTag ? [baseTag] : []);
             } else {
                 setConceptFilters(previousFilters);
             }
@@ -237,6 +255,8 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
 
     const pageContext = useAppSelector(selectors.pageContext.context);
 
+    const subjectTag = tags.getById(pageContext?.subject as TAG_ID);
+
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <h5>Search concepts</h5>
@@ -251,9 +271,19 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
 
         <div className="d-flex flex-column">
             <h5>Filter by topic</h5>
-            <AllFiltersCheckbox conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} />
+            <AllFiltersCheckbox conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag}/>
             <div className="section-divider-small"/>
-            {applicableTags.map(tag => <FilterCheckbox key={tag.id} tag={tag} conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts}/>)}
+            {applicableTags.map(tag => 
+                <FilterCheckbox 
+                    key={tag.id} 
+                    tag={tag} 
+                    conceptFilters={conceptFilters} 
+                    setConceptFilters={setConceptFilters} 
+                    tagCounts={tagCounts} 
+                    incompatibleTags={[subjectTag]} 
+                    baseTag={subjectTag}
+                />
+            )}
         </div>
 
         <div className="section-divider"/>
@@ -272,9 +302,68 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
     </ContentSidebar>;
 };
 
-export const GenericConceptsSidebar = (props: SidebarProps) => {
-    // TODO
-    return <ContentSidebar {...props}/>;
+export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
+    const { searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts, ...rest } = props;
+
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
+    return <ContentSidebar {...rest}>
+        <div className="section-divider"/>
+        <h5>Search concepts</h5>
+        <Input
+            className='search--filter-input my-4'
+            type="search" value={searchText || ""}
+            placeholder="e.g. Forces"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+        />
+
+        <div className="section-divider"/>
+        
+        <div className="d-flex flex-column">
+            <h5>Filter by subject</h5>
+            {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
+                const subjectTag = tags.getById(subject as TAG_ID);
+                const descendentTags = tags.getDirectDescendents(subjectTag.id);
+                const isSelected = conceptFilters.includes(subjectTag) || descendentTags.some(tag => conceptFilters.includes(tag));
+                const isPartial = descendentTags.some(tag => conceptFilters.includes(tag)) && descendentTags.some(tag => !conceptFilters.includes(tag));
+                return <div key={i} className={classNames("ps-2", {"checkbox-region": isSelected})}>
+                    <FilterCheckbox 
+                        checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
+                        setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags}
+                        className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
+                    />
+                    {isSelected && <div className="ms-3 ps-2">
+                        {descendentTags
+                            .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
+                            // .sort((a, b) => tagCounts ? tagCounts[b.id] - tagCounts[a.id] : 0)
+                            .map((tag, j) => <FilterCheckbox key={j} 
+                                checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters} 
+                                setConceptFilters={setConceptFilters} tagCounts={tagCounts} incompatibleTags={[subjectTag]}
+                            />)
+                        }
+                    </div>}
+                </div>;
+            })}
+        </div>
+
+        <div className="section-divider"/>
+
+        {pageContext?.subject && <>
+            <div className="section-divider"/>
+
+            <div className="sidebar-help">
+                <p>The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                <p>If you want to explore broader concepts across multiple subjects or learning stages, you can use the main concept browser:</p>
+                <AffixButton size="md" color="keyline" tag={Link} to="/concepts" affix={{
+                    affix: "icon-right",
+                    position: "suffix",
+                    type: "icon"
+                }}>
+                    Browse concepts
+                </AffixButton>
+            </div>
+        </>}
+    </ContentSidebar>;
 };
 
 interface QuestionFinderSidebarProps extends SidebarProps {

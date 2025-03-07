@@ -87,7 +87,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
     fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewQuizUrl || quizButton) ? false : true);
     const colWidths = fullWidth ? [12,12,12,12,12] : isQuiz ? [12,6,6,6,6] : [12,8,7,6,7];
     const cardBody =
-    <Row className="w-100 flex-row">
+    <Row className="flex-row">
         <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} xxl={colWidths[4]} className={classNames("d-flex", {"mt-3": isCard})}>
             <div>
                 {icon && (

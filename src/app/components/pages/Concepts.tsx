@@ -4,7 +4,7 @@ import {AppState, fetchConcepts, selectors, useAppDispatch, useAppSelector} from
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {isPhy, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
+import {isAda, isPhy, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -30,10 +30,15 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         maths: TAG_ID.maths,
     };
     
-    const applicableTags = tags.getDirectDescendents(subjectToTagMap[subject ?? "physics"]); 
+    const applicableTags = subject ? tags.getDirectDescendents(subjectToTagMap[subject]) : tags.allFieldTags;
     const tagCounts : Record<string, number> = applicableTags.reduce((acc, t) => ({...acc, [t.id]: concepts?.filter(c => c.tags?.includes(t.id)).length || 0}), {});
 
-    useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);
+    useEffect(() => {
+        // TODO: run if EITHER subject exists OR there is no subject, but *not* if the subject is loading
+        // if (pageContext) {
+            dispatch(fetchConcepts(undefined, subject));
+        // }
+    }, [dispatch, subject]);
 
     const searchParsed = queryString.parse(location.search);
 
@@ -44,9 +49,10 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const filters = (Array.isArray(filterParsed) ? filterParsed[0] || "" : filterParsed || "").split(",");
 
     const [searchText, setSearchText] = useState(query);
-    const [conceptFilters, setConceptFilters] = useState<Tag[]>(
-        applicableTags.filter(f => filters.includes(f.id))
-    );
+    const [conceptFilters, setConceptFilters] = useState<Tag[]>([
+        ...(subject ? [tags.getById(subjectToTagMap[subject])] : []),
+        ...applicableTags.filter(f => filters.includes(f.id))
+    ]);
 
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
@@ -54,7 +60,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         if (e) {
             e.preventDefault();
         }
-        pushConceptsToHistory(history, searchText || "", conceptFilters.map(f => f.id));
+        pushConceptsToHistory(history, searchText || "", [...conceptFilters.map(f => f.id)]);
 
         if (searchText) {
             setShortcutResponse(shortcuts(searchText));
@@ -87,6 +93,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
 
     const crumb = isPhy && isDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
+    const sidebarProps = {searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts};
+
     return (
         <Container id="search-page" { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
             <TitleAndBreadcrumb 
@@ -95,31 +103,46 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                 icon={{type: "hex", icon: "page-icon-concept"}}
             />
             <SidebarLayout>
-                {pageContext?.subject ? <SubjectSpecificConceptListSidebar 
-                    searchText={searchText} setSearchText={setSearchText} 
-                    conceptFilters={conceptFilters} setConceptFilters={setConceptFilters}
-                    applicableTags={applicableTags} tagCounts={tagCounts}
-                /> : <GenericConceptsSidebar />}
+                {pageContext?.subject 
+                    ? <SubjectSpecificConceptListSidebar {...sidebarProps}/> 
+                    : <GenericConceptsSidebar {...sidebarProps}/>
+                }
                 <MainContent>
-                    <Card>
+                    {isPhy && <div className="list-results-container p-2 mt-4">
+                        {shortcutAndFilteredSearchResults && <div className="p-2 py-3">
+                            Showing <b>{shortcutAndFilteredSearchResults.length}</b> results
+                        </div>}
+
+                        {shortcutAndFilteredSearchResults
+                            ? <ListView items={shortcutAndFilteredSearchResults}/>
+                            : <em>No results found</em>
+                        }
+                    </div>
+                    }
+                    
+                    {isAda && <Card>
                         <CardHeader className="search-header">
                             <h3>
-                                <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
+                                <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results 
+                                {query !== "" 
+                                    ? shortcutAndFilteredSearchResults 
+                                        ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> 
+                                        : <IsaacSpinner /> 
+                                    : null
+                                }
                             </h3>
                         </CardHeader>
-                        <CardBody>
+                        <CardBody className="px-2">
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {shortcutAndFilteredSearchResults ?
-                                    isPhy ? 
-                                        <ListView items={shortcutAndFilteredSearchResults}/> :
-                                        <LinkToContentSummaryList 
-                                            items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
-                                            contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                        />
+                                    <LinkToContentSummaryList 
+                                        items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
+                                        contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
+                                    />
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </CardBody>
-                    </Card>
+                    </Card>}
                 </MainContent>
             </SidebarLayout>
         </Container>
