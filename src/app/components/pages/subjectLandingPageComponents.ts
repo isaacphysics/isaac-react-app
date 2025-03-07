@@ -1,8 +1,7 @@
 import { PageContextState } from "../../../IsaacAppTypes";
-import { getHumanContext, interleave, isDefinedContext, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS, Writeable } from "../../services";
+import { BookInfo, getHumanContext, interleave, ISAAC_BOOKS, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS, Writeable } from "../../services";
 import { ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
 import { ListViewCardProps } from "../elements/list-groups/ListView";
-import { BookInfo, isaacBooks } from "../elements/modals/IsaacBooksModal";
 
 const extendUrl = (context: NonNullable<Required<PageContextState>>, page: string) => {
     return `/${context.subject}/${context.stage}/${page}`;
@@ -132,7 +131,7 @@ const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
 const subjectSpecificBooksMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: BookInfo[]}} = (
     Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
         acc[subject as keyof typeof PHY_NAV_SUBJECTS] = stages.reduce((stageAcc, stage) => {
-            stageAcc[stage] = isaacBooks.filter(book => book.subject === subject && book.stages.includes(stage));
+            stageAcc[stage] = ISAAC_BOOKS.filter(book => book.subject === subject && book.stages.includes(stage));
             return stageAcc;
         }, {} as {[stage in typeof stages[number]]: BookInfo[]});
         return acc;
@@ -161,9 +160,9 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
 };
 
 export const getBooksForContext = (context: PageContextState): BookInfo[] => {
-    if (!isDefinedContext(context)) return [];
+    if (!isFullyDefinedContext(context)) return [];
     if (!context?.stage?.length) {
-        return isaacBooks.filter(book => book.subject === context.subject);
+        return ISAAC_BOOKS.filter(book => book.subject === context.subject);
     }
     
     if (!isFullyDefinedContext(context)) return []; // this is implied by the above, but this has a type guard

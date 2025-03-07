@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "4.0.0-rc5-SNAPSHOT",
+  "version": "4.0.0-rc6-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=18",
@@ -18,7 +18,7 @@
     "core-js": "^3.38.1",
     "dayjs": "^1.11.13",
     "he": "^1.2.0",
-    "highlight.js": "^11.10.0",
+    "highlight.js": "^11.11.1",
     "history": "^4.10.1",
     "html-to-text": "^9.0.5",
     "identity-obj-proxy": "3.0.0",

@@ -74,6 +74,7 @@ export interface TitleIconProps {
 export interface PageTitleProps {
     currentPageTitle: string;
     subTitle?: string;
+    description?: string;
     disallowLaTeX?: boolean;
     help?: ReactElement;
     className?: string;
@@ -82,7 +83,7 @@ export interface PageTitleProps {
     preview?: boolean;
     icon?: TitleIconProps;
 }
-export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, className, audienceViews, modalId, preview, icon}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, subTitle, description, disallowLaTeX, help, className, audienceViews, modalId, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
     const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
@@ -120,12 +121,17 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
     }
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-4 mb-0": isPhy}, className)}>
-        {icon && (
-            icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
-                : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject}/> : undefined)}
-        <div className="me-auto" data-testid={"main-heading"}>
-            {formatPageTitle(currentPageTitle, disallowLaTeX)}
-            {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
+        <div className="me-auto">
+            <div className="d-sm-flex align-items-center">
+                {icon && (
+                    icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
+                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject}/> : undefined)}
+                <div className="me-auto" data-testid={"main-heading"}>
+                    {formatPageTitle(currentPageTitle, disallowLaTeX)}
+                    {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
+                </div>
+            </div>
+            {description && <div className="h-description">{description}</div>}
         </div>
         <Helmet>
             <meta property="og:title" content={currentPageTitle} />

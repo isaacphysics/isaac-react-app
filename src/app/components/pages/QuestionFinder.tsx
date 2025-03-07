@@ -3,22 +3,31 @@ import {AppState, clearQuestionSearch, searchQuestions, useAppDispatch, useAppSe
 import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
+    BookInfo,
+    difficultyShortLabelMap,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
+    getHumanContext,
+    HUMAN_STAGES,
+    ISAAC_BOOKS,
     isAda,
     isFullyDefinedContext,
     isLoggedIn,
     isPhy,
     Item,
     itemiseTag,
+    LearningStage,
     ListParams,
     SEARCH_CHAR_LENGTH_LIMIT,
     SEARCH_RESULTS_PER_PAGE,
+    simpleDifficultyLabelMap,
     siteSpecific,
     STAGE,
     STAGE_NULL_OPTIONS,
+    stageLabelMap,
     TAG_ID,
+    TAG_LEVEL,
     tags,
     toSimpleCSV,
     useQueryParams,
@@ -33,14 +42,18 @@ import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import {PageFragment} from "../elements/PageFragment";
-import {RenderNothing} from "../elements/RenderNothing";
 import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
-import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
+import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { PageContextState, Tag } from "../../../IsaacAppTypes";
+import { PrintButton } from "../elements/PrintButton";
+import { ShareLink } from "../elements/ShareLink";
+import { Spacer } from "../elements/Spacer";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
+import { PageFragment } from "../elements/PageFragment";
+import { RenderNothing } from "../elements/RenderNothing";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
@@ -65,22 +78,54 @@ function questionStatusToURIComponent(statuses: QuestionStatus): string {
         .join(",");
 }
 
-function processTagHierarchy(subjects: string[], fields: string[], topics: string[]): Item<TAG_ID>[][] {
+function processTagHierarchy(subjects: string[], fields: string[], topics: string[]): ChoiceTree[] {
     const tagHierarchy = tags.getTagHierarchy();
-    const selectionItems: Item<TAG_ID>[][] = [];
+    const selectionItems: ChoiceTree[] = [];
 
-    let plausibleParentHeirarchy = true;
     [subjects, fields, topics].forEach((tier, index) => {
-        if (tier && plausibleParentHeirarchy) {
+        if (tier.length > 0) {
             const validTierTags = tags.getSpecifiedTags(
                 tagHierarchy[index], tier as TAG_ID[]
             );
-            plausibleParentHeirarchy = validTierTags.length === 1;
-            selectionItems.push(validTierTags.map(itemiseTag));
+
+            if (index === 0)
+                selectionItems.push({[TAG_LEVEL.subject]: validTierTags.map(itemiseTag)} as ChoiceTree);
+            else {
+                const parents = selectionItems[index-1] ? Object.values(selectionItems[index-1]).flat() : [];
+                const validChildren = parents.map(p => tags.getChildren(p.value).filter(c => tier.includes(c.id)).map(itemiseTag));
+
+                const currentLayer: ChoiceTree = {};
+                parents.forEach((p, i) => {
+                    currentLayer[p.value] = validChildren[i];
+                });
+                selectionItems.push(currentLayer);
+            }
         }
     });
 
     return selectionItems;
+}
+
+export function pruneTreeNode(tree: ChoiceTree[], filter: string, recursive?: boolean, pageContext?: PageContextState): ChoiceTree[] {
+    let newTree = [...tree];
+    newTree.forEach((tier, i) => {
+        if (tier[filter as TAG_ID]) { // removing children of node
+            Object.values(tier[filter as TAG_ID] || {}).forEach(v => pruneTreeNode(newTree, v.value, recursive, pageContext));
+            delete newTree[i][filter as TAG_ID];
+        } else { // removing node itself
+            const parents = Object.keys(tier);
+            parents.forEach(parent => {
+                if (newTree[i][parent as TAG_ID]?.some(c => c.value === filter)) {
+                    newTree[i][parent as TAG_ID] = newTree[i][parent as TAG_ID]?.filter(c => c.value !== filter);
+                    if (recursive && newTree[i][parent as TAG_ID]?.length === 0 && parent !== pageContext?.subject) {
+                        newTree = pruneTreeNode(newTree, parent, true, pageContext);
+                    }
+                }
+            });
+        }
+    });
+
+    return newTree;
 }
 
 function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionStatus {
@@ -103,23 +148,35 @@ function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionS
     }
 }
 
+export function pageStageToSearchStage(stage?: LearningStage[]): STAGE[] {
+    if (!stage || stage.length === 0) return [];
+    switch (stage[0]) {
+        case "11_14": return [STAGE.YEAR_7_AND_8, STAGE.YEAR_9];
+        case "gcse": return [STAGE.GCSE];
+        case "a_level": return [STAGE.A_LEVEL, STAGE.FURTHER_A];
+        case "university": return [STAGE.UNIVERSITY];
+        default: return [];
+    }
+}
+
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
     const pageContext = useUrlPageTheme({resetIfNotFound: true});
+    const isSolitaryStage = pageStageToSearchStage(pageContext?.stage).length === 1;
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]);
+    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages).concat(isSolitaryStage ? pageStageToSearchStage(pageContext?.stage)[0] : []) as STAGE[]);
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
     const [searchDisabled, setSearchDisabled] = useState(true);
-
+    
     const [populatedFromAccountSettings, setPopulatedFromAccountSettings] = useState(false);
     useEffect(function populateFiltersFromAccountSettings() {
         if (isLoggedIn(user)) {
@@ -150,45 +207,46 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
-    const [selections, setSelections] = useState<Item<TAG_ID>[][]>(
+    const [selections, setSelections] = useState<ChoiceTree[]>(
         processTagHierarchy(
-            arrayFromPossibleCsv(params.subjects), 
+            arrayFromPossibleCsv(params.subjects).concat(pageContext?.subject ? [pageContext.subject] : []), 
             arrayFromPossibleCsv(params.fields), 
-            arrayFromPossibleCsv(params.topics)
-        )
+            arrayFromPossibleCsv(params.topics))  
     );
 
-    const choices = [tags.allSubjectTags.map(itemiseTag)];
-    let tierIndex;
-    for (tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
-        const selection = selections[tierIndex];
-        if (selection.length !== 1) break;
-        choices.push(tags.getChildren(selection[0].value).map(itemiseTag));
+    const choices: ChoiceTree[] = [];
+    if (!pageContext?.subject) {
+        choices.push({"subject": tags.allSubjectTags.map(itemiseTag)});
+    } else {
+        choices.push({});
+        choices[0][pageContext.subject] = tags.getChildren(pageContext.subject as TAG_ID).map(itemiseTag);
+    }
+
+    for (let tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
+        if (Object.keys(selections[tierIndex]).length > 0) {
+            choices[tierIndex+1] = {};
+            for (const v of Object.values(selections[tierIndex])) {
+                for (const v2 of v) 
+                    choices[tierIndex+1][v2.value] = tags.getChildren(v2.value).map(itemiseTag);
+            }
+        }
     }
 
     const tiers: Tier[] = [
         {id: "subjects" as TierID, name: "Subject"},
         {id: "fields" as TierID, name: "Field"},
         {id: "topics" as TierID, name: "Topic"}
-    ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, tierIndex + 1);
-
-    const setTierSelection = (tierIndex: number) => {
-        return ((values: Item<TAG_ID>[]) => {
-            const newSelections = selections.slice(0, tierIndex);
-            newSelections.push(values);
-            setSelections(newSelections);
-        }) as React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
-    };
+    ].map(tier => ({...tier, for: "for_" + tier.id}));
 
     const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const nothingToSearchFor =
         [searchQuery, searchTopics, searchBooks, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
-        selections.every(v => v.length === 0);
+        selections.every(v => Object.keys(v).length === 0);
 
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], examBoards: string[],
             book: string[], stages: string[], difficulties: string[],
-            hierarchySelections: Item<TAG_ID>[][], tiers: Tier[],
+            hierarchySelections: ChoiceTree[],
             excludeBooks: boolean, questionStatuses: QuestionStatus,
             startIndex: number) => {
             if (nothingToSearchFor) {
@@ -198,31 +256,23 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
             const filterParams: Record<TierID, string[] | undefined> = {} as Record<TierID, string[] | undefined>;
             if (isPhy) {
-                const allTags: TAG_ID[] = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
-                tiers.forEach((tier, i) => {
-                    if (!hierarchySelections[i] || hierarchySelections[i].length === 0) {
-                        if (i === 0) {
-                            filterParams[tier.id] = allTags;
-                        }
-                        return;
-                    }
-                    filterParams[tier.id] = hierarchySelections[i].map(item => item.value);
-                });
+                if (getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value).length === 0) {
+                    filterParams.subjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
+                }
             } else {
-                filterParams["topics"] = [...topics].filter((query) => query != "");
+                filterParams.topics = [...topics].filter((query) => query != "");
             }
-            const examBoardString = examBoards.join(",");
 
             dispatch(searchQuestions({
                 searchString: searchString,
-                tags: "", // Tags currently not used
+                tags: getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value).join(",") || undefined,
                 fields: filterParams.fields?.join(",") || undefined,
                 subjects: filterParams.subjects?.join(",") || undefined,
                 topics: filterParams.topics?.join(",") || undefined,
                 books: (!excludeBooks && book.join(",")) || undefined,
                 stages: stages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
-                examBoards: examBoardString,
+                examBoards: examBoards.join(",") || undefined,
                 questionCategories: isPhy
                     ? (excludeBooks ? "problem_solving" : "problem_solving,book")
                     : undefined,
@@ -267,16 +317,22 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setPageCount(1);
         setDisableLoadMore(false);
         setDisplayQuestions(undefined);
+
+        const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
         searchDebounce(
-            searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages,
-            searchDifficulties, selections, tiers, excludeBooks, searchStatuses, 0
+            searchQuery, searchTopics, searchExamBoards, searchBooks, filteredStages,
+            searchDifficulties, selections, excludeBooks, searchStatuses, 0
         );
 
         const params: {[key: string]: string} = {};
-        if (searchStages.length) params.stages = toSimpleCSV(searchStages);
+        if (searchStages.length) {
+            params.stages = toSimpleCSV(searchStages
+                .filter(s => isSolitaryStage ? !pageStageToSearchStage(pageContext?.stage).includes(s) : true));
+            if (params.stages === "") delete params.stages;
+        }
         if (searchDifficulties.length) params.difficulties = toSimpleCSV(searchDifficulties);
         if (searchQuery.length) params.query = encodeURIComponent(searchQuery);
-        if (isAda && searchTopics.length) params.topics = toSimpleCSV(searchTopics);
+        if (searchTopics.length) params.topics = toSimpleCSV(searchTopics);
         if (isAda && searchExamBoards.length) params.examBoards = toSimpleCSV(searchExamBoards);
         if (isPhy && !excludeBooks && searchBooks.length) {
             params.book = toSimpleCSV(searchBooks);
@@ -290,10 +346,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
         if (isPhy) {
             tiers.forEach((tier, i) => {
-                if (!selections[i] || selections[i].length === 0) {
+                if (!selections[i] || Object.keys(selections[i]).length === 0) {
                     return;
                 }
-                params[tier.id] = selections[i].map(item => item.value).join(",");
+                params[tier.id] = Object.values(selections[i])
+                    .flat().map(item => item.value)
+                    .filter(v => v !== pageContext?.subject).join(",");
+                if (params[tier.id] === "") delete params[tier.id];
             });
         }
 
@@ -349,18 +408,19 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || searchStages.length > 0
             || searchBooks.length > 0
             || excludeBooks
-            || selections.some(tier => tier.length > 0)
+            || selections.some(tier => Object.values(tier).flat().length > 0)
             || Object.entries(searchStatuses).some(e => e[1]));
+        if (isPhy) applyFilters();
     }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
 
     const clearFilters = useCallback(() => {
         setSearchDifficulties([]);
         setSearchTopics([]);
         setSearchExamBoards([]);
-        setSearchStages([]);
+        setSearchStages(isSolitaryStage ? pageStageToSearchStage(pageContext?.stage) : []);
         setSearchBooks([]);
         setExcludeBooks(false);
-        setSelections([[], [], []]);
+        setSelections([pageContext?.subject ? {"subject": [itemiseTag(tags.getById(pageContext.subject as TAG_ID))]} : {}, {}, {}]);
         setSearchStatuses(
             {
                 notAttempted: false,
@@ -384,6 +444,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         You can select more than one entry in each area.
     </span>, undefined);
 
+    const description = siteSpecific(
+        (pageContext?.subject && pageContext.stage ? `Use our question finder to find questions to try on ${getHumanContext(pageContext)} topics.` : "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.") 
+        + " Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.",
+        "");
+
     const metaDescription = siteSpecific(
         "Find physics, maths, chemistry and biology questions by topic and difficulty.",
         "Search for the perfect computer science questions to study. For revision. For homework. For the classroom."
@@ -394,23 +459,101 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <IsaacSpinner />
     </div>;
 
+    function removeFilterTag(filter: string) {
+        if (searchStages.includes(filter as STAGE)) {
+            setSearchStages(searchStages.filter(f => f !== filter));
+        } else if (getChoiceTreeLeaves(selections).some(leaf => leaf.value === filter)) {
+            setSelections(pruneTreeNode(selections, filter, true, pageContext));
+        } else if (searchDifficulties.includes(filter as Difficulty)) {
+            setSearchDifficulties(searchDifficulties.filter(f => f !== filter));
+        } else if (searchExamBoards.includes(filter as ExamBoard)) {
+            setSearchExamBoards(searchExamBoards.filter(f => f !== filter));
+        } else if (searchBooks.includes(filter)) {
+            setSearchBooks(searchBooks.filter(f => f !== filter));
+        } else if (searchStatuses[filter as keyof QuestionStatus]) {
+            setSearchStatuses({...searchStatuses, [filter as keyof QuestionStatus]: false});
+        } else if (excludeBooks && filter === "excludeBooks") {
+            setExcludeBooks(false);
+        }
+    };
+
+    const FilterTag = ({tag}: {tag: {value: string, label: string}}) => {
+        return (
+            <div data-bs-theme="neutral" className="filter-tag me-2 mt-1 d-flex align-items-center">
+                {tag.label}
+                <button className="icon icon-close" onClick={() => removeFilterTag(tag.value)} aria-label="Close"/>
+            </div>
+        );
+    };
+
+    const FilterSummary = () => {
+        const stageList: STAGE[] = searchStages.filter(stage => isSolitaryStage ? !pageStageToSearchStage(pageContext?.stage).includes(stage) : true);
+        const selectionList: Item<TAG_ID>[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext?.subject);
+        const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
+        const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.value));
+
+        const categories = [
+            searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
+            stageList.map(s => {return {value: s, label: stageLabelMap[s]};}),
+            statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
+            excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.value, label: book.label}}),
+            selectionList,
+        ].flat();
+
+        return <div className="d-flex flex-wrap mt-2">
+            {categories.map(c => <FilterTag key={c.value} tag={c}/>)}
+            {categories.length > 0 ?
+                <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
+                    Clear all filters
+                </button>
+                : <div/>}
+        </div>;
+    };
+    
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question Finder", "Questions")}
+            description={description} help={pageHelp}
             intermediateCrumbs={crumb ? [crumb] : []}
-            help={pageHelp}
             icon={{type: "hex", icon: "page-icon-finder"}}
         />
+        {siteSpecific(<div className="d-flex align-items-center">
+            <span>Use the search box and/or filters to find questions; you can then refine your search further with the filters.</span>
+            <Spacer/>
+            <div className="no-print d-flex align-items-center">
+                <div className="question-actions question-actions-leftmost mt-3">
+                    <ShareLink linkUrl={`/questions`}/>
+                </div>
+                <div className="question-actions mt-3 not-mobile">
+                    <PrintButton/>
+                </div>
+            </div>
+        </div>, 
+        <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />)}
         <SidebarLayout>
-            <QuestionFinderSidebar />
+            <QuestionFinderSidebar searchText={searchQuery} setSearchText={setSearchQuery} questionFilters={[]} setQuestionFilters={function (value: React.SetStateAction<Tag[]>): void {
+                throw new Error("Function not implemented.");
+            } } topLevelFilters={[]} 
+            questionFinderFilterPanelProps={{
+                searchDifficulties, setSearchDifficulties,
+                searchTopics, setSearchTopics,
+                searchStages, setSearchStages,
+                searchExamBoards, setSearchExamBoards,
+                searchStatuses, setSearchStatuses,
+                searchBooks, setSearchBooks,
+                excludeBooks, setExcludeBooks,
+                tiers, choices, 
+                selections, setSelections,
+                applyFilters, clearFilters,
+                validFiltersSelected, searchDisabled, setSearchDisabled
+            }} />
             <MainContent>
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
-                <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
 
-                <Row>
+                {isAda && <Row>
                     <Col lg={6} md={12} xs={12} className="finder-search">
                         <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
                         <InputGroup>
@@ -424,11 +567,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             <Button className="question-search-button" onClick={searchAndUpdateURL}/>
                         </InputGroup>
                     </Col>
-                </Row>
+                </Row>}
+
+                {isPhy && <FilterSummary/>}
 
                 <Row className="mt-4 position-relative finder-panel">
-                    <Col lg={siteSpecific(4, 3)} md={12} xs={12} className={classNames("text-wrap my-2", {"d-lg-none": isPhy})} data-testid="question-finder-filters">
-                        <QuestionFinderFilterPanel {...{ 
+                    <Col lg={siteSpecific(4, 3)} md={12} xs={12} className={classNames("text-wrap my-2", {"d-none": isPhy})} data-testid="question-finder-filters">
+                        <QuestionFinderFilterPanel {...{
                             searchDifficulties, setSearchDifficulties,
                             searchTopics, setSearchTopics,
                             searchStages, setSearchStages,
@@ -436,7 +581,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             searchStatuses, setSearchStatuses,
                             searchBooks, setSearchBooks,
                             excludeBooks, setExcludeBooks,
-                            tiers, choices, selections, setTierSelection,
+                            tiers, choices, 
+                            selections, setSelections,
                             applyFilters, clearFilters,
                             validFiltersSelected, searchDisabled, setSearchDisabled
                         }} /> {/* Temporarily disabled at >=lg to test list view until this filter is moved into the sidebar */}
@@ -478,7 +624,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                                 searchExamBoards,
                                                 searchBooks, searchStages,
                                                 searchDifficulties,
-                                                selections, tiers,
+                                                selections,
                                                 excludeBooks,
                                                 searchStatuses,
                                                 nextSearchOffset
