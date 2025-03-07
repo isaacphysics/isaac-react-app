@@ -157,14 +157,6 @@
   );
 }
 
-.page-icon-quiz {
-  @include svg-icon-layered(
-    '/assets/phy/icons/redesign/quiz-fg.svg', 
-    '/assets/phy/icons/redesign/quiz-bg.svg',
-    75px, 75px, 44px
-  );
-}
-
 .page-icon-concept {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-concept-fg.svg', 
@@ -233,14 +225,6 @@
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-question-fg.svg', 
     '/assets/phy/icons/redesign/page-generic-bg.svg',
-    60px, 60px, 36px
-  );
-}
-
-.list-icon-quiz {
-  @include svg-icon-layered(
-    '/assets/phy/icons/redesign/quiz-fg.svg', 
-    '/assets/phy/icons/redesign/quiz-bg.svg',
     60px, 60px, 36px
   );
 }

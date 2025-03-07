@@ -93,7 +93,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                     <Col className="d-flex flex-column align-items-start col-sm-8">
                         <div className="d-flex align-items-center">
                             <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
-                                <PhyHexIcon icon="page-icon-quiz" subject={subject as Subject} className="assignment-hex ps-3"/>
+                                <PhyHexIcon icon="page-icon-tests" subject={subject as Subject} className="assignment-hex ps-3"/>
                             </div>
                             <div className="d-flex flex-column flex-grow-1">
                                 <h4>{quiz.title || quiz.id }</h4>
