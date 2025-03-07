@@ -89,8 +89,8 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
     return <div className="p-2">
         <Card className="h-100" style={{borderRadius: "8px"}}>
             <CardBody className="d-flex flex-column">
-                <Row>
-                    <Col className="d-flex flex-column align-items-start col-8">
+                <Row className="row-cols-1 row-cols-sm-2">
+                    <Col className="d-flex flex-column align-items-start col-sm-8">
                         <div className="d-flex align-items-center">
                             <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
                                 <PhyHexIcon icon="page-icon-quiz" subject={subject as Subject} className="assignment-hex ps-3"/>
@@ -103,7 +103,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                             </div>
                         </div>
                     </Col>
-                    <Col className="d-flex flex-column justify-content-between col-4">
+                    <Col className="d-flex flex-column justify-content-between col-sm-4">
                         {quiz.isAssigned
                             ? quiz.dueDate && <p>Due date: <strong>{getFriendlyDaysUntil(quiz.dueDate)}</strong></p>
                             : quiz.attempt && <p>Freely {quiz.status === QuizStatus.Started ? "attempting" : "attempted"}</p>                           
