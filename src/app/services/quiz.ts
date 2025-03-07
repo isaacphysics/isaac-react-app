@@ -292,7 +292,7 @@ export enum QuizStatus {
     All = "All",
     Overdue = "Overdue", 
     NotStarted = "Not started", 
-    Started = "Started", 
+    Started = "Started (incomplete)", 
     Complete = "Complete",
 }
 

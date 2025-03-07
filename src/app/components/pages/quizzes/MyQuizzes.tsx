@@ -52,15 +52,40 @@ interface QuizAssignmentProps {
     quiz: DisplayableQuiz;
 }
 
+const QuizButton = ({quiz}: QuizAssignmentProps) => {
+    return <>{quiz.isAssigned ? <>
+        {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={quiz.link}>
+            {siteSpecific("Start Test", "Start test")}
+        </Button>}
+        {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
+            {siteSpecific("Continue Test", "Continue test")}
+        </Button>}
+        {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
+            {siteSpecific("Overdue", "Overdue")}
+        </Button>}
+        {quiz.status === QuizStatus.Complete && (
+            <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
+                {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
+            </Button>
+        )}
+    </> : quiz.attempt && <>
+        {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
+            {siteSpecific("Continue Test", "Continue test")}
+        </Button>}
+        {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
+            {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
+        </Button>
+        }
+    </>}</>;
+};
+
 const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
     const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
     const deviceSize = useDeviceSize();
-
     const determineQuizSubject = (quizSummary?: DisplayableQuiz) => {
         return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `${tag.toLowerCase()}`, "");
     };
     const subject = determineQuizSubject(quiz); 
-
     return <div className="p-2">
         <Card className="h-100" style={{borderRadius: "8px"}}>
             <CardBody className="d-flex flex-column">
@@ -78,14 +103,10 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                             </div>
                         </div>
                     </Col>
-                
                     <Col className="d-flex flex-column justify-content-between col-4">
                         {quiz.isAssigned
                             ? quiz.dueDate && <p>Due date: <strong>{getFriendlyDaysUntil(quiz.dueDate)}</strong></p>
-                            : quiz.attempt && siteSpecific(
-                                <p>Freely {quiz.status === QuizStatus.Started ? "attempting" : "attempted"}</p>,
-                                <p>{quiz.status === QuizStatus.Started ? "Attempting" : "Attempted"} independently</p>
-                            )
+                            : quiz.attempt && <p>Freely {quiz.status === QuizStatus.Started ? "attempting" : "attempted"}</p>                           
                         }
                         {quiz.isAssigned && <p>
                             Set: <strong>{getFriendlyDaysUntil(assignmentStartDate as Date)}</strong>
@@ -97,30 +118,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                                 : <>Started: <strong>{getFriendlyDaysUntil(quiz.attempt.startDate as Date)}</strong></>
                             }
                         </p>}
-                        {quiz.isAssigned ? <>
-                            {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={quiz.link}>
-                                {siteSpecific("Start Test", "Start test")}
-                            </Button>}
-                            {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-                                {siteSpecific("Continue Test", "Continue test")}
-                            </Button>}
-                            {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
-                                {siteSpecific("Overdue", "Overdue")}
-                            </Button>}
-                            {quiz.status === QuizStatus.Complete && (
-                                <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-                                    {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
-                                </Button>
-                            )}
-                        </> : quiz.attempt && <>
-                            {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-                                {siteSpecific("Continue Test", "Continue test")}
-                            </Button>}
-                            {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-                                {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
-                            </Button>
-                            }
-                        </>}
+                        <QuizButton quiz={quiz}/>
                     </Col>
                 </Row>
             </CardBody>
@@ -130,18 +128,13 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
 
 const AdaQuizItem = ({quiz}: QuizAssignmentProps) => {
     const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
-
     return <div className="p-2">
         <Card className="card-neat my-quizzes-card">
             <CardBody className="d-flex flex-column">
                 <h4 className="border-bottom pb-3 mb-3">{quiz.title || quiz.id }</h4>
-
                 {quiz.isAssigned
                     ? quiz.dueDate && <p>Due date: <strong>{formatDate(quiz.dueDate)}</strong></p>
-                    : quiz.attempt && siteSpecific(
-                        <p>Freely {quiz.status === QuizStatus.Started ? "attempting" : "attempted"}</p>,
-                        <p>{quiz.status === QuizStatus.Started ? "Attempting" : "Attempted"} independently</p>
-                    )
+                    : quiz.attempt && <p>{quiz.status === QuizStatus.Started ? "Attempting" : "Attempted"} independently</p>
                 }
                 {quiz.isAssigned && <p>
                     Set: {formatDate(assignmentStartDate)}
@@ -153,34 +146,9 @@ const AdaQuizItem = ({quiz}: QuizAssignmentProps) => {
                         : `Started: ${formatDate(quiz.attempt.startDate)}`
                     }
                 </p>}
-
                 <Spacer/>
-
                 <div className="text-center mt-4">
-                    {quiz.isAssigned ? <>
-                        {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={quiz.link}>
-                            {siteSpecific("Start Test", "Start test")}
-                        </Button>}
-                        {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-                            {siteSpecific("Continue Test", "Continue test")}
-                        </Button>}
-                        {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
-                            {siteSpecific("Overdue", "Overdue")}
-                        </Button>}
-                        {quiz.status === QuizStatus.Complete && (
-                            <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-                                {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
-                            </Button>
-                        )}
-                    </> : quiz.attempt && <>
-                        {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-                            {siteSpecific("Continue Test", "Continue test")}
-                        </Button>}
-                        {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-                            {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
-                        </Button>
-                        }
-                    </>}
+                    <QuizButton quiz={quiz}/>
                 </div>
             </CardBody>
         </Card>
@@ -293,15 +261,15 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
 };
 
 interface AdaQuizFiltersProps {
-    setShowCompleted: (show: boolean) => void;
-    setQuizCreator: (creator: string) => void;
     setQuizTitleFilter: (title: string) => void;
-    quizStatuses: QuizStatus[];
-    setQuizStatuses: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
+    setQuizCreatorFilter: (creator: string) => void;
+    quizStatusFilter: QuizStatus[];
+    setQuizStatusFilter: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
+    setShowCompleted: (show: boolean) => void;
     showFilters: boolean;
 }
 
-const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, quizStatuses, setQuizStatuses, showFilters}: AdaQuizFiltersProps) => {
+const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, showFilters}: AdaQuizFiltersProps) => {
     return <CollapsibleContainer expanded={showFilters}>
         <Row>
             <Col className="col-6">
@@ -314,7 +282,7 @@ const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, q
             <Col className={"col-6"}>
                 <Label className="w-100">
                     <h5>Filter by assigner</h5>
-                    <Input type="text" onChange={(e) => setQuizCreator(e.target.value)}
+                    <Input type="text" onChange={(e) => setQuizCreatorFilter(e.target.value)}
                         placeholder="Search by assigner" aria-label="Search by assigner"/>
                 </Label>
             </Col>
@@ -325,10 +293,10 @@ const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, q
                     <span className={"text-nowrap"}>Filter by status</span>
                     <StyledSelect 
                         isMulti
-                        value={quizStatuses.map(status => ({value: status, label: status}))} 
+                        value={quizStatusFilter.map(status => ({value: status, label: status}))} 
                         options={Object.values(QuizStatus).map(status => ({value: status, label: status}))}
                         onChange={(newValues) => {
-                            selectOnChange(setQuizStatuses, true)(newValues);
+                            selectOnChange(setQuizStatusFilter, true)(newValues);
                             setShowCompleted(newValues.map(v => v.value).includes(QuizStatus.Complete) || newValues.map(v => v.value).includes(QuizStatus.Overdue));
                         }}
                         menuPortalTarget={document.body} 
@@ -354,7 +322,7 @@ export const DisplayModeToggle = ({displayMode, setDisplayMode}: {displayMode: "
     </div>;
 };
 
-export const PastTestsToggle = ({showCompleted, setShowCompleted, setQuizStatuses}: {showCompleted: boolean, setShowCompleted: (show: boolean) => void, setQuizStatuses: React.Dispatch<React.SetStateAction<QuizStatus[]>>}) => {
+export const PastTestsToggle = ({showCompleted, setShowCompleted, setQuizStatusFilter}: {showCompleted: boolean, setShowCompleted: (show: boolean) => void, setQuizStatusFilter: React.Dispatch<React.SetStateAction<QuizStatus[]>>}) => {
     return <div className={classNames("d-flex flex-column align-items-start w-max-content", {"pb-3": isAda})}>
         <span>Past tests</span>
         <div className="h-100 align-content-center">
@@ -365,7 +333,7 @@ export const PastTestsToggle = ({showCompleted, setShowCompleted, setQuizStatuse
                 onChange={() => {
                     const target = !showCompleted;
                     setShowCompleted(target);
-                    setQuizStatuses(s => target ? [...s, QuizStatus.Complete, QuizStatus.Overdue] : s.filter(status => ![QuizStatus.Complete, QuizStatus.Overdue].includes(status)));
+                    setQuizStatusFilter(s => target ? [...s, QuizStatus.Complete, QuizStatus.Overdue] : s.filter(status => ![QuizStatus.Complete, QuizStatus.Overdue].includes(status)));
                 }}
             />
         </div>
@@ -385,8 +353,8 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     
     const [showFilters, setShowFilters] = useState(false);
     const [quizTitleFilter, setQuizTitleFilter] = useState("");
-    const [quizCreatorFilter, setQuizCreator] = useState("");
-    const [quizStatusFilter, setQuizStatuses] = useState<QuizStatus[]>([QuizStatus.NotStarted, QuizStatus.Started]);
+    const [quizCreatorFilter, setQuizCreatorFilter] = useState("");
+    const [quizStatusFilter, setQuizStatusFilter] = useState<QuizStatus[]>([QuizStatus.NotStarted, QuizStatus.Started]);
 
     const sortQuizzesByOrder = useCallback((quizzes: DisplayableQuiz[]) => {
         // if we're in table mode, sort by the order set by the user via the columns (boardOrder).
@@ -458,11 +426,11 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
             <div className="d-flex">
                 {<DisplayModeToggle displayMode={displayMode} setDisplayMode={setDisplayMode}/>}
                 <Spacer/>
-                {above["sm"](deviceSize) && <PastTestsToggle showCompleted={showCompleted} setShowCompleted={setShowCompleted} setQuizStatuses={setQuizStatuses}/>}
+                {above["sm"](deviceSize) && <PastTestsToggle showCompleted={showCompleted} setShowCompleted={setShowCompleted} setQuizStatusFilter={setQuizStatusFilter}/>}
                 {filtersToggle}
             </div>
-            <AdaQuizFilters setShowCompleted={setShowCompleted} setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter} 
-                quizStatuses={quizStatusFilter} setQuizStatuses={setQuizStatuses} showFilters={showFilters}/>
+            <AdaQuizFilters setShowCompleted={setShowCompleted} setQuizCreatorFilter={setQuizCreatorFilter} setQuizTitleFilter={setQuizTitleFilter} 
+                quizStatusFilter={quizStatusFilter} setQuizStatusFilter={setQuizStatusFilter} showFilters={showFilters}/>
         </>}
     </>;
 
@@ -480,8 +448,8 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
         <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <SidebarLayout>
-            <MyQuizzesSidebar setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter}
-                quizStatuses={quizStatusFilter} setQuizStatuses={setQuizStatuses} displayMode={displayMode} setDisplayMode={setDisplayMode}/>
+            <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter} 
+                setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}/>
             <MainContent>
                 <Tabs className="mb-5 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
                     history.replace({...history.location, hash: tabAnchors[index - 1]});

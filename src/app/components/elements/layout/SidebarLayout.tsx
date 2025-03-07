@@ -672,19 +672,22 @@ const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status">) =
 
 
 interface MyQuizzesSidebarProps extends SidebarProps {
-    setQuizCreator: (creator: string) => void;
     setQuizTitleFilter: (title: string) => void;
-    quizStatuses: QuizStatus[];
-    setQuizStatuses: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
+    setQuizCreatorFilter: (creator: string) => void;
+    quizStatusFilter: QuizStatus[];
+    setQuizStatusFilter: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
+    activeTab: number;
     displayMode: "table" | "cards";
     setDisplayMode: React.Dispatch<React.SetStateAction<"table" | "cards">>;
 };
 
 export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
-    const { setQuizCreator, setQuizTitleFilter, quizStatuses, setQuizStatuses, displayMode, setDisplayMode } = props;
+    const { setQuizTitleFilter,setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, activeTab, displayMode, setDisplayMode } = props;
     const deviceSize = useDeviceSize();
-
     const quizQuery = useGetQuizAssignmentsAssignedToMeQuery();
+
+    const statusOptions = activeTab === 1 ? Object.values(QuizStatus).filter(s => s !== QuizStatus.All)
+        : [QuizStatus.Started, QuizStatus.Complete];
 
     return <ContentSidebar buttonTitle="Search & Filter">
         <ShowLoadingQuery query={quizQuery} defaultErrorTitle="" thenRender={(quizzes: QuizAssignmentDTO[]) => {
@@ -695,14 +698,14 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                     placeholder="Search by title" aria-label="Search by title"/>
                 <div className="section-divider"/>
                 <h5 className="mb-4">Filter by status</h5>
-                <QuizStatusAllCheckbox statusFilter={quizStatuses} setStatusFilter={setQuizStatuses} count={undefined}/>
+                <QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/>
                 <div className="section-divider-small"/>
-                {Object.values(QuizStatus).filter(s => s !== QuizStatus.All).map(state => <QuizStatusCheckbox 
+                {statusOptions.map(state => <QuizStatusCheckbox 
                     key={state} status={state} count={undefined}
-                    statusFilter={quizStatuses} setStatusFilter={setQuizStatuses} 
+                    statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} 
                 />)}
                 <h5 className="mt-4 mb-3">Filter by assigner</h5>
-                <Input type="select" onChange={e => setQuizCreator(e.target.value)}>
+                <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
                     {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
                 </Input>
                 <div className="section-divider mt-4"/>
