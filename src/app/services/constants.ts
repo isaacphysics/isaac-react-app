@@ -497,14 +497,70 @@ export const HUMAN_STAGES: {[key: string]: string} = {
 export const PHY_NAV_SUBJECTS = {
     [SUBJECTS.PHYSICS]: [LEARNING_STAGE["11_TO_14"], LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
     [SUBJECTS.MATHS]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
-    [SUBJECTS.CHEMISTRY]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
-    [SUBJECTS.BIOLOGY]: [LEARNING_STAGE.A_LEVEL]
-} as {[subject in SUBJECTS]: LEARNING_STAGE[]};
+    [SUBJECTS.CHEMISTRY]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
+    [SUBJECTS.BIOLOGY]: [LEARNING_STAGE.A_LEVEL],
+} as const;
 
 export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) => {
-    acc[stage.valueOf()] = Object.keys(PHY_NAV_SUBJECTS).filter(subject => (PHY_NAV_SUBJECTS[subject as keyof typeof PHY_NAV_SUBJECTS] as LEARNING_STAGE[]).includes(stage as LEARNING_STAGE)) as SUBJECTS[];
+    acc[stage.valueOf() as LEARNING_STAGE] = Object.keys(PHY_NAV_SUBJECTS).filter(subject => (PHY_NAV_SUBJECTS[subject as keyof typeof PHY_NAV_SUBJECTS] as readonly LEARNING_STAGE[]).includes(stage as LEARNING_STAGE)) as Exclude<SUBJECTS, SUBJECTS.CS>[];
     return acc;
-}, {} as {[stage : string]: SUBJECTS[]});
+}, {} as {[stage in LEARNING_STAGE]: Exclude<SUBJECTS, SUBJECTS.CS>[]});
+
+export interface BookInfo {
+    title: string;
+    value: string;
+    label: string;
+    image: string;
+    path: string;
+    subject: Subject;
+    stages: LearningStage[];
+}
+
+export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
+    [
+        {
+            title: "Step up to GCSE Physics", value: "phys_book_step_up",
+            label: "Step up to GCSE Physics", image: "/assets/phy/books/step_up_phys.jpg",
+            path: "/books/step_up_phys", subject: "physics", stages: ["11_14"]
+        },
+        {
+            title: "GCSE Physics", value: "phys_book_gcse",
+            label: "GCSE Physics", image: "/assets/phy/books/phys_book_gcse.jpg",
+            path: "/books/phys_book_gcse", subject: "physics", stages: ["gcse"]
+        },
+        {
+            title: "Pre-University Physics", value: "physics_skills_19",
+            label: "A Level Physics (3rd Edition)", image: "/assets/phy/books/physics_skills_19.jpg",
+            path: "/books/physics_skills_19", subject: "physics", stages: ["a_level"]
+        },
+        {
+            title: "Linking Concepts in Pre-University Physics", value: "physics_linking_concepts",
+            label: "Linking Concepts in Pre-Uni Physics", image: "/assets/phy/books/linking_concepts.png",
+            path: "/books/linking_concepts", subject: "physics", stages: ["a_level"]
+        },
+        {
+            title: "Using Essential GCSE Mathematics", value: "maths_book_gcse",
+            label: "GCSE Maths", image: "/assets/phy/books/2021_maths_book_gcse.jpg",
+            path: "/books/maths_book_gcse", subject: "maths", stages: ["gcse"]
+        },
+        {
+            title: "Mathematics for Sciences (2nd edition)", value: "maths_book_2e",
+            label: "Pre-Uni Maths (2nd edition)", image: "/assets/phy/books/pre_uni_maths_2e.jpg",
+            path: "/books/pre_uni_maths_2e", subject: "maths", stages: ["a_level"]
+        },
+        {
+            title: "Mathematics for Sciences (1st edition)", value: "maths_book",
+            label: "Pre-Uni Maths (1st edition)", image: "/assets/phy/books/pre_uni_maths.jpg",
+            path: "/books/pre_uni_maths", subject: "maths", stages: ["a_level"]
+        },
+        {
+            title: "Pre-University Physical Chemistry", value: "chemistry_16",
+            label: "A-Level Physical Chemistry", image: "/assets/phy/books/chemistry_16.jpg",
+            path: "/books/chemistry_16", subject: "chemistry", stages: ["a_level"]
+        }
+    ],
+    []
+);
 
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',

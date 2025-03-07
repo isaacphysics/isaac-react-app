@@ -19,10 +19,7 @@ export const FilterCount = (props: FilterCountProps) => {
     >
         <title>{`${count} filters selected`}</title>
         <g>
-            {siteSpecific(
-                <Hexagon halfWidth={filterIconWidth * Math.sqrt(3)/4} quarterHeight={filterIconWidth / 4} className={"hex filter-count"} />,
-                <Circle radius={filterIconWidth / 2} className={"circle filter-count"} />
-            )}
+            <Circle radius={filterIconWidth / 2} className={"circle filter-count"} />
             <foreignObject width={siteSpecific(filterIconWidth * Math.sqrt(3)/2, filterIconWidth)} height={filterIconWidth}>
                 <div aria-hidden={"true"} className={`filter-count-title`}>
                     {count}

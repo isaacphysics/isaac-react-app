@@ -43,7 +43,8 @@
   margin: 8px 10px 0 0;
 }
 .icon-status {
-  width: 46;
+  width: 46px;
+  height: 46px;
   margin-top: -1px;
 }
 
@@ -101,6 +102,10 @@
 
 .icon-info {
   @include svg-icon('/assets/phy/icons/redesign/info.svg', 16px, 16px);
+}
+
+.icon-refresh {
+  @include svg-icon('/assets/phy/icons/redesign/refresh.svg', 16px, 16px);
 }
 
 .icon-sidebar {
@@ -185,6 +190,22 @@
   );
 }
 
+.page-icon-tests {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-tests-fg.svg', 
+    '/assets/phy/icons/redesign/page-tests-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
+.page-icon-quiz {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-quiz-fg.svg', 
+    '/assets/phy/icons/redesign/page-quiz-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
 .page-icon-lessons {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-lessons-fg.svg', 
@@ -248,7 +269,6 @@
     60px, 60px, 36px
   )
 }
-
 
 svg {
   &.almost-fill {
