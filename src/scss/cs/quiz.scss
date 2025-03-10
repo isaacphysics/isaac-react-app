@@ -21,3 +21,13 @@
         margin-top: -10px;
     }
 }
+
+.set-quiz-table-dropdown {
+    button {
+        min-width: 150px !important;
+      
+        &.btn-sm {
+          min-width: 100px !important;
+        }
+      }
+}
