@@ -41,7 +41,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
         {
             item: {
                 title: "University",
-                subtitle: `Our University ${context?.subject} resources help you prepare for your university STEM degree.`
+                subtitle: `Our University ${humanSubject} resources help you prepare for your university STEM degree.`
             },
             url: `/${context.subject}/university`,
             stage: LEARNING_STAGE.UNIVERSITY,
