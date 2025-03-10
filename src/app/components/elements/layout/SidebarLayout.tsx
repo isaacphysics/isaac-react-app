@@ -329,7 +329,7 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
                 return <div key={i} className={classNames("ps-2", {"checkbox-region": isSelected})}>
                     <FilterCheckbox 
                         checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
-                        setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags}
+                        setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
                         className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
                     />
                     {isSelected && <div className="ms-3 ps-2">
