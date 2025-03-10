@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PageContextState } from "../../../IsaacAppTypes";
-import { Stage } from "../../../IsaacApiTypes";
 
 interface actionType {
     payload: PageContextState;
@@ -13,9 +12,14 @@ export const pageContextSlice = createSlice({
     reducers: {
         updatePageContext: (state, action: actionType) => ({
             ...state,
-            stage: action.payload?.stage,
-            subject: action.payload?.subject,
+            stage: action.payload?.stage ?? state?.stage,
+            subject: action.payload?.subject ?? state?.subject,
+            previousContext: action.payload?.previousContext ?? state?.previousContext,
         }),
-        resetPageContext: () => null,
+        resetPageContext: (state) => ({
+            ...state,
+            stage: undefined,
+            subject: undefined,
+        }),
     },
 });

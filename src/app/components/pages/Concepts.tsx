@@ -19,9 +19,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const concepts = useAppSelector((state: AppState) => state?.concepts?.results || null);
-    const pageContext = useUrlPageTheme({resetIfNotFound: true});
-
-    const subject = useAppSelector(selectors.pageContext.subject);
+    const pageContext = useUrlPageTheme();
 
     const subjectToTagMap = {
         physics: TAG_ID.physics,
@@ -30,15 +28,14 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         maths: TAG_ID.maths,
     };
     
-    const applicableTags = subject ? tags.getDirectDescendents(subjectToTagMap[subject]) : tags.allFieldTags;
+    const applicableTags = pageContext?.subject ? tags.getDirectDescendents(subjectToTagMap[pageContext.subject]) : tags.allFieldTags;
     const tagCounts : Record<string, number> = applicableTags.reduce((acc, t) => ({...acc, [t.id]: concepts?.filter(c => c.tags?.includes(t.id)).length || 0}), {});
 
     useEffect(() => {
-        // TODO: run if EITHER subject exists OR there is no subject, but *not* if the subject is loading
-        // if (pageContext) {
-            dispatch(fetchConcepts(undefined, subject));
-        // }
-    }, [dispatch, subject]);
+        if (pageContext) {
+            dispatch(fetchConcepts(undefined, pageContext?.subject));
+        }
+    }, [dispatch]);
 
     const searchParsed = queryString.parse(location.search);
 
@@ -50,7 +47,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
 
     const [searchText, setSearchText] = useState(query);
     const [conceptFilters, setConceptFilters] = useState<Tag[]>([
-        ...(subject ? [tags.getById(subjectToTagMap[subject])] : []),
+        ...(pageContext?.subject ? [tags.getById(subjectToTagMap[pageContext.subject])] : []),
         ...applicableTags.filter(f => filters.includes(f.id))
     ]);
 
