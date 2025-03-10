@@ -163,6 +163,7 @@ export function useUrlPageTheme(): PageContextState {
         dispatch(pageContextSlice.actions.updatePageContext({
             subject: urlContext?.subject, 
             stage: urlContext?.stage,
+            previousContext: {subject: urlContext?.subject, stage: urlContext?.stage},
         }));
 
         return () => {

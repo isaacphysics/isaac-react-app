@@ -12,8 +12,9 @@ export const pageContextSlice = createSlice({
     reducers: {
         updatePageContext: (state, action: actionType) => ({
             ...state,
-            stage: action.payload?.stage ?? state?.stage,
-            subject: action.payload?.subject ?? state?.subject,
+            // stage and subject can be undefined, so should not ??-inherit from the previous context
+            stage: action.payload?.stage,
+            subject: action.payload?.subject,
             previousContext: action.payload?.previousContext ?? state?.previousContext,
         }),
         resetPageContext: (state) => ({
