@@ -90,12 +90,8 @@ export const eventsApi = isaacApi.enhanceEndpoints({
                 }
             }),
             transformResponse: (data: {results: IsaacEventPageDTO[], totalResults: number}) => ({events: data.results.map(augmentEvent), total: data.totalResults}),
-            // i.e. choose the query args to use as the cache key - ones that, if changed, will start a new request
-            // in a new cache entry.
-            // this previously did not contain `limit` or `startIndex` which caused the cache to be shared across different use cases;
-            // as such, a query with e.g. `limit=2` was being ignored if more than 2 events were already in the cache.
-            serializeQueryArgs: ({queryArgs}) => {
-                return queryArgs;
+            serializeQueryArgs: ({endpointName}) => {
+                return endpointName;
             },
             merge: ({events: currentEvents}, {events: newEvents, total}, { arg }) => {
                 if (arg.startIndex === 0) {
