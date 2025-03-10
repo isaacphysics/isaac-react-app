@@ -2,13 +2,13 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, ListViewTagProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { DOCUMENT_TYPE, documentTypePathPrefix, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupItemProps, ListGroupProps } from "reactstrap";
 import { TitleIconProps } from "../PageTitle";
 import { AffixButton } from "../AffixButton";
 import { QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
-import { showQuizSettingModal, useAppDispatch } from "../../../state";
+import { selectors, showQuizSettingModal, useAppDispatch, useAppSelector } from "../../../state";
 import classNames from "classnames";
 
 export interface ListViewCardProps extends ListGroupItemProps {
@@ -37,14 +37,15 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const { item, ...rest } = props;
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
-    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+    const pageSubject = useAppSelector(selectors.pageContext.subject);
+    const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
 
     return <AbstractListViewItem
         {...rest}
         icon={{type: "hex", icon: "list-icon-question", size: "sm"}}
         title={item.title ?? ""}
-        subject={itemSubject}
+        subject={itemSubject !== "neutral" ? itemSubject : undefined}
         tags={item.tags}
         supersededBy={item.supersededBy}
         subtitle={item.subtitle}
@@ -56,13 +57,14 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
 };
 
 export const ConceptListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
-    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+    const pageSubject = useAppSelector(selectors.pageContext.subject);
+    const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
 
     return <AbstractListViewItem 
         icon={{type: "hex", icon: "list-icon-concept", size: "sm"}}
         title={item.title ?? ""}
-        subject={itemSubject}
+        subject={itemSubject !== "neutral" ? itemSubject : undefined}
         subtitle={item.subtitle}
         url={url}
         {...rest}

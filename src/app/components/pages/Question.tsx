@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {Button, Col, Container, Row} from "reactstrap";
 import {match, RouteComponentProps, withRouter} from "react-router-dom";
-import {fetchDoc, goToSupersededByQuestion, pageContextSlice, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {fetchDoc, goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {
@@ -9,7 +9,7 @@ import {
     DOCUMENT_TYPE,
     fastTrackProgressEnabledBoards,
     generateQuestionTitle,
-    getUpdatedPageContext,
+    usePreviousPageContext,
     isAda,
     isPhy,
     isStudent,
@@ -63,7 +63,6 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
     const questionId = questionIdOverride || match.params.questionId;
     const doc = useAppSelector(selectors.doc.get);
     const user = useAppSelector(selectors.user.orNull);
-    const prevPageContext = useAppSelector(selectors.pageContext.context);
     const navigation = useNavigation(doc);
     const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
     const query = queryString.parse(location.search);
@@ -74,12 +73,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
         dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, questionId));
     }, [dispatch, questionId]);
 
-    useEffect(() => {
-        if (doc && doc !== 404) {
-            const newPageContext = getUpdatedPageContext(prevPageContext, user && user.loggedIn && user.registeredContexts || undefined, doc);
-            dispatch(pageContextSlice.actions.updatePageContext(newPageContext));
-        }
-    }, [dispatch, user, doc]);
+    const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && doc !== 404 ? doc : undefined);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
@@ -87,7 +81,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
         const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
         return <GameboardContext.Provider value={navigation.currentGameboard}>
-            <Container className={classNames("no-shadow")} data-bs-theme={prevPageContext?.subject ?? doc.subjectId}>
+            <Container className={classNames("no-shadow")} data-bs-theme={pageContext?.subject ?? doc.subjectId}>
                 <TitleAndBreadcrumb
                     currentPageTitle={generateQuestionTitle(doc)}
                     subTitle={doc.subtitle}
