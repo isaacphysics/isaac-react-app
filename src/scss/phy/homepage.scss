@@ -181,6 +181,11 @@ $dashboard-panel-padding: 30px;
     &:hover {
       text-decoration: none;
     }
+
+    &:focus {
+      box-shadow: 0 0 0 2pt black !important;
+      border-radius: 1px;
+    }
   }
 
   .panel-my-isaac-link {
@@ -258,4 +263,8 @@ a:has(.assignment-card) {
     flex: 0 0 auto;
     width: 12.5%;
   }
+}
+
+.random-question-panel {
+  background-color: $color-neutral-100;
 }

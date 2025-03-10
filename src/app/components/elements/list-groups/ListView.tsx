@@ -1,20 +1,22 @@
 import React from "react";
-import { AbstractListViewItem, ListViewTagProps } from "./AbstractListViewItem";
+import { AbstractListViewItem, AbstractListViewItemProps, ListViewTagProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
 import { DOCUMENT_TYPE, documentTypePathPrefix, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
-import { ListGroup, ListGroupItemProps } from "reactstrap";
+import { ListGroup, ListGroupItem, ListGroupItemProps, ListGroupProps } from "reactstrap";
 import { TitleIconProps } from "../PageTitle";
 import { AffixButton } from "../AffixButton";
 import { QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
 import { showQuizSettingModal, useAppDispatch } from "../../../state";
+import classNames from "classnames";
 
 export interface ListViewCardProps extends ListGroupItemProps {
     item: ShortcutResponse;
     icon: TitleIconProps;
     subject?: Subject;
     linkTags?: ListViewTagProps[];
+    url?: string;
 }
 
 export const ListViewCard = ({item, icon, subject, linkTags, ...rest}: ListViewCardProps) => {
@@ -29,13 +31,17 @@ export const ListViewCard = ({item, icon, subject, linkTags, ...rest}: ListViewC
     />;
 };
 
-export const QuestionListViewItem = ({item, ...rest} : {item: ShortcutResponse}) => {
+type QuestionListViewItemProps = {item: ShortcutResponse} & Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "tags" | "supersededBy" | "subtitle" | "breadcrumb" | "status" | "url" | "audienceViews">;
+
+export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
+    const { item, ...rest } = props;
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
 
     return <AbstractListViewItem
+        {...rest}
         icon={{type: "hex", icon: "list-icon-question", size: "sm"}}
         title={item.title ?? ""}
         subject={itemSubject}
@@ -46,7 +52,6 @@ export const QuestionListViewItem = ({item, ...rest} : {item: ShortcutResponse})
         status={item.state}
         url={url}
         audienceViews={audienceViews}
-        {...rest}
     />;
 };
 
@@ -156,9 +161,10 @@ export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
     />;
 };
 
-export const ListViewCards = ({cards}: {cards: ListViewCardProps[]}) => {
-    return <ListGroup className="list-view-card-container link-list list-group-links p-0 m-0 flex-row row-cols-1 row-cols-lg-2 row">
-        {cards.map((card, index) => <ListViewCard key={index} {...card}/>)}
+export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & {showBlanks?: boolean} & ListGroupProps) => {
+    const { cards, showBlanks, ...rest } = props;
+    return <ListGroup {...rest} className={classNames("list-view-card-container link-list list-group-links p-0 m-0 flex-row row-cols-1 row-cols-lg-2 row", rest.className)}>
+        {cards.map((card, index) => card ? <ListViewCard key={index} {...card}/> : (showBlanks ? <ListGroupItem key={index}/> : null))}
     </ListGroup>;
 };
 

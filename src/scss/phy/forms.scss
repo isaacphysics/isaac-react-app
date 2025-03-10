@@ -7,7 +7,7 @@
   .select__control, .select__control:hover {
     height: 2.6rem;
     border: 1px solid $color-neutral-300;
-    border-radius: 8px;
+    border-radius: $border-radius-lg;
 
     .select__value-container {
       padding: 0 0 0 1.2em;
@@ -45,6 +45,8 @@
 
 [type='search'].search--filter-input {
   border: 1px solid $color-neutral-300;
+  background: $color-neutral-white url(/assets/cs/icons/search-jet.svg) no-repeat 95%;
+  background-size: 20px;
 }
 
 select.form-select {
@@ -87,7 +89,7 @@ input {
   &.form-control {
     height: 2.6rem;
     border: 1px solid $color-neutral-300;
-    border-radius: 8px;
+    border-radius: $border-radius-lg;
   }
 }
 
@@ -95,7 +97,7 @@ select {
   &.form-select {
     height: 2.6rem;
     border: 1px solid $color-neutral-300;
-    border-radius: 8px;
+    border-radius: $border-radius-lg;
     background-color: white;
 
     &[name='selectMulti'] {
