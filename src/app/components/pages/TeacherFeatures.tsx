@@ -56,7 +56,7 @@ export const TeacherFeatures = () => {
             </Col>}
         </Row>
         <Row className="isaac-cards-body px-3">
-            <Col sm={6} md={4} className="mb-3 mb-md-0">
+            <Col md={6} lg={4} className="mb-3 mb-lg-0">
                 <TeacherFeatureCard
                     url = "/groups"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#groups"
@@ -65,7 +65,7 @@ export const TeacherFeatures = () => {
                     disabled = {isDisabled}
                 />
             </Col>
-            <Col sm={6} md={4} className="mb-3 mb-md-0">
+            <Col md={6} lg={4} className="mb-3 mb-lg-0">
                 <TeacherFeatureCard
                     url = {PATHS.SET_ASSIGNMENTS}
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#set-assignments"
@@ -74,8 +74,7 @@ export const TeacherFeatures = () => {
                     disabled = {isDisabled}
                 />
             </Col>
-            <Col xs={0} sm={3} className="d-md-none"/>
-            <Col sm={6} md={4}>
+            <Col md={{size: 6, offset: 3}} lg={{size: 4, offset: 0}}>
                 <TeacherFeatureCard
                     url = {PATHS.ASSIGNMENT_PROGRESS}
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#track-progress"
@@ -89,7 +88,7 @@ export const TeacherFeatures = () => {
             <h4>Teacher Support</h4>
         </Row>
         <Row className="isaac-cards-body mt-2 px-3">
-            <Col sm={6} md={4} className="mb-3 mb-md-0">
+            <Col md={6} lg={4} className="mb-3 mb-lg-0">
                 <TeacherFeatureCard               
                     url = "/support/teacher/general"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#teacher-forum"
@@ -97,7 +96,7 @@ export const TeacherFeatures = () => {
                     subtitle = "Answers to your questions and how-to guides."
                 />
             </Col>
-            <Col sm={6} md={4} className="mb-3 mb-md-0">
+            <Col md={6} lg={4} className="mb-3 mb-lg-0">
                 <TeacherFeatureCard
                     url = "/events?types=teacher"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#use-with-class"
@@ -105,8 +104,7 @@ export const TeacherFeatures = () => {
                     subtitle = "Free short courses to help you use Isaac: by topic or by level of experience with Isaac."
                 />
             </Col>
-            <Col xs={0} sm={3} className="d-md-none"/>
-            <Col sm={6} md={4}>
+            <Col md={{size: 6, offset: 3}} lg={{size: 4, offset: 0}}>
                 <TeacherFeatureCard
                     url = "/teacher_emails"
                     imgSrc = "/assets/phy/icons/computer.svg"
@@ -120,7 +118,7 @@ export const TeacherFeatures = () => {
             <h4>Teacher Resources</h4>
         </Row>
         <Row className="isaac-cards-body mb-5 mt-2 px-3">
-            <Col sm={6} md={4} className="mb-3 mb-md-0">
+            <Col md={6} lg={4} className="mb-3 mb-lg-0">
                 <TeacherFeatureCard
                     url = "/pages/order_books"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#skills-book-cover"
@@ -128,7 +126,7 @@ export const TeacherFeatures = () => {
                     subtitle = "Buy one of our Skills Mastery books at cost."
                 />
             </Col>
-            <Col sm={6} md={4} className="mb-3 mb-md-0">
+            <Col md={6} lg={4} className="mb-3 mb-lg-0">
                 <TeacherFeatureCard
                     url = "/pages/pre_made_gameboards"
                     imgSrc = "/assets/phy/icons/key_stage_sprite.svg#triple"
@@ -136,8 +134,7 @@ export const TeacherFeatures = () => {
                     subtitle = {isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}
                 />
             </Col>
-            <Col xs={0} sm={3} className="d-md-none"/>
-            <Col sm={6} md={4}>
+            <Col md={{size: 6, offset: 3}} lg={{size: 4, offset: 0}}>
                 <TeacherFeatureCard
                     url = "/events?types=student"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#calendar"
