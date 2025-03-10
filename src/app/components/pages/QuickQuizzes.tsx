@@ -2,13 +2,13 @@ import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Container } from "reactstrap";
 import { generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { getHumanContext, isDefinedContext, useUrlPageTheme } from "../../services/pageContext";
+import { getHumanContext, isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
 import { isPhy } from "../../services";
 
 export const QuickQuizzes = withRouter((props: RouteComponentProps) => {
     const pageContext = useUrlPageTheme();
 
-    const crumb = isPhy && isDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
+    const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb 
