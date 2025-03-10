@@ -75,3 +75,31 @@ svg.book-page-icon {
     }
   }
 }
+
+.book-container {
+  border-radius: 8px;
+  text-decoration: none;
+
+  &:hover {
+    .book-image-container {
+      scale: 1.02;
+    }
+
+    h5 {
+      text-decoration: underline;
+    }
+  }
+
+  .book-image-container {
+    position: relative;
+    width: max-content;
+    height: max-content;
+    box-shadow: 0px 6px 12px rgba(0,0,0,0.2);
+    transition: scale 0.2s ease-out;
+
+    > img {
+      max-height: 215px;
+      border-radius: 3px;
+    }
+  }
+}

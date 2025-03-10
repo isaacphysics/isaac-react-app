@@ -28,7 +28,8 @@ import {
     SortOrder,
     sortQuestions,
     STAGE,
-    useUserViewingContext
+    useUserViewingContext,
+    ISAAC_BOOKS
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -168,7 +169,7 @@ export const QuestionSearchModal = (
                 type="button"
                 value={siteSpecific("Add Selections to Gameboard", "Add selections to quiz")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
-                className={classNames("btn w-100 border-0", siteSpecific("btn-keyline", "btn-secondary"))}
+                className={classNames("btn w-100", siteSpecific("btn-keyline", "btn-secondary border-0"))}
                 onClick={() => {
                     undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
                     currentQuestions.setSelectedQuestions(modalQuestions.selectedQuestions);
@@ -190,16 +191,7 @@ export const QuestionSearchModal = (
                         selectOnChange(setSearchBook, true)(e);
                         sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
                     }}
-                    options={[
-                        {value: "phys_book_step_up", label: "Step Up to GCSE Physics"},
-                        {value: "phys_book_gcse", label: "GCSE Physics"},
-                        {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
-                        {value: "physics_linking_concepts", label: "Linking Concepts in Pre-Uni Physics"},
-                        {value: "maths_book_gcse", label: "GCSE Maths"},
-                        {value: "maths_book_2e", label: "Pre-Uni Maths (2nd edition)"},
-                        {value: "maths_book", label: "Pre-Uni Maths (1st edition)"},
-                        {value: "chemistry_16", label: "A-Level Physical Chemistry"}
-                    ]}
+                    options={ISAAC_BOOKS.map(book => ({value: book.value, label: book.label}))}
                 />
             </Col>}
             <Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
