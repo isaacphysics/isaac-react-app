@@ -645,7 +645,7 @@ export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
     return <ContentSidebar buttonTitle="Search & Filter">
         {above["lg"](deviceSize) && <div className="section-divider mt-5"/>}
         <h5>Search &amp; Filter</h5>
-        <span className="quiz-filter-date-span">Title</span>
+        <span className="quiz-filter-date-span mt-2">Title</span>
         <Input
             id="available-quizzes-title-filter" type="search"
             value={titleFilter} onChange={event => setTitleFilter(event.target.value)}

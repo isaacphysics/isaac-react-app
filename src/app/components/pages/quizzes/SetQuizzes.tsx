@@ -216,7 +216,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
 
         </tr>
         {isExpanded && <tr>
-            <td colSpan={4} className={classNames("bg-white border-0", {"px-2 pb-2": isPhy})}>
+            <td colSpan={siteSpecific(5, 4)} className={classNames("bg-white border-0", {"px-2 pb-2": isPhy})}>
                 <Table striped className="w-100 set-quiz-table-inner mb-1">
                     <thead>
                         <tr>
@@ -252,8 +252,8 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                     </td>
                                 }
                                 <td className={isPhy ? "text-end" : "text-center"}>
-                                    <Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className={`px-1 bg-transparent text-center ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`}>
-                                        View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
+                                    <Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className={classNames(`px-2 text-center ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`, {"bg-transparent": isAda})}>
+                                        View {assignmentNotYetStarted ? "details" : "results"}
                                     </Button>
                                 </td>
 
