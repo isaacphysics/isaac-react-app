@@ -17,12 +17,6 @@
     margin-bottom: 15px;
     display: flex;
     position: relative;
-
-    &.teacher-features {
-      display: block;
-      width: 62.5%;
-      margin-left: 18.75%;
-    }
   }
 
   .col-centered{
@@ -86,6 +80,20 @@
       box-shadow: 0 0 0 2px $phy_green !important;
       border-radius: 0;
       outline: none !important;
+    }
+
+    &.teacher-features {
+      border-radius: 8px;
+      border: 2px solid $color-neutral-200;
+      img {
+        width: 3.5rem;
+      }
+      &.disabled {
+        box-shadow: none !important;
+        img {
+          filter: grayscale(1);
+        }
+      }
     }
   }
 
@@ -170,10 +178,6 @@
       margin-right: auto !important;
       margin-left: auto !important;
       display: block;
-
-      &.teacher-features {
-        width: 150px;
-      }
     }
 
     &.disabled {
