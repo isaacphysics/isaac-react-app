@@ -68,7 +68,7 @@
     "test-ada": "jest --config config/jest/jest.config.ada.js",
     "test-ada-visual": "python3 vrt-in-docker.py ada",
     "test-ada-visual-update-baseline": "python3 vrt-in-docker.py ada --update-baselines",
-    "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
+    "lint": "eslint -c eslint.config.mjs src/",
     "build-stats-phy": "webpack --env prod --config config/webpack.config.physics.js --profile --json > bundle-stats-phy.json",
     "analyse-bundle-phy": "webpack-bundle-analyzer bundle-stats-phy.json build-physics",
     "build-stats-ada": "webpack --env prod --config config/webpack.config.ada.js --profile --json > bundle-stats-ada.json",
