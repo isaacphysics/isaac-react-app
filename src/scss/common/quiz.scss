@@ -169,9 +169,10 @@
     content: "";
     background-image: url('/assets/common/icons/chevron_down.svg');
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: left center;
     width: 20px;
     height: 10px;
+    min-width: 1rem;
     margin-right: 1rem;
     margin-top: auto;
     margin-bottom: auto;
@@ -181,12 +182,8 @@
     }
   }
 
-  button {
-    min-width: 150px !important;
-  
-    &.btn-sm {
-      min-width: 100px !important;
-    }
+  button.btn.btn {
+    min-width: max-content;
   }
 }
 

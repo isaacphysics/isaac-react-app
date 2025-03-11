@@ -336,23 +336,22 @@ iframe.email-html {
   height: 0;
   margin: 0.5rem 0;
   overflow: hidden;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
   opacity: 1;
+  width: 100%;
 }
 
 .section-divider-y {
   width: 0;
   margin: 0 0.5rem;
   overflow: hidden;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
   opacity: 1;
 }
 
 .section-divider-bold {
-  height: 0;
-  margin: 0.5rem 0;
-  overflow: hidden;
-  border-top: 2px solid rgba(0, 0, 0, 0.2);
+  @extend .section-divider;
+  border-top: 2px solid rgba(0, 0, 0, 0.20);
 }
 
 .hoverable-tooltip {

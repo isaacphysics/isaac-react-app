@@ -9,6 +9,7 @@ import { CompletionState } from "../../../../IsaacApiTypes";
 import { below, isPhy, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
+import { Markup } from "../markup";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -61,13 +62,13 @@ export interface ListViewTagProps {
 }
 
 export interface AbstractListViewItemProps extends ListGroupItemProps {
-    icon: TitleIconProps;
     title: string;
+    icon?: TitleIconProps;
     subject?: Subject;
     subtitle?: string;
     breadcrumb?: string[];
     status?: CompletionState;
-    tags?: string[]
+    tags?: string[];
     supersededBy?: string;
     linkTags?: ListViewTagProps[];
     quizTag?: string;
@@ -86,8 +87,8 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
     fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewQuizUrl || quizButton) ? false : true);
     const colWidths = fullWidth ? [12,12,12,12,12] : isQuiz ? [12,6,6,6,6] : [12,8,7,6,7];
     const cardBody =
-    <Row className="w-100 flex-row">
-        <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} xxl={colWidths[4]} className={classNames("d-flex", {"mt-3": isCard})}>
+    <Row className="flex-row">
+        <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} xxl={colWidths[4]} className={classNames("d-flex", {"mt-3": isCard && linkTags?.length, "mb-3": isCard && !linkTags?.length})}>
             <div>
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
@@ -95,7 +96,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
             </div>
             <div className="align-content-center">
                 <div className="d-flex">
-                    <span className="question-link-title">{title}</span>
+                    <span className="question-link-title"><Markup encoding="latex">{title}</Markup></span>
                     {quizTag && <span className="quiz-level-1-tag ms-sm-2">{quizTag}</span>}
                     {isPhy && <div className="d-flex flex-column justify-self-end">
                         {supersededBy && <a 
@@ -144,8 +145,9 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
     </Row>;
 
     return <ListGroupItem {...rest} className={classNames("content-summary-item", rest.className)} data-bs-theme={subject}>
-        {url ? 
-            <Link to={{pathname: url}}> {cardBody} </Link> : 
-            <div> {cardBody} </div>}
+        {url 
+            ? <Link to={{pathname: url}} className="w-100 h-100 align-items-start"> {cardBody} </Link> 
+            : cardBody
+        }
     </ListGroupItem>;
 };

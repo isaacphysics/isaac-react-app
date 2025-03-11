@@ -1,6 +1,6 @@
 import { ContentBaseDTO, UserContext } from "../../IsaacApiTypes";
 import { PageContextState } from "../../IsaacAppTypes";
-import { LearningStage, LearningStages, SiteTheme, STAGE_TO_LEARNING_STAGE, Subject, Subjects, TAG_ID } from "./constants";
+import { LearningStage, LearningStages, PHY_NAV_SUBJECTS, SiteTheme, STAGE_TO_LEARNING_STAGE, Subject, Subjects, TAG_ID } from "./constants";
 import { isDefined } from "./miscUtils";
 import { useLocation } from "react-router";
 import { HUMAN_STAGES, HUMAN_SUBJECTS } from "./constants";
@@ -127,6 +127,9 @@ function isValidIsaacStage(stage?: string): stage is LearningStage {
 
 function determinePageContextFromUrl(url: string): PageContextState {
     const [subject, stage] = url.split("/").filter(Boolean);
+    if (isValidIsaacSubject(subject) && stage === undefined) {
+        return {subject, stage: []};
+    }
     if (isValidIsaacSubject(subject) && isValidIsaacStage(stage)) {
         return {subject, stage: [stage]};
     }
@@ -146,7 +149,7 @@ export function useUrlPageTheme(params?: {resetIfNotFound?: boolean}): PageConte
 
     useEffect(() => {
         const urlContext = determinePageContextFromUrl(location.pathname);
-        if (urlContext?.subject && urlContext?.stage) {
+        if (urlContext?.subject || urlContext?.stage) {
             dispatch(pageContextSlice.actions.updatePageContext({
                 subject: urlContext.subject, 
                 stage: urlContext.stage
@@ -161,10 +164,18 @@ export function useUrlPageTheme(params?: {resetIfNotFound?: boolean}): PageConte
     return determinePageContextFromUrl(location.pathname);
 }
 
-export function isDefinedContext(context?: PageContextState): context is NonNullable<Required<PageContextState>> {
+export function isDefinedContext(context?: PageContextState): context is NonNullable<PageContextState> {
+    return isDefined(context) && (isDefined(context.subject) || isDefined(context.stage));
+}
+
+export function isFullyDefinedContext(context?: PageContextState): context is NonNullable<Required<PageContextState>> {
     return isDefined(context) && isDefined(context.subject) && isDefined(context.stage);
 }
 
 export function isSingleStageContext(context?: PageContextState): boolean {
-    return isDefinedContext(context) && context.stage.length === 1;
+    return isFullyDefinedContext(context) && context.stage.length === 1;
+}
+
+export function isValidStageSubjectPair(subject: Subject, stage: LearningStage): boolean {
+    return (PHY_NAV_SUBJECTS[subject] as readonly LearningStage[]).includes(stage);
 }
