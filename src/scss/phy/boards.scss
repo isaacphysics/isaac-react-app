@@ -53,6 +53,12 @@
   text-align: center;
 }
 
+.board-bubble-info-sm {
+  @extend .board-bubble-info;
+  height: 28px;
+  font-size: 22px;
+}
+
 .board-percent-completed {
   @extend .board-bubble-info;
 

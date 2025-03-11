@@ -13,7 +13,7 @@ import classNames from "classnames";
 
 export interface ListViewCardProps extends ListGroupItemProps {
     item: ShortcutResponse;
-    icon: TitleIconProps;
+    icon?: TitleIconProps;
     subject?: Subject;
     linkTags?: ListViewTagProps[];
     url?: string;
@@ -97,7 +97,7 @@ export const QuizListViewItem = ({item, isQuizSetter, ...rest}: {item: QuizSumma
         </AffixButton>;
 
     return <AbstractListViewItem 
-        icon={{type: "hex", icon: "list-icon-lessons", size: "sm"}}
+        icon={{type: "hex", icon: "list-icon-quiz", size: "sm"}}
         title={item.title ?? ""}
         subject={itemSubject}
         previewQuizUrl={`/test/preview/${item.id}`}

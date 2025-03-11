@@ -62,13 +62,13 @@ export interface ListViewTagProps {
 }
 
 export interface AbstractListViewItemProps extends ListGroupItemProps {
-    icon: TitleIconProps;
     title: string;
+    icon?: TitleIconProps;
     subject?: Subject;
     subtitle?: string;
     breadcrumb?: string[];
     status?: CompletionState;
-    tags?: string[]
+    tags?: string[];
     supersededBy?: string;
     linkTags?: ListViewTagProps[];
     quizTag?: string;
@@ -88,7 +88,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
     const colWidths = fullWidth ? [12,12,12,12,12] : isQuiz ? [12,6,6,6,6] : [12,8,7,6,7];
     const cardBody =
     <Row className="flex-row">
-        <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} xxl={colWidths[4]} className={classNames("d-flex", {"mt-3": isCard})}>
+        <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} xxl={colWidths[4]} className={classNames("d-flex", {"mt-3": isCard && linkTags?.length, "mb-3": isCard && !linkTags?.length})}>
             <div>
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
@@ -145,8 +145,9 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
     </Row>;
 
     return <ListGroupItem {...rest} className={classNames("content-summary-item", rest.className)} data-bs-theme={subject}>
-        {url ? 
-            <Link to={{pathname: url}} className="w-100"> {cardBody} </Link> : 
-            <div> {cardBody} </div>}
+        {url 
+            ? <Link to={{pathname: url}} className="w-100 h-100 align-items-start"> {cardBody} </Link> 
+            : cardBody
+        }
     </ListGroupItem>;
 };

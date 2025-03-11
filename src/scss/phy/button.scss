@@ -90,7 +90,7 @@
   color: var(--buttons-light-text);
 
   &:hover, &.btn-dropdown.active {
-    background: var(--buttons-light-hover);
+    background-color: var(--buttons-light-hover);
     color: var(--buttons-dark-text);
     text-decoration: none;
   }
