@@ -3,7 +3,7 @@ import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Dropdown, Dro
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
-import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, Subject, above, below, isDefinedContext, isSingleStageContext, isTeacherOrAbove, isValidStageSubjectPair, useDeviceSize } from "../../../services";
+import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, Subject, above, below, isFullyDefinedContext, isSingleStageContext, isTeacherOrAbove, isValidStageSubjectPair, useDeviceSize } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
@@ -191,14 +191,14 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                 }
 
                 if (category.type === "stage") {
-                    if (isDefinedContext(pageContext) && isSingleStageContext(pageContext) && category.subcategories[0].stage !== pageContext.stage[0]) {
+                    if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && category.subcategories[0].stage !== pageContext.stage[0]) {
                         quickSwitcher = {
                             subject: pageContext.subject,
                             stage: category.subcategories[0].stage as LearningStage
                         }; 
                     }
                 } else if (category.type === "subject") {
-                    if (isDefinedContext(pageContext) && isSingleStageContext(pageContext) && category.subcategories[0].subject !== pageContext.subject) {
+                    if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && category.subcategories[0].subject !== pageContext.subject) {
                         quickSwitcher = {
                             subject: category.subcategories[0].subject as Subject,
                             stage: pageContext.stage[0]
@@ -209,7 +209,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                 return <HoverableNavigationDropdown 
                     key={i} ikey={props.ikey * keyBase + i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}
                     isActiveUnderContext={(context) => {
-                        if (!isDefinedContext(context) || !isSingleStageContext(context)) return false;
+                        if (!isFullyDefinedContext(context) || !isSingleStageContext(context)) return false;
                         if (category.type === "stage") {
                             return context.stage[0] === category.subcategories[0].stage;
                         }

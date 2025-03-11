@@ -20,12 +20,16 @@
     border-left: 1px solid $cs-list-outline-gray;
   }
 
-  li a > span:first-of-type {
-    display: inline-block;
-    border-right: 1px solid $gray-107;
-    margin-right: 1rem;
-    padding-right: 1rem;
-    text-align: center;
-    min-width: 3.4rem;
+  li a {
+    font-size: 1.25rem;
+
+    > span:first-of-type {
+      display: inline-block;
+      border-right: 1px solid $gray-107;
+      margin-right: 1rem;
+      padding-right: 1rem;
+      text-align: center;
+      min-width: 3.4rem;
+    }
   }
 }

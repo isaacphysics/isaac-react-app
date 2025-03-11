@@ -70,6 +70,7 @@
       --buttons-dark-prefix: #{$color-neutral-200};
       --buttons-keyline-border: #{$color-neutral-700};
       --buttons-keyline-white-hover: #{$color-brand-700};
+      --buttons-light-hover: #{$color-brand-500};
       --buttons-light-hover-prefix: #{$color-neutral-200};
 
       --nav-primary: #{$color-brand-500};
@@ -145,6 +146,16 @@
   &a {
     &:hover, &:focus {
       color: var(--subject-color-600);
+    }
+  }
+}
+
+.text-theme-dark {
+  color: var(--subject-color-800);
+
+  &a {
+    &:hover, &:focus {
+      color: var(--subject-color-900);
     }
   }
 }
