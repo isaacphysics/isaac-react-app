@@ -150,6 +150,16 @@
   }
 }
 
+.text-theme-dark {
+  color: var(--subject-color-800);
+
+  &a {
+    &:hover, &:focus {
+      color: var(--subject-color-900);
+    }
+  }
+}
+
 .bg-theme {
   background-color: var(--subject-color-500);
 }
