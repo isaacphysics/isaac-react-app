@@ -11,37 +11,43 @@ interface AccordionItemProps {
   setOpenState: (id: string | undefined) => void;
 }
 
-const renderSectionContent = (section: NestedStringArray[]) => (
-  <>
-    {section.map((item, index) => {
-      if (Array.isArray(item)) {
-        return (
-          <ul key={`list-${index}`}>
-            {item.map((nestedItem, nestedIndex) => (
-              <li key={`nested-list-item-${nestedIndex}`}>
-                {typeof nestedItem === "string" && nestedItem.includes("<a") ? (
-                  <span dangerouslySetInnerHTML={{ __html: nestedItem }} />
-                ) : (
-                  nestedItem
-                )}
-              </li>
-            ))}
-          </ul>
-        );
-      } else {
-        return (
-          <p key={`item-${index}`}>
-            {typeof item === "string" && item.includes("<a") ? (
-              <span dangerouslySetInnerHTML={{ __html: item }} />
-            ) : (
-              item
-            )}
-          </p>
-        );
-      }
-    })}
-  </>
-);
+const renderSectionContent = (section: NestedStringArray[]) => {
+  const renderNestedList = (items: NestedStringArray[], level: number = 0) => (
+    <ul key={`list-level-${level}`}>
+      {items.map((item, index) => (
+        <li key={`nested-list-item-${level}-${index}`}>
+          {Array.isArray(item) ? (
+            renderNestedList(item, level + 1)
+          ) : typeof item === "string" && item.includes("<a") ? (
+            <span dangerouslySetInnerHTML={{ __html: item }} />
+          ) : (
+            item
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+
+  return (
+    <>
+      {section.map((item, index) => {
+        if (Array.isArray(item)) {
+          return renderNestedList(item);
+        } else {
+          return (
+            <p key={`item-${index}`}>
+              {typeof item === "string" && item.includes("<a") ? (
+                <span dangerouslySetInnerHTML={{ __html: item }} />
+              ) : (
+                item
+              )}
+            </p>
+          );
+        }
+      })}
+    </>
+  );
+};
 
 const AccordionItem: React.FC<AccordionItemProps> = ({ id, title, section, open, isLast, setOpenState }) => {
   const headerClasses = [
