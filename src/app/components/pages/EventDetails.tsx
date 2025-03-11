@@ -170,27 +170,35 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
             const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
 
+            const firstColumnWidths = siteSpecific("col-4 col-sm-3 col-md-2", "col-4 col-xl-3");
+
             const KeyEventInfo = () => {
                 return <div className="event-key-info">
-                    <Row className="d-flex align-items-center">
-                        <Col className="col-4 col-sm-3 col-md-2">When:</Col>
+                    <Row>
+                        <Col className={firstColumnWidths}>When:</Col>
                         <Col>
                             {formatEventDetailsDate(event)}
                             {event.hasExpired && <div>
                                 <b>This event is in the past.</b>
                             </div>}
                         </Col>
+                        {isAda && isStaff(user) &&
+                            <Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2"
+                                title="Add to Google Calendar">
+                                Add to Calendar
+                            </Button>
+                        }
                     </Row>
-                    {<Row className="d-flex align-items-center">
-                        <Col className="col-4 col-sm-3 col-md-2">Location:</Col>
+                    {<Row>
+                        <Col className={firstColumnWidths}>Location:</Col>
                         {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <Col>
                             {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
                         </Col>}
                         {isVirtual && <Col>Online</Col>}
                     </Row>}
                     {event.isNotClosed && !event.hasExpired &&
-                        <Row className="d-flex align-items-center">
-                            <Col className="col-4 col-sm-3 col-md-2">Availability:</Col>
+                        <Row>
+                            <Col className={firstColumnWidths}>Availability:</Col>
                             <Col>
                                 {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
                                 {zeroOrLess(event.placesAvailable) && <div>
@@ -215,8 +223,8 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                             </Col>
                         </Row>}
                     {(!event.isCancelled || isEventLeader(user) || isAdminOrEventManager(user)) && event.bookingDeadline &&
-                        <Row className="d-flex align-items-center">
-                            <Col className="col-4 col-sm-3 col-md-2">Booking Deadline:</Col>
+                        <Row>
+                            <Col className={firstColumnWidths}>Booking Deadline:</Col>
                             <Col>
                                 <DateString>{event.bookingDeadline}</DateString>
                                 {!event.isWithinBookingDeadline 
@@ -226,6 +234,12 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                     </div>
                                 }
                             </Col>
+                            {isPhy && isLoggedIn(user) && !event.hasExpired && (canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
+                                <Col size={3} lg={2} className="d-flex flex-column justify-content-end mt-n1 mb-1 me-2">
+                                    <Button color="primary" onClick={openAndScrollToBookingForm} className="text-nowrap">
+                                        {formatMakeBookingButtonMessage(event)}
+                                    </Button>
+                                </Col>}
                         </Row>}
                 </div>;
             };
@@ -325,160 +339,106 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                 </div>;
             };
 
-            const PhyEventDetails = <Container>
-                <TitleAndBreadcrumb
-                    currentPageTitle="Events" icon={{type: "hex", icon: "page-icon-events"}}
-                    breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
-                />
+            const ImageAndMap = () => <div>
+                <Col className={siteSpecific("d-none d-lg-block", "d-block")} lg={12}>
+                    {event.eventThumbnail && <div className="px-0 align-self-center">
+                        <CardImg
+                            aria-hidden={true}
+                            alt={""}
+                            className={siteSpecific("my-3", "m-auto restrict-height")} src={event.eventThumbnail.src}
+                        />
+                    </div>}
+
+                    {isAda && <div className="border px-2 py-1 mt-3 bg-light">
+                        <strong>{event.title}</strong>
+                    </div>}
+                </Col>
+
+                {isDefined(event.location) && isDefined(event.location?.latitude) && isDefined(event.location?.longitude) 
+                && <Col xs={12} sm={6} lg={12} className="mt-3 px-0">
+                    <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13}>
+                        <TileLayer
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                        />
+                        <Marker position={[event.location.latitude, event.location.longitude]} icon={icon}>
+                            <Popup>
+                                {event.location?.address?.addressLine1}<br/>{event.location?.address?.addressLine2}<br/>{event.location?.address?.town}<br/>{event.location?.address?.postalCode}
+                            </Popup>
+                        </Marker>
+                    </MapContainer>
+                </Col>}
+            </div>;
+
+            const EventDetails = <Container className="events">
+                {isPhy ?
+                    <TitleAndBreadcrumb
+                        currentPageTitle="Events" icon={{type: "hex", icon: "page-icon-events"}}
+                        breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
+                    /> :
+                    <TitleAndBreadcrumb
+                        currentPageTitle={event.title as string} subTitle={event.subtitle}
+                        breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
+                    />
+                }
                 <EditContentButton doc={event}/>
-                <div className="d-flex mb-4">
-                    <div className="mt-2 me-4">
-                        {isTeacherEvent &&
-                            <span className={"event-type-hex"}>
-                                <b>TEACHER EVENT</b>
-                                <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
-                            </span>}
-                        {isStudentEvent &&
-                            <span className={"event-type-hex"}>
-                                <b>STUDENT EVENT</b>
-                                <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
-                            </span>}
-                    </div>
-                    <div>
-                        <h3 className="event-title">{event.title}</h3>
-                        {hasExpired &&
-                            <span className="event-pod-badge me-2">
-                                <Badge className="badge rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>EXPIRED</Badge>
-                            </span>}
-                        <span className="event-subtitle">{event.subtitle}</span>
-                    </div>
-                    <div className="d-flex flex-nowrap ms-auto">
-                        <ShareLink linkUrl={`/events/${eventId}`} clickAwayClose />
-                        <PrintButton/>
-                        <ReportButton pageId={eventId}/> 
+                <div className={siteSpecific("", "mt-4 pt-2 card")}>
+                    <div className={siteSpecific("", "card-body")}>
+                        {isPhy && <div className="w-100 d-flex mb-4">
+                            <div className="mt-2 me-4">
+                                {isTeacherEvent &&
+                                    <span className={"event-type-hex"}>
+                                        <b>TEACHER EVENT</b>
+                                        <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
+                                    </span>}
+                                {isStudentEvent &&
+                                    <span className={"event-type-hex"}>
+                                        <b>STUDENT EVENT</b>
+                                        <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
+                                    </span>}
+                            </div>
+                            <div>
+                                <h3 className="event-title">{event.title}</h3>
+                                {hasExpired &&
+                                    <span className="event-pod-badge me-2">
+                                        <Badge className="badge rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>EXPIRED</Badge>
+                                    </span>}
+                                <span className="event-subtitle">{event.subtitle}</span>
+                            </div>
+                            <div className="d-flex flex-nowrap ms-auto">
+                                <ShareLink linkUrl={`/events/${eventId}`} clickAwayClose />
+                                <PrintButton/>
+                                <ReportButton pageId={eventId}/> 
+                            </div>
+                        </div>}
+                        <Row> 
+                            {isAda && <Col lg={4}>
+                                <ImageAndMap/>
+                            </Col>}
+                            <Col>
+                                <Row className="mb-3">
+                                    <Col className="event-bg-grey event-key-info">
+                                        <KeyEventInfo/>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col size={5} lg={8} xxl={9}>
+                                        <IsaacContent doc={event}/>
+                                    </Col>
+                                    {isPhy && <Col size={5} lg={4} xxl={3}>
+                                        <ImageAndMap/>
+                                    </Col>}
+                                </Row>
+                                <Row>
+                                    <BookingForm/>
+                                </Row>
+                            </Col>
+                        </Row>
                     </div>
                 </div>
-                <Row className="mb-3 event-bg-grey">
-                    <Col className="event-key-info">
-                        <KeyEventInfo/>
-                    </Col>
-                    <Col className="d-flex justify-content-end col-3 col-lg-2">
-                        {isLoggedIn(user) && !event.hasExpired && (canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
-                            <div className="d-flex flex-column justify-content-end mb-4 me-2">
-                                <Button color="primary" onClick={openAndScrollToBookingForm} className="text-nowrap">
-                                    {formatMakeBookingButtonMessage(event)}
-                                </Button>
-                            </div>}
-                    </Col>
-                </Row>
-                <Row>
-                    <Col className="col-7 col-lg-8 col-xxl-9">
-                        <IsaacContent doc={event}/>
-                    </Col>
-                    <Col className="col-5 col-lg-4 col-xxl-3">
-                        <Row>
-                            {event.eventThumbnail && <div className="mt-2 px-0">
-                                <CardImg
-                                    aria-hidden={true}
-                                    alt={""}
-                                    className="my-3" src={event.eventThumbnail.src}
-                                />
-                            </div>}
-                        </Row>
-                        <Row>
-                            {isDefined(event.location) 
-                            && isDefined(event.location?.latitude) 
-                            && isDefined(event.location?.longitude) 
-                            && <div className="mt-3 px-0">
-                                <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13}>
-                                    <TileLayer
-                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                        attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                    />
-                                    <Marker position={[event.location.latitude, event.location.longitude]} icon={icon}>
-                                        <Popup>
-                                            {event.location?.address?.addressLine1}<br/>{event.location?.address?.addressLine2}<br/>{event.location?.address?.town}<br/>{event.location?.address?.postalCode}
-                                        </Popup>
-                                    </Marker>
-                                </MapContainer>
-                            </div>
-                            }
-                        </Row>
-                    </Col>
-                </Row>
-                <Row>
-                    <BookingForm/>
-                </Row>
-            </Container>;
-            
-            // Keep old-style physics layout for potential use on Ada
-            const AdaEventDetails = <Container className="events mb-5">
-                <TitleAndBreadcrumb
-                    currentPageTitle={event.title as string} subTitle={event.subtitle}
-                    breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
-                />
-                <EditContentButton doc={event}/>
-
-                <Card className="mt-4 pt-2">
-                    <CardBody>
-                        {/* Detail Main */}
-                        <Row>
-                            <Col lg={4}>
-                                {event.eventThumbnail && <div className="mt-2">
-                                    <CardImg
-                                        aria-hidden={true}
-                                        alt={"" /* Decorative image, should be hidden from screenreaders */}
-                                        className='m-auto restrict-height' top src={event.eventThumbnail.src}
-                                    />
-                                    <div className="border px-2 py-1 mt-3 bg-light">
-                                        <strong>{event.title}</strong>
-                                    </div>
-                                    {isDefined(event.location) 
-                                        && isDefined(event.location?.latitude) 
-                                        && isDefined(event.location?.longitude) 
-                                        && <div className="border px-2 py-1 mt-3 bg-light">
-                                            <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13}>
-                                                <TileLayer
-                                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                                    attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                                />
-                                                <Marker position={[event.location.latitude, event.location.longitude]} icon={icon}>
-                                                    <Popup>
-                                                        {event.location?.address?.addressLine1}<br/>{event.location?.address?.addressLine2}<br/>{event.location?.address?.town}<br/>{event.location?.address?.postalCode}
-                                                    </Popup>
-                                                </Marker>
-                                            </MapContainer>
-                                        </div>
-                                    }
-                                </div>}
-                            </Col>
-                            <Col lg={8} className={event.hasExpired ? "expired" : ""}>
-                                {isStaff(user) &&
-                                    <Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2"
-                                        title="Add to Google Calendar">
-                                        Add to Calendar
-                                    </Button>
-                                }
-
-                                <KeyEventInfo/>
-
-                                {event.isCancelled && <Alert color={"danger"}>
-                                    This event has been cancelled.
-                                </Alert>}
-
-                                {/* Event body copy */}
-                                <div className="mb-3">
-                                    <IsaacContent doc={event}/>
-                                </div>
-
-                                <BookingForm/>                              
-                            </Col>
-                        </Row>
-                    </CardBody>
-                </Card>
             </Container>;
          
-            return siteSpecific(PhyEventDetails, AdaEventDetails);
+            return EventDetails;
         }}/>;
 };
 export default EventDetails;
