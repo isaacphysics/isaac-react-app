@@ -434,7 +434,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
 
     const emptyAssignedMessage = <span className="text-muted">{!quizAssignments || quizAssignments.length === 0
         ? "You have no tests in progress."
-        : "No tests match your filters."
+        : <>No tests match your filters. Are you looking for <button className="btn-link text-muted p-0 m-0 bg-transparent" onClick={() => setQuizStatusFilter([QuizStatus.All])}>past tests</button>?</>
     }</span>;
 
     const emptyPracticeMessage = <span className="text-muted">{!freeAttempts || freeAttempts.length === 0
