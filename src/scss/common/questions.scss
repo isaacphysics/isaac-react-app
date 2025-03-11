@@ -509,6 +509,8 @@ $inline-feedback-padding: 2px;
 }
 
 .katex-display.katex-display {
+  // katex default is margin: 1rem 0, padding: 0. owing to issues with requiring hidden y-overflow, we move some of this
+  // to padding to "absorb" the overflow and prevent it from being cut off (helps fix latex dropzones in big latex expressions - c.f. matrices)
   margin: 0.5rem 0;
   padding: 0.5rem 0;
 }
