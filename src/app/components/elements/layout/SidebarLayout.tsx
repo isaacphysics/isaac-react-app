@@ -17,7 +17,7 @@ import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
 import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
-import { DisplayModeToggle} from "../../pages/quizzes/MyQuizzes";
+import { StyledDropdown } from "../inputs/DropdownInput";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -749,8 +749,11 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                     {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
                 </Input>
                 <div className="section-divider mt-4"/>
-                <h5>Display mode</h5>
-                <DisplayModeToggle displayMode={displayMode} setDisplayMode={setDisplayMode}/>
+                <h5 className="mb-3">Display mode</h5>
+                <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
+                    <option value="table">Table View</option>
+                    <option value="cards">Card View</option>
+                </StyledDropdown>
             </>;
         }}/>
     </ContentSidebar>;
