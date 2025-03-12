@@ -99,6 +99,7 @@ const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormProps) =
                 />
                 <FormInput
                   label="Group"
+                  subLabel="Please ensure each group has no more than 4 students."
                   type="select"
                   id="formGroup"
                   required

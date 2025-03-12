@@ -4,6 +4,7 @@ import { InputType } from "reactstrap/es/Input";
 
 interface FormInputProps {
   label: string;
+  subLabel?: string;
   type: string;
   id: string;
   disabled: boolean;
@@ -18,6 +19,7 @@ interface FormInputProps {
 
 const FormInput = ({
   label,
+  subLabel,
   type,
   id,
   disabled,
@@ -34,6 +36,7 @@ const FormInput = ({
       <Label className="entry-form-sub-title">
         {label} {required && <span className="entry-form-astrisk">*</span>}
       </Label>
+      {subLabel && <div className="entry-form-sub-title">{subLabel}</div>}
       {type === "select" ? (
         <Input
           type="select"
