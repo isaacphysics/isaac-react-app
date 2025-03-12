@@ -176,8 +176,6 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         }
     };
 
-    console.log(getFilteredStageOptions());
-
     return <div data-bs-theme="neutral" className={classNames({"card": isAda})}>
         <CardHeader className="finder-header pl-3" onClick={(e) => {
             // the filters panel can only be collapsed when it is not a sidebar
