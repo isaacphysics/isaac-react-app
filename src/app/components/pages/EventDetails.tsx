@@ -43,9 +43,7 @@ import {
     isPhy,
     userBookedReservedOrOnWaitingList, confirmThen,
     siteSpecific,
-    isAda,
-    above,
-    useDeviceSize
+    isAda
 } from "../../services";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -62,7 +60,6 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { PrintButton } from "../elements/PrintButton";
 import { ReportButton } from "../elements/ReportButton";
 import { ShareLink } from "../elements/ShareLink";
-import classNames from "classnames";
 
 function formatDate(date: Date | number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -75,7 +72,6 @@ interface EventDetailsProps {
 
 const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
     const dispatch = useAppDispatch();
-    const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
     const eventQuery = useGetEventQuery(eventId || skipToken);
     const {data: event} = eventQuery;
@@ -231,16 +227,15 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                             <Col className={firstColumnWidths}>Booking Deadline:</Col>
                             <Col>
                                 <DateString>{event.bookingDeadline}</DateString>
-                                {!event.isWithinBookingDeadline 
-                                    && !event.hasExpired 
-                                    && <div className="alert-danger text-center">
+                                {!event.isWithinBookingDeadline && !event.hasExpired &&
+                                    <div className="text-start">
                                         The booking deadline for this event has passed.
                                     </div>
                                 }
                             </Col>
                             {isPhy && isLoggedIn(user) && !event.hasExpired && (canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
-                                <Col size={3} sm={2} className={classNames({"d-flex flex-column justify-content-end": above["sm"](deviceSize)})} style={{minWidth: "fit-content"}}>
-                                    <Button color="primary" onClick={openAndScrollToBookingForm} className="my-2 me-2 text-nowrap">
+                                <Col size={3} sm={2} className="d-flex flex-column justify-content-end" style={{minWidth: "fit-content"}}>
+                                    <Button color="primary" onClick={openAndScrollToBookingForm} className="mt-2 mb-3 me-2 text-nowrap align-self-center">
                                         {formatMakeBookingButtonMessage(event)}
                                     </Button>
                                 </Col>}
