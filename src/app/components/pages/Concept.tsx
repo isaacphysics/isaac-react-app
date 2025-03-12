@@ -1,11 +1,11 @@
 import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
-import {AppState, fetchDoc, pageContextSlice, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {AppState, fetchDoc, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {Col, Container, Row} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, Subject, above, below, getUpdatedPageContext, isAda, isPhy, useDeviceSize, useNavigation} from "../../services";
+import {DOCUMENT_TYPE, Subject, above, below, usePreviousPageContext, isAda, isPhy, useDeviceSize, useNavigation} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -35,18 +35,12 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     const dispatch = useAppDispatch();
     const conceptId = conceptIdOverride || params.conceptId;
     const user = useAppSelector(selectors.user.orNull);
-    const prevPageContext = useAppSelector(selectors.pageContext.context);
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
     const doc = useAppSelector((state: AppState) => state?.doc || null);
     const navigation = useNavigation(doc);
     const deviceSize = useDeviceSize();
 
-    useEffect(() => {
-        if (doc && doc !== 404) {
-            const newPageContext = getUpdatedPageContext(prevPageContext, user && user.loggedIn && user.registeredContexts || undefined, doc);
-            dispatch(pageContextSlice.actions.updatePageContext(newPageContext));
-        }
-    }, [dispatch, user, doc]);
+    const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && doc !== 404 ? doc : undefined);
 
     const ManageButtons = () => <div className={classNames("no-print d-flex justify-content-end mt-1 ms-2", {"gap-2": isPhy})}>
         <div className="question-actions">
@@ -63,7 +57,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
         return <GameboardContext.Provider value={navigation.currentGameboard}>
-            <Container data-bs-theme={doc.subjectId}>
+            <Container data-bs-theme={doc.subjectId ?? pageContext?.subject}>
                 <TitleAndBreadcrumb
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     currentPageTitle={doc.title as string}
