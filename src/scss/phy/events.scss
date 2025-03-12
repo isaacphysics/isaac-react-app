@@ -36,6 +36,17 @@
   text-decoration: none;
   align-content: center;
   padding: 24px 16px;
+
+  &:hover {
+    background-color: $color-neutral-200;
+  }
+}
+
+.label-radio:hover {
+  input:not(:checked) {
+    background: $color-neutral-200;
+    cursor: pointer;
+  }
 }
 
 // Named class for event titles to avoid
