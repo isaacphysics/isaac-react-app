@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useReducer, useState } from "react";
-import { Button, Card, CardBody, CardHeader, Col } from "reactstrap";
+import { Button, CardBody, CardHeader, Col } from "reactstrap";
 import { CollapsibleList } from "../CollapsibleList";
 import {
     above,
@@ -7,6 +7,7 @@ import {
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     groupTagSelectionsByParent,
+    ISAAC_BOOKS,
     isAda,
     isPhy,
     Item,
@@ -14,31 +15,21 @@ import {
     siteSpecific,
     STAGE,
     TAG_ID,
+    TAG_LEVEL,
     tags,
-    useDeviceSize
+    useDeviceSize,
+    useUrlPageTheme
 } from "../../../services";
 import { Difficulty, ExamBoard } from "../../../../IsaacApiTypes";
-import { QuestionStatus } from "../../pages/QuestionFinder";
+import { pageStageToSearchStage, QuestionStatus } from "../../pages/QuestionFinder";
 import classNames from "classnames";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { DifficultyIcons } from "../svg/DifficultyIcons";
 import { GroupBase } from "react-select";
-import { HierarchyFilterHexagonal, Tier } from "../svg/HierarchyFilter";
+import { HierarchyFilterTreeList, Tier } from "../svg/HierarchyFilter";
 import { openActiveModal, useAppDispatch } from "../../../state";
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
-
-
-const bookOptions: Item<string>[] = [
-    {value: "phys_book_step_up", label: "Step Up to GCSE Physics"},
-    {value: "phys_book_gcse", label: "GCSE Physics"},
-    {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
-    {value: "physics_linking_concepts", label: "Linking Concepts in Pre-Uni Physics"},
-    {value: "maths_book_gcse", label: "GCSE Maths"},
-    {value: "maths_book_2e", label: "Pre-Uni Maths (2nd edition)"},
-    {value: "maths_book", label: "Pre-Uni Maths (1st edition)"},
-    {value: "chemistry_16", label: "A-Level Physical Chemistry"}
-];
 
 const sublistDelimiter = " >>> ";
 type TopLevelListsState = {
@@ -109,15 +100,32 @@ function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsState {
 }
 
 const listTitles: { [field in keyof TopLevelListsState]: string } = {
-    stage: "Stage",
+    stage: siteSpecific("Learning Stage", "Stage"),
     examBoard: "Exam board",
-    topics: "Topics",
+    topics: siteSpecific("Topic", "Topics"),
     difficulty: siteSpecific("Difficulty", "Question difficulty"),
     books: "Book",
     questionStatus: siteSpecific("Status", "Question status")
 };
 
-interface QuestionFinderFilterPanelProps {
+export type ChoiceTree = Partial<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>>;
+
+export function getChoiceTreeLeaves(tree: ChoiceTree[]) {
+    let leaves: Item<TAG_ID>[] = [];
+    for (let index = 0; index < tree.length; index++) {
+        if (index === 0)
+            leaves.push(...tree[0][TAG_LEVEL.subject] ?? []);
+        else {
+            const parentIds = Object.values(tree[index]).flat().map(item => tags.getById(item.value).parent);
+            leaves = leaves.filter(l => !parentIds.includes(l.value))
+            Object.values(tree[index]).forEach(v => leaves.push(...v)); 
+        }
+    }
+
+    return leaves;
+}
+
+export interface QuestionFinderFilterPanelProps {
     searchDifficulties: Difficulty[]; setSearchDifficulties: Dispatch<SetStateAction<Difficulty[]>>;
     searchTopics: string[], setSearchTopics: Dispatch<SetStateAction<string[]>>;
     searchStages: STAGE[], setSearchStages: Dispatch<SetStateAction<STAGE[]>>;
@@ -125,7 +133,8 @@ interface QuestionFinderFilterPanelProps {
     searchStatuses: QuestionStatus, setSearchStatuses: Dispatch<SetStateAction<QuestionStatus>>;
     searchBooks: string[], setSearchBooks: Dispatch<SetStateAction<string[]>>;
     excludeBooks: boolean, setExcludeBooks: Dispatch<SetStateAction<boolean>>;
-    tiers: Tier[], choices: Item<TAG_ID>[][], selections: Item<TAG_ID>[][], setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>,
+    tiers: Tier[], choices: ChoiceTree[]; 
+    selections: ChoiceTree[], setSelections: Dispatch<SetStateAction<ChoiceTree[]>>;
     applyFilters: () => void; clearFilters: () => void;
     validFiltersSelected: boolean; 
     searchDisabled: boolean;
@@ -140,15 +149,17 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         searchStatuses, setSearchStatuses,
         searchBooks, setSearchBooks,
         excludeBooks, setExcludeBooks,
-        tiers, choices, selections, setTierSelection,
+        tiers, choices, selections, setSelections,
         applyFilters, clearFilters, validFiltersSelected, 
         searchDisabled, setSearchDisabled
     } = props;
-    const groupBaseTagOptions: GroupBase<Item<string>>[] = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
+    const groupBaseTagOptions: GroupBase<Item<string>>[] = siteSpecific(tags.allSubjectTags.map(groupTagSelectionsByParent), tags.allSubcategoryTags.map(groupTagSelectionsByParent));
 
     const [listState, listStateDispatch] = useReducer(listStateReducer, groupBaseTagOptions, initialiseListState);
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
+    const pageContext = useUrlPageTheme();
+    const bookOptions = ISAAC_BOOKS.filter(book => !pageContext?.subject || book.subject === pageContext?.subject);
 
     const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));
 
@@ -165,36 +176,32 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         }
     };
 
-    return <Card>
+    return <div data-bs-theme="neutral" className={classNames({"card": isAda})}>
         <CardHeader className="finder-header pl-3" onClick={(e) => {
             // the filters panel can only be collapsed when it is not a sidebar
             // (changing screen size after collapsing does not re-expand it but the options become visible)
             if (below["md"](deviceSize)) handleFilterPanelExpansion(e);
         }}>
-            <div>
-                <img
-                    src="/assets/common/icons/filter-icon.svg"
-                    alt="Filter"
-                    style={{width: 18}}
-                    className="ms-1 me-2"
-                />
-                <b>Filter by</b>
-            </div>
-            <Spacer/>
-            {validFiltersSelected && <div className="pe-1 pe-lg-0">
+            {siteSpecific(
+                <h6 className="filter-question-text">Filter questions by</h6>,
+                <>
+                    <div>
+                        <img src="/assets/common/icons/filter-icon.svg" alt="Filter" style={{width: 18}} className="ms-1 me-2"/>
+                        <b>Filter by</b>
+                    </div>
+                    <Spacer/>
+                    {validFiltersSelected && <div className="pe-1 pe-lg-0">
+                        <button
+                            className={classNames("text-black pe-lg-0 py-0 me-2 me-lg-0 bg-opacity-10 btn-link", {"bg-white": isAda})}
+                            onClick={(e) => { e.stopPropagation(); clearFilters(); }}
+                        >
+                            Clear all
+                        </button>
+                    </div>}
+                </>)}
+            {below["md"](deviceSize) && isAda && <div>
                 <button
-                    className={"text-black pe-lg-0 py-0 me-2 me-lg-0 bg-white bg-opacity-10 btn-link"}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        clearFilters();
-                    }}
-                >
-                    Clear all
-                </button>
-            </div>}
-            {below["md"](deviceSize) && <div>
-                <button
-                    className="bg-white bg-opacity-10 p-0"
+                    className="bg-opacity-10 p-0 bg-white"
                     onClick={handleFilterPanelExpansion}
                 >
                     <img
@@ -207,14 +214,14 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 </button>
             </div>}
         </CardHeader>
-        <CardBody className={classNames("p-0 m-0", {"d-none": below["md"](deviceSize) && !filtersVisible})}>
-            <CollapsibleList
+        <CardBody className={classNames("p-0 m-0", {"d-none": isAda && below["md"](deviceSize) && !filtersVisible})}>
+            {(isAda || pageStageToSearchStage(pageContext?.stage).length !== 1) && <CollapsibleList
                 title={listTitles.stage} expanded={listState.stage.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "stage", focus: below["md"](deviceSize)})}
                 numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.length}
             >
-                {getFilteredStageOptions().map((stage, index) => (
-                    <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                {getFilteredStageOptions().filter(stage => pageStageToSearchStage(pageContext?.stage).includes(stage.value) || !pageContext?.stage).map((stage, index) => (
+                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStages.includes(stage.value)})} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchStages.includes(stage.value)}
@@ -223,7 +230,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         />
                     </div>
                 ))}
-            </CollapsibleList>
+            </CollapsibleList>}
             {isAda && <CollapsibleList
                 title={listTitles.examBoard} expanded={listState.examBoard.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "examBoard", focus: below["md"](deviceSize)})}
@@ -243,18 +250,16 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             <CollapsibleList
                 title={listTitles.topics} expanded={listState.topics.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
-                numberSelected={siteSpecific(
-                    // Find the last non-zero tier in the tree
-                    // FIXME: Use `filter` and `at` when Safari supports it
-                    selections.map(tier => tier.length)
-                        .reverse()
-                        .find(l => l > 0),
-                    searchTopics.length
-                )}
+                numberSelected={siteSpecific(getChoiceTreeLeaves(selections).filter(l => l.value !== pageContext?.subject).length, searchTopics.length)}
             >
                 {siteSpecific(
                     <div>
-                        <HierarchyFilterHexagonal {...{tiers, choices, selections: selections, questionFinderFilter: true, setTierSelection}} />
+                        <HierarchyFilterTreeList root {...{
+                            tier: pageContext?.subject ? 1 : 0,
+                            index: pageContext?.subject as TAG_ID ?? TAG_LEVEL.subject,
+                            tiers, choices, selections, setSelections,
+                            questionFinderFilter: true
+                        }}/>
                     </div>,
                     groupBaseTagOptions.map((tag, index) => (
                         <CollapsibleList
@@ -263,7 +268,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
                         >
                             {tag.options.map((topic, index) => (
-                                <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                                <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
                                     <StyledCheckbox
                                         color="primary"
                                         checked={searchTopics.includes(topic.value)}
@@ -278,8 +283,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 </div>
                             ))}
                         </CollapsibleList>
-                    )))
-                }
+                    )))}
             </CollapsibleList>
 
             <CollapsibleList
@@ -288,7 +292,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={searchDifficulties.length}
             >
                 <button
-                    className="p-0 bg-white h-min-content btn-link d-flex ps-3 py-2"
+                    className={classNames("p-0 h-min-content btn-link d-flex ps-3 py-2", {"bg-white": isAda, "bg-transparent": isPhy})}
                     onClick={(e) => {
                         e.preventDefault();
                         dispatch(openActiveModal(questionFinderDifficultyModal()));
@@ -296,7 +300,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     <b className="small text-start">{siteSpecific("Learn more about difficulty levels", "What do the difficulty levels mean?")}</b>
                 </button>
                 {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
-                    <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchDifficulties.includes(difficulty.value)})} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchDifficulties.includes(difficulty.value)}
@@ -307,19 +311,19 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             )}
                             label={<div className="d-flex align-items-center">
                                 <span className="me-2">{difficulty.label}</span>
-                                <DifficultyIcons difficulty={difficulty.value} blank className="mt-n2"/>
+                                <DifficultyIcons difficulty={difficulty.value} blank className={classNames({"mt-n2": isAda, "mt-2": isPhy})}/>
                             </div>}
                         />
                     </div>
                 ))}
             </CollapsibleList>
-            {isPhy && <CollapsibleList
+            {isPhy && bookOptions.length > 0 && <CollapsibleList
                 title={listTitles.books} expanded={listState.books.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "books", focus: below["md"](deviceSize)})}
                 numberSelected={excludeBooks ? 1 : searchBooks.length}
             >
                 <>
-                    <div className="w-100 ps-3 py-1 bg-white">
+                    <div className={classNames("w-100 ps-3 py-1 ms-2", {"checkbox-region": excludeBooks})}>
                         <StyledCheckbox
                             color="primary"
                             checked={excludeBooks}
@@ -328,7 +332,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         />
                     </div>
                     {bookOptions.map((book, index) => (
-                        <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                        <div className={classNames("w-100 ps-3 py-1 ms-2", {"checkbox-region": searchBooks.includes(book.value) && !excludeBooks})} key={index}>
                             <StyledCheckbox
                                 color="primary" disabled={excludeBooks}
                                 checked={searchBooks.includes(book.value) && !excludeBooks}
@@ -337,7 +341,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                         ? s.filter(v => v !== book.value)
                                         : [...s, book.value]
                                 )}
-                                label={<span className="me-2">{book.label}</span>}
+                                label={<span className="me-2">{book.label ?? book.title}</span>}
                             />
                         </div>
                     ))}
@@ -348,73 +352,54 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 toggle={() => listStateDispatch({type: "toggle", id: "questionStatus", focus: below["md"](deviceSize)})}
                 numberSelected={Object.values(searchStatuses).reduce((acc, item) => acc + item, 0)}
             >
-                <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
+                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStatuses.notAttempted})}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.notAttempted}
                         onChange={() => setSearchStatuses(s => {return {...s, notAttempted: !s.notAttempted};})}
-                        label={<div>
-                            <span>{siteSpecific("Not started", "Not attempted")}</span>
-                            {siteSpecific(
-                                <svg
-                                    className={"search-item-icon ps-2 icon-status"}
-                                    aria-label={"Not started"}>
-                                    <use href={`/assets/phy/icons/question-hex.svg#icon`}
-                                        xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/>
-                                </svg>,
-                                <img
-                                    src="/assets/common/icons/not-started.svg"
-                                    alt="Not attempted"
-                                    className="ps-2 icon-status"
-                                />
-                            )}
-                        </div>}
+                        label={siteSpecific(
+                            <div className="d-flex">
+                                Not started
+                            </div>,
+                            <div>
+                                Not attempted
+                                <img className="ps-2 icon-status" src="/assets/common/icons/not-started.svg" alt="Not attempted" />
+                            </div>
+                        )}
                     />
                 </div>
-                <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
+                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStatuses.complete})}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.complete}
                         onChange={() => setSearchStatuses(s => {return {...s, complete: !s.complete};})}
-                        label={<div>
-                            <span>{siteSpecific("Fully correct", "Completed")}</span>
-                            {siteSpecific(
-                                <svg
-                                    className={"search-item-icon ps-2 icon-status correct-fill"}
-                                    aria-label={"Fully correct"}>
-                                    <use href={`/assets/phy/icons/tick-rp-hex.svg#icon`}
-                                        xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/>
-                                </svg>,
-                                <img
-                                    src="/assets/common/icons/completed.svg"
-                                    alt="Completed"
-                                    className="ps-2 icon-status"
-                                />
-                            )}
-                        </div>}
+                        label={siteSpecific(
+                            <div className="d-flex">
+                                Fully correct
+                                <img className="ps-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt="Fully correct"/> 
+                            </div>,
+                            <div>
+                                Completed
+                                <img className="ps-2 icon-status" src="/assets/common/icons/completed.svg" alt="Completed" />
+                            </div>
+                        )}
                     />
                 </div>
-                <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
+                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStatuses.tryAgain})}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.tryAgain}
                         onChange={() => setSearchStatuses(s => {return {...s, tryAgain: !s.tryAgain};})}
-                        label={<div>
-                            <span>{siteSpecific("In progress", "Try again")}</span>
-                            {siteSpecific(
-                                <svg
-                                    className={"search-item-icon ps-2 icon-status almost-fill"}
-                                    aria-label={"In progress"}>
-                                    <use href={`/assets/phy/icons/incomplete-hex.svg#icon`}
-                                        xlinkHref={`/assets/phy/icons/incomplete-hex.svg#icon`}/>
-                                </svg>,
-                                <img
-                                    src="/assets/common/icons/incorrect.svg"
-                                    alt="Try again"
-                                    className="ps-2 icon-status"
-                                />
-                            )}
-                        </div>}
+                        label={siteSpecific(
+                            <div className="d-flex">
+                                In progress
+                                <img className="ps-2" src={`/assets/phy/icons/redesign/status-in-progress.svg`} alt="In Progress"/> 
+                            </div>,
+                            <div>
+                                Try again
+                                <img className="ps-2 icon-status" src="/assets/common/icons/incorrect.svg" alt="Try again" />
+                            </div>
+                        )}
                     />
                 </div>
             </CollapsibleList>
@@ -442,14 +427,14 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     </span>}
                 />
             </div>}*/}
-            <Col className="text-center py-3 filter-btn bg-white border-radius-2">
+            {isAda && <Col className="text-center py-3 filter-btn bg-white border-radius-2">
                 <Button onClick={() => {
                     applyFilters();
                     setSearchDisabled(true);
                 }} disabled={searchDisabled}>
                     Apply filters
                 </Button>
-            </Col>
+            </Col>}
         </CardBody>
-    </Card>;
+    </div>;
 }

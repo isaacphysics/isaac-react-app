@@ -11,18 +11,34 @@ import {
     svgLine,
     svgMoveTo,
     TAG_ID,
-    useDeviceSize, siteSpecific
+    useDeviceSize, siteSpecific,
+    TAG_LEVEL
 } from "../../../services";
 import {calculateHexagonProportions, Hexagon, HexagonProportions} from "./Hexagon";
 import {HexagonConnection} from "./HexagonConnection";
 import classNames from "classnames";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { Label } from "reactstrap";
+import { StyledCheckbox } from "../inputs/StyledCheckbox";
+import { ChoiceTree, getChoiceTreeLeaves } from "../panels/QuestionFinderFilterPanel";
+import { pruneTreeNode } from "../../pages/QuestionFinder";
 
 export type TierID = "subjects" | "fields" | "topics";
 export interface Tier {id: TierID; name: string; for: string}
 
 const connectionProperties = {fill: 'none', strokeWidth: 3, strokeDasharray: 3};
+
+interface HierarchyFilterProps {
+    tiers: Tier[];
+    choices: ChoiceTree[];
+    selections: ChoiceTree[];
+    questionFinderFilter?: boolean;
+    setSelections: (selections: ChoiceTree[]) => void;
+    tier: number;
+    index: TAG_ID | TAG_LEVEL;
+    className?: string;
+    root?: boolean;
+}
 
 interface HierarchySummaryProps {
     tiers: Tier[];
@@ -30,9 +46,51 @@ interface HierarchySummaryProps {
     selections: Item<TAG_ID>[][];
 }
 
-interface HierarchyFilterProps extends HierarchySummaryProps {
+interface HierarchyFilterHexagonalProps extends HierarchySummaryProps {
     questionFinderFilter?: boolean;
     setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
+    choices: Item<TAG_ID>[][];
+    selections: Item<TAG_ID>[][]; 
+}
+
+export function HierarchyFilterTreeList({tier, index, tiers, choices, selections, questionFinderFilter, className, root, setSelections}: HierarchyFilterProps) {  
+    return <div className={classNames("ms-3", className)}>
+        {choices[tier] && choices[tier][index] && choices[tier][index].map((choice) => {
+            const isSelected = selections[tier] && selections[tier][index]?.map(s => s.value).includes(choice.value);
+            const isLeaf = getChoiceTreeLeaves(selections).map(l => l.value).includes(choice.value);
+            function selectValue() {
+                let newSelections = [...selections];
+                if (selections[tier] && selections[tier][index]) {
+                    if (isSelected) { // Remove the node from the tree
+                        newSelections = pruneTreeNode(newSelections, choice.value);
+                    } else { // Add the node to the tree
+                        newSelections[tier][index]?.push(choice);
+                    }
+                }
+                else {
+                    newSelections[tier] = {...selections[tier], [index]: [choice]};
+                }
+                setSelections(newSelections);
+            };
+
+            return <div key={choice.value} className={classNames("ps-2", {"search-field": tier===2, "checkbox-region": isSelected && tier !== 2, "hierarchy-true-root": root && tier === 0})}>
+                <div className="d-flex align-items-center">
+                    <StyledCheckbox
+                        color="white"
+                        bsSize={root ? "lg" : "sm"}
+                        checked={isSelected}
+                        onChange={selectValue}
+                        label={<span>{choice.label}</span>}
+                        className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && !isLeaf, "icon-checkbox-selected": isLeaf})} 
+                    />
+                </div>
+                {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
+                    <HierarchyFilterTreeList {...{tier: tier+1, index: choice.value, tiers, choices, selections, questionFinderFilter, setSelections}}/>
+                }
+            </div>;
+        }
+        )}
+    </div>;
 }
 
 function naturalLanguageList(list: string[]) {
@@ -69,7 +127,7 @@ function hexagonTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions,
     }
 }
 
-export function HierarchyFilterHexagonal({tiers, choices, selections, questionFinderFilter, setTierSelection}: HierarchyFilterProps) {
+export function HierarchyFilterHexagonal({tiers, choices, selections, questionFinderFilter, setTierSelection}: HierarchyFilterHexagonalProps) {
     const deviceSize = useDeviceSize();
     const leadingHexagon = calculateHexagonProportions(36, deviceSize === "xs" ? 2 : 8);
     const hexagon = calculateHexagonProportions(36, deviceSize === "xs" || !!questionFinderFilter ? 16 : 8);
@@ -153,7 +211,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
     const connection = {length: 60};
     const height = `${hexagon.quarterHeight * 4 + hexagon.padding * 2 + 32}px`;
 
-    if (! selections[0]?.length) {
+    if (!selections[0]?.length) {
         return <span className="text-muted ms-3 d-inline-block" style={{height}}>
             None Selected
         </span>;
@@ -171,7 +229,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
             {`${naturalLanguageList(selectionSummary)} filter${selectionSummary.length != 1 || selections[0]?.length != 1 ? "s" : ""} selected`}
         </title>
         <g id="hexagonal-filter-summary" transform={`translate(1,1)`}>
-            {/* Connection & Hexagon */}
+            
             <g transform={`translate(${connection.length / 2 - hexKeyPoints.x.center}, 0)`}>
                 {selectionSummary.map((selection, i) => {
                     const yCenter = hexKeyPoints.y.center;
@@ -187,7 +245,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
                 })}
             </g>
 
-            {/* Text */}
+           
             {selectionSummary.map((selection, i) => {
                 return <g key={selection} transform={`translate(${((hexagon.halfWidth + hexagon.padding) * 2 + connection.length) * i}, 0)`}>
                     <g transform={`translate(0, ${hexagon.quarterHeight * 4 + hexagon.padding})`}>
@@ -203,7 +261,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
     </svg>;
 }
 
-export function HierarchyFilterSelects({tiers, choices, selections, setTierSelection}: HierarchyFilterProps) {
+export function HierarchyFilterSelects({tiers, choices, selections, setTierSelection}: HierarchyFilterHexagonalProps) {
     return <React.Fragment>
         {tiers.map((tier, i) => <React.Fragment key={tier.for}>
             <Label htmlFor={tier.for} className="pt-2 pb-0">{tier.name}: </Label>

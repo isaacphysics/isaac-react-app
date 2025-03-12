@@ -1,5 +1,5 @@
 import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
-import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, Form, Label } from "reactstrap";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
@@ -10,12 +10,14 @@ import { Link, useHistory } from "react-router-dom";
 import { AppGroup, AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { getHumanContext } from "../../../services/pageContext";
+import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
 import { AssignmentState } from "../../pages/MyAssignments";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
 import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
+import { formatISODateOnly } from "../DateString";
 import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 
@@ -116,7 +118,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     </>;
 };
 
-const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
+export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
     const { icon, text, ...rest } = props;
     return <span {...rest} className={classNames(rest.className, "d-flex align-items-center pt-2")}><img className="pe-2" src={`/assets/phy/icons/redesign/${icon}.svg`} alt=""/> {text}</span>;
 };
@@ -277,9 +279,49 @@ export const GenericConceptsSidebar = (props: SidebarProps) => {
     return <ContentSidebar {...props}/>;
 };
 
-export const QuestionFinderSidebar = (props: SidebarProps) => {
-    // TODO
-    return <ContentSidebar {...props}/>;
+interface QuestionFinderSidebarProps extends SidebarProps {
+    searchText: string;
+    setSearchText: React.Dispatch<React.SetStateAction<string>>;
+    questionFilters: Tag[];
+    setQuestionFilters: React.Dispatch<React.SetStateAction<Tag[]>>;
+    topLevelFilters: string[];
+    tagCounts?: Record<string, number>;
+    questionFinderFilterPanelProps: QuestionFinderFilterPanelProps
+}
+
+export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
+    const { searchText, setSearchText, questionFilters, setQuestionFilters, topLevelFilters, tagCounts, questionFinderFilterPanelProps, ...rest } = props;
+
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
+    return <ContentSidebar {...rest}>
+        <div className="section-divider"/>
+        <h5>Search Questions</h5>
+        <Input
+            className='search--filter-input my-4'
+            type="search" value={searchText || ""}
+            placeholder="e.g. Man vs. Horse"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+        />
+
+        <QuestionFinderFilterPanel {...questionFinderFilterPanelProps} />
+
+        {pageContext?.subject && pageContext?.stage && <>
+            <div className="section-divider"/>
+
+            <div className="sidebar-help">
+                <p>The questions shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                <p>If you want to explore our full range of questions across multiple subjects or learning stages, you can use the main question finder:</p>
+                <AffixButton size="md" color="keyline" tag={Link} to="/questions" affix={{
+                    affix: "icon-right",
+                    position: "suffix",
+                    type: "icon"
+                }}>
+                    Browse all questions
+                </AffixButton>
+            </div>
+        </>}
+    </ContentSidebar>;
 };
 
 export const PracticeQuizzesSidebar = (props: SidebarProps) => {
@@ -633,6 +675,116 @@ export const SignupSidebar = ({activeTab} : {activeTab: number}) => {
         <StyledTabPicker checkboxTitle={"Age verification"} checked={activeTab === 1} disabled={activeTab < 1 || activeTab > 2} onClick={() => activeTab === 2 && goBack("age")}/>
         <StyledTabPicker checkboxTitle={"Account details"} checked={activeTab === 2} disabled={activeTab !== 2}/>
         <StyledTabPicker checkboxTitle={"Preferences"} checked={activeTab === 3} disabled={activeTab !== 3}/>
+    </ContentSidebar>;
+};
+
+interface SetQuizzesSidebarProps extends SidebarProps {
+    titleFilter?: string;
+    setTitleFilter: React.Dispatch<React.SetStateAction<string | undefined>>;
+};
+
+export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
+    const { titleFilter, setTitleFilter } = props;
+    const deviceSize = useDeviceSize();
+
+    return <ContentSidebar buttonTitle="Search & Filter">
+        {above["lg"](deviceSize) && <div className="section-divider mt-5"/>}
+        <h5>Search &amp; Filter</h5>
+        <span className="quiz-filter-date-span mt-2">Title</span>
+        <Input
+            id="available-quizzes-title-filter" type="search"
+            value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
+            placeholder="Search by title" aria-label="Search by title"
+        />
+    </ContentSidebar>;
+};
+
+interface ManageQuizzesSidebarProps extends SidebarProps {
+    manageQuizzesTitleFilter: string;
+    setManageQuizzesTitleFilter: React.Dispatch<React.SetStateAction<string>>;
+    quizStartDate: Date | undefined;
+    setQuizStartDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+    quizSetDateFilterType: string;
+    setQuizSetDateFilterType: React.Dispatch<React.SetStateAction<string>>;
+    quizDueDate: Date | undefined;
+    setQuizDueDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+    quizDueDateFilterType: string;
+    setQuizDueDateFilterType: React.Dispatch<React.SetStateAction<string>>;
+    manageQuizzesGroupNameFilter: string;
+    setManageQuizzesGroupNameFilter: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
+    const { manageQuizzesTitleFilter, setManageQuizzesTitleFilter, quizStartDate, setQuizStartDate,
+        quizSetDateFilterType, setQuizSetDateFilterType, quizDueDate, setQuizDueDate, quizDueDateFilterType,
+        setQuizDueDateFilterType, manageQuizzesGroupNameFilter, setManageQuizzesGroupNameFilter} = props;
+
+    const deviceSize = useDeviceSize();
+    
+    const dateFilterTypeSelector = (dateFilterType: string, setDateFilterType: React.Dispatch<React.SetStateAction<string>>) => <UncontrolledDropdown>
+        <DropdownToggle className="bg-transparent border-0 px-2" caret>{dateFilterType}</DropdownToggle>
+        <DropdownMenu>
+            <DropdownItem onClick={() => setDateFilterType('after')}>
+                after
+            </DropdownItem>
+            <DropdownItem onClick={() => setDateFilterType('before')}>
+                before
+            </DropdownItem>
+            <DropdownItem onClick={() => setDateFilterType('on')}>
+                on
+            </DropdownItem>
+        </DropdownMenu>
+    </UncontrolledDropdown>;
+
+    const titleFilterInput = <div className="my-2">
+        <span className="quiz-filter-date-span">Title</span>
+        <Input
+            id="manage-quizzes-title-filter" type="search"
+            value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
+            placeholder="Search by title" aria-label="Search by title"
+        /> 
+    </div>;
+
+    const groupFilterInput = <div className="my-2">
+        <span className="quiz-filter-date-span">Group</span>
+        <Input
+            id="manage-quizzes-group-name-filter" type="search"
+            value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
+            placeholder="Search by group" aria-label="Search by group"
+        />
+    </div>;
+
+    const setDateFilterInput = <div className="my-2">
+        <div className="d-flex align-items-center">
+            <span className="quiz-filter-date-span">Starting</span>
+            {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
+        </div>
+        <Input
+            id="manage-quizzes-set-date-filter" type="date" className="quiz-filter-date-input"
+            value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
+            placeholder="Filter by set date" aria-label="Filter by set date"
+        />
+    </div>;
+
+    const dueDateFilterInput = <div className="my-2">
+        <div className="d-flex align-items-center">
+            <span className="quiz-filter-date-span">Due</span>
+            {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
+        </div>
+        <Input
+            id="manage-quizzes-due-date-filter" type="date" className="quiz-filter-date-input"
+            value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
+            placeholder="Filter by due date" aria-label="Filter by due date"
+        />
+    </div>;
+
+    return <ContentSidebar buttonTitle="Search & Filter">
+        {above["lg"](deviceSize) && <div className="section-divider mt-5"/>}
+        <h5>Search & Filter</h5>
+        {titleFilterInput}
+        {groupFilterInput}
+        {setDateFilterInput}
+        {dueDateFilterInput}
     </ContentSidebar>;
 };
 

@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {isMobile, isPhy, isTutorOrAbove, PATHS, siteSpecific, useOutsideCallback} from "../../services";
 import {selectors, useAppSelector} from "../../state";
 import classNames from "classnames";
+import { IconButton } from "./AffixButton";
 
 export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean; outline?: boolean; className?: string}) => {
     const [showShareLink, setShowShareLink] = useState(false);
@@ -41,8 +42,20 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
     const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * siteSpecific(9, 6));
     const showDuplicateAndEdit = gameboardId && isTutorOrAbove(user);
-    return <div ref={shareLinkDivRef} className={classNames("share-link-icon", className)}>
-        <button className={siteSpecific("btn-action", classNames({"outline": outline}))} onClick={(e) => {e.preventDefault(); toggleShareLink();}} aria-label={buttonAriaLabel} />
+    return <div ref={shareLinkDivRef} className={classNames(className, "share-link-icon", {"w-max-content d-inline-flex": isPhy})}>
+        {siteSpecific(
+            <IconButton
+                icon="icon-share"
+                className="w-max-content h-max-content"
+                affixClassName="icon-color-black"
+                aria-label="Share page" 
+                title="Share page"
+                color="tint"
+                data-bs-theme="neutral"
+                onClick={(e) => { e.preventDefault(); toggleShareLink(); }}
+            />,
+            <button className={siteSpecific("btn-action", classNames({"outline": outline}))} onClick={(e) => {e.preventDefault(); toggleShareLink();}} aria-label={buttonAriaLabel} />
+        )}
         <div className={`share-link ${showShareLink ? "d-block" : ""} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
             <input type="text" readOnly ref={shareLink} value={shareUrl} onClick={(e) => e.preventDefault()} aria-label="Share URL" />
             {showDuplicateAndEdit && <React.Fragment>

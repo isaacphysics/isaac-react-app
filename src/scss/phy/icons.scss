@@ -43,7 +43,8 @@
   margin: 8px 10px 0 0;
 }
 .icon-status {
-  width: 46;
+  width: 46px;
+  height: 46px;
   margin-top: -1px;
 }
 
@@ -75,6 +76,12 @@
   height: 16px;
 }
 
+.icon-not-started {
+  background-image: url('/assets/phy/icons/redesign/status-not-started.svg');
+  width: 16px;
+  height: 16px;
+}
+
 .icon-menu {
   @include svg-icon('/assets/phy/icons/redesign/menu.svg', 16px, 16px, 14px 12px);
 }
@@ -101,6 +108,22 @@
 
 .icon-info {
   @include svg-icon('/assets/phy/icons/redesign/info.svg', 16px, 16px);
+}
+
+.icon-flag {
+  @include svg-icon('/assets/phy/icons/redesign/flag.svg', 16px, 16px);
+}
+
+.icon-print {
+  @include svg-icon('/assets/phy/icons/redesign/print.svg', 16px, 16px);
+}
+
+.icon-share {
+  @include svg-icon('/assets/phy/icons/redesign/share.svg', 16px, 16px);
+}
+
+.icon-refresh {
+  @include svg-icon('/assets/phy/icons/redesign/refresh.svg', 16px, 16px);
 }
 
 .icon-sidebar {
@@ -169,10 +192,34 @@
   );
 }
 
+.page-icon-quiz {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/quiz-fg.svg', 
+    '/assets/phy/icons/redesign/quiz-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
 .page-icon-finder {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-finder-fg.svg', 
     '/assets/phy/icons/redesign/page-finder-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
+.page-icon-tests {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-tests-fg.svg', 
+    '/assets/phy/icons/redesign/page-tests-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
+.page-icon-quiz {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-quiz-fg.svg', 
+    '/assets/phy/icons/redesign/page-quiz-bg.svg',
     75px, 75px, 44px
   );
 }
@@ -225,6 +272,14 @@
   );
 }
 
+.list-icon-quiz {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/quiz-fg.svg', 
+    '/assets/phy/icons/redesign/quiz-bg.svg',
+    60px, 60px, 36px
+  );
+}
+
 .list-icon-events {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-event-fg.svg',
@@ -232,7 +287,6 @@
     60px, 60px, 36px
   )
 }
-
 
 svg {
   &.almost-fill {
@@ -247,11 +301,13 @@ svg {
 // Overrides -- ONLY use these on an individual basis to override an active theme.
 // Setting `data-bs-theme` on a parent element is the much preferred approach.
 
+// These are !important by the same logic as Bootstrap classes; if you have specified this as an explicit classname, you want it to take precedence.
+
 // the default icon colour for `neutral` is $color-theme-500 (green), but we use black icons in a few places across e.g. navigation
 i.icon.icon-color-black {
-  background-color: black;
+  background-color: $color-neutral-900 !important;
 }
 
 i.icon.icon-color-grey {
-  background-color: $color-neutral-500;
+  background-color: $color-neutral-500 !important;
 }

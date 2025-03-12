@@ -113,7 +113,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                     ? above['md'](deviceSize) && <Button className="mb-2" color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
                         Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
                     </Button> 
-                    : boardLink && <div className="card-share-link">
+                    : boardLink && <div className="d-flex justify-content-end card-share-link">
                         <ShareLink linkUrl={boardLink} gameboardId={gameboard.id} reducedWidthLink clickAwayClose />
                     </div>
                 }

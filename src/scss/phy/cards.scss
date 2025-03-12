@@ -1,5 +1,21 @@
-@container pod-parent (min-width: 700px) {
-  .pod.card {
+// stylistically this would work better as a class with a @extend of this class in the @container query, 
+// but the generated CSS seemingly ignores the @container condition when using @extend?
+@mixin horizontal-pod-container {
+  .pod.force-horizontal {
+    @content;
+  }
+
+  @container pod-parent (min-width: 700px) {
+    .pod:not(.no-horizontal) {
+      @content;
+    }
+  }
+}
+
+div:has(> .pod) {
+  container: pod-parent / inline-size;
+
+  @include horizontal-pod-container {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -21,10 +37,6 @@
       font-size: 24px;
     }
   }
-}
-
-div:not(.no-horizontal):has(> .pod) {
-  container: pod-parent / inline-size;
 }
 
 .pod {

@@ -1,7 +1,7 @@
 import React from "react";
 import {Difficulty} from "../../../../IsaacApiTypes";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
-import {difficultyLabelMap, difficultyShortLabelMap, isAda, siteSpecific} from "../../../services";
+import {difficultyLabelMap, difficultyShortLabelMap, isAda, isPhy, siteSpecific} from "../../../services";
 import classnames from "classnames";
 import {Rectangle} from "./Rectangle";
 import {Circle} from "./Circle";
@@ -51,6 +51,7 @@ export function DifficultyIcons({difficulty, blank, className} : {difficulty: Di
             role={"img"}
             width={`${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) + difficultyIconXPadding}px`}
             height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`}
+            {...(isPhy && {viewBox: `0 0 ${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding} ${miniHexagon.quarterHeight * 4}`})}
         >
             <title>{difficultyLabelMap[difficulty]}</title>
             {difficultyCategoryLevels.map(difficultyCategoryLevel => {
