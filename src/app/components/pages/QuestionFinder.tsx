@@ -164,7 +164,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
-    const pageContext = useUrlPageTheme({resetIfNotFound: true});
+    const pageContext = useUrlPageTheme();
     const isSolitaryStage = pageStageToSearchStage(pageContext?.stage).length === 1;
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));

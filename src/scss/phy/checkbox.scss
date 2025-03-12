@@ -17,6 +17,10 @@
 
 .styled-checkbox-wrapper div input[type="checkbox"] { 
     border: none;
+
+    &[color="theme"] {   
+        --checkbox-selected-color: var(--subject-color-500);
+    }
 }
 
 .icon-checkbox-off {
@@ -73,7 +77,7 @@
     }
 
     &::after {
-        background-color: $color-brand-500;
+        background-color: var(--checkbox-selected-color, $color-brand-500);
     }
 }
   
@@ -85,7 +89,7 @@
     );
   
     &::before {
-        background-color: $color-brand-500;
+        background-color: var(--checkbox-selected-color, $color-brand-500);
     }
     &::after {
         background-color: $color-neutral-100;
