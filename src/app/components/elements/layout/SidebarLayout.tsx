@@ -2,10 +2,10 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, QuizStatus, siteSpecific, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
-import { selectors, useAppSelector } from "../../../state";
+import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
 import { AppGroup, AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
@@ -18,6 +18,7 @@ import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
 import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
 import { formatISODateOnly } from "../DateString";
+import { StyledDropdown } from "../inputs/DropdownInput";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -783,5 +784,88 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
         {groupFilterInput}
         {setDateFilterInput}
         {dueDateFilterInput}
+    </ContentSidebar>;
+};
+
+interface QuizStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
+    status: QuizStatus;
+    statusFilter: QuizStatus[];
+    setStatusFilter: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
+    count?: number;
+}
+
+const QuizStatusCheckbox = (props: QuizStatusCheckboxProps) => {
+    const {status, statusFilter, setStatusFilter, count, ...rest} = props;
+    return <StyledTabPicker 
+        id={status ?? ""} checkboxTitle={status}
+        onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== QuizStatus.All), status]) : setStatusFilter(c => c.filter(s => s !== status))}
+        checked={statusFilter.includes(status)}
+        count={count} {...rest}
+    />;
+};
+
+const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status">) => {
+    const { statusFilter, setStatusFilter, count, ...rest } = props;
+    const [previousFilters, setPreviousFilters] = useState<QuizStatus[]>([]);
+    return <StyledTabPicker 
+        id="all" checkboxTitle="All"
+        onInputChange={(e) => {
+            if (e.target.checked) {
+                setPreviousFilters(statusFilter);
+                setStatusFilter([QuizStatus.All]);
+            } else {
+                setStatusFilter(previousFilters);
+            }
+        }}
+        checked={statusFilter.includes(QuizStatus.All)}
+        count={count} {...rest}
+    />;
+};
+
+
+interface MyQuizzesSidebarProps extends SidebarProps {
+    setQuizTitleFilter: (title: string) => void;
+    setQuizCreatorFilter: (creator: string) => void;
+    quizStatusFilter: QuizStatus[];
+    setQuizStatusFilter: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
+    activeTab: number;
+    displayMode: "table" | "cards";
+    setDisplayMode: React.Dispatch<React.SetStateAction<"table" | "cards">>;
+};
+
+export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
+    const { setQuizTitleFilter,setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, activeTab, displayMode, setDisplayMode } = props;
+    const deviceSize = useDeviceSize();
+    const quizQuery = useGetQuizAssignmentsAssignedToMeQuery();
+
+    const statusOptions = activeTab === 1 ? Object.values(QuizStatus).filter(s => s !== QuizStatus.All)
+        : [QuizStatus.Started, QuizStatus.Complete];
+
+    return <ContentSidebar buttonTitle="Search & Filter">
+        <ShowLoadingQuery query={quizQuery} defaultErrorTitle="" thenRender={(quizzes: QuizAssignmentDTO[]) => {
+            return <>
+                <div className={classNames("section-divider", {"mt-5": above["lg"](deviceSize)})}/>
+                <h5>Search tests</h5>
+                <Input type="text" className="search--filter-input my-4" onChange={(e) => setQuizTitleFilter(e.target.value)} 
+                    placeholder="Search by title" aria-label="Search by title"/>
+                <div className="section-divider"/>
+                <h5 className="mb-4">Filter by status</h5>
+                <QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/>
+                <div className="section-divider-small"/>
+                {statusOptions.map(state => <QuizStatusCheckbox 
+                    key={state} status={state} count={undefined} statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} 
+                />)}
+                <h5 className="mt-4 mb-3">Filter by assigner</h5>
+                <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
+                    {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
+                </Input>
+                <div className="section-divider mt-4"/>
+                <h5 className="mb-3">Display mode</h5>
+                <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
+                    <option value="table">Table View</option>
+                    <option value="cards">Card View</option>
+                </StyledDropdown>
+            </>;
+        }}/>
     </ContentSidebar>;
 };

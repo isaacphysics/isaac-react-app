@@ -44,7 +44,7 @@
     text-decoration: none;
   }
 
-  &:disabled {
+  &:disabled, &.disabled {
     background-color: var(--buttons-dark-disabled);
     color: var(--buttons-dark-text);
   }
@@ -71,7 +71,7 @@
     text-decoration: none;
   }
 
-  &:disabled {
+  &:disabled, &.disabled {
     color: var(--buttons-light-disabled-text);
   }
 
@@ -95,7 +95,7 @@
     text-decoration: none;
   }
 
-  &:disabled {
+  &:disabled, &.disabled {
     color: var(--buttons-light-disabled-text);
   }
 
@@ -124,7 +124,7 @@
     box-shadow: 0 0 0 3px var(--buttons-dark), 0 0 0 4.5px var(--buttons-focus-ring) !important;
   }
 
-  &:disabled {
+  &:disabled, &.disabled {
     color: var(--buttons-dark-disabled-text);
   }
 }
