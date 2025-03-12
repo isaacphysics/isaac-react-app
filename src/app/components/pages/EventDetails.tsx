@@ -339,7 +339,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                 </div>;
             };
 
-            const ImageAndMap = () => <div>
+            const ImageAndMap = () => <div className="mb-3">
                 <Col className={siteSpecific("d-none d-lg-block", "d-block")} lg={12}>
                     {event.eventThumbnail && <div className="px-0 align-self-center">
                         <CardImg
