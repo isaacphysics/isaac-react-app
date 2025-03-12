@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import {printingSettingsSlice, useAppDispatch} from "../../state";
 import {Button} from "reactstrap";
+import { IconButton } from "./AffixButton";
+import { siteSpecific } from "../../services";
 
 interface PrintProps {
     questionPage?: boolean;
@@ -13,12 +15,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
 
     return questionPage ?
         <>
-            <button
-                className="print-icon btn-action"
-                onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
-                aria-label="Print page"
-            />
-            {questionPrintOpen && <div className="question-actions-link-box">
+            {questionPrintOpen && <div className="question-actions-link-box not-mobile">
                 <div className="question-actions-link text-nowrap">
                     <Button
                         size={"sm"}
@@ -44,14 +41,46 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                     ><span className="visually-hidden">Print{" "}</span>Without hints</Button>
                 </div>
             </div>}
+            {siteSpecific(
+                <IconButton
+                    icon="icon-print"
+                    className="w-max-content h-max-content not-mobile"
+                    affixClassName="icon-color-black"
+                    aria-label="Print page" 
+                    title="Print page"
+                    color="tint"
+                    data-bs-theme="neutral"
+                    onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
+                />,
+                <button
+                    className="print-icon btn-action not-mobile"
+                    onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
+                    aria-label="Print page"
+                />
+            )}
         </>
         :
-        <button
-            className="print-icon btn-action"
-            onClick={() => {
-                dispatch(printingSettingsSlice.actions.enableHints(false));
-                setTimeout(window.print, 100);
-            }}
-            aria-label="Print page"
-        />;
+        siteSpecific(
+            <IconButton
+                icon="icon-print"
+                className="w-max-content h-max-content not-mobile"
+                affixClassName="icon-color-black"
+                aria-label="Print page" 
+                title="Print page"
+                color="tint"
+                data-bs-theme="neutral"
+                onClick={() => {
+                    dispatch(printingSettingsSlice.actions.enableHints(false));
+                    setTimeout(window.print, 100);
+                }}
+            />,
+            <button
+                className="print-icon btn-action not-mobile"
+                onClick={() => {
+                    dispatch(printingSettingsSlice.actions.enableHints(false));
+                    setTimeout(window.print, 100);
+                }}
+                aria-label="Print page"
+            />
+        );
 };

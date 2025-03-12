@@ -42,7 +42,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
 
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && doc !== 404 ? doc : undefined);
 
-    const ManageButtons = () => <div className="no-print d-flex justify-content-end mt-1 ms-2">
+    const ManageButtons = () => <div className={classNames("no-print d-flex justify-content-end mt-1 ms-2", {"gap-2": isPhy})}>
         <div className="question-actions">
             <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
         </div>

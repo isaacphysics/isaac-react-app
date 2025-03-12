@@ -40,6 +40,7 @@ import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
 import { LLMFreeTextQuestionIndicator } from "../elements/LLMFreeTextQuestionIndicator";
 import { MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { StageAndDifficultySummaryIcons } from "../elements/StageAndDifficultySummaryIcons";
 
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
@@ -63,6 +64,9 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
     const questionId = questionIdOverride || match.params.questionId;
     const doc = useAppSelector(selectors.doc.get);
     const user = useAppSelector(selectors.user.orNull);
+    const prevPageContext = useAppSelector(selectors.pageContext.context);
+    const allQuestionsCorrect = useAppSelector(selectors.questions.allQuestionsCorrect);
+    const anyQuestionAttempted = useAppSelector(selectors.questions.anyQuestionPreviouslyAttempted);
     const navigation = useNavigation(doc);
     const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
     const query = queryString.parse(location.search);
@@ -83,11 +87,11 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
         return <GameboardContext.Provider value={navigation.currentGameboard}>
             <Container className={classNames("no-shadow")} data-bs-theme={pageContext?.subject ?? doc.subjectId}>
                 <TitleAndBreadcrumb
-                    currentPageTitle={generateQuestionTitle(doc)}
-                    subTitle={doc.subtitle}
+                    currentPageTitle={siteSpecific("Question", generateQuestionTitle(doc))}
+                    subTitle={siteSpecific(undefined, doc.subtitle)}
                     intermediateCrumbs={siteSpecific([...navigation.breadcrumbHistory], [...navigation.breadcrumbHistory, ...getTags(doc.tags)])}
                     collectionType={navigation.collectionType}
-                    audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
+                    audienceViews={siteSpecific(undefined, determineAudienceViews(doc.audience, navigation.creationContext))}
                     preview={preview} icon={{type: "hex", subject: doc.subjectId as Subject, icon: "page-icon-question"}}
                 />
                 {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
@@ -95,19 +99,58 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                     <QuestionSidebar relatedContent={doc.relatedContent} />
                     <MainContent>
                         {!preview && <CanonicalHrefElement />}
-                        <div className="no-print d-flex flex-wrap align-items-center mt-3">
-                            {pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
-                            <EditContentButton doc={doc} />
-                            <div className="question-actions ms-auto">
-                                <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
-                            </div>
-                            <div className="question-actions not-mobile">
-                                <PrintButton questionPage />
-                            </div>
-                            <div className="question-actions">
-                                <ReportButton pageId={questionId}/>
-                            </div>
+
+                        <div className="no-print d-flex align-items-center mt-3">
+                            {isAda && <>
+                                {pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
+                                <EditContentButton doc={doc} />
+                                <div className="d-flex ms-auto">
+                                    <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
+                                    <PrintButton questionPage />
+                                    <ReportButton pageId={questionId}/>
+                                </div>
+                            </>}
+                            {isPhy && <>
+                                <div>
+                                    <h2 className="text-theme-dark mb-4">{generateQuestionTitle(doc)}</h2>
+                                    {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
+                                </div>
+                                <div className="d-flex gap-2 ms-auto">
+                                    <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
+                                    <PrintButton questionPage />
+                                    <ReportButton pageId={questionId}/>
+                                </div>
+                            </>}
                         </div>
+                        
+                        {isPhy && <Row className="question-metadata d-flex">
+                            <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
+                                <span>Subject & topics</span>
+                                <div className="d-flex align-items-center">
+                                    <i className="icon icon-hexagon me-2"/>
+                                    {getTags(doc.tags).map((tag, index, arr) => <>
+                                        <span key={tag.title} className="text-theme">{tag.title}</span>
+                                        {index !== arr.length - 1 && <span className="mx-2">|</span>}
+                                    </>)}
+                                </div>
+                            </Col>
+                            <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0 pb-sm-0">
+                                <span>Stage & difficulty</span>
+                                <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/> 
+                            </Col>
+                            <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0">
+                                <span>Status</span>
+                                {allQuestionsCorrect 
+                                    ? <div className="d-flex align-items-center"><span className="icon-correct me-2"/> Correct</div>
+                                    : anyQuestionAttempted
+                                        ? <div className="d-flex align-items-center"><span className="icon-in-progress me-2"/> In Progress</div>
+                                        : <div className="d-flex align-items-center"><span className="icon-not-started me-2"/> Not Started</div>
+                                }
+                            </Col>
+                        </Row>}
+
+                        {isPhy && <EditContentButton doc={doc} />}
+
                         <Row className="question-content-container">
                             <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
 
@@ -139,7 +182,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
 
                                 <NavigationLinks navigation={navigation}/>
 
-                                {doc.relatedContent && !isFastTrack && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                                {isAda && doc.relatedContent && !isFastTrack && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                             </Col>
                         </Row>
                     </MainContent>

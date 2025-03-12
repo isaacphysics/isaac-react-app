@@ -4,7 +4,6 @@
   $x-translation: 24px;
   margin-left: -$x-translation;
   float: left;
-  z-index: -1;
   transform: translateX(7.5px + $x-translation);
   height: 48px; // height of an icon button, should be a variable probably
   display: flex;

@@ -203,7 +203,7 @@ button.btn.btn-link.login-b,
 
 .not-mobile {
   @include respond-below(sm) {
-    display: none;
+    display: none !important;
   }
 }
 
