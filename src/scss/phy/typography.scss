@@ -246,5 +246,16 @@ a {
     clear: left;
     text-decoration: none;
   }
+
+  &.a-link:has(> i.icon) {
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+    gap: 4px;
+    > i.icon {
+      order: 1;
+      margin-top: 1px;
+    }
+  }
 }
 
