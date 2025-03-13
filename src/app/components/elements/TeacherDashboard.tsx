@@ -3,10 +3,12 @@ import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQue
 import { skipToken } from '@reduxjs/toolkit/query';
 import { Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { BookInfo, ISAAC_BOOKS, isDefined, isLoggedIn, isTutorOrAbove, Subject, useDeviceSize } from '../../services';
-import { AssignmentDTO, RegisteredUserDTO } from '../../../IsaacApiTypes';
+import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, Subject, useDeviceSize } from '../../services';
+import { AssignmentDTO, RegisteredUserDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
 import { GroupSelector } from '../pages/Groups';
 import { StyledDropdown } from './inputs/DropdownInput';
+import StyledToggle from './inputs/StyledToggle';
+import { StudentDashboard } from './StudentDashboard';
 
 const GroupsPanel = () => {
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
@@ -24,7 +26,7 @@ const GroupsPanel = () => {
             <h4>Manage my groups</h4>
         </Link>
         <GroupSelector allGroups={allGroups} groupNameInputRef={groupNameInputRef} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
-            setShowArchived={setShowArchived} groups={groups} user={user} selectedGroup={selectedGroup} showCreateGroup={false} useHashAnchor={true} />
+            setShowArchived={setShowArchived} groups={groups} user={user} selectedGroup={selectedGroup} isDashboard={true} useHashAnchor={true} />
     </div>;
 };
 
@@ -78,7 +80,8 @@ const AssignmentsPanel = () => {
         <Link to="/assignment_schedule"  className="plain-link">
             <h4>Assignment schedule</h4>
         </Link>
-        {upcomingAssignments && upcomingAssignments.slice(0, 4).map(({id, groupName}) => <AssignmentCard key={id} assignmentId={id} groupName={groupName} />)}
+        {upcomingAssignments?.length ? upcomingAssignments.slice(0, 4).map(({id, groupName}) => <AssignmentCard key={id} assignmentId={id} groupName={groupName} />)
+            : <div className="mt-3">You have no upcoming assignments.</div>}
     </div>;
 };
 
@@ -152,9 +155,24 @@ const BooksPanel = () => {
 export const TeacherDashboard = () => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
-    if (user && isLoggedIn(user) && isTutorOrAbove(user)) {
-        return <div className="dashboard w-100">
-            {deviceSize === "lg"
+    const nameToDisplay = extractTeacherName(user as UserSummaryDTO);
+    const [studentView, setStudentView] = useState(false);
+             
+    return <div className="dashboard dashboard-outer w-100">
+        <div className="d-flex">
+            {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
+            <span className="ms-auto">
+                <div className="text-center">Dashboard view</div>
+                <StyledToggle
+                    checked={studentView}
+                    falseLabel="Teacher"
+                    trueLabel="Student"
+                    onChange={() => setStudentView(studentView => !studentView)}             
+                />
+            </span>
+        </div>
+        {studentView ? <StudentDashboard/> :
+            <>{deviceSize === "lg"
                 ? <>
                     <Row className="row-cols-3">
                         <Col className="mt-4 col-4">
@@ -188,6 +206,7 @@ export const TeacherDashboard = () => {
                         </Col>
                     </Row>
                 </>}
-        </div>;
-    }
+            </>
+        }
+    </div>;
 };

@@ -476,10 +476,11 @@ interface GroupSelectorProps {
     createNewGroup?: (newGroupName: string) => Promise<boolean>;
     showCreateGroup?: boolean;
     sidebarStyle?: boolean;
+    isDashboard?: boolean;
     useHashAnchor?: boolean;
 }
 
-export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, showCreateGroup, sidebarStyle, useHashAnchor}: GroupSelectorProps) => {
+export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, showCreateGroup, sidebarStyle, isDashboard, useHashAnchor}: GroupSelectorProps) => {
     const dispatch = useAppDispatch();
 
     // Clear the selected group when switching between tabs
@@ -533,7 +534,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
         }
     };
 
-    return <Card className={classNames({"groups-sidebar": sidebarStyle})}>
+    return <Card className="group-selector">
         <CardBody>
             {showCreateGroup && isDefined(createNewGroup) && <>
                 <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
@@ -607,7 +608,10 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                 </div>}
                             </div>
                     )
-                    : <div className={"group-item p-2"}>No {showArchived ? "archived" : "active"} groups</div>
+                    : <div className="text-center p-2">
+                        You have no {showArchived ? "archived" : "active"} groups.
+                        {!showArchived && isDashboard && <Button tag={Link} to="/groups" className="mt-2">Create new group</Button>}
+                    </div>
                 }
             </ul>
         </CardBody>

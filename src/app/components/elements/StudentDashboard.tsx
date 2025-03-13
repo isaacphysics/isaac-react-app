@@ -3,12 +3,13 @@ import { closeActiveModal, getMyProgress, openActiveModal, selectors, showErrorT
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { filterAssignmentsByStatus, isDefined, isLoggedIn, PATHS, useDeviceSize } from '../../services';
+import { filterAssignmentsByStatus, isDefined, isLoggedIn, isTeacherOrAbove, PATHS, useDeviceSize } from '../../services';
 import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
 import { AssignmentDTO } from '../../../IsaacApiTypes';
 import { useAssignmentsCount } from '../navigation/NavigationBar';
 import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
 import { Spacer } from './Spacer';
+import classNames from 'classnames';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -162,42 +163,43 @@ const MyIsaacPanel = () => {
 export const StudentDashboard = () => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
-    if (user && isLoggedIn(user)) {
-        return <div className="dashboard w-100">
-            {deviceSize === "lg"
-                ? <>
-                    <Row>
-                        <Col className="mt-4">
-                            <CurrentWorkPanel />
-                        </Col>
-                    </Row>
-                    <Row className="row-cols-3">
-                        <Col className="mt-4 panel-streak">
-                            <DashboardStreakPanel />
-                        </Col>
-                        <Col className="mt-4">
-                            <GroupJoinPanel />
-                        </Col>
-                        <Col className="mt-4">
-                            <MyIsaacPanel />
-                        </Col>
-                    </Row></>
-                : <>
-                    <Row className="row-cols-1 row-cols-sm-2 row-cols-xl-4">
-                        <Col className="mt-4 col-xl-3">
-                            <CurrentWorkPanel />
-                        </Col>
-                        <Col className="mt-4 col-xl-2 panel-streak">
-                            <DashboardStreakPanel />
-                        </Col>
-                        <Col className="mt-4 col-sm-7 col-xl-4">
-                            <GroupJoinPanel />
-                        </Col>
-                        <Col className="mt-4 col-sm-5 col-xl-3">
-                            <MyIsaacPanel />
-                        </Col>
-                    </Row></>
-            }
-        </div>;
-    }
+    const nameToDisplay = isLoggedIn(user) && !isTeacherOrAbove(user) && user.givenName;
+
+    return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTeacherOrAbove(user)})}>
+        {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
+        {deviceSize === "lg"
+            ? <>
+                <Row>
+                    <Col className="mt-4">
+                        <CurrentWorkPanel />
+                    </Col>
+                </Row>
+                <Row className="row-cols-3">
+                    <Col className="mt-4 panel-streak">
+                        <DashboardStreakPanel />
+                    </Col>
+                    <Col className="mt-4">
+                        <GroupJoinPanel />
+                    </Col>
+                    <Col className="mt-4">
+                        <MyIsaacPanel />
+                    </Col>
+                </Row></>
+            : <>
+                <Row className="row-cols-1 row-cols-sm-2 row-cols-xl-4">
+                    <Col className="mt-4 col-xl-3">
+                        <CurrentWorkPanel />
+                    </Col>
+                    <Col className="mt-4 col-xl-2 panel-streak">
+                        <DashboardStreakPanel />
+                    </Col>
+                    <Col className="mt-4 col-sm-7 col-xl-4">
+                        <GroupJoinPanel />
+                    </Col>
+                    <Col className="mt-4 col-sm-5 col-xl-3">
+                        <MyIsaacPanel />
+                    </Col>
+                </Row></>
+        }
+    </div>;
 };
