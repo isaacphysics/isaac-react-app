@@ -42,13 +42,6 @@
   }
 }
 
-.label-radio:hover {
-  input:not(:checked) {
-    background: $color-neutral-200;
-    cursor: pointer;
-  }
-}
-
 // Named class for event titles to avoid
 // styling headings encoded in the markdown
 .event-title {
