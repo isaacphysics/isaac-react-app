@@ -226,12 +226,17 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
         />;
 };
 
-const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag">) => {
-    const { conceptFilters, setConceptFilters, tagCounts, baseTag, ...rest } = props;
+const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnabled?: boolean}) => {
+    const { conceptFilters, setConceptFilters, tagCounts, baseTag, forceEnabled, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<Tag[]>(baseTag ? [baseTag] : []);
     return <StyledTabPicker {...rest} 
-        id="all" checked={baseTag ? conceptFilters.length === 1 && conceptFilters[0] === baseTag : !conceptFilters.length} checkboxTitle="All" count={tagCounts && Object.values(tagCounts).reduce((a, b) => a + b, 0)}
+        id="all" checked={forceEnabled || baseTag ? conceptFilters.length === 1 && conceptFilters[0] === baseTag : !conceptFilters.length} 
+        checkboxTitle="All" count={tagCounts && (baseTag ? tagCounts[baseTag.id] : Object.values(tagCounts).reduce((a, b) => a + b, 0))}
         onInputChange={(e) => {
+            if (forceEnabled) {
+                setConceptFilters(baseTag ? [baseTag] : []);
+                return;
+            }
             if (e.target.checked) {
                 setPreviousFilters(conceptFilters);
                 setConceptFilters(baseTag ? [baseTag] : []);
@@ -272,19 +277,25 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
 
         <div className="d-flex flex-column">
             <h5>Filter by topic</h5>
-            <AllFiltersCheckbox conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag}/>
+            <AllFiltersCheckbox 
+                conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag} 
+                forceEnabled={applicableTags.filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0).length === 0}
+            />
             <div className="section-divider-small"/>
-            {applicableTags.map(tag => 
-                <FilterCheckbox 
-                    key={tag.id} 
-                    tag={tag} 
-                    conceptFilters={conceptFilters} 
-                    setConceptFilters={setConceptFilters} 
-                    tagCounts={tagCounts} 
-                    incompatibleTags={[subjectTag]} 
-                    baseTag={subjectTag}
-                />
-            )}
+            {applicableTags
+                .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
+                .map(tag => 
+                    <FilterCheckbox 
+                        key={tag.id} 
+                        tag={tag} 
+                        conceptFilters={conceptFilters} 
+                        setConceptFilters={setConceptFilters} 
+                        tagCounts={tagCounts} 
+                        incompatibleTags={[subjectTag]} 
+                        baseTag={subjectTag}
+                    />
+                )
+            }
         </div>
 
         <div className="section-divider"/>
