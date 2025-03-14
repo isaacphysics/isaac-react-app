@@ -24,8 +24,7 @@ import {jest} from "@jest/globals";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "../dateUtils";
 
 const mockStore = configureMockStore([thunk, ...middleware]);
-//@ts-ignore
-const axiosMock = new MockAdapter(endpoint);
+const axiosMock = new MockAdapter(endpoint as any);
 const middlewareRegistrationActions = [{type: 'isaacApi/config/middlewareRegistered', payload: 'some unique string'}];
 
 function expectActionsToStartWithMiddlewareRegistration(actualActions: Action[]): Action[] {
