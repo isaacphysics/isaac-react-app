@@ -90,7 +90,7 @@ const DashboardStreakPanel = () => {
     </div>;
 };
 
-const AssignmentCard = (assignment: IAssignmentLike) => {
+export const AssignmentCard = (assignment: IAssignmentLike) => {
     const today = new Date();
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
     const isOverdue = dueDate && dueDate < today;
@@ -114,12 +114,10 @@ const AssignmentCard = (assignment: IAssignmentLike) => {
 
     return <Link to={link} className="mt-3">
         <Card className="assignment-card px-3">
-            <div className="d-flex flex-row h-100">
-                <i className="icon icon-question-pack" />
-                <div className="flex-grow-1 ms-2">
-                    <h5>{title}</h5>
-                </div>
-                {dueDate && (isOverdue ? <span className="align-self-end overdue">Overdue</span> : <span className="align-self-end">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
+            <div className="h-100">
+                <i className="icon icon-question-pack me-2"/>
+                <h5 className="d-inline">{title}</h5>
+                {dueDate && (isOverdue ? <div className="ms-auto overdue">Overdue</div> : <div className="ms-auto">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</div>)}
             </div>
         </Card>
     </Link>;
@@ -166,6 +164,15 @@ const CurrentWorkPanel = () => {
                         <>
                             <span>You have assignments that are active or due soon:</span>
                             {toDo.map((assignment: IAssignmentLike) => <AssignmentCard key={assignment.id} {...assignment} />)}
+                            <Spacer/>
+                            <div className="d-flex align-items-center">
+                                <Link to="/assignments" className="d-inline panel-link">
+                                    See all assignments
+                                </Link>
+                                <Link to="/tests" className="d-inline panel-link ms-auto ms-lg-5 ms-xl-auto">
+                                    See all tests
+                                </Link>
+                            </div>
                         </>}
                 </>;
             }
