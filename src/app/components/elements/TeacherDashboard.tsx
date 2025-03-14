@@ -1,12 +1,15 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
-import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQuery, useGetSingleSetAssignmentQuery } from '../../state';
-import { skipToken } from '@reduxjs/toolkit/query';
+import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQuery, useGetQuizAssignmentsSetByMeQuery } from '../../state';
 import { Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { BookInfo, ISAAC_BOOKS, isDefined, isLoggedIn, isTutorOrAbove, Subject, useDeviceSize } from '../../services';
-import { AssignmentDTO, RegisteredUserDTO } from '../../../IsaacApiTypes';
+import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, Subject, useDeviceSize } from '../../services';
+import { AssignmentDTO, IAssignmentLike, RegisteredUserDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
 import { GroupSelector } from '../pages/Groups';
 import { StyledDropdown } from './inputs/DropdownInput';
+import StyledToggle from './inputs/StyledToggle';
+import { AssignmentCard, StudentDashboard } from './StudentDashboard';
+import { orderBy } from 'lodash';
+import { Spacer } from './Spacer';
 
 const GroupsPanel = () => {
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
@@ -24,37 +27,8 @@ const GroupsPanel = () => {
             <h4>Manage my groups</h4>
         </Link>
         <GroupSelector allGroups={allGroups} groupNameInputRef={groupNameInputRef} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
-            setShowArchived={setShowArchived} groups={groups} user={user} selectedGroup={selectedGroup} showCreateGroup={false} useHashAnchor={true} />
+            setShowArchived={setShowArchived} groups={groups} user={user} selectedGroup={selectedGroup} isDashboard={true} useHashAnchor={true} />
     </div>;
-};
-
-interface AssignmentCardProps {
-    assignmentId?: number;
-    groupName?: string; // In props because useSingleSetAssignmentQuery doesn't return group name
-}
-
-const AssignmentCard = ({assignmentId, groupName}: AssignmentCardProps) => {
-    // Query single assignment for each card because useGetMySetAssignmentsQuery doesn't return gameboard info
-    const assignmentQuery = useGetSingleSetAssignmentQuery(assignmentId || skipToken);
-    const { data: assignment } = assignmentQuery;
-
-    if (isDefined(assignment)) {
-        const today = new Date();
-        const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
-        const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
-        return <Link to={`/assignment_progress/${assignmentId}`} className="plain-link mb-3">
-            <Card className="assignment-card px-3">
-                <div className="d-flex flex-row h-100">
-                    <i className="icon icon-question-pack" />
-                    <div className="flex-grow-1 ms-2 me-3">
-                        <h5>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h5>
-                        {isDefined(groupName) && groupName}
-                    </div>
-                    <span className="align-self-end">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>
-                </div>
-            </Card>
-        </Link>;
-    }
 };
 
 const AssignmentsPanel = () => {
@@ -74,11 +48,46 @@ const AssignmentsPanel = () => {
     const sortedAssignments = getSortedAssignments(assignmentsSetByMe);
     const upcomingAssignments = sortedAssignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
 
+    const quizzesSetByMeQuery = useGetQuizAssignmentsSetByMeQuery(undefined);
+    const { data: quizzesSetByMe } = quizzesSetByMeQuery;
+
+    const isOverdue = (assignment: IAssignmentLike) => {
+        return assignment.dueDate && assignment.dueDate < new Date();
+    };
+
+    // Prioritise non-overdue quizzes, then sort as on My Tests
+    const sortedQuizzes = orderBy(quizzesSetByMe, [
+        (q) => isOverdue(q),
+        (q) => q.dueDate,
+        (q) => q.scheduledStartDate ?? q.creationDate,
+        (q) => q.quiz?.title ?? ""
+    ], ["asc", "asc", "asc", "asc"]);
+
+    // Get the 3 most urgent due dates from assignments & quizzes combined
+    // To avoid merging & re-sorting entire lists, get the 3 most urgent from each list first
+    const soonestAssignments = upcomingAssignments?.slice(0, 3) ?? [];
+    const soonestQuizzes = sortedQuizzes.slice(0, 3);
+
+    const soonestDeadlines = orderBy([...soonestAssignments, ...soonestQuizzes], [
+        (a) => a.dueDate,
+        (a) => a.scheduledStartDate ?? a.creationDate
+    ], ["asc", "asc", "asc"]).slice(0, 3);
+
     return <div className="dashboard-panel">
         <Link to="/assignment_schedule"  className="plain-link">
             <h4>Assignment schedule</h4>
         </Link>
-        {upcomingAssignments && upcomingAssignments.slice(0, 4).map(({id, groupName}) => <AssignmentCard key={id} assignmentId={id} groupName={groupName} />)}
+        {soonestDeadlines.length ? soonestDeadlines.map(assignment => <AssignmentCard key={assignment.id} {...assignment}/>)
+            : <div className="mt-3">You have no upcoming assignments.</div>}
+        <Spacer/>
+        <div className="d-flex align-items-center">
+            <Link to="/assignment_schedule" className="d-inline panel-link">
+                See all assignments
+            </Link>
+            <Link to="/set_tests" className="d-inline panel-link ms-5">
+                See all tests
+            </Link>
+        </div>
     </div>;
 };
 
@@ -152,9 +161,24 @@ const BooksPanel = () => {
 export const TeacherDashboard = () => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
-    if (user && isLoggedIn(user) && isTutorOrAbove(user)) {
-        return <div className="dashboard w-100">
-            {deviceSize === "lg"
+    const nameToDisplay = extractTeacherName(user as UserSummaryDTO);
+    const [studentView, setStudentView] = useState(false);
+             
+    return <div className="dashboard dashboard-outer w-100">
+        <div className="d-flex">
+            {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
+            <span className="ms-auto">
+                <div className="text-center">Dashboard view</div>
+                <StyledToggle
+                    checked={studentView}
+                    falseLabel="Teacher"
+                    trueLabel="Student"
+                    onChange={() => setStudentView(studentView => !studentView)}             
+                />
+            </span>
+        </div>
+        {studentView ? <StudentDashboard/> :
+            <>{deviceSize === "lg"
                 ? <>
                     <Row className="row-cols-3">
                         <Col className="mt-4 col-4">
@@ -188,6 +212,7 @@ export const TeacherDashboard = () => {
                         </Col>
                     </Row>
                 </>}
-        </div>;
-    }
+            </>
+        }
+    </div>;
 };

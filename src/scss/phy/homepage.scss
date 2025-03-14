@@ -96,23 +96,18 @@
   }
 }
 
-.welcome-text {
-  font-family: $secondary-font-bold;
-  font-size: 24px;
-  background-color: white;
-  padding-left: 30px;
-  padding-top: 20px;
-}
-
-.dashboard-toggle {
-  background-color: white;
-  padding-left: 30px;
-  padding-top: 20px;
-}
-
 .dashboard {
   background-color: white;
-  padding: 10px 30px 50px;
+
+  &.dashboard-outer { // avoids double-padding for teachers viewing student dashboard
+    padding: 30px 30px 50px;
+  }
+
+  .welcome-text {
+    font-family: $secondary-font-bold;
+    font-size: 24px;
+    margin-top: 10px;
+  }
 }
 
 $dashboard-panel-size: 120px;
@@ -176,7 +171,6 @@ $dashboard-panel-padding: 30px;
     font-size: 14px;
     font-weight: 400;
     text-decoration: underline;
-    padding-bottom: 10px;
 
     &:hover {
       text-decoration: none;
