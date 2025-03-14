@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { closeActiveModal, getMyProgress, openActiveModal, selectors, showErrorToast, store, useAppDispatch, useAppSelector, useGetMyAssignmentsQuery, useLazyGetTokenOwnerQuery } from '../../state';
+import { closeActiveModal, getMyProgress, openActiveModal, selectors, showErrorToast, store, useAppDispatch, useAppSelector, useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { filterAssignmentsByStatus, isDefined, isLoggedIn, isTeacherOrAbove, PATHS, useDeviceSize } from '../../services';
 import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
-import { AssignmentDTO } from '../../../IsaacApiTypes';
+import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
 import { useAssignmentsCount } from '../navigation/NavigationBar';
 import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
 import { Spacer } from './Spacer';
 import classNames from 'classnames';
+import { orderBy } from 'lodash';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -91,18 +92,34 @@ const DashboardStreakPanel = () => {
     </div>;
 };
 
-const AssignmentCard = (assignment: AssignmentDTO) => {
+const AssignmentCard = (assignment: IAssignmentLike) => {
     const today = new Date();
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
     const isOverdue = dueDate && dueDate < today;
     const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
-    return <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`} className="mt-3">
+
+    function isQuiz(assignment: IAssignmentLike): assignment is QuizAssignmentDTO {
+        return (assignment as QuizAssignmentDTO).quizId !== undefined;
+    }
+
+    function isAssignment(assignment: IAssignmentLike): assignment is AssignmentDTO {
+        return (assignment as AssignmentDTO).gameboardId !== undefined;
+    }
+
+    const link = isQuiz(assignment) ? `/test/assignment/${assignment.id}`
+        : isAssignment(assignment) ? `${PATHS.GAMEBOARD}#${assignment.gameboardId}`
+            : "";
+
+    const title = isQuiz(assignment) ? assignment.quizSummary?.title
+        : isAssignment(assignment) ? assignment.gameboard?.title
+            : "";
+
+    return <Link to={link} className="mt-3">
         <Card className="assignment-card px-3">
             <div className="d-flex flex-row h-100">
                 <i className="icon icon-question-pack" />
                 <div className="flex-grow-1 ms-2">
-                    <h5>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h5>
-                    {isDefined(assignment.groupName) && assignment.groupName}
+                    <h5>{title}</h5>
                 </div>
                 {dueDate && (isOverdue ? <span className="align-self-end overdue">Overdue</span> : <span className="align-self-end">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
             </div>
@@ -112,6 +129,20 @@ const AssignmentCard = (assignment: AssignmentDTO) => {
 
 const CurrentWorkPanel = () => {
     const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
+    const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
+
+    const isOverdue = (assignment: IAssignmentLike) => {
+        return assignment.dueDate && assignment.dueDate < new Date();
+    };
+
+    // Prioritise non-overdue quizzes, then sort as on My Tests
+    const sortedQuizzes = orderBy(quizAssignments, [
+        (q) => isOverdue(q),
+        (q) => q.dueDate,
+        (q) => q.scheduledStartDate ?? q.creationDate,
+        (q) => q.quiz?.title ?? ""
+    ], ["asc", "asc", "asc", "asc"]);
+
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>
         <ShowLoadingQuery
@@ -119,13 +150,24 @@ const CurrentWorkPanel = () => {
             defaultErrorTitle={"Error fetching your assignments"}
             thenRender={(assignments) => {
                 const myAssignments = filterAssignmentsByStatus(assignments);
-                const toDo = [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld].slice(0, 2);
+
+                // Get the 2 most urgent due dates from assignments & quizzes combined
+                // To avoid merging & re-sorting entire lists, get the 2 most urgent from each list first
+                const assignmentsToDo = [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld].slice(0, 2);
+                const quizzesToDo = sortedQuizzes.slice(0, 2);
+
+                const toDo = orderBy([...assignmentsToDo, ...quizzesToDo], [
+                    (a) => isOverdue(a),
+                    (a) => a.dueDate,
+                    (a) => a.scheduledStartDate ?? a.creationDate
+                ], ["asc", "asc", "asc"]).slice(0, 2);
+
                 return <>
                     {toDo.length === 0 ?
                         <div className="mt-3">You have no active assignments.</div> :
                         <>
                             <span>You have assignments that are active or due soon:</span>
-                            {toDo.map((assignment: AssignmentDTO) => <AssignmentCard key={assignment.id} {...assignment} />)}
+                            {toDo.map((assignment: IAssignmentLike) => <AssignmentCard key={assignment.id} {...assignment} />)}
                         </>}
                 </>;
             }
