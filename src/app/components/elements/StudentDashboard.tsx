@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { closeActiveModal, getMyProgress, openActiveModal, selectors, showErrorToast, store, useAppDispatch, useAppSelector, useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery, useLazyGetTokenOwnerQuery } from '../../state';
+import React, { useEffect, useRef, useState } from 'react';
+import { getMyProgress, openActiveModal, selectors, showErrorToast, useAppDispatch, useAppSelector, useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
-import { Button, Card, Col, Input, InputGroup, Row } from 'reactstrap';
+import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { filterAssignmentsByStatus, isDefined, isLoggedIn, isTeacherOrAbove, PATHS, useDeviceSize } from '../../services';
 import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
@@ -68,14 +68,11 @@ const DashboardStreakPanel = () => {
         dispatch(getMyProgress());
     }, [dispatch]);
 
-    const streaksInfoModal = () => openActiveModal({
-        closeAction: () => store.dispatch(closeActiveModal()),
-        title: "Weekly streaks",
-        body: <div className="mb-4">
+    const streaksTooltip = useRef(null);
+    const tooltip = <UncontrolledTooltip placement="auto" autohide={false} target={streaksTooltip}>
             The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/><br/>
             Answer at least ten question parts correctly per week to fill up your weekly progress bar and increase your streak!
-        </div>
-    });
+    </UncontrolledTooltip>;
 
     const remainingToAnswer = 10 - (myProgress?.userSnapshot?.weeklyStreakRecord?.currentActivity || 0);
 
@@ -86,9 +83,10 @@ const DashboardStreakPanel = () => {
         </div>
         {remainingToAnswer === 0 ? <div className="streak-text">You&apos;ve maintained your streak for this week!</div> : <div className="streak-text">Only {remainingToAnswer} more question parts to answer correctly this week!</div>}
         <Spacer/>
-        <button onClick={() => dispatch(streaksInfoModal())} className="mt-2 p-0 panel-link">
-            What is this?<img src="/assets/common/icons/chevron_down.svg" className="ms-1" alt=""/> { /* TODO replace this icon since this isn't a dropdown */ }
-        </button>
+        <Button className="numeric-help d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
+            <i className="icon icon-info icon-color-grey"/> What is this?
+        </Button>
+        {tooltip}
     </div>;
 };
 
