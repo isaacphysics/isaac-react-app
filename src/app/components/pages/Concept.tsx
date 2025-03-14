@@ -102,8 +102,6 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                                 {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
                                 <NavigationLinks navigation={navigation} />
-
-                                {isPhy && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
                             </Col>
                         </Row>
                     </MainContent>
