@@ -112,9 +112,9 @@ export const AssignmentCard = (assignment: IAssignmentLike) => {
         : isAssignment(assignment) ? assignment.gameboard?.title
             : "";
 
-    return <Link to={link} className="mt-3">
+    return <Link to={link} className="mt-3 w-100">
         <Card className="assignment-card px-3">
-            <div className="h-100">
+            <div>
                 <i className="icon icon-question-pack me-2"/>
                 <h5 className="d-inline">{title}</h5>
                 {dueDate && (isOverdue ? <div className="ms-auto overdue">Overdue</div> : <div className="ms-auto">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</div>)}
@@ -163,7 +163,9 @@ const CurrentWorkPanel = () => {
                         <div className="mt-3">You have no active assignments.</div> :
                         <>
                             <span>You have assignments that are active or due soon:</span>
-                            {toDo.map((assignment: IAssignmentLike) => <AssignmentCard key={assignment.id} {...assignment} />)}
+                            <div className="row">
+                                {toDo.map((assignment: IAssignmentLike) => <span key={assignment.id} className="col-12 col-lg-6 col-xl-12"><AssignmentCard {...assignment}/></span>)}
+                            </div>
                             <Spacer/>
                             <div className="d-flex align-items-center">
                                 <Link to="/assignments" className="d-inline panel-link">
