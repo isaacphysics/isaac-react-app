@@ -7,8 +7,6 @@ import { API_PATH, isAda } from "../../app/services";
 import { UserRole } from "../../IsaacApiTypes";
 
 describe("SubjectLandingPage", () => {
-    jest.setTimeout(10000);
-
     if (isAda) {
         it('does not matter', () => {});
     } else {
