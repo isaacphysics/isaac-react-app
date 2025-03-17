@@ -160,3 +160,5 @@ export const interleave = <T>(...lists: T[][]): T[] => {
     }
     return result;
 };
+
+export const nextRandom = () => Math.random();

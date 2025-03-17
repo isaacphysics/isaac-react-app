@@ -10,9 +10,10 @@ import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
 import {MemoryRouter} from "react-router";
-import {screen, within} from "@testing-library/react";
+import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
+import * as miscUtils from '../app/services/miscUtils';
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -137,3 +138,26 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     const tabLink = await within(await screen.findByTestId("account-nav")).findByText(ACCOUNT_TABS.find(t => t.tab === tab)?.title ?? "");
     await userEvent.click(tabLink);
 };
+
+export const clickButton = (text: string) => screen.findAllByText(text).then(e => userEvent.click(e[0]));
+
+export const waitForLoaded = () => waitFor(() => {
+    expect(screen.queryAllByText("Loading...")).toHaveLength(0);
+});
+
+export const withMockedRandom = async (fn: (setRandom: (n: number) => void) => Promise<void>) => {
+    const nextRandom = {
+        value: -1,
+        get() { return this.value; },
+        set(n: number) { this.value = n; }
+    };
+
+    try {
+        jest.spyOn(miscUtils, 'nextRandom').mockImplementation(() => nextRandom.get());
+        await fn(nextRandom.set.bind(nextRandom));         
+    } finally {
+        jest.spyOn(miscUtils, 'nextRandom').mockRestore();
+    }
+};
+
+export const expectInDocument = async (text: string) => expect(await screen.findByText(text)).toBeInTheDocument();
