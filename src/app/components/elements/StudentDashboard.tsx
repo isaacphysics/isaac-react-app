@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { getMyProgress, openActiveModal, selectors, showErrorToast, useAppDispatch, useAppSelector, useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery, useLazyGetTokenOwnerQuery } from '../../state';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { getMyProgress, openActiveModal, selectors, showErrorToast, useAppDispatch, useAppSelector, useGetGroupsQuery, useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { filterAssignmentsByStatus, isDefined, isLoggedIn, isOverdue, isTeacherOrAbove, PATHS, sortUpcomingAssignments, useDeviceSize } from '../../services';
+import { filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTeacherOrAbove, PATHS, sortUpcomingAssignments, useDeviceSize } from '../../services';
 import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
-import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
+import { IAssignmentLike } from '../../../IsaacApiTypes';
 import { useAssignmentsCount } from '../navigation/NavigationBar';
 import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
 import { Spacer } from './Spacer';
@@ -94,13 +94,13 @@ export const AssignmentCard = (assignment: IAssignmentLike) => {
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
     const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
 
-    function isQuiz(assignment: IAssignmentLike): assignment is QuizAssignmentDTO {
-        return (assignment as QuizAssignmentDTO).quizId !== undefined;
-    }
+    // QuizAssignmentDTOs don't have group names
+    const { data: groups } = useGetGroupsQuery(false);
+    const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
 
-    function isAssignment(assignment: IAssignmentLike): assignment is AssignmentDTO {
-        return (assignment as AssignmentDTO).gameboardId !== undefined;
-    }
+    const groupName = isQuiz(assignment) ? groupIdToName[assignment.groupId as number]
+        : isAssignment(assignment) ? assignment.groupName
+            : "";
 
     const link = isQuiz(assignment) ? `/test/assignment/${assignment.id}`
         : isAssignment(assignment) ? `${PATHS.GAMEBOARD}#${assignment.gameboardId}`
@@ -115,7 +115,11 @@ export const AssignmentCard = (assignment: IAssignmentLike) => {
             <div>
                 <i className="icon icon-question-pack me-2"/>
                 <h5 className="d-inline">{title}</h5>
-                {dueDate && (isOverdue(assignment) ? <div className="ms-auto overdue">Overdue</div> : <div className="ms-auto">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</div>)}
+                <div className="d-flex text-nowrap">
+                    {dueDate && (isOverdue(assignment) ? <span className="overdue">Overdue</span> : <span className="me-3">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
+                    <span className="group-name">{groupName}</span>
+                </div>
+
             </div>
         </Card>
     </Link>;

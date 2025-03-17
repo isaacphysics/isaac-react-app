@@ -31,6 +31,7 @@ import {
 } from "./";
 import {
     ContentDTO,
+    IAssignmentLike,
     IsaacQuizSectionDTO,
     QuestionDTO,
     QuizAssignmentDTO,
@@ -356,4 +357,8 @@ export function convertAttemptToQuiz(attempt: QuizAttemptDTO): DisplayableQuiz |
         link: attempt.completedDate ? `/test/attempt/${attempt.id}/feedback` : `/test/attempt/${attempt.quizId}`,
         status: attempt.completedDate ? QuizStatus.Complete : QuizStatus.Started,
     };
+}
+
+export function isQuiz(assignment: IAssignmentLike): assignment is QuizAssignmentDTO {
+    return (assignment as QuizAssignmentDTO).quizId !== undefined;
 }

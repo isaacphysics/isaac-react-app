@@ -246,6 +246,13 @@ a:has(.assignment-card) {
     font-weight: 600;
   }
 
+  .group-name {
+    display: inline-block;
+    margin-inline-start: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   &:hover {
     scale: 1.02;
     border-color: $color-neutral-400;

@@ -110,6 +110,10 @@ export const sortUpcomingAssignments = (assignments: IAssignmentLike[]): IAssign
     ], ["asc", "asc", "asc"]);
 };
 
+export function isAssignment(assignment: IAssignmentLike): assignment is AssignmentDTO {
+    return (assignment as AssignmentDTO).gameboardId !== undefined;
+}
+
 export const getAssignmentStartDate = (a: AssignmentDTO): number => (a.scheduledStartDate ?? a.creationDate ?? 0).valueOf();
 
 export const hasAssignmentStarted = (a: AssignmentDTO): boolean => getAssignmentStartDate(a) <= Date.now();
