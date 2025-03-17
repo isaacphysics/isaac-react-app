@@ -1,33 +1,33 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQuery, useGetQuizAssignmentsSetByMeQuery } from '../../state';
-import { Card, Col, Row } from 'reactstrap';
+import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, Subject, useDeviceSize } from '../../services';
-import { AssignmentDTO, IAssignmentLike, RegisteredUserDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
-import { GroupSelector } from '../pages/Groups';
+import { AssignmentDTO, IAssignmentLike, UserSummaryDTO } from '../../../IsaacApiTypes';
 import { StyledDropdown } from './inputs/DropdownInput';
 import StyledToggle from './inputs/StyledToggle';
 import { AssignmentCard, StudentDashboard } from './StudentDashboard';
-import { orderBy } from 'lodash';
+import { orderBy, sortBy } from 'lodash';
 import { Spacer } from './Spacer';
 
 const GroupsPanel = () => {
-    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    const [showArchived, setShowArchived] = useState(false);
-    const groupQuery = useGetGroupsQuery(showArchived);
-    const { currentData: groups, isLoading, isFetching } = groupQuery;
-    const otherGroups = useGetGroupsQuery(!showArchived);
-    const allGroups = [...(groups ?? []) , ...(otherGroups.currentData ?? [])];
-    const [selectedGroupId, setSelectedGroupId] = useState<number>();
-    const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
-    const groupNameInputRef = useRef<HTMLInputElement>(null);
-    
-    return <div className="dashboard-panel scrollable-panel">
+    const groupsQuery = useGetGroupsQuery(false);
+    const { data: groups } = groupsQuery;
+    const sortedGroups = sortBy(groups, g => g.created).reverse();
+
+    return <div className="dashboard-panel">
         <Link to="/groups" className="plain-link">
             <h4>Manage my groups</h4>
         </Link>
-        <GroupSelector allGroups={allGroups} groupNameInputRef={groupNameInputRef} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
-            setShowArchived={setShowArchived} groups={groups} user={user} selectedGroup={selectedGroup} isDashboard={true} useHashAnchor={true} />
+        {sortedGroups.length ?
+            <>
+                <div className="overflow-hidden">
+                    {sortedGroups.map(group => <Link key={group.id} to={`/groups#${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
+                </div>
+                <Spacer/>
+                <Link to="/groups" className="d-inline panel-link mt-3">See all groups</Link>
+            </>
+            : <div className="text-center mt-lg-5">You have no active groups.<Button tag={Link} to="/groups" className="mt-3 d-block">Create new group</Button></div>}
     </div>;
 };
 
@@ -78,13 +78,13 @@ const AssignmentsPanel = () => {
             <h4>Assignment schedule</h4>
         </Link>
         {soonestDeadlines.length ? soonestDeadlines.map(assignment => <AssignmentCard key={assignment.id} {...assignment}/>)
-            : <div className="mt-3">You have no upcoming assignments.</div>}
+            : <div className="text-center mt-lg-5">You have no upcoming assignments.</div>}
         <Spacer/>
         <div className="d-flex align-items-center">
-            <Link to="/assignment_schedule" className="d-inline panel-link">
+            <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
                 See all assignments
             </Link>
-            <Link to="/set_tests" className="d-inline panel-link ms-5">
+            <Link to="/set_tests" className="d-inline text-center panel-link ms-auto">
                 See all tests
             </Link>
         </div>

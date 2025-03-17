@@ -112,7 +112,7 @@ export const AssignmentCard = (assignment: IAssignmentLike) => {
         : isAssignment(assignment) ? assignment.gameboard?.title
             : "";
 
-    return <Link to={link} className="mt-3 w-100">
+    return <Link to={link} className="mb-3 w-100">
         <Card className="assignment-card px-3">
             <div>
                 <i className="icon icon-question-pack me-2"/>
