@@ -57,7 +57,7 @@ const AssignmentsPanel = () => {
                 const soonestAssignments = sortedAssignments?.slice(0, 3) ?? [];
                 const soonestQuizzes = sortedQuizAssignments.slice(0, 3);
                 const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
-                
+
                 return <>
                     {soonestDeadlines.length ? soonestDeadlines.map(assignment => <AssignmentCard key={assignment.id} {...assignment}/>)
                         : <div className="text-center mt-lg-5">You have no upcoming assignments.</div>}
@@ -109,9 +109,11 @@ const MyIsaacPanel = () => {
 };
 
 const BookCard = ({title, image, path}: BookInfo) => {
-    return <Card className="p-2 h-100">  
-        <Link to={path} className="book">
-            <img src={image} alt={title} className="w-100"/>
+    return <Card className="p-2 h-100 border-0 bg-transparent">  
+        <Link to={path} className="d-flex flex-column align-items-center dashboard-book book-container">
+            <div className="book-image-container">
+                <img src={image} alt={title}/>
+            </div>
             <div className="mt-2">{title}</div>
         </Link>
     </Card>;
@@ -119,7 +121,7 @@ const BookCard = ({title, image, path}: BookInfo) => {
 
 const BooksPanel = () => {
     const [subject, setSubject] = useState<Subject | "all">("all");
-    return <div className="w-100 dashboard-panel">
+    return <div className="w-100 dashboard-panel book-panel">
         <Link to="/publications" className="plain-link">
             <h4>Books</h4>
         </Link>
@@ -133,7 +135,7 @@ const BooksPanel = () => {
                 {/* No biology books */}
             </StyledDropdown>
         </div>
-        <Row className="row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-3 flex-nowrap book-panel">
+        <Row className="mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap">
             {ISAAC_BOOKS.filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2 me-1 p-0">

@@ -209,12 +209,16 @@ $dashboard-panel-padding: 30px;
 
 .book-panel {
   overflow-x: auto;
-  overflow-y: hidden;
 
-  .book {
-    font-family: $secondary-font-medium;
-    font-size: 14px;
+  .dashboard-book {
+    font-size: 13px;
     text-decoration: none;
+    text-align: center;
+    max-width: 105px;
+
+    img {
+      max-width: 85px;
+    }
   }
 }
 
