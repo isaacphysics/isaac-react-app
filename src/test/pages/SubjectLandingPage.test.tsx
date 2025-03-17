@@ -3,11 +3,12 @@ import { renderTestEnvironment} from "../testUtils";
 import { mockQuestionFinderResults } from "../../mocks/data";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { API_PATH } from "../../app/services";
+import { API_PATH, isPhy } from "../../app/services";
 import { UserRole } from "../../IsaacApiTypes";
 
 jest.setTimeout(10000);
-describe("SubjectLandingPage", () => {
+
+isPhy && describe("SubjectLandingPage", () => {
     const renderSubjectLandingPage = async (role: UserRole | "ANONYMOUS" ) => {
         const result = { requestCount: 0 };
         renderTestEnvironment({
