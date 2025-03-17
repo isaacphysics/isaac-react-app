@@ -25,18 +25,19 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
 
-    const subjects = context?.subject;
-    const stages = context?.stage?.map(s => s === "11_14" ? "year_7_and_8,year_9" : s).join(',');
-
     const searchDebounce = useCallback(debounce(() => {
+        if (!isFullyDefinedContext(context)) {
+            return;
+        }
+
         dispatch(searchQuestions({
             searchString: "",
             tags: "",
             fields: undefined,
-            subjects,
+            subjects: context?.subject,
             topics: undefined,
             books: undefined,
-            stages,
+            stages: context?.stage?.map(s => s === "11_14" ? "year_7_and_8,year_9" : s).join(','),
             difficulties: undefined,
             examBoards: undefined,
             questionCategories: "problem_solving,book",
@@ -45,7 +46,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
             startIndex: undefined,
             limit: 1
         }));
-    }), [dispatch, subjects, stages]);
+    }), [dispatch, context]);
 
     const {results: questions} = useAppSelector((state) => state && state.questionSearchResult) || {};
 
