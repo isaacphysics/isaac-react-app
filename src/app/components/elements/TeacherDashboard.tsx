@@ -32,29 +32,19 @@ const GroupsPanel = () => {
 };
 
 const AssignmentsPanel = () => {
-    const getSortedAssignments = (assignments: AssignmentDTO[] | undefined) => {
-        if (isDefined(assignments)) {
-            return assignments.toSorted((a, b) => {
-                if (a.dueDate && b.dueDate) {
-                    return a.dueDate > b.dueDate ? 1 : -1;
-                }
-                return 0;
-            });
-        }
-    };
-
     const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
-    const sortedAssignments = getSortedAssignments(assignmentsSetByMe);
-    const upcomingAssignments = sortedAssignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
+    const upcomingAssignments = assignmentsSetByMe?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
+    const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
 
     const quizzesSetByMeQuery = useGetQuizAssignmentsSetByMeQuery(undefined);
     const { data: quizzesSetByMe } = quizzesSetByMeQuery;
-    const sortedQuizAssignments = quizzesSetByMe ? sortUpcomingAssignments(quizzesSetByMe) : [];
+    const upcomingQuizAssignments = quizzesSetByMe?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past quizzes
+    const sortedQuizAssignments = upcomingQuizAssignments ? sortUpcomingAssignments(upcomingQuizAssignments) : [];
 
     // Get the 3 most urgent due dates from assignments & quizzes combined
     // To avoid merging & re-sorting entire lists, get the 3 most urgent from each list first
-    const soonestAssignments = upcomingAssignments?.slice(0, 3) ?? [];
+    const soonestAssignments = sortedAssignments?.slice(0, 3) ?? [];
     const soonestQuizzes = sortedQuizAssignments.slice(0, 3);
     const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
