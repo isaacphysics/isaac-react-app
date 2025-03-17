@@ -2,8 +2,8 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
@@ -21,6 +21,7 @@ import { formatISODateOnly } from "../DateString";
 import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
+import { StyledSelect } from "../inputs/StyledSelect";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -1057,5 +1058,76 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                 </StyledDropdown>
             </>;
         }}/>
+    </ContentSidebar>;
+};
+
+
+interface GlossarySidebarProps extends SidebarProps {
+    searchText: string;
+    setSearchText: React.Dispatch<React.SetStateAction<string>>;
+    filterSubject: Tag | undefined;
+    setFilterSubject: React.Dispatch<React.SetStateAction<Tag | undefined>>;
+    filterStage: Stage | undefined;
+    setFilterStage: React.Dispatch<React.SetStateAction<Stage | undefined>>;
+    subjects: Tag[];
+    stages: Stage[];
+}
+
+export const GlossarySidebar = (props: GlossarySidebarProps) => {
+    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStage, setFilterStage, subjects, stages, ...rest } = props;
+    
+    const history = useHistory();
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
+    return <ContentSidebar buttonTitle="Search glossary" {...rest}>
+        <div className="section-divider"/>
+        <h5>Search glossary</h5>
+        <Input
+            className='search--filter-input my-4'
+            type="search" value={searchText || ""}
+            placeholder="e.g. Forces"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+        />
+        <div className="section-divider"/>
+
+        {!pageContext?.subject && <>
+            <h5>Select subject</h5>
+            <Label for='subject-select' className='visually-hidden'>Subject</Label>
+            <StyledSelect inputId="subject-select"
+                options={subjects.map(s => ({ value: s.id, label: s.title}))}
+                value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title}) : undefined}
+                name="subject-select"
+                placeholder="Select a subject"
+                onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
+                isClearable
+            />
+        </>}
+
+        {!pageContext?.stage?.length && <>
+            <h5 className="mt-4">Select stage</h5>
+            <Label for='stage-select' className='visually-hidden'>Stage</Label>
+            <StyledSelect inputId="stage-select"
+                options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
+                value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
+                name="stage-select"
+                placeholder="Select a stage"
+                onChange={e => setFilterStage(stages.find(s => s === e?.value))}
+                isClearable
+            />
+        </>}
+
+        {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
+            <h5>Switch learning stage</h5>
+            <ul>
+                {PHY_NAV_SUBJECTS[pageContext.subject].map((stage, index) => 
+                    <li key={index}>
+                        <StyledTabPicker
+                            checkboxTitle={HUMAN_STAGES[stage]} checked={pageContext.stage[0] === stage} 
+                            onClick={() => history.replace(`/${pageContext.subject}/${stage}/glossary`)}
+                        />
+                    </li>
+                )}
+            </ul>
+        </>}
     </ContentSidebar>;
 };
