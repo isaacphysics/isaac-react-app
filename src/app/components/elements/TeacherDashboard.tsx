@@ -2,12 +2,12 @@ import React, { ChangeEvent, useState } from 'react';
 import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQuery, useGetQuizAssignmentsSetByMeQuery } from '../../state';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, Subject, useDeviceSize } from '../../services';
-import { AssignmentDTO, IAssignmentLike, UserSummaryDTO } from '../../../IsaacApiTypes';
+import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
+import { AssignmentDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
 import { StyledDropdown } from './inputs/DropdownInput';
 import StyledToggle from './inputs/StyledToggle';
 import { AssignmentCard, StudentDashboard } from './StudentDashboard';
-import { orderBy, sortBy } from 'lodash';
+import { sortBy } from 'lodash';
 import { Spacer } from './Spacer';
 
 const GroupsPanel = () => {
@@ -50,28 +50,13 @@ const AssignmentsPanel = () => {
 
     const quizzesSetByMeQuery = useGetQuizAssignmentsSetByMeQuery(undefined);
     const { data: quizzesSetByMe } = quizzesSetByMeQuery;
-
-    const isOverdue = (assignment: IAssignmentLike) => {
-        return assignment.dueDate && assignment.dueDate < new Date();
-    };
-
-    // Prioritise non-overdue quizzes, then sort as on My Tests
-    const sortedQuizzes = orderBy(quizzesSetByMe, [
-        (q) => isOverdue(q),
-        (q) => q.dueDate,
-        (q) => q.scheduledStartDate ?? q.creationDate,
-        (q) => q.quiz?.title ?? ""
-    ], ["asc", "asc", "asc", "asc"]);
+    const sortedQuizAssignments = quizzesSetByMe ? sortUpcomingAssignments(quizzesSetByMe) : [];
 
     // Get the 3 most urgent due dates from assignments & quizzes combined
     // To avoid merging & re-sorting entire lists, get the 3 most urgent from each list first
     const soonestAssignments = upcomingAssignments?.slice(0, 3) ?? [];
-    const soonestQuizzes = sortedQuizzes.slice(0, 3);
-
-    const soonestDeadlines = orderBy([...soonestAssignments, ...soonestQuizzes], [
-        (a) => a.dueDate,
-        (a) => a.scheduledStartDate ?? a.creationDate
-    ], ["asc", "asc", "asc"]).slice(0, 3);
+    const soonestQuizzes = sortedQuizAssignments.slice(0, 3);
+    const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
     return <div className="dashboard-panel">
         <Link to="/assignment_schedule"  className="plain-link">

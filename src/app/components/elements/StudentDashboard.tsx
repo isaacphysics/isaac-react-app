@@ -3,7 +3,7 @@ import { getMyProgress, openActiveModal, selectors, showErrorToast, useAppDispat
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { filterAssignmentsByStatus, isDefined, isLoggedIn, isTeacherOrAbove, PATHS, useDeviceSize } from '../../services';
+import { filterAssignmentsByStatus, isDefined, isLoggedIn, isOverdue, isTeacherOrAbove, PATHS, sortUpcomingAssignments, useDeviceSize } from '../../services';
 import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
 import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
 import { useAssignmentsCount } from '../navigation/NavigationBar';
@@ -93,7 +93,6 @@ const DashboardStreakPanel = () => {
 export const AssignmentCard = (assignment: IAssignmentLike) => {
     const today = new Date();
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
-    const isOverdue = dueDate && dueDate < today;
     const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
 
     function isQuiz(assignment: IAssignmentLike): assignment is QuizAssignmentDTO {
@@ -117,7 +116,7 @@ export const AssignmentCard = (assignment: IAssignmentLike) => {
             <div>
                 <i className="icon icon-question-pack me-2"/>
                 <h5 className="d-inline">{title}</h5>
-                {dueDate && (isOverdue ? <div className="ms-auto overdue">Overdue</div> : <div className="ms-auto">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</div>)}
+                {dueDate && (isOverdue(assignment) ? <div className="ms-auto overdue">Overdue</div> : <div className="ms-auto">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</div>)}
             </div>
         </Card>
     </Link>;
@@ -126,18 +125,7 @@ export const AssignmentCard = (assignment: IAssignmentLike) => {
 const CurrentWorkPanel = () => {
     const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
-
-    const isOverdue = (assignment: IAssignmentLike) => {
-        return assignment.dueDate && assignment.dueDate < new Date();
-    };
-
-    // Prioritise non-overdue quizzes, then sort as on My Tests
-    const sortedQuizzes = orderBy(quizAssignments, [
-        (q) => isOverdue(q),
-        (q) => q.dueDate,
-        (q) => q.scheduledStartDate ?? q.creationDate,
-        (q) => q.quiz?.title ?? ""
-    ], ["asc", "asc", "asc", "asc"]);
+    const sortedQuizAssignments = quizAssignments ? sortUpcomingAssignments(quizAssignments) : [];
 
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>
@@ -150,19 +138,14 @@ const CurrentWorkPanel = () => {
                 // Get the 2 most urgent due dates from assignments & quizzes combined
                 // To avoid merging & re-sorting entire lists, get the 2 most urgent from each list first
                 const assignmentsToDo = [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld].slice(0, 2);
-                const quizzesToDo = sortedQuizzes.slice(0, 2);
-
-                const toDo = orderBy([...assignmentsToDo, ...quizzesToDo], [
-                    (a) => isOverdue(a),
-                    (a) => a.dueDate,
-                    (a) => a.scheduledStartDate ?? a.creationDate
-                ], ["asc", "asc", "asc"]).slice(0, 2);
+                const quizzesToDo = sortedQuizAssignments.slice(0, 2);
+                const toDo = sortUpcomingAssignments([...assignmentsToDo, ...quizzesToDo]).slice(0, 2);
 
                 return <>
                     {toDo.length === 0 ?
                         <div className="mt-3">You have no active assignments.</div> :
                         <>
-                            <span>You have assignments that are active or due soon:</span>
+                            <span className="mb-2">You have assignments that are active or due soon:</span>
                             <div className="row">
                                 {toDo.map((assignment: IAssignmentLike) => <span key={assignment.id} className="col-12 col-lg-6 col-xl-12"><AssignmentCard {...assignment}/></span>)}
                             </div>

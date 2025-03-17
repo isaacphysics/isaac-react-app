@@ -1,4 +1,4 @@
-import {AssignmentDTO} from "../../IsaacApiTypes";
+import {AssignmentDTO, IAssignmentLike} from "../../IsaacApiTypes";
 import orderBy from "lodash/orderBy";
 import {EnhancedAssignment} from "../../IsaacAppTypes";
 import {API_PATH, extractTeacherName, matchesAllWordsInAnyOrder} from "./";
@@ -101,6 +101,17 @@ export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | unde
     return distinctFormattedAssignmentSetters;
 };
 
+export const sortUpcomingAssignments = (assignments: IAssignmentLike[]): IAssignmentLike[] => {
+    // Prioritise non-overdue assignments, then sort by due date (soonest first), then start date
+    return orderBy(assignments, [
+        (a) => isOverdue(a),
+        (a) => a.dueDate,
+        (a) => a.scheduledStartDate ?? a.creationDate
+    ], ["asc", "asc", "asc"]);
+};
+
 export const getAssignmentStartDate = (a: AssignmentDTO): number => (a.scheduledStartDate ?? a.creationDate ?? 0).valueOf();
 
 export const hasAssignmentStarted = (a: AssignmentDTO): boolean => getAssignmentStartDate(a) <= Date.now();
+
+export const isOverdue = (a: IAssignmentLike) =>  a.dueDate && a.dueDate < new Date();
