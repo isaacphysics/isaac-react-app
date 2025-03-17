@@ -17,9 +17,7 @@ const GroupsPanel = () => {
     const sortedGroups = sortBy(groups, g => g.created).reverse();
 
     return <div className="dashboard-panel">
-        <Link to="/groups" className="plain-link">
-            <h4>Manage my groups</h4>
-        </Link>
+        <h4>Manage my groups</h4>
         {sortedGroups.length ?
             <>
                 <div className="overflow-hidden">
@@ -28,7 +26,7 @@ const GroupsPanel = () => {
                 <Spacer/>
                 <Link to="/groups" className="d-inline panel-link mt-3">See all groups</Link>
             </>
-            : <div className="text-center mt-lg-5">You have no active groups.<Button tag={Link} to="/groups" className="mt-3 d-block">Create new group</Button></div>}
+            : <div className="text-center mt-lg-3">You have no active groups.<Button tag={Link} to="/groups" size="sm" className="mt-3">Create new group</Button></div>}
     </div>;
 };
 
@@ -41,9 +39,7 @@ const AssignmentsPanel = () => {
     const sortedQuizAssignments = upcomingQuizAssignments ? sortUpcomingAssignments(upcomingQuizAssignments) : [];
 
     return <div className="dashboard-panel">
-        <Link to="/assignment_schedule"  className="plain-link">
-            <h4>Assignment schedule</h4>
-        </Link>
+        <h4>Assignment schedule</h4>
 
         <ShowLoadingQuery
             query={assignmentsSetByMeQuery}
@@ -60,7 +56,7 @@ const AssignmentsPanel = () => {
 
                 return <>
                     {soonestDeadlines.length ? soonestDeadlines.map(assignment => <AssignmentCard key={assignment.id} {...assignment}/>)
-                        : <div className="text-center mt-lg-5">You have no upcoming assignments.</div>}
+                        : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>}
                     <Spacer/>
                     <div className="d-flex align-items-center">
                         <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
@@ -122,9 +118,7 @@ const BookCard = ({title, image, path}: BookInfo) => {
 const BooksPanel = () => {
     const [subject, setSubject] = useState<Subject | "all">("all");
     return <div className="w-100 dashboard-panel book-panel">
-        <Link to="/publications" className="plain-link">
-            <h4>Books</h4>
-        </Link>
+        <h4>Books</h4>
         <div className="mb-3 w-50">
             <StyledDropdown value={subject}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSubject(e.target.value as Subject)}>
@@ -142,6 +136,8 @@ const BooksPanel = () => {
                         <BookCard {...book}/>
                     </Col>)}
         </Row>
+        <Spacer/>
+        <Link to="/publications" className="d-inline panel-link">See all books</Link>
     </div>;
 };
 

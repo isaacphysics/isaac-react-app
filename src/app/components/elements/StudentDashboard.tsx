@@ -146,7 +146,7 @@ const CurrentWorkPanel = () => {
 
                 return <>
                     {toDo.length === 0 ?
-                        <div className="mt-3">You have no active assignments.</div> :
+                        <div className="mt-3 mt-lg-0 mt-xl-3 text-center">You have no active assignments.</div> :
                         <>
                             <span className="mb-2">You have assignments that are active or due soon:</span>
                             <div className="row">
