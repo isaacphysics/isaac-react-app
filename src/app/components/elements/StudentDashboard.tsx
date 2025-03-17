@@ -10,7 +10,6 @@ import { useAssignmentsCount } from '../navigation/NavigationBar';
 import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
 import { Spacer } from './Spacer';
 import classNames from 'classnames';
-import { orderBy } from 'lodash';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);

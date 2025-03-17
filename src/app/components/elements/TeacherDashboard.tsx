@@ -2,13 +2,14 @@ import React, { ChangeEvent, useState } from 'react';
 import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQuery, useGetQuizAssignmentsSetByMeQuery } from '../../state';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
-import { AssignmentDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
+import { BookInfo, extractTeacherName, ISAAC_BOOKS, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
+import { UserSummaryDTO } from '../../../IsaacApiTypes';
 import { StyledDropdown } from './inputs/DropdownInput';
 import StyledToggle from './inputs/StyledToggle';
 import { AssignmentCard, StudentDashboard } from './StudentDashboard';
 import { sortBy } from 'lodash';
 import { Spacer } from './Spacer';
+import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
 
 const GroupsPanel = () => {
     const groupsQuery = useGetGroupsQuery(false);
@@ -33,36 +34,45 @@ const GroupsPanel = () => {
 
 const AssignmentsPanel = () => {
     const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
-    const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
-    const upcomingAssignments = assignmentsSetByMe?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
-    const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
 
     const quizzesSetByMeQuery = useGetQuizAssignmentsSetByMeQuery(undefined);
     const { data: quizzesSetByMe } = quizzesSetByMeQuery;
     const upcomingQuizAssignments = quizzesSetByMe?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past quizzes
     const sortedQuizAssignments = upcomingQuizAssignments ? sortUpcomingAssignments(upcomingQuizAssignments) : [];
 
-    // Get the 3 most urgent due dates from assignments & quizzes combined
-    // To avoid merging & re-sorting entire lists, get the 3 most urgent from each list first
-    const soonestAssignments = sortedAssignments?.slice(0, 3) ?? [];
-    const soonestQuizzes = sortedQuizAssignments.slice(0, 3);
-    const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
-
     return <div className="dashboard-panel">
         <Link to="/assignment_schedule"  className="plain-link">
             <h4>Assignment schedule</h4>
         </Link>
-        {soonestDeadlines.length ? soonestDeadlines.map(assignment => <AssignmentCard key={assignment.id} {...assignment}/>)
-            : <div className="text-center mt-lg-5">You have no upcoming assignments.</div>}
-        <Spacer/>
-        <div className="d-flex align-items-center">
-            <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
-                See all assignments
-            </Link>
-            <Link to="/set_tests" className="d-inline text-center panel-link ms-auto">
-                See all tests
-            </Link>
-        </div>
+
+        <ShowLoadingQuery
+            query={assignmentsSetByMeQuery}
+            defaultErrorTitle={"Error fetching your assignments"}
+            thenRender={(assignmentsSetByMe) => {
+                const upcomingAssignments = assignmentsSetByMe?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
+                const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
+
+                // Get the 3 most urgent due dates from assignments & quizzes combined
+                // To avoid merging & re-sorting entire lists, get the 3 most urgent from each list first
+                const soonestAssignments = sortedAssignments?.slice(0, 3) ?? [];
+                const soonestQuizzes = sortedQuizAssignments.slice(0, 3);
+                const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
+                
+                return <>
+                    {soonestDeadlines.length ? soonestDeadlines.map(assignment => <AssignmentCard key={assignment.id} {...assignment}/>)
+                        : <div className="text-center mt-lg-5">You have no upcoming assignments.</div>}
+                    <Spacer/>
+                    <div className="d-flex align-items-center">
+                        <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
+                            See all assignments
+                        </Link>
+                        <Link to="/set_tests" className="d-inline text-center panel-link ms-auto">
+                            See all tests
+                        </Link>
+                    </div>
+                </>;
+            }
+            }/>
     </div>;
 };
 
