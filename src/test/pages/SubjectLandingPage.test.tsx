@@ -3,27 +3,30 @@ import { renderTestEnvironment} from "../testUtils";
 import { mockQuestionFinderResults } from "../../mocks/data";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { API_PATH, isPhy } from "../../app/services";
+import { API_PATH, isAda } from "../../app/services";
 import { UserRole } from "../../IsaacApiTypes";
 
-jest.setTimeout(10000);
+describe("SubjectLandingPage", () => {
+    if (isAda) {
+        return;
+    }
+    jest.setTimeout(10000);
 
-isPhy && describe("SubjectLandingPage", () => {
     const renderSubjectLandingPage = async (role: UserRole | "ANONYMOUS" ) => {
         const result = { requestCount: 0 };
         renderTestEnvironment({
-                role,
-                extraEndpoints: [
-                    http.get(API_PATH + "/pages/questions/", async () => {
-                        result.requestCount++;
-                        return HttpResponse.json(mockQuestionFinderResults, {
-                            status: 200,
-                        });
-                    })
-                ]
-            });
+            role,
+            extraEndpoints: [
+                http.get(API_PATH + "/pages/questions/", async () => {
+                    result.requestCount++;
+                    return HttpResponse.json(mockQuestionFinderResults, {
+                        status: 200,
+                    });
+                })
+            ]
+        });
     
-        const links = await screen.findAllByText("GCSE Maths")
+        const links = await screen.findAllByText("GCSE Maths");
         await userEvent.click(links[0]);
         return result;
     };

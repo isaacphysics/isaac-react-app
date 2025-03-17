@@ -26,7 +26,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const dispatch = useAppDispatch();
 
     const subjects = context?.subject;
-    const stages = context?.stage?.map(s => s === "11_14" ? "year_7_and_8,year_9" : s).join(',')
+    const stages = context?.stage?.map(s => s === "11_14" ? "year_7_and_8,year_9" : s).join(',');
 
     const searchDebounce = useCallback(debounce(() => {
         dispatch(searchQuestions({
