@@ -26,6 +26,10 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const dispatch = useAppDispatch();
 
     const searchDebounce = useCallback(debounce(() => {
+        if (!isFullyDefinedContext(context)) {
+            return;
+        }
+
         dispatch(searchQuestions({
             searchString: "",
             tags: "",
@@ -109,7 +113,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
     useEffect(() => {
-        getEventsList({startIndex: 0, limit: 10, typeFilter: EventTypeFilter["All events"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
+        getEventsList({startIndex: 0, limit: 10, typeFilter: EventTypeFilter["All groups"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
     }, []);
 
     const books = getBooksForContext(context);

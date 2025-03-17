@@ -1,11 +1,11 @@
 import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
-import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, siteSpecific, TAG_ID, tags, useDeviceSize } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
-import { selectors, useAppSelector } from "../../../state";
+import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
 import { AppGroup, AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
@@ -18,6 +18,9 @@ import { GroupSelector } from "../../pages/Groups";
 import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { formatISODateOnly } from "../DateString";
+import queryString from "query-string";
+import { EventsPageQueryParams } from "../../pages/Events";
+import { StyledDropdown } from "../inputs/DropdownInput";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -758,7 +761,7 @@ export const SignupSidebar = ({activeTab} : {activeTab: number}) => {
     return <ContentSidebar buttonTitle="Create an account">
         <div className="section-divider mt-4"/>
         <h5 className="mt-1">Create an account</h5>
-        {/* Tabs are clickable iff their page could be reached with a Back buttons */}
+        {/* Tabs are clickable iff their page could be reached with a Back button */}
         <StyledTabPicker checkboxTitle={"Sign-up method"} checked={activeTab === 0} disabled={activeTab > 2} onClick={() => (activeTab === 1 || activeTab === 2) && goBack("/register")}/>
         <StyledTabPicker checkboxTitle={"Age verification"} checked={activeTab === 1} disabled={activeTab < 1 || activeTab > 2} onClick={() => activeTab === 2 && goBack("age")}/>
         <StyledTabPicker checkboxTitle={"Account details"} checked={activeTab === 2} disabled={activeTab !== 2}/>
@@ -873,5 +876,186 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
         {groupFilterInput}
         {setDateFilterInput}
         {dueDateFilterInput}
+    </ContentSidebar>;
+};
+
+export const EventsSidebar = (props: SidebarProps) => {
+    const history = useHistory();
+    const query: EventsPageQueryParams = queryString.parse(history.location.search);
+    const user = useAppSelector(selectors.user.orNull);
+
+    return <ContentSidebar style={{marginTop: "65px"}} buttonTitle="Filter events" {...props}>
+        <Form>
+            <h5 className="mb-3">Event type</h5>
+            <ul>               
+                {Object.entries(EventStatusFilter)
+                    .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
+                    .filter(([_statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])
+                    .map(([statusLabel, statusValue]) =>
+                        <li className="list-unstyled" key={statusValue}>
+                            <Label className="py-1 label-radio d-flex">
+                                <Input                                   
+                                    id={statusValue}
+                                    name="event-status"
+                                    color="primary"
+                                    type="radio"
+                                    defaultChecked={
+                                        (!isDefined(query.event_status) && statusValue === EventStatusFilter["Upcoming events"]) ||
+                                        (query.show_booked_only && statusValue === EventStatusFilter["My booked events"]) ||
+                                        (query.show_reservations_only && statusValue === EventStatusFilter["My event reservations"]) ||
+                                        (query.event_status === "all" && statusValue === EventStatusFilter["All events"])
+                                    }
+                                    onChange={() => {
+                                        const selectedFilter = statusValue;
+                                        query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
+                                        query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
+                                        query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
+                                        history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                                    }}
+                                />
+                                <div className="flex-fill overflow-x-auto">
+                                    <span>{statusLabel}</span>
+                                </div>
+                            </Label>
+                        </li>
+                    )
+                }
+            </ul>
+
+            <div className="section-divider"/>
+            <h5 className="mb-3">Groups</h5>
+            <ul>
+                {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
+                    <li className="list-unstyled" key={typeValue}>
+                        <Label className="py-1 label-radio d-flex">
+                            <Input                                   
+                                id={typeValue}
+                                name="event-type"
+                                color="primary"
+                                type="radio"
+                                defaultChecked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All groups"]}
+                                onChange={() => {
+                                    const selectedType = typeValue;
+                                    query.types = selectedType !== EventTypeFilter["All groups"] ? selectedType : undefined;
+                                    history.push({pathname: location.pathname, search: queryString.stringify(query as any)});}}
+                            />
+                            <div className="flex-fill overflow-x-auto">
+                                <span>{typeLabel}</span>
+                            </div>
+                        </Label>
+                    </li>
+                )
+                }
+            </ul>
+
+            <div className="section-divider"/>
+            <h5 className="mb-3">Stages</h5>
+            <ul>               
+                {Object.entries(EventStageMap).map(([label, value]) =>
+                    <li className="list-unstyled" key={value}>
+                        <Label className="py-1 label-radio d-flex">
+                            <Input                                   
+                                id={value}
+                                name="event-stage"
+                                color="primary"
+                                type="radio"
+                                defaultChecked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
+                                onChange={() => {
+                                    query.show_stage_only = value !== STAGE.ALL ? value : undefined;
+                                    history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                                }}
+                            />
+                            <div className="flex-fill overflow-x-auto">
+                                <span>{label}</span>
+                            </div>
+                        </Label>
+                    </li>
+                )
+                }
+            </ul>
+        </Form>
+    </ContentSidebar>;
+};
+
+interface QuizStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
+    status: QuizStatus;
+    statusFilter: QuizStatus[];
+    setStatusFilter: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
+    count?: number;
+}
+
+const QuizStatusCheckbox = (props: QuizStatusCheckboxProps) => {
+    const {status, statusFilter, setStatusFilter, count, ...rest} = props;
+    return <StyledTabPicker 
+        id={status ?? ""} checkboxTitle={status}
+        onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== QuizStatus.All), status]) : setStatusFilter(c => c.filter(s => s !== status))}
+        checked={statusFilter.includes(status)}
+        count={count} {...rest}
+    />;
+};
+
+const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status">) => {
+    const { statusFilter, setStatusFilter, count, ...rest } = props;
+    const [previousFilters, setPreviousFilters] = useState<QuizStatus[]>([]);
+    return <StyledTabPicker 
+        id="all" checkboxTitle="All"
+        onInputChange={(e) => {
+            if (e.target.checked) {
+                setPreviousFilters(statusFilter);
+                setStatusFilter([QuizStatus.All]);
+            } else {
+                setStatusFilter(previousFilters);
+            }
+        }}
+        checked={statusFilter.includes(QuizStatus.All)}
+        count={count} {...rest}
+    />;
+};
+
+
+interface MyQuizzesSidebarProps extends SidebarProps {
+    setQuizTitleFilter: (title: string) => void;
+    setQuizCreatorFilter: (creator: string) => void;
+    quizStatusFilter: QuizStatus[];
+    setQuizStatusFilter: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
+    activeTab: number;
+    displayMode: "table" | "cards";
+    setDisplayMode: React.Dispatch<React.SetStateAction<"table" | "cards">>;
+};
+
+export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
+    const { setQuizTitleFilter,setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, activeTab, displayMode, setDisplayMode } = props;
+    const deviceSize = useDeviceSize();
+    const quizQuery = useGetQuizAssignmentsAssignedToMeQuery();
+
+    const statusOptions = activeTab === 1 ? Object.values(QuizStatus).filter(s => s !== QuizStatus.All)
+        : [QuizStatus.Started, QuizStatus.Complete];
+
+    return <ContentSidebar buttonTitle="Search & Filter">
+        <ShowLoadingQuery query={quizQuery} defaultErrorTitle="" thenRender={(quizzes: QuizAssignmentDTO[]) => {
+            return <>
+                <div className={classNames("section-divider", {"mt-5": above["lg"](deviceSize)})}/>
+                <h5>Search tests</h5>
+                <Input type="text" className="search--filter-input my-4" onChange={(e) => setQuizTitleFilter(e.target.value)} 
+                    placeholder="Search by title" aria-label="Search by title"/>
+                <div className="section-divider"/>
+                <h5 className="mb-4">Filter by status</h5>
+                <QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/>
+                <div className="section-divider-small"/>
+                {statusOptions.map(state => <QuizStatusCheckbox 
+                    key={state} status={state} count={undefined} statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} 
+                />)}
+                <h5 className="mt-4 mb-3">Filter by assigner</h5>
+                <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
+                    {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
+                </Input>
+                <div className="section-divider mt-4"/>
+                <h5 className="mb-3">Display mode</h5>
+                <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
+                    <option value="table">Table View</option>
+                    <option value="cards">Card View</option>
+                </StyledDropdown>
+            </>;
+        }}/>
     </ContentSidebar>;
 };

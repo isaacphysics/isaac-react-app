@@ -1,5 +1,12 @@
 @import "../common/checkbox";
 
+.label-radio:hover {
+    input:not(:checked) {
+      background: $gray-103;
+      cursor: pointer;
+    }
+  }
+
 .checkbox-region {
     border-radius: 4px;
 

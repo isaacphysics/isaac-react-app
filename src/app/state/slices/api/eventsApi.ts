@@ -79,7 +79,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             query: ({startIndex, limit, stageFilter, statusFilter, typeFilter}) => ({
                 url: "/events",
                 params: {
-                    tags: typeFilter !== EventTypeFilter["All events"] ? typeFilter : undefined,
+                    tags: typeFilter !== EventTypeFilter["All groups"] ? typeFilter : undefined,
                     start_index: startIndex,
                     limit,
                     show_active_only: statusFilter === EventStatusFilter["Upcoming events"],

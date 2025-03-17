@@ -116,7 +116,7 @@ export const HomepagePhy = () => {
 
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
     useEffect(() => {
-        getEventsList({startIndex: 0, limit: 2, typeFilter: EventTypeFilter["All events"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
+        getEventsList({startIndex: 0, limit: 2, typeFilter: EventTypeFilter["All groups"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
     }, []);
     
     return <>

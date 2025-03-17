@@ -1,3 +1,7 @@
+.rounded-card {
+  border-radius: 8px;
+}
+
 // stylistically this would work better as a class with a @extend of this class in the @container query, 
 // but the generated CSS seemingly ignores the @container condition when using @extend?
 @mixin horizontal-pod-container {
@@ -71,8 +75,7 @@ div:has(> .pod) {
 
     .event-pod-badge {
       position: absolute;
-      bottom: 3%;
-      left: 3%;
+      margin: 3%;
     }
 
     .event-pod-hex {
@@ -89,5 +92,9 @@ div:has(> .pod) {
         padding-top: 5px;
       }
     }
+  }
+
+  .expired {
+    filter: grayscale(1);
   }
 }
