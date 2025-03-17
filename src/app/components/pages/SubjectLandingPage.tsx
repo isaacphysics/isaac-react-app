@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Button, Card, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
@@ -17,13 +17,19 @@ import { Loading } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
 
-const handleGetDifferentQuestion = () => {
-    // TODO
-};
+
+export const nextRandom = () => Math.random();
+
+const nextSeed = () => Math.floor(Math.floor(nextRandom() * 10 ** 6));
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
+    const [randomSeed, setrandomSeed] = useState(nextSeed);
+
+    const handleGetDifferentQuestion = () => {
+        setrandomSeed(nextSeed);
+    };
 
     const searchDebounce = useCallback(debounce(() => {
         if (!isFullyDefinedContext(context)) {
@@ -44,9 +50,10 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
             statuses: undefined,
             fasttrack: false,
             startIndex: undefined,
-            limit: 1
+            limit: 1,
+            randomSeed
         }));
-    }), [dispatch, context]);
+    }), [dispatch, context, randomSeed]);
 
     const {results: questions} = useAppSelector((state) => state && state.questionSearchResult) || {};
 
