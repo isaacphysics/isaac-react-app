@@ -175,7 +175,7 @@ export function useUrlPageTheme(): PageContextState {
         };
     }, [dispatch, location.pathname]);
 
-    return determinePageContextFromUrl(location.pathname);
+    return useAppSelector(selectors.pageContext.context);
 }
 
 export function isDefinedContext(context?: PageContextState): context is NonNullable<PageContextState> {

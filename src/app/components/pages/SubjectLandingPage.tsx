@@ -26,6 +26,10 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const dispatch = useAppDispatch();
 
     const searchDebounce = useCallback(debounce(() => {
+        if (!isFullyDefinedContext(context)) {
+            return;
+        }
+
         dispatch(searchQuestions({
             searchString: "",
             tags: "",
