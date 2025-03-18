@@ -44,7 +44,7 @@ import { RegistrationGroupInvite } from "../../pages/RegistrationGroupInvite";
 import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
 import { SubjectLandingPage } from "../../pages/SubjectLandingPage";
 import { QuestionFinder } from "../../pages/QuestionFinder";
-import { QuestionPacks } from "../../pages/QuestionPacks";
+import { QuestionDecks } from "../../pages/QuestionDecks";
 import { QuickQuizzes } from "../../pages/QuickQuizzes";
 import { LessonsAndRevision } from "../../pages/LessonsAndRevision";
 import { SubjectOverviewPage } from "../../pages/SubjectOverviewPage";
@@ -53,7 +53,7 @@ const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
 const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 
-const subjectSpecificPages : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
+const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
     // at all valid paths matching `/:subject/:stage${string}`, render the given component
     "": SubjectLandingPage,
     "/questions": QuestionFinder,
@@ -61,7 +61,7 @@ const subjectSpecificPages : Record<string, React.ComponentType<RouteComponentPr
     "/lessons_and_revision": LessonsAndRevision,
     "/practice_tests": PracticeQuizzes,
     "/quick_quizzes": QuickQuizzes,
-    "/question_packs": QuestionPacks,
+    "/question_decks": QuestionDecks,
 };
 
 let key = 0;
@@ -131,7 +131,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/books/linking_concepts" component={LinkingConcepts}/>,
 
     // Subject-stage pages -- see subjectSpecificPages, defined above
-    ...(Object.entries(subjectSpecificPages).map(([path, component]) => (
+    ...(Object.entries(subjectStagePairPages).map(([path, component]) => (
         <TrackedRoute key={key++} exact path={Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
             stages.forEach((stage) => {
                 acc.push(`/${subject}/${stage}${path}`);
