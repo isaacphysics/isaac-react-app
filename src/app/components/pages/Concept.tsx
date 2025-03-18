@@ -81,7 +81,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                                 </div>
                                 <div className="d-flex gap-2 ms-auto">
                                     <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
-                                    <PrintButton questionPage />
+                                    <PrintButton />
                                     <ReportButton pageId={conceptId}/>
                                 </div>
                             </div>

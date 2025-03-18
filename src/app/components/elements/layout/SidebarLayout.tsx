@@ -67,7 +67,7 @@ const NavigationSidebar = (props: SidebarProps) => {
     if (isAda) return <></>;
 
     const { className, ...rest } = props;
-    return <Col lg={4} xl={3} {...rest} className={classNames("sidebar p-4 order-1 order-lg-0", className)} />;
+    return <Col lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", className)} />;
 };
 
 interface ContentSidebarProps extends SidebarProps {
@@ -86,9 +86,9 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     const { className, buttonTitle, ...rest } = props;
     return <>
         {above['lg'](deviceSize) 
-            ? <Col lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar p-4 order-0", className)} />
+            ? <Col lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
-                <div className="d-flex align-items-center flex-wrap py-3 gap-3">
+                <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
                         affix: "icon-sidebar", 
                         position: "prefix", 
