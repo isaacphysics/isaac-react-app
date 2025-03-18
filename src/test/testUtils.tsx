@@ -159,5 +159,3 @@ export const withMockedRandom = async (fn: (setRandom: (n: number) => void) => P
         jest.spyOn(miscUtils, 'nextRandom').mockRestore();
     }
 };
-
-export const expectInDocument = async (text: string) => expect(await screen.findByText(text)).toBeInTheDocument();

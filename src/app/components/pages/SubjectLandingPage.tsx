@@ -23,11 +23,9 @@ const nextSeed = () => Math.floor(Math.floor(nextRandom() * 10 ** 6));
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
-    const [randomSeed, setrandomSeed] = useState(nextSeed);
+    const [randomSeed, setrandomSeed] = useState(nextSeed());
 
-    const handleGetDifferentQuestion = () => {
-        setrandomSeed(nextSeed);
-    };
+    const handleGetDifferentQuestion = () => setrandomSeed(nextSeed());
 
     const searchDebounce = useCallback(debounce(() => {
         if (!isFullyDefinedContext(context)) {

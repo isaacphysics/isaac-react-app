@@ -1,4 +1,5 @@
-import { clickButton, expectInDocument, renderTestEnvironment, waitForLoaded, withMockedRandom} from "../testUtils";
+import {screen} from "@testing-library/react";
+import { clickButton, renderTestEnvironment, waitForLoaded, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults } from "../../mocks/data";
 import { http, HttpResponse } from "msw";
 import { API_PATH, isAda } from "../../app/services";
@@ -8,7 +9,8 @@ describe("SubjectLandingPage", () => {
     if (isAda) {
         it('does not matter', () => {});
     } else {
-        const expectedQuestions = mockQuestionFinderResults.results;
+        const expectInDocument = (text: string) => screen.findByText(text).then(e => expect(e).toBeInTheDocument());
+        const questions = mockQuestionFinderResults.results;
         const renderSubjectLandingPage = async (role: UserRole | "ANONYMOUS" ) => {
             const result = { requestCount: 0 };
           
@@ -34,13 +36,13 @@ describe("SubjectLandingPage", () => {
         };
 
         it('should show the first question', async () => {
-            await withMockedRandom(async (setRandom) => {
-                setRandom(0);
+            await withMockedRandom(async (nextRandom) => {
+                nextRandom(0);
                 await renderSubjectLandingPage('ANONYMOUS');
 
                 await waitForLoaded();
             
-                await expectInDocument(expectedQuestions[0].title);
+                await expectInDocument(questions[0].title);
             });
             
         });
@@ -54,17 +56,17 @@ describe("SubjectLandingPage", () => {
         });
 
         describe('when a new question is requested', () => {
-            it('shows the second question', async () => {
-                await withMockedRandom(async (setRandom) => {
-                    setRandom(0);
+            it('should show the second question and send exactly 2 requests', async () => {
+                await withMockedRandom(async (nextRandom) => {
+                    nextRandom(0);
                     const page = await renderSubjectLandingPage('ANONYMOUS');
                     await waitForLoaded();
-                    await expectInDocument(expectedQuestions[0].title);
+                    await expectInDocument(questions[0].title);
     
-                    setRandom(1 * 10 ** -6);
+                    nextRandom(1 * 10 ** -6);
                     await clickButton("Get a different question");
                     await waitForLoaded();
-                    await expectInDocument(expectedQuestions[1].title);
+                    await expectInDocument(questions[1].title);
                     expect(page.requestCount).toEqual(2);
                 });
             });
