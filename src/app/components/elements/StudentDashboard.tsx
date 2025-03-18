@@ -116,7 +116,7 @@ export const AssignmentCard = (assignment: IAssignmentLike) => {
                 <i className="icon icon-question-pack me-2"/>
                 <h5 className="d-inline">{title}</h5>
                 <div className="d-flex text-nowrap">
-                    {dueDate && (isOverdue(assignment) ? <span className="overdue">Overdue</span> : <span className="me-3">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
+                    {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
                     <span className="group-name">{groupName}</span>
                 </div>
 
