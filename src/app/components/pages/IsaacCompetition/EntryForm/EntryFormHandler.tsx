@@ -6,7 +6,7 @@ import { selectors, useAppSelector } from "../../../../state";
 import { isStudent, isTeacher } from "../../../../services";
 
 const STUDENT_MESSAGE = "Students, ask your teacher about submitting an entry.";
-const TEACHER_MESSAGE = "Teachers, login to enter the competition.";
+const TEACHER_MESSAGE = "Teachers, login to submit a student project.";
 
 const StudentMessage = () => (
   <Container>

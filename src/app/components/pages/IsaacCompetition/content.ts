@@ -69,7 +69,7 @@ export default {
       description: "Finalists from each region will participate in exclusive partner events, which may include:",
       prizeList: [
         "£50 Amazon gift vouchers",
-        "industry tours with partners such as Siemens and Arcadis",
+        "industry tours with partners such as Siemens",
         "a Royal Albert Hall box for a show of your choice",
         "Isaac Computer Science merchandise to support students",
       ],
@@ -198,7 +198,6 @@ export default {
         "A big thank you to all of our industry partners! These include:",
         [
           "The British Computer Society, branded BCS, The Chartered Institute for IT",
-          "Arcadis",
           "Cisco",
           "Kainos",
           "Reed",
@@ -310,7 +309,7 @@ export default {
           "7.2. Additional Prizes for Winners may include, but subject to change:",
           [
             "£50 Amazon gift vouchers",
-            "industry tours with partners such as Siemens and Arcadis",
+            "industry tours with partners such as Siemens",
             "A Royal Albert Hall box for a show of your choice",
             "Isaac Computer Science notebook, pen, water bottle and stickers",
           ],

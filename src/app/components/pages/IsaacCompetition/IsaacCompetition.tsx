@@ -21,7 +21,7 @@ export const IsaacCompetition = () => {
   const buttons = [
     {
       to: "/login",
-      label: "Enter the competition",
+      label: "Submit a project",
     },
   ];
 
