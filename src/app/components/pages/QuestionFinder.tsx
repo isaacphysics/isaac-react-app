@@ -590,15 +590,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
                         <Card>
                             <CardHeader className="finder-header pl-3">
-                                <Col className={"px-0"}>
-                                    {displayQuestions && displayQuestions.length > 0
-                                        ? <>Showing <b>{displayQuestions.length}</b></>
-                                        : <>No results</>}
-                                    {(totalQuestions ?? 0) > 0
-                                    && !filteringByStatus
-                                    && <>{" "}of <b>{totalQuestions}</b></>}
-                                    .
-                                </Col>
+                                <Row>
+                                    <Col>
+                                        {displayQuestions && displayQuestions.length > 0
+                                            ? <>Showing <b>{displayQuestions.length}</b></>
+                                            : <>No results</>}
+                                        {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
+                                        .
+                                    </Col>
+                                    <Col className="float-end">
+                                        <button className="btn btn-link invert-underline d-flex align-items-center gap-2 float-end">Shuffle questions<i className="icon icon-refresh icon-color-black"></i></button>
+                                    </Col>
+                                </Row>
                             </CardHeader>
                             <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
