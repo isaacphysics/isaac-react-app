@@ -598,7 +598,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
                                         .
                                     </Col>
-                                    <Col className="float-end">
+                                    <Col>
                                         <button className="btn btn-link invert-underline d-flex align-items-center gap-2 float-end">Shuffle questions<i className="icon icon-refresh icon-color-black"></i></button>
                                     </Col>
                                 </Row>
