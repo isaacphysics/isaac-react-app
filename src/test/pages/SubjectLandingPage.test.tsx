@@ -35,17 +35,16 @@ describe("SubjectLandingPage", () => {
             return result;
         };
 
-        it('should show the first question', async () => {
-            await withMockedRandom(async (nextRandom) => {
+        it('should show the first question', () => 
+            withMockedRandom(async (nextRandom) => {
                 nextRandom(0);
                 await renderSubjectLandingPage('ANONYMOUS');
 
                 await waitForLoaded();
             
                 await expectInDocument(questions[0].title);
-            });
-            
-        });
+            })
+        );
 
         it('should send exactly 1 request', async () => {
             const page = await renderSubjectLandingPage('ANONYMOUS');
@@ -56,8 +55,8 @@ describe("SubjectLandingPage", () => {
         });
 
         describe('when a new question is requested', () => {
-            it('should show the second question and send exactly 2 requests', async () => {
-                await withMockedRandom(async (nextRandom) => {
+            it('should show the second question and send exactly 2 requests', () => 
+                withMockedRandom(async (nextRandom) => {
                     nextRandom(0);
                     const page = await renderSubjectLandingPage('ANONYMOUS');
                     await waitForLoaded();
@@ -68,8 +67,8 @@ describe("SubjectLandingPage", () => {
                     await waitForLoaded();
                     await expectInDocument(questions[1].title);
                     expect(page.requestCount).toEqual(2);
-                });
-            });
+                })
+            );
         });
     }
 });
