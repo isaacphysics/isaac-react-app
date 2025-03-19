@@ -89,7 +89,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                 <TitleAndBreadcrumb
                     currentPageTitle={siteSpecific("Question", generateQuestionTitle(doc))}
                     subTitle={siteSpecific(undefined, doc.subtitle)}
-                    intermediateCrumbs={siteSpecific([...navigation.breadcrumbHistory], [...navigation.breadcrumbHistory, ...getTags(doc.tags)])}
+                    intermediateCrumbs={navigation.breadcrumbHistory}
                     collectionType={navigation.collectionType}
                     audienceViews={siteSpecific(undefined, determineAudienceViews(doc.audience, navigation.creationContext))}
                     preview={preview} icon={{type: "hex", subject: doc.subjectId as Subject, icon: "page-icon-question"}}
