@@ -1,6 +1,6 @@
 import {screen, waitFor, within} from "@testing-library/react";
 import { clickButton, renderTestEnvironment, withMockedRandom} from "../testUtils";
-import { mockQuestionFinderResults } from "../../mocks/data";
+import { buildMockQuestionFinderResults, buildMockQuestions, mockQuestionFinderResults } from "../../mocks/data";
 import { http, HttpResponse } from "msw";
 import { API_PATH, isAda } from "../../app/services";
 import _ from "lodash";
@@ -24,10 +24,9 @@ describe("QuestionFinder", () => {
             }
             return expect(await findQuestions()).toHaveLength(length);
         });
-        const question = mockQuestionFinderResults.results[0];
-        const questions = Array(40).fill(null).map((_, i) => ({ ...question, id: `q${i}`, title: `Question ${i}` }));
 
-        const resultsResponse = { results: questions.slice(0, 31), totalResults: 40, nextSearchOffset: 31 };               
+        const questions = buildMockQuestions(40);
+        const resultsResponse = buildMockQuestionFinderResults(questions, 0);               
         
         const renderQuestionFinderPage = async ({searchResponse} : RenderParameters) => {          
             renderTestEnvironment({
@@ -52,7 +51,7 @@ describe("QuestionFinder", () => {
 
         describe('Question shuffling', () => {
             const shuffledQuestions = _.shuffle(questions);
-            const shuffledResultsResponse = { ...resultsResponse, results: shuffledQuestions.slice(0, 31) };
+            const shuffledResultsResponse = buildMockQuestionFinderResults(shuffledQuestions, 0);
 
             const searchResponse: RenderParameters['searchResponse'] = ({randomSeed}) => {
                 switch (randomSeed) {
@@ -90,8 +89,8 @@ describe("QuestionFinder", () => {
             });
 
             it('"Load more" should avoid duplicate questions by fetching next page from same order', () => {
-                const resultsResponsePage2 = { results: questions.slice(30, 40), totalResults: 40, nextSearchOffset: 41 };
-                const shuffledResultsResponsePage2 = { results: shuffledQuestions.slice(30, 40), totalResults: 40, nextSearchOffset: 41 };
+                const resultsResponsePage2 = buildMockQuestionFinderResults(questions, 30);
+                const shuffledResultsResponsePage2 = buildMockQuestionFinderResults(shuffledQuestions, 30);
 
                 return withMockedRandom(async (nextRandom) => {
                     nextRandom([1 * 10 ** -6]);
