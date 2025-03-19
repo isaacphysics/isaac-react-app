@@ -177,7 +177,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
     const [searchDisabled, setSearchDisabled] = useState(true);
-    const [randomSeed, setRandomSeed] = useState(undefined as undefined | number);
+    const [randomSeed, setRandomSeed] = useState<number | undefined>();
     
     const [populatedFromAccountSettings, setPopulatedFromAccountSettings] = useState(false);
     useEffect(function populateFiltersFromAccountSettings() {
