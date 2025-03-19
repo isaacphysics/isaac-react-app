@@ -3,11 +3,11 @@ import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHead
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize } from "../../../services";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
-import { AppGroup, AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
+import { AppGroup, AssignmentBoardOrder, PageContextState, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
 import { AssignmentState } from "../../pages/MyAssignments";
@@ -1057,5 +1057,48 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                 </StyledDropdown>
             </>;
         }}/>
+    </ContentSidebar>;
+};
+
+interface QuestionDecksSidebarProps extends SidebarProps {
+    validStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]};
+    context: NonNullable<Required<PageContextState>>;
+};
+
+export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
+    const { validStageSubjectPairs, context } = props;
+
+    const history = useHistory();
+
+    return <ContentSidebar buttonTitle="Switch stage/subject" {...props}>
+        <div className="section-divider"/>
+        <h5>Decks by stage</h5>
+        <ul>
+            {validStageSubjectPairs[context.subject].map((stage, index) => 
+                <li key={index}>
+                    <StyledTabPicker 
+                        checkboxTitle={HUMAN_STAGES[stage]} 
+                        checked={context.stage.includes(stage)}
+                        onClick={() => history.push(`/${context.subject}/${stage}/question_decks`)}
+                    />
+                </li>
+            )}
+        </ul>
+        <div className="section-divider"/>
+        <h5>Decks by subject</h5>
+        <ul>
+            {Object.entries(validStageSubjectPairs)
+                .filter(([_subject, stages]) => (stages as LearningStage[]).includes(context.stage[0]))
+                .map(([subject, _stages], index) => 
+                    <li key={index}>
+                        <StyledTabPicker 
+                            checkboxTitle={HUMAN_SUBJECTS[subject]} 
+                            checked={context.subject === subject}
+                            onClick={() => history.push(`/${subject}/${context.stage}/question_decks`)}
+                        />
+                    </li>
+                )
+            }
+        </ul>
     </ContentSidebar>;
 };
