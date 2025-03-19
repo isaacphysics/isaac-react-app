@@ -19,6 +19,7 @@ import {
     itemiseTag,
     LearningStage,
     ListParams,
+    nextSeed,
     SEARCH_CHAR_LENGTH_LIMIT,
     SEARCH_RESULTS_PER_PAGE,
     simpleDifficultyLabelMap,
@@ -176,6 +177,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
     const [searchDisabled, setSearchDisabled] = useState(true);
+    const [randomSeed, setRandomSeed] = useState(undefined as undefined | number);
     
     const [populatedFromAccountSettings, setPopulatedFromAccountSettings] = useState(false);
     useEffect(function populateFiltersFromAccountSettings() {
@@ -248,7 +250,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             book: string[], stages: string[], difficulties: string[],
             hierarchySelections: ChoiceTree[],
             excludeBooks: boolean, questionStatuses: QuestionStatus,
-            startIndex: number) => {
+            startIndex: number, randomSeed?: number) => {
             if (nothingToSearchFor) {
                 dispatch(clearQuestionSearch);
                 return;
@@ -279,7 +281,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 statuses: questionStatusToURIComponent(questionStatuses),
                 fasttrack: false,
                 startIndex,
-                limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need to know if there are more results
+                limit: SEARCH_RESULTS_PER_PAGE + 1, // request one more than we need to know if there are more results
+                randomSeed
             }));
         }, 250),
         [nothingToSearchFor]
@@ -310,6 +313,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
 
         setFilteringByStatus(isFilteringByStatus);
+        setRandomSeed(undefined);
         searchAndUpdateURL();
     };
 
@@ -321,7 +325,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
         searchDebounce(
             searchQuery, searchTopics, searchExamBoards, searchBooks, filteredStages,
-            searchDifficulties, selections, excludeBooks, searchStatuses, 0
+            searchDifficulties, selections, excludeBooks, searchStatuses, 0, randomSeed
         );
 
         const params: {[key: string]: string} = {};
@@ -361,7 +365,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(searchAndUpdateURL, [searchQuery]);
+    useEffect(searchAndUpdateURL, [searchQuery, randomSeed]);
 
     // If the stages filter changes, update the exam board filter selections to remove now-incompatible ones
     useEffect(() => {
@@ -496,7 +500,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
             stageList.map(s => {return {value: s, label: stageLabelMap[s]};}),
             statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
-            excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.value, label: book.label}}),
+            excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.value, label: book.label};}),
             selectionList,
         ].flat();
 
@@ -599,7 +603,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         .
                                     </Col>
                                     <Col>
-                                        <button className="btn btn-link invert-underline d-flex align-items-center gap-2 float-end">Shuffle questions<i className="icon icon-refresh icon-color-black"></i></button>
+                                        <button className="btn btn-link invert-underline d-flex align-items-center gap-2 float-end"
+                                            onClick={() => setRandomSeed(nextSeed())}>Shuffle questions<i className="icon icon-refresh icon-color-black"></i></button>
                                     </Col>
                                 </Row>
                             </CardHeader>
@@ -632,7 +637,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                                 searchStatuses,
                                                 nextSearchOffset
                                                     ? nextSearchOffset - 1
-                                                    : 0);
+                                                    : 0,
+                                                randomSeed);
                                             setPageCount(c => c + 1);
                                             setDisableLoadMore(true);
                                         }}

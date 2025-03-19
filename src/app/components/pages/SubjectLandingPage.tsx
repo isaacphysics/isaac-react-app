@@ -5,7 +5,7 @@ import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { above, below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, nextRandom, STAGE, useDeviceSize } from "../../services";
+import { above, below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, nextSeed, STAGE, useDeviceSize } from "../../services";
 import { PageContextState } from "../../../IsaacAppTypes";
 import { PhyHexIcon } from "../elements/svg/PhyHexIcon";
 import { Link } from "react-router-dom";
@@ -18,14 +18,12 @@ import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
 
 
-const nextSeed = () => Math.floor(Math.floor(nextRandom() * 10 ** 6));
-
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
-    const [randomSeed, setrandomSeed] = useState(nextSeed());
+    const [randomSeed, setrandomSeed] = useState(nextSeed);
 
-    const handleGetDifferentQuestion = () => setrandomSeed(nextSeed());
+    const handleGetDifferentQuestion = () => setrandomSeed(nextSeed);
 
     const searchDebounce = useCallback(debounce(() => {
         if (!isFullyDefinedContext(context)) {

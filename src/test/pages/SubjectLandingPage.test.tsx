@@ -36,8 +36,8 @@ describe("SubjectLandingPage", () => {
         };
 
         it('should show the first question', () => 
-            withMockedRandom(async (nextRandom) => {
-                nextRandom(0);
+            withMockedRandom(async (randomSequence) => {
+                randomSequence([0]);
                 await renderSubjectLandingPage('ANONYMOUS');
 
                 await waitForLoaded();
@@ -56,13 +56,13 @@ describe("SubjectLandingPage", () => {
 
         describe('when a new question is requested', () => {
             it('should show the second question and send exactly 2 requests', () => 
-                withMockedRandom(async (nextRandom) => {
-                    nextRandom(0);
+                withMockedRandom(async (randomSequence) => {
+                    randomSequence([0, 1 * 10 ** -6]);
+                    
                     const page = await renderSubjectLandingPage('ANONYMOUS');
                     await waitForLoaded();
                     await expectInDocument(questions[0].title);
     
-                    nextRandom(1 * 10 ** -6);
                     await clickButton("Get a different question");
                     await waitForLoaded();
                     await expectInDocument(questions[1].title);

@@ -139,17 +139,22 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     await userEvent.click(tabLink);
 };
 
-export const clickButton = (text: string) => screen.findAllByText(text).then(e => userEvent.click(e[0]));
+export const clickButton = (text: string) => screen.findAllByText(text).then(e => {
+    if (e[0].hasAttribute('disabled')) {
+        throw new Error(`Can't click on disabled button ${e[0].textContent}`);
+    }
+    return userEvent.click(e[0]);
+});
 
 export const waitForLoaded = () => waitFor(() => {
     expect(screen.queryAllByText("Loading...")).toHaveLength(0);
 });
 
-export const withMockedRandom = async (fn: (setRandom: (n: number) => void) => Promise<void>) => {
+export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => void) => Promise<void>) => {
     const nextRandom = {
-        value: -1,
-        get() { return this.value; },
-        set(n: number) { this.value = n; }
+        values: [] as number[],
+        get() { return this.values.shift() ?? Math.random(); },
+        set(arr: number[]) { this.values = arr; }
     };
 
     try {
