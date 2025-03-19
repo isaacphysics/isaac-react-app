@@ -33,8 +33,6 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & {question: Qu
     const { question, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
-
-    console.log(question.bestAttempt?.correct);
                         
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
         <Link to={`/questions/${question.id}`} className="py-2">
