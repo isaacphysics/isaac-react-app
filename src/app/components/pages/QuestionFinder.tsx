@@ -359,6 +359,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 if (params[tier.id] === "") delete params[tier.id];
             });
         }
+        if (randomSeed !== undefined) params.randomSeed = randomSeed.toString();
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
     }, [searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages, searchDifficulties, selections, tiers, excludeBooks, searchStatuses, filteringByStatus]);

@@ -34,7 +34,7 @@ describe("QuestionFinder", () => {
             const questionsSearchResponse: RenderParameters['questionsSearchResponse'] = ({randomSeed}) => {
                 switch (randomSeed) {
                     case null: return resultsResponse;
-                    case '1': return { ...shuffledResultsResponse, results: shuffledResultsResponse.results };
+                    case '1': return shuffledResultsResponse;
                     default: throw new Error('Unexpected seed.');
                 }
             };
@@ -54,14 +54,28 @@ describe("QuestionFinder", () => {
                 });
             });
 
+            it('stores the seed in a URL parameter', () => {
+                return withMockedRandom(async (nextRandom) => {
+                    nextRandom([1 * 10 ** -6]);
+                   
+                    await renderQuestionFinderPage({ questionsSearchResponse });
+                    await clickButton("Year 7&8");
+                    await clickButton("Shuffle questions");
+                    await expectUrlParams("?randomSeed=1&stages=year_7_and_8");
+                });
+            });
+
             it('after using button, applying filters should return to alphabetical order', () => {
                 return withMockedRandom(async (nextRandom) => {
                     nextRandom([1 * 10 ** -6]);
                     
                     await renderQuestionFinderPage({ questionsSearchResponse });
                     await clickButton("Shuffle questions");
+                    await expectUrlParams("?randomSeed=1");
                     await clickButton("Year 7&8");
+                    await expectUrlParams("?stages=year_7_and_8");
                     await waitForQuestions();
+                    await sleep(1000);
                     await expectQuestions(questions.slice(0, 30));
                 });
             });
@@ -126,3 +140,7 @@ const waitForQuestions = (length?: number) => waitFor(async () => {
     }
     return expect(await findQuestions()).toHaveLength(length);
 });
+
+const expectUrlParams = (text: string) => expect(window.location.search).toBe(text);
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
