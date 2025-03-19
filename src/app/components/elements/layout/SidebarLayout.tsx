@@ -7,7 +7,7 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
-import { AppGroup, AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
+import { AppGroup, AssignmentBoardOrder, MyAssignmentsOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
 import { AssignmentState } from "../../pages/MyAssignments";
@@ -477,11 +477,28 @@ interface MyAssignmentsSidebarProps extends SidebarProps {
     setGroupFilter: React.Dispatch<React.SetStateAction<string>>;
     setByFilter: string;
     setSetByFilter: React.Dispatch<React.SetStateAction<string>>;
+    sortOrder: MyAssignmentsOrder;
+    setSortOrder: React.Dispatch<React.SetStateAction<MyAssignmentsOrder>>;
     assignmentQuery: any;
 }
 
 export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
-    const { statusFilter, setStatusFilter, titleFilter, setTitleFilter, groupFilter, setGroupFilter, setByFilter, setSetByFilter, assignmentQuery, ...rest } = props;
+    const { statusFilter, setStatusFilter, titleFilter, setTitleFilter, groupFilter, setGroupFilter, setByFilter, setSetByFilter, sortOrder, setSortOrder, assignmentQuery, ...rest } = props;
+
+    const ORDER_NAMES: {[key in MyAssignmentsOrder]: string} = {
+        "title": "Title (A-Z)",
+        "-title": "Title (Z-A)",
+        "setBy": "Assigner (A-Z)",
+        "-setBy": "Assigner (Z-A)",
+        "startDate": "Start date (oldest first)",
+        "-startDate": "Start date (latest first)",
+        "dueDate": "Due date (oldest first)",
+        "-dueDate": "Due date (latest first)",
+        "attempted": "Attempted (lowest first)",
+        "-attempted": "Attempted (highest first)",
+        "correct": "Correctness (lowest first)",
+        "-correct": "Correctness (highest first)",
+    };
 
     useEffect(() => {
         if (statusFilter.length === 0) {
@@ -502,6 +519,13 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                     placeholder="e.g. Forces"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setTitleFilter(e.target.value)}
                 />
+                <div className="section-divider"/>
+                <h5>Sort</h5>
+                <Label className="w-100">
+                    <Input type="select" value={sortOrder} onChange={e => setSortOrder(e.target.value as MyAssignmentsOrder)}>
+                        {Object.values(MyAssignmentsOrder).map(order => <option key={order} value={order}>{ORDER_NAMES[order]}</option>)}
+                    </Input>
+                </Label>
                 <div className="section-divider"/>
                 <h5 className="mb-4">Filter by status</h5>
                 <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
