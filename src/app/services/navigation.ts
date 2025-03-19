@@ -26,7 +26,7 @@ import {
     TAG_ID,
     useQueryParams,
 } from "./";
-import {AudienceContext, ContentDTO, GameboardDTO} from "../../IsaacApiTypes";
+import {AssignmentDTO, AudienceContext, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE, PageContextState} from "../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {useLocation} from "react-router-dom";
@@ -44,7 +44,7 @@ export interface PageNavigation {
     currentGameboard?: GameboardDTO;
 }
 
-const defaultPageNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null, pageContext: NonNullable<PageContextState> | undefined, currentGameboard?: GameboardDTO) : PageNavigation => {
+const defaultPageNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null, pageContext: PageContextState, currentGameboard?: GameboardDTO) : PageNavigation => {
     if (isAda || doc === NOT_FOUND || doc === null) {
         return {breadcrumbHistory: [], currentGameboard};
     }
@@ -66,7 +66,7 @@ const defaultPageNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null, pageCont
                     },
                 ],
                 currentGameboard,
-            }
+            };
         }
     }
 
@@ -99,6 +99,22 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const pageContext = useAppSelector(selectors.pageContext.context);
+
+    return determinePageNavigation(doc, currentDocId, currentGameboard, gameboardId, topic, currentTopic, questionHistory, assignments, search, pageContext);
+};
+
+export const determinePageNavigation = (
+    doc: ContentDTO | NOT_FOUND_TYPE | null,
+    currentDocId: string,
+    currentGameboard: GameboardDTO | undefined,
+    gameboardId: string | undefined,
+    topic: string | undefined,
+    currentTopic: IsaacTopicSummaryPageDTO | null,
+    questionHistory: string | undefined,
+    assignments:  AssignmentDTO[] | undefined,
+    search: string,
+    pageContext: PageContextState
+): PageNavigation => {
 
     if (doc === null || doc === NOT_FOUND) {
         return defaultPageNavigation(doc, pageContext, currentGameboard);
