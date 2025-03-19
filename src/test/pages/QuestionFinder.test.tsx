@@ -24,7 +24,7 @@ describe("QuestionFinder", () => {
                 questionsSearchResponse: () => resultsResponse
             });
             await clickButton("Year 7&8");
-            await expectQuestions(resultsResponse.results.slice(0, 30));
+            await expectQuestions(questions.slice(0, 30));
         });
 
         describe('Question shuffling', () => {
@@ -46,11 +46,11 @@ describe("QuestionFinder", () => {
                     await renderQuestionFinderPage({ questionsSearchResponse });
                     await clickButton("Year 7&8");
                     await waitForQuestions();
-                    await expectQuestions(resultsResponse.results.slice(0, 30));
+                    await expectQuestions(questions.slice(0, 30));
                     
                     await clickButton("Shuffle questions");
                     await waitForQuestions();
-                    await expectQuestions(shuffledResultsResponse.results.slice(0, 30));
+                    await expectQuestions(shuffledQuestions.slice(0, 30));
                 });
             });
 
@@ -62,7 +62,7 @@ describe("QuestionFinder", () => {
                     await clickButton("Shuffle questions");
                     await clickButton("Year 7&8");
                     await waitForQuestions();
-                    await expectQuestions(resultsResponse.results.slice(0, 30));
+                    await expectQuestions(questions.slice(0, 30));
                 });
             });
 
@@ -82,13 +82,13 @@ describe("QuestionFinder", () => {
                     }});
                     await clickButton("Year 7&8");
                     await waitForQuestions();
-                    await expectQuestions(resultsResponse.results.slice(0, 30));
+                    await expectQuestions(questions.slice(0, 30));
                     await expectPageIndicator("Showing 30 of 40.");
                     
                     await clickButton("Shuffle questions");
                     await waitForQuestions();
                     await expectPageIndicator("Showing 30 of 40.");
-                    await expectQuestions(shuffledResultsResponse.results.slice(0, 30));
+                    await expectQuestions(shuffledQuestions.slice(0, 30));
 
                     await clickButton("Load more");
                     await waitForQuestions(shuffledQuestions.length);
