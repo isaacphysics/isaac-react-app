@@ -1,19 +1,18 @@
 @import "../common/questions";
 
-.question-actions-link-box {
-  $x-translation: 24px;
-  margin-left: -$x-translation;
-  float: left;
-  transform: translateX(7.5px + $x-translation);
-  height: 48px; // height of an icon button, should be a variable probably
+.action-buttons-popup-container {
+  position: absolute;
+  height: 100%;
+  right: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   border: 3px solid $secondary;
-  padding-left: 15px;
-  padding-right: 32px;
+  padding-left: 1.5rem;
+  padding-right: 2rem;
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
+  z-index: 2;
   .question-actions-link {
     margin-top: 2px; // Just to vertically center the links nicely
     color: $secondary;
@@ -21,6 +20,53 @@
       margin-left: 7px;
       margin-right: 7px;
     }
+  }
+
+  &:has(> input + a) {
+    flex-direction: row;
+
+    input {
+      width: auto;
+    }
+  }
+
+  a {
+    flex-grow: 1;
+    align-self: center;
+  }
+
+  input {
+    flex-grow: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    user-select: all;
+    -webkit-user-select: all;
+    -moz-user-select: all;
+    -ms-user-select: all;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    outline: none;
+  }
+
+  & ~ .duplicate-and-edit {
+    position: absolute;
+    right: 30px;
+    padding: 24px 24px 0;
+    top: 24px;
+    text-align: center;
+    background: white;
+    border: 1px solid $gray-118;
+    border-radius: 8px;
+    border-top-left-radius: 0;
+    font-size: small;
+    z-index: 1;
+  }
+
+  &.double-height {
+    background: #fff;
+    text-align: center;
   }
 }
 

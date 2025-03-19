@@ -70,7 +70,7 @@ const NavigationSidebar = (props: SidebarProps) => {
     if (isAda) return <></>;
 
     const { className, ...rest } = props;
-    return <Col lg={4} xl={3} {...rest} className={classNames("sidebar p-4 order-1 order-lg-0", className)} />;
+    return <Col lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", className)} />;
 };
 
 interface ContentSidebarProps extends SidebarProps {
@@ -89,9 +89,9 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     const { className, buttonTitle, ...rest } = props;
     return <>
         {above['lg'](deviceSize) 
-            ? <Col lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar p-4 order-0", className)} />
+            ? <Col lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
-                <div className="d-flex align-items-center flex-wrap py-3 gap-3">
+                <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
                         affix: "icon-sidebar", 
                         position: "prefix", 
@@ -199,12 +199,13 @@ interface FilterCheckboxProps extends React.HTMLAttributes<HTMLElement> {
     incompatibleTags?: Tag[]; // tags that are removed when this tag is added
     dependentTags?: Tag[]; // tags that are removed when this tag is removed
     baseTag?: Tag; // tag to add when all tags are removed
+    partiallySelected?: boolean;
     checkboxStyle?: "tab" | "button";
     bsSize?: "sm" | "lg";
 }
 
 const FilterCheckbox = (props : FilterCheckboxProps) => {
-    const {tag, conceptFilters, setConceptFilters, tagCounts, checkboxStyle, incompatibleTags, dependentTags, baseTag, ...rest} = props;
+    const {tag, conceptFilters, setConceptFilters, tagCounts, checkboxStyle, incompatibleTags, dependentTags, baseTag, partiallySelected, ...rest} = props;
     const [checked, setChecked] = useState(conceptFilters.includes(tag));
 
     useEffect(() => {
@@ -213,7 +214,7 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
 
     const handleCheckboxChange = (checked: boolean) => {
         const newConceptFilters = checked 
-            ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), tag] 
+            ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), ...(!partiallySelected ? [tag] : [])] 
             : conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c));
         setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : (baseTag ? [baseTag] : []));
     };
@@ -229,12 +230,17 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
         />;
 };
 
-const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag">) => {
-    const { conceptFilters, setConceptFilters, tagCounts, baseTag, ...rest } = props;
+const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnabled?: boolean}) => {
+    const { conceptFilters, setConceptFilters, tagCounts, baseTag, forceEnabled, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<Tag[]>(baseTag ? [baseTag] : []);
     return <StyledTabPicker {...rest} 
-        id="all" checked={baseTag ? conceptFilters.length === 1 && conceptFilters[0] === baseTag : !conceptFilters.length} checkboxTitle="All" count={tagCounts && Object.values(tagCounts).reduce((a, b) => a + b, 0)}
+        id="all" checked={forceEnabled || baseTag ? conceptFilters.length === 1 && conceptFilters[0] === baseTag : !conceptFilters.length} 
+        checkboxTitle="All" count={tagCounts && (baseTag ? tagCounts[baseTag.id] : Object.values(tagCounts).reduce((a, b) => a + b, 0))}
         onInputChange={(e) => {
+            if (forceEnabled) {
+                setConceptFilters(baseTag ? [baseTag] : []);
+                return;
+            }
             if (e.target.checked) {
                 setPreviousFilters(conceptFilters);
                 setConceptFilters(baseTag ? [baseTag] : []);
@@ -275,19 +281,25 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
 
         <div className="d-flex flex-column">
             <h5>Filter by topic</h5>
-            <AllFiltersCheckbox conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag}/>
+            <AllFiltersCheckbox 
+                conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag} 
+                forceEnabled={applicableTags.filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0).length === 0}
+            />
             <div className="section-divider-small"/>
-            {applicableTags.map(tag => 
-                <FilterCheckbox 
-                    key={tag.id} 
-                    tag={tag} 
-                    conceptFilters={conceptFilters} 
-                    setConceptFilters={setConceptFilters} 
-                    tagCounts={tagCounts} 
-                    incompatibleTags={[subjectTag]} 
-                    baseTag={subjectTag}
-                />
-            )}
+            {applicableTags
+                .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
+                .map(tag => 
+                    <FilterCheckbox 
+                        key={tag.id} 
+                        tag={tag} 
+                        conceptFilters={conceptFilters} 
+                        setConceptFilters={setConceptFilters} 
+                        tagCounts={tagCounts} 
+                        incompatibleTags={[subjectTag]} 
+                        baseTag={subjectTag}
+                    />
+                )
+            }
         </div>
 
         <div className="section-divider"/>
@@ -334,6 +346,7 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
                     <FilterCheckbox 
                         checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
                         setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
+                        partiallySelected={descendentTags.some(tag => conceptFilters.includes(tag))} // not quite isPartial; this is also true if all descendents selected
                         className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
                     />
                     {isSelected && <div className="ms-3 ps-2">
