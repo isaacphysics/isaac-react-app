@@ -1,49 +1,27 @@
 import {screen, waitFor, within} from "@testing-library/react";
 import { clickButton, renderTestEnvironment, withMockedRandom} from "../testUtils";
 import { buildMockQuestionFinderResults, buildMockQuestions, mockQuestionFinderResults } from "../../mocks/data";
-import { http, HttpResponse } from "msw";
-import { API_PATH, isAda } from "../../app/services";
 import _ from "lodash";
+import { buildFunctionHandler } from "../../mocks/handlers";
+import { isAda } from "../../app/services";
 
 describe("QuestionFinder", () => {
     if (isAda) {
         it('does not matter', () => {});
     } else {        
-        const findQuestions = () => screen.findByTestId("question-finder-results").then(elem => within(elem).findAllByRole('listitem'));
-        const getQuestionText = (q: HTMLElement) => q.querySelector('span')?.textContent;
-        const expectQuestions = (expectedQuestions: typeof mockQuestionFinderResults.results) => findQuestions().then((found) => { 
-            expect(found.length).toEqual(expectedQuestions.length);
-            expect(found.map(getQuestionText)).toEqual(expectedQuestions.map(q => q.title));
-        });
-        const expectPageIndicator = (content: string) => screen.findByTestId("question-finder-results").then(found => {
-            expect(found.querySelectorAll('.col')[0].textContent).toBe(content);
-        });
-        const waitForQuestions = (length?: number) => waitFor(async () => {
-            if (length === undefined) {
-                return expect(await findQuestions()).not.toHaveLength(0);
-            }
-            return expect(await findQuestions()).toHaveLength(length);
-        });
-
         const questions = buildMockQuestions(40);
         const resultsResponse = buildMockQuestionFinderResults(questions, 0);               
         
-        const renderQuestionFinderPage = async ({searchResponse} : RenderParameters) => {          
+        const renderQuestionFinderPage = async ({questionsSearchResponse} : RenderParameters) => {          
             renderTestEnvironment({
-                extraEndpoints: [
-                    http.get(API_PATH + "/pages/questions/", async ({ request }) => {
-                        const randomSeed = new URL(request.url).searchParams.get('randomSeed');
-                        const startIndex = new URL(request.url).searchParams.get('startIndex');
-                        return HttpResponse.json(searchResponse({ randomSeed, startIndex }), { status: 200, });
-                    })
-                ]
+                extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed', 'startIndex'], questionsSearchResponse)]
             });
             await clickButton("Question finder");
         };
 
         it('should render results in alphabetical order', async () => {
             await renderQuestionFinderPage({
-                searchResponse: () => resultsResponse
+                questionsSearchResponse: () => resultsResponse
             });
             await clickButton("Year 7&8");
             await expectQuestions(resultsResponse.results.slice(0, 30));
@@ -53,7 +31,7 @@ describe("QuestionFinder", () => {
             const shuffledQuestions = _.shuffle(questions);
             const shuffledResultsResponse = buildMockQuestionFinderResults(shuffledQuestions, 0);
 
-            const searchResponse: RenderParameters['searchResponse'] = ({randomSeed}) => {
+            const questionsSearchResponse: RenderParameters['questionsSearchResponse'] = ({randomSeed}) => {
                 switch (randomSeed) {
                     case null: return resultsResponse;
                     case '1': return { ...shuffledResultsResponse, results: shuffledResultsResponse.results };
@@ -65,7 +43,7 @@ describe("QuestionFinder", () => {
                 return withMockedRandom(async (nextRandom) => {
                     nextRandom([1 * 10 ** -6]);
                    
-                    await renderQuestionFinderPage({ searchResponse });
+                    await renderQuestionFinderPage({ questionsSearchResponse });
                     await clickButton("Year 7&8");
                     await waitForQuestions();
                     await expectQuestions(resultsResponse.results.slice(0, 30));
@@ -80,7 +58,7 @@ describe("QuestionFinder", () => {
                 return withMockedRandom(async (nextRandom) => {
                     nextRandom([1 * 10 ** -6]);
                     
-                    await renderQuestionFinderPage({ searchResponse });
+                    await renderQuestionFinderPage({ questionsSearchResponse });
                     await clickButton("Shuffle questions");
                     await clickButton("Year 7&8");
                     await waitForQuestions();
@@ -95,7 +73,7 @@ describe("QuestionFinder", () => {
                 return withMockedRandom(async (nextRandom) => {
                     nextRandom([1 * 10 ** -6]);
                    
-                    await renderQuestionFinderPage({ searchResponse: ({ randomSeed, startIndex }) => {
+                    await renderQuestionFinderPage({ questionsSearchResponse: ({ randomSeed, startIndex }) => {
                         switch (randomSeed) {
                             case null: return startIndex === '0' ? resultsResponse : resultsResponsePage2;;
                             case '1': return startIndex === '0' ? shuffledResultsResponse : shuffledResultsResponsePage2;
@@ -123,8 +101,28 @@ describe("QuestionFinder", () => {
 });
 
 type RenderParameters = {
-    searchResponse: (options: {
+    questionsSearchResponse: (options: {
         randomSeed: string | null;
         startIndex: string | null;
     }) => typeof mockQuestionFinderResults;
 };
+
+const findQuestions = () => screen.findByTestId("question-finder-results").then(elem => within(elem).findAllByRole('listitem'));
+
+const getQuestionText = (q: HTMLElement) => q.querySelector('span')?.textContent;
+
+const expectQuestions = (expectedQuestions: typeof mockQuestionFinderResults.results) => findQuestions().then((found) => { 
+    expect(found.length).toEqual(expectedQuestions.length);
+    expect(found.map(getQuestionText)).toEqual(expectedQuestions.map(q => q.title));
+});
+
+const expectPageIndicator = (content: string) => screen.findByTestId("question-finder-results").then(found => {
+    expect(found.querySelectorAll('.col')[0].textContent).toBe(content);
+});
+
+const waitForQuestions = (length?: number) => waitFor(async () => {
+    if (length === undefined) {
+        return expect(await findQuestions()).not.toHaveLength(0);
+    }
+    return expect(await findQuestions()).toHaveLength(length);
+});
