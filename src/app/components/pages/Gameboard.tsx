@@ -42,8 +42,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
     let itemClasses = classNames("content-summary-link text-info bg-white", {"p-3": isPhy, "p-0": isAda});
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
-    const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
-    let iconHref = siteSpecific("/assets/phy/icons/question-hex.svg#icon", "/assets/cs/icons/question-not-started.svg");
+    let icon = siteSpecific("icon-not-started", "/assets/cs/icons/question-not-started.svg");
     let message = siteSpecific("", "Not started");
     const messageClasses = "";
 
@@ -53,16 +52,16 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 itemClasses += " bg-success";
             }
             message = siteSpecific("perfect!", "Correct");
-            iconHref = siteSpecific("/assets/phy/icons/tick-rp-hex.svg#icon", "/assets/cs/icons/question-correct.svg");
+            icon = siteSpecific("icon-correct", "/assets/cs/icons/question-correct.svg");
             break;
         case "PASSED":
         case "IN_PROGRESS":
             message = siteSpecific("in progress", "In progress");
-            iconHref = siteSpecific("/assets/phy/icons/incomplete-hex.svg#icon", "/assets/cs/icons/question-in-progress.svg");
+            icon = siteSpecific("icon-in-progress", "/assets/cs/icons/question-in-progress.svg");
             break;
         case "FAILED":
             message = siteSpecific("try again!", "Try again");
-            iconHref = siteSpecific("/assets/phy/icons/cross-rp-hex.svg#icon", "/assets/cs/icons/question-incorrect.svg");
+            icon = siteSpecific("icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
             break;
     }
 
@@ -78,15 +77,14 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "justify-content-center": isAda})}>
             <span className={"question-progress-icon"}>
                 {siteSpecific(
-                    <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg>,
+                    <div className={`${icon} me-4`}/>,
                     <div className={"inner-progress-icon"}>
-                        <img src={iconHref} alt="" /><br/>
+                        <img src={icon} alt="" /><br/>
                         <span className={"icon-title d-none d-sm-block"}>{message}</span>
                     </div>
                 )}
             </span>
             <div className={classNames("flex-fill", {"d-flex py-3 pe-3 flex-column flex-md-row": isAda, "d-md-flex": isPhy})}>
-                {/* TODO CP shouldn't the subject colour here depend on the contents/tags of the gameboard? */}
                 <div className={"flex-grow-1 " + (itemSubject?.id ?? (isPhy ? "physics" : ""))}>
                     <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-theme": isPhy})}>
                         {generateQuestionTitle(question)}
