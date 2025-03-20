@@ -432,6 +432,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 tryAgain: false,
             });
         setSearchDisabled(!searchQuery);
+        setRandomSeed(undefined);
     }, []);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -464,6 +465,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     </div>;
 
     function removeFilterTag(filter: string) {
+        setRandomSeed(undefined);
         if (searchStages.includes(filter as STAGE)) {
             setSearchStages(searchStages.filter(f => f !== filter));
         } else if (getChoiceTreeLeaves(selections).some(leaf => leaf.value === filter)) {
@@ -483,7 +485,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const FilterTag = ({tag}: {tag: {value: string, label: string}}) => {
         return (
-            <div data-bs-theme="neutral" className="filter-tag me-2 mt-1 d-flex align-items-center">
+            <div data-bs-theme="neutral" data-testid={`filter-tag-${tag.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
                 {tag.label}
                 <button className="icon icon-close" onClick={() => removeFilterTag(tag.value)} aria-label="Close"/>
             </div>
@@ -535,7 +537,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         tiers, choices,
         selections, setSelections: withResetSeed(setSelections), 
         applyFilters: withResetSeed(applyFilters),
-        clearFilters: withResetSeed(applyFilters),
+        clearFilters,
         validFiltersSelected,
         searchDisabled,
         setSearchDisabled: withResetSeed(setSearchDisabled)

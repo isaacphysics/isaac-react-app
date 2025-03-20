@@ -8,12 +8,14 @@ import {mockUser} from "../mocks/data";
 import {isaacApi, requestCurrentUser, store} from "../app/state";
 import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
-import React, { act } from "react";
+import React from "react";
 import {MemoryRouter} from "react-router";
-import {screen, waitFor, within} from "@testing-library/react";
+import {act, screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
+import { history } from "../app/services";
+import { LocationDescriptor } from "history";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -157,9 +159,10 @@ export const waitForLoaded = () => waitFor(() => {
     expect(screen.queryAllByText("Loading...")).toHaveLength(0);
 });
 
-export const expectUrlParams = (text: string) => expect(window.location.search).toBe(text);
+export const expectUrlParams = (text: string) => expect(history.location.search).toBe(text);
 
-export const sleep = (ms: number) => act(() => new Promise(resolve => setTimeout(resolve, ms)));
+export const setUrl = (location: LocationDescriptor) => history.push(location);
+
 
 export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => void) => Promise<void>) => {
     const nextRandom = {
