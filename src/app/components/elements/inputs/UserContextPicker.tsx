@@ -17,6 +17,7 @@ import {
     useUserViewingContext
 } from "../../../services";
 import {selectors, transientUserContextSlice, useAppDispatch, useAppSelector,} from "../../../state";
+import classNames from "classnames";
 
 const contextExplanationMap: {[key in CONTEXT_SOURCE]: string} = {
     [CONTEXT_SOURCE.TRANSIENT]: "these context picker settings",
@@ -62,7 +63,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         return <Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
             <Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}>
                 {/* Stage Selector */}
-                <FormGroup className={`form-group w-100 d-flex justify-content-end m-0`}>
+                <div className={classNames("form-group w-100 d-flex justify-content-end m-0", {"mb-3": isAda})}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}
                     {!userContext.hasDefaultPreferences && (userContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
                         <button className={"icon-reset mt-2"} aria-label={"Reset viewing context"} onClick={() => {
@@ -71,7 +72,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         }}/>
                     }
                     <Input
-                        className={`flex-grow-1 d-inline-block ps-2 pe-0 mb-2 ${isAda ? "me-1" : ""}`}
+                        className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", { "mb-2 me-1": isAda })}
                         type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
                         value={userContext.stage}
@@ -134,7 +135,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                             }
                         </UncontrolledTooltip>
                     </div>
-                </FormGroup>
+                </div>
             </Row>
         </Col>;
     }
