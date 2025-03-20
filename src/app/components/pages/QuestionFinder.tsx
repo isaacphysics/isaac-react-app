@@ -57,7 +57,7 @@ import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
-const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
+const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
 type FilterParams = typeof FILTER_PARAMS[number];
 
 export interface QuestionStatus {
@@ -177,7 +177,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
     const [searchDisabled, setSearchDisabled] = useState(true);
-    const [randomSeed, setRandomSeed] = useState<number | undefined>();
+    const [randomSeed, setRandomSeed] = useState<number | undefined>(params.randomSeed === undefined ? undefined : parseInt(params.randomSeed.toString()));
     
     const [populatedFromAccountSettings, setPopulatedFromAccountSettings] = useState(false);
     useEffect(function populateFiltersFromAccountSettings() {
@@ -313,7 +313,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
 
         setFilteringByStatus(isFilteringByStatus);
-        setRandomSeed(undefined);
         searchAndUpdateURL();
     };
 
@@ -517,6 +516,30 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
+    const withResetSeed: {
+        (fn: () => void): () => void;
+        <T>(fn: (v: T) => void): (v: T) => void;
+    } = <T,>(fn: (...args: T[]) => void) => (...args: T[]) => {
+        setRandomSeed(undefined);
+        return args.length > 0 ? fn(args[0]) : fn();
+    };
+
+    const questionFinderFilterPanelProps = {
+        searchDifficulties, setSearchDifficulties: withResetSeed(setSearchDifficulties),
+        searchTopics, setSearchTopics: withResetSeed(setSearchTopics),
+        searchStages, setSearchStages: withResetSeed(setSearchStages),
+        searchExamBoards, setSearchExamBoards: withResetSeed(setSearchExamBoards),
+        searchStatuses, setSearchStatuses: withResetSeed(setSearchStatuses),
+        searchBooks, setSearchBooks: withResetSeed(setSearchBooks),
+        excludeBooks, setExcludeBooks: withResetSeed(setExcludeBooks),
+        tiers, choices,
+        selections, setSelections: withResetSeed(setSelections), 
+        applyFilters: withResetSeed(applyFilters),
+        clearFilters: withResetSeed(applyFilters),
+        validFiltersSelected,
+        searchDisabled,
+        setSearchDisabled: withResetSeed(setSearchDisabled)
+    };
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question Finder", "Questions")}
@@ -541,19 +564,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             <QuestionFinderSidebar searchText={searchQuery} setSearchText={setSearchQuery} questionFilters={[]} setQuestionFilters={function (value: React.SetStateAction<Tag[]>): void {
                 throw new Error("Function not implemented.");
             } } topLevelFilters={[]} 
-            questionFinderFilterPanelProps={{
-                searchDifficulties, setSearchDifficulties,
-                searchTopics, setSearchTopics,
-                searchStages, setSearchStages,
-                searchExamBoards, setSearchExamBoards,
-                searchStatuses, setSearchStatuses,
-                searchBooks, setSearchBooks,
-                excludeBooks, setExcludeBooks,
-                tiers, choices, 
-                selections, setSelections,
-                applyFilters, clearFilters,
-                validFiltersSelected, searchDisabled, setSearchDisabled
-            }} />
+            questionFinderFilterPanelProps={questionFinderFilterPanelProps} />
             <MainContent>
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>

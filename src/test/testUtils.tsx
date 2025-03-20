@@ -8,7 +8,7 @@ import {mockUser} from "../mocks/data";
 import {isaacApi, requestCurrentUser, store} from "../app/state";
 import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
-import React from "react";
+import React, { act } from "react";
 import {MemoryRouter} from "react-router";
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -149,6 +149,10 @@ export const clickButton = (text: string) => screen.findAllByText(text).then(e =
 export const waitForLoaded = () => waitFor(() => {
     expect(screen.queryAllByText("Loading...")).toHaveLength(0);
 });
+
+export const expectUrlParams = (text: string) => expect(window.location.search).toBe(text);
+
+export const sleep = (ms: number) => act(() => new Promise(resolve => setTimeout(resolve, ms)));
 
 export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => void) => Promise<void>) => {
     const nextRandom = {
