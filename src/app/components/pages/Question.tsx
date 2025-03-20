@@ -98,7 +98,8 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                 />
                 {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                 <SidebarLayout>
-                    {isDefined(gameboardId) ? <GameboardSidebar id={gameboard?.id} title={gameboard?.title} questions={gameboard?.contents}/> : <QuestionSidebar relatedContent={doc.relatedContent} />}
+                    {isDefined(gameboardId) ? <GameboardSidebar id={gameboard?.id} title={gameboard?.title} questions={gameboard?.contents} currentQuestionId={questionId}/>
+                        : <QuestionSidebar relatedContent={doc.relatedContent} />}
                     <MainContent>
                         {!preview && <CanonicalHrefElement />}
 

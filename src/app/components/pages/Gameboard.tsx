@@ -27,7 +27,6 @@ import {
     showWildcard,
     siteSpecific,
     TAG_ID,
-    TAG_LEVEL,
     tags,
     useDeviceSize,
     useUserViewingContext
@@ -65,7 +64,6 @@ export const getProgressIcon = (question: GameboardItem) => {
 };
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
-    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const {itemClasses, icon, message} = getProgressIcon(question);
 
     const questionTags = tags.getByIdsAsHierarchy((question.tags || []) as TAG_ID[])
@@ -88,7 +86,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 )}
             </span>
             <div className={classNames("flex-fill", {"d-flex py-3 pe-3 flex-column flex-md-row": isAda, "d-md-flex": isPhy})}>
-                <div className={"flex-grow-1 " + (itemSubject?.id ?? (isPhy ? "physics" : ""))}>
+                <div className={"flex-grow-1"}>
                     <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-theme": isPhy})}>
                         {generateQuestionTitle(question)}
                     </Markup>

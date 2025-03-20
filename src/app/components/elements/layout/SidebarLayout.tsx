@@ -3,7 +3,7 @@ import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHead
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement } from "../../../services";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isPhy } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
@@ -46,7 +46,7 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
                         
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
         <Link to={link} className="py-2">
-            {isDefined(gameboardId) ? <span className={classNames(getProgressIcon(question).icon, "mt-3 me-2")} style={{minWidth: "16px"}}/> : <i className="icon icon-question"/>}
+            {isDefined(gameboardId) ? <span className={classNames(getProgressIcon(question).icon, "question-progress-icon mt-1 mx-2")}/> : <i className="icon icon-question"/>}
             <div className="d-flex flex-column w-100">
                 <span className="hover-underline link-title">{question.title}</span>
                 <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
@@ -196,16 +196,17 @@ interface GameboardSidebarProps extends SidebarProps {
     id?: string;
     title?: string;
     questions?: GameboardItem[];
+    currentQuestionId?: string;
 }
 
 export const GameboardSidebar = (props: GameboardSidebarProps) => {
     // Alternative to QuestionSidebar for questions in the context of a gameboard
-    const {id, title, questions} = props;
+    const {id, title, questions, currentQuestionId} = props;
     return <NavigationSidebar>
         <div className="section-divider"/>
         <h5 className="mb-3">Assignment: {title}</h5>
         <ul>
-            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id}/></li>)}
+            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={q.id === currentQuestionId ? "selected-question" : ""}/></li>)}
         </ul>
     </NavigationSidebar>;
 };
