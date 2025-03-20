@@ -146,6 +146,13 @@ export const clickButton = (text: string) => screen.findAllByText(text).then(e =
     return userEvent.click(e[0]);
 });
 
+export const enterInput = (placeholder: string, input: string) => screen.findByPlaceholderText(placeholder).then(e => {
+    if (e.hasAttribute('disabled')) {
+        throw new Error(`Can't inter text into  disabled field ${[placeholder]}`);
+    }
+    return userEvent.type(e, input);
+});
+
 export const waitForLoaded = () => waitFor(() => {
     expect(screen.queryAllByText("Loading...")).toHaveLength(0);
 });

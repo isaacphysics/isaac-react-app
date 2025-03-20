@@ -561,7 +561,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         </div>, 
         <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />)}
         <SidebarLayout>
-            <QuestionFinderSidebar searchText={searchQuery} setSearchText={setSearchQuery} questionFilters={[]} setQuestionFilters={function (value: React.SetStateAction<Tag[]>): void {
+            <QuestionFinderSidebar searchText={searchQuery} setSearchText={withResetSeed(setSearchQuery)} questionFilters={[]} setQuestionFilters={function (value: React.SetStateAction<Tag[]>): void {
                 throw new Error("Function not implemented.");
             } } topLevelFilters={[]} 
             questionFinderFilterPanelProps={questionFinderFilterPanelProps} />

@@ -1,5 +1,5 @@
 import {act, screen, waitFor, within} from "@testing-library/react";
-import { clickButton, expectUrlParams, renderTestEnvironment, sleep, withMockedRandom} from "../testUtils";
+import { clickButton, enterInput, expectUrlParams, renderTestEnvironment, sleep, withMockedRandom} from "../testUtils";
 import { buildMockQuestionFinderResults, buildMockQuestions, mockQuestionFinderResults } from "../../mocks/data";
 import _ from "lodash";
 import { buildFunctionHandler } from "../../mocks/handlers";
@@ -12,13 +12,13 @@ describe("QuestionFinder", () => {
         const questions = buildMockQuestions(40);
         const resultsResponse = buildMockQuestionFinderResults(questions, 0);               
         
-        const renderQuestionFinderPage = ({questionsSearchResponse} : RenderParameters) => {
+        const renderQuestionFinderPage = ({questionsSearchResponse, queryParams} : RenderParameters) => {
             act(() => {
                 renderTestEnvironment({
                     extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed', 'startIndex'], questionsSearchResponse)]
             
                 });
-                history.push({ pathname: '/questions' });
+                history.push({ pathname: '/questions', search: queryParams });
             });
         };
 
@@ -41,10 +41,7 @@ describe("QuestionFinder", () => {
             };
 
             it('query parameter should shuffle results', async () => {
-                act(() => {
-                    renderQuestionFinderPage({ questionsSearchResponse });
-                    history.push({pathname: '/questions', search: '?stages=year_7_and_8&randomSeed=1' });
-                });
+                renderQuestionFinderPage({ questionsSearchResponse, queryParams: '?stages=year_7_and_8&randomSeed=1' });
                 await waitForQuestions();
                 await expectQuestions(shuffledQuestions.slice(0, 30));
             });
@@ -79,12 +76,23 @@ describe("QuestionFinder", () => {
                 return withMockedRandom(async (nextRandom) => {
                     nextRandom([1 * 10 ** -6]);
                     
-                    renderQuestionFinderPage({ questionsSearchResponse });
-                    await clickButton("Shuffle questions");
-                    expectUrlParams("?randomSeed=1");
+                    renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
                     await clickButton("Year 7&8");
                     await sleep(1000);
                     expectUrlParams("?stages=year_7_and_8");
+                    await waitForQuestions();
+                    await expectQuestions(questions.slice(0, 30));
+                });
+            });
+
+            it('searching for a question should return to alphabetical order when a random seed is applied', () => {
+                return withMockedRandom(async (nextRandom) => {
+                    nextRandom([1 * 10 ** -6]);
+                    
+                    renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
+                    await enterInput("e.g. Man vs. Horse", "A bag");
+                    await sleep(1000);
+                    expectUrlParams("?query=A%20bag");
                     await waitForQuestions();
                     await expectQuestions(questions.slice(0, 30));
                 });
@@ -129,6 +137,7 @@ type RenderParameters = {
         randomSeed: string | null;
         startIndex: string | null;
     }) => typeof mockQuestionFinderResults;
+    queryParams?: string;
     initalRouteEntries?: string[];
 };
 
