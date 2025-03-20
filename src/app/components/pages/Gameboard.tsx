@@ -39,13 +39,10 @@ import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
-const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
+export const getProgressIcon = (question: GameboardItem) => {
     let itemClasses = classNames("content-summary-link text-info bg-white", {"p-3": isPhy, "p-0": isAda});
-    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     let icon = siteSpecific("icon-not-started", "/assets/cs/icons/question-not-started.svg");
     let message = siteSpecific("", "Not started");
-    const messageClasses = "";
-
     switch (question.state) {
         case "PERFECT":
             if (isPhy) {
@@ -64,6 +61,12 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
             icon = siteSpecific("icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
             break;
     }
+    return {itemClasses, icon, message};
+};
+
+const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
+    const {itemClasses, icon, message} = getProgressIcon(question);
 
     const questionTags = tags.getByIdsAsHierarchy((question.tags || []) as TAG_ID[])
         .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
@@ -89,7 +92,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-theme": isPhy})}>
                         {generateQuestionTitle(question)}
                     </Markup>
-                    {isPhy && message && <span className={classNames("gameboard-item-message-phy", messageClasses)}>{message}</span>}
+                    {isPhy && message && <span className="gameboard-item-message-phy">{message}</span>}
                     {isPhy && question.subtitle && <div className="small text-muted d-none d-sm-block">
                         {question.subtitle}
                     </div>}

@@ -2,7 +2,7 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, ContentSummaryDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
@@ -21,6 +21,7 @@ import { formatISODateOnly } from "../DateString";
 import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
+import { getProgressIcon } from "../../pages/Gameboard";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -32,14 +33,20 @@ export const MainContent = (props: ColProps) => {
     return siteSpecific(<Col xs={12} lg={8} xl={9} {...rest} className={classNames(className, "order-0 order-lg-1")} />, props.children);
 };
 
-const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & {question: QuestionDTO}) => {
-    const { question, ...rest } = props;
+interface QuestionLinkProps {
+    question: QuestionDTO;
+    gameboardId?: string;
+}
+
+const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkProps) => {
+    const { question, gameboardId, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
+    const link = isDefined(gameboardId) ? `/questions/${question.id}?board=${gameboardId}` : `/questions/${question.id}`;
                         
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
-        <Link to={`/questions/${question.id}`} className="py-2">
-            <i className="icon icon-question"/>
+        <Link to={link} className="py-2">
+            {isDefined(gameboardId) ? <span className={classNames(getProgressIcon(question).icon, "mt-3 me-2")} style={{minWidth: "16px"}}/> : <i className="icon icon-question"/>}
             <div className="d-flex flex-column w-100">
                 <span className="hover-underline link-title">{question.title}</span>
                 <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
@@ -131,7 +138,7 @@ interface QuestionSidebarProps extends SidebarProps {
 }
 
 export const QuestionSidebar = (props: QuestionSidebarProps) => {
-    // TODO: this implementation is only for standalone questions; if in the context of a gameboard, the sidebar should show gameboard navigation
+    // This implementation is only for standalone questions; if in the context of a gameboard, the sidebar should show gameboard navigation
     const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage") as IsaacConceptPageDTO[] | undefined;
     const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage") as QuestionDTO[] | undefined;
 
@@ -182,6 +189,24 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
             </div>
 
         </>}
+    </NavigationSidebar>;
+};
+
+interface GameboardSidebarProps extends SidebarProps {
+    id?: string;
+    title?: string;
+    questions?: GameboardItem[];
+}
+
+export const GameboardSidebar = (props: GameboardSidebarProps) => {
+    // Alternative to QuestionSidebar for questions in the context of a gameboard
+    const {id, title, questions} = props;
+    return <NavigationSidebar>
+        <div className="section-divider"/>
+        <h5 className="mb-3">Assignment: {title}</h5>
+        <ul>
+            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id}/></li>)}
+        </ul>
     </NavigationSidebar>;
 };
 
