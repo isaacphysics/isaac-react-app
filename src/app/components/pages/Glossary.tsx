@@ -340,12 +340,12 @@ export const Glossary = () => {
                         </Col>
                     </Row>
                     {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
-                        <Col md={{size: 8, offset: 2}} className="py-4">
+                        <div className={siteSpecific("text-center", "col-md-8 offset-md-2 py-4")}>
                             {/* Let users know that they need to select a subject */}
                             {isPhy && !isDefined(filterSubject) && <p>Please select a subject.</p>}
                             {(isAda || isDefined(filterSubject)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
                             {searchText !== "" && <p>We could not find glossary terms to match your search criteria.</p>}
-                        </Col>
+                        </div>
                     </Row>}
                     {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className={classNames("p-2 pb-4", {"list-results-container border-radius-2 mb-4": isPhy})}>
                         <div className="no-print">
