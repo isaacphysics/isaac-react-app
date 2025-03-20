@@ -48,6 +48,7 @@ import { QuestionDecks } from "../../pages/QuestionDecks";
 import { QuickQuizzes } from "../../pages/QuickQuizzes";
 import { LessonsAndRevision } from "../../pages/LessonsAndRevision";
 import { SubjectOverviewPage } from "../../pages/SubjectOverviewPage";
+import { Glossary } from "../../pages/Glossary";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -62,6 +63,7 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
     "/practice_tests": PracticeQuizzes,
     "/quick_quizzes": QuickQuizzes,
     "/question_decks": QuestionDecks,
+    "/glossary": Glossary,
 };
 
 let key = 0;
