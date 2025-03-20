@@ -177,7 +177,7 @@ export const Gameboard = withRouter(({ location }) => {
                 thenRender={(gameboard) => {
                     return <>
                         <TitleAndBreadcrumb 
-                            currentPageTitle={gameboard && gameboard.title || `Filter Generated ${siteSpecific("Gameboard", "Quiz")}`}
+                            currentPageTitle={gameboard && gameboard.title || `Filter Generated ${siteSpecific("Gameboard", "Quiz")}`} icon={{type: "hex", icon: "page-icon-question-pack"}}
                             intermediateCrumbs={isPhy && isDefined(assignments) && isFound(assignments) && (assignments.map(a => a.gameboardId).includes(gameboardId)) ? [{title: "Assignments", to: "/assignments"}] : []}
                         />
                         <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
