@@ -47,7 +47,6 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     const SORT_FUNCTIONS = {
         [MyAssignmentsOrder.title]: (a: AssignmentDTO) => a.gameboard?.title,
-        [MyAssignmentsOrder.setBy]: (a: AssignmentDTO) => a.assignerSummary?.familyName,
         [MyAssignmentsOrder.startDate]: (a: AssignmentDTO) => a.scheduledStartDate ? a.scheduledStartDate : a.creationDate,
         [MyAssignmentsOrder.dueDate]: (a: AssignmentDTO) => a.dueDate,
         [MyAssignmentsOrder.attempted]: (a: AssignmentDTO) => a.gameboard?.percentageAttempted ?? 0,
@@ -93,7 +92,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                         );
 
                         const orderNegative = sortOrder.at(0) == "-";
-                        const orderKind = (orderNegative ? sortOrder.slice(1) : sortOrder) as "title" | "setBy" | "startDate" | "dueDate" | "attempted" | "correct";
+                        const orderKind = (orderNegative ? sortOrder.slice(1) : sortOrder) as "title" | "startDate" | "dueDate" | "attempted" | "correct";
                         const orderedBoards = sortBy(filteredAssignments, SORT_FUNCTIONS[orderKind]);
                         if (orderNegative) orderedBoards.reverse();
 

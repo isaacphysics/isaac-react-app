@@ -514,8 +514,6 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
     const ORDER_NAMES: {[key in MyAssignmentsOrder]: string} = {
         "title": "Title (A-Z)",
         "-title": "Title (Z-A)",
-        "setBy": "Assigner (A-Z)",
-        "-setBy": "Assigner (Z-A)",
         "startDate": "Start date (oldest first)",
         "-startDate": "Start date (latest first)",
         "dueDate": "Due date (oldest first)",
