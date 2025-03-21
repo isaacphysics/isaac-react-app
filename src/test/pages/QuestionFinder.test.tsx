@@ -63,7 +63,7 @@ describe("QuestionFinder", () => {
                 await renderQuestionFinderPage({ questionsSearchResponse });
                 await setFilter("GCSE");
                 await clickButton("Shuffle questions");
-                expectUrlParams("?randomSeed=1&stages=gcse");
+                await expectUrlParams("?randomSeed=1&stages=gcse");
             });
         });
 
@@ -71,31 +71,28 @@ describe("QuestionFinder", () => {
             it('when applying filters', async () => {
                 await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
                 await setFilter("GCSE");
-                expectUrlParams("?stages=gcse");
+                await expectUrlParams("?stages=gcse");
                 await expectQuestions(questions.slice(0, 30));
             });
     
             it('when searching for a question', async () => {
                 await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
                 await enterInput(siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST"), "A bag");
-                await act(async () => {
-                    await new Promise((resolve) => setTimeout(resolve, 1000));
-                });
-                expectUrlParams("?query=A%20bag");
+                await expectUrlParams("?query=A%20bag");
                 await expectQuestions(questions.slice(0, 30));
             });
 
             it('when clearing all filters', async () => {
                 await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=year_7_and_8" });
                 await clickButton(siteSpecific("Clear all filters", "Clear all"));
-                expectUrlParams('');
+                await expectUrlParams('');
             });
 
             if (isPhy) {
                 it('when clearing a filter tag', async () => {
                     await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=year_9" });
                     await clearFilterTag('year_9');
-                    expectUrlParams('');
+                    await expectUrlParams('');
                 });
             }
         });
@@ -145,30 +142,20 @@ const findQuestions = () => screen.findByTestId("question-finder-results").then(
 
 const getQuestionText = (q: HTMLElement) => q.querySelector(isPhy ? 'span' : 'span.question-link-title')?.textContent;
 
-const expectQuestions = async (expectedQuestions: typeof mockQuestionFinderResults.results) => {
-    await waitForQuestions(expectedQuestions.length);
-    if (!isPhy) {
-        await act(async () => {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-        });
-    }
+const expectQuestions = (expectedQuestions: typeof mockQuestionFinderResults.results) => waitFor(async () => {
     const found = await findQuestions();
     expect(found.length).toEqual(expectedQuestions.length);
     expect(found.map(getQuestionText)).toEqual(expectedQuestions.map(q => q.title));
-};
+});
 
 const expectPageIndicator = (content: string) => screen.findByTestId("question-finder-results").then(found => {
     expect(found.querySelectorAll('.col')[0].textContent).toBe(content);
 });
 
-const waitForQuestions = (length: number) => waitFor(async () => {
-    return expect(await findQuestions()).toHaveLength(length);
-});
-
 const clearFilterTag = async (tagId: string) =>  {
     const tag = await screen.findByTestId(`filter-tag-${tagId}`);
     const button = await within(tag).findByRole('button');
-    return userEvent.click(button);
+    await userEvent.click(button);
 };
 
 const setFilter = async (filter: string) => {

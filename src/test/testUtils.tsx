@@ -155,18 +155,21 @@ export const clickButton = async (text: string, container?: Promise<HTMLElement>
     return userEvent.click(button);
 };
 
-export const enterInput = (placeholder: string, input: string) => screen.findByPlaceholderText(placeholder).then(e => {
-    if (e.hasAttribute('disabled')) {
+export const enterInput = async (placeholder: string, input: string) => {
+    const textBox = await screen.findByPlaceholderText(placeholder);
+    if (textBox.hasAttribute('disabled')) {
         throw new Error(`Can't inter text into  disabled field ${[placeholder]}`);
     }
-    return userEvent.type(e, input);
-});
+    await userEvent.type(textBox, input);
+};
 
 export const waitForLoaded = () => waitFor(() => {
     expect(screen.queryAllByText("Loading...")).toHaveLength(0);
 });
 
-export const expectUrlParams = (text: string) => expect(history.location.search).toBe(text);
+export const expectUrlParams = (text: string) => waitFor(() => {
+    expect(history.location.search).toBe(text);
+});
 
 export const setUrl = (location: LocationDescriptor) => history.push(location);
 
