@@ -14,8 +14,8 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
     const dispatch = useAppDispatch();
 
     return questionPage ?
-        <>
-            {questionPrintOpen && <div className="question-actions-link-box not-mobile">
+        <div className="position-relative">
+            {questionPrintOpen && <div className="action-buttons-popup-container not-mobile">
                 <div className="question-actions-link text-nowrap">
                     <Button
                         size={"sm"}
@@ -58,7 +58,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                     aria-label="Print page"
                 />
             )}
-        </>
+        </div>
         :
         siteSpecific(
             <IconButton
