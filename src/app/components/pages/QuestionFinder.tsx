@@ -617,7 +617,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         .
                                     </Col>
                                     <Col>
-                                        <button className="btn btn-link invert-underline d-flex align-items-center gap-2 float-end"
+                                        <button className="btn btn-link nomargin invert-underline d-flex align-items-center gap-2 float-end"
                                             onClick={() => setRandomSeed(nextSeed())}>Shuffle questions<i className="icon icon-refresh icon-color-black"></i></button>
                                     </Col>
                                 </Row>
