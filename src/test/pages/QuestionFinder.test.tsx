@@ -3,7 +3,6 @@ import { clickButton, enterInput, expectUrlParams, renderTestEnvironment, setUrl
 import { buildMockQuestionFinderResults, buildMockQuestions, mockQuestionFinderResults } from "../../mocks/data";
 import _ from "lodash";
 import { buildFunctionHandler } from "../../mocks/handlers";
-import userEvent from "@testing-library/user-event";
 import { isPhy, siteSpecific } from "../../app/services";
 
 describe("QuestionFinder", () => {
