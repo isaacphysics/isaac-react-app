@@ -5,6 +5,7 @@ import _ from "lodash";
 import { buildFunctionHandler } from "../../mocks/handlers";
 import { isAda } from "../../app/services";
 import userEvent from "@testing-library/user-event";
+
 describe("QuestionFinder", () => {
     if (isAda) {
         it('does not matter', () => {});
@@ -42,7 +43,6 @@ describe("QuestionFinder", () => {
 
             it('query parameter should shuffle results', async () => {
                 await renderQuestionFinderPage({ questionsSearchResponse, queryParams: '?stages=year_7_and_8&randomSeed=1' });
-                await waitForQuestions();
                 await expectQuestions(shuffledQuestions.slice(0, 30));
             });
             
@@ -52,11 +52,9 @@ describe("QuestionFinder", () => {
                     await renderQuestionFinderPage({ questionsSearchResponse });
                    
                     await clickButton("Year 7&8");
-                    await waitForQuestions();
                     await expectQuestions(questions.slice(0, 30));
                     
                     await clickButton("Shuffle questions");
-                    await waitForQuestions();
                     await expectQuestions(shuffledQuestions.slice(0, 30));
                 });
             });
@@ -72,26 +70,20 @@ describe("QuestionFinder", () => {
                 });
             });
 
-            describe('returning to alphabetical order from a randomised screen', () => {
-                const testReturnToAlphabeticalOrder = async (action: () => Promise<void>) => {                        
-                    await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
-                    await action();
-                    await waitForQuestions();
-                    await expectQuestions(questions.slice(0, 30));
-                };
-                
+            describe('returning to alphabetical order from a randomised screen', () => {                
                 it('when applying filters', async () => {
-                    await testReturnToAlphabeticalOrder(async () => {
-                        await clickButton("Year 7&8");
-                        expectUrlParams("?stages=year_7_and_8");
-                    });
+                    await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
+                    await clickButton("Year 7&8");
+                    expectUrlParams("?stages=year_7_and_8");
+                    await expectQuestions(questions.slice(0, 30));
                 });
     
-                it('when searching for a question', () => {
-                    return testReturnToAlphabeticalOrder(async () => {
-                        await enterInput("e.g. Man vs. Horse", "A bag");
-                        expectUrlParams("?query=A%20bag");
-                    });
+                it('when searching for a question', async () => {
+                    await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
+                    await enterInput("e.g. Man vs. Horse", "A bag");
+                    expectUrlParams("?query=A%20bag");
+                    await expectQuestions(questions.slice(0, 30));
+
                 });
 
                 it('when clearing all filters', async () => {
@@ -123,19 +115,16 @@ describe("QuestionFinder", () => {
                         }
                     }});
                     await clickButton("Year 7&8");
-                    await waitForQuestions();
                     await expectQuestions(questions.slice(0, 30));
                     await expectPageIndicator("Showing 30 of 40.");
                     
                     await clickButton("Shuffle questions");
-                    await waitForQuestions();
-                    await expectPageIndicator("Showing 30 of 40.");
                     await expectQuestions(shuffledQuestions.slice(0, 30));
+                    await expectPageIndicator("Showing 30 of 40.");
 
                     await clickButton("Load more");
-                    await waitForQuestions(shuffledQuestions.length);
-                    await expectPageIndicator("Showing 40 of 40.");
                     await expectQuestions(shuffledQuestions);
+                    await expectPageIndicator("Showing 40 of 40.");
                 });
             });
         });
@@ -148,7 +137,6 @@ type RenderParameters = {
         startIndex: string | null;
     }) => typeof mockQuestionFinderResults;
     queryParams?: string;
-    initalRouteEntries?: string[];
 };
 
 const findQuestions = () => screen.findByTestId("question-finder-results").then(e => within(e).findAllByRole('listitem'));
@@ -156,6 +144,7 @@ const findQuestions = () => screen.findByTestId("question-finder-results").then(
 const getQuestionText = (q: HTMLElement) => q.querySelector('span')?.textContent;
 
 const expectQuestions = async (expectedQuestions: typeof mockQuestionFinderResults.results) => {
+    await waitForQuestions(expectedQuestions.length);
     const found = await findQuestions();
     expect(found.length).toEqual(expectedQuestions.length);
     expect(found.map(getQuestionText)).toEqual(expectedQuestions.map(q => q.title));
@@ -165,10 +154,7 @@ const expectPageIndicator = (content: string) => screen.findByTestId("question-f
     expect(found.querySelectorAll('.col')[0].textContent).toBe(content);
 });
 
-const waitForQuestions = (length?: number) => waitFor(async () => {
-    if (length === undefined) {
-        return expect(await findQuestions()).not.toHaveLength(0);
-    }
+const waitForQuestions = (length: number) => waitFor(async () => {
     return expect(await findQuestions()).toHaveLength(length);
 });
 
