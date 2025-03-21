@@ -1,44 +1,30 @@
-import {screen} from "@testing-library/react";
-import { clickButton, renderTestEnvironment, waitForLoaded, withMockedRandom} from "../testUtils";
+import {act, screen} from "@testing-library/react";
+import { clickButton, renderTestEnvironment, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults } from "../../mocks/data";
-import { http, HttpResponse } from "msw";
-import { API_PATH, isAda } from "../../app/services";
-import { UserRole } from "../../IsaacApiTypes";
+import { isAda } from "../../app/services";
+import { buildFunctionHandler } from "../../mocks/handlers";
 
 describe("SubjectLandingPage", () => {
     if (isAda) {
         it('does not matter', () => {});
     } else {
-        const expectInDocument = (text: string) => screen.findByText(text).then(e => expect(e).toBeInTheDocument());
         const questions = mockQuestionFinderResults.results;
-        const renderSubjectLandingPage = async (role: UserRole | "ANONYMOUS" ) => {
-            const result = { requestCount: 0 };
-          
-            renderTestEnvironment({
-                role,
-                extraEndpoints: [
-                    http.get(API_PATH + "/pages/questions/", async ({request}) => {
-                        result.requestCount++;
-                        const length = mockQuestionFinderResults.results.length;
-                        const randomSeed = parseInt(new URL(request.url).searchParams.get('randomSeed') || '0') % length;
-                        return HttpResponse.json({
-                            ...mockQuestionFinderResults,
-                            results: mockQuestionFinderResults.results.slice(randomSeed, length)
-                        }, {
-                            status: 200,
-                        });
-                    })
-                ]
+
+        const renderSubjectLandingPage = async ({questionsSearchResponse} : RenderParameters) => {
+            await act(async () => {
+                renderTestEnvironment({
+                    role: 'ANONYMOUS',
+                    extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed'], questionsSearchResponse)]
+                            
+                });
+                setUrl({ pathname: '/maths/gcse' });
             });
-    
-            await clickButton("GCSE Maths");
-            return result;
         };
 
         it('should show the first question', () => 
             withMockedRandom(async (randomSequence) => {
                 randomSequence([0]);
-                await renderSubjectLandingPage('ANONYMOUS');
+                await renderSubjectLandingPage({ questionsSearchResponse: () => mockQuestionFinderResults});
 
                 await waitForLoaded();
             
@@ -47,28 +33,55 @@ describe("SubjectLandingPage", () => {
         );
 
         it('should send exactly 1 request', async () => {
-            const page = await renderSubjectLandingPage('ANONYMOUS');
+            const requestCounter = buildCounter();
+            await renderSubjectLandingPage({ questionsSearchResponse: requestCounter.attach(() => mockQuestionFinderResults)});
         
             await waitForLoaded();
 
-            expect(page.requestCount).toEqual(1);
+            expect(requestCounter.count).toEqual(1);
         });
 
         describe('when a new question is requested', () => {
-            it('should show the second question and send exactly 2 requests', () => 
+            it('should show the second question and send exactly 2 requests', () =>
                 withMockedRandom(async (randomSequence) => {
                     randomSequence([0, 1 * 10 ** -6]);
+                    const requestCounter = buildCounter();
                     
-                    const page = await renderSubjectLandingPage('ANONYMOUS');
+                    await renderSubjectLandingPage({
+                        questionsSearchResponse: requestCounter.attach(({ randomSeed }) => {
+                            if (randomSeed !== null) {
+                                return {...mockQuestionFinderResults, results: [questions[parseInt(randomSeed)]]};
+                            }
+                            throw new Error('Expected random seed.');
+                        })
+                    });
                     await waitForLoaded();
                     await expectInDocument(questions[0].title);
     
                     await clickButton("Get a different question");
                     await waitForLoaded();
                     await expectInDocument(questions[1].title);
-                    expect(page.requestCount).toEqual(2);
+                    expect(requestCounter.count).toEqual(2);
                 })
             );
         });
     }
 });
+
+type RenderParameters = {
+    questionsSearchResponse: (options: {
+        randomSeed: string | null;
+    }) => typeof mockQuestionFinderResults;
+};
+
+const buildCounter = () => ({
+    count: 0,
+    attach<T, U>(fn: ((p: T) => U)) {
+        return (p: T) => {
+            this.count++;
+            return fn(p);
+        };
+    } 
+});
+
+const expectInDocument = (text: string) => screen.findByText(text).then(e => expect(e).toBeInTheDocument());

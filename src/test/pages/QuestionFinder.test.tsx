@@ -47,8 +47,8 @@ describe("QuestionFinder", () => {
             });
             
             it('button should shuffle questions', async () => {
-                await withMockedRandom(async (nextRandom) => {
-                    nextRandom([1 * 10 ** -6]);
+                await withMockedRandom(async (randomSequence) => {
+                    randomSequence([1 * 10 ** -6]);
                     await renderQuestionFinderPage({ questionsSearchResponse });
                    
                     await clickButton("Year 7&8");
@@ -60,8 +60,8 @@ describe("QuestionFinder", () => {
             });
 
             it('button stores the seed in a URL parameter', () => {
-                return withMockedRandom(async (nextRandom) => {
-                    nextRandom([1 * 10 ** -6]);
+                return withMockedRandom(async (randomSequence) => {
+                    randomSequence([1 * 10 ** -6]);
                    
                     await renderQuestionFinderPage({ questionsSearchResponse });
                     await clickButton("Year 7&8");
@@ -104,8 +104,8 @@ describe("QuestionFinder", () => {
                 const resultsResponsePage2 = buildMockQuestionFinderResults(questions, 30);
                 const shuffledResultsResponsePage2 = buildMockQuestionFinderResults(shuffledQuestions, 30);
 
-                return withMockedRandom(async (nextRandom) => {
-                    nextRandom([1 * 10 ** -6]);
+                return withMockedRandom(async (randomSequence) => {
+                    randomSequence([1 * 10 ** -6]);
                    
                     await renderQuestionFinderPage({ questionsSearchResponse: ({ randomSeed, startIndex }) => {
                         switch (randomSeed) {
