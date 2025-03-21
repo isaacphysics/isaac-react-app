@@ -1,20 +1,4 @@
-import {ContentDTO, ImageDTO, SeguePageDTO} from "../../IsaacApiTypes";
-
-export interface BookSectionDTO extends ContentDTO {
-    label?: string;
-    pageId?: string;
-}
-
-export interface BookChapterDTO extends ContentDTO {
-    label?: string;
-    sections?: BookSectionDTO[];
-}
-
-export interface IsaacBookIndexPageDTO extends SeguePageDTO {
-    chapters?: BookChapterDTO[];
-    coverImage?: ImageDTO;
-}
-
+import { IsaacBookIndexPageDTO } from "../../IsaacApiTypes";
 
 export const physicsSkills19: IsaacBookIndexPageDTO = {
     "type": "isaacBookIndexPage",
