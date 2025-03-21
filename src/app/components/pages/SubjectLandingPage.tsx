@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { searchQuestions, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery } from "../../state";
 import { EventCard } from "../elements/cards/EventCard";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { Loading } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
