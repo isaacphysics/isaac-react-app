@@ -1,24 +1,24 @@
 import React, {lazy} from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
 import {PhysicsSkills19} from "../../pages/books/physics_skills_19";
-import {PhysBookGcse} from "../../pages/books/phys_book_gcse";
-import {PhysicsSkills14} from "../../pages/books/physics_skills_14";
-import {PreUniMaths} from "../../pages/books/pre_uni_maths";
-import {PreUniMaths2e} from "../../pages/books/pre_uni_maths_2e";
-import {Chemistry16} from "../../pages/books/chemistry_16";
+import {PhysBookGcse} from "../../pages/books_old/phys_book_gcse";
+import {PhysicsSkills14} from "../../pages/books_old/physics_skills_14";
+import {PreUniMaths} from "../../pages/books_old/pre_uni_maths";
+import {PreUniMaths2e} from "../../pages/books_old/pre_uni_maths_2e";
+import {Chemistry16} from "../../pages/books_old/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect, RouteComponentProps} from "react-router";
 import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
-import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
-import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
+import {QuantumMechanicsPrimer} from "../../pages/books_old/QuantumMechanicsPrimer";
+import {SolvingPhysProblems} from "../../pages/books_old/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
-import {MathsBookGcse} from "../../pages/books/maths_book_gcse";
-import {PhysBookYrNine} from "../../pages/books/phys_book_yr9";
-import {StepUpPhys} from "../../pages/books/step_up_phys";
-import {LinkingConcepts} from "../../pages/books/linking_concepts";
+import {MathsBookGcse} from "../../pages/books_old/maths_book_gcse";
+import {PhysBookYrNine} from "../../pages/books_old/phys_book_yr9";
+import {StepUpPhys} from "../../pages/books_old/step_up_phys";
+import {LinkingConcepts} from "../../pages/books_old/linking_concepts";
 import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
 import {QuizDoAssignment} from "../../pages/quizzes/QuizDoAssignment";
 import {QuizAttemptFeedback} from "../../pages/quizzes/QuizAttemptFeedback";
@@ -120,6 +120,7 @@ export const RoutesPhy = [
 
     // Books
     <TrackedRoute key={key++} exact path="/books/physics_skills_19" component={PhysicsSkills19}/>,
+    <TrackedRoute key={key++} exact path="/books/physics_skills_19/:pageId" component={PhysicsSkills19}/>,
     <TrackedRoute key={key++} exact path="/books/phys_book_gcse" component={PhysBookGcse}/>,
     <TrackedRoute key={key++} exact path="/books/physics_skills_14" component={PhysicsSkills14}/>,
     <TrackedRoute key={key++} exact path="/books/pre_uni_maths" component={PreUniMaths}/>,

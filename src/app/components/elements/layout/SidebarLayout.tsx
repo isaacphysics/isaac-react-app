@@ -2,7 +2,7 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, ContentSummaryDTO, IsaacBookIndexPageDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
@@ -22,6 +22,7 @@ import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
 import { StyledSelect } from "../inputs/StyledSelect";
+import { CollapsibleList } from "../CollapsibleList";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -1185,5 +1186,54 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
                 )}
             </ul>
         </>}
+    </ContentSidebar>;
+};
+
+export interface BookSidebarProps extends SidebarProps {
+    book: IsaacBookIndexPageDTO;
+    pageId: string | undefined;
+};
+
+export const BookSidebar = ({ book, pageId }: BookSidebarProps) => {
+
+    const [expandedTab, setExpandedTab] = useState<number | undefined>(undefined);
+
+    const history = useHistory();
+
+    return <ContentSidebar buttonTitle="Contents">
+        <ul className="m-0 p-0">
+            <button className="w-100 d-flex align-items-center p-3 text-start bg-transparent" onClick={() => history.push("#")}>
+                <h5 className="m-0">Overview</h5>
+                <Spacer/>
+                <img className={classNames("icon-dropdown-90")} src={"/assets/common/icons/chevron_right.svg"} alt="" />
+            </button>
+            {book.chapters?.map((chapter, index) => {
+                const chapterActive = chapter.sections?.some(section => section.pageId === pageId);
+
+                return <CollapsibleList
+                    title={<div className="d-flex flex-column gap-2 chapter-title">
+                        <span className="text-theme">Chapter {chapter.label}</span>
+                        <h6 className={classNames("m-0", {"text-theme fw-semibold": chapterActive})}>{chapter.title}</h6>
+                    </div>}
+                    key={index}
+                    expanded={expandedTab === index}
+                    toggle={() => setExpandedTab(expandedTab === index ? undefined : index)}
+                    additionalOffset={"4px"}
+                >
+                    {chapter.sections?.map((section, sectionIndex) =>
+                        <li key={sectionIndex}>
+                            <StyledTabPicker
+                                checkboxTitle={<div className="d-flex">
+                                    <span className="text-theme me-2">{section.label}</span>
+                                    <span className="flex-grow-1">{section.title}</span>
+                                </div>}
+                                checked={pageId === section.pageId}
+                                onClick={() => history.push(`#${section.pageId?.split("_").slice(2).join("_")}`)}
+                            />
+                        </li>
+                    )}
+                </CollapsibleList>;
+            })}
+        </ul>
     </ContentSidebar>;
 };
