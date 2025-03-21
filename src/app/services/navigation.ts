@@ -44,45 +44,6 @@ export interface PageNavigation {
     currentGameboard?: GameboardDTO;
 }
 
-const defaultPageNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null, pageContext: PageContextState, currentGameboard?: GameboardDTO) : PageNavigation => {
-    if (isAda || doc === NOT_FOUND || doc === null) {
-        return {breadcrumbHistory: [], currentGameboard};
-    }
-
-    if (doc.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.CONCEPT].includes(doc.type as DOCUMENT_TYPE)) {
-        // attempt to determine which landing page to return to
-        if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
-            return {
-                breadcrumbHistory: [
-                    {
-                        title: `${HUMAN_STAGES[pageContext.stage[0]]} ${HUMAN_SUBJECTS[pageContext.subject]}`,
-                        to: `/${pageContext.subject}/${pageContext.stage[0]}`,
-                        replace: false
-                    },
-                    {
-                        title: doc.type === DOCUMENT_TYPE.QUESTION ? "Questions" : "Concepts",
-                        to: `/${pageContext.subject}/${pageContext.stage[0]}/${doc.type === DOCUMENT_TYPE.QUESTION ? "questions" : "concepts"}`,
-                        replace: false
-                    },
-                ],
-                currentGameboard,
-            };
-        }
-    }
-
-    let history = [] as LinkInfo[];
-
-    switch (doc.type) {
-        case DOCUMENT_TYPE.QUESTION:
-            history = [GENERIC_QUESTION_CRUMB];
-            break;
-        case DOCUMENT_TYPE.CONCEPT:
-            history = [GENERIC_CONCEPT_CRUMB];
-            break;
-    }
-    return {breadcrumbHistory: history, currentGameboard};
-};
-
 export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavigation => {
     const {search} = useLocation();
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
@@ -116,65 +77,105 @@ export const determinePageNavigation = (
     pageContext: PageContextState
 ): PageNavigation => {
 
-    if (doc === null || doc === NOT_FOUND) {
-        return defaultPageNavigation(doc, pageContext, currentGameboard);
+    if (doc !== null && doc !== NOT_FOUND) {
+        if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && fastTrackProgressEnabledBoards.includes(currentGameboard?.id || "")) {
+            const gameboardHistory = (currentGameboard && gameboardId === currentGameboard.id) ?
+                determineGameboardHistory(currentGameboard) :
+                [];
+            const questionHistoryList = (questionHistory as string || "").split(",");
+            const previousQuestion = questionHistoryList.pop();
+            const modifiedQuestionHistory = questionHistoryList.length ? questionHistoryList.join(",") : undefined;
+            const board = currentGameboard?.id;
+            return {
+                collectionType: "Master Mathematics",
+                breadcrumbHistory: gameboardHistory,
+                backToCollection: currentGameboard ? {
+                    title: "Return to Top 10 Questions",
+                    to: `${PATHS.GAMEBOARD}#${currentGameboard.id}`
+                } : undefined,
+                nextItem: !previousQuestion ? determineNextGameboardItem(currentGameboard, currentDocId) : undefined,
+                previousItem: previousQuestion ? {
+                    title: "Return to Previous Question",
+                    to: `/questions/${previousQuestion}`
+                } : undefined,
+                search: queryString.stringify(previousQuestion ? {board, modifiedQuestionHistory} : {board}),
+                currentGameboard
+            };
+        }
+
+        if (gameboardId) {
+            const gameboardHistory: LinkInfo[] = (currentGameboard && gameboardId === currentGameboard.id) ?
+                determineGameboardHistory(currentGameboard) :
+                [];
+
+            const breadcrumbHistory = isPhy && isDefined(assignments) && isFound(assignments) && (assignments.map(a => a.gameboardId).includes(gameboardId))
+                ? [{title: "Assignments", to: "/assignments"}, ...gameboardHistory]
+                : gameboardHistory;
+
+            return {
+                collectionType: siteSpecific("Gameboard", "Quiz"),
+                breadcrumbHistory: breadcrumbHistory,
+                backToCollection: gameboardHistory.slice(-1)[0],
+                nextItem: determineNextGameboardItem(currentGameboard, currentDocId),
+                previousItem: determinePreviousGameboardItem(currentGameboard, currentDocId),
+                search,
+                creationContext: determineCurrentCreationContext(currentGameboard, currentDocId),
+                currentGameboard
+            };
+        }
+
+        if (topic) {
+            const topicHistory = (currentTopic && topic === currentTopic?.id?.slice("topic_summary_".length)) ?
+                determineTopicHistory(currentTopic, currentDocId) :
+                makeAttemptAtTopicHistory();
+            return {
+                collectionType: "Topic",
+                breadcrumbHistory: topicHistory,
+                backToCollection: topicHistory.slice(-1)[0],
+                nextItem: determineNextTopicContentLink(currentTopic, currentDocId),
+                search,
+                currentGameboard
+            };
+        }
+
+        if (doc.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.CONCEPT].includes(doc.type as DOCUMENT_TYPE)) {
+            // attempt to determine which landing page to return to
+            if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
+                return {
+                    breadcrumbHistory: [
+                        {
+                            title: `${HUMAN_STAGES[pageContext.stage[0]]} ${HUMAN_SUBJECTS[pageContext.subject]}`,
+                            to: `/${pageContext.subject}/${pageContext.stage[0]}`,
+                            replace: false
+                        },
+                        {
+                            title: doc.type === DOCUMENT_TYPE.QUESTION ? "Questions" : "Concepts",
+                            to: `/${pageContext.subject}/${pageContext.stage[0]}/${doc.type === DOCUMENT_TYPE.QUESTION ? "questions" : "concepts"}`,
+                            replace: false
+                        },
+                    ],
+                    currentGameboard,
+                };
+            }
+        }
+
+        // Defaults for different document types
+        let history = [] as LinkInfo[];
+
+        switch (doc.type) {
+            case DOCUMENT_TYPE.QUESTION:
+                history = [GENERIC_QUESTION_CRUMB];
+                break;
+            case DOCUMENT_TYPE.CONCEPT:
+                history = [GENERIC_CONCEPT_CRUMB];
+                break;
+        }
+
+        return {breadcrumbHistory: history, currentGameboard};
     }
 
-    if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && fastTrackProgressEnabledBoards.includes(currentGameboard?.id || "")) {
-        const gameboardHistory = (currentGameboard && gameboardId === currentGameboard.id) ?
-            determineGameboardHistory(currentGameboard) :
-            [];
-        const questionHistoryList = (questionHistory as string || "").split(",");
-        const previousQuestion = questionHistoryList.pop();
-        const modifiedQuestionHistory = questionHistoryList.length ? questionHistoryList.join(",") : undefined;
-        const board = currentGameboard?.id;
-        return {
-            collectionType: "Master Mathematics",
-            breadcrumbHistory: gameboardHistory,
-            backToCollection: currentGameboard ? {title: "Return to Top 10 Questions", to: `${PATHS.GAMEBOARD}#${currentGameboard.id}`} : undefined,
-            nextItem: !previousQuestion ? determineNextGameboardItem(currentGameboard, currentDocId) : undefined,
-            previousItem: previousQuestion ? {title: "Return to Previous Question", to: `/questions/${previousQuestion}`} : undefined,
-            search: queryString.stringify(previousQuestion ? {board, modifiedQuestionHistory} : {board}),
-            currentGameboard
-        };
-    }
-
-    if (gameboardId) {
-        const gameboardHistory : LinkInfo[] = (currentGameboard && gameboardId === currentGameboard.id) ?
-            determineGameboardHistory(currentGameboard) :
-            [];
-
-        const breadcrumbHistory = isPhy && isDefined(assignments) && isFound(assignments) && (assignments.map(a => a.gameboardId).includes(gameboardId))
-            ? [{title: "Assignments", to: "/assignments"}, ...gameboardHistory]
-            : gameboardHistory;
-
-        return {
-            collectionType: siteSpecific("Gameboard", "Quiz"),
-            breadcrumbHistory: breadcrumbHistory,
-            backToCollection: gameboardHistory.slice(-1)[0],
-            nextItem: determineNextGameboardItem(currentGameboard, currentDocId),
-            previousItem: determinePreviousGameboardItem(currentGameboard, currentDocId),
-            search,
-            creationContext: determineCurrentCreationContext(currentGameboard, currentDocId),
-            currentGameboard
-        };
-    }
-
-    if (topic) {
-        const topicHistory = (currentTopic && topic === currentTopic?.id?.slice("topic_summary_".length)) ?
-            determineTopicHistory(currentTopic, currentDocId) :
-            makeAttemptAtTopicHistory();
-        return {
-            collectionType: "Topic",
-            breadcrumbHistory: topicHistory,
-            backToCollection: topicHistory.slice(-1)[0],
-            nextItem: determineNextTopicContentLink(currentTopic, currentDocId),
-            search,
-            currentGameboard
-        };
-    }
-
-    return defaultPageNavigation(doc, pageContext, currentGameboard);
+    // Defaults when there is no current document
+    return {breadcrumbHistory: [], currentGameboard};
 };
 
 export const ifKeyIsEnter = (action: () => void) => (event: React.KeyboardEvent) => {

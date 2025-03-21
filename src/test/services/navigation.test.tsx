@@ -1,4 +1,4 @@
-import {determinePageNavigation, DOCUMENT_TYPE, isPhy, PATHS, siteSpecific} from "../../app/services";
+import {determinePageNavigation, DOCUMENT_TYPE, isPhy, PATHS} from "../../app/services";
 import {
     AssignmentDTO,
     ContentDTO,
@@ -105,29 +105,27 @@ describe("Breadcrumb trails", () => {
         expect(actual).toEqual(expected);
     });
 
-    if (isPhy) {
-        it("for question page use default otherwise", () => {
-            // Arrange
-            const document: ContentDTO = {
-                id: "some_question",
-                type: DOCUMENT_TYPE.QUESTION
-            };
+    it("for question page use default otherwise", () => {
+        // Arrange
+        const document: ContentDTO = {
+            id: "some_question",
+            type: DOCUMENT_TYPE.QUESTION
+        };
 
-            // Act
-            const actual = determinePageNavigation(document, "some_question", undefined, undefined, undefined,
-                null, undefined, undefined, "", {}).breadcrumbHistory;
+        // Act
+        const actual = determinePageNavigation(document, "some_question", undefined, undefined, undefined,
+            null, undefined, undefined, "", {}).breadcrumbHistory;
 
-            // Assert
-            const expected = [
-                {
-                    title: "Questions",
-                    to: "/questions"
-                }
-            ];
+        // Assert
+        const expected = [
+            {
+                title: "Questions",
+                to: "/questions"
+            }
+        ];
 
-            expect(actual).toEqual(expected);
-        });
-    }
+        expect(actual).toEqual(expected);
+    });
 
     it("for concept page use topic when possible", () => {
         // Arrange
