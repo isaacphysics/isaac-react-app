@@ -580,7 +580,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 maxLength={SEARCH_CHAR_LENGTH_LIMIT}
                                 defaultValue={searchQuery}
                                 placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                                onChange={(e) => handleSearch(e.target.value)}
+                                onChange={(e) => withResetSeed(handleSearch)(e.target.value)}
                             />
                             <Button className="question-search-button" onClick={searchAndUpdateURL}/>
                         </InputGroup>
@@ -601,7 +601,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             excludeBooks, setExcludeBooks,
                             tiers, choices, 
                             selections, setSelections,
-                            applyFilters, clearFilters,
+                            applyFilters: withResetSeed(applyFilters), clearFilters,
                             validFiltersSelected, searchDisabled, setSearchDisabled
                         }} /> {/* Temporarily disabled at >=lg to test list view until this filter is moved into the sidebar */}
                     </Col>

@@ -3,132 +3,132 @@ import { clickButton, enterInput, expectUrlParams, renderTestEnvironment, setUrl
 import { buildMockQuestionFinderResults, buildMockQuestions, mockQuestionFinderResults } from "../../mocks/data";
 import _ from "lodash";
 import { buildFunctionHandler } from "../../mocks/handlers";
-import { isAda } from "../../app/services";
 import userEvent from "@testing-library/user-event";
+import { isPhy, siteSpecific } from "../../app/services";
 
 describe("QuestionFinder", () => {
-    if (isAda) {
-        it('does not matter', () => {});
-    } else {        
-        const questions = buildMockQuestions(40);
-        const resultsResponse = buildMockQuestionFinderResults(questions, 0);               
+    const questions = buildMockQuestions(40);
+    const resultsResponse = buildMockQuestionFinderResults(questions, 0);               
         
-        const renderQuestionFinderPage = async ({questionsSearchResponse, queryParams} : RenderParameters) => {
-            await act(async () => {
-                renderTestEnvironment({
-                    extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed', 'startIndex'], questionsSearchResponse)]
+    const renderQuestionFinderPage = async ({questionsSearchResponse, queryParams} : RenderParameters) => {
+        await act(async () => {
+            renderTestEnvironment({
+                extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed', 'startIndex'], questionsSearchResponse)]
                     
-                });
-                setUrl({ pathname: '/questions', search: queryParams });
             });
+            setUrl({ pathname: '/questions', search: queryParams });
+        });
+    };
+
+    it('should render results in alphabetical order', async () => {
+        await renderQuestionFinderPage({ questionsSearchResponse: () => resultsResponse });
+        await setFilter("GCSE");
+        await expectQuestions(questions.slice(0, 30));
+    });
+
+    describe('Question shuffling', () => {
+        const shuffledQuestions = _.shuffle(questions);
+        const shuffledResultsResponse = buildMockQuestionFinderResults(shuffledQuestions, 0);
+
+        const questionsSearchResponse: RenderParameters['questionsSearchResponse'] = ({randomSeed}) => {
+            switch (randomSeed) {
+                case null: return resultsResponse;
+                case '1': return shuffledResultsResponse;
+                default: throw new Error('Unexpected seed.');
+            }
         };
 
-        it('should render results in alphabetical order', async () => {
-            await renderQuestionFinderPage({ questionsSearchResponse: () => resultsResponse });
-            await clickButton("Year 7&8");
-            await expectQuestions(questions.slice(0, 30));
+        it('query parameter should shuffle results', async () => {
+            await renderQuestionFinderPage({ questionsSearchResponse, queryParams: '?randomSeed=1&stages=gcse' });
+            await expectQuestions(shuffledQuestions.slice(0, 30));
         });
-
-        describe('Question shuffling', () => {
-            const shuffledQuestions = _.shuffle(questions);
-            const shuffledResultsResponse = buildMockQuestionFinderResults(shuffledQuestions, 0);
-
-            const questionsSearchResponse: RenderParameters['questionsSearchResponse'] = ({randomSeed}) => {
-                switch (randomSeed) {
-                    case null: return resultsResponse;
-                    case '1': return shuffledResultsResponse;
-                    default: throw new Error('Unexpected seed.');
-                }
-            };
-
-            it('query parameter should shuffle results', async () => {
-                await renderQuestionFinderPage({ questionsSearchResponse, queryParams: '?stages=year_7_and_8&randomSeed=1' });
+            
+        it('button should shuffle questions', async () => {
+            await withMockedRandom(async (randomSequence) => {
+                randomSequence([1 * 10 ** -6]);
+                await renderQuestionFinderPage({ questionsSearchResponse });
+                   
+                await setFilter("GCSE");
+                await expectQuestions(questions.slice(0, 30));
+                    
+                await clickButton("Shuffle questions");
                 await expectQuestions(shuffledQuestions.slice(0, 30));
             });
-            
-            it('button should shuffle questions', async () => {
-                await withMockedRandom(async (randomSequence) => {
-                    randomSequence([1 * 10 ** -6]);
-                    await renderQuestionFinderPage({ questionsSearchResponse });
-                   
-                    await clickButton("Year 7&8");
-                    await expectQuestions(questions.slice(0, 30));
-                    
-                    await clickButton("Shuffle questions");
-                    await expectQuestions(shuffledQuestions.slice(0, 30));
-                });
-            });
+        });
 
-            it('button stores the seed in a URL parameter', () => {
-                return withMockedRandom(async (randomSequence) => {
-                    randomSequence([1 * 10 ** -6]);
+        it('button stores the seed in a URL parameter', () => {
+            return withMockedRandom(async (randomSequence) => {
+                randomSequence([1 * 10 ** -6]);
                    
-                    await renderQuestionFinderPage({ questionsSearchResponse });
-                    await clickButton("Year 7&8");
-                    await clickButton("Shuffle questions");
-                    expectUrlParams("?randomSeed=1&stages=year_7_and_8");
-                });
+                await renderQuestionFinderPage({ questionsSearchResponse });
+                await setFilter("GCSE");
+                await clickButton("Shuffle questions");
+                expectUrlParams("?randomSeed=1&stages=gcse");
             });
+        });
 
-            describe('returning to alphabetical order from a randomised screen', () => {                
-                it('when applying filters', async () => {
-                    await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
-                    await clickButton("Year 7&8");
-                    expectUrlParams("?stages=year_7_and_8");
-                    await expectQuestions(questions.slice(0, 30));
-                });
+        describe('returning to alphabetical order from a randomised screen', () => {                
+            it('when applying filters', async () => {
+                await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
+                await setFilter("GCSE");
+                expectUrlParams("?stages=gcse");
+                await expectQuestions(questions.slice(0, 30));
+            });
     
-                it('when searching for a question', async () => {
-                    await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
-                    await enterInput("e.g. Man vs. Horse", "A bag");
-                    expectUrlParams("?query=A%20bag");
-                    await expectQuestions(questions.slice(0, 30));
-
+            it('when searching for a question', async () => {
+                await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
+                await enterInput(siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST"), "A bag");
+                await act(async () => {
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
                 });
+                expectUrlParams("?query=A%20bag");
+                await expectQuestions(questions.slice(0, 30));
+            });
 
-                it('when clearing all filters', async () => {
-                    await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=year_7_and_8" });
-                    await clickButton("Clear all filters");
-                    expectUrlParams('');
-                });
+            it('when clearing all filters', async () => {
+                await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=year_7_and_8" });
+                await clickButton(siteSpecific("Clear all filters", "Clear all"));
+                expectUrlParams('');
+            });
 
+            if (isPhy) {
                 it('when clearing a filter tag', async () => {
                     await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=year_9" });
                     await clearFilterTag('year_9');
                     expectUrlParams('');
                 });
-            });
+            }
+        });
 
             
-            it('"Load more" should avoid duplicate questions by fetching next page using same seed', () => {
-                const resultsResponsePage2 = buildMockQuestionFinderResults(questions, 30);
-                const shuffledResultsResponsePage2 = buildMockQuestionFinderResults(shuffledQuestions, 30);
+        it('"Load more" should avoid duplicate questions by fetching next page using same seed', () => {
+            const resultsResponsePage2 = buildMockQuestionFinderResults(questions, 30);
+            const shuffledResultsResponsePage2 = buildMockQuestionFinderResults(shuffledQuestions, 30);
 
-                return withMockedRandom(async (randomSequence) => {
-                    randomSequence([1 * 10 ** -6]);
+            return withMockedRandom(async (randomSequence) => {
+                randomSequence([1 * 10 ** -6]);
                    
-                    await renderQuestionFinderPage({ questionsSearchResponse: ({ randomSeed, startIndex }) => {
-                        switch (randomSeed) {
-                            case null: return startIndex === '0' ? resultsResponse : resultsResponsePage2;;
-                            case '1': return startIndex === '0' ? shuffledResultsResponse : shuffledResultsResponsePage2;
-                            default: throw new Error('Unexpected seed');
-                        }
-                    }});
-                    await clickButton("Year 7&8");
-                    await expectQuestions(questions.slice(0, 30));
-                    await expectPageIndicator("Showing 30 of 40.");
+                await renderQuestionFinderPage({ questionsSearchResponse: ({ randomSeed, startIndex }) => {
+                    switch (randomSeed) {
+                        case null: return startIndex === '0' ? resultsResponse : resultsResponsePage2;;
+                        case '1': return startIndex === '0' ? shuffledResultsResponse : shuffledResultsResponsePage2;
+                        default: throw new Error('Unexpected seed');
+                    }
+                }});
+                await setFilter("GCSE");
+                await expectQuestions(questions.slice(0, 30));
+                await expectPageIndicator("Showing 30 of 40.");
                     
-                    await clickButton("Shuffle questions");
-                    await expectQuestions(shuffledQuestions.slice(0, 30));
-                    await expectPageIndicator("Showing 30 of 40.");
+                await clickButton("Shuffle questions");
+                await expectQuestions(shuffledQuestions.slice(0, 30));
+                await expectPageIndicator("Showing 30 of 40.");
 
-                    await clickButton("Load more");
-                    await expectQuestions(shuffledQuestions);
-                    await expectPageIndicator("Showing 40 of 40.");
-                });
+                await clickButton("Load more");
+                await expectQuestions(shuffledQuestions);
+                await expectPageIndicator("Showing 40 of 40.");
             });
         });
-    }                                                                                              
+    });
 });
 
 type RenderParameters = {
@@ -139,12 +139,19 @@ type RenderParameters = {
     queryParams?: string;
 };
 
+const mainContainer = () => screen.findByTestId('main');
+
 const findQuestions = () => screen.findByTestId("question-finder-results").then(e => within(e).findAllByRole('listitem'));
 
-const getQuestionText = (q: HTMLElement) => q.querySelector('span')?.textContent;
+const getQuestionText = (q: HTMLElement) => q.querySelector(isPhy ? 'span' : 'span.question-link-title')?.textContent;
 
 const expectQuestions = async (expectedQuestions: typeof mockQuestionFinderResults.results) => {
     await waitForQuestions(expectedQuestions.length);
+    if (!isPhy) {
+        await act(async () => {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+        });
+    }
     const found = await findQuestions();
     expect(found.length).toEqual(expectedQuestions.length);
     expect(found.map(getQuestionText)).toEqual(expectedQuestions.map(q => q.title));
@@ -162,4 +169,13 @@ const clearFilterTag = async (tagId: string) =>  {
     const tag = await screen.findByTestId(`filter-tag-${tagId}`);
     const button = await within(tag).findByRole('button');
     return userEvent.click(button);
+};
+
+const setFilter = async (filter: string) => {
+    if (isPhy) {
+        await clickButton(filter, mainContainer());
+    } else {
+        await clickButton(filter);
+        await clickButton("Apply filters");
+    }
 };

@@ -10,7 +10,7 @@ import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
 import {MemoryRouter} from "react-router";
-import {act, screen, waitFor, within} from "@testing-library/react";
+import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
@@ -141,12 +141,19 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     await userEvent.click(tabLink);
 };
 
-export const clickButton = (text: string) => screen.findAllByText(text).then(e => {
-    if (e[0].hasAttribute('disabled')) {
-        throw new Error(`Can't click on disabled button ${e[0].textContent}`);
+export const clickButton = async (text: string, container?: Promise<HTMLElement>) => {
+    let button: HTMLElement;
+    if (container === undefined) {
+        [button] = await screen.findAllByText(text);
+    } else {
+        [button] = await within(await container).findAllByText(text);
+
     }
-    return userEvent.click(e[0]);
-});
+    if (button.hasAttribute('disabled')) {
+        throw new Error(`Can't click on disabled button ${button.textContent}`);
+    }
+    return userEvent.click(button);
+};
 
 export const enterInput = (placeholder: string, input: string) => screen.findByPlaceholderText(placeholder).then(e => {
     if (e.hasAttribute('disabled')) {
