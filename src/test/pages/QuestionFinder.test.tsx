@@ -83,15 +83,15 @@ describe("QuestionFinder", () => {
             });
 
             it('when clearing all filters', async () => {
-                await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=year_7_and_8" });
+                await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=gcse" });
                 await clickButton(siteSpecific("Clear all filters", "Clear all"));
                 await expectUrlParams('');
             });
 
             if (isPhy) {
                 it('when clearing a filter tag', async () => {
-                    await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=year_9" });
-                    await clearFilterTag('year_9');
+                    await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=gcse" });
+                    await clearFilterTag('gcse');
                     await expectUrlParams('');
                 });
             }
@@ -152,10 +152,10 @@ const expectPageIndicator = (content: string) => screen.findByTestId("question-f
     expect(found.querySelectorAll('.col')[0].textContent).toBe(content);
 });
 
-const clearFilterTag = async (tagId: string) =>  {
+const clearFilterTag = async (tagId: string) => {
     const tag = await screen.findByTestId(`filter-tag-${tagId}`);
     const button = await within(tag).findByRole('button');
-    await userEvent.click(button);
+    await act(async () => button.click());
 };
 
 const setFilter = async (filter: string) => {

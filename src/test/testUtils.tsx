@@ -10,7 +10,7 @@ import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
 import {MemoryRouter} from "react-router";
-import {screen, waitFor, within} from "@testing-library/react";
+import {act, screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
@@ -142,17 +142,11 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
 };
 
 export const clickButton = async (text: string, container?: Promise<HTMLElement>) => {
-    let button: HTMLElement;
-    if (container === undefined) {
-        [button] = await screen.findAllByText(text);
-    } else {
-        [button] = await within(await container).findAllByText(text);
-
-    }
+    const [button] = await (container ? within(await container).findAllByText(text).then(e => e) : screen.findAllByText(text));
     if (button.hasAttribute('disabled')) {
         throw new Error(`Can't click on disabled button ${button.textContent}`);
     }
-    return userEvent.click(button);
+    await act(async () => button.click());
 };
 
 export const enterInput = async (placeholder: string, input: string) => {
@@ -172,7 +166,6 @@ export const expectUrlParams = (text: string) => waitFor(() => {
 });
 
 export const setUrl = (location: LocationDescriptor) => history.push(location);
-
 
 export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => void) => Promise<void>) => {
     const nextRandom = {

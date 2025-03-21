@@ -608,7 +608,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
                         <Card>
                             <CardHeader className="finder-header pl-3">
-                                <Row>
+                                <Row className="flex-grow-1">
                                     <Col>
                                         {displayQuestions && displayQuestions.length > 0
                                             ? <>Showing <b>{displayQuestions.length}</b></>
@@ -616,9 +616,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
                                         .
                                     </Col>
-                                    <Col>
-                                        <button className="btn btn-link nomargin invert-underline d-flex align-items-center gap-2 float-end"
-                                            onClick={() => setRandomSeed(nextSeed())}>Shuffle questions<i className="icon icon-refresh icon-color-black"></i></button>
+                                    <Col>                                        
+                                        <button className={siteSpecific(
+                                            "btn btn-link nomargin invert-underline d-flex align-items-center gap-2 float-end",
+                                            "text-black pe-lg-0 py-0 me-2 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
+                                        } onClick={() => setRandomSeed(nextSeed())}>
+                                                Shuffle questions
+                                            {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
+                                        </button>
                                     </Col>
                                 </Row>
                             </CardHeader>
