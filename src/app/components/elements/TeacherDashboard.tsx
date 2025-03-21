@@ -7,14 +7,14 @@ import { UserSummaryDTO } from '../../../IsaacApiTypes';
 import { StyledDropdown } from './inputs/DropdownInput';
 import StyledToggle from './inputs/StyledToggle';
 import { AssignmentCard, StudentDashboard } from './StudentDashboard';
-import { sortBy } from 'lodash';
+import sortBy from 'lodash/sortBy';
 import { Spacer } from './Spacer';
 import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
 
 const GroupsPanel = () => {
     const groupsQuery = useGetGroupsQuery(false);
     const { data: groups } = groupsQuery;
-    const sortedGroups = sortBy(groups, g => g.created).reverse();
+    const sortedGroups = sortBy(groups, g => g.created).reverse().slice(0, 5);
 
     return <div className="dashboard-panel">
         <h4>Manage my groups</h4>
@@ -55,7 +55,7 @@ const AssignmentsPanel = () => {
                 const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
                 return <>
-                    {soonestDeadlines.length ? soonestDeadlines.map(assignment => <AssignmentCard key={assignment.id} {...assignment}/>)
+                    {soonestDeadlines.length ? soonestDeadlines.map(assignment => <div className="mb-3" key={assignment.id}><AssignmentCard {...assignment}/></div>)
                         : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>}
                     <Spacer/>
                     <div className="d-flex align-items-center">
@@ -118,18 +118,20 @@ const BookCard = ({title, image, path}: BookInfo) => {
 const BooksPanel = () => {
     const [subject, setSubject] = useState<Subject | "all">("all");
     return <div className="w-100 dashboard-panel book-panel">
-        <h4>Books</h4>
-        <div className="mb-3 w-50">
-            <StyledDropdown value={subject}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setSubject(e.target.value as Subject)}>
-                <option value="all">All</option>
-                <option value="physics">Physics</option>
-                <option value="maths">Maths</option>
-                <option value="chemistry">Chemistry</option>
-                {/* No biology books */}
-            </StyledDropdown>
+        <div className="d-flex align-items-center">
+            <h4>Books</h4>
+            <div className="w-50 ms-auto">
+                <StyledDropdown value={subject}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSubject(e.target.value as Subject)}>
+                    <option value="all">All</option>
+                    <option value="physics">Physics</option>
+                    <option value="maths">Maths</option>
+                    <option value="chemistry">Chemistry</option>
+                    {/* No biology books */}
+                </StyledDropdown>
+            </div>
         </div>
-        <Row className="mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap">
+        <Row className="mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
             {ISAAC_BOOKS.filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2 me-1 p-0">

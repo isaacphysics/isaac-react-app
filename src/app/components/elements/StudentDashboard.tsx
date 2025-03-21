@@ -25,7 +25,7 @@ const GroupJoinPanel = () => {
         else {
             const {data: usersToGrantAccess} = await getTokenOwner(token);
             if (usersToGrantAccess && usersToGrantAccess.length) {
-                dispatch(openActiveModal(tokenVerificationModal(userId, token, usersToGrantAccess)) as any);
+                dispatch(openActiveModal(tokenVerificationModal(userId, token, usersToGrantAccess)));
             }
         }
     };
@@ -80,7 +80,12 @@ const DashboardStreakPanel = () => {
         <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
             <DashboardStreakGauge streakRecord={myProgress?.userSnapshot}/>
         </div>
-        {remainingToAnswer <= 0 ? <div className="streak-text">You&apos;ve maintained your streak for this week!</div> : <div className="streak-text">Only {remainingToAnswer} more question parts to answer correctly this week!</div>}
+        <div className="streak-text mb-2">
+            {remainingToAnswer <= 0
+                ? `You've maintained your streak for this week!`
+                : `Only ${remainingToAnswer} more question parts to answer correctly this week!`
+            }
+        </div>
         <Spacer/>
         <Button className="numeric-help d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
             <i className="icon icon-info icon-color-grey"/> What is this?
@@ -110,16 +115,16 @@ export const AssignmentCard = (assignment: IAssignmentLike) => {
         : isAssignment(assignment) ? assignment.gameboard?.title
             : "";
 
-    return <Link to={link} className="mb-3 w-100">
-        <Card className="assignment-card px-3">
-            <div>
+    return <Link to={link} className="w-100">
+        <Card className="assignment-card px-3 d-flex flex-column h-100">
+            <h5 className="d-inline">
                 <i className="icon icon-question-pack me-2"/>
-                <h5 className="d-inline">{title}</h5>
-                <div className="d-flex text-nowrap">
-                    {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
-                    <span className="group-name">{groupName}</span>
-                </div>
-
+                {title}
+            </h5>
+            <Spacer/>
+            <div className="d-flex text-nowrap">
+                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
+                <span className="group-name">{groupName}</span>
             </div>
         </Card>
     </Link>;
@@ -128,7 +133,8 @@ export const AssignmentCard = (assignment: IAssignmentLike) => {
 const CurrentWorkPanel = () => {
     const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
-    const sortedQuizAssignments = quizAssignments ? sortUpcomingAssignments(quizAssignments) : [];
+    // we can show overdue assignments, as students can still complete them; we cannot show overdue quizzes as you cannot take them after the due date
+    const sortedQuizAssignments = quizAssignments ? sortUpcomingAssignments(quizAssignments).filter(quiz => !isOverdue(quiz)) : [];
 
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>
@@ -150,7 +156,7 @@ const CurrentWorkPanel = () => {
                         <>
                             <span className="mb-2">You have assignments that are active or due soon:</span>
                             <div className="row">
-                                {toDo.map((assignment: IAssignmentLike) => <span key={assignment.id} className="col-12 col-lg-6 col-xl-12"><AssignmentCard {...assignment}/></span>)}
+                                {toDo.map((assignment: IAssignmentLike) => <span key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3"><AssignmentCard {...assignment}/></span>)}
                             </div>
                             <Spacer/>
                             <div className="d-flex align-items-center">
@@ -222,13 +228,13 @@ export const StudentDashboard = () => {
                 </Row></>
             : <>
                 <Row className="row-cols-1 row-cols-sm-2 row-cols-xl-4">
-                    <Col className="mt-4 col-xl-3">
+                    <Col className="mt-4 col-xl-4">
                         <CurrentWorkPanel />
                     </Col>
                     <Col className="mt-4 col-xl-2 panel-streak">
                         <DashboardStreakPanel />
                     </Col>
-                    <Col className="mt-4 col-sm-7 col-xl-4">
+                    <Col className="mt-4 col-sm-7 col-xl-3">
                         <GroupJoinPanel />
                     </Col>
                     <Col className="mt-4 col-sm-5 col-xl-3">
