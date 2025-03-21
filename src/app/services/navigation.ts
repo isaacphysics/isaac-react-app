@@ -100,7 +100,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const pageContext = useAppSelector(selectors.pageContext.context);
 
-    return determinePageNavigation(doc, currentDocId, currentGameboard, gameboardId, topic, currentTopic, questionHistory, assignments, search, pageContext);
+    return determinePageNavigation(doc, currentDocId, currentGameboard, gameboardId, questionHistory, currentTopic, topic, assignments, search, pageContext);
 };
 
 export const determinePageNavigation = (
@@ -108,10 +108,10 @@ export const determinePageNavigation = (
     currentDocId: string,
     currentGameboard: GameboardDTO | undefined,
     gameboardId: string | undefined,
-    topic: string | undefined,
-    currentTopic: IsaacTopicSummaryPageDTO | null,
     questionHistory: string | undefined,
-    assignments:  AssignmentDTO[] | undefined,
+    currentTopic: IsaacTopicSummaryPageDTO | null,
+    topic: string | undefined,
+    assignments: AssignmentDTO[] | undefined,
     search: string,
     pageContext: PageContextState
 ): PageNavigation => {
