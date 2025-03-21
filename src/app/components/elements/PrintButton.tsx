@@ -14,25 +14,8 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
     const dispatch = useAppDispatch();
 
     return questionPage ?
-        <>
-            {siteSpecific(
-                <IconButton
-                    icon="icon-print"
-                    className="w-max-content h-max-content not-mobile"
-                    affixClassName="icon-color-black"
-                    aria-label="Print page" 
-                    title="Print page"
-                    color="tint"
-                    data-bs-theme="neutral"
-                    onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
-                />,
-                <button
-                    className="print-icon btn-action not-mobile"
-                    onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
-                    aria-label="Print page"
-                />
-            )}
-            {questionPrintOpen && <div className="question-actions-link-box not-mobile">
+        <div className="position-relative">
+            {questionPrintOpen && <div className="action-buttons-popup-container not-mobile">
                 <div className="question-actions-link text-nowrap">
                     <Button
                         size={"sm"}
@@ -58,7 +41,24 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                     ><span className="visually-hidden">Print{" "}</span>Without hints</Button>
                 </div>
             </div>}
-        </>
+            {siteSpecific(
+                <IconButton
+                    icon="icon-print"
+                    className="w-max-content h-max-content not-mobile"
+                    affixClassName="icon-color-black"
+                    aria-label="Print page" 
+                    title="Print page"
+                    color="tint"
+                    data-bs-theme="neutral"
+                    onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
+                />,
+                <button
+                    className="print-icon btn-action not-mobile"
+                    onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
+                    aria-label="Print page"
+                />
+            )}
+        </div>
         :
         siteSpecific(
             <IconButton

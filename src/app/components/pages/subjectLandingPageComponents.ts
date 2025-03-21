@@ -44,7 +44,7 @@ const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): Li
     },
     icon: {type: "hex", icon: "page-icon-question-pack"},
     subject: context.subject,
-    linkTags: [{tag: "Explore topic question decks", url: extendUrl(context, 'question_packs')}]
+    linkTags: [{tag: "Explore topic question decks", url: extendUrl(context, 'question_decks')}]
 });
 
 // TODO: replace the link tags with links to lessons by *field* (see designs)

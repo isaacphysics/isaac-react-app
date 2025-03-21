@@ -755,4 +755,5 @@ export type QuestionCorrectness = "CORRECT" | "INCORRECT" | "NOT_ANSWERED" | "NO
 export type PageContextState = {
     stage?: LearningStage[];
     subject?: Subject;
+    previousContext?: Omit<PageContextState, "previousContext">;
 } | null | undefined;

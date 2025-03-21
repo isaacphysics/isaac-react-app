@@ -1,5 +1,6 @@
-button.btn.scroll-btn {
+button.scroll-btn.scroll-btn {
   position: fixed;
+  display: flex;
   opacity: 0;
   height: 45px;
   width: 45px;
@@ -15,8 +16,6 @@ button.btn.scroll-btn {
 
   &.is-sticky {
     opacity: 1;
-    display: flex;
-    // TODO: animate opacity on destruction
   }
   
   > img {

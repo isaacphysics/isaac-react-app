@@ -44,7 +44,7 @@
     text-decoration: none;
   }
 
-  &:disabled {
+  &:disabled, &.disabled {
     background-color: var(--buttons-dark-disabled);
     color: var(--buttons-dark-text);
   }
@@ -71,7 +71,7 @@
     text-decoration: none;
   }
 
-  &:disabled {
+  &:disabled, &.disabled {
     color: var(--buttons-light-disabled-text);
   }
 
@@ -95,7 +95,7 @@
     text-decoration: none;
   }
 
-  &:disabled {
+  &:disabled, &.disabled {
     color: var(--buttons-light-disabled-text);
   }
 
@@ -124,7 +124,7 @@
     box-shadow: 0 0 0 3px var(--buttons-dark), 0 0 0 4.5px var(--buttons-focus-ring) !important;
   }
 
-  &:disabled {
+  &:disabled, &.disabled {
     color: var(--buttons-dark-disabled-text);
   }
 }
@@ -376,43 +376,41 @@ a.btn {
   background-color: transparent;
 }
 
-.share-link-icon {
+.action-buttons-popup-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: max-content;
+  height: 100%;
+  right: 50%;
+  align-items: center;
+  border: 1px solid $color-neutral-200;
+  border-radius: 0.5rem;
+  padding: 0 1.5rem 0 1rem;
+  z-index: 15;
+  background: white;
 
-  button {
+  & ~ button {
     position: relative;
-    z-index: 12;
+    z-index: 15;
   }
 
-  .share-link {
-    z-index: 11;
-    font-family: $secondary-font !important;
-    display: none;
-    position: absolute;
-    padding: 4px 32px 4px 8px;
-    transform: translate(calc(25px - 100%), -3px);
-    border: 1px solid $color-neutral-300;
-    background: #fff;
-    height: 58px;
-    width: 70%;
+  input {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    user-select: all;
+    -webkit-user-select: all;
+    -moz-user-select: all;
+    -ms-user-select: all;
+    width: 100%;
+    height: max-content;
+    border: none;
+    border-bottom: 2px solid $color-neutral-200;
+  }
 
-    input {
-      position: relative;
-      top: 9px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      user-select: all;
-      -webkit-user-select: all;
-      -moz-user-select: all;
-      -ms-user-select: all;
-      width: 100%;
-      padding-left: 2px;
-      border: none;
-      border-bottom: 2px solid $color-neutral-200;
-    }
-
-    &.double-height {
-      height: 118px;
-    }
+  &.double-height {
+    height: calc(100% + 38px);
   }
 }
 

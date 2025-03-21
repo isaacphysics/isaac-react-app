@@ -4,8 +4,8 @@ import { LearningStage, LearningStages, PHY_NAV_SUBJECTS, SiteTheme, STAGE_TO_LE
 import { isDefined } from "./miscUtils";
 import { useLocation } from "react-router";
 import { HUMAN_STAGES, HUMAN_SUBJECTS } from "./constants";
-import { pageContextSlice, useAppDispatch } from "../state";
-import { useEffect } from "react";
+import { pageContextSlice, selectors, useAppDispatch, useAppSelector } from "../state";
+import { useEffect, useMemo } from "react";
 
 const filterBySubjects = (tags: (TAG_ID | string)[]): SiteTheme[] => {
     // filtering this const list against the passed-in tags maintains the order (and thus precedence) of the subjects
@@ -23,15 +23,14 @@ const filterBySubjects = (tags: (TAG_ID | string)[]): SiteTheme[] => {
  * 
  * If no subject tags are found, `"neutral"` is returned as a default.
  * 
- * @param element - The element from which to find the active context theme.
+ * @param currentTheme - The current page theme. Find via e.g. `useAppSelector(selectors.pageContext.theme)`.
  * @param tags - The content object tags in which to search for a subject.
  * @returns The most relevant theme.
  */
-export const getThemeFromContextAndTags = (element: React.RefObject<HTMLElement>, tags: (TAG_ID | string)[]): SiteTheme => {
-    const currentTheme = element.current?.closest("[data-bs-theme]")?.getAttribute("data-bs-theme") as SiteTheme;
+export const getThemeFromContextAndTags = (currentTheme: Subject | undefined, tags: (TAG_ID | string)[]): SiteTheme => {
     const subjectTags = filterBySubjects(tags);
 
-    if (currentTheme !== "neutral" && subjectTags.includes(currentTheme)) {
+    if (currentTheme && subjectTags.includes(currentTheme)) {
         return currentTheme;
     }
 
@@ -65,8 +64,11 @@ export const getThemeFromTags = (tags?: (TAG_ID | string)[]): SiteTheme => {
  * @param doc - The current page DTO. The audience and tags of this object will be used to determine the new context.
  * @returns The page context for this page.
  */
-export const getUpdatedPageContext = (previousContext: PageContextState | undefined, userContexts: readonly UserContext[] | undefined, doc: ContentBaseDTO | undefined): PageContextState => {
-    const newContext = {stage: undefined, subject: undefined} as NonNullable<PageContextState>;
+export const usePreviousPageContext = (userContexts: readonly UserContext[] | undefined, doc: ContentBaseDTO | undefined): PageContextState => {
+    const previousContext = useAppSelector(selectors.pageContext.previousContext) as PageContextState;
+    const dispatch = useAppDispatch();
+
+    const newContext = useMemo(() => ({stage: undefined, subject: undefined, previousContext} as NonNullable<PageContextState>), [previousContext]);
 
     // if we haven't changed learning stage (GCSE => GCSE), use the learning stage from the old context
     if (previousContext?.stage && doc?.audience?.some(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s]).filter(isDefined).some(s => previousContext.stage?.includes(s)))) {
@@ -105,6 +107,18 @@ export const getUpdatedPageContext = (previousContext: PageContextState | undefi
     }
     // otherwise we cannot infer a subject to show, so the default of "neutral" is used
 
+    useEffect(() => {
+        dispatch(pageContextSlice.actions.updatePageContext(newContext));
+
+        return () => {
+            dispatch(pageContextSlice.actions.updatePageContext({
+                subject: undefined,
+                stage: undefined,
+                previousContext: {subject: newContext.subject, stage: newContext.stage},
+            }));
+        };
+    }, [dispatch, doc]);
+
     return newContext;
 };
 
@@ -127,41 +141,41 @@ function isValidIsaacStage(stage?: string): stage is LearningStage {
 
 function determinePageContextFromUrl(url: string): PageContextState {
     const [subject, stage] = url.split("/").filter(Boolean);
-    if (isValidIsaacSubject(subject) && stage === undefined) {
-        return {subject, stage: []};
-    }
-    if (isValidIsaacSubject(subject) && isValidIsaacStage(stage)) {
-        return {subject, stage: [stage]};
-    }
-    return {};
+
+    return {
+        subject: isValidIsaacSubject(subject) ? subject : undefined,
+        stage: isValidIsaacStage(stage) ? [stage] : [],
+    } as PageContextState;
 }
 
 /**
  * A hook for updating the page context based on the URL. Only use on pages where the URL is the source of truth for the page context.
  * (i.e. subject-specific pages, like question finders, concept pages, etc.)
  * If you want to get the current page context from redux rather than the URL, use `useAppSelector(selectors.pageContext.context)` instead.
- * @param resetIfNotFound - If true, the page context will be reset if the URL does not contain a valid page context. This should be true on pages with a "neutral" version and a "subject-specific" version.
  * @returns The current page context.
  */
-export function useUrlPageTheme(params?: {resetIfNotFound?: boolean}): PageContextState {
+export function useUrlPageTheme(): PageContextState {
     const location = useLocation();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         const urlContext = determinePageContextFromUrl(location.pathname);
-        if (urlContext?.subject || urlContext?.stage) {
+        dispatch(pageContextSlice.actions.updatePageContext({
+            subject: urlContext?.subject, 
+            stage: urlContext?.stage,
+            previousContext: {subject: urlContext?.subject, stage: urlContext?.stage},
+        }));
+
+        return () => {
             dispatch(pageContextSlice.actions.updatePageContext({
-                subject: urlContext.subject, 
-                stage: urlContext.stage
+                subject: undefined,
+                stage: undefined,
+                previousContext: {subject: urlContext?.subject, stage: urlContext?.stage},
             }));
-        } else {
-            if (params?.resetIfNotFound) {
-                dispatch(pageContextSlice.actions.resetPageContext());
-            }
-        }
+        };
     }, [dispatch, location.pathname]);
 
-    return determinePageContextFromUrl(location.pathname);
+    return useAppSelector(selectors.pageContext.context);
 }
 
 export function isDefinedContext(context?: PageContextState): context is NonNullable<PageContextState> {

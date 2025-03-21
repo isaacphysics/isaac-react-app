@@ -10,6 +10,8 @@ export function isDefined<T>(value: T | undefined | null): value is NonNullable<
 
 export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 
+export type ArrayElement<T extends readonly any[]> = T extends readonly (infer U)[] ? U : never;
+
 /**
  * This function is used to check if a string contains all the words in a search phease, in any order.
  * 
