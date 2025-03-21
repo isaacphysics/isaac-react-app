@@ -16,7 +16,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {PageFragment} from "../elements/PageFragment";
 import { MainContent, MyAssignmentsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { MyAssignmentsOrder } from "../../../IsaacAppTypes";
-import { sortBy } from "lodash";
+import sortBy from "lodash/sortBy";
 
 
 const INITIAL_NO_ASSIGNMENTS = 10;
