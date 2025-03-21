@@ -4,9 +4,11 @@ import CompetitionEntryForm from "./CompetitionEntryForm";
 import CompetitionButton from "../Buttons/CompetitionButton";
 import { selectors, useAppSelector } from "../../../../state";
 import { isStudent, isTeacher } from "../../../../services";
+import CompetitionWrapper from "../CompetitionWrapper";
 
 const STUDENT_MESSAGE = "Students, ask your teacher about submitting an entry.";
 const TEACHER_MESSAGE = "Teachers, login to submit a student project.";
+const CLOSED_MESSAGE = "Entries for this competition have now closed.";
 
 const StudentMessage = () => (
   <Container>
@@ -39,7 +41,11 @@ const EntryFormHandler = ({ buttons, handleTermsClick }: EntryFormHandlerProps) 
 
   const renderEntryForm = () => {
     if (isTeacher(user)) {
-      return <CompetitionEntryForm handleTermsClick={handleTermsClick} />;
+      return (
+        <CompetitionWrapper>
+          <CompetitionEntryForm handleTermsClick={handleTermsClick} />
+        </CompetitionWrapper>
+      );
     } else if (isStudent(user)) {
       return <StudentMessage />;
     } else {
@@ -47,7 +53,19 @@ const EntryFormHandler = ({ buttons, handleTermsClick }: EntryFormHandlerProps) 
     }
   };
 
-  return renderEntryForm();
+  return (
+    <CompetitionWrapper
+      closedCompetitionContent={
+        <Container>
+          <Col className="d-flex flex-column align-items-start pb-4 pl-0" xs="auto">
+            <p className="pb-3 body-text">{CLOSED_MESSAGE}</p>
+          </Col>
+        </Container>
+      }
+    >
+      {renderEntryForm()}
+    </CompetitionWrapper>
+  );
 };
 
 export default EntryFormHandler;
