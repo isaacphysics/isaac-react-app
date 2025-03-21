@@ -21,7 +21,7 @@ const GroupsPanel = () => {
         {sortedGroups.length ?
             <>
                 <div className="overflow-hidden">
-                    {sortedGroups.map(group => <Link key={group.id} to={`/groups#${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
+                    {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress#${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
                 </div>
                 <Spacer/>
                 <Link to="/groups" className="d-inline panel-link mt-3">See all groups</Link>
