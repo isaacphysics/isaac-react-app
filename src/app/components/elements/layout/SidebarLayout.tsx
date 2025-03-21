@@ -2,8 +2,8 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isPhy } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isPhy, extractTeacherName, determineGameboardSubjects } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
@@ -17,7 +17,7 @@ import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
 import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
-import { formatISODateOnly } from "../DateString";
+import { formatISODateOnly, getFriendlyDaysUntil } from "../DateString";
 import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
@@ -192,14 +192,14 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
     </NavigationSidebar>;
 };
 
-interface GameboardSidebarProps extends SidebarProps {
+interface GameboardQuestionSidebarProps extends SidebarProps {
     id?: string;
     title?: string;
     questions?: GameboardItem[];
     currentQuestionId?: string;
 }
 
-export const GameboardSidebar = (props: GameboardSidebarProps) => {
+export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) => {
     // Alternative to QuestionSidebar for questions in the context of a gameboard
     const {id, title, questions, currentQuestionId} = props;
     return <NavigationSidebar>
@@ -209,6 +209,58 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
             {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={q.id === currentQuestionId ? "selected-question" : ""}/></li>)}
         </ul>
     </NavigationSidebar>;
+};
+
+interface GameboardSidebarProps extends SidebarProps {
+    gameboard: GameboardDTO;
+    assignments: AssignmentDTO[] | false;
+};
+
+export const GameboardSidebar = (props: GameboardSidebarProps) => {
+    const {gameboard, assignments} = props;
+
+    const GameboardDetails = () => {
+        const subjects = determineGameboardSubjects(gameboard);
+        const topics = tags.getTopicTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
+            if (isDefined(c.tags) && c.tags.length > 0) {
+                return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
+            }
+            return a;
+        }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
+        const questionsAttempted = gameboard.contents?.filter(q => q.questionPartsNotAttempted !== q.questionPartsTotal).length;
+        const questionsCorrect = gameboard.contents?.filter(q => q.questionPartsCorrect === q.questionPartsTotal).length;
+
+        return <>
+            <div>Questions: <b>{gameboard.contents?.length}</b></div>
+            <div>Attempted: <b>{questionsAttempted}</b> ({gameboard.percentageAttempted}%)</div>
+            <div>Correct: <b>{questionsCorrect}</b> ({gameboard.percentageCorrect}%)</div>
+            <div>Subjects: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
+            <div>Topics: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
+        </>;
+    };
+
+    const AssignmentDetails = (assignment: AssignmentDTO) => {
+        const {assignerSummary, creationDate, dueDate, groupName, scheduledStartDate} = assignment;
+        const assigner = extractTeacherName(assignerSummary);
+        const startDate = scheduledStartDate ?? creationDate;
+        return <>
+            {assignments && assignments.length > 1 && <div className="section-divider"/>}
+            <div>Assigned to <b>{groupName}</b> by <b>{assigner}</b></div>
+            {startDate && <div>Set: <b>{getFriendlyDaysUntil(startDate)}</b></div>}
+            {dueDate && <div>Due: <b>{getFriendlyDaysUntil(dueDate)}</b></div>}
+        </>;
+    };
+
+    return <ContentSidebar buttonTitle="Assignment details">
+        <div className="section-divider"/>
+        <h5>Question deck details</h5>
+        <GameboardDetails />
+        <div className="section-divider-bold"/>
+        <h5>Assignment details</h5>
+        {!assignments || assignments.length === 0 && <div>You are attempting this question deck independently.</div>}
+        {assignments && assignments.length > 1 && <div>You have multiple assignments for this question deck.</div>}
+        {assignments && assignments.map(a => <AssignmentDetails key={a.id} {...a} />)}
+    </ContentSidebar>;
 };
 
 export const ConceptSidebar = (props: QuestionSidebarProps) => {
@@ -512,11 +564,9 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
     const { statusFilter, setStatusFilter, titleFilter, setTitleFilter, groupFilter, setGroupFilter, setByFilter, setSetByFilter, sortOrder, setSortOrder, assignmentQuery, ...rest } = props;
 
     const ORDER_NAMES: {[key in MyAssignmentsOrder]: string} = {
-        "title": "Title (A-Z)",
-        "-title": "Title (Z-A)",
         "startDate": "Start date (oldest first)",
-        "-startDate": "Start date (latest first)",
-        "dueDate": "Due date (oldest first)",
+        "-startDate": "Start date (recent first)",
+        "dueDate": "Due date (soonest first)",
         "-dueDate": "Due date (latest first)",
         "attempted": "Attempted (lowest first)",
         "-attempted": "Attempted (highest first)",
@@ -545,11 +595,9 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                 />
                 <div className="section-divider"/>
                 <h5>Sort</h5>
-                <Label className="w-100">
-                    <Input type="select" value={sortOrder} onChange={e => setSortOrder(e.target.value as MyAssignmentsOrder)}>
-                        {Object.values(MyAssignmentsOrder).map(order => <option key={order} value={order}>{ORDER_NAMES[order]}</option>)}
-                    </Input>
-                </Label>
+                <Input type="select" value={sortOrder} onChange={e => setSortOrder(e.target.value as MyAssignmentsOrder)}>
+                    {Object.values(MyAssignmentsOrder).map(order => <option key={order} value={order}>{ORDER_NAMES[order]}</option>)}
+                </Input>
                 <div className="section-divider"/>
                 <h5 className="mb-4">Filter by status</h5>
                 <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>

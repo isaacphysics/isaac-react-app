@@ -46,7 +46,6 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
 
     const SORT_FUNCTIONS = {
-        [MyAssignmentsOrder.title]: (a: AssignmentDTO) => a.gameboard?.title,
         [MyAssignmentsOrder.startDate]: (a: AssignmentDTO) => a.scheduledStartDate ? a.scheduledStartDate : a.creationDate,
         [MyAssignmentsOrder.dueDate]: (a: AssignmentDTO) => a.dueDate,
         [MyAssignmentsOrder.attempted]: (a: AssignmentDTO) => a.gameboard?.percentageAttempted ?? 0,
@@ -92,16 +91,16 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                         );
 
                         const orderNegative = sortOrder.at(0) == "-";
-                        const orderKind = (orderNegative ? sortOrder.slice(1) : sortOrder) as "title" | "startDate" | "dueDate" | "attempted" | "correct";
-                        const orderedBoards = sortBy(filteredAssignments, SORT_FUNCTIONS[orderKind]);
-                        if (orderNegative) orderedBoards.reverse();
+                        const orderKind = (orderNegative ? sortOrder.slice(1) : sortOrder) as "startDate" | "dueDate" | "attempted" | "correct";
+                        const orderedAssignments = sortBy(filteredAssignments, SORT_FUNCTIONS[orderKind]);
+                        if (orderNegative) orderedAssignments.reverse();
 
                         return <div className="pt-4">
-                            <Assignments assignments={orderedBoards.slice(0, limit)} />
-                            {limit < orderedBoards.length && <div className="text-center">
+                            <Assignments assignments={orderedAssignments.slice(0, limit)} />
+                            {limit < orderedAssignments.length && <div className="text-center">
                                 <hr className="text-center" />
                                 <p className="mt-4">
-                                    Showing <strong>{limit}</strong> of <strong>{orderedBoards.length}</strong> filtered {siteSpecific("assignments", "quizzes")}.
+                                    Showing <strong>{limit}</strong> of <strong>{orderedAssignments.length}</strong> filtered {siteSpecific("assignments", "quizzes")}.
                                 </p>
                                 <Button color="primary" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
                                     Show more

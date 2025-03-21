@@ -356,8 +356,6 @@ export enum AssignmentBoardOrder {
 }
 
 export enum MyAssignmentsOrder {
-    "title" = "title",
-    "-title" = "-title",
     "startDate" = "startDate",
     "-startDate" = "-startDate",
     "dueDate" = "dueDate",

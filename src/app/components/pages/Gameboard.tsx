@@ -37,6 +37,7 @@ import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import { GameboardSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 export const getProgressIcon = (question: GameboardItem) => {
     let itemClasses = classNames("content-summary-link text-info bg-white", {"p-3": isPhy, "p-0": isAda});
@@ -85,7 +86,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     </div>
                 )}
             </span>
-            <div className={classNames("flex-fill", {"d-flex py-3 pe-3 flex-column flex-md-row": isAda, "d-md-flex": isPhy})}>
+            <div className={classNames("flex-fill", {"d-flex py-3 pe-3 flex-column flex-md-row": isAda, "d-flex align-items-center": isPhy})}>
                 <div className={"flex-grow-1"}>
                     <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-theme": isPhy})}>
                         {generateQuestionTitle(question)}
@@ -136,7 +137,7 @@ export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => 
 
 export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => (
     <Row className={className}>
-        <Col lg={{size: 10, offset: 1}}>
+        <Col>
             <GameboardViewerInner gameboard={gameboard}/>
         </Col>
     </Row>
@@ -150,6 +151,7 @@ export const Gameboard = withRouter(({ location }) => {
     const user = useAppSelector(selectors.user.orNull);
     const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
+    const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId)));
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
@@ -159,52 +161,57 @@ export const Gameboard = withRouter(({ location }) => {
     }, [dispatch, gameboard]);
 
     const notFoundComponent = <Container>
-        <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle={`${siteSpecific("Gameboard", "Quiz")} not found`} />
+        <TitleAndBreadcrumb breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")} currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`} />
         <h3 className="my-4">
             <small>
-                {`We're sorry, we were not able to find a ${siteSpecific("gameboard", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
+                {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
             </small>
         </h3>
     </Container>;
-
     return !gameboardId
         ? <Redirect to={PATHS.QUESTION_FINDER} />
         : <Container className="mb-5">
             <ShowLoadingQuery
                 query={gameboardQuery}
-                defaultErrorTitle={`Error fetching ${siteSpecific("gameboard", "quiz")} with id: ${gameboardId}`}
+                defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboardId}`}
                 ifNotFound={notFoundComponent}
                 thenRender={(gameboard) => {
                     return <>
                         <TitleAndBreadcrumb 
-                            currentPageTitle={gameboard && gameboard.title || `Filter Generated ${siteSpecific("Gameboard", "Quiz")}`} icon={{type: "hex", icon: "page-icon-question-pack"}}
-                            intermediateCrumbs={isPhy && isDefined(assignments) && isFound(assignments) && (assignments.map(a => a.gameboardId).includes(gameboardId)) ? [{title: "Assignments", to: "/assignments"}] : []}
+                            currentPageTitle={siteSpecific("Question deck", gameboard && gameboard.title || "Filter Generated Quiz")} icon={{type: "hex", icon: "page-icon-question-pack"}}
+                            intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: "Assignments", to: "/assignments"}] : []}
                         />
-                        <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
-                        {user && isTutorOrAbove(user)
-                            ? <Row>
-                                <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
-                                    <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="primary" outline block>
-                                        {siteSpecific("Set as Assignment", "Set as assignment")}
-                                    </Button>
-                                </Col>
-                                <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={4} xl={{size: 3, offset: 2}} className="mt-4">
-                                    <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboardId}`}} color="primary" block outline>
-                                        {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
-                                    </Button>
-                                </Col>
-                            </Row>
-                            : gameboard && !gameboard.savedToCurrentUser && <Row>
-                                <Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
-                                    <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`}
-                                        onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
-                                        color="primary" outline block
-                                    >
-                                        {siteSpecific("Save to My Gameboards", "Save to My quizzes")}
-                                    </Button>
-                                </Col>
-                            </Row>
-                        }
+                        <SidebarLayout>
+                            <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments}/>
+                            <MainContent>
+                                {isPhy && <h3 className="mt-3">{gameboard.title}</h3>}
+                                <GameboardViewer gameboard={gameboard} className={siteSpecific("mt-3", "mt-4 mt-lg-5")} />
+                                {user && isTutorOrAbove(user)
+                                    ? <Row>
+                                        <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
+                                            <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="primary" outline block>
+                                                {siteSpecific("Set as Assignment", "Set as assignment")}
+                                            </Button>
+                                        </Col>
+                                        <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={4} xl={{size: 3, offset: 2}} className="mt-4">
+                                            <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboardId}`}} color="primary" block outline>
+                                                {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                    : gameboard && !gameboard.savedToCurrentUser && <Row>
+                                        <Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
+                                            <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`}
+                                                onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
+                                                color="primary" outline block
+                                            >
+                                                {siteSpecific("Save to My Question Decks", "Save to My quizzes")}
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                }
+                            </MainContent>
+                        </SidebarLayout>
                     </>;
                 }}
             />
