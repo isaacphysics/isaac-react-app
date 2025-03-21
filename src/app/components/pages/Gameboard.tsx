@@ -79,15 +79,15 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "justify-content-center": isAda})}>
             <span className={"question-progress-icon"}>
                 {siteSpecific(
-                    <div className={`${icon} me-4`}/>,
+                    <div className={`${icon} me-3`}/>,
                     <div className={"inner-progress-icon"}>
                         <img src={icon} alt="" /><br/>
                         <span className={"icon-title d-none d-sm-block"}>{message}</span>
                     </div>
                 )}
             </span>
-            <div className={classNames("flex-fill", {"d-flex py-3 pe-3 flex-column flex-md-row": isAda, "d-flex align-items-center": isPhy})}>
-                <div className={"flex-grow-1"}>
+            <div className={classNames({"d-flex py-3 pe-3 flex-column flex-md-row": isAda, "d-flex flex-column w-100": isPhy})}>
+                <div>
                     <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-theme": isPhy})}>
                         {generateQuestionTitle(question)}
                     </Markup>
@@ -99,9 +99,11 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                         {questionTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
                 </div>
-                {question.audience && <StageAndDifficultySummaryIcons stack={isAda && below['sm'](deviceSize)} audienceViews={
-                    isPhy && !isTutorOrAbove(currentUser) && uniqueStage ? [uniqueStage] : questionViewingContexts
-                } />}
+                {question.audience && <span className="ms-auto">
+                    <StageAndDifficultySummaryIcons stack={isAda && below['sm'](deviceSize)} audienceViews={
+                        isPhy && !isTutorOrAbove(currentUser) && uniqueStage ? [uniqueStage] : questionViewingContexts
+                    } />
+                </span>}
             </div>
             {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to question"}/></div>}
         </Link>
