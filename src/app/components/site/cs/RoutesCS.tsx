@@ -88,15 +88,16 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
     <Redirect key={key++} from="/topics/projects_link_pseudo_project" to="/projects" />,
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
-    <TrackedRoute key={key++} exact path="/exam_specifications_england" component={ExamSpecifications} />,
+    <TrackedRoute key={key++} exact path="/exam_specifications_england" component={ExamSpecifications}
+        componentProps={{title: "English qualifications"}} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_wales" component={ExamSpecifications}
-        componentProps={{'examBoardFilter': [EXAM_BOARD.WJEC]}} />,
+        componentProps={{'examBoardFilter': [EXAM_BOARD.WJEC], title: "Welsh qualifications"}} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_ada" component={ExamSpecifications}
-        componentProps={{'examBoardFilter': [EXAM_BOARD.ADA], 'stageFilter': [STAGE.CORE, STAGE.ADVANCED]}} />,
+        componentProps={{'examBoardFilter': [EXAM_BOARD.ADA], 'stageFilter': [STAGE.CORE, STAGE.ADVANCED], title: "Ada Curriculum"}} />,
     <Redirect key={key++} from="/concepts/sqa_computing_science" to="/exam_specifications_scotland" />,
     <TrackedRoute key={key++} exact path="/exam_specifications_scotland" component={ExamSpecifications}
         componentProps={{'examBoardFilter': [EXAM_BOARD.SQA], 'stageFilter': [STAGE.SCOTLAND_NATIONAL_5,
-            STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER]}} />,
+            STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER], title: "Scottish qualifications"}} />,
     <TrackedRoute key={key++} exact path="/exam_specifications" component={ExamSpecificationsDirectory} />,
     <TrackedRoute key={key++} exact path="/teaching_order" component={TeachingOrders}/>,
 
