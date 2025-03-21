@@ -80,7 +80,7 @@ const DashboardStreakPanel = () => {
         <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
             <DashboardStreakGauge streakRecord={myProgress?.userSnapshot}/>
         </div>
-        {remainingToAnswer === 0 ? <div className="streak-text">You&apos;ve maintained your streak for this week!</div> : <div className="streak-text">Only {remainingToAnswer} more question parts to answer correctly this week!</div>}
+        {remainingToAnswer <= 0 ? <div className="streak-text">You&apos;ve maintained your streak for this week!</div> : <div className="streak-text">Only {remainingToAnswer} more question parts to answer correctly this week!</div>}
         <Spacer/>
         <Button className="numeric-help d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
             <i className="icon icon-info icon-color-grey"/> What is this?
