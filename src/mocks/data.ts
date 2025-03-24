@@ -5976,3 +5976,13 @@ export const buildMockEvent = (eventId: string, eventStatus: EventStatus, userBo
     },
     endDate: 4613677200000
 });
+
+export const buildMockQuestions = (n: number) => {
+    return Array(n).fill(null).map((_, i) => ({ ...mockQuestionFinderResults.results[0], id: `q${i}`, title: `Question ${i}` }));
+};
+
+export const buildMockQuestionFinderResults = (questions: typeof mockQuestionFinderResults.results, start: number) => ({
+    results: questions.slice(start, start + 31),
+    nextSearchOffset: start + 31,
+    totalResults: questions.length
+});

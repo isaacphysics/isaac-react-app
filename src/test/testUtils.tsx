@@ -10,9 +10,12 @@ import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
 import {MemoryRouter} from "react-router";
-import {screen, within} from "@testing-library/react";
+import {act, screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
+import { history } from "../app/services";
+import { LocationDescriptor } from "history";
+import * as miscUtils from '../app/services/miscUtils';
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -136,4 +139,45 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     // Switch to the correct tab
     const tabLink = await within(await screen.findByTestId("account-nav")).findByText(ACCOUNT_TABS.find(t => t.tab === tab)?.title ?? "");
     await userEvent.click(tabLink);
+};
+
+export const clickButton = async (text: string, container?: Promise<HTMLElement>) => {
+    const [button] = await (container ? within(await container).findAllByText(text).then(e => e) : screen.findAllByText(text));
+    if (button.hasAttribute('disabled')) {
+        throw new Error(`Can't click on disabled button ${button.textContent}`);
+    }
+    await act(async () => button.click());
+};
+
+export const enterInput = async (placeholder: string, input: string) => {
+    const textBox = await screen.findByPlaceholderText(placeholder);
+    if (textBox.hasAttribute('disabled')) {
+        throw new Error(`Can't inter text into  disabled field ${[placeholder]}`);
+    }
+    await userEvent.type(textBox, input);
+};
+
+export const waitForLoaded = () => waitFor(() => {
+    expect(screen.queryAllByText("Loading...")).toHaveLength(0);
+});
+
+export const expectUrlParams = (text: string) => waitFor(() => {
+    expect(history.location.search).toBe(text);
+});
+
+export const setUrl = (location: LocationDescriptor) => history.push(location);
+
+export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => void) => Promise<void>) => {
+    const nextRandom = {
+        values: [] as number[],
+        get() { return this.values.shift() ?? Math.random(); },
+        set(arr: number[]) { this.values = arr; }
+    };
+
+    try {
+        jest.spyOn(miscUtils, 'nextRandom').mockImplementation(() => nextRandom.get());
+        await fn(nextRandom.set.bind(nextRandom));         
+    } finally {
+        jest.spyOn(miscUtils, 'nextRandom').mockRestore();
+    }
 };
