@@ -44,10 +44,10 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
     const subject = useAppSelector(selectors.pageContext.subject);
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
     const link = isDefined(gameboardId) ? `/questions/${question.id}?board=${gameboardId}` : `/questions/${question.id}`;
-                        
+
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
         <Link to={link} className="py-2">
-            {isDefined(gameboardId) ? <span className={classNames(getProgressIcon(question).icon, "question-progress-icon mt-1 mx-2")}/> : <i className="icon icon-question"/>}
+            {isDefined(gameboardId) ? <span className={classNames(getProgressIcon(question).icon, "mt-1 mx-2")} style={{minWidth: "16px"}}/> : <i className="icon icon-question"/>}
             <div className="d-flex flex-column w-100">
                 <span className="hover-underline link-title">{question.title}</span>
                 <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
@@ -205,7 +205,7 @@ export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) =
     const {id, title, questions, currentQuestionId} = props;
     return <NavigationSidebar>
         <div className="section-divider"/>
-        <h5 className="mb-3">Assignment: {title}</h5>
+        <h5 className="mb-3">Question deck: {title}</h5>
         <ul>
             {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={q.id === currentQuestionId ? "selected-question" : ""}/></li>)}
         </ul>
