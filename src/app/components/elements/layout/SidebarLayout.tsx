@@ -219,6 +219,7 @@ interface GameboardSidebarProps extends SidebarProps {
 
 export const GameboardSidebar = (props: GameboardSidebarProps) => {
     const {gameboard, assignments} = props;
+    const multipleAssignments = assignments && assignments.length > 1;
 
     const GameboardDetails = () => {
         const subjects = determineGameboardSubjects(gameboard);
@@ -245,22 +246,23 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         const assigner = extractTeacherName(assignerSummary);
         const startDate = scheduledStartDate ?? creationDate;
         return <>
-            {assignments && assignments.length > 1 && <div className="section-divider"/>}
+            {multipleAssignments && <div className="section-divider"/>}
             <div>Assigned to <b>{groupName}</b> by <b>{assigner}</b></div>
             {startDate && <div>Set: <b>{getFriendlyDaysUntil(startDate)}</b></div>}
             {dueDate && <div>Due: <b>{getFriendlyDaysUntil(dueDate)}</b></div>}
         </>;
     };
 
-    return <ContentSidebar buttonTitle="Assignment details">
+    return <ContentSidebar buttonTitle="Details">
         <div className="section-divider"/>
-        <h5>Question deck details</h5>
+        <h5>Question deck</h5>
         <GameboardDetails />
-        <div className="section-divider-bold"/>
-        <h5>Assignment details</h5>
-        {!assignments || assignments.length === 0 && <div>You are attempting this question deck independently.</div>}
-        {assignments && assignments.length > 1 && <div>You have multiple assignments for this question deck.</div>}
-        {assignments && assignments.map(a => <AssignmentDetails key={a.id} {...a} />)}
+        {assignments && assignments.length > 0 && <>
+            <div className={multipleAssignments ? "section-divider-bold" : "section-divider"}/>
+            <h5>Assignment{multipleAssignments && "s"}</h5>
+            {multipleAssignments && <div>You have multiple assignments for this question deck.</div>}
+            {assignments.map(a => <AssignmentDetails key={a.id} {...a} />)}
+        </>}
     </ContentSidebar>;
 };
 
