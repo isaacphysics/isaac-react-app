@@ -233,8 +233,8 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
 
         return <>
             <div>Questions: <b>{gameboard.contents?.length}</b></div>
-            <div>Attempted: <b>{questionsAttempted}</b> ({gameboard.percentageAttempted}%)</div>
-            <div>Correct: <b>{questionsCorrect}</b> ({gameboard.percentageCorrect}%)</div>
+            <div>Attempted: <b>{questionsAttempted}</b></div>
+            <div>Correct: <b>{questionsCorrect}</b></div>
             <div>Subjects: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
             <div>Topics: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
         </>;
