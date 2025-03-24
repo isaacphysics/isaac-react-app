@@ -22,6 +22,7 @@ import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
 import { StyledSelect } from "../inputs/StyledSelect";
+import { extendUrl } from "../../pages/subjectLandingPageComponents";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -136,6 +137,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
     const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage") as IsaacConceptPageDTO[] | undefined;
     const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage") as QuestionDTO[] | undefined;
 
+    const pageContext = useAppSelector(selectors.pageContext.context);
     const pageContextStage = useAppSelector(selectors.pageContext.stage);
 
     const [relatedQuestionsForContextStage, relatedQuestionsForOtherStages] = partition(relatedQuestions, q => q.audience && determineAudienceViews(q.audience).some(v => v.stage === pageContextStage));
@@ -143,46 +145,58 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
     const sidebarRef = useRef<HTMLDivElement>(null);
 
     return <NavigationSidebar ref={sidebarRef}>
-        {relatedConcepts && relatedConcepts.length > 0 && <>
-            <div className="section-divider"/>
-            <h5>Related concepts</h5>
-            <ul className="link-list">
+        <div className="section-divider"/>
+        <h5>Related concepts</h5>
+        {relatedConcepts && relatedConcepts.length > 0
+            ? <ul className="link-list">
                 {relatedConcepts.map((concept, i) => <ConceptLink key={i} concept={concept} />)}
             </ul>
-        </>}
-        {relatedQuestions && relatedQuestions.length > 0 && <>
-            {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
-                ? <>
-                    <div className="section-divider"/>
-                    <h5>Related questions</h5>
-                    <ul className="link-list">
-                        {relatedQuestions.map((question, i) => <QuestionLink key={i} question={question} />)}
-                    </ul>
-                </>
-                : <>
-                    <div className="section-divider"/>
-                    <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
-                    <ul className="link-list">
-                        {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} />)}
-                    </ul>
-                    <div className="section-divider"/>
-                    <h5>Related questions for other learning stages</h5>
-                    <ul className="link-list">
-                        {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} />)}
-                    </ul>
-                </>
-            }
+            : <>
+                There are no related concepts for this question.
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "concepts")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                    See all concepts for {getHumanContext(pageContext)}
+                </AffixButton>}
+            </>
+        }
+        <div className="section-divider"/>
+        <h5>Related questions</h5>
+        {relatedQuestions && relatedQuestions.length > 0
+            ? <>
+                {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
+                    ? <>
+                        <ul className="link-list">
+                            {relatedQuestions.map((question, i) => <QuestionLink key={i} question={question} />)}
+                        </ul>
+                    </>
+                    : <>
+                        <div className="section-divider"/>
+                        <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
+                        <ul className="link-list">
+                            {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} />)}
+                        </ul>
+                        <div className="section-divider"/>
+                        <h5>Related questions for other learning stages</h5>
+                        <ul className="link-list">
+                            {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} />)}
+                        </ul>
+                    </>
+                }
+                <div className="section-divider"/>
+                <div className="d-flex flex-column sidebar-key">
+                    Key
+                    <KeyItem icon="status-in-progress" text="Question in progress"/>
+                    <KeyItem icon="status-correct" text="Question completed correctly"/>
+                    <KeyItem icon="status-incorrect" text="Question completed incorrectly"/>
+                </div>
 
-            <div className="section-divider"/>
-
-            <div className="d-flex flex-column sidebar-key">
-                Key
-                <KeyItem icon="status-in-progress" text="Question in progress"/>
-                <KeyItem icon="status-correct" text="Question completed correctly"/>
-                <KeyItem icon="status-incorrect" text="Question completed incorrectly"/>
-            </div>
-
-        </>}
+            </>
+            : <>
+                There are no related questions for this question.
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "questions")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                    See all questions for {getHumanContext(pageContext)}
+                </AffixButton>}
+            </>
+        }
     </NavigationSidebar>;
 };
 
