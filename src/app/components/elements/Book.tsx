@@ -35,6 +35,7 @@ export const Book = ({ book }: BookProps) => {
     return <Container data-bs-theme={getThemeFromTags(book.tags)}>
         <TitleAndBreadcrumb 
             currentPageTitle={book.title ?? "Book"}
+            icon={{type: "hex", icon: "page-icon-book"}}
         />
         <SidebarLayout>
             <BookSidebar book={book} pageId={pageId} />

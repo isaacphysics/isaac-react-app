@@ -247,6 +247,14 @@
   );
 }
 
+.page-icon-book {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-book-fg.svg',
+    '/assets/phy/icons/redesign/page-book-bg.svg',
+    75px, 75px, 44px
+  )
+}
+
 .list-icon-question {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-question-fg.svg', 
