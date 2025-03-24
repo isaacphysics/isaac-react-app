@@ -1207,7 +1207,6 @@ export const BookSidebar = ({ book, pageId }: BookSidebarProps) => {
             <button className="w-100 d-flex align-items-center p-3 text-start bg-transparent" onClick={() => history.push("#")}>
                 <h5 className={classNames("m-0", {"text-theme": pageId === undefined})}>Overview</h5>
                 <Spacer/>
-                <img className={classNames("icon-dropdown-90")} src={"/assets/common/icons/chevron_right.svg"} alt="" />
             </button>
             {book.chapters?.map((chapter, index) => {
                 const chapterActive = chapter.sections?.some(section => section.pageId === pageId);
