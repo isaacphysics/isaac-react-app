@@ -115,10 +115,14 @@ export const AssignmentCard = (assignment: IAssignmentLike) => {
         : isAssignment(assignment) ? assignment.gameboard?.title
             : "";
 
+    const icon = isQuiz(assignment) ? "icon icon-tests"
+        : isAssignment(assignment) ? "icon icon-question-pack"
+            : "";
+
     return <Link to={link} className="w-100">
         <Card className="assignment-card px-3 d-flex flex-column h-100">
             <h5 className="d-inline">
-                <i className="icon icon-question-pack me-2"/>
+                <i className={`${icon} me-2`}/>
                 {title}
             </h5>
             <Spacer/>
