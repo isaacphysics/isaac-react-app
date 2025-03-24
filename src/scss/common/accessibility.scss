@@ -1,0 +1,26 @@
+
+@mixin not-reduced-motion {
+  @media (prefers-reduced-motion: no-preference) {
+    &:not(:has(:root#root.reduced-motion)) {
+      @content;
+    }
+  }
+}
+
+@mixin -reduced-motion {
+  --hover-scale: 1;
+}
+
+#root {
+  // default values (non-reduced motion)
+  --hover-scale: 1.02;
+  --focus-outline: 2px solid #000;
+
+  &[data-reduced-motion="true"] {
+    @include -reduced-motion;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    @include -reduced-motion;
+  }
+}

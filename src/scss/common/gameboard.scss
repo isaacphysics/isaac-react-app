@@ -94,12 +94,16 @@
 .my-gameboards-filters {
   overflow: hidden;
   max-height: 0;
-  transition: max-height 0.3s ease-in-out;
+  @include not-reduced-motion {
+    transition: max-height 0.3s ease-in-out;
+  }
   &.shown {
     max-height: 144px;
   }
   @include media-breakpoint-up(lg) {
-    transition: max-height 0.2s ease-in-out;
+    @include not-reduced-motion {
+      transition: max-height 0.2s ease-in-out;
+    }
     &.shown {
       max-height: 72px;
     }

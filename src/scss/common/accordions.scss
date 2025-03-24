@@ -77,7 +77,6 @@
     border-radius: 0;
     font-family: $secondary-font-semi-bold;
     font-size: 1.25rem !important;
-    transition: all 0.5s ease;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -85,6 +84,10 @@
     border: none;
     text-align: left;
     text-decoration: none;
+    
+    @include not-reduced-motion {
+      transition: all 0.5s ease;
+    }
 
     &.active {
       &:after {

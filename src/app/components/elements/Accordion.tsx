@@ -23,7 +23,7 @@ import {Markup} from "./markup";
 import {ReportAccordionButton} from "./ReportAccordionButton";
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import debounce from "lodash/debounce";
-import { Button, Row, UncontrolledTooltip, Collapse, Card, CardBody } from "reactstrap";
+import { UncontrolledTooltip, Collapse, Card, CardBody } from "reactstrap";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -44,6 +44,8 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     const page = useAppSelector((state: AppState) => (state && state.doc) || null);
 
     const deviceSize = useDeviceSize();
+
+    const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
 
     // Toggle
     const isFirst = index === 0;
@@ -172,7 +174,9 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 setOpen(nextState);
                 if (nextState) {
                     logAccordionOpen();
-                    scrollVerticallyIntoView(event.target as HTMLElement, -50);
+                    if (!displaySettings?.REDUCED_MOTION) {
+                        scrollVerticallyIntoView(event.target as HTMLElement, -50);
+                    }
                 }
             }}
             aria-expanded={isOpen ? "true" : "false"}

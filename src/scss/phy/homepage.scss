@@ -253,7 +253,9 @@ a:has(.assignment-card) {
   }
 
   &:hover {
-    scale: 1.02;
+    @include not-reduced-motion {
+      transform: scale(1.02);
+    }
     border-color: $color-neutral-400;
   }
 }
