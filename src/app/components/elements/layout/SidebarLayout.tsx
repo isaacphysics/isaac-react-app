@@ -86,6 +86,8 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(m => !m);
 
+    const pageTheme = useAppSelector(selectors.pageContext.subject);
+
     if (isAda) return <></>;
 
     const { className, buttonTitle, ...rest } = props;
@@ -102,7 +104,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                         {buttonTitle ?? "Search and filter"}
                     </AffixButton>
                 </div>
-                <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root">
+                <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
                             <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
@@ -1203,7 +1205,7 @@ export const BookSidebar = ({ book, pageId }: BookSidebarProps) => {
     return <ContentSidebar buttonTitle="Contents">
         <ul className="m-0 p-0">
             <button className="w-100 d-flex align-items-center p-3 text-start bg-transparent" onClick={() => history.push("#")}>
-                <h5 className="m-0">Overview</h5>
+                <h5 className={classNames("m-0", {"text-theme": pageId === undefined})}>Overview</h5>
                 <Spacer/>
                 <img className={classNames("icon-dropdown-90")} src={"/assets/common/icons/chevron_right.svg"} alt="" />
             </button>

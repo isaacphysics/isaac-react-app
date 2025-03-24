@@ -4,7 +4,7 @@ import { IsaacBookIndexPageDTO } from "../../../IsaacApiTypes";
 import { BookSidebar, MainContent, SidebarLayout } from "./layout/SidebarLayout";
 import { Markup } from "./markup";
 import { TitleAndBreadcrumb } from "./TitleAndBreadcrumb";
-import { getThemeFromTags, isDefined } from "../../services";
+import { isDefined, useContextFromContentObjectTags } from "../../services";
 import { PageFragment } from "./PageFragment";
 import { useHistory } from "react-router";
 
@@ -16,6 +16,8 @@ export const Book = ({ book }: BookProps) => {
 
     const [pageId, setPageId] = useState<string | undefined>(undefined);
     const history = useHistory();
+
+    const pageContext = useContextFromContentObjectTags(book);
 
     useEffect(() => {
         const hash = history.location.hash;
@@ -32,7 +34,7 @@ export const Book = ({ book }: BookProps) => {
         }
     }, [book.chapters, history.location.hash]);
 
-    return <Container data-bs-theme={getThemeFromTags(book.tags)}>
+    return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
         <TitleAndBreadcrumb 
             currentPageTitle={book.title ?? "Book"}
             icon={{type: "hex", icon: "page-icon-book"}}
