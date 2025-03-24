@@ -194,10 +194,10 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
 };
 
 interface GameboardQuestionSidebarProps extends SidebarProps {
-    id?: string;
-    title?: string;
-    questions?: GameboardItem[];
-    currentQuestionId?: string;
+    id: string;
+    title: string;
+    questions: GameboardItem[];
+    currentQuestionId: string;
 }
 
 export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) => {
