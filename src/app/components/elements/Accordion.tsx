@@ -24,6 +24,7 @@ import {ReportAccordionButton} from "./ReportAccordionButton";
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import debounce from "lodash/debounce";
 import { UncontrolledTooltip, Collapse, Card, CardBody } from "reactstrap";
+import { useReducedMotion } from "../../services/accessibility";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -45,7 +46,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     const deviceSize = useDeviceSize();
 
-    const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
+    const isReducedMotion = useReducedMotion();
 
     // Toggle
     const isFirst = index === 0;
@@ -174,7 +175,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 setOpen(nextState);
                 if (nextState) {
                     logAccordionOpen();
-                    if (!displaySettings?.REDUCED_MOTION) {
+                    if (!isReducedMotion) {
                         scrollVerticallyIntoView(event.target as HTMLElement, -50);
                     }
                 }
