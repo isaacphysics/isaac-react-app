@@ -55,7 +55,7 @@ const AssignmentsPanel = () => {
                 const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
                 return <>
-                    {soonestDeadlines.length ? soonestDeadlines.map(assignment => <div className="mb-3" key={assignment.id}><AssignmentCard {...assignment}/></div>)
+                    {soonestDeadlines.length ? soonestDeadlines.map(assignment => <div className="mb-3" key={assignment.id}><AssignmentCard assignment={assignment} isTeacherDashboard /></div>)
                         : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>}
                     <Spacer/>
                     <div className="d-flex align-items-center">

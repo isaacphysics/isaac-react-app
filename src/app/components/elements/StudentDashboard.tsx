@@ -94,7 +94,13 @@ const DashboardStreakPanel = () => {
     </div>;
 };
 
-export const AssignmentCard = (assignment: IAssignmentLike) => {
+interface AssignmentCardProps {
+    assignment: IAssignmentLike;
+    isTeacherDashboard?: boolean;
+}
+
+export const AssignmentCard = (props: AssignmentCardProps) => {
+    const { assignment, isTeacherDashboard } = props;
     const today = new Date();
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
     const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
@@ -107,8 +113,8 @@ export const AssignmentCard = (assignment: IAssignmentLike) => {
         : isAssignment(assignment) ? assignment.groupName
             : "";
 
-    const link = isQuiz(assignment) ? `/test/assignment/${assignment.id}`
-        : isAssignment(assignment) ? `${PATHS.GAMEBOARD}#${assignment.gameboardId}`
+    const link = isQuiz(assignment) ? (isTeacherDashboard ? `${PATHS.TEST}/${assignment.id}/feedback` : `${PATHS.TEST}/${assignment.id}`)
+        : isAssignment(assignment) ? (isTeacherDashboard ? `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}` : `${PATHS.GAMEBOARD}#${assignment.gameboardId}`)
             : "";
 
     const title = isQuiz(assignment) ? assignment.quizSummary?.title
@@ -160,7 +166,7 @@ const CurrentWorkPanel = () => {
                         <>
                             <span className="mb-2">You have assignments that are active or due soon:</span>
                             <div className="row">
-                                {toDo.map((assignment: IAssignmentLike) => <span key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3"><AssignmentCard {...assignment}/></span>)}
+                                {toDo.map((assignment: IAssignmentLike) => <span key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3"><AssignmentCard assignment={assignment}/></span>)}
                             </div>
                             <Spacer/>
                             <div className="d-flex align-items-center">
