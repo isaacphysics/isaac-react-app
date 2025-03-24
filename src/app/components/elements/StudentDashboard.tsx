@@ -3,7 +3,7 @@ import { getMyProgress, openActiveModal, selectors, showErrorToast, useAppDispat
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTeacherOrAbove, PATHS, sortUpcomingAssignments, useDeviceSize } from '../../services';
+import { convertAssignmentToQuiz, filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTeacherOrAbove, PATHS, QuizStatus, sortUpcomingAssignments, useDeviceSize } from '../../services';
 import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
 import { IAssignmentLike } from '../../../IsaacApiTypes';
 import { useAssignmentsCount } from '../navigation/NavigationBar';
@@ -143,8 +143,11 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
 const CurrentWorkPanel = () => {
     const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
+
+    const isComplete = (quiz: IAssignmentLike) => convertAssignmentToQuiz(quiz)?.status === QuizStatus.Complete;
+
     // we can show overdue assignments, as students can still complete them; we cannot show overdue quizzes as you cannot take them after the due date
-    const sortedQuizAssignments = quizAssignments ? sortUpcomingAssignments(quizAssignments).filter(quiz => !isOverdue(quiz)) : [];
+    const sortedQuizAssignments = quizAssignments ? sortUpcomingAssignments(quizAssignments).filter(quiz => !isOverdue(quiz) && !isComplete(quiz)) : [];
 
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>
