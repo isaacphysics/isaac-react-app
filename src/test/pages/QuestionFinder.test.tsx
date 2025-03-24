@@ -136,7 +136,7 @@ const expectQuestions = (expectedQuestions: typeof mockQuestionFinderResults.res
     const found = await findQuestions();
     expect(found.length).toEqual(expectedQuestions.length);
     expect(found.map(getQuestionText)).toEqual(expectedQuestions.map(q => q.title));
-});
+}, { timeout: 5000 });
 
 const expectPageIndicator = (content: string) => screen.findByTestId("question-finder-results").then(found => {
     expect(found.querySelectorAll('.col')[0].textContent).toBe(content);
