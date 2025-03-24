@@ -86,7 +86,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     </div>
                 )}
             </span>
-            <div className={classNames({"d-flex py-3 pe-3 flex-column flex-md-row": isAda, "d-flex flex-column flex-sm-row align-items-sm-center w-100": isPhy})}>
+            <div className={classNames({"d-flex py-3 pe-3 flex-column flex-md-row flex-fill": isAda, "d-flex flex-column flex-sm-row align-items-sm-center w-100": isPhy})}>
                 <div>
                     <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-theme me-2": isPhy})}>
                         {generateQuestionTitle(question)}
@@ -139,9 +139,9 @@ export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => 
 
 export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => (
     <Row className={className}>
-        <Col>
+        <div className={isAda ? "col col-lg-10 offset-lg-1" : ""}>
             <GameboardViewerInner gameboard={gameboard}/>
-        </Col>
+        </div>
     </Row>
 );
 
