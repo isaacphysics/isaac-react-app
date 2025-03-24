@@ -1,16 +1,23 @@
 $reduced-motion: false;
 
 @mixin not-reduced-motion {
-  @media (prefers-reduced-motion: no-preference) {
-    @if not $reduced-motion {
-      @content;
-    }
+  @if not $reduced-motion {
+    @content;
+  }
+}
+
+@mixin reduced-motion-compliant-animation {
+  @content;
+  
+  // https://www.a11yproject.com/posts/understanding-vestibular-disorders/#what-should-you-consider%3F
+  @if $reduced-motion {
+    transition-duration: 0.001s !important;
+    animation-duration: 0.001s !important;
   }
 }
 
 @mixin -reduced-motion {
   $reduced-motion: true;
-  --hover-scale: 1;
 
   .collapsing { // a bootstrap class used in accordions
     transition: none;
@@ -19,7 +26,6 @@ $reduced-motion: false;
 
 #main {
   // default values for all accessibility variables
-  --hover-scale: 1.02;
   --focus-outline: 2px solid #000; // TODO use this
 
   &[data-reduced-motion="true"] {

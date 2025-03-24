@@ -295,7 +295,7 @@ iframe.email-html {
 }
 
 .collapsible-body {
-  @include not-reduced-motion {
+  @include reduced-motion-compliant-animation {
     transition: max-height 0.3s ease-in-out, height 0.3s ease-in-out;
   }
   // https://stackoverflow.com/q/6421966; x-overflow must be visible (for e.g. box shadows), y-overflow would preferably be entirely hidden but can't be.
