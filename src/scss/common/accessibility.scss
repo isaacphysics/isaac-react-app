@@ -1,20 +1,26 @@
+$reduced-motion: false;
 
 @mixin not-reduced-motion {
   @media (prefers-reduced-motion: no-preference) {
-    &:not(:has(:root#root.reduced-motion)) {
+    @if not $reduced-motion {
       @content;
     }
   }
 }
 
 @mixin -reduced-motion {
+  $reduced-motion: true;
   --hover-scale: 1;
+
+  .collapsing { // a bootstrap class used in accordions
+    transition: none;
+  }
 }
 
-#root {
-  // default values (non-reduced motion)
+#main {
+  // default values for all accessibility variables
   --hover-scale: 1.02;
-  --focus-outline: 2px solid #000;
+  --focus-outline: 2px solid #000; // TODO use this
 
   &[data-reduced-motion="true"] {
     @include -reduced-motion;
