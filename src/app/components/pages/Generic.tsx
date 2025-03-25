@@ -33,7 +33,7 @@ const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
 
 // Overrides for physics pages which shouldn't use the default GenericPageSidebar
 // TODO this should also consider page tags (for events/news etc)
-const PHY_SIDEBAR: {[pageId: string]: ((props: any) => React.JSX.Element)} = {
+const PHY_SIDEBAR: {[pageId: string]: (() => React.JSX.Element)} = {
     "privacy_policy": PolicyPageSidebar,
     "terms_of_use": PolicyPageSidebar,
     "cookie_policy": PolicyPageSidebar,
@@ -66,7 +66,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
             <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} /> {/* TODO add page icon, replace main title with "General"?? */}
             <MetaDescription description={doc.summary} />
             <SidebarLayout>
-                {PHY_SIDEBAR[pageId] ? PHY_SIDEBAR[pageId]({currentPageId: pageId}) : <GenericPageSidebar/>}
+                {PHY_SIDEBAR[pageId] ? PHY_SIDEBAR[pageId]() : <GenericPageSidebar/>}
                 <MainContent>
                     <div className="no-print d-flex align-items-center">
                         <EditContentButton doc={doc} />

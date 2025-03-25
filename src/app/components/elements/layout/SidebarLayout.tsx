@@ -6,7 +6,7 @@ import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, Qui
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { AppGroup, AssignmentBoardOrder, PageContextState, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
@@ -1213,20 +1213,25 @@ export const GenericPageSidebar = () => {
     </ContentSidebar>;
 };
 
-interface PolicyPageSidebarProps extends SidebarProps {
-    currentPageId: string;
-}
-
-export const PolicyPageSidebar = (props: PolicyPageSidebarProps) => {
+export const PolicyPageSidebar = () => {
     const history = useHistory();
+    const path = useLocation().pathname;
+
+    const pageIdMap: {[path: string]: string} = {
+        "/accessibility": "accessibility_statement",
+        "/privacy": "privacy_policy",
+        "/cookies": "cookie_policy",
+        "/terms": "terms_of_use"
+    };
+
     return <NavigationSidebar>
         <div className="section-divider"/>
         <h5>Select a page</h5>
         <ul>
-            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={props.currentPageId === "accessibility_statement"} onClick={() => history.push("/accessibility")}/></li>
-            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={props.currentPageId === "privacy_policy"} onClick={() => history.push("/privacy")}/></li>
-            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={props.currentPageId === "cookie_policy"} onClick={() => history.push("/cookies")}/></li>
-            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={props.currentPageId === "terms_of_use"} onClick={() => history.push("/terms")}/></li>
+            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={pageIdMap[path] === "accessibility_statement"} onClick={() => history.push("/accessibility")}/></li>
+            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={pageIdMap[path] === "privacy_policy"} onClick={() => history.push("/privacy")}/></li>
+            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={pageIdMap[path] === "cookie_policy"} onClick={() => history.push("/cookies")}/></li>
+            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={pageIdMap[path] === "terms_of_use"} onClick={() => history.push("/terms")}/></li>
         </ul>
     </NavigationSidebar>;
 };
