@@ -1201,3 +1201,17 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
         </>}
     </ContentSidebar>;
 };
+
+export interface PolicyPageSidebarProps extends SidebarProps {
+    currentPageId: string;
+}
+
+export const PolicyPageSidebar = (props: PolicyPageSidebarProps) => {
+    const history = useHistory();
+    return <NavigationSidebar>
+        <StyledTabPicker checkboxTitle="Accessibility Statement" checked={props.currentPageId === "accessibility_statement"} onClick={() => history.push("/accessibility")}/>
+        <StyledTabPicker checkboxTitle="Privacy Policy" checked={props.currentPageId === "privacy_policy"} onClick={() => history.push("/privacy")}/>
+        <StyledTabPicker checkboxTitle="Cookie Policy" checked={props.currentPageId === "cookie_policy"} onClick={() => history.push("/cookies")}/>
+        <StyledTabPicker checkboxTitle="Terms of Use" checked={props.currentPageId === "terms_of_use"} onClick={() => history.push("/terms")}/>
+    </NavigationSidebar>;
+};

@@ -16,6 +16,7 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
 import { useUntilFound } from "./Glossary";
+import { MainContent, PolicyPageSidebar, PolicyPageSidebarProps, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -28,6 +29,13 @@ interface GenericPageComponentProps {
 // FIXME this should be decided at a content level (if possible)
 const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
     "computer_science_stories": true
+};
+
+const PHY_SIDEBAR: {[pageId: string]: ((props: PolicyPageSidebarProps) => React.JSX.Element)} = {
+    "privacy_policy": PolicyPageSidebar,
+    "terms_of_use": PolicyPageSidebar,
+    "cookie_policy": PolicyPageSidebar,
+    "accessibility_statement": PolicyPageSidebar
 };
 
 export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
@@ -51,26 +59,40 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+
+        const PageContent = () => {
+            return <>
+                <div className="no-print d-flex align-items-center">
+                    <EditContentButton doc={doc} />
+                    <div className="question-actions question-actions-leftmost mt-3">
+                        <ShareLink linkUrl={`/pages/${doc.id}`}/>
+                    </div>
+                    <div className="question-actions mt-3 not-mobile">
+                        <PrintButton/>
+                    </div>
+                </div>
+
+                <Row className="generic-content-container">
+                    <Col className={classNames("py-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
+                        <WithFigureNumbering doc={doc}>
+                            <IsaacContent doc={doc} />
+                        </WithFigureNumbering>
+                    </Col>
+                </Row>
+            </>;};
+
         return <Container data-bs-theme={doc.subjectId}>
             <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} />
             <MetaDescription description={doc.summary} />
-            <div className="no-print d-flex align-items-center">
-                <EditContentButton doc={doc} />
-                <div className="question-actions question-actions-leftmost mt-3">
-                    <ShareLink linkUrl={`/pages/${doc.id}`}/>
-                </div>
-                <div className="question-actions mt-3 not-mobile">
-                    <PrintButton/>
-                </div>
-            </div>
 
-            <Row className="generic-content-container">
-                <Col className={classNames("py-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
-                    <WithFigureNumbering doc={doc}>
-                        <IsaacContent doc={doc} />
-                    </WithFigureNumbering>
-                </Col>
-            </Row>
+            {PHY_SIDEBAR[pageId]
+                ? <SidebarLayout>
+                    {PHY_SIDEBAR[pageId]({currentPageId: pageId})}
+                    <MainContent>
+                        <PageContent />
+                    </MainContent>
+                </SidebarLayout>
+                : <PageContent />}
 
             {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
         </Container>;
