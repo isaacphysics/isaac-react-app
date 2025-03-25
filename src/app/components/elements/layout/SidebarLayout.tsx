@@ -1202,13 +1202,26 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
     </ContentSidebar>;
 };
 
-export interface PolicyPageSidebarProps extends SidebarProps {
+
+export const GenericPageSidebar = () => {
+    // Default sidebar for general pages that don't have a custom sidebar
+    return <ContentSidebar buttonTitle="Options">
+        <div className="section-divider"/>
+        <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+            Go to homepage
+        </AffixButton>
+    </ContentSidebar>;
+};
+
+interface PolicyPageSidebarProps extends SidebarProps {
     currentPageId: string;
 }
 
 export const PolicyPageSidebar = (props: PolicyPageSidebarProps) => {
     const history = useHistory();
     return <NavigationSidebar>
+        <div className="section-divider"/>
+        <h5>Select a page</h5>
         <StyledTabPicker checkboxTitle="Accessibility Statement" checked={props.currentPageId === "accessibility_statement"} onClick={() => history.push("/accessibility")}/>
         <StyledTabPicker checkboxTitle="Privacy Policy" checked={props.currentPageId === "privacy_policy"} onClick={() => history.push("/privacy")}/>
         <StyledTabPicker checkboxTitle="Cookie Policy" checked={props.currentPageId === "cookie_policy"} onClick={() => history.push("/cookies")}/>
