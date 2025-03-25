@@ -4,7 +4,7 @@ import {AppState, fetchDoc, useAppDispatch, useAppSelector} from "../../state";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {DOCUMENT_TYPE, isAda, useUrlHashValue} from "../../services";
+import {DOCUMENT_TYPE, isAda, isDefined, useUrlHashValue} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -33,12 +33,11 @@ const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
 
 // Overrides for physics pages which shouldn't use the default GenericPageSidebar
 // TODO this should also consider page tags (for events/news etc)
-const PHY_SIDEBAR: {[pageId: string]: (() => React.JSX.Element)} = {
-    "privacy_policy": PolicyPageSidebar,
-    "terms_of_use": PolicyPageSidebar,
-    "cookie_policy": PolicyPageSidebar,
-    "accessibility_statement": PolicyPageSidebar
-};
+const PHY_SIDEBAR = new Map<string, () => React.JSX.Element>();
+PHY_SIDEBAR.set("privacy_policy", PolicyPageSidebar);
+PHY_SIDEBAR.set("terms_of_use", PolicyPageSidebar);
+PHY_SIDEBAR.set("cookie_policy", PolicyPageSidebar);
+PHY_SIDEBAR.set("accessibility_statement", PolicyPageSidebar);
 
 export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
     const pageId = pageIdOverride || params.pageId;
@@ -66,7 +65,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
             <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} /> {/* TODO add page icon, replace main title with "General"?? */}
             <MetaDescription description={doc.summary} />
             <SidebarLayout>
-                {PHY_SIDEBAR[pageId] ? PHY_SIDEBAR[pageId]() : <GenericPageSidebar/>}
+                {isDefined(PHY_SIDEBAR.get(pageId)) ? PHY_SIDEBAR.get(pageId)!() : <GenericPageSidebar/>}
                 <MainContent>
                     <div className="no-print d-flex align-items-center">
                         <EditContentButton doc={doc} />
