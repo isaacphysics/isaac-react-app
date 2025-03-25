@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "reactstrap";
-import { IsaacBookIndexPageDTO } from "../../../IsaacApiTypes";
+import { Alert, Container } from "reactstrap";
 import { BookSidebar, MainContent, SidebarLayout } from "./layout/SidebarLayout";
 import { Markup } from "./markup";
 import { TitleAndBreadcrumb } from "./TitleAndBreadcrumb";
 import { isDefined, useContextFromContentObjectTags } from "../../services";
 import { PageFragment } from "./PageFragment";
 import { useHistory } from "react-router";
+import { useGetBookPageQuery } from "../../state/slices/api/booksApi";
+import { ShowLoading } from "../handlers/ShowLoading";
 
-interface BookProps {
-    book: IsaacBookIndexPageDTO;
-};
+export const Book = ({ bookId }: { bookId: string}) => {
 
-export const Book = ({ book }: BookProps) => {
+    const {data: book} = useGetBookPageQuery({id: bookId});
 
     const [pageId, setPageId] = useState<string | undefined>(undefined);
     const history = useHistory();
@@ -27,31 +26,39 @@ export const Book = ({ book }: BookProps) => {
             return;
         }
 
-        const prefix = book.chapters?.[0]?.sections?.[0]?.pageId?.split("_").slice(0, 2).join("_") ?? "";
-        const fragmentId = prefix + "_" + hash.replace("#", "");
+        const fragmentId = book?.id + "_" + hash.replace("#", "");
         if (fragmentId) {
             setPageId(fragmentId);
         }
-    }, [book.chapters, history.location.hash]);
+    }, [book?.chapters, history.location.hash]);
 
     return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
         <TitleAndBreadcrumb 
-            currentPageTitle={book.title ?? "Book"}
+            currentPageTitle={book?.title ?? "Book"}
             icon={{type: "hex", icon: "page-icon-book"}}
         />
         <SidebarLayout>
-            <BookSidebar book={book} pageId={pageId} />
-            <MainContent className="mt-4">
-                {isDefined(pageId) 
-                    ? <PageFragment fragmentId={pageId} /> 
-                    : <div>
-                        <div className="book-image-container mx-3 float-end">
-                            <img src={book.coverImage?.src} alt={book.title} />
-                        </div>
-                        <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{book.value}</Markup>
-                    </div>
-                }
-            </MainContent>
+            <ShowLoading
+                until={book} 
+                ifNotFound={<Alert color="warning">Book contents could not be loaded, please try refreshing the page.</Alert>}
+                thenRender={(definedBook) => {
+                    return <>
+                        <BookSidebar book={definedBook} pageId={pageId} />
+                        <MainContent className="mt-4">
+                            {isDefined(pageId) 
+                                ? <PageFragment fragmentId={pageId} /> 
+                                : <div>
+                                    <div className="book-image-container mx-3 float-end">
+                                        <img src={definedBook.coverImage?.src} alt={definedBook.title} />
+                                    </div>
+                                    <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBook.value}</Markup>
+                                </div>
+                            }
+                        </MainContent>
+                    </>;
+                }}
+                
+            />
         </SidebarLayout>
     </Container>;
 };

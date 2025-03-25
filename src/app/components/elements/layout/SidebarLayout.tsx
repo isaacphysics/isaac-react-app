@@ -1209,7 +1209,7 @@ export const BookSidebar = ({ book, pageId }: BookSidebarProps) => {
                 <Spacer/>
             </button>
             {book.chapters?.map((chapter, index) => {
-                const chapterActive = chapter.sections?.some(section => section.pageId === pageId);
+                const chapterActive = chapter.sections?.some(section => section.bookPageId === pageId);
 
                 return <CollapsibleList
                     title={<div className="d-flex flex-column gap-2 chapter-title">
@@ -1228,8 +1228,8 @@ export const BookSidebar = ({ book, pageId }: BookSidebarProps) => {
                                     <span className="text-theme me-2">{section.label}</span>
                                     <span className="flex-grow-1">{section.title}</span>
                                 </div>}
-                                checked={pageId === section.pageId}
-                                onClick={() => history.push(`#${section.pageId?.split("_").slice(2).join("_")}`)}
+                                checked={pageId === section.bookPageId}
+                                onClick={() => history.push(`#${section.bookPageId?.slice((book.id?.length ?? 0) + 1)}`)}
                             />
                         </li>
                     )}

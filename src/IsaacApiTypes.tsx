@@ -98,7 +98,7 @@ export interface IsaacConceptPageDTO extends SeguePageDTO {
 
 export interface BookSectionDTO extends ContentDTO {
     label?: string;
-    pageId?: string;
+    bookPageId?: string;
 }
 
 export interface BookChapterDTO extends ContentDTO {
