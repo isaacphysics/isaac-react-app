@@ -1222,9 +1222,11 @@ export const PolicyPageSidebar = (props: PolicyPageSidebarProps) => {
     return <NavigationSidebar>
         <div className="section-divider"/>
         <h5>Select a page</h5>
-        <StyledTabPicker checkboxTitle="Accessibility Statement" checked={props.currentPageId === "accessibility_statement"} onClick={() => history.push("/accessibility")}/>
-        <StyledTabPicker checkboxTitle="Privacy Policy" checked={props.currentPageId === "privacy_policy"} onClick={() => history.push("/privacy")}/>
-        <StyledTabPicker checkboxTitle="Cookie Policy" checked={props.currentPageId === "cookie_policy"} onClick={() => history.push("/cookies")}/>
-        <StyledTabPicker checkboxTitle="Terms of Use" checked={props.currentPageId === "terms_of_use"} onClick={() => history.push("/terms")}/>
+        <ul>
+            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={props.currentPageId === "accessibility_statement"} onClick={() => history.push("/accessibility")}/></li>
+            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={props.currentPageId === "privacy_policy"} onClick={() => history.push("/privacy")}/></li>
+            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={props.currentPageId === "cookie_policy"} onClick={() => history.push("/cookies")}/></li>
+            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={props.currentPageId === "terms_of_use"} onClick={() => history.push("/terms")}/></li>
+        </ul>
     </NavigationSidebar>;
 };
