@@ -1217,21 +1217,14 @@ export const PolicyPageSidebar = () => {
     const history = useHistory();
     const path = useLocation().pathname;
 
-    const pageIdMap: {[path: string]: string} = {
-        "/accessibility": "accessibility_statement",
-        "/privacy": "privacy_policy",
-        "/cookies": "cookie_policy",
-        "/terms": "terms_of_use"
-    };
-
     return <NavigationSidebar>
         <div className="section-divider"/>
         <h5>Select a page</h5>
         <ul>
-            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={pageIdMap[path] === "accessibility_statement"} onClick={() => history.push("/accessibility")}/></li>
-            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={pageIdMap[path] === "privacy_policy"} onClick={() => history.push("/privacy")}/></li>
-            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={pageIdMap[path] === "cookie_policy"} onClick={() => history.push("/cookies")}/></li>
-            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={pageIdMap[path] === "terms_of_use"} onClick={() => history.push("/terms")}/></li>
+            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={path === "/accessibility"} onClick={() => history.push("/accessibility")}/></li>
+            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"} onClick={() => history.push("/privacy")}/></li>
+            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies"} onClick={() => history.push("/cookies")}/></li>
+            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms"} onClick={() => history.push("/terms")}/></li>
         </ul>
     </NavigationSidebar>;
 };
