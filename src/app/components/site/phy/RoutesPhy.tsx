@@ -1,8 +1,6 @@
 import React, {lazy} from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
-import {PhysicsSkills19} from "../../pages/books/physics_skills_19";
-import {PhysBookGcse} from "../../pages/books_old/phys_book_gcse";
-import {PhysicsSkills14} from "../../pages/books_old/physics_skills_14";
+import {PhysBookGcse, PhysicsSkills14, PhysicsSkills19} from "../../pages/books/books";
 import {PreUniMaths} from "../../pages/books_old/pre_uni_maths";
 import {PreUniMaths2e} from "../../pages/books_old/pre_uni_maths_2e";
 import {Chemistry16} from "../../pages/books_old/chemistry_16";
@@ -66,6 +64,21 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
     "/glossary": Glossary,
 };
 
+const books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
+    "/books/physics_skills_19": PhysicsSkills19,
+    "/books/phys_book_gcse": PhysBookGcse,
+    "/books/physics_skills_14": PhysicsSkills14,
+    "/books/pre_uni_maths": PreUniMaths,
+    "/books/pre_uni_maths_2e": PreUniMaths2e,
+    "/books/chemistry_16": Chemistry16,
+    "/books/quantum_mechanics_primer": QuantumMechanicsPrimer,
+    "/books/solve_physics_problems": SolvingPhysProblems,
+    "/books/maths_book_gcse": MathsBookGcse,
+    "/books/phys_book_yr9": PhysBookYrNine,
+    "/books/step_up_phys": StepUpPhys,
+    "/books/linking_concepts": LinkingConcepts,
+};
+
 let key = 0;
 export const RoutesPhy = [
     // Registration
@@ -119,19 +132,10 @@ export const RoutesPhy = [
     <Redirect key={key++} from="/quiz/attempt/:quizId"                         to="/test/attempt/:quizId" />,
 
     // Books
-    <TrackedRoute key={key++} exact path="/books/physics_skills_19" component={PhysicsSkills19}/>,
-    <TrackedRoute key={key++} exact path="/books/physics_skills_19/:pageId" component={PhysicsSkills19}/>,
-    <TrackedRoute key={key++} exact path="/books/phys_book_gcse" component={PhysBookGcse}/>,
-    <TrackedRoute key={key++} exact path="/books/physics_skills_14" component={PhysicsSkills14}/>,
-    <TrackedRoute key={key++} exact path="/books/pre_uni_maths" component={PreUniMaths}/>,
-    <TrackedRoute key={key++} exact path="/books/pre_uni_maths_2e" component={PreUniMaths2e}/>,
-    <TrackedRoute key={key++} exact path="/books/chemistry_16" component={Chemistry16}/>,
-    <TrackedRoute key={key++} exact path="/books/quantum_mechanics_primer" component={QuantumMechanicsPrimer}/>,
-    <TrackedRoute key={key++} exact path="/books/solve_physics_problems" component={SolvingPhysProblems}/>,
-    <TrackedRoute key={key++} exact path="/books/maths_book_gcse" component={MathsBookGcse}/>,
-    <TrackedRoute key={key++} exact path="/books/phys_book_yr9" component={PhysBookYrNine}/>,
-    <TrackedRoute key={key++} exact path="/books/step_up_phys" component={StepUpPhys}/>,
-    <TrackedRoute key={key++} exact path="/books/linking_concepts" component={LinkingConcepts}/>,
+    ...(Object.entries(books).map(([path, component]) => [
+        <TrackedRoute key={key++} exact path={path} component={component} />,
+        <TrackedRoute key={key++} exact path={`${path}/:pageId`} component={component} />,
+    ]).flat()),
 
     // Subject-stage pages -- see subjectSpecificPages, defined above
     ...(Object.entries(subjectStagePairPages).map(([path, component]) => (
