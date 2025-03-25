@@ -17,7 +17,7 @@ $reduced-motion: false;
 }
 
 @mixin -reduced-motion {
-  $reduced-motion: true;
+  $reduced-motion: true !global;
 
   .collapsing { // a bootstrap class used in accordions
     transition: none;
