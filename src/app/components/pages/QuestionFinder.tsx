@@ -55,6 +55,7 @@ import { ListView } from "../elements/list-groups/ListView";
 import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
+import { set } from "lodash";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -293,8 +294,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     );
 
     const [noResultsMessage, setNoResultsMessage] = useState<ReactNode>(<em>Please select and apply filters</em>);
+    const [paramsLoaded, setParamsLoaded] = useState(false);
 
     const applyFilters = () => {
+        if (paramsLoaded) setRandomSeed(undefined);
+
         // Have to use a local variable as React won't update state in time
         const isFilteringByStatus = !(
             Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v)
@@ -359,6 +363,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             });
         }
         if (randomSeed !== undefined) params.randomSeed = randomSeed.toString();
+        setParamsLoaded(true);
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
     }, [searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages, searchDifficulties, selections, tiers, excludeBooks, searchStatuses, filteringByStatus]);
@@ -415,7 +420,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || selections.some(tier => Object.values(tier).flat().length > 0)
             || Object.entries(searchStatuses).some(e => e[1]));
         if (isPhy) applyFilters();
-    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
+    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses, searchQuery]);
 
     const clearFilters = useCallback(() => {
         setSearchDifficulties([]);
@@ -432,7 +437,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 tryAgain: false,
             });
         setSearchDisabled(!searchQuery);
-        setRandomSeed(undefined);
     }, []);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -465,7 +469,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     </div>;
 
     function removeFilterTag(filter: string) {
-        setRandomSeed(undefined);
         if (searchStages.includes(filter as STAGE)) {
             setSearchStages(searchStages.filter(f => f !== filter));
         } else if (getChoiceTreeLeaves(selections).some(leaf => leaf.value === filter)) {
@@ -518,29 +521,21 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
-    const withResetSeed: {
-        (fn: () => void): () => void;
-        <T>(fn: (v: T) => void): (v: T) => void;
-    } = <T,>(fn: (...args: T[]) => void) => (...args: T[]) => {
-        setRandomSeed(undefined);
-        return args.length > 0 ? fn(args[0]) : fn();
-    };
-
     const questionFinderFilterPanelProps = {
-        searchDifficulties, setSearchDifficulties: withResetSeed(setSearchDifficulties),
-        searchTopics, setSearchTopics: withResetSeed(setSearchTopics),
-        searchStages, setSearchStages: withResetSeed(setSearchStages),
-        searchExamBoards, setSearchExamBoards: withResetSeed(setSearchExamBoards),
-        searchStatuses, setSearchStatuses: withResetSeed(setSearchStatuses),
-        searchBooks, setSearchBooks: withResetSeed(setSearchBooks),
-        excludeBooks, setExcludeBooks: withResetSeed(setExcludeBooks),
+        searchDifficulties, setSearchDifficulties,
+        searchTopics, setSearchTopics,
+        searchStages, setSearchStages,
+        searchExamBoards, setSearchExamBoards,
+        searchStatuses, setSearchStatuses,
+        searchBooks, setSearchBooks,
+        excludeBooks, setExcludeBooks,
         tiers, choices,
-        selections, setSelections: withResetSeed(setSelections), 
-        applyFilters: withResetSeed(applyFilters),
+        selections, setSelections,
+        applyFilters,
         clearFilters,
         validFiltersSelected,
         searchDisabled,
-        setSearchDisabled: withResetSeed(setSearchDisabled)
+        setSearchDisabled
     };
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
@@ -563,7 +558,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         </div>, 
         <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />)}
         <SidebarLayout>
-            <QuestionFinderSidebar searchText={searchQuery} setSearchText={withResetSeed(setSearchQuery)} questionFilters={[]} setQuestionFilters={function (value: React.SetStateAction<Tag[]>): void {
+            <QuestionFinderSidebar searchText={searchQuery} setSearchText={setSearchQuery} questionFilters={[]} setQuestionFilters={function (value: React.SetStateAction<Tag[]>): void {
                 throw new Error("Function not implemented.");
             } } topLevelFilters={[]} 
             questionFinderFilterPanelProps={questionFinderFilterPanelProps} />
@@ -580,7 +575,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 maxLength={SEARCH_CHAR_LENGTH_LIMIT}
                                 defaultValue={searchQuery}
                                 placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                                onChange={(e) => withResetSeed(handleSearch)(e.target.value)}
+                                onChange={(e) => handleSearch(e.target.value)}
                             />
                             <Button className="question-search-button" onClick={searchAndUpdateURL}/>
                         </InputGroup>
@@ -601,7 +596,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             excludeBooks, setExcludeBooks,
                             tiers, choices, 
                             selections, setSelections,
-                            applyFilters: withResetSeed(applyFilters), clearFilters,
+                            applyFilters, clearFilters,
                             validFiltersSelected, searchDisabled, setSearchDisabled
                         }} /> {/* Temporarily disabled at >=lg to test list view until this filter is moved into the sidebar */}
                     </Col>
