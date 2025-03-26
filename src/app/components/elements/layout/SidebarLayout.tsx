@@ -2,12 +2,12 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap, extractTeacherName, determineGameboardSubjects } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
-import { AppGroup, AssignmentBoardOrder, PageContextState, Tag } from "../../../../IsaacAppTypes";
+import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
 import { AssignmentState } from "../../pages/MyAssignments";
@@ -17,11 +17,12 @@ import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
 import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
-import { formatISODateOnly } from "../DateString";
+import { formatISODateOnly, getFriendlyDaysUntil } from "../DateString";
 import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
 import { StyledSelect } from "../inputs/StyledSelect";
+import { getProgressIcon } from "../../pages/Gameboard";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -33,14 +34,20 @@ export const MainContent = (props: ColProps) => {
     return siteSpecific(<Col xs={12} lg={8} xl={9} {...rest} className={classNames(className, "order-0 order-lg-1")} />, props.children);
 };
 
-const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & {question: QuestionDTO}) => {
-    const { question, ...rest } = props;
+interface QuestionLinkProps {
+    question: QuestionDTO;
+    gameboardId?: string;
+}
+
+const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkProps) => {
+    const { question, gameboardId, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
-                        
+    const link = isDefined(gameboardId) ? `/questions/${question.id}?board=${gameboardId}` : `/questions/${question.id}`;
+
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
-        <Link to={`/questions/${question.id}`} className="py-2">
-            <i className="icon icon-question"/>
+        <Link to={link} className="py-2">
+            {isDefined(gameboardId) ? <span className={classNames(getProgressIcon(question).icon, "mt-1 mx-2")} style={{minWidth: "16px"}}/> : <i className="icon icon-question"/>}
             <div className="d-flex flex-column w-100">
                 <span className="hover-underline link-title">{question.title}</span>
                 <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
@@ -132,7 +139,7 @@ interface QuestionSidebarProps extends SidebarProps {
 }
 
 export const QuestionSidebar = (props: QuestionSidebarProps) => {
-    // TODO: this implementation is only for standalone questions; if in the context of a gameboard, the sidebar should show gameboard navigation
+    // This implementation is only for standalone questions; if in the context of a gameboard, the sidebar should show gameboard navigation
     const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage") as IsaacConceptPageDTO[] | undefined;
     const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage") as QuestionDTO[] | undefined;
 
@@ -184,6 +191,79 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
 
         </>}
     </NavigationSidebar>;
+};
+
+interface GameboardQuestionSidebarProps extends SidebarProps {
+    id: string;
+    title: string;
+    questions: GameboardItem[];
+    currentQuestionId: string;
+}
+
+export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) => {
+    // Alternative to QuestionSidebar for questions in the context of a gameboard
+    const {id, title, questions, currentQuestionId} = props;
+    return <NavigationSidebar>
+        <div className="section-divider"/>
+        <h5 className="mb-3">Question deck: {title}</h5>
+        <ul>
+            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={q.id === currentQuestionId ? "selected-question" : ""}/></li>)}
+        </ul>
+    </NavigationSidebar>;
+};
+
+interface GameboardSidebarProps extends SidebarProps {
+    gameboard: GameboardDTO;
+    assignments: AssignmentDTO[] | false;
+};
+
+export const GameboardSidebar = (props: GameboardSidebarProps) => {
+    const {gameboard, assignments} = props;
+    const multipleAssignments = assignments && assignments.length > 1;
+
+    const GameboardDetails = () => {
+        const subjects = determineGameboardSubjects(gameboard);
+        const topics = tags.getTopicTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
+            if (isDefined(c.tags) && c.tags.length > 0) {
+                return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
+            }
+            return a;
+        }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
+        const questionsAttempted = gameboard.contents?.filter(q => q.questionPartsNotAttempted !== q.questionPartsTotal).length;
+        const questionsCorrect = gameboard.contents?.filter(q => q.questionPartsCorrect === q.questionPartsTotal).length;
+
+        return <>
+            <div>Questions: <b>{gameboard.contents?.length}</b></div>
+            <div>Attempted: <b>{questionsAttempted}</b></div>
+            <div>Correct: <b>{questionsCorrect}</b></div>
+            <div>Subjects: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
+            <div>Topics: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
+        </>;
+    };
+
+    const AssignmentDetails = (assignment: AssignmentDTO) => {
+        const {assignerSummary, creationDate, dueDate, groupName, scheduledStartDate} = assignment;
+        const assigner = extractTeacherName(assignerSummary);
+        const startDate = scheduledStartDate ?? creationDate;
+        return <>
+            {multipleAssignments && <div className="section-divider"/>}
+            <div>Assigned to <b>{groupName}</b> by <b>{assigner}</b></div>
+            {startDate && <div>Set: <b>{getFriendlyDaysUntil(startDate)}</b></div>}
+            {dueDate && <div>Due: <b>{getFriendlyDaysUntil(dueDate)}</b></div>}
+        </>;
+    };
+
+    return <ContentSidebar buttonTitle="Details">
+        <div className="section-divider"/>
+        <h5>Question deck</h5>
+        <GameboardDetails />
+        {assignments && assignments.length > 0 && <>
+            <div className={multipleAssignments ? "section-divider-bold" : "section-divider"}/>
+            <h5>Assignment{multipleAssignments && "s"}</h5>
+            {multipleAssignments && <div>You have multiple assignments for this question deck.</div>}
+            {assignments.map(a => <AssignmentDetails key={a.id} {...a} />)}
+        </>}
+    </ContentSidebar>;
 };
 
 export const ConceptSidebar = (props: QuestionSidebarProps) => {
@@ -491,11 +571,24 @@ interface MyAssignmentsSidebarProps extends SidebarProps {
     setGroupFilter: React.Dispatch<React.SetStateAction<string>>;
     setByFilter: string;
     setSetByFilter: React.Dispatch<React.SetStateAction<string>>;
+    sortOrder: MyAssignmentsOrder;
+    setSortOrder: React.Dispatch<React.SetStateAction<MyAssignmentsOrder>>;
     assignmentQuery: any;
 }
 
 export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
-    const { statusFilter, setStatusFilter, titleFilter, setTitleFilter, groupFilter, setGroupFilter, setByFilter, setSetByFilter, assignmentQuery, ...rest } = props;
+    const { statusFilter, setStatusFilter, titleFilter, setTitleFilter, groupFilter, setGroupFilter, setByFilter, setSetByFilter, sortOrder, setSortOrder, assignmentQuery, ...rest } = props;
+
+    const ORDER_NAMES: {[key in MyAssignmentsOrder]: string} = {
+        "startDate": "Start date (oldest first)",
+        "-startDate": "Start date (recent first)",
+        "dueDate": "Due date (soonest first)",
+        "-dueDate": "Due date (latest first)",
+        "attempted": "Attempted (lowest first)",
+        "-attempted": "Attempted (highest first)",
+        "correct": "Correctness (lowest first)",
+        "-correct": "Correctness (highest first)",
+    };
 
     useEffect(() => {
         if (statusFilter.length === 0) {
@@ -516,6 +609,11 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                     placeholder="e.g. Forces"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setTitleFilter(e.target.value)}
                 />
+                <div className="section-divider"/>
+                <h5>Sort</h5>
+                <Input type="select" value={sortOrder} onChange={e => setSortOrder(e.target.value as MyAssignmentsOrder)}>
+                    {Object.values(MyAssignmentsOrder).map(order => <option key={order} value={order}>{ORDER_NAMES[order]}</option>)}
+                </Input>
                 <div className="section-divider"/>
                 <h5 className="mb-4">Filter by status</h5>
                 <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
