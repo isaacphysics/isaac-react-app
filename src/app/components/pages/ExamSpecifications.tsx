@@ -13,7 +13,8 @@ interface ExamSpecificationsProps {
     // Show only tabs for the following stages
     stageFilter?: STAGE[]
     // Show only tabs for the following exam boards
-    examBoardFilter?: ExamBoard[]
+    examBoardFilter?: ExamBoard[],
+    title?: string
 }
 
 const getStageFromURL = (stageFilter: STAGE[]) => {
@@ -38,7 +39,7 @@ export const getFilteredExamBoardsByStage = (stages: STAGE[], examBoards: ExamBo
     );
 };
 
-export const ExamSpecifications = ({stageFilter, examBoardFilter}: ExamSpecificationsProps) => {
+export const ExamSpecifications = ({stageFilter, examBoardFilter, title}: ExamSpecificationsProps) => {
     const STAGES: STAGE[] = stageFilter ?? [STAGE.A_LEVEL, STAGE.GCSE];
     const EXAM_BOARDS: ExamBoard[] = examBoardFilter ?? [EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.EDEXCEL];
     const FILTERED_EXAM_BOARDS_BY_STAGE = getFilteredExamBoardsByStage(STAGES, EXAM_BOARDS);
@@ -114,7 +115,7 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter}: ExamSpecifica
     }, [examBoardTab, stageTab]);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Specifications"} />
+        <TitleAndBreadcrumb currentPageTitle={title ?? "Exam specification"} intermediateCrumbs={[{title: "Exam specifications", to: "/exam_specifications"}]} />
         <MetaDescription description={metaDescription} />
         {stageTabs}
         <Row>
