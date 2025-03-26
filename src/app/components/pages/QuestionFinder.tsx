@@ -613,7 +613,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     </Col>
                                     <Col>                                        
                                         <button className={siteSpecific(
-                                            "btn btn-link nomargin invert-underline d-flex align-items-center gap-2 float-end",
+                                            "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end",
                                             "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
                                         } onClick={() => setRandomSeed(nextSeed())}>
                                                 Shuffle questions
