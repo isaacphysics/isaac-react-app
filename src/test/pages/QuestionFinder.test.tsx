@@ -4,6 +4,7 @@ import { buildMockQuestionFinderResults, buildMockQuestions, mockQuestionFinderR
 import _ from "lodash";
 import { buildFunctionHandler } from "../../mocks/handlers";
 import { isPhy, siteSpecific } from "../../app/services";
+import userEvent from "@testing-library/user-event";
 
 describe("QuestionFinder", () => {
     const questions = buildMockQuestions(40);
@@ -154,7 +155,7 @@ const expectPageIndicator = (content: string) => screen.findByTestId("question-f
 const clearFilterTag = async (tagId: string) => {
     const tag = await screen.findByTestId(`filter-tag-${tagId}`);
     const button = await within(tag).findByRole('button');
-    await act(async () => button.click());
+    await userEvent.click(button);
 };
 
 const setFilter = async (filter: string) => {
