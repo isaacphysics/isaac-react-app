@@ -18,7 +18,6 @@ import {
     TAG_LEVEL,
     tags,
     useDeviceSize,
-    useUrlPageTheme
 } from "../../../services";
 import { Difficulty, ExamBoard } from "../../../../IsaacApiTypes";
 import { pageStageToSearchStage, QuestionStatus } from "../../pages/QuestionFinder";
@@ -27,7 +26,7 @@ import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { DifficultyIcons } from "../svg/DifficultyIcons";
 import { GroupBase } from "react-select";
 import { HierarchyFilterTreeList, Tier } from "../svg/HierarchyFilter";
-import { openActiveModal, useAppDispatch } from "../../../state";
+import { openActiveModal, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
 
@@ -158,7 +157,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     const [listState, listStateDispatch] = useReducer(listStateReducer, groupBaseTagOptions, initialiseListState);
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
-    const pageContext = useUrlPageTheme();
+    const pageContext = useAppSelector(selectors.pageContext.context);
     const bookOptions = ISAAC_BOOKS.filter(book => !pageContext?.subject || book.subject === pageContext?.subject);
 
     const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));

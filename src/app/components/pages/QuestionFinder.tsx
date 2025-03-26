@@ -4,12 +4,10 @@ import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
     BookInfo,
-    difficultyShortLabelMap,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     getHumanContext,
-    HUMAN_STAGES,
     ISAAC_BOOKS,
     isAda,
     isFullyDefinedContext,
@@ -572,7 +570,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 {isPhy && <FilterSummary/>}
 
                 <Row className="mt-4 position-relative finder-panel">
-                    <Col lg={siteSpecific(4, 3)} md={12} xs={12} className={classNames("text-wrap my-2", {"d-none": isPhy})} data-testid="question-finder-filters">
+                    {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")} data-testid="question-finder-filters">
                         <QuestionFinderFilterPanel {...{
                             searchDifficulties, setSearchDifficulties,
                             searchTopics, setSearchTopics,
@@ -585,8 +583,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             selections, setSelections,
                             applyFilters, clearFilters,
                             validFiltersSelected, searchDisabled, setSearchDisabled
-                        }} /> {/* Temporarily disabled at >=lg to test list view until this filter is moved into the sidebar */}
-                    </Col>
+                        }} />
+                    </Col>}
                     <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
                         <Card>
                             <CardHeader className="finder-header pl-3">
