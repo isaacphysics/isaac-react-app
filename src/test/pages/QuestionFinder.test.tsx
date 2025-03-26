@@ -141,7 +141,6 @@ const expectQuestions = (expectedQuestions: typeof mockQuestionFinderResults.res
 const expectPageIndicator = (content: string) => screen.findByTestId("question-finder-results").then(found => {
     expect(found.querySelectorAll('.col')[0].textContent).toBe(content);
 });
-
 const setFilter = async (filter: string) => {
     await clickButton(filter, mainContainer());
     await clickButton("Apply filters");
