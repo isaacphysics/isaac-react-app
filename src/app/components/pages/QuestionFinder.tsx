@@ -441,6 +441,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const handleSearch = useCallback(
         debounce((searchTerm: string) => {
+            setRandomSeed(undefined);
             setSearchQuery(searchTerm);
         }, 500),
         [setSearchQuery]
