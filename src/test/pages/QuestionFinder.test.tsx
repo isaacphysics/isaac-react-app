@@ -82,13 +82,14 @@ describe("QuestionFinder", () => {
                 await expectQuestions(questions.slice(0, 30));
             });
 
-            it('when clearing all filters', async () => {
-                await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=gcse" });
-                await clickButton(siteSpecific("Clear all filters", "Clear all"));
-                await expectUrlParams('');
-            });
-
             if (isPhy) {
+                // On Ada, clearing filters only has an affect after clicking the "Apply" button, so same case as above 
+                it('when clearing all filters', async () => {
+                    await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=gcse" });
+                    await clickButton(siteSpecific("Clear all filters", "Clear all"));
+                    await expectUrlParams('');
+                });
+
                 // This test is currently flaky (fails every 10th execution, but the variance is really wild).
                 // I believe the flakiness is caused by the implementation, which nests the component definition functions
                 // for FilterTag and FilterSummary. The React docs advise against this, see:
@@ -100,7 +101,6 @@ describe("QuestionFinder", () => {
                 });
             }
         });
-
             
         it('"Load more" should avoid duplicate questions by fetching next page using same seed', () => {
             const resultsResponsePage2 = buildMockQuestionFinderResults(questions, 30);
