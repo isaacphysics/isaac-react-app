@@ -246,6 +246,7 @@ export interface BooleanNotation {
 export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
     PREFER_MATHML?: boolean;
+    REDUCED_MOTION?: boolean;
 }
 
 export interface UserConsent {

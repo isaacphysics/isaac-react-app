@@ -142,6 +142,8 @@ export const IsaacApp = () => {
         };
     }, []);
 
+    const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
+
     // Render
     return <Router history={history}>
         <SiteSpecific.Header />
@@ -151,7 +153,7 @@ export const IsaacApp = () => {
         <UnsupportedBrowserBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
-        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
+        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-reduced-motion={displaySettings?.REDUCED_MOTION ? "true" : "false"}>
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <Suspense fallback={<Loading/>}>
                     <Switch>

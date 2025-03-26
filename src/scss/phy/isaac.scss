@@ -354,6 +354,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 
 // theming
 @import "color-theme";
+@import "../common/accessibility";
 
 // Atoms
 @import "fonts";

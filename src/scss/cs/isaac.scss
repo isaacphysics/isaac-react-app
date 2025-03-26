@@ -342,6 +342,9 @@ $enable-negative-margins: true;
 @import "../common/mixins";
 @import "../common/_utils";
 
+// Theming
+@import "../common/accessibility";
+
 // Atoms
 @import "fonts";
 @import "typography";
