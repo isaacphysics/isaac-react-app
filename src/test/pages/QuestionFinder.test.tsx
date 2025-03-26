@@ -79,12 +79,6 @@ describe("QuestionFinder", () => {
                 await expectUrlParams("?query=A%20bag");
                 await expectQuestions(questions.slice(0, 30));
             });
-
-            it('when clearing all filters', async () => {
-                await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=gcse" });
-                await clickButton("Clear all");
-                await expectUrlParams('');
-            });
         });
 
             

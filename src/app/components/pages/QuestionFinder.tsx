@@ -240,8 +240,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     );
 
     const [noResultsMessage, setNoResultsMessage] = useState<ReactNode>(<em>Please select and apply filters</em>);
+    const [paramsLoaded, setParamsLoaded] = useState(false);
 
     const applyFilters = () => {
+        if (paramsLoaded) setRandomSeed(undefined);
+
         // Have to use a local variable as React won't update state in time
         const isFilteringByStatus = !(
             Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v)
@@ -298,6 +301,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             });
         }
         if (randomSeed !== undefined) params.randomSeed = randomSeed.toString();
+        setParamsLoaded(true);
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
     }, [searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages, searchDifficulties, selections, tiers, excludeBooks, searchStatuses, filteringByStatus, randomSeed]);
@@ -375,6 +379,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const handleSearch = useCallback(
         debounce((searchTerm: string) => {
+            setRandomSeed(undefined);
             setSearchQuery(searchTerm);
         }, 500),
         [setSearchQuery]
@@ -396,14 +401,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <IsaacSpinner />
     </div>;
 
-    const withResetSeed: {
-        (fn: () => void): () => void;
-        <T>(fn: (v: T) => void): (v: T) => void;
-    } = <T,>(fn: (...args: T[]) => void) => (...args: T[]) => {
-        setRandomSeed(undefined);
-        return args.length > 0 ? fn(args[0]) : fn();
-    };
-
     return <Container id="finder-page" className={classNames("mb-5", {"question-finder-container": isPhy})}>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Question Finder", "Questions")} help={pageHelp}/>
         <MetaDescription description={metaDescription}/>
@@ -419,7 +416,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         maxLength={SEARCH_CHAR_LENGTH_LIMIT}
                         defaultValue={searchQuery}
                         placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                        onChange={(e) => withResetSeed(handleSearch)(e.target.value)}
+                        onChange={(e) => handleSearch(e.target.value)}
                     />
                     <Button className="question-search-button" onClick={searchAndUpdateURL}/>
                 </InputGroup>
@@ -437,8 +434,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     searchBooks, setSearchBooks,
                     excludeBooks, setExcludeBooks,
                     tiers, choices, selections, setTierSelection,
-                    applyFilters: withResetSeed(applyFilters),
-                    clearFilters: withResetSeed(clearFilters),
+                    applyFilters, clearFilters,
                     validFiltersSelected, searchDisabled, setSearchDisabled
                 }} />
             </Col>
