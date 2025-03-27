@@ -16,6 +16,7 @@ import {
     isAda,
     isFound,
     isNotPartiallyLoggedIn,
+    isOverdue,
     isPhy,
     partitionCompleteAndIncompleteQuizzes,
     siteSpecific,
@@ -92,7 +93,7 @@ export function useAssignmentsCount() {
         ? filterAssignmentsByStatus(assignments).inProgressRecent.length
         : 0;
     const quizzesCount = quizAssignments && isFound(quizAssignments)
-        ? partitionCompleteAndIncompleteQuizzes(quizAssignments)[1].length
+        ? partitionCompleteAndIncompleteQuizzes(quizAssignments)[1].filter(q => !isOverdue(q)).length
         : 0;
 
     return {assignmentsCount, quizzesCount};

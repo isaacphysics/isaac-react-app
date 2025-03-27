@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useMemo, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {
     openActiveModal,
     useAppDispatch,
@@ -36,7 +36,7 @@ import {
     QuizAssignmentDTO,
     RegisteredUserDTO
 } from "../../../IsaacApiTypes";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {
     above,
     API_PATH,
@@ -412,7 +412,17 @@ function getGroupQuizProgressCSVDownloadLink(groupId: number) {
 
 export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
-    const [isExpanded, setExpanded] = useState(false);
+    
+    const location = useLocation();
+    const hashAnchor = location.hash !== "" && location.hash[0] === '#' ? location.hash.slice(1) : null;
+    const isInitiallyExpanded = hashAnchor === group.id?.toString();
+    const [isExpanded, setExpanded] = useState(isInitiallyExpanded);
+
+    useEffect(() => {
+        if (isInitiallyExpanded) {
+            document.getElementById(`progress-${group.id}`)?.scrollIntoView({behavior: "smooth"});
+        }
+    }, []);
 
     const openDownloadLink = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
         event.stopPropagation();
@@ -426,7 +436,7 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
     const deviceSize = useDeviceSize();
 
     return <>
-        <div  onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
+        <div id={`progress-${group.id}`} onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
             <div className={classNames("group-name ps-2 ps-md-3 justify-content-between", {"flex-grow-1" : below['xs'](deviceSize)})}>
                 <div className="d-flex align-items-center">
                     <span className="icon-group"/>
