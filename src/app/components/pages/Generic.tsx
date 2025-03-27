@@ -33,11 +33,12 @@ const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
 
 // Overrides for physics pages which shouldn't use the default GenericPageSidebar
 // TODO this should also consider page tags (for events/news etc)
-const PHY_SIDEBAR = new Map<string, () => React.JSX.Element>();
-PHY_SIDEBAR.set("privacy_policy", PolicyPageSidebar);
-PHY_SIDEBAR.set("terms_of_use", PolicyPageSidebar);
-PHY_SIDEBAR.set("cookie_policy", PolicyPageSidebar);
-PHY_SIDEBAR.set("accessibility_statement", PolicyPageSidebar);
+const PHY_SIDEBAR = new Map<string, () => React.JSX.Element>([
+    ["privacy_policy", PolicyPageSidebar],
+    ["terms_of_use", PolicyPageSidebar],
+    ["cookie_policy", PolicyPageSidebar],
+    ["accessibility_statement", PolicyPageSidebar]
+]);
 
 export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
     const pageId = pageIdOverride || params.pageId;
