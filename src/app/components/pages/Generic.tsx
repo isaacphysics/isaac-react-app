@@ -16,6 +16,7 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
 import { useUntilFound } from "./Glossary";
+import { MainContent, SidebarLayout, GenericPageSidebar, PolicyPageSidebar } from "../elements/layout/SidebarLayout";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -29,6 +30,15 @@ interface GenericPageComponentProps {
 const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
     "computer_science_stories": true
 };
+
+// Overrides for physics pages which shouldn't use the default GenericPageSidebar
+// TODO this should also consider page tags (for events/news etc)
+const PHY_SIDEBAR = new Map<string, () => React.JSX.Element>([
+    ["privacy_policy", PolicyPageSidebar],
+    ["terms_of_use", PolicyPageSidebar],
+    ["cookie_policy", PolicyPageSidebar],
+    ["accessibility_statement", PolicyPageSidebar]
+]);
 
 export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
     const pageId = pageIdOverride || params.pageId;
@@ -51,26 +61,32 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+        
         return <Container data-bs-theme={doc.subjectId}>
-            <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} />
+            <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} /> {/* TODO add page icon, replace main title with "General"?? */}
             <MetaDescription description={doc.summary} />
-            <div className="no-print d-flex align-items-center">
-                <EditContentButton doc={doc} />
-                <div className="question-actions question-actions-leftmost mt-3">
-                    <ShareLink linkUrl={`/pages/${doc.id}`}/>
-                </div>
-                <div className="question-actions mt-3 not-mobile">
-                    <PrintButton/>
-                </div>
-            </div>
+            <SidebarLayout>
+                {PHY_SIDEBAR.has(pageId) ? PHY_SIDEBAR.get(pageId)!() : <GenericPageSidebar/>}
+                <MainContent>
+                    <div className="no-print d-flex align-items-center">
+                        <EditContentButton doc={doc} />
+                        <div className="question-actions question-actions-leftmost mt-3">
+                            <ShareLink linkUrl={`/pages/${doc.id}`}/>
+                        </div>
+                        <div className="question-actions mt-3 not-mobile">
+                            <PrintButton/>
+                        </div>
+                    </div>
 
-            <Row className="generic-content-container">
-                <Col className={classNames("py-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
-                    <WithFigureNumbering doc={doc}>
-                        <IsaacContent doc={doc} />
-                    </WithFigureNumbering>
-                </Col>
-            </Row>
+                    <Row className="generic-content-container">
+                        <Col className={classNames("py-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
+                            <WithFigureNumbering doc={doc}>
+                                <IsaacContent doc={doc} />
+                            </WithFigureNumbering>
+                        </Col>
+                    </Row>
+                </MainContent>
+            </SidebarLayout>
 
             {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
         </Container>;
