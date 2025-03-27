@@ -103,7 +103,9 @@ export const assignmentsApi = isaacApi.injectEndpoints({
 
 export const {
     useGetMySetAssignmentsQuery,
+    useLazyGetMySetAssignmentsQuery,
     useGetMyAssignmentsQuery,
+    useLazyGetMyAssignmentsQuery,
     useGetAssignmentProgressQuery,
     useUnassignGameboardMutation,
     useGetSingleSetAssignmentQuery
