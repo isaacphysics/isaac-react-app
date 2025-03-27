@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
-import {selectors, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery} from "../../../state";
+import React, {useEffect, useState} from "react";
+import {getMyProgress, selectors, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery, useLazyGetGroupsQuery, useLazyGetMyAssignmentsQuery, useLazyGetMySetAssignmentsQuery, useLazyGetQuizAssignmentsAssignedToMeQuery, useLazyGetQuizAssignmentsSetByMeQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardProps, CardText, CardTitle, Col, Container, Row} from "reactstrap";
-import {above, EventStatusFilter, EventTypeFilter, HUMAN_STAGES, HUMAN_SUBJECTS, isLoggedIn, isTutorOrAbove, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, Subject, useDeviceSize} from "../../../services";
+import {above, EventStatusFilter, EventTypeFilter, HUMAN_STAGES, HUMAN_SUBJECTS, isDefined, isLoggedIn, isTutorOrAbove, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, Subject, useDeviceSize} from "../../../services";
 import { NewsCard } from "../../elements/cards/NewsCard";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { EventCard } from "../../elements/cards/EventCard";
@@ -108,11 +108,48 @@ const getListViewSubjectCard = (sc: subjectCategory) => {
 const cards = subjectCategories.map((sc) => getListViewSubjectCard(sc));
 
 export const HomepagePhy = () => {
+    const dispatch = useAppDispatch();
+
     useEffect( () => {document.title = SITE_TITLE;}, []);
 
     const user = useAppSelector(selectors.user.orNull);
     
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
+
+    const [dashboardView, setDashboardView] = useState<"student" | "teacher" | undefined>(undefined);
+
+    // all dashboard queries should be lazy as they may not run depending on dashboard view
+    // this also prevents mass-loading queries on page load
+    const [getAssignmentsSetByMe, {data: assignmentsSetByMe}] = useLazyGetMySetAssignmentsQuery();
+    const [getQuizzesSetByMe, {data: quizzesSetByMe}] = useLazyGetQuizAssignmentsSetByMeQuery();
+    const [getGroups, {data: groups}] = useLazyGetGroupsQuery();
+
+    //{refetchOnMountOrArgChange: true, refetchOnReconnect: true}
+    const [getMyAssignments, {data: myAssignments}] = useLazyGetMyAssignmentsQuery();
+    const [getMyQuizAssignments, {data: myQuizAssignments}] = useLazyGetQuizAssignmentsAssignedToMeQuery();
+
+    useEffect(() => {
+        if (isLoggedIn(user)) {
+            setDashboardView(isTutorOrAbove(user) ? "teacher" : "student");
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (dashboardView === "teacher" && (!isDefined(assignmentsSetByMe) || !isDefined(quizzesSetByMe) || !isDefined(groups))) {
+            getAssignmentsSetByMe(undefined);
+            getQuizzesSetByMe(undefined);
+            getGroups(false);
+        } else if (dashboardView === "student" && (!isDefined(myAssignments) || !isDefined(myQuizAssignments))) {
+            getMyAssignments(undefined);
+            getMyQuizAssignments(undefined);
+        }
+    }, [dashboardView]);
+
+    const myProgress = useAppSelector(selectors.user.progress);
+
+    useEffect(() => {
+        dispatch(getMyProgress());
+    }, [dispatch]);
 
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
     useEffect(() => {
@@ -122,7 +159,9 @@ export const HomepagePhy = () => {
     return <>
         <div id="homepage" className="homepage pb-5">
             <section id="dashboard">
-                {isLoggedIn(user) && (isTutorOrAbove(user) ? <TeacherDashboard/> : <StudentDashboard/>)}
+                {isLoggedIn(user) && (isTutorOrAbove(user)
+                    ? <TeacherDashboard assignmentsSetByMe={assignmentsSetByMe} quizzesSetByMe={quizzesSetByMe} groups={groups} myAssignments={myAssignments} myQuizAssignments={myQuizAssignments} myProgress={myProgress} dashboardView={dashboardView} setDashboardView={setDashboardView} /> 
+                    : <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} myProgress={myProgress} groups={groups} />)}
             </section>
             <section id="homepage-hero">               
                 {!isLoggedIn(user) && <HomepageHero />}
