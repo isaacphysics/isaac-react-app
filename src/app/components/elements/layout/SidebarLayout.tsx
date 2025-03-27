@@ -1217,7 +1217,7 @@ export const PolicyPageSidebar = () => {
     const history = useHistory();
     const path = useLocation().pathname;
 
-    return <NavigationSidebar>
+    return <ContentSidebar buttontitle="Select a page">
         <div className="section-divider"/>
         <h5>Select a page</h5>
         <ul>
@@ -1226,5 +1226,5 @@ export const PolicyPageSidebar = () => {
             <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies"} onClick={() => history.push("/cookies")}/></li>
             <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms"} onClick={() => history.push("/terms")}/></li>
         </ul>
-    </NavigationSidebar>;
+    </ContentSidebar>;
 };
