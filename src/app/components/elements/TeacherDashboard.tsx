@@ -62,7 +62,7 @@ const AssignmentsPanel = () => {
                         <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
                             See all assignments
                         </Link>
-                        <Link to="/set_tests" className="d-inline text-center panel-link ms-auto">
+                        <Link to="/set_tests#manage" className="d-inline text-center panel-link ms-auto">
                             See all tests
                         </Link>
                     </div>
