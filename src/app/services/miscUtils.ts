@@ -145,3 +145,5 @@ export const confirmThen = <T, R>(prompt: string, confirmCallback: () => T, canc
     }
     return cancelCallback?.();
 };
+
+export const nextRandom = () => Math.random();
