@@ -10,6 +10,7 @@ import {
     getHumanContext,
     ISAAC_BOOKS,
     isAda,
+    isDefined,
     isFullyDefinedContext,
     isLoggedIn,
     isPhy,
@@ -114,7 +115,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const history = useHistory();
     const pageContext = useUrlPageTheme();
     const isSolitaryStage = pageStageToSearchStage(pageContext?.stage).length === 1;
-
+    const [selections, setSelections] = useState<ChoiceTree[]>([]); // we can't populate this until we have the page context
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
     const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages).concat(isSolitaryStage ? pageStageToSearchStage(pageContext?.stage)[0] : []) as STAGE[]);
@@ -126,7 +127,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [randomSeed, setRandomSeed] = useState<number | undefined>(params.randomSeed === undefined ? undefined : parseInt(params.randomSeed.toString()));
     
-    const [populatedFromAccountSettings, setPopulatedFromAccountSettings] = useState(false);
+    const [readingFromUrlParams, setReadingFromUrlParams] = useState(FILTER_PARAMS.some(p => params[p]));
+
     useEffect(function populateFiltersFromAccountSettings() {
         if (isLoggedIn(user)) {
             const filtersHaveNotBeenSpecifiedByQueryParams = FILTER_PARAMS.every(p => !params[p]);
@@ -135,43 +137,35 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 const allStagesSelected = accountStages?.some(stage => STAGE_NULL_OPTIONS.includes(stage));
                 if (!allStagesSelected && (isPhy || accountStages.length === 1)) { // Ada only want to apply stages filter if there is only one
                     setSearchStages(accountStages);
-                    setPopulatedFromAccountSettings(true);
                 }
                 const examBoardStages = user.registeredContexts?.map(c => c.examBoard).filter(e => e) as EXAM_BOARD[];
                 const allExamBoardsSelected = examBoardStages?.some(examBoard => EXAM_BOARD_NULL_OPTIONS.includes(examBoard));
                 if (isAda && !allExamBoardsSelected && examBoardStages.length === 1) { // Phy does not have exam boards
                     setSearchExamBoards(examBoardStages);
-                    setPopulatedFromAccountSettings(true);
                 }
             }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- we don't want this to re-run on params change.
     }, [user]);
 
-    // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates
     useEffect(() => {
-        searchAndUpdateURL();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [populatedFromAccountSettings]);
-
-    useEffect(() => {
-        // `selections` drives the API requests, so we can't populate it until we have the page context
-        setSelections(
-            processTagHierarchy(
-                tags,
-                arrayFromPossibleCsv(params.subjects).concat(pageContext?.subject ? [pageContext.subject] : []), 
-                arrayFromPossibleCsv(params.fields), 
-                arrayFromPossibleCsv(params.topics)
-            )
-        );
+        if (pageContext) {
+            // on physics' subject-QFs, the url path (i.e. pageContext.subject) is the first tier of the hierarchy.
+            setSelections(
+                processTagHierarchy(
+                    tags,
+                    arrayFromPossibleCsv(params.subjects).concat(pageContext?.subject ? [pageContext.subject] : []),
+                    arrayFromPossibleCsv(params.fields), 
+                    arrayFromPossibleCsv(params.topics)
+                )
+            );
+        }
     }, [pageContext]);
 
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
-    const [selections, setSelections] = useState<ChoiceTree[]>([]);
-
     const choices = useMemo(() => {
-        if (!selections) return [];
+        if (!selections.length) return [];
 
         const choices: ChoiceTree[] = [];
 
@@ -247,20 +241,20 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     
     const filteringByStatus = Object.values(searchStatuses).some(v => v) && !Object.values(searchStatuses).every(v => v);
-    
-    const [paramsLoaded, setParamsLoaded] = useState(false);
 
     const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
         setDisableLoadMore(false);
         setDisplayQuestions(undefined);
-        if (paramsLoaded) setRandomSeed(undefined);
-
+        
         const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
         debouncedSearch({
             searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages: filteredStages,
             searchDifficulties, selections, excludeBooks, searchStatuses, startIndex: 0, randomSeed
         });
+        
+        if (!selections.length) return;
+        setReadingFromUrlParams(false);
 
         const params: {[key: string]: string} = {};
         if (searchStages.length) {
@@ -294,14 +288,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             });
         }
         if (randomSeed !== undefined) params.randomSeed = randomSeed.toString();
-        setParamsLoaded(true);
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: history.location.state});
-    }, [searchStages, pageContext, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, filteringByStatus, history, isSolitaryStage]);
+    }, [searchStages, pageContext, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, filteringByStatus, history, isSolitaryStage, randomSeed]);
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
+    useEffect(() => {
+        // on ada, this should not trigger a search if the seed changes from defined => undefined after changing a filter
+        if (isPhy || isDefined(randomSeed)) {
+            searchAndUpdateURL();
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(searchAndUpdateURL, [searchQuery, randomSeed]);
+    }, [searchQuery, randomSeed]);
 
     // If the stages filter changes, update the exam board filter selections to remove now-incompatible ones
     useEffect(() => {
@@ -340,7 +338,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [questionList]);
 
-    useEffect(() => {
+    useEffect(function onFiltersChanged() {
         setSearchDisabled(false);
         setValidFiltersSelected(searchDifficulties.length > 0
             || searchTopics.length > 0
@@ -350,8 +348,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || excludeBooks
             || selections.some(tier => Object.values(tier).flat().length > 0)
             || Object.entries(searchStatuses).some(e => e[1]));
+
+        if (!readingFromUrlParams) {
+            setRandomSeed(undefined);
+        }
+
+        // on physics, we immediately update the search if filters change; on ada, we wait until "Apply filters" is clicked
         if (isPhy) searchAndUpdateURL();
-    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses, searchAndUpdateURL]);
+
+    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses, searchQuery]);
 
     const clearFilters = useCallback(() => {
         setSearchDifficulties([]);
@@ -372,7 +377,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const debouncedSearchHandler = useMemo(() =>
         debounce((searchTerm: string) => {
-            setRandomSeed(undefined);
             setSearchQuery(searchTerm);
         }, 500),
     [setSearchQuery]);

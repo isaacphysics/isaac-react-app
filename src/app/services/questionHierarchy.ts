@@ -9,23 +9,25 @@ export function processTagHierarchy(tags: AbstractBaseTagService, subjects: stri
     const selectionItems: ChoiceTree[] = [];
 
     [subjects, fields, topics].forEach((tier, index) => {
-        if (tier.length > 0) {
-            const validTierTags = tags.getSpecifiedTags(
-                tagHierarchy[index], tier as TAG_ID[]
-            );
+        const validTierTags = tags.getSpecifiedTags(
+            tagHierarchy[index], tier as TAG_ID[]
+        );
 
-            if (index === 0)
+        if (index === 0)
+            if (validTierTags.length) {
                 selectionItems.push({[TAG_LEVEL.subject]: validTierTags.map(itemiseTag)} as ChoiceTree);
-            else {
-                const parents = selectionItems[index-1] ? Object.values(selectionItems[index-1]).flat() : [];
-                const validChildren = parents.map(p => tags.getChildren(p.value).filter(c => tier.includes(c.id)).map(itemiseTag));
-
-                const currentLayer: ChoiceTree = {};
-                parents.forEach((p, i) => {
-                    currentLayer[p.value] = validChildren[i];
-                });
-                selectionItems.push(currentLayer);
+            } else {
+                selectionItems.push({});
             }
+        else {
+            const parents = selectionItems[index-1] ? Object.values(selectionItems[index-1]).flat() : [];
+            const validChildren = parents.map(p => tags.getChildren(p.value).filter(c => tier.includes(c.id)).map(itemiseTag));
+
+            const currentLayer: ChoiceTree = {};
+            parents.forEach((p, i) => {
+                currentLayer[p.value] = validChildren[i];
+            });
+            selectionItems.push(currentLayer);
         }
     });
 
