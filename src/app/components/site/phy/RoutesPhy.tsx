@@ -1,22 +1,12 @@
 import React, {lazy} from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
-import {PhysBookGcse, PhysicsSkills14, PhysicsSkills19} from "../../pages/books/books";
-import {PreUniMaths} from "../../pages/books_old/pre_uni_maths";
-import {PreUniMaths2e} from "../../pages/books_old/pre_uni_maths_2e";
-import {Chemistry16} from "../../pages/books_old/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect, RouteComponentProps} from "react-router";
 import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
-import {QuantumMechanicsPrimer} from "../../pages/books_old/QuantumMechanicsPrimer";
-import {SolvingPhysProblems} from "../../pages/books_old/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
-import {MathsBookGcse} from "../../pages/books_old/maths_book_gcse";
-import {PhysBookYrNine} from "../../pages/books_old/phys_book_yr9";
-import {StepUpPhys} from "../../pages/books_old/step_up_phys";
-import {LinkingConcepts} from "../../pages/books_old/linking_concepts";
 import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
 import {QuizDoAssignment} from "../../pages/quizzes/QuizDoAssignment";
 import {QuizAttemptFeedback} from "../../pages/quizzes/QuizAttemptFeedback";
@@ -47,6 +37,7 @@ import { QuickQuizzes } from "../../pages/QuickQuizzes";
 import { LessonsAndRevision } from "../../pages/LessonsAndRevision";
 import { SubjectOverviewPage } from "../../pages/SubjectOverviewPage";
 import { Glossary } from "../../pages/Glossary";
+import { Book } from "../../elements/Book";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -62,21 +53,6 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
     "/quick_quizzes": QuickQuizzes,
     "/question_decks": QuestionDecks,
     "/glossary": Glossary,
-};
-
-const books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
-    "/books/physics_skills_19": PhysicsSkills19,
-    "/books/phys_book_gcse": PhysBookGcse,
-    "/books/physics_skills_14": PhysicsSkills14,
-    "/books/pre_uni_maths": PreUniMaths,
-    "/books/pre_uni_maths_2e": PreUniMaths2e,
-    "/books/chemistry_16": Chemistry16,
-    "/books/quantum_mechanics_primer": QuantumMechanicsPrimer,
-    "/books/solve_physics_problems": SolvingPhysProblems,
-    "/books/maths_book_gcse": MathsBookGcse,
-    "/books/phys_book_yr9": PhysBookYrNine,
-    "/books/step_up_phys": StepUpPhys,
-    "/books/linking_concepts": LinkingConcepts,
 };
 
 let key = 0;
@@ -132,10 +108,8 @@ export const RoutesPhy = [
     <Redirect key={key++} from="/quiz/attempt/:quizId"                         to="/test/attempt/:quizId" />,
 
     // Books
-    ...(Object.entries(books).map(([path, component]) => [
-        <TrackedRoute key={key++} exact path={path} component={component} />,
-        <TrackedRoute key={key++} exact path={`${path}/:pageId`} component={component} />,
-    ]).flat()),
+    <TrackedRoute key={key++} exact path={"/books/:bookId"} component={Book} />,
+    <TrackedRoute key={key++} exact path={"/books/:bookId/:pageId"} component={Book} />,
 
     // Subject-stage pages -- see subjectSpecificPages, defined above
     ...(Object.entries(subjectStagePairPages).map(([path, component]) => (

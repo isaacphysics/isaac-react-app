@@ -8,10 +8,14 @@ import { useHistory } from "react-router";
 import { useGetBookIndexPageQuery } from "../../state/slices/api/booksApi";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { BookPage } from "./BookPage";
+    
+interface BookProps {
+    match: { params: { bookId: string } };
+}
 
-export const Book = ({ bookId }: { bookId: string}) => {
+export const Book = ({match: {params: {bookId}}}: BookProps) => {
 
-    const {data: book} = useGetBookIndexPageQuery({id: bookId});
+    const {data: book} = useGetBookIndexPageQuery({id: `book_${bookId}`});
 
     const [pageId, setPageId] = useState<string | undefined>(undefined);
     const history = useHistory();
