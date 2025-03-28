@@ -111,6 +111,10 @@ export interface IsaacBookIndexPageDTO extends SeguePageDTO {
     coverImage?: ImageDTO;
 }
 
+export interface IsaacBookDetailPageDTO extends SeguePageDTO {
+    gameboards?: GameboardDTO[];
+    extensionGameboards?: GameboardDTO[];
+}
 export interface IsaacEventPageDTO extends ContentDTO {
     date?: Date;
     bookingDeadline?: Date;

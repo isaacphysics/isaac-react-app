@@ -4,14 +4,14 @@ import { BookSidebar, MainContent, SidebarLayout } from "./layout/SidebarLayout"
 import { Markup } from "./markup";
 import { TitleAndBreadcrumb } from "./TitleAndBreadcrumb";
 import { isDefined, useContextFromContentObjectTags } from "../../services";
-import { PageFragment } from "./PageFragment";
 import { useHistory } from "react-router";
-import { useGetBookPageQuery } from "../../state/slices/api/booksApi";
+import { useGetBookIndexPageQuery } from "../../state/slices/api/booksApi";
 import { ShowLoading } from "../handlers/ShowLoading";
+import { BookPage } from "./BookPage";
 
 export const Book = ({ bookId }: { bookId: string}) => {
 
-    const {data: book} = useGetBookPageQuery({id: bookId});
+    const {data: book} = useGetBookIndexPageQuery({id: bookId});
 
     const [pageId, setPageId] = useState<string | undefined>(undefined);
     const history = useHistory();
@@ -21,7 +21,7 @@ export const Book = ({ bookId }: { bookId: string}) => {
     useEffect(() => {
         const hash = history.location.hash;
 
-        if (!hash) {
+        if (!book?.id || !hash) {
             setPageId(undefined);
             return;
         }
@@ -46,7 +46,7 @@ export const Book = ({ bookId }: { bookId: string}) => {
                         <BookSidebar book={definedBook} pageId={pageId} />
                         <MainContent className="mt-4">
                             {isDefined(pageId) 
-                                ? <PageFragment fragmentId={pageId} /> 
+                                ? <BookPage pageId={pageId} /> 
                                 : <div>
                                     <div className="book-image-container mx-3 float-end">
                                         <img src={definedBook.coverImage?.src} alt={definedBook.title} />
@@ -57,7 +57,6 @@ export const Book = ({ bookId }: { bookId: string}) => {
                         </MainContent>
                     </>;
                 }}
-                
             />
         </SidebarLayout>
     </Container>;
