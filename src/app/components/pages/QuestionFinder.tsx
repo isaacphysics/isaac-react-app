@@ -156,6 +156,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         // `selections` drives the API requests, so we can't populate it until we have the page context
         setSelections(
             processTagHierarchy(
+                tags,
                 arrayFromPossibleCsv(params.subjects).concat(pageContext?.subject ? [pageContext.subject] : []), 
                 arrayFromPossibleCsv(params.fields), 
                 arrayFromPossibleCsv(params.topics)

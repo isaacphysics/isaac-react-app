@@ -1,10 +1,10 @@
 import { PageContextState } from "../../IsaacAppTypes";
 import { ChoiceTree } from "../components/elements/panels/QuestionFinderFilterPanel";
 import { TAG_ID, TAG_LEVEL } from "./constants";
+import { AbstractBaseTagService } from "./tagsAbstract";
 import { itemiseTag } from "./filter";
-import { tags } from "./tags";
 
-export function processTagHierarchy(subjects: string[], fields: string[], topics: string[]): ChoiceTree[] {
+export function processTagHierarchy(tags: AbstractBaseTagService, subjects: string[], fields: string[], topics: string[]): ChoiceTree[] {
     const tagHierarchy = tags.getTagHierarchy();
     const selectionItems: ChoiceTree[] = [];
 
