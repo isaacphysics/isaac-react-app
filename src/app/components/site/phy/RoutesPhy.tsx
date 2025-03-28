@@ -38,6 +38,15 @@ import { LessonsAndRevision } from "../../pages/LessonsAndRevision";
 import { SubjectOverviewPage } from "../../pages/SubjectOverviewPage";
 import { Glossary } from "../../pages/Glossary";
 import { Book } from "../../elements/Book";
+import { QuantumMechanicsPrimer } from "../../pages/books_old/QuantumMechanicsPrimer";
+import { SolvingPhysProblems } from "../../pages/books_old/SolvingPhysProblems";
+import { Chemistry16 } from "../../pages/books_old/chemistry_16";
+import { LinkingConcepts } from "../../pages/books_old/linking_concepts";
+import { MathsBookGcse } from "../../pages/books_old/maths_book_gcse";
+import { PhysBookYrNine } from "../../pages/books_old/phys_book_yr9";
+import { PreUniMaths } from "../../pages/books_old/pre_uni_maths";
+import { PreUniMaths2e } from "../../pages/books_old/pre_uni_maths_2e";
+import { StepUpPhys } from "../../pages/books_old/step_up_phys";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -53,6 +62,19 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
     "/quick_quizzes": QuickQuizzes,
     "/question_decks": QuestionDecks,
     "/glossary": Glossary,
+};
+
+// TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
+const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
+    "/books/pre_uni_maths": PreUniMaths,
+    "/books/pre_uni_maths_2e": PreUniMaths2e,
+    "/books/chemistry_16": Chemistry16,
+    "/books/quantum_mechanics_primer": QuantumMechanicsPrimer,
+    "/books/solve_physics_problems": SolvingPhysProblems,
+    "/books/maths_book_gcse": MathsBookGcse,
+    "/books/phys_book_yr9": PhysBookYrNine,
+    "/books/step_up_phys": StepUpPhys,
+    "/books/linking_concepts": LinkingConcepts,
 };
 
 let key = 0;
@@ -107,7 +129,13 @@ export const RoutesPhy = [
     <Redirect key={key++} from="/quiz/attempt/:quizId/page/:page"              to="/test/attempt/:quizId/page/:page" />,
     <Redirect key={key++} from="/quiz/attempt/:quizId"                         to="/test/attempt/:quizId" />,
 
-    // Books
+    // Books (old)
+    ...(Object.entries(old_books).map(([path, component]) => [
+        <TrackedRoute key={key++} exact path={path} component={component} />,
+        <TrackedRoute key={key++} exact path={`${path}/:pageId`} component={component} />,
+    ]).flat()),
+
+    // Books (new)
     <TrackedRoute key={key++} exact path={"/books/:bookId"} component={Book} />,
     <TrackedRoute key={key++} exact path={"/books/:bookId/:pageId"} component={Book} />,
 
