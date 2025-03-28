@@ -23,18 +23,18 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
     const pageContext = useContextFromContentObjectTags(book);
 
     useEffect(() => {
-        const hash = history.location.hash;
+        const section = history.location.pathname.split("/")[3];
 
-        if (!book?.id || !hash) {
+        if (!book?.id || !section) {
             setPageId(undefined);
             return;
         }
 
-        const fragmentId = book?.id + "_" + hash.replace("#", "");
+        const fragmentId = book?.id + "_" + section;
         if (fragmentId) {
             setPageId(fragmentId);
         }
-    }, [book?.chapters, history.location.hash]);
+    }, [book?.chapters, history.location]);
 
     return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
         <TitleAndBreadcrumb 
@@ -47,7 +47,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                 ifNotFound={<Alert color="warning">Book contents could not be loaded, please try refreshing the page.</Alert>}
                 thenRender={(definedBook) => {
                     return <>
-                        <BookSidebar book={definedBook} pageId={pageId} />
+                        <BookSidebar book={definedBook} urlBookId={bookId} pageId={pageId} />
                         <MainContent className="mt-4">
                             {isDefined(pageId) 
                                 ? <BookPage pageId={pageId} /> 

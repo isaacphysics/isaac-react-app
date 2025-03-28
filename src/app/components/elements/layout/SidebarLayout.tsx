@@ -1193,10 +1193,11 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
 
 export interface BookSidebarProps extends SidebarProps {
     book: IsaacBookIndexPageDTO;
+    urlBookId: string;
     pageId: string | undefined;
 };
 
-export const BookSidebar = ({ book, pageId }: BookSidebarProps) => {
+export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
 
     const [expandedTab, setExpandedTab] = useState<number | undefined>(undefined);
 
@@ -1204,7 +1205,7 @@ export const BookSidebar = ({ book, pageId }: BookSidebarProps) => {
 
     return <ContentSidebar buttonTitle="Contents">
         <ul className="m-0 p-0">
-            <button className="w-100 d-flex align-items-center p-3 text-start bg-transparent" onClick={() => history.push("#")}>
+            <button className="w-100 d-flex align-items-center p-3 text-start bg-transparent" onClick={() => history.push(`/books/${urlBookId}`)}>
                 <h5 className={classNames("m-0", {"text-theme": pageId === undefined})}>Overview</h5>
                 <Spacer/>
             </button>
@@ -1229,7 +1230,7 @@ export const BookSidebar = ({ book, pageId }: BookSidebarProps) => {
                                     <span className="flex-grow-1">{section.title}</span>
                                 </div>}
                                 checked={pageId === section.bookPageId}
-                                onClick={() => history.push(`#${section.bookPageId?.slice((book.id?.length ?? 0) + 1)}`)}
+                                onClick={() => history.push(`/books/${urlBookId}/${section.bookPageId?.slice((book.id?.length ?? 0) + 1)}`)}
                             />
                         </li>
                     )}
