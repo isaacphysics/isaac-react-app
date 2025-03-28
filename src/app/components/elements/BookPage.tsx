@@ -17,7 +17,7 @@ export const BookPage = ({ pageId }: { pageId: string }) => {
                         <h3 className="mb-3">{page.title}</h3>
 
                         {!!page.gameboards?.length && <>
-                            <h4 className="mb-3">Questions and resources</h4>
+                            <h4 className="mb-3" id="resources">Questions and resources</h4>
                             <span>Revision questions are available as an interactive question pack.</span>
                             <div className="mt-3 mb-5 list-results-container p-2">
                                 <ListView
@@ -27,14 +27,14 @@ export const BookPage = ({ pageId }: { pageId: string }) => {
                             </div>
                         </>}
 
-                        <h4 className="mb-3">Review</h4>
+                        <h4 className="mb-3" id="review">Review</h4>
                         <span>Watch both introductory and tutorial videos for this topic.</span>
                         <IsaacContentValueOrChildren value={page.value} encoding={page.encoding}>
                             {page.children}
                         </IsaacContentValueOrChildren>
                         
                         {page?.relatedContent && <>
-                            <h5 className="mb-3">Get a refresher of the core concepts</h5>
+                            <h5 className="mb-3" id="refresher">Get a refresher of the core concepts</h5>
                             <div className="mt-3 mb-5 list-results-container p-2">
                                 <ListView
                                     items={page.relatedContent}
@@ -44,7 +44,7 @@ export const BookPage = ({ pageId }: { pageId: string }) => {
                         </>}
 
                         {!!page.extensionGameboards?.length && <>
-                            <h5 className="mb-3">Extension work</h5>
+                            <h5 className="mb-3" id="extension">Extension work</h5>
                             <span>Expand your boundaries by having a go at these additional extension questions.</span>
                             <div className="mt-3 mb-5 list-results-container p-2">
                                 <ListView
