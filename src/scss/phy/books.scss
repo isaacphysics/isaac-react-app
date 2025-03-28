@@ -89,17 +89,24 @@ svg.book-page-icon {
       text-decoration: underline;
     }
   }
+}
 
-  .book-image-container {
-    position: relative;
-    width: max-content;
-    height: max-content;
-    box-shadow: 0px 6px 12px rgba(0,0,0,0.2);
-    transition: scale 0.2s ease-out;
+.book-image-container {
+  position: relative;
+  width: max-content;
+  height: max-content;
+  box-shadow: 0px 6px 12px rgba(0,0,0,0.2);
+  overflow: auto;
+  transition: scale 0.2s ease-out;
 
-    > img {
-      max-height: 215px;
-      border-radius: 3px;
-    }
+  > img {
+    max-height: 215px;
+    border-radius: 3px;
+  }
+}
+
+.chapter-title {
+  > span:first-child {
+    font-size: 12px;
   }
 }
