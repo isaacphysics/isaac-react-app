@@ -3,7 +3,7 @@ import { BookInfo, getHumanContext, interleave, ISAAC_BOOKS, isFullyDefinedConte
 import { ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
 import { ListViewCardProps } from "../elements/list-groups/ListView";
 
-const extendUrl = (context: NonNullable<Required<PageContextState>>, page: string) => {
+export const extendUrl = (context: NonNullable<Required<PageContextState>>, page: string) => {
     return `/${context.subject}/${context.stage}/${page}`;
 };
 

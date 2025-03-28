@@ -1,4 +1,4 @@
-import {http, HttpResponse} from "msw";
+import {http, HttpResponse, JsonBodyType} from "msw";
 import {
     buildMockUserSummary,
     mockAssignmentsGroup2,
@@ -246,3 +246,12 @@ export const buildGroupHandler = (groups?: any[]) => jest.fn(({request}) => {
         status: 200,
     });
 });
+export const buildFunctionHandler = <T extends string, V extends JsonBodyType>(path: string, keys: T[], fn: (p: Record<T, string>) => V) => {
+    return http.get(API_PATH + path, async ({ request }) => {
+        const params = keys.reduce(
+            (acc, key) => Object.assign(acc, {[key]: new URL(request.url).searchParams.get(key)}),
+            {} as Record<T, string>
+        );
+        return HttpResponse.json(fn(params), { status: 200, });
+    });
+};

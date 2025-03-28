@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Button, Card, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { above, below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, STAGE, useDeviceSize } from "../../services";
+import { above, below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, nextSeed, STAGE, useDeviceSize } from "../../services";
 import { PageContextState } from "../../../IsaacAppTypes";
 import { PhyHexIcon } from "../elements/svg/PhyHexIcon";
 import { Link } from "react-router-dom";
@@ -17,13 +17,13 @@ import { Loading } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
 
-const handleGetDifferentQuestion = () => {
-    // TODO
-};
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
+    const [randomSeed, setrandomSeed] = useState(nextSeed);
+
+    const handleGetDifferentQuestion = () => setrandomSeed(nextSeed);
 
     const searchDebounce = useCallback(debounce(() => {
         if (!isFullyDefinedContext(context)) {
@@ -44,9 +44,10 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
             statuses: undefined,
             fasttrack: false,
             startIndex: undefined,
-            limit: 1
+            limit: 1,
+            randomSeed
         }));
-    }), [dispatch, context]);
+    }), [dispatch, context, randomSeed]);
 
     const {results: questions} = useAppSelector((state) => state && state.questionSearchResult) || {};
 
