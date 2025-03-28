@@ -5,7 +5,7 @@ import { isDefined } from "./miscUtils";
 import { useLocation } from "react-router";
 import { HUMAN_STAGES, HUMAN_SUBJECTS } from "./constants";
 import { pageContextSlice, selectors, useAppDispatch, useAppSelector } from "../state";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const filterBySubjects = (tags: (TAG_ID | string)[]): SiteTheme[] => {
     // filtering this const list against the passed-in tags maintains the order (and thus precedence) of the subjects
@@ -158,8 +158,12 @@ export function useUrlPageTheme(): PageContextState {
     const location = useLocation();
     const dispatch = useAppDispatch();
 
+    // urlPageTheme mirrors the redux state, but without delay; this is never stale, but redux might be for a couple of renders
+    const [urlPageTheme, setUrlPageTheme] = useState<PageContextState | undefined>(undefined);
+
     useEffect(() => {
         const urlContext = determinePageContextFromUrl(location.pathname);
+        setUrlPageTheme(urlContext);
         dispatch(pageContextSlice.actions.updatePageContext({
             subject: urlContext?.subject, 
             stage: urlContext?.stage,
@@ -167,6 +171,7 @@ export function useUrlPageTheme(): PageContextState {
         }));
 
         return () => {
+            setUrlPageTheme(undefined);
             dispatch(pageContextSlice.actions.updatePageContext({
                 subject: undefined,
                 stage: undefined,
@@ -175,7 +180,7 @@ export function useUrlPageTheme(): PageContextState {
         };
     }, [dispatch, location.pathname]);
 
-    return useAppSelector(selectors.pageContext.context);
+    return urlPageTheme;
 }
 
 export function isDefinedContext(context?: PageContextState): context is NonNullable<PageContextState> {
