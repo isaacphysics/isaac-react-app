@@ -87,7 +87,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
     fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewQuizUrl || quizButton) ? false : true);
     const colWidths = fullWidth ? [12,12,12,12,12] : isQuiz ? [12,6,6,6,6] : [12,8,7,6,7];
     const cardBody =
-    <Row className="flex-row">
+    <div className="w-100 d-flex flex-row">
         <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} xxl={colWidths[4]} className={classNames("d-flex", {"mt-3": isCard && linkTags?.length, "mb-3": isCard && !linkTags?.length})}>
             <div>
                 {icon && (
@@ -142,7 +142,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 </Col>}
             </>
         }
-    </Row>;
+    </div>;
 
     return <ListGroupItem {...rest} className={classNames("content-summary-item", rest.className)} data-bs-theme={subject}>
         {url 

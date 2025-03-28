@@ -133,7 +133,7 @@ export function useOutsideCallback(ref: RefObject<any>, callback : () => void, d
     }, [...deps, ref]);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
+ 
 export function noop(_: never) {}
 
 // Confirms (currently using `window.confirm`, but we could change that to a more Isaac/Ada-themed thing moving
@@ -162,3 +162,7 @@ export const interleave = <T>(...lists: T[][]): T[] => {
     }
     return result;
 };
+
+export const nextRandom = () => Math.random();
+
+export const nextSeed = () => Math.floor(Math.floor(nextRandom() * 10 ** 6));
