@@ -99,7 +99,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                         {questionTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
                 </div>
-                {question.audience && <span className="ms-auto">
+                {question.audience && <span className="ms-sm-auto w-max-content">
                     <StageAndDifficultySummaryIcons stack={isAda && below['sm'](deviceSize)} audienceViews={
                         isPhy && !isTutorOrAbove(currentUser) && uniqueStage ? [uniqueStage] : questionViewingContexts
                     } />
