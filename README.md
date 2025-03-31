@@ -7,7 +7,7 @@
 - `yarn --frozen-lockfile` instead of `npm ci` (sometimes it may be necessary to nuke `node_modules` too)
 - Running scripts works in the same way
 
-![Node.js CI](https://github.com/isaacphysics/isaac-react-app/workflows/Node.js%20CI/badge.svg?branch=master)
+[![Node.js CI](https://github.com/isaacphysics/isaac-react-app/actions/workflows/node.js.yml/badge.svg)](https://github.com/isaacphysics/isaac-react-app/actions/workflows/node.js.yml)
 [![codecov](https://codecov.io/gh/isaacphysics/isaac-react-app/branch/master/graph/badge.svg)](https://codecov.io/gh/isaacphysics/isaac-react-app)
 
 `isaac-react-app` is the front end interface for the [Isaac Physics](https://isaacphysics.org/about) and [Ada Computer Science](https://adacomputerscience.org/about) projects. Together with [`isaac-api`](https://github.com/isaacphysics/isaac-api), it forms the core stack of the Isaac platform.
