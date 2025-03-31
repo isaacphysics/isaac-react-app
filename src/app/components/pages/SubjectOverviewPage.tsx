@@ -16,11 +16,11 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
     return <ListViewCards showBlanks cards={[
         {
             item: {
-                title: "A Level",
-                subtitle: `Our A Level ${humanSubject} resources further strengthen the understanding of ${humanSubject}, while developing problem solving skills. Our resources include questions, concepts and books.`
+                title: "11-14",
+                subtitle: `Our 11-14 ${humanSubject} resources introduce secondary ${humanSubject} concepts to students and build their numeracy skills through questions and a selection of experiments.`
             },
-            url: `/${context.subject}/a_level`,
-            stage: LEARNING_STAGE.A_LEVEL,
+            url: `/${context.subject}/11_14`,
+            stage: LEARNING_STAGE["11_TO_14"],
         },
         {
             item: {
@@ -32,11 +32,11 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
         },
         {
             item: {
-                title: "11-14",
-                subtitle: `Our 11-14 ${humanSubject} resources introduce secondary ${humanSubject} concepts to students and build their numeracy skills through questions and a selection of experiments.`
+                title: "A Level",
+                subtitle: `Our A Level ${humanSubject} resources further strengthen the understanding of ${humanSubject}, while developing problem solving skills. Our resources include questions, concepts and books.`
             },
-            url: `/${context.subject}/11_14`,
-            stage: LEARNING_STAGE["11_TO_14"],
+            url: `/${context.subject}/a_level`,
+            stage: LEARNING_STAGE.A_LEVEL,
         },
         {
             item: {
