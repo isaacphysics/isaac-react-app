@@ -107,7 +107,7 @@ a.icon-card, a.cs-card {
   transition: all 0.2s;
 
   &:hover {
-    @include reduced-motion($show-content: false) {
+    @include not-reduced-motion {
       transform: scale(1.05);
     }
   }
