@@ -229,13 +229,8 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
             }
             return a;
         }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
-        const questionsAttempted = gameboard.contents?.filter(q => q.questionPartsNotAttempted !== q.questionPartsTotal).length;
-        const questionsCorrect = gameboard.contents?.filter(q => q.questionPartsCorrect === q.questionPartsTotal).length;
 
         return <>
-            <div>Questions: <b>{gameboard.contents?.length}</b></div>
-            <div>Attempted: <b>{questionsAttempted}</b></div>
-            <div>Correct: <b>{questionsCorrect}</b></div>
             <div>Subjects: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
             <div>Topics: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
         </>;
