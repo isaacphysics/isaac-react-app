@@ -1,8 +1,26 @@
-$reduced-motion: false;
+@mixin reduced-motion($show-content: true) {
+  // default values for all accessibility variables
+  --focus-outline: 2px solid #000; // TODO use this
 
-@mixin not-reduced-motion {
-  @if not $reduced-motion {
-    @content;
+  // if reduced motion is enabled in the browser or the app, apply these reduced-motion styles e.g. instant transitions
+  @media (prefers-reduced-motion: reduce) {
+    @if $show-content {
+      @content;
+    }
+  }
+  @at-root main[data-reduced-motion="true"] & {
+    @if $show-content {
+      @content;
+    }
+  }
+
+  // if reduced motion is not enabled in the browser or the app, don't apply these motion styles e.g. hover scale effects
+  @media (prefers-reduced-motion: no-preference) {
+    @at-root main[data-reduced-motion="false"] & {
+      @if not $show-content {
+        @content;
+      }
+    }
   }
 }
 
@@ -10,29 +28,14 @@ $reduced-motion: false;
   @content;
   
   // https://www.a11yproject.com/posts/understanding-vestibular-disorders/#what-should-you-consider%3F
-  @if $reduced-motion {
+  @include reduced-motion {
     transition-duration: 0.001s !important;
     animation-duration: 0.001s !important;
   }
 }
 
-@mixin -reduced-motion {
-  $reduced-motion: true !global;
-
-  .collapsing { // a bootstrap class used in accordions
-    transition: none;
-  }
-}
-
-#main {
-  // default values for all accessibility variables
-  --focus-outline: 2px solid #000; // TODO use this
-
-  &[data-reduced-motion="true"] {
-    @include -reduced-motion;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    @include -reduced-motion;
+.collapsing { // a bootstrap class used in accordions
+  @include reduced-motion {
+    transition-duration: 0.001s !important;
   }
 }

@@ -7,7 +7,7 @@
 
     &:hover {
         border-color: $color-neutral-400;
-        @include not-reduced-motion {
+        @include reduced-motion($show-content: false) {
             transform: scale(1.02);
         }
     }
