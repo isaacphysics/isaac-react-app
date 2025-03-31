@@ -216,6 +216,37 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
     </NavigationSidebar>;
 };
 
+export const QuestionSidebar = (props: RelatedContentSidebarProps) => {
+    return <RelatedContentSidebar {...props} />;
+};
+
+export const ConceptSidebar = (props: RelatedContentSidebarProps) => {
+    return <RelatedContentSidebar {...props} isConcept />;
+};
+
+interface GameboardQuestionSidebarProps extends SidebarProps {
+    id: string;
+    title: string;
+    questions: GameboardItem[];
+    currentQuestionId: string;
+}
+
+export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) => {
+    // For questions in the context of a gameboard
+    const {id, title, questions, currentQuestionId} = props;
+    return <NavigationSidebar>
+        <div className="section-divider"/>
+        <Link to={`${PATHS.GAMEBOARD}#${id}`} style={{textDecoration: "none"}}>
+            <h5 className="mb-3">Question deck: {title}</h5>
+        </Link>
+        <ul>
+            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={q.id === currentQuestionId ? "selected-question" : ""}/></li>)}
+        </ul>
+        <div className="section-divider"/>
+        <CompletionKey/>
+    </NavigationSidebar>;
+};
+
 interface GameboardSidebarProps extends SidebarProps {
     gameboard: GameboardDTO;
     assignments: AssignmentDTO[] | false;
@@ -264,15 +295,6 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         </>}
     </ContentSidebar>;
 };
-
-export const QuestionSidebar = (props: RelatedContentSidebarProps) => {
-    return <RelatedContentSidebar {...props} />;
-};
-
-export const ConceptSidebar = (props: RelatedContentSidebarProps) => {
-    return <RelatedContentSidebar {...props} isConcept />;
-};
-
 interface FilterCheckboxProps extends React.HTMLAttributes<HTMLElement> {
     tag: Tag;
     conceptFilters: Tag[];
