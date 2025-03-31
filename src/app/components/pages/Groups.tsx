@@ -566,7 +566,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                 {tabs.map((tab, index) => {
                     return <NavItem key={index} className={classNames({"px-2": isPhy, "active": tab.active()})}>
                         <NavLink
-                            className={classNames("text-center", {"group-nav-tab": isPhy}, {"px-2": isAda})} tabIndex={0}
+                            className={classNames("text-center", {"group-nav-tab border-radius-2": isPhy}, {"px-2": isAda})} tabIndex={0}
                             onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
                         >
                             {tab.name}
