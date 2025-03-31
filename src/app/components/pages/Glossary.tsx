@@ -300,7 +300,7 @@ export const Glossary = () => {
                     subjects={subjects} stages={stages}
                 />
                 <MainContent>
-                    <div className="no-print d-flex align-items-center">
+                    <div className={classNames("no-print d-flex align-items-center", {"gap-2": isPhy})}>
                         <div className="question-actions question-actions-leftmost mt-3">
                             <ShareLink linkUrl={`/glossary`} clickAwayClose/>
                         </div>

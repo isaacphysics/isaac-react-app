@@ -23,7 +23,7 @@ export const STAGING_URL = siteSpecific(
     "https://staging.adacomputerscience.org"
 );
 
-// eslint-disable-next-line no-undef
+ 
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
 /*
@@ -954,7 +954,7 @@ export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
 export const GENERIC_QUESTION_CRUMB = {title: "Questions", to: "/questions"};
-export const GENERIC_CONCEPT_CRUMB = {title: "Concepts", to: "/concepts"};
+export const GENERIC_CONCEPT_CRUMB = {title: "Concepts", to: siteSpecific("/concepts", "")};
 export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "Assignment Progress", to: "/assignment_progress"},
     {title: "Markbook", to: "/my_markbook"}

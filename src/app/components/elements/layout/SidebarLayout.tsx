@@ -6,7 +6,7 @@ import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacCon
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
@@ -22,6 +22,7 @@ import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
 import { StyledSelect } from "../inputs/StyledSelect";
+import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { getProgressIcon } from "../../pages/Gameboard";
 
 export const SidebarLayout = (props: RowProps) => {
@@ -146,15 +147,18 @@ const CompletionKey = () => {
     </div>;
 };
 
-interface QuestionSidebarProps extends SidebarProps {
+interface RelatedContentSidebarProps extends SidebarProps {
     relatedContent: ContentSummaryDTO[] | undefined;
+    isConcept?: boolean;
 }
 
-export const QuestionSidebar = (props: QuestionSidebarProps) => {
-    // This implementation is only for standalone questions; if in the context of a gameboard, the sidebar should show gameboard navigation
+const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
     const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage") as IsaacConceptPageDTO[] | undefined;
     const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage") as QuestionDTO[] | undefined;
 
+    const pageType = props.isConcept ? "concept" : "question";
+
+    const pageContext = useAppSelector(selectors.pageContext.context);
     const pageContextStage = useAppSelector(selectors.pageContext.stage);
 
     const [relatedQuestionsForContextStage, relatedQuestionsForOtherStages] = partition(relatedQuestions, q => q.audience && determineAudienceViews(q.audience).some(v => v.stage === pageContextStage));
@@ -162,120 +166,63 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
     const sidebarRef = useRef<HTMLDivElement>(null);
 
     return <NavigationSidebar ref={sidebarRef}>
-        {relatedConcepts && relatedConcepts.length > 0 && <>
-            <div className="section-divider"/>
-            <h5>Related concepts</h5>
-            <ul className="link-list">
+        <div className="section-divider"/>
+        <h5>Related concepts</h5>
+        {relatedConcepts && relatedConcepts.length > 0
+            ? <ul className="link-list">
                 {relatedConcepts.map((concept, i) => <ConceptLink key={i} concept={concept} />)}
             </ul>
-        </>}
-        {relatedQuestions && relatedQuestions.length > 0 && <>
-            {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
-                ? <>
-                    <div className="section-divider"/>
-                    <h5>Related questions</h5>
-                    <ul className="link-list">
-                        {relatedQuestions.map((question, i) => <QuestionLink key={i} question={question} />)}
-                    </ul>
-                </>
-                : <>
-                    <div className="section-divider"/>
-                    <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
-                    <ul className="link-list">
-                        {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} />)}
-                    </ul>
-                    <div className="section-divider"/>
-                    <h5>Related questions for other learning stages</h5>
-                    <ul className="link-list">
-                        {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} />)}
-                    </ul>
-                </>
-            }
-            <div className="section-divider"/>
-            <CompletionKey/>
-        </>}
+            : <>
+                There are no related concepts for this {pageType}.
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "concepts")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                    See all concepts for {getHumanContext(pageContext)}
+                </AffixButton>}
+            </>
+        }
+        <div className="section-divider"/>
+        <h5>Related questions</h5>
+        {relatedQuestions && relatedQuestions.length > 0
+            ? <>
+                {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
+                    ? <>
+                        <ul className="link-list">
+                            {relatedQuestions.map((question, i) => <QuestionLink key={i} question={question} />)}
+                        </ul>
+                    </>
+                    : <>
+                        <div className="section-divider"/>
+                        <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
+                        <ul className="link-list">
+                            {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} />)}
+                        </ul>
+                        <div className="section-divider"/>
+                        <h5>Related questions for other learning stages</h5>
+                        <ul className="link-list">
+                            {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} />)}
+                        </ul>
+                    </>
+                }
+                <div className="section-divider"/>
+                <CompletionKey/>
+
+            </>
+            : <>
+                There are no related questions for this {pageType}.
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "questions")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                    See all questions for {getHumanContext(pageContext)}
+                </AffixButton>}
+            </>
+        }
     </NavigationSidebar>;
 };
 
-interface GameboardQuestionSidebarProps extends SidebarProps {
-    id: string;
-    title: string;
-    questions: GameboardItem[];
-    currentQuestionId: string;
-}
-
-export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) => {
-    // Alternative to QuestionSidebar for questions in the context of a gameboard
-    const {id, title, questions, currentQuestionId} = props;
-    return <NavigationSidebar>
-        <div className="section-divider"/>
-        <Link to={`${PATHS.GAMEBOARD}#${id}`} style={{textDecoration: "none"}}>
-            <h5 className="mb-3">Question deck: {title}</h5>
-        </Link>
-        <ul>
-            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={q.id === currentQuestionId ? "selected-question" : ""}/></li>)}
-        </ul>
-        <div className="section-divider"/>
-        <CompletionKey/>
-    </NavigationSidebar>;
+export const QuestionSidebar = (props: RelatedContentSidebarProps) => {
+    return <RelatedContentSidebar {...props} />;
 };
 
-interface GameboardSidebarProps extends SidebarProps {
-    gameboard: GameboardDTO;
-    assignments: AssignmentDTO[] | false;
+export const ConceptSidebar = (props: RelatedContentSidebarProps) => {
+    return <RelatedContentSidebar {...props} isConcept />;
 };
-
-export const GameboardSidebar = (props: GameboardSidebarProps) => {
-    const {gameboard, assignments} = props;
-    const multipleAssignments = assignments && assignments.length > 1;
-
-    const GameboardDetails = () => {
-        const subjects = determineGameboardSubjects(gameboard);
-        const topics = tags.getTopicTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
-            if (isDefined(c.tags) && c.tags.length > 0) {
-                return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
-            }
-            return a;
-        }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
-
-        return <>
-            <div className="mb-2">Subjects: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
-            <div>Topics: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
-        </>;
-    };
-
-    const AssignmentDetails = (assignment: AssignmentDTO) => {
-        const {assignerSummary, creationDate, dueDate, groupName, scheduledStartDate} = assignment;
-        const assigner = extractTeacherName(assignerSummary);
-        const startDate = scheduledStartDate ?? creationDate;
-        return <>
-            {multipleAssignments && <div className="section-divider"/>}
-            <div>Assigned to <b>{groupName}</b> by <b>{assigner}</b></div>
-            {startDate && <div>Set: <b>{getFriendlyDaysUntil(startDate)}</b></div>}
-            {dueDate && <div>Due: <b>{getFriendlyDaysUntil(dueDate)}</b></div>}
-        </>;
-    };
-
-    return <ContentSidebar buttonTitle="Details">
-        <div className="section-divider"/>
-        <h5>Question deck</h5>
-        <GameboardDetails />
-        {assignments && assignments.length > 0 && <>
-            <div className={multipleAssignments ? "section-divider-bold" : "section-divider"}/>
-            <h5>Assignment{multipleAssignments && "s"}</h5>
-            {multipleAssignments && <div>You have multiple assignments for this question deck.</div>}
-            {assignments.map(a => <AssignmentDetails key={a.id} {...a} />)}
-        </>}
-        <div className="section-divider"/>
-        <CompletionKey/>
-    </ContentSidebar>;
-};
-
-export const ConceptSidebar = (props: QuestionSidebarProps) => {
-    return <QuestionSidebar {...props} />;
-};
-
-
 
 interface FilterCheckboxProps extends React.HTMLAttributes<HTMLElement> {
     tag: Tag;
@@ -1290,5 +1237,32 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
                 )}
             </ul>
         </>}
+    </ContentSidebar>;
+};
+
+
+export const GenericPageSidebar = () => {
+    // Default sidebar for general pages that don't have a custom sidebar
+    return <ContentSidebar buttonTitle="Options">
+        <div className="section-divider"/>
+        <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+            Go to homepage
+        </AffixButton>
+    </ContentSidebar>;
+};
+
+export const PolicyPageSidebar = () => {
+    const history = useHistory();
+    const path = useLocation().pathname;
+
+    return <ContentSidebar buttontitle="Select a page">
+        <div className="section-divider"/>
+        <h5>Select a page</h5>
+        <ul>
+            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={path === "/accessibility"} onClick={() => history.push("/accessibility")}/></li>
+            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"} onClick={() => history.push("/privacy")}/></li>
+            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies"} onClick={() => history.push("/cookies")}/></li>
+            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms"} onClick={() => history.push("/terms")}/></li>
+        </ul>
     </ContentSidebar>;
 };

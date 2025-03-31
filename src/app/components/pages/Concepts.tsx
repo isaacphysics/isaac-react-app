@@ -35,7 +35,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         if (pageContext) {
             dispatch(fetchConcepts(undefined, pageContext?.subject));
         }
-    }, [dispatch]);
+    }, [dispatch, pageContext]);
 
     const searchParsed = queryString.parse(location.search);
 

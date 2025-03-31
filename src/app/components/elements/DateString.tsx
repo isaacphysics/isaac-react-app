@@ -48,7 +48,7 @@ export function getFriendlyDaysUntil(date: number | Date) : NonNullable<ReactNod
 
     const getStartOfDay = (date: number | Date): Date => {
         const dateObject = new Date(date);
-        dateObject.setHours(0, 0, 0, 0);
+        dateObject.setUTCHours(0, 0, 0, 0);
         return dateObject;
     };
 
@@ -59,12 +59,12 @@ export function getFriendlyDaysUntil(date: number | Date) : NonNullable<ReactNod
     if (daysUntil < 0) {
         // in the past
         if (daysUntil === -1) result = "yesterday";
-        if (daysUntil && daysUntil > -7) result = `${-daysUntil} days ago`;
+        else if (daysUntil && daysUntil > -7) result = `${-daysUntil} days ago`;
     } else {
         // in the future
         if (daysUntil === 0) result = "today";
-        if (daysUntil === 1) result = "tomorrow";
-        if (daysUntil && daysUntil < 7) result = `in ${daysUntil} days`;
+        else if (daysUntil === 1) result = "tomorrow";
+        else if (daysUntil && daysUntil < 7) result = `in ${daysUntil} days`;
     }
 
     // if the date has a special result, return it with a tooltip showing the exact date
