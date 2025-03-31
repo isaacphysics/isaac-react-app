@@ -181,3 +181,12 @@ export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => voi
         jest.spyOn(miscUtils, 'nextRandom').mockRestore();
     }
 };
+
+export const withMockedDate = async (date: number, fn: () => Promise<void>) => {
+    try {
+        jest.spyOn(global.Date, 'now').mockImplementation(() => new Date(date).valueOf());
+        await fn();
+    } finally {
+        jest.spyOn(global.Date, 'now').mockRestore();
+    }
+};

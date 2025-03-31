@@ -74,9 +74,16 @@ interface AssignGroupProps {
     groups: UserGroupDTO[];
     board: GameboardDTO | undefined;
 }
+
+const weekFromNow = () => {
+    const now = new Date(Date.now());
+    now.setDate(now.getDate() + 6);
+    return now;
+};
+
 const AssignGroup = ({groups, board}: AssignGroupProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
-    const [dueDate, setDueDate] = useState<Date>();
+    const [dueDate, setDueDate] = useState<Date | undefined>(weekFromNow);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
     const user = useAppSelector(selectors.user.loggedInOrNull);
@@ -111,7 +118,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
     }
 
     return <Container className="py-2">
-        <Label className="w-100 pb-2">Group(s):
+        <Label data-testid="modal-groups-selector" className="w-100 pb-2">Group(s):
             <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
                 value={selectedGroups}
                 closeMenuOnSelect={false}
