@@ -604,7 +604,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                 <div className="section-divider"/>
                 <h5>Search assignments</h5>
                 <Input
-                    className='search--filter-input my-4'
+                    className='search--filter-input my-3'
                     type="search" value={titleFilter || ""}
                     placeholder="e.g. Forces"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setTitleFilter(e.target.value)}
