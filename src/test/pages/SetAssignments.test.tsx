@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, SOME_FIXED_FUTURE_DATE} from "../dateUtils";
-import {renderTestEnvironment} from "../testUtils";
+import {renderTestEnvironment, withMockedDate} from "../testUtils";
 
 import {API_PATH, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
 import {DefaultRequestMultipartBody, http, HttpResponse} from "msw";
@@ -14,14 +14,12 @@ const expectedPhysicsTopLinks = {
     "create a gameboard": PATHS.GAMEBOARD_BUILDER
 };
 
-jest.setTimeout(10000);
-
 describe("SetAssignments", () => {
 
-    const renderSetAssignments = () => {
+    const renderSetAssignments = (path = PATHS.SET_ASSIGNMENTS) => {
         renderTestEnvironment({
             PageComponent: SetAssignments,
-            initalRouteEntries: [PATHS.SET_ASSIGNMENTS]
+            initalRouteEntries: [path]
         });
     };
 
@@ -219,6 +217,36 @@ describe("SetAssignments", () => {
         expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual("2groups");
     });
 
+    describe('modal', () => {
+        const mockGameboard = mockGameboards.results[0];
+        const renderModal = () => renderSetAssignments(`${PATHS.SET_ASSIGNMENTS}#${mockGameboard.id}`); 
+        const modal = () => screen.findByTestId("set-assignment-modal");
+        const dateInput = async (labelText: string | RegExp) => {
+            const label = await within(await modal()).findByText(labelText);
+            return await within(label).findByTestId('date-input');
+        };
+
+        describe('default values', () => {
+            it('groups are empty', async () => {
+                renderModal();
+                const select = await within(await modal()).findByTestId('modal-groups-selector');
+                expect(select).toHaveTextContent('Group(s):None');
+            });
+    
+            it('start date is empty', async () => {
+                renderModal();
+                expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
+            });
+            
+            it('due date is a week from now', async() => {
+                await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
+                    renderModal();
+                    expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
+                });
+            });
+        });
+    });
+
     it('should let you unassign a gameboard', async () => {
         // Arrange
         renderTestEnvironment({
@@ -264,71 +292,64 @@ describe("SetAssignments", () => {
     });
 
     it('should reject duplicate assignment', async () => {
-        // Arrange
-        // mock date
-        const dateMock = jest.spyOn(global.Date, 'now').mockImplementation(() =>
-            new Date(SOME_FIXED_FUTURE_DATE).valueOf()
-        );
-
-        renderTestEnvironment({
-            PageComponent: SetAssignments,
-            initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
-            extraEndpoints: [
-                http.post(API_PATH + "/assignments/assign_bulk", async () => {
-                    return HttpResponse.json([
-                        {
-                            groupId: 1,
-                            errorMessage: "You cannot assign the same work to a group more than once."
-                        }
-                    ], {
-                        status: 200,
-                    });
-                })
-            ]
-        });
-        if (!isPhy) {
+        await withMockedDate(SOME_FIXED_FUTURE_DATE, async () => {
+            renderTestEnvironment({
+                PageComponent: SetAssignments,
+                initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
+                extraEndpoints: [
+                    http.post(API_PATH + "/assignments/assign_bulk", async () => {
+                        return HttpResponse.json([
+                            {
+                                groupId: 1,
+                                errorMessage: "You cannot assign the same work to a group more than once."
+                            }
+                        ], {
+                            status: 200,
+                        });
+                    })
+                ]
+            });
+            if (!isPhy) {
             // change view to "Card View"
-            const viewDropdown = await screen.findByLabelText("Display in");
-            await userEvent.selectOptions(viewDropdown, "Card View");
-        }
-        const gameboards = await screen.findAllByTestId("gameboard-card");
+                const viewDropdown = await screen.findByLabelText("Display in");
+                await userEvent.selectOptions(viewDropdown, "Card View");
+            }
+            const gameboards = await screen.findAllByTestId("gameboard-card");
 
-        // find and click assign gameboard button for the first gameboard
-        const modalOpenButton = within(gameboards[0]).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
-        await userEvent.click(modalOpenButton);
+            // find and click assign gameboard button for the first gameboard
+            const modalOpenButton = within(gameboards[0]).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
+            await userEvent.click(modalOpenButton);
 
-        // wait for modal to appear, for the gameboard we expect
-        const modal = await screen.findByTestId("set-assignment-modal");
+            // wait for modal to appear, for the gameboard we expect
+            const modal = await screen.findByTestId("set-assignment-modal");
 
-        // select the group with that gameboard already assigned
-        const selectContainer = within(modal).getByText(/Group(\(s\))?:/);
-        const selectBox = within(modal).getByLabelText(/Group(\(s\))?:/);
-        await userEvent.click(selectBox);
-        const group1Choice = within(selectContainer).getByText(mockActiveGroups[0].groupName);
-        await userEvent.click(group1Choice);
+            // select the group with that gameboard already assigned
+            const selectContainer = within(modal).getByText(/Group(\(s\))?:/);
+            const selectBox = within(modal).getByLabelText(/Group(\(s\))?:/);
+            await userEvent.click(selectBox);
+            const group1Choice = within(selectContainer).getByText(mockActiveGroups[0].groupName);
+            await userEvent.click(group1Choice);
 
-        // Act
-        const assignButton = within(modal).getByRole("button", {name: "Assign to group"});
-        await userEvent.click(assignButton);
+            // Act
+            const assignButton = within(modal).getByRole("button", {name: "Assign to group"});
+            await userEvent.click(assignButton);
 
-        // Assert
-        // check that existing assignment is still the only assignment shown in the modal
-        await waitFor(() => {
-            const currentAssignment = within(modal).getByTestId("current-assignment");
-            expect(currentAssignment.textContent).toContain(mockActiveGroups[0].groupName);
+            // Assert
+            // check that existing assignment is still the only assignment shown in the modal
+            await waitFor(() => {
+                const currentAssignment = within(modal).getByTestId("current-assignment");
+                expect(currentAssignment.textContent).toContain(mockActiveGroups[0].groupName);
+            });
+
+            // close modal, make sure the gameboard number of groups assigned is unchanged
+            const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
+            await userEvent.click(closeButtons[0]);
+            await waitFor(() => {
+                expect(modal).not.toBeInTheDocument();
+            });
+
+            const groupsAssignedHexagon = await within(gameboards[0]).findByTitle("Number of groups assigned");
+            expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual("1group");
         });
-
-        // close modal, make sure the gameboard number of groups assigned is unchanged
-        const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
-        await userEvent.click(closeButtons[0]);
-        await waitFor(() => {
-            expect(modal).not.toBeInTheDocument();
-        });
-
-        const groupsAssignedHexagon = await within(gameboards[0]).findByTitle("Number of groups assigned");
-        expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual("1group");
-
-        // Teardown
-        dateMock.mockRestore();
     });
 });
