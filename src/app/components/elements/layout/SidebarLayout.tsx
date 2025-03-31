@@ -216,6 +216,55 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
     </NavigationSidebar>;
 };
 
+interface GameboardSidebarProps extends SidebarProps {
+    gameboard: GameboardDTO;
+    assignments: AssignmentDTO[] | false;
+};
+
+export const GameboardSidebar = (props: GameboardSidebarProps) => {
+    const {gameboard, assignments} = props;
+    const multipleAssignments = assignments && assignments.length > 1;
+
+    const GameboardDetails = () => {
+        const subjects = determineGameboardSubjects(gameboard);
+        const topics = tags.getTopicTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
+            if (isDefined(c.tags) && c.tags.length > 0) {
+                return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
+            }
+            return a;
+        }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
+
+        return <>
+            <div>Subjects: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
+            <div>Topics: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
+        </>;
+    };
+
+    const AssignmentDetails = (assignment: AssignmentDTO) => {
+        const {assignerSummary, creationDate, dueDate, groupName, scheduledStartDate} = assignment;
+        const assigner = extractTeacherName(assignerSummary);
+        const startDate = scheduledStartDate ?? creationDate;
+        return <>
+            {multipleAssignments && <div className="section-divider"/>}
+            <div>Assigned to <b>{groupName}</b> by <b>{assigner}</b></div>
+            {startDate && <div>Set: <b>{getFriendlyDaysUntil(startDate)}</b></div>}
+            {dueDate && <div>Due: <b>{getFriendlyDaysUntil(dueDate)}</b></div>}
+        </>;
+    };
+    
+    return <ContentSidebar buttonTitle="Details">
+        <div className="section-divider"/>
+        <h5>Question deck</h5>
+        <GameboardDetails />
+        {assignments && assignments.length > 0 && <>
+            <div className={multipleAssignments ? "section-divider-bold" : "section-divider"}/>
+            <h5>Assignment{multipleAssignments && "s"}</h5>
+            {multipleAssignments && <div>You have multiple assignments for this question deck.</div>}
+            {assignments.map(a => <AssignmentDetails key={a.id} {...a} />)}
+        </>}
+    </ContentSidebar>;
+};
+
 export const QuestionSidebar = (props: RelatedContentSidebarProps) => {
     return <RelatedContentSidebar {...props} />;
 };

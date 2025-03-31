@@ -112,17 +112,17 @@ export const determinePageNavigation = (
                 ? [{title: "Assignments", to: "/assignments"}, ...gameboardHistory]
                 : gameboardHistory;
 
-        return {
-            collectionType: siteSpecific("Question deck", "Quiz"),
-            breadcrumbHistory: breadcrumbHistory,
-            backToCollection: gameboardHistory.slice(-1)[0],
-            nextItem: determineNextGameboardItem(currentGameboard, currentDocId),
-            previousItem: determinePreviousGameboardItem(currentGameboard, currentDocId),
-            search,
-            creationContext: determineCurrentCreationContext(currentGameboard, currentDocId),
-            currentGameboard
-        };
-    }
+            return {
+                collectionType: siteSpecific("Question deck", "Quiz"),
+                breadcrumbHistory: breadcrumbHistory,
+                backToCollection: gameboardHistory.slice(-1)[0],
+                nextItem: determineNextGameboardItem(currentGameboard, currentDocId),
+                previousItem: determinePreviousGameboardItem(currentGameboard, currentDocId),
+                search,
+                creationContext: determineCurrentCreationContext(currentGameboard, currentDocId),
+                currentGameboard
+            };
+        }
 
         if (topic) {
             const topicHistory = (currentTopic && topic === currentTopic?.id?.slice("topic_summary_".length)) ?
