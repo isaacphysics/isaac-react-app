@@ -547,7 +547,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         {siteSpecific(<div className="d-flex align-items-center">
             <span>Use the search box and/or filters to find questions; you can then refine your search further with the filters.</span>
             <Spacer/>
-            <div className="no-print d-flex align-items-center">
+            <div className="no-print d-flex align-items-center gap-2">
                 <div className="question-actions question-actions-leftmost mt-3">
                     <ShareLink linkUrl={`/questions`}/>
                 </div>

@@ -4,7 +4,7 @@ import {AppState, fetchDoc, useAppDispatch, useAppSelector} from "../../state";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {DOCUMENT_TYPE, isAda, useUrlHashValue} from "../../services";
+import {DOCUMENT_TYPE, isAda, isPhy, useUrlHashValue} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -70,7 +70,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 <MainContent>
                     <div className="no-print d-flex align-items-center">
                         <EditContentButton doc={doc} />
-                        <div className="question-actions question-actions-leftmost mt-3">
+                        <div className={classNames("question-actions question-actions-leftmost mt-3", {"gap-2": isPhy})}>
                             <ShareLink linkUrl={`/pages/${doc.id}`}/>
                         </div>
                         <div className="question-actions mt-3 not-mobile">
