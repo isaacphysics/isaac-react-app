@@ -89,7 +89,7 @@ const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormProps) =
               </Col>
               <Col lg={6}>
                 <FormInput
-                  label="Link to submission"
+                  label="Link to a students' project"
                   type="text"
                   id="submissionLink"
                   required

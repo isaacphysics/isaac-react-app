@@ -1,4 +1,4 @@
-export const END_DATE = new Date("2025-03-28T16:00:00"); // 4 PM on Friday, March 28, 2025
+export const END_DATE = new Date("2025-04-07T16:00:00"); // Monday 7th April 2025 at 4pm
 export const FOUR_WEEKS_AFTER_END_DATE = new Date(END_DATE.getTime() + 4 * 7 * 24 * 60 * 60 * 1000); // 4 weeks after end date
 
 export const isBeforeEndDate = (currentDate: Date) => currentDate <= END_DATE;

@@ -7,9 +7,9 @@ export default {
       ],
     },
     note: {
-      heading: "Please note:",
+      heading: "Teachers - good news!",
       entryDetails:
-        "Competition entries open in January and last two months. Students will be able to submit their entries until 28 March 16:00. Follow our",
+        "The deadline has been extended. Make sure to submit your students' project by 7 April at 16:00. Follow our",
       callToAction: "accounts for updates.",
       xLink: "https://x.com/isaaccompsci",
       facebookLink: "https://www.facebook.com/IsaacComputerScience",
@@ -43,9 +43,9 @@ export default {
       steps: [
         "1. Students need to ask their teacher to participate",
         "2. Students and teachers create or log in to an account",
-        "3. Attend our Q&A sessions for tips and tricks on entries (coming soon)",
-        "4. Boost your knowledge with our Student Boosters and Gameboards",
-        "5. Submit your entry! The finalists will be selected and invited to a final in Birmingham on 19 May.",
+        "3. Boost your knowledge with our Student Boosters and Gameboards",
+        "4. Work individually or in a group to develop a project, record a video, and ask your teacher to submit it",
+        "5. Teachers submit students' projects. The finalists will be selected and invited to a final in Birmingham on 19 May 2025.",
       ],
     },
     whyJoin: {
@@ -80,7 +80,7 @@ export default {
         "Save the 2024/25 dates in your calendar and plan time for you or your team to develop your IoE idea before applications close.",
       entries: [
         { event: "Entries open", date: "January" },
-        { event: "Entries close", date: "28 March 16:00" },
+        { event: "Entries close", date: "7th April 16:00" },
         { event: "Finalist selected", date: "April" },
         { event: "The final", date: "19 May" },
       ],
@@ -195,17 +195,17 @@ export default {
     industry: {
       title: "Industry Partners",
       section: [
-        "A big thank you to all of our industry partners! These include:",
+        "A big thank you to our industry partners for their support and generous prizes! Sincere appreciation for the contributions from:",
         [
           "The British Computer Society, branded BCS, The Chartered Institute for IT",
           "Cisco",
           "Kainos",
           "Reed",
           "Siemens",
-          "TC",
+          "Dassault Systèmes",
         ],
         "",
-        "A big thank you to Birmingham City University for giving us space to host the finals. The University has offered continuous support throughout the competition, and we are excited to partner with them and be a part of the Innovation Fest 19th May - 23rd May 2025.",
+        "A special thank you to Birmingham City University for providing the space to host the competition final. Their continued support throughout the competition has been invaluable, and it's exciting to partner with them and be a part of Innovation Fest, taking place 19 - 23 May 2025.",
       ],
     },
     termsAndConditions: {
