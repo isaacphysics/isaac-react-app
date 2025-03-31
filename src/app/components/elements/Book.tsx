@@ -5,9 +5,10 @@ import { Markup } from "./markup";
 import { TitleAndBreadcrumb } from "./TitleAndBreadcrumb";
 import { isDefined, useContextFromContentObjectTags } from "../../services";
 import { useHistory } from "react-router";
-import { useGetBookIndexPageQuery } from "../../state/slices/api/booksApi";
+import { useGetBookDetailPageQuery, useGetBookIndexPageQuery } from "../../state/slices/api/booksApi";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { BookPage } from "./BookPage";
+import { skipToken } from "@reduxjs/toolkit/query";
     
 interface BookProps {
     match: { params: { bookId: string } };
@@ -15,9 +16,11 @@ interface BookProps {
 
 export const Book = ({match: {params: {bookId}}}: BookProps) => {
 
-    const {data: book} = useGetBookIndexPageQuery({id: `book_${bookId}`});
-
     const [pageId, setPageId] = useState<string | undefined>(undefined);
+    
+    const { data: book }  = useGetBookIndexPageQuery({id: `book_${bookId}`});
+    const { data: bookDetailPage } = useGetBookDetailPageQuery(pageId ? { id: pageId } : skipToken);
+
     const history = useHistory();
 
     const pageContext = useContextFromContentObjectTags(book);
@@ -43,19 +46,19 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
         />
         <SidebarLayout>
             <ShowLoading
-                until={book} 
+                until={book ? {definedBookIndexPage: book, bookDetailPage} : undefined}
                 ifNotFound={<Alert color="warning">Book contents could not be loaded, please try refreshing the page.</Alert>}
-                thenRender={(definedBook) => {
+                thenRender={({definedBookIndexPage, bookDetailPage}) => {
                     return <>
-                        <BookSidebar book={definedBook} urlBookId={bookId} pageId={pageId} />
+                        <BookSidebar book={definedBookIndexPage} urlBookId={bookId} pageId={pageId} />
                         <MainContent className="mt-4">
-                            {isDefined(pageId) 
-                                ? <BookPage pageId={pageId} /> 
+                            {isDefined(bookDetailPage) 
+                                ? <BookPage page={bookDetailPage} /> 
                                 : <div>
                                     <div className="book-image-container mx-3 float-end">
-                                        <img src={definedBook.coverImage?.src} alt={definedBook.title} />
+                                        <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
                                     </div>
-                                    <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBook.value}</Markup>
+                                    <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBookIndexPage.value}</Markup>
                                 </div>
                             }
                         </MainContent>
