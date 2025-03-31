@@ -3,7 +3,7 @@ import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHead
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap, extractTeacherName, determineGameboardSubjects } from "../../../services";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
@@ -129,9 +129,21 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     </>;
 };
 
-export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
+const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
     const { icon, text, ...rest } = props;
-    return <span {...rest} className={classNames(rest.className, "d-flex align-items-center pt-2")}><img className="pe-2" src={`/assets/phy/icons/redesign/${icon}.svg`} alt=""/> {text}</span>;
+    return <li {...rest} className={classNames(rest.className, "d-flex align-items-center pt-2")}><img className="pe-2" src={`/assets/phy/icons/redesign/${icon}.svg`} alt=""/> {text}</li>;
+};
+
+const CompletionKey = () => {
+    return <div className="d-flex flex-column sidebar-key">
+        Key
+        <ul>
+            <KeyItem icon="status-not-started" text="Question not started"/>
+            <KeyItem icon="status-in-progress" text="Question in progress"/>
+            <KeyItem icon="status-correct" text="Question completed correctly"/>
+            <KeyItem icon="status-incorrect" text="Question completed incorrectly"/>
+        </ul>
+    </div>;
 };
 
 interface QuestionSidebarProps extends SidebarProps {
@@ -179,16 +191,8 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
                     </ul>
                 </>
             }
-
             <div className="section-divider"/>
-
-            <div className="d-flex flex-column sidebar-key">
-                Key
-                <KeyItem icon="status-in-progress" text="Question in progress"/>
-                <KeyItem icon="status-correct" text="Question completed correctly"/>
-                <KeyItem icon="status-incorrect" text="Question completed incorrectly"/>
-            </div>
-
+            <CompletionKey/>
         </>}
     </NavigationSidebar>;
 };
@@ -205,10 +209,14 @@ export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) =
     const {id, title, questions, currentQuestionId} = props;
     return <NavigationSidebar>
         <div className="section-divider"/>
-        <h5 className="mb-3">Question deck: {title}</h5>
+        <Link to={`${PATHS.GAMEBOARD}#${id}`} style={{textDecoration: "none"}}>
+            <h5 className="mb-3">Question deck: {title}</h5>
+        </Link>
         <ul>
             {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={q.id === currentQuestionId ? "selected-question" : ""}/></li>)}
         </ul>
+        <div className="section-divider"/>
+        <CompletionKey/>
     </NavigationSidebar>;
 };
 
@@ -231,7 +239,7 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
 
         return <>
-            <div>Subjects: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
+            <div className="mb-2">Subjects: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
             <div>Topics: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
         </>;
     };
@@ -258,6 +266,8 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
             {multipleAssignments && <div>You have multiple assignments for this question deck.</div>}
             {assignments.map(a => <AssignmentDetails key={a.id} {...a} />)}
         </>}
+        <div className="section-divider"/>
+        <CompletionKey/>
     </ContentSidebar>;
 };
 
@@ -793,8 +803,10 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
 
             <div className="d-flex flex-column sidebar-key">
                 Key
-                <KeyItem icon="status-in-progress" text="Section in progress"/>
-                <KeyItem icon="status-correct" text="Section completed"/>
+                <ul>
+                    <KeyItem icon="status-in-progress" text="Section in progress"/>
+                    <KeyItem icon="status-correct" text="Section completed"/>
+                </ul>
             </div>
         </ContentSidebar>;
     };

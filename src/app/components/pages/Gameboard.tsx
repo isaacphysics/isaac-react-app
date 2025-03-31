@@ -48,16 +48,16 @@ export const getProgressIcon = (question: GameboardItem) => {
             if (isPhy) {
                 itemClasses += " bg-success";
             }
-            message = siteSpecific("perfect!", "Correct");
+            message = "Correct";
             icon = siteSpecific("icon-correct", "/assets/cs/icons/question-correct.svg");
             break;
         case "PASSED":
         case "IN_PROGRESS":
-            message = siteSpecific("in progress", "In progress");
+            message = "In progress";
             icon = siteSpecific("icon-in-progress", "/assets/cs/icons/question-in-progress.svg");
             break;
         case "FAILED":
-            message = siteSpecific("try again!", "Try again");
+            message = "Try again";
             icon = siteSpecific("icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
             break;
     }
@@ -91,7 +91,6 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-theme me-2": isPhy})}>
                         {generateQuestionTitle(question)}
                     </Markup>
-                    {isPhy && message && <span className="gameboard-item-message-phy">{message}</span>}
                     {isPhy && question.subtitle && <div className="small text-muted d-none d-sm-block">
                         {question.subtitle}
                     </div>}
