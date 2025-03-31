@@ -611,7 +611,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                 />
                 <div className="section-divider"/>
                 <h5>Sort</h5>
-                <Input type="select" value={sortOrder} onChange={e => setSortOrder(e.target.value as MyAssignmentsOrder)}>
+                <Input type="select" className="ps-3 my-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as MyAssignmentsOrder)}>
                     {Object.values(MyAssignmentsOrder).map(order => <option key={order} value={order}>{ORDER_NAMES[order]}</option>)}
                 </Input>
                 <div className="section-divider"/>
