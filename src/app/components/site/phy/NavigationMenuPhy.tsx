@@ -296,16 +296,16 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                         <NavigationItemClose href="/my_gameboards">
                             My question packs
                         </NavigationItemClose>
-                        <NavigationItemClose href="/assignments">
+                        <NavigationItemClose href="/assignments" className="d-flex align-items-center">
                             My assignments
-                            {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
+                            {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
                         </NavigationItemClose>
                         <NavigationItemClose href="/progress">
                             My progress
                         </NavigationItemClose>
-                        <NavigationItemClose href="/tests">
+                        <NavigationItemClose href="/tests" className="d-flex align-items-center">
                             My tests
-                            {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
+                            {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
                         </NavigationItemClose>
                     </div>
 

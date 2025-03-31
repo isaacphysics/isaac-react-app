@@ -89,7 +89,9 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
             </>
         }
         {!enableSearch && <Spacer />}
-        <button type="button" className={siteSpecific("icon-search px-4", "search-toggler-icon")} onClick={_ => setEnableSearch(c => !c)}/>
+        <button type="button" className={siteSpecific("d-flex bg-transparent px-4", "search-toggler-icon")} onClick={_ => setEnableSearch(c => !c)}>
+            {isPhy && <i className="icon icon-search icon-color-white"/>}
+        </button>
     </div>;
 };
 
