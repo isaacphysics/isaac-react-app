@@ -294,10 +294,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     useEffect(() => {
-        // on ada, this should not trigger a search if the seed changes from defined => undefined after changing a filter
-        if (isPhy || isDefined(randomSeed)) {
-            searchAndUpdateURL();
-        }
+        searchAndUpdateURL();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchQuery, randomSeed]);
 
@@ -349,12 +346,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || selections.some(tier => Object.values(tier).flat().length > 0)
             || Object.entries(searchStatuses).some(e => e[1]));
 
-        if (!readingFromUrlParams) {
-            setRandomSeed(undefined);
+        if (isPhy) {
+            if (!readingFromUrlParams) {
+                setRandomSeed(undefined);
+            }
+            
+            // on physics, we immediately update the search if filters change; on ada, we wait until "Apply filters" is clicked
+            searchAndUpdateURL();
         }
-
-        // on physics, we immediately update the search if filters change; on ada, we wait until "Apply filters" is clicked
-        if (isPhy) searchAndUpdateURL();
 
     }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses, searchQuery]);
 
@@ -504,7 +503,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 maxLength={SEARCH_CHAR_LENGTH_LIMIT}
                                 defaultValue={searchQuery}
                                 placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                                onChange={(e) => debouncedSearchHandler(e.target.value)}
+                                onChange={(e) => {
+                                    debouncedSearchHandler(e.target.value);
+                                    setRandomSeed(undefined); // This random seed reset is for Ada only! This is managed in the filtersChanged useEffect for Phy
+                                }}
                             />
                             <Button className="question-search-button" onClick={searchAndUpdateURL}/>
                         </InputGroup>
@@ -525,7 +527,17 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             excludeBooks, setExcludeBooks,
                             choices, 
                             selections, setSelections,
-                            applyFilters: searchAndUpdateURL, clearFilters,
+                            applyFilters: () => {
+                                if (isDefined(randomSeed)) {
+                                    // on Ada, if randomSeed is defined, we need to unset it before running the search.
+                                    // since it is state, running this first won't necessarily have it updated when searchAndUpdateURL is called.
+                                    // as such, a useEffect above with randomSeed as a dep will run searchAndUpdateURL for us, instead of here.
+                                    setRandomSeed(undefined);
+                                } else {
+                                    searchAndUpdateURL();
+                                }
+                            },
+                            clearFilters,
                             validFiltersSelected, searchDisabled, setSearchDisabled
                         }} />
                     </Col>}
