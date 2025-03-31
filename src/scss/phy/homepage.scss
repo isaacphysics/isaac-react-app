@@ -184,6 +184,8 @@ $dashboard-panel-padding: 30px;
     font-weight: 400;
     text-decoration: none;
     padding-bottom: 10px;
+    display: flex;
+    align-items: center;
 
     &:hover {
       text-decoration: underline;
