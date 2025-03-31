@@ -266,8 +266,8 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
 
         return <>
-            <div>Subjects: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
-            <div>Topics: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
+            <div className="mb-2">Subject{subjects.length > 1 && "s"}: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
+            <div>Topic{subjects.length > 1 && "s"}: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
         </>;
     };
 
@@ -293,6 +293,8 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
             {multipleAssignments && <div>You have multiple assignments for this question deck.</div>}
             {assignments.map(a => <AssignmentDetails key={a.id} {...a} />)}
         </>}
+        <div className="section-divider"/>
+        <CompletionKey/>
     </ContentSidebar>;
 };
 interface FilterCheckboxProps extends React.HTMLAttributes<HTMLElement> {
