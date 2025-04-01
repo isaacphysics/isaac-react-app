@@ -3,10 +3,12 @@ import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, SOME_FIXED_FUTURE_DATE} from "../dateUtils";
-import {renderTestEnvironment, withMockedDate} from "../testUtils";
+import {clickButton, renderTestEnvironment, withMockedDate} from "../testUtils";
 
 import {API_PATH, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
-import {DefaultRequestMultipartBody, http, HttpResponse} from "msw";
+import { http, HttpHandler, HttpResponse } from "msw";
+import { AssignmentDTO } from "../../IsaacApiTypes";
+import { buildPostHandler } from "../../mocks/handlers";
 
 const expectedPhysicsTopLinks = {
     "our books": null,
@@ -16,10 +18,11 @@ const expectedPhysicsTopLinks = {
 
 describe("SetAssignments", () => {
 
-    const renderSetAssignments = (path = PATHS.SET_ASSIGNMENTS) => {
+    const renderSetAssignments = ({path = PATHS.SET_ASSIGNMENTS, endpoints = []}: { endpoints?: HttpHandler[], path?: string } = {}) => {
         renderTestEnvironment({
             PageComponent: SetAssignments,
-            initalRouteEntries: [path]
+            initalRouteEntries: [path],
+            extraEndpoints: endpoints
         });
     };
 
@@ -124,20 +127,16 @@ describe("SetAssignments", () => {
     });
 
     it('should let you assign a gameboard in card view (using the modal)', async () => {
-        let requestGroupIds: string[];
-        let requestAssignment: {gameboardId: string, scheduledStartDate?: any, dueDate?: any, notes?: string};
-        renderTestEnvironment({
-            PageComponent: SetAssignments,
-            initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
-            extraEndpoints: [
-                http.post(API_PATH + "/assignments/assign_bulk", async ({request}) => {
-                    const json = await request.json() as Record<string, any> | DefaultRequestMultipartBody;
-                    requestGroupIds = json?.map((x: any) => x.groupId);
-                    requestAssignment = json[0];
-                    return HttpResponse.json(json.map((x: any) => ({groupId: x.groupId, assignmentId: x.groupId * 2})), {
-                        status: 200,
-                    });
-                })
+        const requestGroupIds = (body: AssignmentDTO[]) => body?.map((x) => x.groupId!);
+        const requestAssignment = (body: AssignmentDTO[]) => body[0];
+        const observer = parameterObserver<AssignmentDTO[]>();
+
+        renderSetAssignments({
+            endpoints: [
+                buildPostHandler(
+                    "/assignments/assign_bulk",
+                    observer.attach(body => body.map(x => ({ groupId: x.groupId, assignmentId: x.groupId! * 2 })))
+                ), 
             ]
         });
         if (!isPhy) {
@@ -156,15 +155,12 @@ describe("SetAssignments", () => {
         const modal = await screen.findByTestId("set-assignment-modal");
         expect(modal).toHaveModalTitle(mockGameboard.title);
         // Ensure all active groups are selectable in the drop-down
-        const selectContainer = within(modal).getByText(/Group(\(s\))?:/);
-        const selectBox = within(modal).getByLabelText(/Group(\(s\))?:/);
-        await userEvent.click(selectBox);
+        const groupSelector = await toggleGroupSelect();
         mockActiveGroups.forEach(g => {
-            expect(selectContainer.textContent).toContain(g.groupName);
+            expect(groupSelector.textContent).toContain(g.groupName);
         });
         // Pick the second active group
-        const group1Choice = within(selectContainer).getByText(mockActiveGroups[1].groupName);
-        await userEvent.click(group1Choice);
+        await selectGroup(mockActiveGroups[1].groupName);
 
         // Check scheduled start date and due date are there
         within(modal).getByLabelText("Schedule an assignment start date", {exact: false});
@@ -186,16 +182,15 @@ describe("SetAssignments", () => {
         expect(allAssignments[0].textContent).toContain(mockActiveGroups[0].groupName);
 
         // Click button
-        const assignButton = within(modal).getByRole("button", {name: "Assign to group"});
-        await userEvent.click(assignButton);
+        await clickButton('Assign to group', Promise.resolve(modal));
 
         // Expect request to be sent off with expected parameters
         await waitFor(() => {
-            expect(requestGroupIds).toEqual([mockActiveGroups[1].id]);
-            expect(requestAssignment.gameboardId).toEqual(mockGameboard.id);
-            expect(requestAssignment.notes).toEqual(testNotes);
-            expect(requestAssignment.dueDate).toBeDefined();
-            expect(requestAssignment.scheduledStartDate).not.toBeDefined();
+            expect(requestGroupIds(observer.observedParams!)).toEqual([mockActiveGroups[1].id]);
+            expect(requestAssignment(observer.observedParams!).gameboardId).toEqual(mockGameboard.id);
+            expect(requestAssignment(observer.observedParams!).notes).toEqual(testNotes);
+            expect(requestAssignment(observer.observedParams!).dueDate).toBeDefined();
+            expect(requestAssignment(observer.observedParams!).scheduledStartDate).not.toBeDefined();
         });
 
         // Check that new assignment is displayed in the modal
@@ -219,32 +214,51 @@ describe("SetAssignments", () => {
 
     describe('modal', () => {
         const mockGameboard = mockGameboards.results[0];
-        const renderModal = () => renderSetAssignments(`${PATHS.SET_ASSIGNMENTS}#${mockGameboard.id}`); 
-        const modal = () => screen.findByTestId("set-assignment-modal");
-        const dateInput = async (labelText: string | RegExp) => {
-            const label = await within(await modal()).findByText(labelText);
-            return await within(label).findByTestId('date-input');
-        };
+        const renderModal = (endpoints: HttpHandler[] = []) => renderSetAssignments({ path: `${PATHS.SET_ASSIGNMENTS}#${mockGameboard.id}`, endpoints}); 
 
-        describe('default values', () => {
-            it('groups are empty', async () => {
-                renderModal();
-                const select = await within(await modal()).findByTestId('modal-groups-selector');
-                expect(select).toHaveTextContent('Group(s):None');
-            });
+        it('groups are empty', async () => {
+            renderModal();
+            const select = await within(await modal()).findByTestId('modal-groups-selector');
+            expect(select).toHaveTextContent('Group(s):None');
+        });
     
-            it('start date is empty', async () => {
-                renderModal();
-                expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
-            });
+        it('start date is empty', async () => {
+            renderModal();
+            expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
+        });
             
-            it('due date is a week from now', async() => {
-                await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
-                    renderModal();
-                    expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
-                });
+        it('due date is a week from now', async() => {
+            await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
+                renderModal();
+                expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
             });
         });
+
+        const testPostedDueDate = ({ currentTime, expectedDueDatePosted } : { currentTime: string, expectedDueDatePosted: string}) => async () => {
+            await withMockedDate(Date.parse(currentTime), async () => { // Monday
+                const observer = parameterObserver<AssignmentDTO[]>();
+                renderModal([
+                    buildPostHandler(
+                        "/assignments/assign_bulk",
+                        observer.attach(body => body.map(x => ({ groupId: x.groupId, assignmentId: x.groupId! * 2 })))
+                    )
+                ]);
+
+                await toggleGroupSelect();
+                await selectGroup(mockActiveGroups[1].groupName);
+                await clickButton('Assign to group', modal());
+
+                await waitFor(() => expect(observer.observedParams![0].dueDate).toEqual(expectedDueDatePosted)); // Sunday
+            });
+        };
+
+        it('posts the default due date as UTC midnight, even when that is not exactly 24 hours away', testPostedDueDate(
+            { currentTime: "2025-01-30T09:00:00.000Z" /* Monday */, expectedDueDatePosted: "2025-02-05T00:00:00.000Z" /* Sunday */ }
+        ));
+
+        it('posts the default due date as UTC midnight, even when the current time zone offset is non-zero', testPostedDueDate(
+            { currentTime: "2025-04-28" /* Monday */, expectedDueDatePosted: "2025-05-04T00:00:00.000Z" /* Sunday */ }
+        ));
     });
 
     it('should let you unassign a gameboard', async () => {
@@ -352,4 +366,33 @@ describe("SetAssignments", () => {
             expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual("1group");
         });
     });
+});
+
+const modal = () => screen.findByTestId("set-assignment-modal");
+
+const dateInput = async (labelText: string | RegExp) => {
+    const label = await within(await modal()).findByText(labelText);
+    return await within(label).findByTestId('date-input');
+};
+
+const toggleGroupSelect = async () => {
+    const selectBox = within(await modal()).getByLabelText(/Group(\(s\))?:/);
+    await userEvent.click(selectBox);
+    return within(await modal()).getByText(/Group(\(s\))?:/);;
+};
+
+const selectGroup = async (groupName: string) => {
+    const selectContainer = within(await modal()).getByText(/Group(\(s\))?:/);
+    const group1Choice = within(selectContainer).getByText(groupName);
+    await userEvent.click(group1Choice);
+};
+
+const parameterObserver = <T,>() => ({
+    observedParams: null as T | null,
+    attach<U>(fn: (p: T)=> U) {
+        return (p: T) => {
+            this.observedParams = p;
+            return fn(p);
+        }; 
+    }
 });

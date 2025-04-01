@@ -255,3 +255,9 @@ export const buildFunctionHandler = <T extends string, V extends JsonBodyType>(p
         return HttpResponse.json(fn(params), { status: 200, });
     });
 };
+export const buildPostHandler = <T, V extends JsonBodyType>(path: string, fn: (p: T) => V) => {
+    return http.post(API_PATH + path, async ({ request }) => {
+        const body = await request.json() as T;
+        return HttpResponse.json(fn(body), { status: 200, });
+    });
+};
