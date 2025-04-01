@@ -165,7 +165,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
             {siteSpecific(
                 <>
                     {above["md"](deviceSize) && <td className="align-middle">                       
-                        <PhyHexIcon size="sm" icon="icon-tests" subject={subject as Subject} className="assignment-hex"/>                       
+                        <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="assignment-hex"/>                       
                     </td>}
                     <td className="align-middle">
                         <span className="manage-quiz-title me-3">{quizTitle}</span>

@@ -43,7 +43,7 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
 
     return <AbstractListViewItem
         {...rest}
-        icon={{type: "hex", icon: "icon-question", size: "sm"}}
+        icon={{type: "hex", icon: "icon-question", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
         tags={item.tags}
@@ -62,7 +62,7 @@ export const ConceptListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
 
     return <AbstractListViewItem 
-        icon={{type: "hex", icon: "icon-concept", size: "sm"}}
+        icon={{type: "hex", icon: "icon-concept", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
         subtitle={item.subtitle}
@@ -76,7 +76,7 @@ export const EventListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => 
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
 
     return <AbstractListViewItem 
-        icon={{type: "hex", icon: "icon-events", size: "sm"}}
+        icon={{type: "hex", icon: "icon-events", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
@@ -97,7 +97,7 @@ export const QuizListViewItem = ({item, isQuizSetter, ...rest}: {item: QuizSumma
         </AffixButton>;
 
     return <AbstractListViewItem 
-        icon={{type: "hex", icon: "icon-tests", size: "sm"}}
+        icon={{type: "hex", icon: "icon-tests", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
         previewQuizUrl={`/test/preview/${item.id}`}
@@ -112,7 +112,7 @@ export const QuestionPackListViewItem = ({item, ...rest}: {item: ShortcutRespons
     const url = `/gameboards#${item.id}`;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question", size: "sm"}}
+        icon={{type: "hex", icon: "icon-question", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
@@ -129,7 +129,7 @@ export const QuickQuizListViewItem = ({item, ...rest}: {item: ShortcutResponse})
     const url = `/gameboards#${item.id}`;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question", size: "sm"}}
+        icon={{type: "hex", icon: "icon-question", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
@@ -149,7 +149,7 @@ export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question", size: "sm"}}
+        icon={{type: "hex", icon: "icon-question", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
