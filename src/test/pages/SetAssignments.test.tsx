@@ -234,6 +234,13 @@ describe("SetAssignments", () => {
             });
         });
 
+        it('due date is displayed in UTC', async () => {
+            await withMockedDate(Date.parse("2025-04-28T23:30:00.000Z"), async () => { // Monday in UTC, already Tuesday in UTC+1.
+                renderModal();
+                expect(await dateInput("Due date reminder")).toHaveValue('2025-05-04'); // Sunday in UTC (would be Monday if we showed UTC+1)
+            });
+        });
+
         const testPostedDueDate = ({ currentTime, expectedDueDatePosted } : { currentTime: string, expectedDueDatePosted: string}) => async () => {
             await withMockedDate(Date.parse(currentTime), async () => { // Monday
                 const observer = parameterObserver<AssignmentDTO[]>();
@@ -256,7 +263,7 @@ describe("SetAssignments", () => {
             { currentTime: "2025-01-30T09:00:00.000Z" /* Monday */, expectedDueDatePosted: "2025-02-05T00:00:00.000Z" /* Sunday */ }
         ));
 
-        it('posts the default due date as UTC midnight, even when the current time zone offset is non-zero', testPostedDueDate(
+        it('posts the default due date as UTC midnight, even when local representation does not equal UTC', testPostedDueDate(
             { currentTime: "2025-04-28" /* Monday */, expectedDueDatePosted: "2025-05-04T00:00:00.000Z" /* Sunday */ }
         ));
     });
