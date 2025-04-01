@@ -98,7 +98,7 @@ const AssignmentCard = (assignment: AssignmentDTO) => {
     return <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`} className="mt-3">
         <Card className="assignment-card px-3">
             <div className="d-flex flex-row h-100">
-                <i className="icon icon-question-pack" />
+                <i className="icon icon-question-deck" />
                 <div className="flex-grow-1 ms-2">
                     <h5>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h5>
                     {isDefined(assignment.groupName) && assignment.groupName}

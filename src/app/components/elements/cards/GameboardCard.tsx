@@ -54,7 +54,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                         <div className="board-subject-hexagon-container justify-content-center">
                             {generateGameboardSubjectHexagons(boardSubjects)}
                         </div>
-                        <PhyHexIcon icon="page-icon-question-pack" subject={boardSubjects[0] as Subject} className="assignment-hex ps-3"/>
+                        <PhyHexIcon icon="icon-question-deck" subject={boardSubjects[0] as Subject} className="assignment-hex ps-3"/>
                     </div>
                     <div className="d-flex flex-column flex-grow-1">
                         <h4 className="text-break m-0">

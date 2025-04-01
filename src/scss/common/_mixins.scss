@@ -177,7 +177,7 @@ $viewport-sizes: (
   }
 }
 
-@mixin svg-icon-layered($fg_path, $bg_path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
+@mixin svg-icon-layered($fg_path, $bg_path, $width: 16px, $height: 16px, $mask-size: 100%, $mask-position: none) {
   display: inline-flex;
   width: $width;
   height: $height;

@@ -12,8 +12,8 @@ export const PhyHexIcon = (props: PhyHexIconProps) => {
     const {icon, subject, size, className, ...rest} = props;
     if (isPhy) {
         return <div {...rest} className={classNames("d-flex pe-3", className)} {...(subject && {"data-bs-theme": subject})}>
-            <div className={classNames("phy-hex-icon", {"phy-hex-icon-sm": size === "sm"})}/>
-            <i className={classNames("icon", icon)}/>
+            <div className={classNames("phy-hex-icon", {"icon-lg": size === "sm"})}/>
+            <i className={classNames("icon", icon, size === "sm" ? "icon-lg" : "icon-xl")}/>
         </div>;
     }
 };

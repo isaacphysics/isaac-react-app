@@ -459,7 +459,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             currentPageTitle={siteSpecific("Question Finder", "Questions")}
             description={description} help={pageHelp}
             intermediateCrumbs={crumb ? [crumb] : []}
-            icon={{type: "hex", icon: "page-icon-finder"}}
+            icon={{type: "hex", icon: "icon-finder"}}
         />
         {siteSpecific(<div className="d-flex align-items-center">
             <span>Use the search box and/or filters to find questions; you can then refine your search further with the filters.</span>

@@ -372,7 +372,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             const EventDetails = <Container className="events">
                 {isPhy ?
                     <TitleAndBreadcrumb
-                        currentPageTitle="Events" icon={{type: "hex", icon: "page-icon-events"}}
+                        currentPageTitle="Events" icon={{type: "hex", icon: "icon-events"}}
                         breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
                     /> :
                     <TitleAndBreadcrumb
