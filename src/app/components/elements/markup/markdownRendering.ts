@@ -6,8 +6,9 @@ MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpe
     const href = utils.escapeHtml(tokens[idx].href || "");
     const localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:") || href.startsWith("#");
     const title = tokens[idx].title ? (' title="' + utils.escapeHtml(utils.replaceEntities(tokens[idx].title || "")) + '"') : '';
+    const conceptIcon = "<i class=\"icon icon-lightbulb\"></i>";
     if (localLink) {
-        return `<a class="a-link" href="${href}" ${title}>`;
+        return `<a class="a-link" href="${href}" ${title}>${isPhy && href.includes("/concepts/") ? conceptIcon : ""}`;
     } else {
         return `<a class="a-link" href="${href}" ${title} target="_blank" rel="noopener nofollow">`;
     }

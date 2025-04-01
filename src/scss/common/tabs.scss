@@ -39,7 +39,7 @@
     &.active {
       .nav-link {
         font-family: $secondary-font-semi-bold;
-        background-color: $black;
+        background-color: var(--sidebar-tab-active, $black);
         color: $white;
         text-decoration: none;
         cursor: default;

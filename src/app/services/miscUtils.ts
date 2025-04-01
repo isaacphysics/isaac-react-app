@@ -10,6 +10,8 @@ export function isDefined<T>(value: T | undefined | null): value is NonNullable<
 
 export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 
+export type ArrayElement<T extends readonly any[]> = T extends readonly (infer U)[] ? U : never;
+
 /**
  * This function is used to check if a string contains all the words in a search phease, in any order.
  * 
@@ -131,7 +133,7 @@ export function useOutsideCallback(ref: RefObject<any>, callback : () => void, d
     }, [...deps, ref]);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
+ 
 export function noop(_: never) {}
 
 // Confirms (currently using `window.confirm`, but we could change that to a more Isaac/Ada-themed thing moving
@@ -160,3 +162,7 @@ export const interleave = <T>(...lists: T[][]): T[] => {
     }
     return result;
 };
+
+export const nextRandom = () => Math.random();
+
+export const nextSeed = () => Math.floor(Math.floor(nextRandom() * 10 ** 6));

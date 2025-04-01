@@ -246,6 +246,7 @@ export interface BooleanNotation {
 export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
     PREFER_MATHML?: boolean;
+    REDUCED_MOTION?: boolean;
 }
 
 export interface UserConsent {
@@ -434,7 +435,7 @@ export const ClozeDropRegionContext = React.createContext<{
     shouldGetFocus: (id: string) => boolean,
     nonSelectedItems: Immutable<ClozeItemDTO>[]
     allItems: Immutable<ClozeItemDTO>[]
-} | undefined>(undefined);
+    } | undefined>(undefined);
 
 export const InlineContext = React.createContext<{
     docId?: string,
@@ -469,7 +470,7 @@ export const AssignmentScheduleContext = React.createContext<{
     collapsed: boolean;
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
-}>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+    }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
     completed?: boolean;
@@ -589,6 +590,7 @@ export interface QuestionSearchQuery {
     fasttrack?: boolean;
     startIndex?: number;
     limit?: number;
+    randomSeed?: number;
 }
 
 export interface ContentSummary extends ContentSummaryDTO {

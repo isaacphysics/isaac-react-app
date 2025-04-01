@@ -2,12 +2,12 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
-import { Link, useHistory } from "react-router-dom";
-import { AppGroup, AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import { AppGroup, AssignmentBoardOrder, PageContextState, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
 import { AssignmentState } from "../../pages/MyAssignments";
@@ -21,6 +21,8 @@ import { formatISODateOnly } from "../DateString";
 import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
+import { StyledSelect } from "../inputs/StyledSelect";
+import { extendUrl } from "../../pages/subjectLandingPageComponents";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -70,7 +72,7 @@ const NavigationSidebar = (props: SidebarProps) => {
     if (isAda) return <></>;
 
     const { className, ...rest } = props;
-    return <Col lg={4} xl={3} {...rest} className={classNames("sidebar p-4 order-1 order-lg-0", className)} />;
+    return <Col lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", className)} />;
 };
 
 interface ContentSidebarProps extends SidebarProps {
@@ -89,9 +91,9 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     const { className, buttonTitle, ...rest } = props;
     return <>
         {above['lg'](deviceSize) 
-            ? <Col lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar p-4 order-0", className)} />
+            ? <Col lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
-                <div className="d-flex align-items-center flex-wrap py-3 gap-3">
+                <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
                         affix: "icon-sidebar", 
                         position: "prefix", 
@@ -126,15 +128,18 @@ export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: st
     return <span {...rest} className={classNames(rest.className, "d-flex align-items-center pt-2")}><img className="pe-2" src={`/assets/phy/icons/redesign/${icon}.svg`} alt=""/> {text}</span>;
 };
 
-interface QuestionSidebarProps extends SidebarProps {
+interface RelatedContentSidebarProps extends SidebarProps {
     relatedContent: ContentSummaryDTO[] | undefined;
+    isConcept?: boolean;
 }
 
-export const QuestionSidebar = (props: QuestionSidebarProps) => {
-    // TODO: this implementation is only for standalone questions; if in the context of a gameboard, the sidebar should show gameboard navigation
+const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
     const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage") as IsaacConceptPageDTO[] | undefined;
     const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage") as QuestionDTO[] | undefined;
 
+    const pageType = props.isConcept ? "concept" : "question";
+
+    const pageContext = useAppSelector(selectors.pageContext.context);
     const pageContextStage = useAppSelector(selectors.pageContext.stage);
 
     const [relatedQuestionsForContextStage, relatedQuestionsForOtherStages] = partition(relatedQuestions, q => q.audience && determineAudienceViews(q.audience).some(v => v.stage === pageContextStage));
@@ -142,54 +147,68 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
     const sidebarRef = useRef<HTMLDivElement>(null);
 
     return <NavigationSidebar ref={sidebarRef}>
-        {relatedConcepts && relatedConcepts.length > 0 && <>
-            <div className="section-divider"/>
-            <h5>Related concepts</h5>
-            <ul className="link-list">
+        <div className="section-divider"/>
+        <h5>Related concepts</h5>
+        {relatedConcepts && relatedConcepts.length > 0
+            ? <ul className="link-list">
                 {relatedConcepts.map((concept, i) => <ConceptLink key={i} concept={concept} />)}
             </ul>
-        </>}
-        {relatedQuestions && relatedQuestions.length > 0 && <>
-            {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
-                ? <>
-                    <div className="section-divider"/>
-                    <h5>Related questions</h5>
-                    <ul className="link-list">
-                        {relatedQuestions.map((question, i) => <QuestionLink key={i} question={question} />)}
-                    </ul>
-                </>
-                : <>
-                    <div className="section-divider"/>
-                    <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
-                    <ul className="link-list">
-                        {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} />)}
-                    </ul>
-                    <div className="section-divider"/>
-                    <h5>Related questions for other learning stages</h5>
-                    <ul className="link-list">
-                        {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} />)}
-                    </ul>
-                </>
-            }
+            : <>
+                There are no related concepts for this {pageType}.
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "concepts")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                    See all concepts for {getHumanContext(pageContext)}
+                </AffixButton>}
+            </>
+        }
+        <div className="section-divider"/>
+        <h5>Related questions</h5>
+        {relatedQuestions && relatedQuestions.length > 0
+            ? <>
+                {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
+                    ? <>
+                        <ul className="link-list">
+                            {relatedQuestions.map((question, i) => <QuestionLink key={i} question={question} />)}
+                        </ul>
+                    </>
+                    : <>
+                        <div className="section-divider"/>
+                        <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
+                        <ul className="link-list">
+                            {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} />)}
+                        </ul>
+                        <div className="section-divider"/>
+                        <h5>Related questions for other learning stages</h5>
+                        <ul className="link-list">
+                            {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} />)}
+                        </ul>
+                    </>
+                }
+                <div className="section-divider"/>
+                <div className="d-flex flex-column sidebar-key">
+                    Key
+                    <KeyItem icon="status-in-progress" text="Question in progress"/>
+                    <KeyItem icon="status-correct" text="Question completed correctly"/>
+                    <KeyItem icon="status-incorrect" text="Question completed incorrectly"/>
+                </div>
 
-            <div className="section-divider"/>
-
-            <div className="d-flex flex-column sidebar-key">
-                Key
-                <KeyItem icon="status-in-progress" text="Question in progress"/>
-                <KeyItem icon="status-correct" text="Question completed correctly"/>
-                <KeyItem icon="status-incorrect" text="Question completed incorrectly"/>
-            </div>
-
-        </>}
+            </>
+            : <>
+                There are no related questions for this {pageType}.
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "questions")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                    See all questions for {getHumanContext(pageContext)}
+                </AffixButton>}
+            </>
+        }
     </NavigationSidebar>;
 };
 
-export const ConceptSidebar = (props: QuestionSidebarProps) => {
-    return <QuestionSidebar {...props} />;
+export const QuestionSidebar = (props: RelatedContentSidebarProps) => {
+    return <RelatedContentSidebar {...props} />;
 };
 
-
+export const ConceptSidebar = (props: RelatedContentSidebarProps) => {
+    return <RelatedContentSidebar {...props} isConcept />;
+};
 
 interface FilterCheckboxProps extends React.HTMLAttributes<HTMLElement> {
     tag: Tag;
@@ -199,12 +218,13 @@ interface FilterCheckboxProps extends React.HTMLAttributes<HTMLElement> {
     incompatibleTags?: Tag[]; // tags that are removed when this tag is added
     dependentTags?: Tag[]; // tags that are removed when this tag is removed
     baseTag?: Tag; // tag to add when all tags are removed
+    partiallySelected?: boolean;
     checkboxStyle?: "tab" | "button";
     bsSize?: "sm" | "lg";
 }
 
 const FilterCheckbox = (props : FilterCheckboxProps) => {
-    const {tag, conceptFilters, setConceptFilters, tagCounts, checkboxStyle, incompatibleTags, dependentTags, baseTag, ...rest} = props;
+    const {tag, conceptFilters, setConceptFilters, tagCounts, checkboxStyle, incompatibleTags, dependentTags, baseTag, partiallySelected, ...rest} = props;
     const [checked, setChecked] = useState(conceptFilters.includes(tag));
 
     useEffect(() => {
@@ -213,7 +233,7 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
 
     const handleCheckboxChange = (checked: boolean) => {
         const newConceptFilters = checked 
-            ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), tag] 
+            ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), ...(!partiallySelected ? [tag] : [])] 
             : conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c));
         setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : (baseTag ? [baseTag] : []));
     };
@@ -229,12 +249,17 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
         />;
 };
 
-const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag">) => {
-    const { conceptFilters, setConceptFilters, tagCounts, baseTag, ...rest } = props;
+const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnabled?: boolean}) => {
+    const { conceptFilters, setConceptFilters, tagCounts, baseTag, forceEnabled, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<Tag[]>(baseTag ? [baseTag] : []);
     return <StyledTabPicker {...rest} 
-        id="all" checked={baseTag ? conceptFilters.length === 1 && conceptFilters[0] === baseTag : !conceptFilters.length} checkboxTitle="All" count={tagCounts && Object.values(tagCounts).reduce((a, b) => a + b, 0)}
+        id="all" checked={forceEnabled || baseTag ? conceptFilters.length === 1 && conceptFilters[0] === baseTag : !conceptFilters.length} 
+        checkboxTitle="All" count={tagCounts && (baseTag ? tagCounts[baseTag.id] : Object.values(tagCounts).reduce((a, b) => a + b, 0))}
         onInputChange={(e) => {
+            if (forceEnabled) {
+                setConceptFilters(baseTag ? [baseTag] : []);
+                return;
+            }
             if (e.target.checked) {
                 setPreviousFilters(conceptFilters);
                 setConceptFilters(baseTag ? [baseTag] : []);
@@ -275,19 +300,25 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
 
         <div className="d-flex flex-column">
             <h5>Filter by topic</h5>
-            <AllFiltersCheckbox conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag}/>
+            <AllFiltersCheckbox 
+                conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag} 
+                forceEnabled={applicableTags.filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0).length === 0}
+            />
             <div className="section-divider-small"/>
-            {applicableTags.map(tag => 
-                <FilterCheckbox 
-                    key={tag.id} 
-                    tag={tag} 
-                    conceptFilters={conceptFilters} 
-                    setConceptFilters={setConceptFilters} 
-                    tagCounts={tagCounts} 
-                    incompatibleTags={[subjectTag]} 
-                    baseTag={subjectTag}
-                />
-            )}
+            {applicableTags
+                .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
+                .map(tag => 
+                    <FilterCheckbox 
+                        key={tag.id} 
+                        tag={tag} 
+                        conceptFilters={conceptFilters} 
+                        setConceptFilters={setConceptFilters} 
+                        tagCounts={tagCounts} 
+                        incompatibleTags={[subjectTag]} 
+                        baseTag={subjectTag}
+                    />
+                )
+            }
         </div>
 
         <div className="section-divider"/>
@@ -334,6 +365,7 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
                     <FilterCheckbox 
                         checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
                         setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
+                        partiallySelected={descendentTags.some(tag => conceptFilters.includes(tag))} // not quite isPartial; this is also true if all descendents selected
                         className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
                     />
                     {isSelected && <div className="ms-3 ps-2">
@@ -1057,5 +1089,146 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                 </StyledDropdown>
             </>;
         }}/>
+    </ContentSidebar>;
+};
+
+interface QuestionDecksSidebarProps extends SidebarProps {
+    validStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]};
+    context: NonNullable<Required<PageContextState>>;
+};
+
+export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
+    const { validStageSubjectPairs, context } = props;
+
+    const history = useHistory();
+
+    return <ContentSidebar buttonTitle="Switch stage/subject" {...props}>
+        <div className="section-divider"/>
+        <h5>Decks by stage</h5>
+        <ul>
+            {validStageSubjectPairs[context.subject].map((stage, index) => 
+                <li key={index}>
+                    <StyledTabPicker 
+                        checkboxTitle={HUMAN_STAGES[stage]} 
+                        checked={context.stage.includes(stage)}
+                        onClick={() => history.push(`/${context.subject}/${stage}/question_decks`)}
+                    />
+                </li>
+            )}
+        </ul>
+        <div className="section-divider"/>
+        <h5>Decks by subject</h5>
+        <ul>
+            {Object.entries(validStageSubjectPairs)
+                .filter(([_subject, stages]) => (stages as LearningStage[]).includes(context.stage[0]))
+                .map(([subject, _stages], index) => 
+                    <li key={index}>
+                        <StyledTabPicker 
+                            checkboxTitle={HUMAN_SUBJECTS[subject]} 
+                            checked={context.subject === subject}
+                            onClick={() => history.push(`/${subject}/${context.stage}/question_decks`)}
+                        />
+                    </li>
+                )
+            }
+        </ul>
+    </ContentSidebar>;
+};
+
+
+interface GlossarySidebarProps extends SidebarProps {
+    searchText: string;
+    setSearchText: React.Dispatch<React.SetStateAction<string>>;
+    filterSubject: Tag | undefined;
+    setFilterSubject: React.Dispatch<React.SetStateAction<Tag | undefined>>;
+    filterStage: Stage | undefined;
+    setFilterStage: React.Dispatch<React.SetStateAction<Stage | undefined>>;
+    subjects: Tag[];
+    stages: Stage[];
+}
+
+export const GlossarySidebar = (props: GlossarySidebarProps) => {
+    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStage, setFilterStage, subjects, stages, ...rest } = props;
+    
+    const history = useHistory();
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
+    return <ContentSidebar buttonTitle="Search glossary" {...rest}>
+        <div className="section-divider"/>
+        <h5>Search glossary</h5>
+        <Input
+            className='search--filter-input my-4'
+            type="search" value={searchText || ""}
+            placeholder="e.g. Forces"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+        />
+        <div className="section-divider"/>
+
+        {!pageContext?.subject && <>
+            <h5>Select subject</h5>
+            <Label for='subject-select' className='visually-hidden'>Subject</Label>
+            <StyledSelect inputId="subject-select"
+                options={subjects.map(s => ({ value: s.id, label: s.title}))}
+                value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title}) : undefined}
+                name="subject-select"
+                placeholder="Select a subject"
+                onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
+                isClearable
+            />
+        </>}
+
+        {!pageContext?.stage?.length && <>
+            <h5 className="mt-4">Select stage</h5>
+            <Label for='stage-select' className='visually-hidden'>Stage</Label>
+            <StyledSelect inputId="stage-select"
+                options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
+                value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
+                name="stage-select"
+                placeholder="Select a stage"
+                onChange={e => setFilterStage(stages.find(s => s === e?.value))}
+                isClearable
+            />
+        </>}
+
+        {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
+            <h5>Switch learning stage</h5>
+            <ul>
+                {PHY_NAV_SUBJECTS[pageContext.subject].map((stage, index) => 
+                    <li key={index}>
+                        <StyledTabPicker
+                            checkboxTitle={HUMAN_STAGES[stage]} checked={pageContext.stage[0] === stage} 
+                            onClick={() => history.replace(`/${pageContext.subject}/${stage}/glossary`)}
+                        />
+                    </li>
+                )}
+            </ul>
+        </>}
+    </ContentSidebar>;
+};
+
+
+export const GenericPageSidebar = () => {
+    // Default sidebar for general pages that don't have a custom sidebar
+    return <ContentSidebar buttonTitle="Options">
+        <div className="section-divider"/>
+        <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+            Go to homepage
+        </AffixButton>
+    </ContentSidebar>;
+};
+
+export const PolicyPageSidebar = () => {
+    const history = useHistory();
+    const path = useLocation().pathname;
+
+    return <ContentSidebar buttontitle="Select a page">
+        <div className="section-divider"/>
+        <h5>Select a page</h5>
+        <ul>
+            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={path === "/accessibility"} onClick={() => history.push("/accessibility")}/></li>
+            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"} onClick={() => history.push("/privacy")}/></li>
+            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies"} onClick={() => history.push("/cookies")}/></li>
+            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms"} onClick={() => history.push("/terms")}/></li>
+        </ul>
     </ContentSidebar>;
 };

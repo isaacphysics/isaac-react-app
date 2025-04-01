@@ -29,13 +29,13 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     };
     
     const applicableTags = pageContext?.subject ? tags.getDirectDescendents(subjectToTagMap[pageContext.subject]) : tags.allFieldTags;
-    const tagCounts : Record<string, number> = applicableTags.reduce((acc, t) => ({...acc, [t.id]: concepts?.filter(c => c.tags?.includes(t.id)).length || 0}), {});
+    const tagCounts : Record<string, number> = [...applicableTags, ...(pageContext?.subject ? [tags.getById(pageContext?.subject as TAG_ID)] : [])].reduce((acc, t) => ({...acc, [t.id]: concepts?.filter(c => c.tags?.includes(t.id)).length || 0}), {});
 
     useEffect(() => {
         if (pageContext) {
             dispatch(fetchConcepts(undefined, pageContext?.subject));
         }
-    }, [dispatch]);
+    }, [dispatch, pageContext]);
 
     const searchParsed = queryString.parse(location.search);
 
@@ -105,7 +105,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                     : <GenericConceptsSidebar {...sidebarProps}/>
                 }
                 <MainContent>
-                    {isPhy && <div className="list-results-container p-2 mt-4">
+                    {isPhy && <div className="list-results-container p-2 my-4">
                         {shortcutAndFilteredSearchResults && <div className="p-2 py-3">
                             Showing <b>{shortcutAndFilteredSearchResults.length}</b> results
                         </div>}

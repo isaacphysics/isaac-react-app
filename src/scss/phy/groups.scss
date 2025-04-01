@@ -20,13 +20,6 @@
   font-size: 16px !important;
 }
 
-.nav-tabs .nav-item {
-  &.active .nav-link {
-    border-radius: 8px;
-    background-color: $color-brand-700;
-  }
-}
-
 .group-selector {
   background-color: $color-neutral-50;
   border: none;

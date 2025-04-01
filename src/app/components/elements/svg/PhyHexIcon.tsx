@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import { Subject } from "../../../services";
+import { isPhy, Subject } from "../../../services";
 
 interface PhyHexIconProps extends React.HTMLAttributes<HTMLDivElement> {
     icon: string;
@@ -10,8 +10,10 @@ interface PhyHexIconProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const PhyHexIcon = (props: PhyHexIconProps) => {
     const {icon, subject, size, className, ...rest} = props;
-    return <div {...rest} className={classNames("d-flex pe-3", className)} {...(subject && {"data-bs-theme": subject})}>
-        <div className={classNames("phy-hex-icon", {"phy-hex-icon-sm": size === "sm"})}/>
-        <i className={classNames("icon", icon)}/>
-    </div>;
+    if (isPhy) {
+        return <div {...rest} className={classNames("d-flex pe-3", className)} {...(subject && {"data-bs-theme": subject})}>
+            <div className={classNames("phy-hex-icon", {"phy-hex-icon-sm": size === "sm"})}/>
+            <i className={classNames("icon", icon)}/>
+        </div>;
+    }
 };
