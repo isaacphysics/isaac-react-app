@@ -58,7 +58,8 @@ import {
     siteSpecific,
     useDeviceSize,
     useGameboards,
-    TODAY
+    TODAY,
+    UTC_MIDNIGHT_IN_SIX_DAYS
 } from "../../services";
 import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
@@ -76,15 +77,9 @@ interface AssignGroupProps {
     board: GameboardDTO | undefined;
 }
 
-const weekFromNow = () => {
-    const now = new Date(Date.now());
-    now.setDate(now.getDate() + 6);
-    return now;
-};
-
 const AssignGroup = ({groups, board}: AssignGroupProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
-    const [dueDate, setDueDate] = useState<Date | undefined>(weekFromNow);
+    const [dueDate, setDueDate] = useState<Date | undefined>(UTC_MIDNIGHT_IN_SIX_DAYS);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
     const user = useAppSelector(selectors.user.loggedInOrNull);
