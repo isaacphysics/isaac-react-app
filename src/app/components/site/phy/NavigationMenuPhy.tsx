@@ -385,7 +385,7 @@ interface NavigationItemProps extends React.HTMLAttributes<HTMLAnchorElement> {
 
 const NavigationItem = (props: NavigationItemProps) => {
     const { children, href, ...rest } = props;
-    return <NavLink {...rest} to={href} tag={Link} tabIndex={0} role="menuitem" className={classNames("d-flex px-4 py-2", rest.className)}>
+    return <NavLink {...rest} to={href} tag={Link} tabIndex={0} role="menuitem" className={classNames("d-flex align-items-center px-4 py-2", rest.className)}>
         {children}
     </NavLink>;
 };
