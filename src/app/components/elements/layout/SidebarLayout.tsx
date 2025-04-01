@@ -404,27 +404,30 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
 
 interface QuestionFinderSidebarProps extends SidebarProps {
     searchText: string;
-    setSearchText: React.Dispatch<React.SetStateAction<string>>;
-    questionFilters: Tag[];
-    setQuestionFilters: React.Dispatch<React.SetStateAction<Tag[]>>;
-    topLevelFilters: string[];
+    setSearchText: (searchText: string) => void;
     tagCounts?: Record<string, number>;
     questionFinderFilterPanelProps: QuestionFinderFilterPanelProps
 }
 
 export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
-    const { searchText, setSearchText, questionFilters, setQuestionFilters, topLevelFilters, tagCounts, questionFinderFilterPanelProps, ...rest } = props;
+    const { searchText, setSearchText, tagCounts, questionFinderFilterPanelProps, ...rest } = props;
 
     const pageContext = useAppSelector(selectors.pageContext.context);
+
+    // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
+    const [internalSearchText, setInternalSearchText] = useState(searchText);
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <h5>Search Questions</h5>
         <Input
             className='search--filter-input my-4'
-            type="search" value={searchText || ""}
+            type="search" value={internalSearchText || ""}
             placeholder="e.g. Man vs. Horse"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setInternalSearchText(e.target.value);
+                setSearchText(e.target.value);
+            }}
         />
 
         <QuestionFinderFilterPanel {...questionFinderFilterPanelProps} />
