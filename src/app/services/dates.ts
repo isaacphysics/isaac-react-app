@@ -9,7 +9,7 @@ export const TODAY = () => {
 };
 
 export const UTC_MIDNIGHT_IN_SIX_DAYS = () => {
-    return addUtcDays(6, nthUtcHourOf(0, new Date(Date.now())));
+    return addDays(6, nthUtcHourOf(0, new Date(Date.now())));
 };
 
 export const MONTH_NAMES = [ "January", "February", "March", "April", "May", "June",
@@ -21,8 +21,8 @@ export const nthUtcHourOf = (n: number, d: Date | number) => {
     return newDate;
 };
 
-const addUtcDays = (days: number, date: Date, ) => {
+const addDays = (days: number, date: Date, ) => {
     const newDate = new Date(date.valueOf());
-    newDate.setUTCDate(date.getUTCDate() + days);
+    newDate.setDate(date.getDate() + days);
     return newDate;
 };
