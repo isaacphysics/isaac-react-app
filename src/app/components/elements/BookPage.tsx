@@ -26,7 +26,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
                 {page.children}
             </IsaacContentValueOrChildren>
             
-            {page?.relatedContent && <>
+            {!!page.relatedContent?.length && <>
                 <h5 className="mb-3" id="refresher">Get a refresher of the core concepts</h5>
                 <div className="mt-3 mb-5 list-results-container p-2">
                     <ListView
