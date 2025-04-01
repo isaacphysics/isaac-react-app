@@ -359,6 +359,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         label={siteSpecific(
                             <div className="d-flex">
                                 Not started
+                                <img className="ps-2" src={`/assets/phy/icons/redesign/status-not-started.svg`} alt="Not started"/>
                             </div>,
                             <div>
                                 Not attempted
