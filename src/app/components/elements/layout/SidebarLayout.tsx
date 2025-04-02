@@ -1214,6 +1214,10 @@ export interface BookSidebarProps extends SidebarProps {
 export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
 
     const [expandedTab, setExpandedTab] = useState<number | undefined>(undefined);
+    useEffect(() => {
+        const activeChapter = book.chapters?.map(chapter => chapter.sections?.some(section => section.bookPageId === pageId)).indexOf(true);
+        setExpandedTab(activeChapter === -1 ? undefined : activeChapter);
+    }, [book.chapters, pageId]);
 
     const history = useHistory();
 
