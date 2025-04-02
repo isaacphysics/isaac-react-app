@@ -130,12 +130,9 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
         <Label className="w-100 pb-2">Due date reminder
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
+            {!dueDate && <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.</small>}
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
-            {dueDateInvalid && startDateInvalid && <br/>}
         </Label>
-        <Alert color={siteSpecific("warning", "info")} className="py-1 px-2">
-            Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.
-        </Alert>
         {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
                 spellCheck={true}
