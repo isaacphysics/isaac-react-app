@@ -167,7 +167,8 @@ describe("SetAssignments", () => {
         const dueDateContainer = within(modal).getByLabelText("Due date reminder", {exact: false});
         // TODO check setting scheduled start date and due date leads to correctly saved values,
         //  since this currently just checks any form of due date is set.
-        await userEvent.selectOptions(dueDateContainer, "1");
+        await clearDateInput("Due date reminder"); // get rid of default due date
+        await userEvent.selectOptions(dueDateContainer, "1"); // set some due date
 
         // Add some notes
         const testNotes = "Test notes to test groups for test assignments";
@@ -234,6 +235,7 @@ describe("SetAssignments", () => {
             });
         });
 
+        // assumes local time zone is Europe/London
         it('due date is displayed in UTC', async () => {
             await withMockedDate(Date.parse("2025-04-28T23:30:00.000Z"), async () => { // Monday in UTC, already Tuesday in UTC+1.
                 renderModal();
@@ -263,6 +265,7 @@ describe("SetAssignments", () => {
             { currentTime: "2025-01-30T09:00:00.000Z" /* Monday */, expectedDueDatePosted: "2025-02-05T00:00:00.000Z" /* Sunday */ }
         ));
 
+        // assumes local time zone is Europe/London
         it('posts the default due date as UTC midnight, even when local representation does not equal UTC', testPostedDueDate(
             { currentTime: "2025-04-28" /* Monday */, expectedDueDatePosted: "2025-05-04T00:00:00.000Z" /* Sunday */ }
         ));
@@ -380,6 +383,12 @@ const modal = () => screen.findByTestId("set-assignment-modal");
 const dateInput = async (labelText: string | RegExp) => {
     const label = await within(await modal()).findByText(labelText);
     return await within(label).findByTestId('date-input');
+};
+
+const clearDateInput = async (labelText: string) => {
+    const container = await within(await modal()).findByText(labelText);
+    const clearButton = await within(container).findByRole('button');
+    await userEvent.click(clearButton);
 };
 
 const toggleGroupSelect = async () => {
