@@ -234,7 +234,7 @@ describe("SetAssignments", () => {
             });
         });
 
-        // local time zone should be Europe/London
+        // local time zone is Europe/London, as set in globalSetup.ts
         it('due date is displayed in UTC', async () => {
             await withMockedDate(Date.parse("2025-04-28T23:30:00.000Z"), async () => { // Monday in UTC, already Tuesday in UTC+1.
                 renderModal();
@@ -264,7 +264,7 @@ describe("SetAssignments", () => {
             { currentTime: "2025-01-30T09:00:00.000Z" /* Monday */, expectedDueDatePosted: "2025-02-05T00:00:00.000Z" /* Sunday */ }
         ));
 
-        // local time zone should be Europe/London
+        // local time zone is Europe/London, as set in globalSetup.ts
         it('posts the default due date as UTC midnight, even when local representation does not equal UTC', testPostedDueDate(
             { currentTime: "2025-04-28" /* Monday */, expectedDueDatePosted: "2025-05-04T00:00:00.000Z" /* Sunday */ }
         ));
