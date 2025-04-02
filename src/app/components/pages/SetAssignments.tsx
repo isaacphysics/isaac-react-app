@@ -90,7 +90,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
         dispatch(assignGameboard({boardId: board?.id as string, groups: selectedGroups, dueDate, scheduledStartDate, notes: assignmentNotes, userId: user?.id})).then(success => {
             if (success) {
                 setSelectedGroups([]);
-                setDueDate(undefined);
+                setDueDate(UTC_MIDNIGHT_IN_SIX_DAYS);
                 setScheduledStartDate(undefined);
                 setAssignmentNotes('');
             }
