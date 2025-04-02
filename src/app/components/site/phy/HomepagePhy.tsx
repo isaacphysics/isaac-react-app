@@ -156,7 +156,7 @@ export const HomepagePhy = () => {
         <div id="homepage" className="homepage pb-5">
             <section id="dashboard">
                 {isLoggedIn(user) && (isTutorOrAbove(user)
-                    ? <TeacherDashboard assignmentsSetByMe={assignmentsSetByMe} quizzesSetByMe={quizzesSetByMe} groups={groups} myAssignments={myAssignments} myQuizAssignments={myQuizAssignments} myProgress={myProgress} dashboardView={dashboardView} setDashboardView={setDashboardView} /> 
+                    ? <TeacherDashboard assignmentsSetByMe={assignmentsSetByMe} quizzesSetByMe={quizzesSetByMe} groups={groups} myAssignments={myAssignments} myQuizAssignments={myQuizAssignments} streakRecord={streakRecord} dashboardView={dashboardView} setDashboardView={setDashboardView} /> 
                     : <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} />)}
             </section>
             <section id="homepage-hero">               

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
-import { MyProgressState, selectors, useAppSelector } from '../../state';
+import { selectors, useAppSelector } from '../../state';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
@@ -9,7 +9,7 @@ import StyledToggle from './inputs/StyledToggle';
 import { AssignmentCard, StudentDashboard } from './StudentDashboard';
 import sortBy from 'lodash/sortBy';
 import { Spacer } from './Spacer';
-import { AppGroup } from '../../../IsaacAppTypes';
+import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 
 interface GroupsPanelProps {
     groups: AppGroup[] | undefined;
@@ -149,12 +149,12 @@ interface TeacherDashboardProps {
     myAssignments: AssignmentDTO[] | undefined;
     myQuizAssignments: QuizAssignmentDTO[] | undefined;
     groups: AppGroup[] | undefined;
-    myProgress: MyProgressState | undefined;
+    streakRecord: UserSnapshot | undefined;
     dashboardView: "teacher" | "student" | undefined; // this is always defined if we are displaying a dashboard; just here for typing
     setDashboardView: React.Dispatch<React.SetStateAction<"teacher" | "student" | undefined>>;
 }
 
-export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignments, myQuizAssignments, groups, myProgress, dashboardView, setDashboardView }: TeacherDashboardProps) => {
+export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignments, myQuizAssignments, groups, streakRecord, dashboardView, setDashboardView }: TeacherDashboardProps) => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
     const nameToDisplay = extractTeacherName(user as UserSummaryDTO);
@@ -172,7 +172,7 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
                 />
             </span>
         </div>
-        {dashboardView === "student" ? <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} myProgress={myProgress} groups={groups} /> :
+        {dashboardView === "student" ? <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} /> :
             <>{deviceSize === "lg"
                 ? <>
                     <Row className="row-cols-3">
