@@ -53,7 +53,8 @@ import {
     TAG_LEVEL,
     tags,
     TODAY,
-    useDeviceSize
+    useDeviceSize,
+    UTC_MIDNIGHT_IN_SIX_DAYS
 } from "../../services";
 import {
     AppGroup,
@@ -415,7 +416,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             // Create from scratch
             setSelectedGameboard(undefined);
             setScheduledStartDate(undefined);
-            setDueDate(undefined);
+            setDueDate(UTC_MIDNIGHT_IN_SIX_DAYS);
             setAssignmentNotes(undefined);
         }
     }, [assignmentToCopy]);
@@ -432,8 +433,8 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
         })).then((result) => {
             if (assignGameboard.fulfilled.match(result)) {
                 setSelectedGroups([]);
-                setDueDate(undefined);
                 setScheduledStartDate(undefined);
+                setDueDate(UTC_MIDNIGHT_IN_SIX_DAYS);
                 setAssignmentNotes('');
             }
             // Fails silently if assignGameboard throws an error - we let it handle opening toasts for errors
@@ -506,11 +507,9 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)}
             />
+            {!dueDate && <small className={"pt-2 text-danger"}>Since January 2025, due dates are required for assignments.</small>}
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
         </Label>
-        <Alert color={siteSpecific("warning", "info")} className="py-1">
-            Since January 2025, due dates are required for assignments.
-        </Alert>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
                 spellCheck={true}
