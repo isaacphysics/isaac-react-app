@@ -225,7 +225,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                         href={`/${quickSwitcher.subject}/${quickSwitcher.stage}`}
                     >
                         <span className="mb-1">Quick switch to</span>
-                        <span>
+                        <span className="d-flex align-items-center">
                             <i className="icon icon-hexagon me-1" />
                             {`${HUMAN_STAGES[quickSwitcher.stage]} ${HUMAN_SUBJECTS[quickSwitcher.subject]}`}
                         </span>
@@ -233,7 +233,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     
                     }
                     {category.subcategories.map((subcategory, j) => {
-                        return <NavigationItem key={i * keyBase + j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.subject })}>
+                        return <NavigationItem key={i * keyBase + j} className="align-items-center" href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.subject })}>
                             <i className="icon icon-hexagon me-1" />
                             <span>{subcategory.fullTitle}</span>
                         </NavigationItem>;
@@ -385,7 +385,7 @@ interface NavigationItemProps extends React.HTMLAttributes<HTMLAnchorElement> {
 
 const NavigationItem = (props: NavigationItemProps) => {
     const { children, href, ...rest } = props;
-    return <NavLink {...rest} to={href} tag={Link} tabIndex={0} role="menuitem" className={classNames("d-flex align-items-center px-4 py-2", rest.className)}>
+    return <NavLink {...rest} to={href} tag={Link} tabIndex={0} role="menuitem" className={classNames("d-flex px-4 py-2", rest.className)}>
         {children}
     </NavLink>;
 };
