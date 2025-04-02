@@ -217,25 +217,24 @@ describe("SetAssignments", () => {
         const mockGameboard = mockGameboards.results[0];
         const renderModal = (endpoints: HttpHandler[] = []) => renderSetAssignments({ path: `${PATHS.SET_ASSIGNMENTS}#${mockGameboard.id}`, endpoints}); 
 
-        it('groups are empty', async () => {
+        it('groups are empty by default', async () => {
             renderModal();
-            const select = await within(await modal()).findByTestId('modal-groups-selector');
-            expect(select).toHaveTextContent('Group(s):None');
+            expect(await groupSelector()).toHaveTextContent('Group(s):None');
         });
     
-        it('start date is empty', async () => {
+        it('start date is empty by default', async () => {
             renderModal();
             expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
         });
             
-        it('due date is a week from now', async() => {
+        it('due date is a week from now by default', async() => {
             await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
                 renderModal();
                 expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
             });
         });
 
-        // assumes local time zone is Europe/London
+        // local time zone should be Europe/London
         it('due date is displayed in UTC', async () => {
             await withMockedDate(Date.parse("2025-04-28T23:30:00.000Z"), async () => { // Monday in UTC, already Tuesday in UTC+1.
                 renderModal();
@@ -265,10 +264,29 @@ describe("SetAssignments", () => {
             { currentTime: "2025-01-30T09:00:00.000Z" /* Monday */, expectedDueDatePosted: "2025-02-05T00:00:00.000Z" /* Sunday */ }
         ));
 
-        // assumes local time zone is Europe/London
+        // local time zone should be Europe/London
         it('posts the default due date as UTC midnight, even when local representation does not equal UTC', testPostedDueDate(
             { currentTime: "2025-04-28" /* Monday */, expectedDueDatePosted: "2025-05-04T00:00:00.000Z" /* Sunday */ }
         ));
+
+        it('resets to defaults after a failed post', async () => {
+            await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
+                renderModal([
+                    buildPostHandler(
+                        "/assignments/assign_bulk",
+                        (body: AssignmentDTO[]) => body.map(x => ({ groupId: x.groupId, errorMessage: "Boo, something went wrong" }))
+                    )
+                ]);
+
+                await toggleGroupSelect();
+                await selectGroup(mockActiveGroups[1].groupName);
+                await clickButton('Assign to group', modal());
+
+                expect(await groupSelector()).toHaveTextContent('Group(s):None');
+                expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
+                expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
+            });
+        });
     });
 
     it('should let you unassign a gameboard', async () => {
@@ -390,6 +408,8 @@ const clearDateInput = async (labelText: string) => {
     const clearButton = await within(container).findByRole('button');
     await userEvent.click(clearButton);
 };
+
+const groupSelector = async () => await within(await modal()).findByTestId('modal-groups-selector');
 
 const toggleGroupSelect = async () => {
     const selectBox = within(await modal()).getByLabelText(/Group(\(s\))?:/);
