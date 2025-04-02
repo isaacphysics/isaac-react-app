@@ -287,6 +287,19 @@ describe("SetAssignments", () => {
                 expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
             });
         });
+
+        describe('validation', () => {
+            it('shows an error message when the due date is missing', async () => {
+                renderModal();
+                await clearDateInput("Due date reminder");
+                expect(await findByText("Due date reminder")).toHaveTextContent(`Since ${siteSpecific("Jan", "Januaryt")} 2025, due dates are required for assignments`);
+            });
+
+            it('does not show an error when the due date is present', async () => {
+                renderModal();
+                expect(await findByText("Due date reminder")).not.toHaveTextContent(`due dates are required for assignments`);
+            });
+        });
     });
 
     it('should let you unassign a gameboard', async () => {
@@ -398,14 +411,12 @@ describe("SetAssignments", () => {
 
 const modal = () => screen.findByTestId("set-assignment-modal");
 
-const dateInput = async (labelText: string | RegExp) => {
-    const label = await within(await modal()).findByText(labelText);
-    return await within(label).findByTestId('date-input');
-};
+const findByText = async (labelText: string | RegExp) => await within(await modal()).findByText(labelText);
+
+const dateInput = async (labelText: string | RegExp) => await within(await findByText(labelText)).findByTestId('date-input');
 
 const clearDateInput = async (labelText: string) => {
-    const container = await within(await modal()).findByText(labelText);
-    const clearButton = await within(container).findByRole('button');
+    const clearButton = await within(await findByText(labelText)).findByRole('button');
     await userEvent.click(clearButton);
 };
 
