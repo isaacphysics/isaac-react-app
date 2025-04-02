@@ -180,10 +180,8 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
         }
     }
 
-    const description = `${siteSpecific(
-        "Manage assignment of groups to the selected gameboard.",
-        "Select a group to which to assign the quiz."
-    )} Scheduled assignments appear to students on the morning of the day chosen. If no start date is selected, assignments appear immediately. Assignments are due by the end of the day indicated.`;
+    const description = "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. " +
+        "Assignments are due by the end of the day indicated.";
 
     return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle}>
         <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break d-flex justify-content-between"} close={
@@ -212,7 +210,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
             <div className="py-2">
                 <Label>Pending {siteSpecific("assignments", "quiz assignments")}: <span className="icon-help mx-1" id={`pending-assignments-help-${board?.id}`}/></Label>
                 <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
-                    {siteSpecific("Assignments", "Quizzes")} that are scheduled to begin at a future date. On the morning of the start date, students
+                    These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the morning of the scheduled date, students
                     will be able to see the {siteSpecific("assignment", "quiz")}, and will receive a notification email.
                 </UncontrolledTooltip>
                 {scheduledAssignees.length > 0
