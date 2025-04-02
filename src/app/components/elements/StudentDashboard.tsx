@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { MyProgressState, openActiveModal, selectors, showErrorToast, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
+import { openActiveModal, selectors, showErrorToast, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../Isaa
 import { getActiveWorkCount } from '../navigation/NavigationBar';
 import { Spacer } from './Spacer';
 import classNames from 'classnames';
-import { AppGroup } from '../../../IsaacAppTypes';
+import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -60,10 +60,10 @@ const GroupJoinPanel = () => {
 };
 
 interface DashboardStreakPanelProps {
-    myProgress: MyProgressState | undefined;
+    streakRecord: UserSnapshot | undefined;
 }
 
-const DashboardStreakPanel = ({ myProgress }: DashboardStreakPanelProps) => {
+const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
 
     const streaksTooltip = useRef(null);
     const tooltip = <UncontrolledTooltip placement="auto" autohide={false} target={streaksTooltip}>
@@ -71,12 +71,12 @@ const DashboardStreakPanel = ({ myProgress }: DashboardStreakPanelProps) => {
             Answer at least ten question parts correctly per week to fill up your weekly progress bar and increase your streak!
     </UncontrolledTooltip>;
 
-    const remainingToAnswer = 10 - (myProgress?.userSnapshot?.weeklyStreakRecord?.currentActivity || 0);
+    const remainingToAnswer = 10 - (streakRecord?.weeklyStreakRecord?.currentActivity || 0);
 
     return <div className='w-100 dashboard-panel'>
         <h4>Build your weekly streak</h4>
         <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
-            <DashboardStreakGauge streakRecord={myProgress?.userSnapshot}/>
+            <DashboardStreakGauge streakRecord={streakRecord}/>
         </div>
         <div className="streak-text mb-2">
             {remainingToAnswer <= 0
@@ -220,11 +220,11 @@ const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
 interface StudentDashboardProps {
     assignments: AssignmentDTO[] | undefined;
     quizAssignments: QuizAssignmentDTO[] | undefined;
-    myProgress: MyProgressState | undefined;
+    streakRecord: UserSnapshot | undefined;
     groups: AppGroup[] | undefined;
 }
 
-export const StudentDashboard = ({assignments, quizAssignments, myProgress, groups}: StudentDashboardProps) => {
+export const StudentDashboard = ({assignments, quizAssignments, streakRecord, groups}: StudentDashboardProps) => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
     const nameToDisplay = isLoggedIn(user) && !isTeacherOrAbove(user) && user.givenName;
@@ -242,7 +242,7 @@ export const StudentDashboard = ({assignments, quizAssignments, myProgress, grou
                 </Row>
                 <Row className="row-cols-3">
                     <Col className="mt-4 panel-streak">
-                        <DashboardStreakPanel myProgress={myProgress} />
+                        <DashboardStreakPanel streakRecord={streakRecord} />
                     </Col>
                     <Col className="mt-4">
                         <GroupJoinPanel />
@@ -257,7 +257,7 @@ export const StudentDashboard = ({assignments, quizAssignments, myProgress, grou
                         <CurrentWorkPanel assignments={assignments} quizAssignments={quizAssignments} groups={groups} />
                     </Col>
                     <Col className="mt-4 col-xl-2 panel-streak">
-                        <DashboardStreakPanel myProgress={myProgress} />
+                        <DashboardStreakPanel streakRecord={streakRecord} />
                     </Col>
                     <Col className="mt-4 col-sm-7 col-xl-3">
                         <GroupJoinPanel />

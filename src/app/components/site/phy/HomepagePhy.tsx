@@ -145,11 +145,7 @@ export const HomepagePhy = () => {
         }
     }, [dashboardView]);
 
-    const myProgress = useAppSelector(selectors.user.progress);
-
-    useEffect(() => {
-        dispatch(getMyProgress());
-    }, [dispatch]);
+    const streakRecord = useAppSelector(selectors.user.snapshot);
 
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
     useEffect(() => {
@@ -161,7 +157,7 @@ export const HomepagePhy = () => {
             <section id="dashboard">
                 {isLoggedIn(user) && (isTutorOrAbove(user)
                     ? <TeacherDashboard assignmentsSetByMe={assignmentsSetByMe} quizzesSetByMe={quizzesSetByMe} groups={groups} myAssignments={myAssignments} myQuizAssignments={myQuizAssignments} myProgress={myProgress} dashboardView={dashboardView} setDashboardView={setDashboardView} /> 
-                    : <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} myProgress={myProgress} groups={groups} />)}
+                    : <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} />)}
             </section>
             <section id="homepage-hero">               
                 {!isLoggedIn(user) && <HomepageHero />}
