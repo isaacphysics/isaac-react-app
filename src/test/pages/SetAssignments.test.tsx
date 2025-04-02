@@ -292,7 +292,7 @@ describe("SetAssignments", () => {
             it('shows an error message when the due date is missing', async () => {
                 renderModal();
                 await clearDateInput("Due date reminder");
-                expect(await findByText("Due date reminder")).toHaveTextContent(`Since ${siteSpecific("Jan", "Januaryt")} 2025, due dates are required for assignments`);
+                expect(await findByText("Due date reminder")).toHaveTextContent(`Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments`);
             });
 
             it('does not show an error when the due date is present', async () => {
