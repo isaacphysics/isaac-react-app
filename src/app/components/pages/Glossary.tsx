@@ -288,7 +288,7 @@ export const Glossary = () => {
         <Container data-bs-theme={pageContext?.subject}>
             <TitleAndBreadcrumb 
                 currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? `${getHumanContext(pageContext)} Glossary` : "Glossary"}
-                icon={{type: "hex", subject: pageContext?.subject, icon: "page-icon-tests"}}
+                icon={{type: "hex", subject: pageContext?.subject, icon: "icon-tests"}}
             />
             <MetaDescription description={metaDescription} />
 

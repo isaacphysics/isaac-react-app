@@ -143,149 +143,93 @@
   transform: rotate(180deg);
 }
 
-.icon-question-pack {
-  @include svg-icon-layered(
-    '/assets/phy/icons/redesign/question-pack-fg.svg',
-    '/assets/phy/icons/redesign/question-pack-bg.svg',
-    16px, 16px
-  );
-}
-
-.icon-lightbulb {
-  @include svg-icon-layered(
-    '/assets/phy/icons/redesign/page-concept-fg.svg', 
-    '/assets/phy/icons/redesign/page-concept-bg.svg',
-    16px, 16px
-  );
-}
-
 .icon-question {
   @include svg-icon-layered(
-    '/assets/phy/icons/redesign/question-fg.svg', 
-    '/assets/phy/icons/redesign/question-bg.svg',
-    16px, 16px
+    '/assets/phy/icons/redesign/page-question-fg.svg',
+    '/assets/phy/icons/redesign/page-question-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%)
   );
 }
 
-.page-icon-question {
+// "-thick" icons have a thicker internal stroke (and are shaped slightly differently to account); intended for use at small sizes (e.g. inline)
+.icon-question-thick {
   @include svg-icon-layered(
-    '/assets/phy/icons/redesign/page-question-fg.svg', 
-    '/assets/phy/icons/redesign/page-generic-bg.svg',
-    75px, 75px, 44px
+    '/assets/phy/icons/redesign/page-question-thick-fg.svg', 
+    '/assets/phy/icons/redesign/page-question-thick-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%)
   );
 }
 
-.page-icon-concept {
+.icon-concept {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-concept-fg.svg', 
     '/assets/phy/icons/redesign/page-concept-bg.svg',
-    75px, 75px, 40px, center 19px
+    var(--icon-size), var(--icon-size), var(--mask-size, 55%), center 55%
     // the SVGs are correct, but visually top-heavy; the offset here shifts them down a little for better balance
   );
 }
 
-.page-icon-question-pack {
+.icon-concept-thick {
   @include svg-icon-layered(
-    '/assets/phy/icons/redesign/question-pack-fg.svg',
-    '/assets/phy/icons/redesign/question-pack-bg.svg',
-    75px, 75px, 44px
+    '/assets/phy/icons/redesign/page-concept-thick-fg.svg', 
+    '/assets/phy/icons/redesign/page-concept-thick-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 55%), center 55%
   );
 }
 
-.page-icon-quiz {
+.icon-question-deck {
   @include svg-icon-layered(
-    '/assets/phy/icons/redesign/quiz-fg.svg', 
-    '/assets/phy/icons/redesign/quiz-bg.svg',
-    75px, 75px, 44px
+    '/assets/phy/icons/redesign/page-question-deck-fg.svg',
+    '/assets/phy/icons/redesign/page-question-deck-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), center 45%
   );
 }
 
-.page-icon-finder {
+.icon-finder {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-finder-fg.svg', 
     '/assets/phy/icons/redesign/page-finder-bg.svg',
-    75px, 75px, 44px
+    var(--icon-size), var(--icon-size), var(--mask-size, 57%)
   );
 }
 
-.page-icon-tests {
+.icon-tests {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-tests-fg.svg', 
     '/assets/phy/icons/redesign/page-tests-bg.svg',
-    75px, 75px, 44px
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%)
   );
 }
 
-.page-icon-quiz {
+.icon-quiz {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-quiz-fg.svg', 
     '/assets/phy/icons/redesign/page-quiz-bg.svg',
-    75px, 75px, 44px
+    var(--icon-size), var(--icon-size), var(--mask-size, 57%)
   );
 }
 
-.page-icon-lessons {
+.icon-revision {
   @include svg-icon-layered(
-    '/assets/phy/icons/redesign/page-lessons-fg.svg', 
-    '/assets/phy/icons/redesign/page-lessons-bg.svg',
-    75px, 75px, 44px
+    '/assets/phy/icons/redesign/page-revision-fg.svg', 
+    '/assets/phy/icons/redesign/page-revision-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%)
   );
 }
 
-.page-icon-events {
+.icon-events {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-event-fg.svg',
     '/assets/phy/icons/redesign/page-event-bg.svg',
-    75px, 75px, 44px
-  )
+    var(--icon-size), var(--icon-size), var(--mask-size, 63%)
+  );
 }
 
-.page-icon-account {
+.icon-account {
   @include svg-icon(
     '/assets/phy/icons/redesign/my-isaac.svg', 
-    75px, 75px, 44px // no background - generic hex background clashes with foreground hex
+    var(--icon-size), var(--icon-size), var(--mask-size, 63%) // no background - generic hex background clashes with foreground hex
   );
-}
-
-.list-icon-question {
-  @include svg-icon-layered(
-    '/assets/phy/icons/redesign/page-question-fg.svg', 
-    '/assets/phy/icons/redesign/page-generic-bg.svg',
-    60px, 60px, 36px
-  );
-}
-
-.list-icon-concept {
-  @include svg-icon-layered(
-    '/assets/phy/icons/redesign/page-concept-fg.svg', 
-    '/assets/phy/icons/redesign/page-concept-bg.svg',
-    60px, 60px, 36px, center 15px
-    // the SVGs are correct, but visually top-heavy; the offset here shifts them down a little for better balance
-  );
-}
-
-.list-icon-lessons {
-  @include svg-icon-layered(
-    '/assets/phy/icons/redesign/page-lessons-fg.svg', 
-    '/assets/phy/icons/redesign/page-lessons-bg.svg',
-    60px, 60px, 36px
-  );
-}
-
-.list-icon-quiz {
-  @include svg-icon-layered(
-    '/assets/phy/icons/redesign/quiz-fg.svg', 
-    '/assets/phy/icons/redesign/quiz-bg.svg',
-    60px, 60px, 36px
-  );
-}
-
-.list-icon-events {
-  @include svg-icon-layered(
-    '/assets/phy/icons/redesign/page-event-fg.svg',
-    '/assets/phy/icons/redesign/page-event-bg.svg',
-    60px, 60px, 36px
-  )
 }
 
 svg {
@@ -296,6 +240,38 @@ svg {
   &.correct-fill {
     fill: $phy_green;
   }
+}
+
+i.icon {
+  background-color: var(--icon-primary);
+
+  // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
+  &::after {
+    background-color: var(--icon-primary);
+  }
+}
+
+.phy-hex-icon {
+  // this is essentially an .icon, but needs different colouring; override size as needed with icon-lg, icon-xl, etc.
+  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), var(--icon-size, 75px), var(--icon-size, 75px), 100%);
+  position: absolute;
+}
+
+// Icon sizing
+.icon {
+  --icon-size: 16px;
+  --mask-size: 100%;
+  
+}
+
+.icon-lg {
+  --icon-size: 60px;
+  --mask-size: initial;
+}
+
+.icon-xl {
+  --icon-size: 75px;
+  --mask-size: initial;
 }
 
 // Overrides -- ONLY use these on an individual basis to override an active theme.

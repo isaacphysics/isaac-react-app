@@ -114,25 +114,6 @@
 // COMPONENT STYLES
 @each $palette, $subject-colors in $isaac-color-palettes {
   @include color-mode($palette) {
-    i.icon {
-      background-color: var(--icon-primary);
-
-      // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
-      &::after {
-        background-color: var(--icon-primary);
-      }
-    }
-
-    .phy-hex-icon {
-      @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), 75px, 75px, 75px);
-      position: absolute;
-    }
-
-    .phy-hex-icon-sm {
-      @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), 60px, 60px, 60px);
-      position: absolute;
-    }
-
     .alert-secondary {
       @extend .alert-#{$palette};
       color: var(--alert-text-color);

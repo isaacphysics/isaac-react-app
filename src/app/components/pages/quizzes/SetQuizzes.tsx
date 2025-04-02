@@ -165,7 +165,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
             {siteSpecific(
                 <>
                     {above["md"](deviceSize) && <td className="align-middle">                       
-                        <PhyHexIcon size="sm" icon="list-icon-quiz" subject={subject as Subject} className="assignment-hex"/>                       
+                        <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="assignment-hex"/>                       
                     </td>}
                     <td className="align-middle">
                         <span className="manage-quiz-title me-3">{quizTitle}</span>
@@ -383,7 +383,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </div>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={siteSpecific({type: "hex", icon: "page-icon-tests"}, undefined)} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={siteSpecific({type: "hex", icon: "icon-tests"}, undefined)} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} />
         <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
         <SidebarLayout>
             {activeTab === MANAGE_QUIZ_TAB.set

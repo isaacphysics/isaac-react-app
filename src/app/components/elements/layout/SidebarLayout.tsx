@@ -41,7 +41,7 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & {question: Qu
                         
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
         <Link to={`/questions/${question.id}`} className="py-2">
-            <i className="icon icon-question"/>
+            <i className="icon icon-question-thick"/>
             <div className="d-flex flex-column w-100">
                 <span className="hover-underline link-title">{question.title}</span>
                 <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
@@ -56,7 +56,7 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Isaa
     
     return <li key={concept.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, concept.tags ?? [])}>
         <Link to={`/concepts/${concept.id}`} className="py-2">
-            <i className="icon icon-lightbulb"/>
+            <i className="icon icon-concept-thick"/>
             <span className="hover-underline link-title">{concept.title}</span>
         </Link>
     </li>;
