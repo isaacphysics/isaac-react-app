@@ -7,7 +7,9 @@
 
     &:hover {
         border-color: $color-neutral-400;
-        scale: 1.02;
+        @include not-reduced-motion {
+            transform: scale(1.02);
+        }
     }
 
     .overdue {

@@ -10,7 +10,6 @@ import {
     siteSpecific,
     STAGE,
     stageLabelMap,
-    Subject,
     useUserViewingContext
 } from "../../services";
 import {
@@ -28,7 +27,7 @@ import classNames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
 import { Difficulty } from "../../../IsaacApiTypes";
-import { PhyHexIcon } from "./svg/PhyHexIcon";
+import { PhyHexIcon, PhyHexIconProps } from "./svg/PhyHexIcon";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserViewingContext();
@@ -64,11 +63,8 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     );
 }
 
-export interface TitleIconProps {
+export interface TitleIconProps extends PhyHexIconProps {
     type: "img" | "hex";
-    subject?: Subject;
-    icon: string;
-    size?: string;
 }
 
 export interface PageTitleProps {
@@ -122,7 +118,7 @@ export const PageTitle = ({currentPageTitle, subTitle, description, disallowLaTe
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-4 mb-0": isPhy}, className)}>
         <div className="me-auto">
-            <div className="d-sm-flex align-items-center">
+            <div className={classNames(siteSpecific("d-flex", "d-sm-flex"), "align-items-center")}>
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
                         : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject}/> : undefined)}

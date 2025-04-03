@@ -82,7 +82,9 @@ svg.book-page-icon {
 
   &:hover {
     .book-image-container {
-      scale: 1.02;
+      @include not-reduced-motion{
+        transform: scale(1.02);
+      }
     }
 
     h5 {

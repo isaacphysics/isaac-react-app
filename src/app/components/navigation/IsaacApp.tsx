@@ -66,7 +66,6 @@ import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import SiteSpecific from "../site/siteSpecificComponents";
 import StaticPageRoute from "./StaticPageRoute";
 import {Redirect} from "react-router";
-import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";
 import {notificationModal} from "../elements/modals/NotificationModal";
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
@@ -82,6 +81,7 @@ import {QuestionFinder} from "../pages/QuestionFinder";
 import {SessionCookieExpired} from "../pages/SessionCookieExpired";
 import { AccountDeletion } from '../pages/AccountDeletion';
 import { AccountDeletionSuccess } from '../pages/AccountDeletionSuccess';
+import {BetaSiteBanner} from "./BetaSiteBanner";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -142,16 +142,18 @@ export const IsaacApp = () => {
         };
     }, []);
 
+    const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
+
     // Render
     return <Router history={history}>
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
+        <BetaSiteBanner />
         <ResearchNotificationBanner />
-        <UnsupportedBrowserBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
-        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
+        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-reduced-motion={displaySettings?.REDUCED_MOTION ? "true" : "false"}>
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <Suspense fallback={<Loading/>}>
                     <Switch>

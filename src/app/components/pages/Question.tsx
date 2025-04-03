@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {Button, Col, Container, Row} from "reactstrap";
 import {match, RouteComponentProps, withRouter} from "react-router-dom";
-import {fetchDoc, goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {fetchDoc, goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {
@@ -17,7 +17,8 @@ import {
     Subject,
     TAG_ID,
     tags,
-    useNavigation
+    useNavigation,
+    isDefined
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {EditContentButton} from "../elements/EditContentButton";
@@ -39,8 +40,9 @@ import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
 import { LLMFreeTextQuestionIndicator } from "../elements/LLMFreeTextQuestionIndicator";
-import { MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { GameboardQuestionSidebar, MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StageAndDifficultySummaryIcons } from "../elements/StageAndDifficultySummaryIcons";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
@@ -78,10 +80,10 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
     }, [dispatch, questionId]);
 
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && doc !== 404 ? doc : undefined);
+    const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
-
         const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
         return <GameboardContext.Provider value={navigation.currentGameboard}>
@@ -92,15 +94,16 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     collectionType={navigation.collectionType}
                     audienceViews={siteSpecific(undefined, determineAudienceViews(doc.audience, navigation.creationContext))}
-                    preview={preview} icon={{type: "hex", subject: doc.subjectId as Subject, icon: "page-icon-question"}}
+                    preview={preview} icon={{type: "hex", subject: doc.subjectId as Subject, icon: "icon-question"}}
                 />
                 {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                 <SidebarLayout>
-                    <QuestionSidebar relatedContent={doc.relatedContent} />
+                    {isDefined(gameboardId) ? <GameboardQuestionSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} currentQuestionId={questionId}/>
+                        : <QuestionSidebar relatedContent={doc.relatedContent} />}
                     <MainContent>
                         {!preview && <CanonicalHrefElement />}
 
-                        <div className="no-print d-flex align-items-center mt-3">
+                        <div className={classNames("no-print d-flex align-items-center", siteSpecific("my-3", "mt-3"))}>
                             {isAda && <>
                                 {pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
                                 <EditContentButton doc={doc} />
@@ -112,7 +115,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                             </>}
                             {isPhy && <>
                                 <div>
-                                    <h2 className="text-theme-dark mb-4"><Markup encoding="latex">{generateQuestionTitle(doc)}</Markup></h2>
+                                    <h2 className="text-theme-dark"><Markup encoding="latex">{generateQuestionTitle(doc)}</Markup></h2>
                                     {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
                                 </div>
                                 <div className="d-flex gap-2 ms-auto">

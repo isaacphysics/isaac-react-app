@@ -42,7 +42,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
     return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
         <TitleAndBreadcrumb 
             currentPageTitle={book?.title ?? "Book"}
-            icon={{type: "hex", icon: "page-icon-book"}}
+            icon={{type: "hex", icon: "icon-book"}}
         />
         <SidebarLayout>
             <ShowLoading

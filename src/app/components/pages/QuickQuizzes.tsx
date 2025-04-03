@@ -17,7 +17,7 @@ export const QuickQuizzes = withRouter((props: RouteComponentProps) => {
             icon={pageContext?.subject ? {
                 type: "hex", 
                 subject: pageContext.subject,
-                icon: "page-icon-finder"
+                icon: "icon-finder"
             } : undefined}
         />
         <div className="mt-5">This is a quick quizzes listing page for {getHumanContext(pageContext)}!</div>

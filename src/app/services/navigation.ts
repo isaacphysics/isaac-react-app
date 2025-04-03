@@ -32,7 +32,7 @@ import {skipToken} from "@reduxjs/toolkit/query";
 import {useLocation} from "react-router-dom";
 
 export interface LinkInfo {title: string; to?: string; replace?: boolean}
-export type CollectionType = "Gameboard" | "Quiz" | "Topic" | "Master Mathematics";
+export type CollectionType = "Question deck" | "Quiz" | "Topic" | "Master Mathematics";
 export interface PageNavigation {
     collectionType?: CollectionType;
     breadcrumbHistory: LinkInfo[];
@@ -113,7 +113,7 @@ export const determinePageNavigation = (
                 : gameboardHistory;
 
             return {
-                collectionType: siteSpecific("Gameboard", "Quiz"),
+                collectionType: siteSpecific("Question deck", "Quiz"),
                 breadcrumbHistory: breadcrumbHistory,
                 backToCollection: gameboardHistory.slice(-1)[0],
                 nextItem: determineNextGameboardItem(currentGameboard, currentDocId),

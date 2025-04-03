@@ -48,7 +48,7 @@ export function getFriendlyDaysUntil(date: number | Date) : NonNullable<ReactNod
 
     const getStartOfDay = (date: number | Date): Date => {
         const dateObject = new Date(date);
-        dateObject.setHours(0, 0, 0, 0);
+        dateObject.setUTCHours(0, 0, 0, 0);
         return dateObject;
     };
 

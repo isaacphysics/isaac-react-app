@@ -1136,6 +1136,7 @@ export const PATHS = siteSpecific({
     GAMEBOARD_BUILDER: "/gameboard_builder",
     ADD_GAMEBOARD: "/add_gameboard",
     PREVIEW_TEST: "/test/preview",
+    TEST: "/test/assignment",
 }, {
     ASSIGNMENT_PROGRESS: "/my_markbook",
     MY_GAMEBOARDS: "/quizzes",
@@ -1147,6 +1148,7 @@ export const PATHS = siteSpecific({
     GAMEBOARD_BUILDER: "/quizzes/builder",
     ADD_GAMEBOARD: "/quizzes/add",
     PREVIEW_TEST: "/test/preview",
+    TEST: "/test/assignment",
 });
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";

@@ -35,7 +35,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         if (pageContext) {
             dispatch(fetchConcepts(undefined, pageContext?.subject));
         }
-    }, [dispatch]);
+    }, [dispatch, pageContext]);
 
     const searchParsed = queryString.parse(location.search);
 
@@ -97,7 +97,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             <TitleAndBreadcrumb 
                 currentPageTitle="Concepts" 
                 intermediateCrumbs={crumb ? [crumb] : undefined}
-                icon={{type: "hex", icon: "page-icon-concept"}}
+                icon={{type: "hex", icon: "icon-concept"}}
             />
             <SidebarLayout>
                 {pageContext?.subject 

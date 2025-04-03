@@ -288,7 +288,7 @@ export const Glossary = () => {
         <Container data-bs-theme={pageContext?.subject}>
             <TitleAndBreadcrumb 
                 currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? `${getHumanContext(pageContext)} Glossary` : "Glossary"}
-                icon={{type: "hex", subject: pageContext?.subject, icon: "page-icon-tests"}}
+                icon={{type: "hex", subject: pageContext?.subject, icon: "icon-tests"}}
             />
             <MetaDescription description={metaDescription} />
 
@@ -300,7 +300,7 @@ export const Glossary = () => {
                     subjects={subjects} stages={stages}
                 />
                 <MainContent>
-                    <div className="no-print d-flex align-items-center">
+                    <div className={classNames("no-print d-flex align-items-center", {"gap-2": isPhy})}>
                         <div className="question-actions question-actions-leftmost mt-3">
                             <ShareLink linkUrl={`/glossary`} clickAwayClose/>
                         </div>

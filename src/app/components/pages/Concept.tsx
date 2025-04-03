@@ -64,7 +64,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     collectionType={navigation.collectionType}
                     subTitle={siteSpecific(undefined, doc.subtitle as string)}
                     preview={preview} 
-                    icon={{type: "hex", subject: doc.subjectId as Subject, icon: "page-icon-concept"}}
+                    icon={{type: "hex", subject: doc.subjectId as Subject, icon: "icon-concept"}}
                 />
                 {!preview && <>
                     <MetaDescription description={doc.summary} />
@@ -74,9 +74,9 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     <ConceptSidebar relatedContent={doc.relatedContent} />
                     <MainContent>
                         {isPhy && <>
-                            <div className="no-print d-flex align-items-center mt-3">
+                            <div className="no-print d-flex align-items-center my-3">
                                 <div>
-                                    <h2 className="text-theme-dark mb-4"><Markup encoding="latex">{doc.title as string}</Markup></h2>
+                                    <h2 className="text-theme-dark"><Markup encoding="latex">{doc.title as string}</Markup></h2>
                                     {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
                                 </div>
                                 <div className="d-flex gap-2 ms-auto">
