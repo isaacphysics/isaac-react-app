@@ -887,7 +887,7 @@ export const GroupsSidebar = (props: GroupsSidebarProps) => {
         <div className="section-divider"/>
         <h5>Select a group</h5>
         <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
-            setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true} sidebarStyle={true} useHashAnchor={false}/>
+            setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true} sidebarStyle={true}/>
     </ContentSidebar>;
 };
 
