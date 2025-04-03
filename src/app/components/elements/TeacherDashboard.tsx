@@ -1,19 +1,21 @@
 import React, { ChangeEvent, useState } from 'react';
-import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQuery, useGetQuizAssignmentsSetByMeQuery } from '../../state';
+import { selectors, useAppSelector } from '../../state';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { BookInfo, extractTeacherName, ISAAC_BOOKS, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
-import { UserSummaryDTO } from '../../../IsaacApiTypes';
+import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
+import { AssignmentDTO, QuizAssignmentDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
 import { StyledDropdown } from './inputs/DropdownInput';
 import StyledToggle from './inputs/StyledToggle';
 import { AssignmentCard, StudentDashboard } from './StudentDashboard';
 import sortBy from 'lodash/sortBy';
 import { Spacer } from './Spacer';
-import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
+import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 
-const GroupsPanel = () => {
-    const groupsQuery = useGetGroupsQuery(false);
-    const { data: groups } = groupsQuery;
+interface GroupsPanelProps {
+    groups: AppGroup[] | undefined;
+}
+
+const GroupsPanel = ({ groups }: GroupsPanelProps) => {
     const sortedGroups = sortBy(groups, g => g.created).reverse().slice(0, 5);
 
     return <div className="dashboard-panel">
@@ -30,45 +32,43 @@ const GroupsPanel = () => {
     </div>;
 };
 
-const AssignmentsPanel = () => {
-    const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
+interface AssignmentsPanelProps {
+    assignments: AssignmentDTO[] | undefined;
+    quizzes: QuizAssignmentDTO[] | undefined;
+    groups: AppGroup[] | undefined;
+};
 
-    const quizzesSetByMeQuery = useGetQuizAssignmentsSetByMeQuery(undefined);
-    const { data: quizzesSetByMe } = quizzesSetByMeQuery;
-    const upcomingQuizAssignments = quizzesSetByMe?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past quizzes
+const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProps) => {
+    
+    if (!isDefined(assignments) || !isDefined(quizzes)) {
+        return <div className="dashboard-panel"/>;
+    }
+    
+    const upcomingAssignments = assignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
+    const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
+
+    const upcomingQuizAssignments = quizzes?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past quizzes
     const sortedQuizAssignments = upcomingQuizAssignments ? sortUpcomingAssignments(upcomingQuizAssignments) : [];
+
+    // Get the 3 most urgent due dates from assignments & quizzes combined
+    // To avoid merging & re-sorting entire lists, get the 3 most urgent from each list first
+    const soonestAssignments = sortedAssignments.slice(0, 3);
+    const soonestQuizzes = sortedQuizAssignments.slice(0, 3);
+    const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
     return <div className="dashboard-panel">
         <h4>Assignment schedule</h4>
-
-        <ShowLoadingQuery
-            query={assignmentsSetByMeQuery}
-            defaultErrorTitle={"Error fetching your assignments"}
-            thenRender={(assignmentsSetByMe) => {
-                const upcomingAssignments = assignmentsSetByMe?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
-                const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
-
-                // Get the 3 most urgent due dates from assignments & quizzes combined
-                // To avoid merging & re-sorting entire lists, get the 3 most urgent from each list first
-                const soonestAssignments = sortedAssignments?.slice(0, 3) ?? [];
-                const soonestQuizzes = sortedQuizAssignments.slice(0, 3);
-                const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
-
-                return <>
-                    {soonestDeadlines.length ? soonestDeadlines.map(assignment => <div className="mb-3" key={assignment.id}><AssignmentCard assignment={assignment} isTeacherDashboard /></div>)
-                        : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>}
-                    <Spacer/>
-                    <div className="d-flex align-items-center">
-                        <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
-                            See all assignments
-                        </Link>
-                        <Link to="/set_tests#manage" className="d-inline text-center panel-link ms-auto">
-                            See all tests
-                        </Link>
-                    </div>
-                </>;
-            }
-            }/>
+        {soonestDeadlines.length ? soonestDeadlines.map(assignment => <div className="mb-3" key={assignment.id}><AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} /></div>)
+            : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>}
+        <Spacer/>
+        <div className="d-flex align-items-center">
+            <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
+                See all assignments
+            </Link>
+            <Link to="/set_tests#manage" className="d-inline text-center panel-link ms-auto">
+                See all tests
+            </Link>
+        </div>
     </div>;
 };
 
@@ -143,11 +143,21 @@ const BooksPanel = () => {
     </div>;
 };
 
-export const TeacherDashboard = () => {
+interface TeacherDashboardProps {
+    assignmentsSetByMe: AssignmentDTO[] | undefined;
+    quizzesSetByMe: QuizAssignmentDTO[] | undefined;
+    myAssignments: AssignmentDTO[] | undefined;
+    myQuizAssignments: QuizAssignmentDTO[] | undefined;
+    groups: AppGroup[] | undefined;
+    streakRecord: UserSnapshot | undefined;
+    dashboardView: "teacher" | "student" | undefined; // this is always defined if we are displaying a dashboard; just here for typing
+    setDashboardView: React.Dispatch<React.SetStateAction<"teacher" | "student" | undefined>>;
+}
+
+export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignments, myQuizAssignments, groups, streakRecord, dashboardView, setDashboardView }: TeacherDashboardProps) => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
     const nameToDisplay = extractTeacherName(user as UserSummaryDTO);
-    const [studentView, setStudentView] = useState(false);
              
     return <div className="dashboard dashboard-outer w-100">
         <div className="d-flex">
@@ -155,22 +165,22 @@ export const TeacherDashboard = () => {
             <span className="ms-auto">
                 <div className="text-center">Dashboard view</div>
                 <StyledToggle
-                    checked={studentView}
+                    checked={dashboardView === "student"}
                     falseLabel="Teacher"
                     trueLabel="Student"
-                    onChange={() => setStudentView(studentView => !studentView)}             
+                    onChange={() => setDashboardView(studentView => studentView === "teacher" ? "student" : "teacher")}             
                 />
             </span>
         </div>
-        {studentView ? <StudentDashboard/> :
+        {dashboardView === "student" ? <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} /> :
             <>{deviceSize === "lg"
                 ? <>
                     <Row className="row-cols-3">
                         <Col className="mt-4 col-4">
-                            <GroupsPanel />
+                            <GroupsPanel groups={groups} />
                         </Col>
                         <Col className="mt-4 col-5">
-                            <AssignmentsPanel />
+                            <AssignmentsPanel assignments={assignmentsSetByMe} quizzes={quizzesSetByMe} groups={groups} />
                         </Col>
                         <Col className="mt-4 col-3">
                             <MyIsaacPanel />
@@ -184,10 +194,10 @@ export const TeacherDashboard = () => {
                 : <>
                     <Row className="row-cols-1 row-cols-sm-2 row-cols-xl-4">
                         <Col className="mt-4">
-                            <GroupsPanel />
+                            <GroupsPanel groups={groups} />
                         </Col>
                         <Col className="mt-4">
-                            <AssignmentsPanel />
+                            <AssignmentsPanel assignments={assignmentsSetByMe} quizzes={quizzesSetByMe} groups={groups} />
                         </Col>
                         <Col className="mt-4 col-sm-7 col-xl-3">
                             <BooksPanel />
