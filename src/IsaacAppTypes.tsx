@@ -356,6 +356,17 @@ export enum AssignmentBoardOrder {
     "-correct" = "-correct",
 }
 
+export enum MyAssignmentsOrder {
+    "startDate" = "startDate",
+    "-startDate" = "-startDate",
+    "dueDate" = "dueDate",
+    "-dueDate" = "-dueDate",
+    "attempted" = "attempted",
+    "-attempted" = "-attempted",
+    "correct" = "correct",
+    "-correct" = "-correct",
+}
+
 export enum AssignmentOrderType {
     Title = "Title",
     StartDate = "Start date",
