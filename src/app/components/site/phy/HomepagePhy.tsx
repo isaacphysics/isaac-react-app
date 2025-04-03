@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {getMyProgress, selectors, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery, useLazyGetGroupsQuery, useLazyGetMyAssignmentsQuery, useLazyGetMySetAssignmentsQuery, useLazyGetQuizAssignmentsAssignedToMeQuery, useLazyGetQuizAssignmentsSetByMeQuery} from "../../../state";
+import {selectors, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery, useLazyGetGroupsQuery, useLazyGetMyAssignmentsQuery, useLazyGetMySetAssignmentsQuery, useLazyGetQuizAssignmentsAssignedToMeQuery, useLazyGetQuizAssignmentsSetByMeQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardProps, CardText, CardTitle, Col, Container, Row} from "reactstrap";
 import {above, EventStatusFilter, EventTypeFilter, HUMAN_STAGES, HUMAN_SUBJECTS, isDefined, isLoggedIn, isTutorOrAbove, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, Subject, useDeviceSize} from "../../../services";
@@ -108,7 +108,6 @@ const getListViewSubjectCard = (sc: subjectCategory) => {
 const cards = subjectCategories.map((sc) => getListViewSubjectCard(sc));
 
 export const HomepagePhy = () => {
-    const dispatch = useAppDispatch();
 
     useEffect( () => {document.title = SITE_TITLE;}, []);
 
