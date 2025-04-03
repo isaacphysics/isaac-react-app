@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
 import {Col, Container, Row} from "reactstrap";

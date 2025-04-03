@@ -1,6 +1,6 @@
 import {StyledCheckbox} from "./StyledCheckbox";
 import {FormGroup, Table} from "reactstrap";
-import React, {ReactElement, SetStateAction, useEffect, useRef, useState} from "react";
+import React, {SetStateAction, useState} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {EMAIL_PREFERENCE_DEFAULTS, isPhy, siteSpecific} from "../../../services";
 import {Dispatch} from "react";
