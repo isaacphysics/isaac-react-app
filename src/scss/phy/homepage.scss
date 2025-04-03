@@ -241,6 +241,10 @@ a:has(.assignment-card) {
     font-family: $secondary-font-semi-bold;
   }
 
+  > div > i.icon:first-child {
+    margin-top: 2px;
+  }
+
   .overdue {
     color: $color-misc-red;
     font-weight: 600;

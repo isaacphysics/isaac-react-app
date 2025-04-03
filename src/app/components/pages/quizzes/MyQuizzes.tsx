@@ -93,7 +93,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                     <Col className="d-flex flex-column align-items-start col-sm-8">
                         <div className="d-flex align-items-center">
                             <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
-                                <PhyHexIcon icon="page-icon-tests" subject={subject as Subject} className="assignment-hex ps-3"/>
+                                <PhyHexIcon icon="icon-tests" subject={subject as Subject} className="assignment-hex ps-3"/>
                             </div>
                             <div className="d-flex flex-column flex-grow-1">
                                 <h4>{quiz.title || quiz.id }</h4>
@@ -443,7 +443,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     }</span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
         <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <SidebarLayout>
             <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter} 

@@ -324,7 +324,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     }, [activeTab]);
 
     const PhyMyAccount = <Container id="account-page" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "page-icon-account"}} className="mb-4"/>
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-account"}} className="mb-4"/>
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <SidebarLayout>

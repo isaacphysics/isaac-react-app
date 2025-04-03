@@ -120,7 +120,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
             : "";
 
     const icon = isQuiz(assignment) ? "icon icon-tests"
-        : isAssignment(assignment) ? "icon icon-question-pack"
+        : isAssignment(assignment) ? "icon icon-question-deck"
             : "";
 
     return <Link to={link} className="w-100">

@@ -12,7 +12,7 @@ const QuestionFinderCard = (context: NonNullable<Required<PageContextState>>): L
         title: "Question finder",
         subtitle: `Find ${getHumanContext(context)} questions you need by topic and difficulty level.`
     },
-    icon: {type: "hex", icon: "page-icon-finder"},
+    icon: {type: "hex", icon: "icon-finder"},
     subject: context.subject,
     linkTags: [{tag: "Find questions", url: extendUrl(context, 'questions')}]
 });
@@ -22,7 +22,7 @@ const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): List
         title: "Concepts",
         subtitle: `Review the key concepts for ${getHumanContext(context)}.`
     },
-    icon: {type: "hex", icon: "page-icon-concept"},
+    icon: {type: "hex", icon: "icon-concept"},
     subject: context.subject,
     linkTags: [{tag: "Explore concepts", url: extendUrl(context, 'concepts')}]
 });
@@ -32,7 +32,7 @@ const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): Li
         title: "Tests",
         subtitle: "Use tests to practise a range of topics. These tests are available for you to freely attempt."
     },
-    icon: {type: "hex", icon: "page-icon-tests"},
+    icon: {type: "hex", icon: "icon-tests"},
     subject: context.subject,
     linkTags: [{tag: "Find a test", url: extendUrl(context, 'practice_tests')}]
 });
@@ -42,7 +42,7 @@ const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): Li
         title: "Questions by topic",
         subtitle: "Practise specific topics by using our ready-made question decks on specific topics."
     },
-    icon: {type: "hex", icon: "page-icon-question-pack"},
+    icon: {type: "hex", icon: "icon-question-deck"},
     subject: context.subject,
     linkTags: [{tag: "Explore topic question decks", url: extendUrl(context, 'question_decks')}]
 });
@@ -53,7 +53,7 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
         title: "Revision",
         subtitle: "Revise with our summary videos, topic tests and question decks."
     },
-    icon: {type: "hex", icon: "page-icon-lessons"},
+    icon: {type: "hex", icon: "icon-revision"},
     subject: context.subject,
     linkTags: [{tag: "List of revision areas", url: extendUrl(context, 'lessons')}]
 });
@@ -63,7 +63,7 @@ const QuickQuizzesCard = (context: NonNullable<Required<PageContextState>>): Lis
         title: "Core skills practice",
         subtitle: `Practice core skills required for ${getHumanContext(context)}.`
     },
-    icon: {type: "hex", icon: "page-icon-quiz"},
+    icon: {type: "hex", icon: "icon-quiz"},
     subject: context.subject,
     linkTags: [{tag: "Find a quiz", url: extendUrl(context, 'quick_quizzes')}]
 });
@@ -73,7 +73,7 @@ const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListVie
         title: "Glossary",
         subtitle: "Explore our glossary of terms and definitions."
     },
-    icon: {type: "hex", icon: "page-icon-finder"},
+    icon: {type: "hex", icon: "icon-finder"},
     subject: context.subject,
     linkTags: [{tag: "View glossary", url: extendUrl(context, 'glossary')}]
 });
@@ -83,7 +83,7 @@ const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListVi
         title,
         subtitle
     },
-    icon: {type: "hex", icon: "page-icon-lessons"},
+    icon: {type: "hex", icon: "icon-revision"},
     subject: context.subject,
     linkTags
 });
