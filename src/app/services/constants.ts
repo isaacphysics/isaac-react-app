@@ -891,7 +891,10 @@ export function isAQuestionLikeDoc(doc: ContentDTO): doc is IsaacQuestionPageDTO
     return doc.type === DOCUMENT_TYPE.QUESTION || doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 }
 
-export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
+export enum SEARCH_RESULT_TYPE {
+    SHORTCUT = "shortcut",
+    GAMEBOARD = "gameboard",
+}
 
 export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.CONCEPT]: "Concepts",

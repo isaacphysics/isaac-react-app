@@ -50,6 +50,38 @@ export const getThemeFromTags = (tags?: (TAG_ID | string)[]): SiteTheme => {
 };
 
 /**
+ * Gets the page context for the current page, based exclusively on the tags of the content. Used e.g. for books.
+ * 
+ * @param doc - The current page DTO. The tags of this object will be used to determine the new context.
+ * @returns The page context state based on the content object tags.
+ */
+export const useContextFromContentObjectTags = (doc: ContentBaseDTO | undefined): PageContextState => {
+    const dispatch = useAppDispatch();
+    const tags = doc?.tags || [];
+
+    const newContext = { stage: undefined, subject: undefined, previousContext: undefined } as NonNullable<PageContextState>;
+
+    if (tags.length) {
+        newContext.subject = filterBySubjects(tags)[0] as Subject;
+    }
+
+    useEffect(() => {
+        dispatch(pageContextSlice.actions.updatePageContext(newContext));
+
+        return () => {
+            dispatch(pageContextSlice.actions.updatePageContext({
+                subject: undefined,
+                stage: undefined,
+                previousContext: newContext,
+            }));
+        };
+    }
+    , [dispatch, doc]);
+
+    return useAppSelector(selectors.pageContext.context);
+};
+
+/**
  * Gets the page context for the current page, based on the previous page context, the user's registered contexts, and the audience and tags of the current page.
  * 
  * As a general rule, if the previous context can be maintained, it will be. 

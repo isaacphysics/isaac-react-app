@@ -243,6 +243,14 @@
   );
 }
 
+.icon-book {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-book-fg.svg',
+    '/assets/phy/icons/redesign/page-book-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 58%)
+  )
+}
+
 svg {
   &.almost-fill {
     fill: $phy_extra_force_yellow;
