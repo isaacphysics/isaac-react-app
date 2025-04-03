@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useGetNewsPodListQuery} from "../../../state";
+import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardFooter, CardTitle, Col, Container, Row} from "reactstrap";
 import {PATHS, SITE_TITLE, useDeviceSize} from "../../../services";
@@ -13,12 +13,15 @@ import { IconCard } from "../../elements/cards/IconCard";
 import { TextBlock } from "../../elements/layout/TextBlock";
 import { ColumnSlice } from "../../elements/layout/ColumnSlice";
 import { AdaCard } from "../../elements/cards/AdaCard";
+import {useLinkableSetting} from "../../../services/linkableSetting";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
     const featuredNewsItem = news ? news[0] : undefined;
     const deviceSize = useDeviceSize();
+    const {setLinkedSetting} = useLinkableSetting();
+    const userPreferences = useAppSelector(selectors.user.preferences);
 
     return <>
         {/*<WarningBanner/>*/}
@@ -59,6 +62,9 @@ export const HomepageCS = () => {
                         <TextBlock className="pe-5">
                             <h2>Our latest updates</h2>
                             <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read the latest news and updates from the team.</p>
+                            {!userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES &&
+                                <Button color="secondary" outline tag={Link} to={"/account#notifications"} onClick={() => {setLinkedSetting("news-preference");}}>Stay updated</Button>
+                            }
                         </TextBlock>
                         {featuredNewsItem && featuredNewsItem.title && featuredNewsItem.value ? <IconCard card={{
                             title: featuredNewsItem.title,
@@ -217,6 +223,20 @@ export const HomepageCS = () => {
                     <div className={"mt-4 mt-lg-5 w-100 text-center"}>
                         <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
                     </div>
+                    {!userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES &&
+                        <Row xs={12} className="d-flex flex-row row-cols-1 row-cols-md-2 my-3">
+                            <IconCard
+                                card={{
+                                    title: "Stay updated",
+                                    icon: {src: "/assets/cs/icons/mail.svg"},
+                                    bodyText: "Update your communication preferences to be the first to know about Ada news.",
+                                    clickUrl: "/account#notifications",
+                                    buttonText: "Join our newsletter",
+                                    onButtonClick: () => {setLinkedSetting("news-preference");}
+                                }}
+                            />
+                        </Row>
+                    }
                 </Container>
             </section>}
 

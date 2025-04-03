@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import {useLinkableSetting} from "../../services/linkableSetting";
 import classnames from "classnames";
 
@@ -6,12 +6,14 @@ export const WithLinkableSetting = (props: React.ComponentProps<"div">) => {
     const {linkedSettingId, setLinkedSettingSeen, clearLinkedSetting} = useLinkableSetting();
 
     const isLinkedSetting = props.id === linkedSettingId;
+    const ref = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (isLinkedSetting) {
             setLinkedSettingSeen();
+            ref?.current?.scrollIntoView({ behavior: 'smooth' });
         }
-    }, [isLinkedSetting, setLinkedSettingSeen]);
+    }, [isLinkedSetting, setLinkedSettingSeen, ref]);
 
     function handleClick(event: React.MouseEvent<HTMLDivElement>) {
         // If clicked, clear the highlighting as it's likely done its job.
@@ -22,7 +24,7 @@ export const WithLinkableSetting = (props: React.ComponentProps<"div">) => {
         }
     }
 
-    return <div {...props} className={classnames(props.className, {"highlight-target": isLinkedSetting})} onClick={handleClick}>
+    return <div {...props} className={classnames(props.className, {"highlight-target": isLinkedSetting})} onClick={handleClick} ref={ref}>
         {props.children}
     </div>;
 };
