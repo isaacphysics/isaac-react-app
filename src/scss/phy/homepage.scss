@@ -247,13 +247,19 @@ a:has(.assignment-card) {
     font-family: $secondary-font-semi-bold;
   }
 
+  > div > i.icon:first-child {
+    margin-top: 2px;
+  }
+
   .overdue {
     color: $color-misc-red;
     font-weight: 600;
   }
 
   &:hover {
-    scale: 1.02;
+    @include not-reduced-motion {
+      transform: scale(1.02);
+    }
     border-color: $color-neutral-400;
   }
 }

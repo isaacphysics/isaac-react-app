@@ -13,7 +13,7 @@ export const LessonsAndRevision = withRouter((props: RouteComponentProps) => {
             icon={pageContext?.subject ? {
                 type: "hex", 
                 subject: pageContext.subject,
-                icon: "page-icon-lessons"
+                icon: "icon-revision"
             } : undefined}
         />
         <div className="mt-5">This is a lessons and revision page for {getHumanContext(pageContext)}!</div>

@@ -45,7 +45,7 @@ const AssignmentCard = ({assignmentId, groupName}: AssignmentCardProps) => {
         return <Link to={`/assignment_progress/${assignmentId}`} className="plain-link mb-3">
             <Card className="assignment-card px-3">
                 <div className="d-flex flex-row h-100">
-                    <i className="icon icon-question-pack" />
+                    <i className="icon icon-question-deck"/>
                     <div className="flex-grow-1 ms-2 me-3">
                         <h5>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h5>
                         {isDefined(groupName) && groupName}
