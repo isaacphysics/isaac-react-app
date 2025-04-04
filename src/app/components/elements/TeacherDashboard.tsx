@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import { selectors, useAppSelector } from '../../state';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,8 @@ import { AssignmentCard, StudentDashboard } from './StudentDashboard';
 import sortBy from 'lodash/sortBy';
 import { Spacer } from './Spacer';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
+import { useStatefulElementRef } from './markup/portals/utils';
+import { ScrollShadows } from './ScrollShadows';
 
 interface GroupsPanelProps {
     groups: AppGroup[] | undefined;
@@ -117,6 +119,8 @@ const BookCard = ({title, image, path}: BookInfo) => {
 
 const BooksPanel = () => {
     const [subject, setSubject] = useState<Subject | "all">("all");
+    const [scrollRef, setScrollRef] = useStatefulElementRef<HTMLElement>();
+
     return <div className="w-100 dashboard-panel book-panel">
         <div className="d-flex align-items-center">
             <h4>Explore our books</h4>
@@ -131,13 +135,15 @@ const BooksPanel = () => {
                 </StyledDropdown>
             </div>
         </div>
-        <Row className="mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
+        <div ref={setScrollRef} className="row position-relative mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
+            {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
+            {window.ResizeObserver && <ScrollShadows element={scrollRef ?? undefined} shadowType="dashboard-scroll-shadow" />}
             {ISAAC_BOOKS.filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2 me-1 p-0">
                         <BookCard {...book}/>
                     </Col>)}
-        </Row>
+        </div>
         <Spacer/>
         <Link to="/publications" className="d-inline panel-link">See all books</Link>
     </div>;
