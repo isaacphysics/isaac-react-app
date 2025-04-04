@@ -89,7 +89,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
             </Col>
             <Col lg={5} className="ps-lg-5 m-3 m-lg-0">
                 <div className="d-flex align-items-center">
-                    {above['lg'](deviceSize) && <PhyHexIcon className="w-min-content" icon={"page-icon-concept"} />}
+                    {above['lg'](deviceSize) && <PhyHexIcon className="w-min-content" icon={"icon-concept"} />}
                     <h5 className="m-0">Explore related concepts:</h5>
                 </div>
                 <div className="d-flex flex-wrap gap-2 mt-3">
@@ -97,7 +97,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                     {/* {question?.relatedContent.filter(rc => rc.type === "isaacConceptPage").slice(0, 5).map((rc, i) => (
                         <Link to={`/concepts/${rc.id}`} key={i}>
                             <AffixButton key={i} color="keyline" className="px-3 py-2" affix={{
-                                affix: "icon-lightbulb",
+                                affix: "icon-concept",
                                 position: "prefix",
                                 type: "icon"
                             }}>

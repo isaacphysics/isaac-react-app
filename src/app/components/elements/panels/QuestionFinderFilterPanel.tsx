@@ -18,7 +18,6 @@ import {
     TAG_LEVEL,
     tags,
     useDeviceSize,
-    useUrlPageTheme
 } from "../../../services";
 import { Difficulty, ExamBoard } from "../../../../IsaacApiTypes";
 import { pageStageToSearchStage, QuestionStatus } from "../../pages/QuestionFinder";
@@ -27,7 +26,7 @@ import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { DifficultyIcons } from "../svg/DifficultyIcons";
 import { GroupBase } from "react-select";
 import { HierarchyFilterTreeList, Tier } from "../svg/HierarchyFilter";
-import { openActiveModal, useAppDispatch } from "../../../state";
+import { openActiveModal, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
 
@@ -133,7 +132,7 @@ export interface QuestionFinderFilterPanelProps {
     searchStatuses: QuestionStatus, setSearchStatuses: Dispatch<SetStateAction<QuestionStatus>>;
     searchBooks: string[], setSearchBooks: Dispatch<SetStateAction<string[]>>;
     excludeBooks: boolean, setExcludeBooks: Dispatch<SetStateAction<boolean>>;
-    tiers: Tier[], choices: ChoiceTree[]; 
+    choices: ChoiceTree[]; 
     selections: ChoiceTree[], setSelections: Dispatch<SetStateAction<ChoiceTree[]>>;
     applyFilters: () => void; clearFilters: () => void;
     validFiltersSelected: boolean; 
@@ -149,7 +148,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         searchStatuses, setSearchStatuses,
         searchBooks, setSearchBooks,
         excludeBooks, setExcludeBooks,
-        tiers, choices, selections, setSelections,
+        choices, selections, setSelections,
         applyFilters, clearFilters, validFiltersSelected, 
         searchDisabled, setSearchDisabled
     } = props;
@@ -158,7 +157,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     const [listState, listStateDispatch] = useReducer(listStateReducer, groupBaseTagOptions, initialiseListState);
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
-    const pageContext = useUrlPageTheme();
+    const pageContext = useAppSelector(selectors.pageContext.context);
     const bookOptions = ISAAC_BOOKS.filter(book => !pageContext?.subject || book.subject === pageContext?.subject);
 
     const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));
@@ -257,7 +256,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         <HierarchyFilterTreeList root {...{
                             tier: pageContext?.subject ? 1 : 0,
                             index: pageContext?.subject as TAG_ID ?? TAG_LEVEL.subject,
-                            tiers, choices, selections, setSelections,
+                            choices, selections, setSelections,
                             questionFinderFilter: true
                         }}/>
                     </div>,
@@ -360,6 +359,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         label={siteSpecific(
                             <div className="d-flex">
                                 Not started
+                                <img className="ps-2" src={`/assets/phy/icons/redesign/status-not-started.svg`} alt="Not started"/>
                             </div>,
                             <div>
                                 Not attempted

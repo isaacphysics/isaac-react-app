@@ -10,7 +10,6 @@ import {
     siteSpecific,
     STAGE,
     stageLabelMap,
-    Subject,
     useUserViewingContext
 } from "../../services";
 import {
@@ -28,7 +27,7 @@ import classNames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
 import { Difficulty } from "../../../IsaacApiTypes";
-import { PhyHexIcon } from "./svg/PhyHexIcon";
+import { PhyHexIcon, PhyHexIconProps } from "./svg/PhyHexIcon";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserViewingContext();
@@ -64,11 +63,8 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     );
 }
 
-export interface TitleIconProps {
+export interface TitleIconProps extends PhyHexIconProps {
     type: "img" | "hex";
-    subject?: Subject;
-    icon: string;
-    size?: string;
 }
 
 export interface PageTitleProps {

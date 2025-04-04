@@ -32,6 +32,7 @@ import {
 } from "./";
 import {
     ContentDTO,
+    IAssignmentLike,
     IsaacQuizSectionDTO,
     QuestionDTO,
     QuizAssignmentDTO,
@@ -375,3 +376,7 @@ export const getDistinctQuizSetters = (quizzes: DisplayableQuiz[] | undefined | 
     }
     return distinctFormattedQuizSetters;
 };
+
+export function isQuiz(assignment: IAssignmentLike): assignment is QuizAssignmentDTO {
+    return (assignment as QuizAssignmentDTO).quizId !== undefined;
+}

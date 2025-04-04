@@ -214,7 +214,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="gameboard-builder" fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
         <div ref={sentinel}/>
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Gameboard", "Quiz")} builder`} icon={{type: "hex", icon: "page-icon-question-pack"}} help={pageHelp} modalId="help_modal_gameboard_builder"/>
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Gameboard", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_gameboard_builder"/>
 
         <Card className="p-3 mt-4 mb-5">
             <CardBody>

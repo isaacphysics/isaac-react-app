@@ -1,84 +1,74 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
-import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQuery, useGetSingleSetAssignmentQuery } from '../../state';
-import { skipToken } from '@reduxjs/toolkit/query';
-import { Card, Col, Row } from 'reactstrap';
+import React, { ChangeEvent, useState } from 'react';
+import { selectors, useAppSelector } from '../../state';
+import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { BookInfo, ISAAC_BOOKS, isDefined, isLoggedIn, isTutorOrAbove, Subject, useDeviceSize } from '../../services';
-import { AssignmentDTO, RegisteredUserDTO } from '../../../IsaacApiTypes';
-import { GroupSelector } from '../pages/Groups';
+import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
+import { AssignmentDTO, QuizAssignmentDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
 import { StyledDropdown } from './inputs/DropdownInput';
+import StyledToggle from './inputs/StyledToggle';
+import { AssignmentCard, StudentDashboard } from './StudentDashboard';
+import sortBy from 'lodash/sortBy';
+import { Spacer } from './Spacer';
+import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 
-const GroupsPanel = () => {
-    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    const [showArchived, setShowArchived] = useState(false);
-    const groupQuery = useGetGroupsQuery(showArchived);
-    const { currentData: groups, isLoading, isFetching } = groupQuery;
-    const otherGroups = useGetGroupsQuery(!showArchived);
-    const allGroups = [...(groups ?? []) , ...(otherGroups.currentData ?? [])];
-    const [selectedGroupId, setSelectedGroupId] = useState<number>();
-    const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
-    const groupNameInputRef = useRef<HTMLInputElement>(null);
-    
-    return <div className="dashboard-panel scrollable-panel">
-        <Link to="/groups" className="plain-link">
-            <h4>Manage my groups</h4>
-        </Link>
-        <GroupSelector allGroups={allGroups} groupNameInputRef={groupNameInputRef} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
-            setShowArchived={setShowArchived} groups={groups} user={user} selectedGroup={selectedGroup} showCreateGroup={false} useHashAnchor={true} />
+interface GroupsPanelProps {
+    groups: AppGroup[] | undefined;
+}
+
+const GroupsPanel = ({ groups }: GroupsPanelProps) => {
+    const sortedGroups = sortBy(groups, g => g.created).reverse().slice(0, 5);
+
+    return <div className="dashboard-panel">
+        <h4>Manage my groups</h4>
+        {sortedGroups.length ?
+            <>
+                <div className="overflow-hidden">
+                    {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress#${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
+                </div>
+                <Spacer/>
+                <Link to="/groups" className="d-inline panel-link mt-3">See all groups</Link>
+            </>
+            : <div className="text-center mt-lg-3">You have no active groups.<Button tag={Link} to="/groups" size="sm" className="mt-3">Create new group</Button></div>}
     </div>;
 };
 
-interface AssignmentCardProps {
-    assignmentId?: number;
-    groupName?: string; // In props because useSingleSetAssignmentQuery doesn't return group name
-}
-
-const AssignmentCard = ({assignmentId, groupName}: AssignmentCardProps) => {
-    // Query single assignment for each card because useGetMySetAssignmentsQuery doesn't return gameboard info
-    const assignmentQuery = useGetSingleSetAssignmentQuery(assignmentId || skipToken);
-    const { data: assignment } = assignmentQuery;
-
-    if (isDefined(assignment)) {
-        const today = new Date();
-        const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
-        const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
-        return <Link to={`/assignment_progress/${assignmentId}`} className="plain-link mb-3">
-            <Card className="assignment-card px-3">
-                <div className="d-flex flex-row h-100">
-                    <i className="icon icon-question-pack" />
-                    <div className="flex-grow-1 ms-2 me-3">
-                        <h5>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h5>
-                        {isDefined(groupName) && groupName}
-                    </div>
-                    <span className="align-self-end">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>
-                </div>
-            </Card>
-        </Link>;
-    }
+interface AssignmentsPanelProps {
+    assignments: AssignmentDTO[] | undefined;
+    quizzes: QuizAssignmentDTO[] | undefined;
+    groups: AppGroup[] | undefined;
 };
 
-const AssignmentsPanel = () => {
-    const getSortedAssignments = (assignments: AssignmentDTO[] | undefined) => {
-        if (isDefined(assignments)) {
-            return assignments.toSorted((a, b) => {
-                if (a.dueDate && b.dueDate) {
-                    return a.dueDate > b.dueDate ? 1 : -1;
-                }
-                return 0;
-            });
-        }
-    };
+const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProps) => {
+    
+    if (!isDefined(assignments) || !isDefined(quizzes)) {
+        return <div className="dashboard-panel"/>;
+    }
+    
+    const upcomingAssignments = assignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
+    const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
 
-    const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
-    const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
-    const sortedAssignments = getSortedAssignments(assignmentsSetByMe);
-    const upcomingAssignments = sortedAssignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
+    const upcomingQuizAssignments = quizzes?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past quizzes
+    const sortedQuizAssignments = upcomingQuizAssignments ? sortUpcomingAssignments(upcomingQuizAssignments) : [];
+
+    // Get the 3 most urgent due dates from assignments & quizzes combined
+    // To avoid merging & re-sorting entire lists, get the 3 most urgent from each list first
+    const soonestAssignments = sortedAssignments.slice(0, 3);
+    const soonestQuizzes = sortedQuizAssignments.slice(0, 3);
+    const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
     return <div className="dashboard-panel">
-        <Link to="/assignment_schedule"  className="plain-link">
-            <h4>Assignment schedule</h4>
-        </Link>
-        {upcomingAssignments && upcomingAssignments.slice(0, 4).map(({id, groupName}) => <AssignmentCard key={id} assignmentId={id} groupName={groupName} />)}
+        <h4>Assignment schedule</h4>
+        {soonestDeadlines.length ? soonestDeadlines.map(assignment => <div className="mb-3" key={assignment.id}><AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} /></div>)
+            : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>}
+        <Spacer/>
+        <div className="d-flex align-items-center">
+            <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
+                See all assignments
+            </Link>
+            <Link to="/set_tests#manage" className="d-inline text-center panel-link ms-auto">
+                See all tests
+            </Link>
+        </div>
     </div>;
 };
 
@@ -115,9 +105,11 @@ const MyIsaacPanel = () => {
 };
 
 const BookCard = ({title, image, path}: BookInfo) => {
-    return <Card className="p-2 h-100">  
-        <Link to={path} className="book">
-            <img src={image} alt={title} className="w-100"/>
+    return <Card className="p-2 h-100 border-0 bg-transparent">  
+        <Link to={path} className="d-flex flex-column align-items-center dashboard-book book-container">
+            <div className="book-image-container">
+                <img src={image} alt={title}/>
+            </div>
             <div className="mt-2">{title}</div>
         </Link>
     </Card>;
@@ -125,43 +117,70 @@ const BookCard = ({title, image, path}: BookInfo) => {
 
 const BooksPanel = () => {
     const [subject, setSubject] = useState<Subject | "all">("all");
-    return <div className="w-100 dashboard-panel">
-        <Link to="/publications" className="plain-link">
+    return <div className="w-100 dashboard-panel book-panel">
+        <div className="d-flex align-items-center">
             <h4>Books</h4>
-        </Link>
-        <div className="mb-3 w-50">
-            <StyledDropdown value={subject}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setSubject(e.target.value as Subject)}>
-                <option value="all">All</option>
-                <option value="physics">Physics</option>
-                <option value="maths">Maths</option>
-                <option value="chemistry">Chemistry</option>
-                {/* No biology books */}
-            </StyledDropdown>
+            <div className="w-50 ms-auto">
+                <StyledDropdown value={subject}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSubject(e.target.value as Subject)}>
+                    <option value="all">All</option>
+                    <option value="physics">Physics</option>
+                    <option value="maths">Maths</option>
+                    <option value="chemistry">Chemistry</option>
+                    {/* No biology books */}
+                </StyledDropdown>
+            </div>
         </div>
-        <Row className="row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-3 flex-nowrap book-panel">
+        <Row className="mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
             {ISAAC_BOOKS.filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2 me-1 p-0">
                         <BookCard {...book}/>
                     </Col>)}
         </Row>
+        <Spacer/>
+        <Link to="/publications" className="d-inline panel-link">See all books</Link>
     </div>;
 };
 
-export const TeacherDashboard = () => {
+interface TeacherDashboardProps {
+    assignmentsSetByMe: AssignmentDTO[] | undefined;
+    quizzesSetByMe: QuizAssignmentDTO[] | undefined;
+    myAssignments: AssignmentDTO[] | undefined;
+    myQuizAssignments: QuizAssignmentDTO[] | undefined;
+    groups: AppGroup[] | undefined;
+    streakRecord: UserSnapshot | undefined;
+    dashboardView: "teacher" | "student" | undefined; // this is always defined if we are displaying a dashboard; just here for typing
+    setDashboardView: React.Dispatch<React.SetStateAction<"teacher" | "student" | undefined>>;
+}
+
+export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignments, myQuizAssignments, groups, streakRecord, dashboardView, setDashboardView }: TeacherDashboardProps) => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
-    if (user && isLoggedIn(user) && isTutorOrAbove(user)) {
-        return <div className="dashboard w-100">
-            {deviceSize === "lg"
+    const nameToDisplay = extractTeacherName(user as UserSummaryDTO);
+             
+    return <div className="dashboard dashboard-outer w-100">
+        <div className="d-flex">
+            {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
+            <span className="ms-auto">
+                <div className="text-center">Dashboard view</div>
+                <StyledToggle
+                    checked={dashboardView === "student"}
+                    falseLabel="Teacher"
+                    trueLabel="Student"
+                    onChange={() => setDashboardView(studentView => studentView === "teacher" ? "student" : "teacher")}             
+                />
+            </span>
+        </div>
+        {dashboardView === "student" ? <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} /> :
+            <>{deviceSize === "lg"
                 ? <>
                     <Row className="row-cols-3">
                         <Col className="mt-4 col-4">
-                            <GroupsPanel />
+                            <GroupsPanel groups={groups} />
                         </Col>
                         <Col className="mt-4 col-5">
-                            <AssignmentsPanel />
+                            <AssignmentsPanel assignments={assignmentsSetByMe} quizzes={quizzesSetByMe} groups={groups} />
                         </Col>
                         <Col className="mt-4 col-3">
                             <MyIsaacPanel />
@@ -175,10 +194,10 @@ export const TeacherDashboard = () => {
                 : <>
                     <Row className="row-cols-1 row-cols-sm-2 row-cols-xl-4">
                         <Col className="mt-4">
-                            <GroupsPanel />
+                            <GroupsPanel groups={groups} />
                         </Col>
                         <Col className="mt-4">
-                            <AssignmentsPanel />
+                            <AssignmentsPanel assignments={assignmentsSetByMe} quizzes={quizzesSetByMe} groups={groups} />
                         </Col>
                         <Col className="mt-4 col-sm-7 col-xl-3">
                             <BooksPanel />
@@ -188,6 +207,7 @@ export const TeacherDashboard = () => {
                         </Col>
                     </Row>
                 </>}
-        </div>;
-    }
+            </>
+        }
+    </div>;
 };

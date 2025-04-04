@@ -16,6 +16,7 @@ import {
     isAda,
     isFound,
     isNotPartiallyLoggedIn,
+    isOverdue,
     isPhy,
     partitionCompleteAndIncompleteQuizzes,
     siteSpecific,
@@ -24,6 +25,7 @@ import {
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
+import { AssignmentDTO, QuizAssignmentDTO } from "../../../IsaacApiTypes";
 
 export const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
     menuOpen: false, setMenuOpen: () => {}
@@ -78,6 +80,16 @@ export function MenuBadge({count, message, ...rest}: {count: number, message: st
     </div>;
 }
 
+export function getActiveWorkCount(assignments?: AssignmentDTO[], quizAssignments?: QuizAssignmentDTO[]) {
+    const assignmentsCount = assignments 
+        ? filterAssignmentsByStatus(assignments).inProgressRecent.length 
+        : 0;
+    const quizzesCount = quizAssignments && isFound(quizAssignments)
+        ? partitionCompleteAndIncompleteQuizzes(quizAssignments)[1].filter(q => !isOverdue(q)).length
+        : 0;
+    return {assignmentsCount, quizzesCount};
+}
+
 export function useAssignmentsCount() {
     const user = useAppSelector(selectors.user.orNull);
 
@@ -85,15 +97,9 @@ export function useAssignmentsCount() {
     const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
     // We should add refetchOnFocus: true if we want to refetch on browser focus - hard to say if this is a good idea or not.
     const queryOptions = {refetchOnMountOrArgChange: true, refetchOnReconnect: true};
-    const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery(queryArg, queryOptions);
+
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, queryOptions);
-
-    const assignmentsCount = assignments
-        ? filterAssignmentsByStatus(assignments).inProgressRecent.length
-        : 0;
-    const quizzesCount = quizAssignments && isFound(quizAssignments)
-        ? partitionCompleteAndIncompleteQuizzes(quizAssignments)[1].length
-        : 0;
-
-    return {assignmentsCount, quizzesCount};
+    const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery(queryArg, queryOptions);
+    
+    return getActiveWorkCount(assignments, quizAssignments);
 }

@@ -33,7 +33,7 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
             icon={pageContext?.subject ? {
                 type: "hex", 
                 subject: pageContext.subject,
-                icon: "page-icon-finder"
+                icon: "icon-finder"
             } : undefined}
         />
         <SidebarLayout>

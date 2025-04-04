@@ -205,10 +205,10 @@ export enum BoardLimit {
 }
 
 export const BOARD_ORDER_NAMES: {[key in AssignmentBoardOrder]: string} = {
-    "created": "Date created (oldest first)",
-    "-created": "Date created (recent first)",
-    "visited": "Date visited (oldest first)",
-    "-visited": "Date visited (recent first)",
+    "created": "Date created (recent first)",
+    "-created": "Date created (oldest first)",
+    "visited": "Date visited (recent first)",
+    "-visited": "Date visited (oldest first)",
     "title": "Title (A-Z)",
     "-title": "Title (Z-A)",
     "attempted": "Attempted (lowest first)",
@@ -235,7 +235,7 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
     const [ loadGameboards ] = useLazyGetGameboardsQuery();
     const boards = useAppSelector(selectors.boards.boards);
 
-    const [boardOrder, setBoardOrder] = useState<AssignmentBoardOrder>(AssignmentBoardOrder["-visited"]);
+    const [boardOrder, setBoardOrder] = useState<AssignmentBoardOrder>(AssignmentBoardOrder.visited);
     const [boardView, setBoardView] = useState<BoardViews>((boards && boards.boards.length > 6) ? BoardViews.table : initialView);
     const [boardLimit, setBoardLimit] = useState<BoardLimit>(initialLimit);
     const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
@@ -309,7 +309,7 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
         const boardOrderNegative = boardOrder.at(0) == "-";
         const boardOrderKind = (boardOrderNegative ? boardOrder.slice(1) : boardOrder) as "created" | "visited" | "attempted" | "correct" | "title";
         const orderedBoards = sortBy(boards?.boards, BOARD_SORT_FUNCTIONS[boardOrderKind]);
-        if (["-visited", "-created", "-attempted", "-correct", "-title"].includes(boardOrder)) orderedBoards.reverse();
+        if (["visited", "created", "-attempted", "-correct", "-title"].includes(boardOrder)) orderedBoards.reverse();
         return {
             totalResults: boards?.totalResults ?? 0,
             boards: orderedBoards
