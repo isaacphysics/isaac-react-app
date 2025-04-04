@@ -25,13 +25,6 @@ const footerLinksPhy = {
         <FooterLink key={key++} linkTo="/books">Books</FooterLink>,
         <FooterLink key={key++} linkTo="/contact">Contact us</FooterLink>,
     ],
-    centre: [
-        <p className="footer-link-header" key={key++}>Explore by learning stage</p>,
-        <FooterLink key={key++} linkTo="/11_14">11-14</FooterLink>,
-        <FooterLink key={key++} linkTo="/gcse">GCSE</FooterLink>,
-        <FooterLink key={key++} linkTo="/alevel">A Level</FooterLink>,
-        <FooterLink key={key++} linkTo="/university">University</FooterLink>,
-    ],
     right: [
         <p className="footer-link-header" key={key++}>Explore by subject</p>,
         <FooterLink key={key++} linkTo="/physics">Physics</FooterLink>,
@@ -60,11 +53,8 @@ export const ListGroupFooter = () => (
     siteSpecific(
         // Physics
         <>
-            <ListGroup className="mb-3 w-max-content">
+            <ListGroup className="mb-3 w-max-content me-sm-5 me-sm-4 me-lg-5">
                 {footerLinksPhy.left}
-            </ListGroup>
-            <ListGroup className="mb-3 w-max-content ms-sm-5 me-sm-4 me-lg-5">
-                {footerLinksPhy.centre}
             </ListGroup>
             <ListGroup className="mb-3 w-max-content me-xl-4">
                 {footerLinksPhy.right}
