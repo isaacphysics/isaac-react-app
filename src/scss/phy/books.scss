@@ -82,7 +82,7 @@ svg.book-page-icon {
 
   &:hover {
     .book-image-container {
-      @include not-reduced-motion{
+      @include not-reduced-motion {
         transform: scale(1.02);
       }
     }
@@ -97,7 +97,7 @@ svg.book-page-icon {
     width: max-content;
     height: max-content;
     box-shadow: 0px 6px 12px rgba(0,0,0,0.2);
-    transition: scale 0.2s ease-out;
+    transition: transform 0.2s ease-out;
 
     > img {
       max-height: 215px;
