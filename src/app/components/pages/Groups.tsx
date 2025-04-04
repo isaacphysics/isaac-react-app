@@ -474,12 +474,11 @@ interface GroupSelectorProps {
     setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
     groupNameInputRef: React.RefObject<HTMLInputElement>;
     createNewGroup?: (newGroupName: string) => Promise<boolean>;
-    showCreateGroup?: boolean;
+    showCreateGroup?: boolean; // Avoids having 2 'create group' panels when selector is full screen
     sidebarStyle?: boolean;
-    useHashAnchor?: boolean;
 }
 
-export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, showCreateGroup, sidebarStyle, useHashAnchor}: GroupSelectorProps) => {
+export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, showCreateGroup, sidebarStyle}: GroupSelectorProps) => {
     const dispatch = useAppDispatch();
 
     // Clear the selected group when switching between tabs
@@ -533,7 +532,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
         }
     };
 
-    return <Card className={classNames({"groups-sidebar": sidebarStyle})}>
+    return <Card className="group-selector">
         <CardBody>
             {showCreateGroup && isDefined(createNewGroup) && <>
                 <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
@@ -550,7 +549,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                 {siteSpecific(<div className="section-divider"/>, <hr/>)}
             </>}
             <div className={classNames("text-start", {"mt-3": showCreateGroup})}>
-                <strong className={"me-2"}>Groups:</strong>
+                <strong className="me-2">Groups:</strong>
                 <UncontrolledButtonDropdown size="sm">
                     <DropdownToggle color="secondary" caret size={"sm"}>
                         {sortOrder}
@@ -587,16 +586,9 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                             </li>
                             : <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                 <div className="d-flex justify-content-between align-items-center group-name-buttons">
-                                    {useHashAnchor
-                                        ? <Link to={`/groups#${g.id}`} title={isStaff(user) ? `Group id: ${g.id}` : undefined} data-testid={"select-group"} className="text-start px-1 py-1 group-name d-flex flex-fill">
-                                            <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
-                                                {g.groupName}
-                                            </Button>
-                                        </Link>                                     
-                                        : <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
-                                            {g.groupName}
-                                        </Button>
-                                    }
+                                    <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
+                                        {g.groupName}
+                                    </Button>
                                     {showArchived &&
                                         <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
                                             aria-label="Delete group" className={classNames("ms-1", siteSpecific("icon-close", "bin-icon"))} title={"Delete group"}/>
@@ -607,7 +599,9 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                 </div>}
                             </div>
                     )
-                    : <div className={"group-item p-2"}>No {showArchived ? "archived" : "active"} groups</div>
+                    : <div className="text-center p-2">
+                        You have no {showArchived ? "archived" : "active"} groups.
+                    </div>
                 }
             </ul>
         </CardBody>
@@ -682,7 +676,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
                     <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup}/>
                     {/* On small screens, the groups list should initially be accessible without needing to open the sidebar drawer */}
                     {below["md"](deviceSize) && !isDefined(selectedGroup) && <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                        showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={false} sidebarStyle={false} useHashAnchor={false}/>}
+                        showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} sidebarStyle={false}/>}
                 </MainContent>
             </SidebarLayout>
         </ShowLoadingQuery>
@@ -696,7 +690,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
             <Row className="mb-5">
                 <Col lg={4}>
                     <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                        showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true} useHashAnchor={false}/>
+                        showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true}/>
                 </Col>
                 <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
                     <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />

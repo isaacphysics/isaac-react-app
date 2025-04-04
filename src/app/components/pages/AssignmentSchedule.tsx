@@ -667,7 +667,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Assignment Schedule" help={pageHelp}/>
+        <TitleAndBreadcrumb currentPageTitle="Assignment Schedule" icon={{type: "hex", icon: "icon-events"}} help={pageHelp}/>
         {/*<h4 className="mt-4 mb-3">*/}
         {/*    Assign a {siteSpecific("gameboard", "quiz")} from...*/}
         {/*</h4>*/}

@@ -225,7 +225,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                         href={`/${quickSwitcher.subject}/${quickSwitcher.stage}`}
                     >
                         <span className="mb-1">Quick switch to</span>
-                        <span>
+                        <span className="d-flex align-items-center">
                             <i className="icon icon-hexagon me-1" />
                             {`${HUMAN_STAGES[quickSwitcher.stage]} ${HUMAN_SUBJECTS[quickSwitcher.subject]}`}
                         </span>
@@ -233,7 +233,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     
                     }
                     {category.subcategories.map((subcategory, j) => {
-                        return <NavigationItem key={i * keyBase + j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.subject })}>
+                        return <NavigationItem key={i * keyBase + j} className="align-items-center" href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.subject })}>
                             <i className="icon icon-hexagon me-1" />
                             <span>{subcategory.fullTitle}</span>
                         </NavigationItem>;
@@ -353,8 +353,19 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
 
     const taskCount = assignmentsCount + quizzesCount;
 
+    // Get first char of first & last names. If either is not a letter, don't display it.
+    const userInitials = user?.loggedIn && user?.givenName && user?.familyName ?
+        [...`${user.givenName[0]}${user.familyName[0]}`.toUpperCase()].filter(c => c.match(/[\p{L}]/u)) : undefined;
+
     const title = <div className="d-flex align-items-center">
-        <i className="icon icon-my-isaac me-2"/>
+        <div className="d-flex flex-column justify-content-center align-items-center me-2">
+            {userInitials?.length
+                ? <>
+                    <i className="icon-initials"/>
+                    <span>{userInitials}</span>
+                </>
+                : <i className="icon icon-my-isaac"/>}
+        </div>
         My Isaac
         {taskCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">
             {taskCount > 99 ? "99+" : taskCount}

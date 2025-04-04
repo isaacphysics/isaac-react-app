@@ -15,6 +15,8 @@ import {Assignments} from "../elements/Assignments";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {PageFragment} from "../elements/PageFragment";
 import { MainContent, MyAssignmentsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MyAssignmentsOrder } from "../../../IsaacAppTypes";
+import sortBy from "lodash/sortBy";
 
 
 const INITIAL_NO_ASSIGNMENTS = 10;
@@ -39,8 +41,16 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
     const [assignmentSetByFilter, setAssignmentSetByFilter] = useState<string>("All");
     const [assignmentGroupFilter, setAssignmentGroupFilter] = useState<string>("All");
+    const [sortOrder, setSortOrder] = useState<MyAssignmentsOrder>(MyAssignmentsOrder["dueDate"]);
 
     const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
+
+    const SORT_FUNCTIONS = {
+        [MyAssignmentsOrder.startDate]: (a: AssignmentDTO) => a.scheduledStartDate ? a.scheduledStartDate : a.creationDate,
+        [MyAssignmentsOrder.dueDate]: (a: AssignmentDTO) => a.dueDate,
+        [MyAssignmentsOrder.attempted]: (a: AssignmentDTO) => a.gameboard?.percentageAttempted ?? 0,
+        [MyAssignmentsOrder.correct]: (a: AssignmentDTO) => a.gameboard?.percentageCorrect ?? 0,
+    };
 
     const pageHelp = <span>
         Any {siteSpecific("assignments", "quizzes")} you have been set will appear here.<br />
@@ -49,7 +59,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} modalId="help_modal_my_assignments" />
+        <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_my_assignments" />
         <PageFragment fragmentId={`${siteSpecific("help_toptext_assignments", "assignments_help")}_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <SidebarLayout>
             <MyAssignmentsSidebar
@@ -57,6 +67,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 titleFilter={assignmentTitleFilter} setTitleFilter={setAssignmentTitleFilter}
                 groupFilter={assignmentGroupFilter} setGroupFilter={setAssignmentGroupFilter}
                 setByFilter={assignmentSetByFilter} setSetByFilter={setAssignmentSetByFilter}
+                sortOrder={sortOrder} setSortOrder={setSortOrder}
                 assignmentQuery={assignmentQuery}
             />
             <MainContent>
@@ -79,12 +90,17 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                             assignmentTitleFilter, assignmentGroupFilter, assignmentSetByFilter
                         );
 
+                        const orderNegative = sortOrder.at(0) == "-";
+                        const orderKind = (orderNegative ? sortOrder.slice(1) : sortOrder) as "startDate" | "dueDate" | "attempted" | "correct";
+                        const orderedAssignments = sortBy(filteredAssignments, SORT_FUNCTIONS[orderKind]);
+                        if (orderNegative) orderedAssignments.reverse();
+
                         return <div className="pt-4">
-                            <Assignments assignments={filteredAssignments.slice(0, limit)} />
-                            {limit < filteredAssignments.length && <div className="text-center">
+                            <Assignments assignments={orderedAssignments.slice(0, limit)} />
+                            {limit < orderedAssignments.length && <div className="text-center">
                                 <hr className="text-center" />
                                 <p className="mt-4">
-                                    Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered {siteSpecific("assignments", "quizzes")}.
+                                    Showing <strong>{limit}</strong> of <strong>{orderedAssignments.length}</strong> filtered {siteSpecific("assignments", "quizzes")}.
                                 </p>
                                 <Button color="primary" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
                                     Show more

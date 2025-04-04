@@ -23,11 +23,11 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
         ),
         news: siteSpecific(
             "New content and website feature updates, as well as interesting news about Isaac.",
-            "Be the first to know about new questions, topics, and platform features. You can expect one email a month."
+            "Be the first to hear about new features, challenges, topics, and improvements on the platform. Plus, get helpful tips on making the most of new tools."
         ),
         events: siteSpecific(
             "Information about new virtual or real world physics events.",
-            "Find out about upcoming events."
+            "Find out about upcoming events designed to support your learning and professional development."
         )
     };
 
