@@ -49,6 +49,14 @@
   background-size: 20px;
 }
 
+[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    margin-right: 24px;
+    height: 16px;
+    width: 16px;
+    background: url(/assets/phy/icons/redesign/close.svg);
+}
+
 select.form-select {
   border: none;
   border-radius: 0;
