@@ -682,27 +682,16 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
     const deviceSize = useDeviceSize();
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
-        <div className="section-divider"/>
+        {above["lg"](deviceSize) && <div className="section-divider"/>}
         <h5>Search question decks</h5>
         <Input
-            className='search--filter-input my-4'
+            className='search--filter-input my-3'
             type="search" value={boardTitleFilter || ""}
             placeholder="e.g. Forces"
             onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
         />
         <div className="section-divider"/>
-        <h5 className="mb-4">Display</h5>
-        <div className="d-flex flex-xl-column flex-xxl-row">
-            <Input className="w-auto" type="select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
-                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
-            </Input>
-            {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
-            <div className="select-pretext me-2">Limit:</div>
-            <Input className="w-auto" type="select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
-                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
-            </Input>
-        </div>
-        <h5 className="mt-4 mb-3">Filter by creator</h5>
+        <h5 className="mb-3">Filter by creator</h5>
         <Input type="select" value={boardCreatorFilter} onChange={e => setBoardCreatorFilter(e.target.value as BoardCreators)}>
             {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
         </Input>
@@ -710,6 +699,18 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
         <Input type="select" value={boardCompletionFilter} onChange={e => setBoardCompletionFilter(e.target.value as BoardCompletions)}>
             {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
         </Input>
+        <div className="section-divider"/>
+        <h5 className="mb-4">Display</h5>
+        <div className="d-flex flex-xl-column flex-xxl-row">
+            <Input className="w-auto" type="select" aria-label="Set display mode" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+            </Input>
+            {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
+            <div className="select-pretext me-2">Limit:</div>
+            <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+            </Input>
+        </div>
     </ContentSidebar>;
 };
 interface SetAssignmentsSidebarProps extends SidebarProps {
@@ -730,30 +731,40 @@ interface SetAssignmentsSidebarProps extends SidebarProps {
 
 export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
     const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, sortOrder, setSortOrder, sortDisabled, boardSubject, setBoardSubject, boardCreator, setBoardCreator, ...rest } = props;
+    const deviceSize = useDeviceSize();
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
-        <div className="section-divider"/>
+        {above["lg"](deviceSize) && <div className="section-divider"/>}
         <h5>Search question decks</h5>
         <Input
-            className='search--filter-input my-4'
+            className='search--filter-input my-3'
             type="search" value={boardTitleFilter || ""}
             placeholder="e.g. Forces"
             onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
         />
         <div className="section-divider"/>
-        <h5 className="mb-4">Display</h5>
+        <h5 className="mb-3">Filter by subject</h5>
+        <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
+            {Object.values(BoardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
+        </Input>
+        <h5 className="my-3">Filter by creator</h5>
+        <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
+            {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+        </Input>
+        <div className="section-divider"/>
+        <h5 className="mb-3">Display</h5>
         <div className="d-flex">
-            <Input className="w-auto" type="select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+            <Input className="w-auto" type="select" aria-label="Set display mode" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                 {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
             </Input>
             <Spacer/>
-            <div className="select-pretext">Limit:</div>
-            <Input className="w-auto" type="select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+            <div className="select-pretext me-2">Limit:</div>
+            <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                 {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
             </Input>
         </div>
-        <h5 className="mt-4 mb-3">Sort by</h5>
-        <Input type="select" className="mb-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as AssignmentBoardOrder)} disabled={sortDisabled}>
+        <h5 className="my-3">Sort by</h5>
+        <Input type="select" className="mb-3" aria-label="Set sort order" value={sortOrder} onChange={e => setSortOrder(e.target.value as AssignmentBoardOrder)} disabled={sortDisabled}>
             {Object.values(AssignmentBoardOrder).filter(
                 order => !['attempted', '-attempted', 'correct', '-correct'].includes(order)
             ).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
@@ -761,15 +772,6 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
         {sortDisabled && <div className="small text-muted mt-2">
             Sorting is disabled if some question decks are hidden. Increase the display limit to show all question decks.
         </div>}
-        <div className="section-divider"/>
-        <h5 className="mb-3">Filter by subject</h5>
-        <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
-            {Object.values(BoardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
-        </Input>
-        <h5 className="mt-4 mb-3">Filter by creator</h5>
-        <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-            {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-        </Input>
     </ContentSidebar>;
 };
 
@@ -920,14 +922,14 @@ export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
     const { titleFilter, setTitleFilter } = props;
     const deviceSize = useDeviceSize();
 
-    return <ContentSidebar buttonTitle="Search & Filter">
-        {above["lg"](deviceSize) && <div className="section-divider mt-5"/>}
-        <h5>Search &amp; Filter</h5>
-        <span className="quiz-filter-date-span mt-2">Title</span>
+    return <ContentSidebar buttonTitle="Search tests">
+        {above["lg"](deviceSize) && <div className="section-divider"/>}
+        <h5>Search tests</h5>
         <Input
             id="available-quizzes-title-filter" type="search"
+            className="search--filter-input my-3"
             value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
-            placeholder="Search by title" aria-label="Search by title"
+            placeholder="e.g. Forces"
         />
     </ContentSidebar>;
 };
@@ -969,25 +971,24 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
         </DropdownMenu>
     </UncontrolledDropdown>;
 
-    const titleFilterInput = <div className="my-2">
-        <span className="quiz-filter-date-span">Title</span>
+    return <ContentSidebar buttonTitle="Search & Filter">
+        {above["lg"](deviceSize) && <div className="section-divider"/>}
+        <h5>Search tests</h5>
         <Input
             id="manage-quizzes-title-filter" type="search"
             value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
-            placeholder="Search by title" aria-label="Search by title"
+            className="search--filter-input mt-3 mb-4"
+            placeholder="e.g. Forces" aria-label="Search by title"
         /> 
-    </div>;
-
-    const groupFilterInput = <div className="my-2">
-        <span className="quiz-filter-date-span">Group</span>
+        <h5>Search by group</h5>
         <Input
             id="manage-quizzes-group-name-filter" type="search"
             value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
-            placeholder="Search by group" aria-label="Search by group"
+            className="search--filter-input my-3"
+            placeholder="Group name"  aria-label="Search by group"
         />
-    </div>;
-
-    const setDateFilterInput = <div className="my-2">
+        <div className="section-divider"/>
+        <h5>Filter by date</h5>
         <div className="d-flex align-items-center">
             <span className="quiz-filter-date-span">Starting</span>
             {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
@@ -997,9 +998,6 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
             value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
             placeholder="Filter by set date" aria-label="Filter by set date"
         />
-    </div>;
-
-    const dueDateFilterInput = <div className="my-2">
         <div className="d-flex align-items-center">
             <span className="quiz-filter-date-span">Due</span>
             {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
@@ -1009,15 +1007,6 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
             value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
             placeholder="Filter by due date" aria-label="Filter by due date"
         />
-    </div>;
-
-    return <ContentSidebar buttonTitle="Search & Filter">
-        {above["lg"](deviceSize) && <div className="section-divider mt-5"/>}
-        <h5>Search & Filter</h5>
-        {titleFilterInput}
-        {groupFilterInput}
-        {setDateFilterInput}
-        {dueDateFilterInput}
     </ContentSidebar>;
 };
 
@@ -1176,23 +1165,23 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
     return <ContentSidebar buttonTitle="Search & Filter">
         <ShowLoadingQuery query={quizQuery} defaultErrorTitle="" thenRender={(quizzes: QuizAssignmentDTO[]) => {
             return <>
-                <div className={classNames("section-divider", {"mt-5": above["lg"](deviceSize)})}/>
+                {above["lg"](deviceSize) && <div className="section-divider"/>}
                 <h5>Search tests</h5>
-                <Input type="text" className="search--filter-input my-4" onChange={(e) => setQuizTitleFilter(e.target.value)} 
-                    placeholder="Search by title" aria-label="Search by title"/>
+                <Input type="search" className="search--filter-input my-3" onChange={(e) => setQuizTitleFilter(e.target.value)} 
+                    placeholder="e.g. Forces" aria-label="Search by title"/>
                 <div className="section-divider"/>
-                <h5 className="mb-4">Filter by status</h5>
+                <h5 className="mb-3">Filter by status</h5>
                 <QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/>
                 <div className="section-divider-small"/>
                 {statusOptions.map(state => <QuizStatusCheckbox 
                     key={state} status={state} count={undefined} statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} 
                 />)}
-                <h5 className="mt-4 mb-3">Filter by assigner</h5>
+                <h5 className="my-3">Filter by assigner</h5>
                 <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
                     {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
                 </Input>
                 <div className="section-divider mt-4"/>
-                <h5 className="mb-3">Display mode</h5>
+                <h5 className="mb-3">Display</h5>
                 <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
                     <option value="table">Table View</option>
                     <option value="cards">Card View</option>
