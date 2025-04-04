@@ -58,7 +58,8 @@ import {
     siteSpecific,
     useDeviceSize,
     useGameboards,
-    TODAY
+    TODAY,
+    UTC_MIDNIGHT_IN_SIX_DAYS
 } from "../../services";
 import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
@@ -75,9 +76,10 @@ interface AssignGroupProps {
     groups: UserGroupDTO[];
     board: GameboardDTO | undefined;
 }
+
 const AssignGroup = ({groups, board}: AssignGroupProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
-    const [dueDate, setDueDate] = useState<Date>();
+    const [dueDate, setDueDate] = useState<Date | undefined>(UTC_MIDNIGHT_IN_SIX_DAYS);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
     const user = useAppSelector(selectors.user.loggedInOrNull);
@@ -89,7 +91,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
         dispatch(assignGameboard({boardId: board?.id as string, groups: selectedGroups, dueDate, scheduledStartDate, notes: assignmentNotes, userId: user?.id})).then(success => {
             if (success) {
                 setSelectedGroups([]);
-                setDueDate(undefined);
+                setDueDate(UTC_MIDNIGHT_IN_SIX_DAYS);
                 setScheduledStartDate(undefined);
                 setAssignmentNotes('');
             }
@@ -112,7 +114,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
     }
 
     return <Container fluid className="py-2">
-        <Label className="w-100 pb-2">Group(s):
+        <Label data-testid="modal-groups-selector" className="w-100 pb-2">Group(s):
             <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
                 value={selectedGroups}
                 closeMenuOnSelect={false}
@@ -128,12 +130,9 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
         <Label className="w-100 pb-2">Due date reminder
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
+            {!dueDate && <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.</small>}
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
-            {dueDateInvalid && startDateInvalid && <br/>}
         </Label>
-        <Alert color={siteSpecific("warning", "info")} className="py-1 px-2">
-            Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.
-        </Alert>
         {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
                 spellCheck={true}
@@ -181,10 +180,8 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
         }
     }
 
-    const description = siteSpecific(
-        "Manage assignment of groups to the selected gameboard",
-        "Select a group to which to assign the quiz"
-    );
+    const description = "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. " +
+        "Assignments are due by the end of the day indicated.";
 
     return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle}>
         <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break d-flex justify-content-between"} close={
@@ -213,7 +210,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
             <div className="py-2">
                 <Label>Pending {siteSpecific("assignments", "quiz assignments")}: <span className="icon-help mx-1" id={`pending-assignments-help-${board?.id}`}/></Label>
                 <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
-                    {siteSpecific("Assignments", "Quizzes")} that are scheduled to begin at a future date. Once the start date passes, students
+                    These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the morning of the scheduled date, students
                     will be able to see the {siteSpecific("assignment", "quiz")}, and will receive a notification email.
                 </UncontrolledTooltip>
                 {scheduledAssignees.length > 0

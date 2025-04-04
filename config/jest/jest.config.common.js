@@ -4,6 +4,7 @@ module.exports = {
         "!src/**/*.d.ts"
     ],
     "resolver": "jest-pnp-resolver",
+    globalSetup: "<rootDir>/src/test/globalSetup.ts",
     setupFiles: [
         "<rootDir>/config/jest/jest.polyfills.js"
     ],
