@@ -176,13 +176,13 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
     const scheduledAssignees = useMemo(() => assignees.filter(a => !hasStarted(a)), [assignees]);
 
     function confirmUnassignBoard(groupId: number, groupName?: string) {
-        if (board?.id && confirm(`Are you sure you want to unassign this ${siteSpecific("gameboard", "quiz")} from ${groupName ? `group ${groupName}` : "this group"}?`)) {
+        if (board?.id && confirm(`Are you sure you want to unassign this ${siteSpecific("question deck", "quiz")} from ${groupName ? `group ${groupName}` : "this group"}?`)) {
             unassignBoard({boardId: board?.id, groupId});
         }
     }
 
     const description = siteSpecific(
-        "Manage assignment of groups to the selected gameboard",
+        "Manage assignment of groups to the selected question deck",
         "Select a group to which to assign the quiz"
     );
 
@@ -420,7 +420,7 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
     const dispatch = useAppDispatch();
     return <>
         <h4 className="mt-4 mb-3">
-            Add a {siteSpecific("gameboard", "quiz")} from ...
+            Add a {siteSpecific("question deck", "quiz")} from ...
         </h4>
         <Row className={className}>
             <Col md={6} lg={4} className="pt-1">
@@ -438,7 +438,7 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
             </Col>
             <Col md={12} lg={4} className="pt-1">
                 <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
-                    create a gameboard
+                    create a question deck
                 </Button>
             </Col>
         </Row>
@@ -505,7 +505,7 @@ export const SetAssignments = () => {
 
     // Page help
     const pageHelp = <span>
-        Use this page to set {siteSpecific("assignments", "quizzes")} to your groups. You can {siteSpecific("assign", "set")} any {siteSpecific("gameboard", "quiz")} you have saved to your account.
+        Use this page to set {siteSpecific("assignments", "quizzes")} to your groups. You can {siteSpecific("assign", "set")} any {siteSpecific("question deck", "quiz")} you have saved to your account.
         <br/>
         Students in the group will be emailed when you set a new {siteSpecific("assignment", "quiz")}.
     </span>;
@@ -548,7 +548,7 @@ export const SetAssignments = () => {
                 </Alert>}
                 {boards && boards.totalResults === 0
                     ? <h3 className="text-center mt-4 mb-5">
-                        You have no {siteSpecific("gameboards", "quizzes")} to assign
+                        You have no {siteSpecific("question decks", "quizzes")} to assign
                         {siteSpecific(
                             "; use one of the options above to find one.",
                             <><br /><Button className={"mt-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="secondary">
@@ -569,7 +569,7 @@ export const SetAssignments = () => {
                                 </Button>}
                             </h4>}
                             {!boards && <h4>
-                                You have <IsaacSpinner size="sm" inline/> {siteSpecific("gameboards", "quizzes")} ready to assign...
+                                You have <IsaacSpinner size="sm" inline/> {siteSpecific("question decks", "quizzes")} ready to assign...
                             </h4>}
                         </>}
                         {isAda && <Row>

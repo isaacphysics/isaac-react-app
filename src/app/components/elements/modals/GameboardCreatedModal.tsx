@@ -9,7 +9,7 @@ import {PATHS, siteSpecific} from "../../../services";
 const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
     <Row className="mb-2">
         <Label className="mx-3">
-            Your {siteSpecific("gameboard", "quiz")} was not successfully created.
+            Your {siteSpecific("question deck", "quiz")} was not successfully created.
             <br/>
             {errorMessage}
         </Label>
@@ -18,7 +18,7 @@ const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
 const GameboardSuccessfullyCreated = () =>
     <Row className="mb-2">
         <Label className="mx-3">
-            Your {siteSpecific("gameboard", "quiz")} has been created. You can now set it as an assignment, create another {siteSpecific("board", "quiz")} or view all of your {siteSpecific("boards", "quizzes")}.
+            Your {siteSpecific("question deck", "quiz")} has been created. You can now set it as an assignment, create another {siteSpecific("board", "quiz")} or view all of your {siteSpecific("boards", "quizzes")}.
         </Label>
     </Row>;
 
@@ -39,7 +39,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 className="w-100 h-100" color="primary" outline
                 onClick={() => {resetBuilder(); closeModal();}}
             >
-                Create another {siteSpecific("board", "quiz")}
+                Create another {siteSpecific("question deck", "quiz")}
             </Button>
         </Col>
         <Col sm={12} lg={4} className="mb-1">
@@ -47,7 +47,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 className="w-100 h-100" tag={Link} to={PATHS.SET_ASSIGNMENTS} color="primary" outline
                 onClick={closeModal}
             >
-                View all of your {siteSpecific("boards", "quizzes")}
+                View all of your {siteSpecific("question decks", "quizzes")}
             </Button>
         </Col>
     </Row>;
