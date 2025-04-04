@@ -31,7 +31,7 @@ export const HeaderPhy = () => {
                     <div className="header-logo align-content-center">
                         <Link to="/">
                             <img src="/assets/phy/logo.svg" alt="Isaac Physics" className="d-none d-sm-block d-print-block"/>
-                            <img src="/assets/phy/logo-small.svg" alt="Isaac Physics" className="d-block d-sm-none d-print-none p-2"/>
+                            <img src="/assets/phy/logo-small.svg" alt="Isaac Physics" className="d-block d-sm-none d-print-none"/>
                         </Link>
                     </div>
 

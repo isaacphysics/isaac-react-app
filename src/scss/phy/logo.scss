@@ -10,8 +10,12 @@
     width: 45px;
     vertical-align: top;
 
-    @include respond-above(xs) {
-      width: 7.85rem;
+    @include respond-between(xs, lg) {
+      width: 9rem;
+    }
+
+    @include respond-above(lg) {
+      width: 12rem;
     }
 
     @media print {
