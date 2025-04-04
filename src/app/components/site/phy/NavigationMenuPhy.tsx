@@ -3,7 +3,7 @@ import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Dropdown, Dro
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
-import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, Subject, above, below, isFullyDefinedContext, isSingleStageContext, isTeacherOrAbove, isValidStageSubjectPair, useDeviceSize } from "../../../services";
+import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PATHS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, Subject, above, below, isFullyDefinedContext, isSingleStageContext, isTeacherOrAbove, isValidStageSubjectPair, useDeviceSize } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
@@ -293,7 +293,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                 <div className="d-flex flex-column flex-sm-row">
                     <div>
                         {isTeacherOrAbove(user) && <h5>STUDENT</h5>}
-                        <NavigationItemClose href="/my_gameboards">
+                        <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
                             My question decks
                         </NavigationItemClose>
                         <NavigationItemClose href="/assignments" className="d-flex align-items-center">

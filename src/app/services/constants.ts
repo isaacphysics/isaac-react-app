@@ -1124,14 +1124,14 @@ export const NEWS_PODS_PER_PAGE = 12; // <= api.MAX_PODS_TO_RETURN (if lower, th
 
 export const PATHS = siteSpecific({
     ASSIGNMENT_PROGRESS: "/assignment_progress",
-    MY_GAMEBOARDS: "/my_gameboards",
+    MY_GAMEBOARDS: "/my_question_decks",
     MY_ASSIGNMENTS: "/assignments",
     QUESTION_FINDER: "/questions",
     GAMEBOARD_FILTER: "/gameboards/new",
     GAMEBOARD: "/gameboards",
     SET_ASSIGNMENTS: "/set_assignments",
-    GAMEBOARD_BUILDER: "/gameboard_builder",
-    ADD_GAMEBOARD: "/add_gameboard",
+    GAMEBOARD_BUILDER: "/question_deck_builder",
+    ADD_GAMEBOARD: "/add_question_deck",
     PREVIEW_TEST: "/test/preview",
     TEST: "/test/assignment",
 }, {

@@ -16,12 +16,12 @@ import {
     mockQuestionFinderResults,
     mockConceptPage
 } from "./data";
-import {API_PATH} from "../app/services";
+import {API_PATH, PATHS} from "../app/services";
 import {produce} from "immer";
 import {School} from "../IsaacAppTypes";
 
 export const handlers = [
-    http.get(API_PATH + "/gameboards/user_gameboards", ({request}) => {
+    http.get(API_PATH + `${PATHS.GAMEBOARD}/user_gameboards`, ({request}) => {
         const url = new URL(request.url);
         const startIndexStr = url.searchParams.get("start_index");
         const startIndex = (startIndexStr && parseInt(startIndexStr)) || 0;

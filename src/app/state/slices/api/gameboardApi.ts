@@ -2,7 +2,7 @@ import {isaacApi} from "./baseApi";
 import {AssignmentBoardOrder, Boards, NumberOfBoards} from "../../../../IsaacAppTypes";
 import {GameboardDTO, GameboardListDTO, IsaacWildcard} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
-import {isPhy, QUESTION_CATEGORY, siteSpecific} from "../../../services";
+import {isPhy, PATHS, QUESTION_CATEGORY, siteSpecific} from "../../../services";
 import {logAction} from "../../actions/logging";
 
 export const gameboardApi = isaacApi.injectEndpoints({
@@ -10,7 +10,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
 
         getGameboards: build.query<Boards, {startIndex: number, limit: NumberOfBoards, sort: AssignmentBoardOrder}>({
             query: ({startIndex, limit, sort}) => ({
-                url: "/gameboards/user_gameboards",
+                url: `${PATHS.GAMEBOARD}/user_gameboards`,
                 params: {"start_index": startIndex, limit, sort}
             }),
             providesTags: (result) => result ? ["AllGameboards", ...result.boards.map(b => ({type: "Gameboard" as const, id: b.id}))] : [],
@@ -32,7 +32,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
         // TODO MT handle requesting new gameboard if local storage is also null
         getGameboardById: build.query<GameboardDTO, string | null>({
             query: (boardId) => ({
-                url: `/gameboards/${boardId}`
+                url: `${PATHS.GAMEBOARD}/${boardId}`
             }),
             providesTags: (result) => result && result.id ? [{type: "Gameboard", id: result.id}] : []
         }),
@@ -81,7 +81,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                         .join(",");
                 }
                 return {
-                    url: "/gameboards",
+                    url: PATHS.GAMEBOARD,
                     params
                 };
             },
@@ -115,7 +115,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
 
         unlinkUserFromGameboard: build.mutation<void, string>({
             query: (boardId) => ({
-                url: `/gameboards/user_gameboards/${boardId}`,
+                url: `${PATHS.GAMEBOARD}/user_gameboards/${boardId}`,
                 method: "DELETE",
             }),
             invalidatesTags: (_, error, boardId) => !error ? [{type: "Gameboard", id: boardId}] : [],
