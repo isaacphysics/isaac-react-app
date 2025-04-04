@@ -40,7 +40,7 @@ export const AdminStats = () => {
         <TitleAndBreadcrumb 
             currentPageTitle={`${siteSpecific("Isaac", "Ada")} statistics`} 
             breadcrumbTitleOverride="Admin statistics" 
-            icon={{type: "hex", icon: "icon-finder"}} 
+            icon={{type: "hex", icon: "icon-progress"}} 
         />
         <ShowLoading
             until={maybeAdminStatsWithTotals}

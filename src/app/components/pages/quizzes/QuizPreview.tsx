@@ -57,7 +57,7 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user};
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
-        <TitleAndBreadcrumb currentPageTitle="Test Preview" intermediateCrumbs={myQuizzesCrumbs} />
+        <TitleAndBreadcrumb currentPageTitle="Test Preview" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "hex", icon: "icon-error"}}/>
         <Alert color="danger">
             <h4 className="alert-heading">Error loading test preview</h4>
             <p>{getRTKQueryErrorMessage(error).message}</p>

@@ -165,7 +165,7 @@ export const Gameboard = withRouter(({ location }) => {
         <TitleAndBreadcrumb 
             breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")} 
             currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`} 
-            icon={{type: "hex", icon: "icon-question-deck"}}
+            icon={{type: "hex", icon: "icon-error"}}
         />
         <h3 className="my-4">
             <small>
