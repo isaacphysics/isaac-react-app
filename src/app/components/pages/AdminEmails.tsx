@@ -40,7 +40,10 @@ export const AdminEmails = (props: AdminEmailsProps) => {
     }, [user]);
 
     return <Container id="admin-emails-page">
-        <TitleAndBreadcrumb currentPageTitle="Admin emails" />
+        <TitleAndBreadcrumb 
+            currentPageTitle="Admin emails" 
+            icon={{type: "hex", icon: "icon-contact"}}
+        />
 
         <Card className="p-3 my-3">
             <CardTitle tag="h2">User selection</CardTitle>

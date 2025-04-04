@@ -8,7 +8,7 @@ export const MarkdownBuilder = () => {
     const [markdownToTest, setMarkdownToTest] = useState("");
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Markdown builder" />
+        <TitleAndBreadcrumb currentPageTitle="Markdown builder" icon={{type: "hex", icon: "icon-concept"}} />
         <Card className="mt-4 mb-5">
             <CardBody>
                 <InputGroup>

@@ -73,7 +73,7 @@ const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListVie
         title: "Glossary",
         subtitle: "Explore our glossary of terms and definitions."
     },
-    icon: {type: "hex", icon: "icon-finder"},
+    icon: {type: "hex", icon: "icon-tests"},
     subject: context.subject,
     linkTags: [{tag: "View glossary", url: extendUrl(context, 'glossary')}]
 });

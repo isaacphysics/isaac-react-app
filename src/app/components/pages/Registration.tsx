@@ -125,7 +125,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     // Render
     return <Container id="registration-page" className="mb-5">
 
-        <TitleAndBreadcrumb currentPageTitle="Registration" className="mb-4" />
+        <TitleAndBreadcrumb currentPageTitle="Registration" className="mb-4" icon={{type: "hex", icon: "icon-account"}} />
         <MetaDescription description={metaDescription} />
 
         <Card>

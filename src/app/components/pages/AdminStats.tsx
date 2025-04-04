@@ -37,7 +37,11 @@ export const AdminStats = () => {
     });
 
     return <Container id="admin-stats-page">
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Isaac", "Ada")} statistics`} breadcrumbTitleOverride="Admin statistics" />
+        <TitleAndBreadcrumb 
+            currentPageTitle={`${siteSpecific("Isaac", "Ada")} statistics`} 
+            breadcrumbTitleOverride="Admin statistics" 
+            icon={{type: "hex", icon: "icon-finder"}} 
+        />
         <ShowLoading
             until={maybeAdminStatsWithTotals}
             thenRender={adminStatsWithTotals => {

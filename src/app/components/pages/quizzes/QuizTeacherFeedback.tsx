@@ -84,7 +84,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
             query={quizAssignmentQuery}
             ifError={buildErrorComponent}
             thenRender={quizAssignment => <>
-                <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
+                <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "hex", icon: "icon-tests"}}/>
                 <div className="d-flex mb-4">
                     <span>
                         Set by: {extractTeacherName(quizAssignment.assignerSummary)} on {formatDate(quizAssignment.creationDate)}

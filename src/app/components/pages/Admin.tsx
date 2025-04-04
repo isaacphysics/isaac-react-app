@@ -38,7 +38,10 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     };
 
     return <Container id="admin-page">
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Isaac", "Ada")} administration`} breadcrumbTitleOverride="Admin tools" />
+        <TitleAndBreadcrumb 
+            currentPageTitle={`${siteSpecific("Isaac", "Ada")} administration`} breadcrumbTitleOverride="Admin tools" 
+            icon={{"type": "hex", "icon": "icon-account"}}
+        />
 
         <div className="py-4">
 

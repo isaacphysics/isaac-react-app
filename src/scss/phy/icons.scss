@@ -26,14 +26,6 @@
   background: url(/assets/phy/ru.png) -296px -316px no-repeat;
   margin: 0 10px 0 0;
 }
-.icon-group {
-  float: left;
-  width: 23px;
-  min-width: 23px;
-  height: 19px;
-  background: url(/assets/phy/ru.png) -330px -321px no-repeat;
-  margin: 10px 10px 10px 0;
-}
 .icon-group-table-person {
   float: left;
   width: 11px;
@@ -52,7 +44,6 @@
 .icon-person,
 .icon-warning,
 .icon-help,
-.icon-group,
 .icon-group-table-person
 {
   background-image: url(/assets/phy/ru.png) !important;
@@ -233,6 +224,22 @@
     '/assets/phy/icons/redesign/page-event-fg.svg',
     '/assets/phy/icons/redesign/page-event-bg.svg',
     var(--icon-size), var(--icon-size), var(--mask-size, 63%)
+  );
+}
+
+.icon-contact {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-contact-fg.svg', 
+    '/assets/phy/icons/redesign/page-contact-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), 58% 53%
+  );
+}
+
+.icon-group {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-group-fg.svg', 
+    '/assets/phy/icons/redesign/page-group-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 65%)
   );
 }
 
