@@ -19,7 +19,7 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
     const sortedGroups = sortBy(groups, g => g.created).reverse().slice(0, 5);
 
     return <div className="dashboard-panel">
-        <h4>Manage my groups</h4>
+        <h4>Manage group progress</h4>
         {sortedGroups.length ?
             <>
                 <div className="overflow-hidden">
@@ -57,7 +57,7 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
     const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
     return <div className="dashboard-panel">
-        <h4>Assignment schedule</h4>
+        <h4>View scheduled work</h4>
         {soonestDeadlines.length ? soonestDeadlines.map(assignment => <div className="mb-3" key={assignment.id}><AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} /></div>)
             : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>}
         <Spacer/>
@@ -119,7 +119,7 @@ const BooksPanel = () => {
     const [subject, setSubject] = useState<Subject | "all">("all");
     return <div className="w-100 dashboard-panel book-panel">
         <div className="d-flex align-items-center">
-            <h4>Books</h4>
+            <h4>Explore our books</h4>
             <div className="w-50 ms-auto">
                 <StyledDropdown value={subject}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setSubject(e.target.value as Subject)}>
