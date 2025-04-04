@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { closeActiveModal, getMyProgress, openActiveModal, selectors, showErrorToast, store, useAppDispatch, useAppSelector, useGetMyAssignmentsQuery, useLazyGetTokenOwnerQuery } from '../../state';
+import React, { useMemo, useRef, useState } from 'react';
+import { openActiveModal, selectors, showErrorToast, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
-import { Button, Card, Col, Input, InputGroup, Row } from 'reactstrap';
+import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { filterAssignmentsByStatus, isDefined, isLoggedIn, PATHS, useDeviceSize } from '../../services';
+import { convertAssignmentToQuiz, filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTeacherOrAbove, PATHS, QuizStatus, sortUpcomingAssignments, useDeviceSize } from '../../services';
 import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
-import { AssignmentDTO } from '../../../IsaacApiTypes';
-import { useAssignmentsCount } from '../navigation/NavigationBar';
-import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
+import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
+import { getActiveWorkCount } from '../navigation/NavigationBar';
 import { Spacer } from './Spacer';
+import classNames from 'classnames';
+import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -24,7 +25,7 @@ const GroupJoinPanel = () => {
         else {
             const {data: usersToGrantAccess} = await getTokenOwner(token);
             if (usersToGrantAccess && usersToGrantAccess.length) {
-                dispatch(openActiveModal(tokenVerificationModal(userId, token, usersToGrantAccess)) as any);
+                dispatch(openActiveModal(tokenVerificationModal(userId, token, usersToGrantAccess)));
             }
         }
     };
@@ -58,82 +59,139 @@ const GroupJoinPanel = () => {
     </div>;
 };
 
-const DashboardStreakPanel = () => {
-    const dispatch = useAppDispatch();
-    const myProgress = useAppSelector(selectors.user.progress);
+interface DashboardStreakPanelProps {
+    streakRecord: UserSnapshot | undefined;
+}
 
-    useEffect(() => {
-        dispatch(getMyProgress());
-    }, [dispatch]);
+const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
 
-    const streaksInfoModal = () => openActiveModal({
-        closeAction: () => store.dispatch(closeActiveModal()),
-        title: "Weekly streaks",
-        body: <div className="mb-4">
+    const streaksTooltip = useRef(null);
+    const tooltip = <UncontrolledTooltip placement="auto" autohide={false} target={streaksTooltip}>
             The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/><br/>
             Answer at least ten question parts correctly per week to fill up your weekly progress bar and increase your streak!
-        </div>
-    });
+    </UncontrolledTooltip>;
 
-    const remainingToAnswer = 10 - (myProgress?.userSnapshot?.weeklyStreakRecord?.currentActivity || 0);
+    const remainingToAnswer = 10 - (streakRecord?.weeklyStreakRecord?.currentActivity || 0);
 
     return <div className='w-100 dashboard-panel'>
         <h4>Build your weekly streak</h4>
         <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
-            <DashboardStreakGauge streakRecord={myProgress?.userSnapshot}/>
+            <DashboardStreakGauge streakRecord={streakRecord}/>
         </div>
-        {remainingToAnswer === 0 ? <div className="streak-text">You&apos;ve maintained your streak for this week!</div> : <div className="streak-text">Only {remainingToAnswer} more question parts to answer correctly this week!</div>}
+        <div className="streak-text mb-2">
+            {remainingToAnswer <= 0
+                ? `You've maintained your streak for this week!`
+                : `Only ${remainingToAnswer} more question parts to answer correctly this week!`
+            }
+        </div>
         <Spacer/>
-        <button onClick={() => dispatch(streaksInfoModal())} className="mt-2 p-0 panel-link">
-            What is this?<img src="/assets/common/icons/chevron_down.svg" className="ms-1" alt=""/> { /* TODO replace this icon since this isn't a dropdown */ }
-        </button>
+        <Button className="numeric-help d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
+            <i className="icon icon-info icon-color-grey"/> What is this?
+        </Button>
+        {tooltip}
     </div>;
 };
 
-const AssignmentCard = (assignment: AssignmentDTO) => {
+interface AssignmentCardProps {
+    assignment: IAssignmentLike;
+    isTeacherDashboard?: boolean;
+    groups?: AppGroup[] | undefined;
+}
+
+export const AssignmentCard = (props: AssignmentCardProps) => {
+    const { assignment, isTeacherDashboard, groups } = props;
     const today = new Date();
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
-    const isOverdue = dueDate && dueDate < today;
     const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
-    return <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`} className="mt-3">
-        <Card className="assignment-card px-3">
-            <div className="d-flex flex-row h-100">
-                <i className="icon icon-question-deck" />
-                <div className="flex-grow-1 ms-2">
-                    <h5>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h5>
-                    {isDefined(assignment.groupName) && assignment.groupName}
-                </div>
-                {dueDate && (isOverdue ? <span className="align-self-end overdue">Overdue</span> : <span className="align-self-end">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
+
+    // QuizAssignmentDTOs don't have group names
+    const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
+
+    const groupName = isQuiz(assignment) ? groupIdToName[assignment.groupId as number]
+        : isAssignment(assignment) ? assignment.groupName
+            : "";
+
+    const link = isQuiz(assignment) ? (isTeacherDashboard ? `${PATHS.TEST}/${assignment.id}/feedback` : `${PATHS.TEST}/${assignment.id}`)
+        : isAssignment(assignment) ? (isTeacherDashboard ? `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}` : `${PATHS.GAMEBOARD}#${assignment.gameboardId}`)
+            : "";
+
+    const title = isQuiz(assignment) ? assignment.quizSummary?.title
+        : isAssignment(assignment) ? assignment.gameboard?.title
+            : "";
+
+    const icon = isQuiz(assignment) ? "icon icon-tests"
+        : isAssignment(assignment) ? "icon icon-question-deck"
+            : "";
+
+    return <Link to={link} className="w-100">
+        <Card className="assignment-card px-3 d-flex flex-column h-100">
+            <h5 className="d-inline">
+                <i className={`${icon} me-2`}/>
+                {title}
+            </h5>
+            <Spacer/>
+            <div className="d-flex text-nowrap">
+                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
+                <span className="group-name">{groupName}</span>
             </div>
         </Card>
     </Link>;
 };
 
-const CurrentWorkPanel = () => {
-    const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
+interface CurrentWorkPanelProps {
+    assignments: AssignmentDTO[] | undefined;
+    quizAssignments: QuizAssignmentDTO[] | undefined;
+    groups: AppGroup[] | undefined;
+}
+
+const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPanelProps) => {
+
+    if (!isDefined(assignments) || !isDefined(quizAssignments)) {
+        return <div className="dashboard-panel"/>;
+    }
+
+    const isComplete = (quiz: IAssignmentLike) => convertAssignmentToQuiz(quiz)?.status === QuizStatus.Complete;
+
+    // we can show overdue assignments, as students can still complete them; we cannot show overdue quizzes as you cannot take them after the due date
+    const sortedQuizAssignments = quizAssignments ? sortUpcomingAssignments(quizAssignments).filter(quiz => !isOverdue(quiz) && !isComplete(quiz)) : [];
+    
+    
+    const myAssignments = filterAssignmentsByStatus(assignments);
+
+    // Get the 2 most urgent due dates from assignments & quizzes combined
+    // To avoid merging & re-sorting entire lists, get the 2 most urgent from each list first
+    const assignmentsToDo = [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld].slice(0, 2);
+    const quizzesToDo = sortedQuizAssignments.slice(0, 2);
+    const toDo = sortUpcomingAssignments([...assignmentsToDo, ...quizzesToDo]).slice(0, 2);
+
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>
-        <ShowLoadingQuery
-            query={assignmentQuery}
-            defaultErrorTitle={"Error fetching your assignments"}
-            thenRender={(assignments) => {
-                const myAssignments = filterAssignmentsByStatus(assignments);
-                const toDo = [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld].slice(0, 2);
-                return <>
-                    {toDo.length === 0 ?
-                        <div className="mt-3">You have no active assignments.</div> :
-                        <>
-                            <span>You have assignments that are active or due soon:</span>
-                            {toDo.map((assignment: AssignmentDTO) => <AssignmentCard key={assignment.id} {...assignment} />)}
-                        </>}
-                </>;
-            }
-            }/>
+        {toDo.length === 0 
+            ? <div className="mt-3 mt-lg-0 mt-xl-3 text-center">You have no active assignments.</div> 
+            : <>
+                <span className="mb-2">You have assignments that are active or due soon:</span>
+                <div className="row">
+                    {toDo.map((assignment: IAssignmentLike) => <span key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3"><AssignmentCard assignment={assignment} groups={groups}/></span>)}
+                </div>
+                <Spacer/>
+                <div className="d-flex align-items-center">
+                    <Link to="/assignments" className="d-inline panel-link">
+                        See all assignments
+                    </Link>
+                    <Link to="/tests" className="d-inline panel-link ms-auto ms-lg-5 ms-xl-auto">
+                        See all tests
+                    </Link>
+                </div>
+            </>}
     </div>;
 };
 
-const MyIsaacPanel = () => {
-    const {assignmentsCount, quizzesCount} = useAssignmentsCount();
+interface MyIsaacPanelProps {
+    assignmentsCount: number;
+    quizzesCount: number;
+};
+
+const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
     return <div className='w-100 dashboard-panel'>
         <h4>More in My Isaac</h4>
         <div className="d-flex flex-column">
@@ -159,45 +217,55 @@ const MyIsaacPanel = () => {
     </div>; 
 };
 
-export const StudentDashboard = () => {
+interface StudentDashboardProps {
+    assignments: AssignmentDTO[] | undefined;
+    quizAssignments: QuizAssignmentDTO[] | undefined;
+    streakRecord: UserSnapshot | undefined;
+    groups: AppGroup[] | undefined;
+}
+
+export const StudentDashboard = ({assignments, quizAssignments, streakRecord, groups}: StudentDashboardProps) => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
-    if (user && isLoggedIn(user)) {
-        return <div className="dashboard w-100">
-            {deviceSize === "lg"
-                ? <>
-                    <Row>
-                        <Col className="mt-4">
-                            <CurrentWorkPanel />
-                        </Col>
-                    </Row>
-                    <Row className="row-cols-3">
-                        <Col className="mt-4 panel-streak">
-                            <DashboardStreakPanel />
-                        </Col>
-                        <Col className="mt-4">
-                            <GroupJoinPanel />
-                        </Col>
-                        <Col className="mt-4">
-                            <MyIsaacPanel />
-                        </Col>
-                    </Row></>
-                : <>
-                    <Row className="row-cols-1 row-cols-sm-2 row-cols-xl-4">
-                        <Col className="mt-4 col-xl-3">
-                            <CurrentWorkPanel />
-                        </Col>
-                        <Col className="mt-4 col-xl-2 panel-streak">
-                            <DashboardStreakPanel />
-                        </Col>
-                        <Col className="mt-4 col-sm-7 col-xl-4">
-                            <GroupJoinPanel />
-                        </Col>
-                        <Col className="mt-4 col-sm-5 col-xl-3">
-                            <MyIsaacPanel />
-                        </Col>
-                    </Row></>
-            }
-        </div>;
-    }
+    const nameToDisplay = isLoggedIn(user) && !isTeacherOrAbove(user) && user.givenName;
+
+    const {assignmentsCount, quizzesCount} = getActiveWorkCount(assignments, quizAssignments);
+
+    return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTeacherOrAbove(user)})}>
+        {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
+        {deviceSize === "lg"
+            ? <>
+                <Row>
+                    <Col className="mt-4">
+                        <CurrentWorkPanel assignments={assignments} quizAssignments={quizAssignments} groups={groups} />
+                    </Col>
+                </Row>
+                <Row className="row-cols-3">
+                    <Col className="mt-4 panel-streak">
+                        <DashboardStreakPanel streakRecord={streakRecord} />
+                    </Col>
+                    <Col className="mt-4">
+                        <GroupJoinPanel />
+                    </Col>
+                    <Col className="mt-4">
+                        <MyIsaacPanel assignmentsCount={assignmentsCount} quizzesCount={quizzesCount} />
+                    </Col>
+                </Row></>
+            : <>
+                <Row className="row-cols-1 row-cols-sm-2 row-cols-xl-4">
+                    <Col className="mt-4 col-xl-4">
+                        <CurrentWorkPanel assignments={assignments} quizAssignments={quizAssignments} groups={groups} />
+                    </Col>
+                    <Col className="mt-4 col-xl-2 panel-streak">
+                        <DashboardStreakPanel streakRecord={streakRecord} />
+                    </Col>
+                    <Col className="mt-4 col-sm-7 col-xl-3">
+                        <GroupJoinPanel />
+                    </Col>
+                    <Col className="mt-4 col-sm-5 col-xl-3">
+                        <MyIsaacPanel assignmentsCount={assignmentsCount} quizzesCount={quizzesCount} />
+                    </Col>
+                </Row></>
+        }
+    </div>;
 };

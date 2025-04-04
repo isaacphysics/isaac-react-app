@@ -96,23 +96,18 @@
   }
 }
 
-.welcome-text {
-  font-family: $secondary-font-bold;
-  font-size: 24px;
-  background-color: white;
-  padding-left: 30px;
-  padding-top: 20px;
-}
-
-.dashboard-toggle {
-  background-color: white;
-  padding-left: 30px;
-  padding-top: 20px;
-}
-
 .dashboard {
   background-color: white;
-  padding: 10px 30px 50px;
+
+  &.dashboard-outer { // avoids double-padding for teachers viewing student dashboard
+    padding: 30px 30px 50px;
+  }
+
+  .welcome-text {
+    font-family: $secondary-font-bold;
+    font-size: 24px;
+    margin-top: 10px;
+  }
 }
 
 $dashboard-panel-size: 120px;
@@ -163,10 +158,7 @@ $dashboard-panel-padding: 30px;
   .streak-text {
     color: $color-brand-700;
     font-weight: 600;
-  }
-  
-  .plain-link {
-    text-decoration: none;
+    font-size: 14px;
   }
 
   .panel-link {
@@ -176,7 +168,6 @@ $dashboard-panel-padding: 30px;
     font-size: 14px;
     font-weight: 400;
     text-decoration: underline;
-    padding-bottom: 10px;
 
     &:hover {
       text-decoration: none;
@@ -193,6 +184,8 @@ $dashboard-panel-padding: 30px;
     font-weight: 400;
     text-decoration: none;
     padding-bottom: 10px;
+    display: flex;
+    align-items: center;
 
     &:hover {
       text-decoration: underline;
@@ -213,18 +206,19 @@ $dashboard-panel-padding: 30px;
   }
 }
 
-.scrollable-panel {
-  overflow-y: auto;
-}
-
 .book-panel {
   overflow-x: auto;
   overflow-y: hidden;
 
-  .book {
-    font-family: $secondary-font-medium;
-    font-size: 14px;
+  .dashboard-book {
+    font-size: 13px;
     text-decoration: none;
+    text-align: center;
+    max-width: 105px;
+
+    img {
+      max-width: 85px;
+    }
   }
 }
 
@@ -254,6 +248,13 @@ a:has(.assignment-card) {
   .overdue {
     color: $color-misc-red;
     font-weight: 600;
+  }
+
+  .group-name {
+    display: inline-block;
+    margin-inline-start: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &:hover {
