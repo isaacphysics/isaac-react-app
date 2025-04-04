@@ -294,7 +294,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                     <div>
                         {isTeacherOrAbove(user) && <h5>STUDENT</h5>}
                         <NavigationItemClose href="/my_gameboards">
-                            My question packs
+                            My question decks
                         </NavigationItemClose>
                         <NavigationItemClose href="/assignments" className="d-flex align-items-center">
                             My assignments

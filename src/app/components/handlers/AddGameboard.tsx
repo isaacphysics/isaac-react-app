@@ -24,6 +24,6 @@ export const AddGameboard = ({user}: {user: PotentialUser}) => {
     }, [dispatch, saveGameboard, gameboardId]);
 
     return <Container className={"text-center"}>
-        <IsaacSpinner size={"lg"} displayText={`Adding ${siteSpecific("gameboard", "quiz")}...`}/>
+        <IsaacSpinner size={"lg"} displayText={`Adding ${siteSpecific("question deck", "quiz")}...`}/>
     </Container>;
 };

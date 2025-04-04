@@ -683,7 +683,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         <div className="section-divider"/>
-        <h5>Search gameboards</h5>
+        <h5>Search question decks</h5>
         <Input
             className='search--filter-input my-4'
             type="search" value={boardTitleFilter || ""}
@@ -733,7 +733,7 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         <div className="section-divider"/>
-        <h5>Search gameboards</h5>
+        <h5>Search question decks</h5>
         <Input
             className='search--filter-input my-4'
             type="search" value={boardTitleFilter || ""}
@@ -759,7 +759,7 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
             ).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
         </Input>
         {sortDisabled && <div className="small text-muted mt-2">
-            Sorting is disabled if some gameboards are hidden. Increase the display limit to show all gameboards.
+            Sorting is disabled if some question decks are hidden. Increase the display limit to show all question decks.
         </div>}
         <div className="section-divider"/>
         <h5 className="mb-3">Filter by subject</h5>
