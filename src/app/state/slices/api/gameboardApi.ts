@@ -10,7 +10,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
 
         getGameboards: build.query<Boards, {startIndex: number, limit: NumberOfBoards, sort: AssignmentBoardOrder}>({
             query: ({startIndex, limit, sort}) => ({
-                url: `${PATHS.GAMEBOARD}/user_gameboards`,
+                url: "/gameboards/user_gameboards",
                 params: {"start_index": startIndex, limit, sort}
             }),
             providesTags: (result) => result ? ["AllGameboards", ...result.boards.map(b => ({type: "Gameboard" as const, id: b.id}))] : [],
@@ -32,7 +32,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
         // TODO MT handle requesting new gameboard if local storage is also null
         getGameboardById: build.query<GameboardDTO, string | null>({
             query: (boardId) => ({
-                url: `${PATHS.GAMEBOARD}/${boardId}`
+                url: "/gameboards/${boardId}"
             }),
             providesTags: (result) => result && result.id ? [{type: "Gameboard", id: result.id}] : []
         }),
@@ -81,7 +81,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                         .join(",");
                 }
                 return {
-                    url: PATHS.GAMEBOARD,
+                    url: "/gameboards",
                     params
                 };
             },
@@ -115,7 +115,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
 
         unlinkUserFromGameboard: build.mutation<void, string>({
             query: (boardId) => ({
-                url: `${PATHS.GAMEBOARD}/user_gameboards/${boardId}`,
+                url: "/gameboards/user_gameboards/${boardId}",
                 method: "DELETE",
             }),
             invalidatesTags: (_, error, boardId) => !error ? [{type: "Gameboard", id: boardId}] : [],
