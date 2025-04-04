@@ -4,6 +4,7 @@ import {WithFigureNumbering} from "./WithFigureNumbering";
 import {EditContentButton} from "./EditContentButton";
 import {useGetPageFragmentQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import { TeacherNotes } from "./TeacherNotes";
 
 interface PageFragmentComponentProps {
     fragmentId: string;
@@ -28,6 +29,7 @@ export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProp
         thenRender={(fragment) =>
             <WithFigureNumbering doc={fragment}>
                 <EditContentButton doc={fragment} />
+                <TeacherNotes notes={fragment.teacherNotes} />
                 <IsaacContent doc={fragment} />
             </WithFigureNumbering>
         }

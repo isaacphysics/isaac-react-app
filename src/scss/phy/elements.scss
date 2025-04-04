@@ -19,3 +19,52 @@
 .accordion .accordion-button::after {
   @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
 }
+
+details.teacher-notes {
+  margin: 1rem 0;
+  summary {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: max-content;
+    padding: 0.5rem 1rem;
+    background-color: $color-misc-pale-yellow;
+    border: 2px solid $color-neutral-900;
+    border-radius: 6px;
+    z-index: 1;
+    
+    &::marker {
+      content: '';
+    }
+
+    &::after {
+      content: "";
+      display: inline-block;
+      background: url('/assets/phy/icons/redesign/chevron-down.svg') no-repeat center center;
+      height: 16px;
+      width: 16px;
+      margin-left: 8px;
+      transform: rotate(-90deg);
+      transition: transform 0.1s ease-in-out;
+    }
+  }
+
+  > div {
+    padding: 1.5rem 2rem;
+    background-color: $color-misc-pale-yellow;
+    border: 2px solid $color-neutral-900;
+    border-radius: 6px;
+    border-top-left-radius: 0;
+    margin-top: -2px;
+  }
+
+  &[open] summary {
+    border-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    &::after {
+      transform: rotate(0deg);
+    }
+  }
+}

@@ -96,7 +96,12 @@ export interface IsaacAnvilQuestionDTO extends QuestionDTO {
 export interface IsaacConceptPageDTO extends SeguePageDTO {
 }
 
-export interface IsaacEventPageDTO extends ContentDTO {
+export interface IsaacPageFragmentDTO extends ContentDTO {
+    summary?: string;
+    teacherNotes?: string;
+}
+
+export interface IsaacEventPageDTO extends SeguePageDTO {
     date?: Date;
     bookingDeadline?: Date;
     prepWorkDeadline?: Date;
@@ -538,6 +543,7 @@ export interface SeguePageDTO extends ContentDTO {
     canonicalSourceFile?: string;
     summary?: string;
     deprecated?: boolean;
+    teacherNotes?: string;
 }
 
 export interface StringChoiceDTO extends ChoiceDTO {
