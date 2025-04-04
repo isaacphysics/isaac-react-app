@@ -16,7 +16,7 @@ import {
     mockQuestionFinderResults,
     mockConceptPage
 } from "./data";
-import {API_PATH, PATHS} from "../app/services";
+import {API_PATH} from "../app/services";
 import {produce} from "immer";
 import {School} from "../IsaacAppTypes";
 
