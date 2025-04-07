@@ -224,12 +224,12 @@ export const HomepageCS = () => {
                         <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
                     </div>
                     {!userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES &&
-                        <Row xs={12} className="d-flex flex-row row-cols-1 row-cols-md-2 my-3">
+                        <Row xs={12} className="d-flex flex-row row-cols-1 row-cols-md-2 mt-3">
                             <IconCard
                                 card={{
                                     title: "Stay updated",
                                     icon: {src: "/assets/cs/icons/mail.svg"},
-                                    bodyText: "Update your communication preferences to be the first to know about Ada news.",
+                                    bodyText: "Update your preferences and be the first to hear about new features, challenges, topics, and improvements on the platform.",
                                     clickUrl: "/account#notifications",
                                     buttonText: "Join our newsletter",
                                     onButtonClick: () => {setLinkedSetting("news-preference");}
