@@ -63,7 +63,7 @@ export const HomepageCS = () => {
                             <h2>Our latest updates</h2>
                             <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read the latest news and updates from the team.</p>
                             {!userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES &&
-                                <Button color="secondary" outline tag={Link} to={"/account#notifications"} onClick={() => {setLinkedSetting("news-preference");}}>Stay updated</Button>
+                                <Button color="secondary" outline tag={Link} to={"/account#notifications"} onClick={() => {setLinkedSetting("news-preference");}}>Join our newsletter</Button>
                             }
                         </TextBlock>
                         {featuredNewsItem && featuredNewsItem.title && featuredNewsItem.value ? <IconCard card={{
