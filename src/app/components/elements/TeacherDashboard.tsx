@@ -124,16 +124,15 @@ const BooksPanel = () => {
     return <div className="w-100 dashboard-panel book-panel">
         <div className="d-flex align-items-center">
             <h4>Explore our books</h4>
-            <div className="w-50 ms-auto">
-                <StyledDropdown value={subject}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSubject(e.target.value as Subject)}>
-                    <option value="all">All</option>
-                    <option value="physics">Physics</option>
-                    <option value="maths">Maths</option>
-                    <option value="chemistry">Chemistry</option>
-                    {/* No biology books */}
-                </StyledDropdown>
-            </div>
+            <Spacer/>
+            <select className="books-select ms-2 mb-3" value={subject}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => setSubject(e.target.value as Subject)}>
+                <option value="all">All</option>
+                <option value="physics">Physics</option>
+                <option value="maths">Maths</option>
+                <option value="chemistry">Chemistry</option>
+                {/* No biology books */}
+            </select>
         </div>
         <div ref={setScrollRef} className="row position-relative mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
             {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}

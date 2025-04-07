@@ -298,3 +298,9 @@ a:has(.assignment-card) {
     background: linear-gradient(to left, $color-neutral-50 0%, color-mix(in srgb, $color-neutral-50, transparent 100%) 100%);
   }
 }
+
+.books-select {
+  border: none;
+  border-bottom: 1px solid $color-neutral-300;
+  background-color: transparent;
+}
