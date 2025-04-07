@@ -114,7 +114,7 @@ describe("EmailAlterHandler", () => {
             PageComponent: EmailAlterHandler,
             modifyUser: (user) => ({...user, emailVerificationStatus: "NOT_VERIFIED", role: "STUDENT"}),
             extraEndpoints: [
-                http.get(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
+                http.post(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
             ],
             initalRouteEntries: ["/verifyemail"]
         });
@@ -139,7 +139,7 @@ describe("EmailAlterHandler", () => {
             PageComponent: EmailAlterHandler,
             modifyUser: (user) => ({...user, id: 1, emailVerificationStatus: "VERIFIED", role: "STUDENT"}),
             extraEndpoints: [
-                http.get(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
+                http.post(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
             ],
             initalRouteEntries: ["/verifyemail"]
         });
