@@ -159,7 +159,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
             currDueDate={selectedQuiz.dueDate}
             numericQuizAssignmentId={selectedQuiz.id as number}
         />}
-        <tr className={`list-group-item bg-white set-quiz-table-dropdown p-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0}
+        <tr className={classNames("bg-white set-quiz-table-dropdown p-0 w-100", {"active": isExpanded, "list-group-item": isPhy})} tabIndex={0}
             onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))}
         >
             {siteSpecific(
@@ -531,7 +531,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                 {below["xs"](deviceSize) ? <></> : below["lg"](deviceSize) ? <col width="90px"/> : <col width="160px"/>}
                                                 <col width={"60px"}/>
                                             </colgroup>}
-                                            <tbody className="list-group list-group-links">
+                                            <tbody className={siteSpecific("list-group list-group-links", "")}>
                                                 {quizAssignment.map((g, i) => <QuizAssignment key={g.assignedGroups?.[0].assignment.id ?? 0} user={g.user} assignedGroups={g.assignedGroups} index={i} />)}
                                             </tbody>
                                         </Table>}
