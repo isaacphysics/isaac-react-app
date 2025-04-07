@@ -7,7 +7,7 @@ import {PreUniMaths} from "../../pages/books/pre_uni_maths";
 import {PreUniMaths2e} from "../../pages/books/pre_uni_maths_2e";
 import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
-import {Redirect, RouteComponentProps} from "react-router";
+import {Redirect, Route, RouteComponentProps} from "react-router";
 import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
@@ -185,6 +185,7 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/gameboard_builder" to={PATHS.GAMEBOARD_BUILDER} />,
     <Redirect key={key++} exact from="/add_gameboard/:id" to={`${PATHS.ADD_GAMEBOARD}/:id`} />,
     <Redirect key={key++} exact from="/board/:id" to={`${PATHS.GAMEBOARD}#:id`} />,
+    <Route key={key++} exact path="/gameboards" render={(props) => <Redirect to={`${PATHS.GAMEBOARD}${props.location.hash ?? ""}`}/>} />, // Route wrapper needed to handle hash
     <Redirect key={key++} exact from="/gcsebook" to="/books/phys_book_gcse" />,
     <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_14" />,
     <Redirect key={key++} exact from="/book" to="/books/physics_skills_14" />,
