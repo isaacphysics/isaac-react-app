@@ -159,12 +159,12 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
             currDueDate={selectedQuiz.dueDate}
             numericQuizAssignmentId={selectedQuiz.id as number}
         />}
-        <tr className={`bg-white set-quiz-table-dropdown p-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0}
+        <tr className={`list-group-item bg-white set-quiz-table-dropdown p-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0}
             onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))}
         >
             {siteSpecific(
                 <>
-                    <Row className="w-100 d-flex flex-row">
+                    <Row className="w-100 ms-0 d-flex flex-row">
                         <Col className="d-flex align-items-center col-12 col-md-6">                       
                             <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="assignment-hex"/>                       
 
@@ -216,7 +216,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
 
         </tr>
         {isExpanded && <tr>
-            <td colSpan={siteSpecific(5, 4)} className={classNames("bg-white border-0", {"px-2 pb-2": isPhy})}>
+            <td colSpan={siteSpecific(5, 4)} className={classNames("bg-white border-0", {"px-2 pb-2 d-flex": isPhy})}>
                 <Table striped className="w-100 set-quiz-table-inner mb-1">
                     <thead>
                         <tr>
@@ -531,7 +531,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                 {below["xs"](deviceSize) ? <></> : below["lg"](deviceSize) ? <col width="90px"/> : <col width="160px"/>}
                                                 <col width={"60px"}/>
                                             </colgroup>}
-                                            <tbody>
+                                            <tbody className="list-group list-group-links">
                                                 {quizAssignment.map((g, i) => <QuizAssignment key={g.assignedGroups?.[0].assignment.id ?? 0} user={g.user} assignedGroups={g.assignedGroups} index={i} />)}
                                             </tbody>
                                         </Table>}
