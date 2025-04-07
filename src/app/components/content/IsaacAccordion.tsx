@@ -36,7 +36,8 @@ interface SectionWithDisplaySettings extends ContentDTO {
 const StageInsert = ({stage}: {stage: string}) => {
     const isAdditional = stage.startsWith("additional");
     return <>
-        <h4 className="mt-4">{isAdditional 
+        <div className="section-divider mt-4 mb-3"/>
+        <h4>{isAdditional 
             ? "Additional learning stages" 
             : stageLabelMap[stage as keyof typeof stageLabelMap]
         }</h4>
