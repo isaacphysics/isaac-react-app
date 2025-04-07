@@ -443,6 +443,10 @@ export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
     });
 
     return <HoverableNavigationContext.Provider value={{openId: openHoverable}}>
+        {below["sm"](deviceSize) && <div className="align-self-end d-print-none mb-3">
+            <MainSearchInput onSearch={toggleMenu}/>
+        </div>}
+
         <ContentNavProfile toggleMenu={toggleMenu}/>
         <ContentNavSection title="Explore by learning stage" categories={stageCategories} className="border-start" ikey={0} toggleMenu={toggleMenu}/>
         <ContentNavSection title="Explore by subject" categories={subjectCategories} className="border-start" ikey={1} toggleMenu={toggleMenu}/>
