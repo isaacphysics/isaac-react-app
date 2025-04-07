@@ -60,6 +60,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { PrintButton } from "../elements/PrintButton";
 import { ReportButton } from "../elements/ReportButton";
 import { ShareLink } from "../elements/ShareLink";
+import { TeacherNotes } from "../elements/TeacherNotes";
 
 function formatDate(date: Date | number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -420,6 +421,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                         <KeyEventInfo/>
                                     </Col>
                                 </Row>
+                                <TeacherNotes notes={event.teacherNotes} />
                                 <Row>
                                     <Col size={5} lg={8} xxl={9}>
                                         <IsaacContent doc={event}/>

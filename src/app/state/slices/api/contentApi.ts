@@ -1,4 +1,4 @@
-import {GameboardItem, IsaacConceptPageDTO, IsaacPodDTO} from "../../../../IsaacApiTypes";
+import {GameboardItem, IsaacPageFragmentDTO, IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {FEATURED_NEWS_TAG} from "../../../services";
 import {onQueryLifecycleEvents} from "./utils";
 import {isaacApi} from "./baseApi";
@@ -27,7 +27,7 @@ const contentApi = isaacApi.injectEndpoints({
             keepUnusedDataFor: 60
         }),
 
-        getPageFragment: build.query<IsaacConceptPageDTO, string>({
+        getPageFragment: build.query<IsaacPageFragmentDTO, string>({
             query: (fragmentId) => ({
                 url: `/pages/fragments/${fragmentId}`
             }),

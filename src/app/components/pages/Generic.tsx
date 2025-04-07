@@ -17,6 +17,7 @@ import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
 import { useUntilFound } from "./Glossary";
 import { MainContent, SidebarLayout, GenericPageSidebar, PolicyPageSidebar } from "../elements/layout/SidebarLayout";
+import { TeacherNotes } from "../elements/TeacherNotes";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -77,6 +78,8 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                             <PrintButton/>
                         </div>
                     </div>
+                    
+                    <TeacherNotes notes={doc.teacherNotes} />
 
                     <Row className="generic-content-container">
                         <Col className={classNames("py-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>

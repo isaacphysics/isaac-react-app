@@ -23,6 +23,7 @@ import {MetaDescription} from "../elements/MetaDescription";
 import {ReportButton} from "../elements/ReportButton";
 import classNames from "classnames";
 import { ConceptSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { TeacherNotes } from "../elements/TeacherNotes";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -102,6 +103,8 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                                 {above["md"](deviceSize) && <ManageButtons />}
                             </div>
                         </>}
+
+                        <TeacherNotes notes={doc.teacherNotes} />
 
                         <Row className="concept-content-container">
                             <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
