@@ -482,6 +482,7 @@ export const AssignmentScheduleContext = React.createContext<{
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
     }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+export const IsConceptContext = React.createContext<boolean>(false);
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
     completed?: boolean;

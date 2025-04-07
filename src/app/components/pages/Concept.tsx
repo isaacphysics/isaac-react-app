@@ -6,7 +6,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, Subject, above, below, usePreviousPageContext, isAda, isPhy, useDeviceSize, useNavigation, siteSpecific} from "../../services";
-import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
+import {IsConceptContext, DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -114,7 +114,9 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                                 {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
                                 <WithFigureNumbering doc={doc}>
-                                    <IsaacContent doc={doc} />
+                                    <IsConceptContext.Provider value={true}>
+                                        <IsaacContent doc={doc} />
+                                    </IsConceptContext.Provider>
                                 </WithFigureNumbering>
 
                                 {doc.attribution && <p className="text-muted">
