@@ -38,6 +38,7 @@ import {
     KEY,
     PATHS,
     persistence,
+    ScrollTopOnPageLoad,
     showNotification,
     trackEvent
 } from "../../services";
@@ -153,6 +154,7 @@ export const IsaacApp = () => {
         <ResearchNotificationBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
+        <ScrollTopOnPageLoad />
         <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-reduced-motion={displaySettings?.REDUCED_MOTION ? "true" : "false"}>
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <Suspense fallback={<Loading/>}>
