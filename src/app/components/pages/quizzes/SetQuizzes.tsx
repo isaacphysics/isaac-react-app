@@ -164,29 +164,29 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
         >
             {siteSpecific(
                 <>
-                    {above["md"](deviceSize) && <td className="align-middle">                       
-                        <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="assignment-hex"/>                       
-                    </td>}
-                    <td className="align-middle">
-                        <span className="manage-quiz-title me-3">{quizTitle}</span>
-                    </td>
-                    <td className="align-middle">
-                        <AffixButton size="sm" affix={{ affix: "icon-right", position: "suffix", type: "icon" }}
-                            onClick={(e) => {
-                                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
-                                e.stopPropagation();}}>
-                            Set Test
-                        </AffixButton>
-                    </td>
-                    {above["lg"](deviceSize) && <td className="align-middle d-none d-sm-table-cell">
-                        <Label className="d-block w-max-content text-center text-nowrap">
-                            Assigned to
-                            <div className="board-bubble-info-sm">{assignedGroups.length}</div>
-                            group{assignedGroups.length !== 1 && "s"}
-                        </Label>
-                    </td>}
-                    <td className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
+                    <Row className="w-100 d-flex flex-row">
+                        <Col className="d-flex align-items-center col-12 col-md-6">                       
+                            <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="assignment-hex"/>                       
+
+                            <span className="manage-quiz-title me-3">{quizTitle}</span>
+                        </Col>
+                        <Col className="d-flex align-items-center justify-content-md-end col-12 col-md-6">
+                            <AffixButton size="sm" affix={{ affix: "icon-right", position: "suffix", type: "icon" }} className="me-3"
+                                onClick={(e) => {
+                                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                                    assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
+                                    e.stopPropagation();}}>
+                                Set Test
+                            </AffixButton>
+                            <Label className="d-block w-max-content text-center text-nowrap me-3">
+                                Assigned to
+                                <div className="board-bubble-info-sm">{assignedGroups.length}</div>
+                                group{assignedGroups.length !== 1 && "s"}
+                            </Label>
+                            <div className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
+                        </Col>
+                    </Row>
+                    <div className="section-divider my-0 py-0"/>
                 </>,
 
                 <>
