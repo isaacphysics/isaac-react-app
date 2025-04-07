@@ -330,14 +330,30 @@ i.icon {
 // These are !important by the same logic as Bootstrap classes; if you have specified this as an explicit classname, you want it to take precedence.
 
 // the default icon colour for `neutral` is $color-theme-500 (green), but we use black icons in a few places across e.g. navigation
+@mixin icon-color-override($color) {
+  &.layered {
+    &::before {
+      background-color: $color !important;
+    }
+    &::after {
+      background-color: $color !important;
+    }
+  }
+
+  // .layered is a bit grim; if we could set something in @svg-icon-layered as a flag instead this would be ideal.
+  &:not(.layered) {
+    background-color: $color !important;
+  }
+}
+
 i.icon.icon-color-black {
-  background-color: $color-neutral-900 !important;
+  @include icon-color-override($color-neutral-900);
 }
 
 i.icon.icon-color-grey {
-  background-color: $color-neutral-500 !important;
+  @include icon-color-override($color-neutral-500);
 }
 
 i.icon.icon-color-white {
-  background-color: white;
+  @include icon-color-override($color-neutral-white);
 }
