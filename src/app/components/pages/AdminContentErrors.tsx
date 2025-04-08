@@ -45,7 +45,10 @@ export const AdminContentErrors = () => {
     return <Container>
         <Row>
             <Col>
-                <TitleAndBreadcrumb currentPageTitle="Content errors" />
+                <TitleAndBreadcrumb 
+                    currentPageTitle="Content errors"
+                    icon={{type: "hex", icon: "icon-tests"}}
+                />
             </Col>
         </Row>
         <ShowLoadingQuery

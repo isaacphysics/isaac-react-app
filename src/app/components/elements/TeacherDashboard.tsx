@@ -10,6 +10,8 @@ import { AssignmentCard, StudentDashboard } from './StudentDashboard';
 import sortBy from 'lodash/sortBy';
 import { Spacer } from './Spacer';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
+import { useStatefulElementRef } from './markup/portals/utils';
+import { ScrollShadows } from './ScrollShadows';
 
 interface GroupsPanelProps {
     groups: AppGroup[] | undefined;
@@ -19,7 +21,7 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
     const sortedGroups = sortBy(groups, g => g.created).reverse().slice(0, 5);
 
     return <div className="dashboard-panel">
-        <h4>Manage my groups</h4>
+        <h4>Manage group progress</h4>
         {sortedGroups.length ?
             <>
                 <div className="overflow-hidden">
@@ -57,7 +59,7 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
     const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
     return <div className="dashboard-panel">
-        <h4>Assignment schedule</h4>
+        <h4>View scheduled work</h4>
         {soonestDeadlines.length ? soonestDeadlines.map(assignment => <div className="mb-3" key={assignment.id}><AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} /></div>)
             : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>}
         <Spacer/>
@@ -117,27 +119,30 @@ const BookCard = ({title, image, path}: BookInfo) => {
 
 const BooksPanel = () => {
     const [subject, setSubject] = useState<Subject | "all">("all");
+    const [scrollRef, setScrollRef] = useStatefulElementRef<HTMLElement>();
+
     return <div className="w-100 dashboard-panel book-panel">
         <div className="d-flex align-items-center">
-            <h4>Books</h4>
-            <div className="w-50 ms-auto">
-                <StyledDropdown value={subject}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSubject(e.target.value as Subject)}>
-                    <option value="all">All</option>
-                    <option value="physics">Physics</option>
-                    <option value="maths">Maths</option>
-                    <option value="chemistry">Chemistry</option>
-                    {/* No biology books */}
-                </StyledDropdown>
-            </div>
+            <h4>Explore our books</h4>
+            <Spacer/>
+            <select className="books-select ms-2 mb-3" value={subject}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => setSubject(e.target.value as Subject)}>
+                <option value="all">All</option>
+                <option value="physics">Physics</option>
+                <option value="maths">Maths</option>
+                <option value="chemistry">Chemistry</option>
+                {/* No biology books */}
+            </select>
         </div>
-        <Row className="mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
+        <div ref={setScrollRef} className="row position-relative mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
+            {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
+            {window.ResizeObserver && <ScrollShadows element={scrollRef ?? undefined} shadowType="dashboard-scroll-shadow" />}
             {ISAAC_BOOKS.filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2 me-1 p-0">
                         <BookCard {...book}/>
                     </Col>)}
-        </Row>
+        </div>
         <Spacer/>
         <Link to="/publications" className="d-inline panel-link">See all books</Link>
     </div>;

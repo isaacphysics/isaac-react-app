@@ -104,7 +104,10 @@ export const Contact = () => {
         "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!");
 
     return <Container id="contact-page" className="pb-5">
-        <TitleAndBreadcrumb currentPageTitle="Contact us" />
+        <TitleAndBreadcrumb 
+            currentPageTitle="Contact us" 
+            icon={{type: "hex", "icon": "icon-contact"}}
+        />
         <MetaDescription description={metaDescription}/>
         <div className="pt-4">
             <Row>

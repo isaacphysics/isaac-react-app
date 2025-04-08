@@ -105,7 +105,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
     return <Container id="my-progress" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} disallowLaTeX />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-progress"}} disallowLaTeX />
         <Card className="mt-4">
             <CardBody>
                 <Tabs tabContentClass="mt-3">{{

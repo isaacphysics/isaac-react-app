@@ -19,6 +19,10 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
                 title: "11-14",
                 subtitle: `Our 11-14 ${humanSubject} resources introduce secondary ${humanSubject} concepts to students and build their numeracy skills through questions and a selection of experiments.`
             },
+            icon: {
+                type: "img" as const,
+                icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
+            },
             url: `/${context.subject}/11_14`,
             stage: LEARNING_STAGE["11_TO_14"],
         },
@@ -26,6 +30,10 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             item: {
                 title: "GCSE",
                 subtitle: `Our GCSE ${humanSubject} resources develop the ${humanSubject} knowledge needed at GCSE through the use of questions, concepts and books.`
+            },
+            icon: {
+                type: "img" as const,
+                icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
             },
             url: `/${context.subject}/gcse`,
             stage: LEARNING_STAGE.GCSE,
@@ -35,6 +43,10 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
                 title: "A Level",
                 subtitle: `Our A Level ${humanSubject} resources further strengthen the understanding of ${humanSubject}, while developing problem solving skills. Our resources include questions, concepts and books.`
             },
+            icon: {
+                type: "img" as const,
+                icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
+            },
             url: `/${context.subject}/a_level`,
             stage: LEARNING_STAGE.A_LEVEL,
         },
@@ -42,6 +54,10 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             item: {
                 title: "University",
                 subtitle: `Our University ${humanSubject} resources help you prepare for your university STEM degree.`
+            },
+            icon: {
+                type: "img" as const,
+                icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
             },
             url: `/${context.subject}/university`,
             stage: LEARNING_STAGE.UNIVERSITY,

@@ -77,7 +77,7 @@ export const TutorRequest = () => {
     }, [user]);
 
     return <Container id="contact-page" className="pb-5">
-        <TitleAndBreadcrumb currentPageTitle="Tutor Account request" />
+        <TitleAndBreadcrumb currentPageTitle="Tutor Account request" icon={{type: "hex", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>
                 <Col size={9}>

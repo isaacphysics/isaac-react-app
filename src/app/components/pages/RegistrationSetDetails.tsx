@@ -114,7 +114,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
         <SidebarLayout>
             <SignupSidebar activeTab={2}/>
             <MainContent>

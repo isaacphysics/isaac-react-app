@@ -81,7 +81,7 @@ const GraphSketcherPage = () => {
         <Container>
             <Row>
                 <Col>
-                    <TitleAndBreadcrumb currentPageTitle="Graph Sketcher demo page" />
+                    <TitleAndBreadcrumb currentPageTitle="Graph Sketcher demo page" icon={{type: "hex", icon: "icon-concept"}} />
                 </Col>
             </Row>
             <Row>

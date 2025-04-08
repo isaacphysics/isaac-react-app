@@ -51,7 +51,10 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
     </>;
 
     return <Container { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} />
+        <TitleAndBreadcrumb 
+            currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} 
+            icon={{"type": "hex", "icon": "icon-tests"}}
+        />
         <SidebarLayout>
             <PracticeQuizzesSidebar />
             <MainContent>

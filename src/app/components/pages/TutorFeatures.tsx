@@ -16,7 +16,7 @@ export const TutorFeatures = () => {
     return<Container>
         <Row className="mb-4">
             <Col>
-                <TitleAndBreadcrumb currentPageTitle={"Tutor Features"} />
+                <TitleAndBreadcrumb currentPageTitle={"Tutor Features"} icon={{type: "hex", icon: "icon-account"}}/>
             </Col>
         </Row>
         <Row className="mb-3">
