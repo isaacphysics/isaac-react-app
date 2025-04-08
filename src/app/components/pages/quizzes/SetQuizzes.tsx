@@ -199,7 +199,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                         </UncontrolledTooltip>
                     </td>
                     <td className={classNames("set-quiz-table-title align-middle ps-4")}>{quizTitle}</td>
-                    <td className="align-middle pe-4 d-sm-table-cell">
+                    <td className="align-middle pe-4 d-none d-sm-table-cell">
                         <Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
                             onClick={(e) => {
                                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
