@@ -443,7 +443,7 @@ export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
     });
 
     return <HoverableNavigationContext.Provider value={{openId: openHoverable}}>
-        {below["sm"](deviceSize) && <div className="align-self-end d-print-none mb-3">
+        {below["sm"](deviceSize) && <div className="w-100 align-self-end d-print-none mb-3">
             <MainSearchInput onSearch={toggleMenu}/>
         </div>}
 
