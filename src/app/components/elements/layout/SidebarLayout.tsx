@@ -960,7 +960,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
     const deviceSize = useDeviceSize();
     
     const dateFilterTypeSelector = (dateFilterType: string, setDateFilterType: React.Dispatch<React.SetStateAction<string>>) => <UncontrolledDropdown>
-        <DropdownToggle className="bg-transparent border-0 px-2" caret>{dateFilterType}</DropdownToggle>
+        <DropdownToggle className="bg-transparent border-0 px-2" color="dropdown" caret>{dateFilterType}</DropdownToggle>
         <DropdownMenu>
             <DropdownItem onClick={() => setDateFilterType('after')}>
                 after
@@ -1001,7 +1001,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
             value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
             placeholder="Filter by set date" aria-label="Filter by set date"
         />
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center mt-2">
             <span className="quiz-filter-date-span">Due</span>
             {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
         </div>

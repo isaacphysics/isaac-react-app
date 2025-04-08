@@ -159,34 +159,34 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
             currDueDate={selectedQuiz.dueDate}
             numericQuizAssignmentId={selectedQuiz.id as number}
         />}
-        <tr className={`bg-white set-quiz-table-dropdown p-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0}
+        <tr className={classNames("bg-white set-quiz-table-dropdown p-0 w-100", {"active": isExpanded, "list-group-item": isPhy})} tabIndex={0}
             onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))}
         >
             {siteSpecific(
                 <>
-                    {above["md"](deviceSize) && <td className="align-middle">                       
-                        <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="assignment-hex"/>                       
-                    </td>}
-                    <td className="align-middle">
-                        <span className="manage-quiz-title me-3">{quizTitle}</span>
-                    </td>
-                    <td className="align-middle">
-                        <AffixButton size="sm" affix={{ affix: "icon-right", position: "suffix", type: "icon" }}
-                            onClick={(e) => {
-                                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
-                                e.stopPropagation();}}>
-                            Set Test
-                        </AffixButton>
-                    </td>
-                    {above["lg"](deviceSize) && <td className="align-middle d-none d-sm-table-cell">
-                        <Label className="d-block w-max-content text-center text-nowrap">
-                            Assigned to
-                            <div className="board-bubble-info-sm">{assignedGroups.length}</div>
-                            group{assignedGroups.length !== 1 && "s"}
-                        </Label>
-                    </td>}
-                    <td className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
+                    <Row className="w-100 ms-0 d-flex flex-row">
+                        <Col className="d-flex align-items-center col-12 col-md-6">                       
+                            <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="assignment-hex"/>                       
+
+                            <span className="manage-quiz-title me-3">{quizTitle}</span>
+                        </Col>
+                        <Col className="d-flex align-items-center justify-content-md-end col-12 col-md-6">
+                            <AffixButton size="sm" affix={{ affix: "icon-right", position: "suffix", type: "icon" }} className="me-3"
+                                onClick={(e) => {
+                                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                                    assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
+                                    e.stopPropagation();}}>
+                                Set Test
+                            </AffixButton>
+                            <Label className="d-block w-max-content text-center text-nowrap me-3">
+                                Assigned to
+                                <div className="board-bubble-info-sm">{assignedGroups.length}</div>
+                                group{assignedGroups.length !== 1 && "s"}
+                            </Label>
+                            <div className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
+                        </Col>
+                    </Row>
+                    <div className="section-divider my-0 py-0"/>
                 </>,
 
                 <>
@@ -199,7 +199,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                         </UncontrolledTooltip>
                     </td>
                     <td className={classNames("set-quiz-table-title align-middle ps-4")}>{quizTitle}</td>
-                    <td className="align-middle pe-0 d-none d-sm-table-cell">
+                    <td className="align-middle pe-4 d-none d-sm-table-cell">
                         <Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
                             onClick={(e) => {
                                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -216,7 +216,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
 
         </tr>
         {isExpanded && <tr>
-            <td colSpan={siteSpecific(5, 4)} className={classNames("bg-white border-0", {"px-2 pb-2": isPhy})}>
+            <td colSpan={siteSpecific(5, 4)} className={classNames("bg-white border-0", {"px-2 pb-2 d-flex": isPhy})}>
                 <Table striped className="w-100 set-quiz-table-inner mb-1">
                     <thead>
                         <tr>
@@ -531,7 +531,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                 {below["xs"](deviceSize) ? <></> : below["lg"](deviceSize) ? <col width="90px"/> : <col width="160px"/>}
                                                 <col width={"60px"}/>
                                             </colgroup>}
-                                            <tbody>
+                                            <tbody className={siteSpecific("list-group list-group-links", "")}>
                                                 {quizAssignment.map((g, i) => <QuizAssignment key={g.assignedGroups?.[0].assignment.id ?? 0} user={g.user} assignedGroups={g.assignedGroups} index={i} />)}
                                             </tbody>
                                         </Table>}
