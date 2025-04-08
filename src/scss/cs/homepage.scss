@@ -29,6 +29,12 @@
     opacity: 0.6;
   }
 
+  section#news-and-updates {
+    background-color: $cs-white;
+    color: $cs-black;
+    background-image: url(/assets/cs/decor/swirls.svg);
+  }
+
   section#scotland-slice {
     background-color: $cs-white;
     #scotland-slice-card {
