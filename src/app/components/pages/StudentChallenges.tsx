@@ -11,14 +11,14 @@ export const StudentChallenges = () => {
     const userPreferences = useAppSelector(selectors.user.preferences);
     const {setLinkedSetting} = useLinkableSetting();
     const liveChallengeId = "live_challenge";
-    const {data} = useGetPageFragmentQuery(liveChallengeId);
+    const {isError} = useGetPageFragmentQuery(liveChallengeId);
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Student challenges"} />
         <Row>
             <Col lg={{size: 8, offset: 2}}>
                 <PageFragment fragmentId={"student_challenges_intro"} />
-                {data ?
+                {!isError ?
                     <PageFragment fragmentId={liveChallengeId} />
                     :
                     <>
