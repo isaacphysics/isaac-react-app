@@ -165,12 +165,12 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
             {siteSpecific(
                 <>
                     <Row className="w-100 ms-0 d-flex flex-row">
-                        <Col className="d-flex align-items-center col-12 col-md-6">                       
-                            <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="assignment-hex"/>                       
+                        <Col className="d-flex align-items-center col-7 col-sm-8 col-md-6">                       
+                            <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="d-none d-sm-block assignment-hex"/>                       
 
                             <span className="manage-quiz-title me-3">{quizTitle}</span>
                         </Col>
-                        <Col className="d-flex align-items-center justify-content-md-end col-12 col-md-6">
+                        <Col className="d-flex align-items-center justify-content-end col-5 col-sm-4 col-md-6">
                             <AffixButton size="sm" affix={{ affix: "icon-right", position: "suffix", type: "icon" }} className="me-3"
                                 onClick={(e) => {
                                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -178,7 +178,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                     e.stopPropagation();}}>
                                 Set Test
                             </AffixButton>
-                            <Label className="d-block w-max-content text-center text-nowrap me-3">
+                            <Label className="d-none d-md-block w-max-content text-center text-nowrap me-3">
                                 Assigned to
                                 <div className="board-bubble-info-sm">{assignedGroups.length}</div>
                                 group{assignedGroups.length !== 1 && "s"}
