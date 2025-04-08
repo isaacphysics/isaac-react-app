@@ -10,7 +10,7 @@ import {MetaDescription} from "../../elements/MetaDescription";
 import classNames from "classnames";
 import { ImageBlock } from "../../elements/layout/ImageBlock";
 import { IconCard } from "../../elements/cards/IconCard";
-import { TextBlock } from "../../elements/layout/TextBlock";git;
+import { TextBlock } from "../../elements/layout/TextBlock";
 import { ColumnSlice } from "../../elements/layout/ColumnSlice";
 import { AdaCard } from "../../elements/cards/AdaCard";
 import {useLinkableSetting} from "../../../services/linkableSetting";
