@@ -30,6 +30,7 @@ export const StudentChallenges = () => {
                                     bodyText: "There are no challenges running at the moment, but you're subscribed to " +
                                         "our mailing list and will be the first to know about the next one!",
                                 }}
+                                className={"mx-n3"}
                             />
                             :
                             <IconCard
@@ -42,6 +43,7 @@ export const StudentChallenges = () => {
                                     buttonText: "Notify me",
                                     onButtonClick: () => {setLinkedSetting("events-preference");}
                                 }}
+                                className={"mx-n3"}
                             />
                         }
                     </>
