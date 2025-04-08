@@ -10,7 +10,7 @@ import {MetaDescription} from "../../elements/MetaDescription";
 import classNames from "classnames";
 import { ImageBlock } from "../../elements/layout/ImageBlock";
 import { IconCard } from "../../elements/cards/IconCard";
-import { TextBlock } from "../../elements/layout/TextBlock";
+import { TextBlock } from "../../elements/layout/TextBlock";git;
 import { ColumnSlice } from "../../elements/layout/ColumnSlice";
 import { AdaCard } from "../../elements/cards/AdaCard";
 import {useLinkableSetting} from "../../../services/linkableSetting";
@@ -22,6 +22,7 @@ export const HomepageCS = () => {
     const deviceSize = useDeviceSize();
     const {setLinkedSetting} = useLinkableSetting();
     const userPreferences = useAppSelector(selectors.user.preferences);
+    const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
 
     return <>
         {/*<WarningBanner/>*/}
@@ -57,14 +58,17 @@ export const HomepageCS = () => {
             </section>
             <section id="news-and-updates">
                 <Container className="homepage-padding mw-1600 position-relative" fluid>
-                    <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                     <ColumnSlice>
                         <TextBlock className="pe-5">
                             <h2>Our latest updates</h2>
-                            <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read the latest news and updates from the team.</p>
-                            {!userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES &&
-                                <Button color="secondary" outline tag={Link} to={"/account#notifications"} onClick={() => {setLinkedSetting("news-preference");}}>Join our newsletter</Button>
-                            }
+                            <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read
+                                the latest news and updates from the team.</p>
+                            {showNewsletterPrompts && <div className={"d-none d-lg-block"}>
+                                <Button onClick={() => {setLinkedSetting("news-preference");}} color={"primary"}
+                                    tag={Link} to={"/account#notifications"}>
+                                    Join our newsletter
+                                </Button>
+                            </div>}
                         </TextBlock>
                         {featuredNewsItem && featuredNewsItem.title && featuredNewsItem.value ? <IconCard card={{
                             title: featuredNewsItem.title,
@@ -76,10 +80,17 @@ export const HomepageCS = () => {
                             buttonStyle: "link"
                         }}/> : <div/>}
                     </ColumnSlice>
+                    {showNewsletterPrompts && <div className={"mt-4 mt-lg-5 w-100 text-center d-lg-none"}>
+                        <Button onClick={() => {setLinkedSetting("news-preference");}} color={"primary"}
+                            tag={Link} to={"/account#notifications"}>
+                                Join our newsletter
+                        </Button>
+                    </div>
+                    }
                 </Container>
             </section>
             <section id="benefits-for-teachers-and-students" className="bg-white">
-                <Container className={"homepage-padding mw-1600"}>                    
+                <Container className={"homepage-padding mw-1600"}>
                     <Row className={"align-items-center"}>
                         <Col xs={12} lg={5} className="mt-4 mt-lg-4 order-1 order-lg-0">
                             <picture>
@@ -223,7 +234,7 @@ export const HomepageCS = () => {
                     <div className={"mt-4 mt-lg-5 w-100 text-center"}>
                         <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
                     </div>
-                    {!userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES &&
+                    {showNewsletterPrompts &&
                         <Row xs={12} className="d-flex flex-row row-cols-1 row-cols-md-2 mt-3">
                             <IconCard
                                 card={{
