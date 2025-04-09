@@ -195,11 +195,11 @@ export const withMockedDate = async (date: number, fn: () => Promise<void>) => {
     }
 };
 
-const expectHeader = (n: number) => (txt?: string) => expect(screen.getByRole('heading', { level: n })).toHaveTextContent(`${txt}`);
+const expectHeading = (n: number) => (txt?: string) => expect(screen.getByRole('heading', { level: n })).toHaveTextContent(`${txt}`);
 
-export const expectH1 = expectHeader(1);
+export const expectH1 = expectHeading(1);
 
-export const expectH4 = expectHeader(4);
+export const expectH4 = expectHeading(4);
 
 export const expectTextInElementWithId = (testId: string) => (msg: string) => expect(screen.getByTestId(testId)).toHaveTextContent(msg);
 
