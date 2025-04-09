@@ -612,7 +612,7 @@ describe("Groups", () => {
     });
 
     it("the shareable url for an existing group is shown when the invite button clicked", async () => {
-        const mockToken = "3GGD0G";
+        const mockToken = "ABCD234";
         const mockGroup = {
             ...mockActiveGroups[0],
             ownerId: mockUser.id,
@@ -656,7 +656,7 @@ describe("Groups", () => {
     });
 
     it("the shareable url for a group connects a student to the group", async () => {
-        const mockToken = "3GGD0G";
+        const mockToken = "ABCD234";
 
         const mockTeacher = buildMockTeacher(75);
         const mockManager = buildMockTeacher(76);
