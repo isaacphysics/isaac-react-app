@@ -2,7 +2,7 @@ import React, {useCallback, useMemo} from "react";
 import {useGetQuizPreviewQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {isDefined, tags, useQuizQuestions, useQuizSections} from "../../../services";
-import {QuizAttemptComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizAttemptComponent";
+import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizAttemptComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {Button, Container} from "reactstrap";
@@ -23,7 +23,7 @@ const pageHelp = <span>
     Preview the questions on this test.
 </span>;
 
-const Error = buildErrorComponent("Test Preview", "Error loading test preview");
+const Error = buildErrorComponent("Test Preview", "Error loading test preview", myQuizzesCrumbs);
 
 export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
 
