@@ -95,6 +95,19 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
     </div>;
 };
 
+export const sanitiseGroupToken = (token: string) => {
+    // Some users paste the URL in the token box, so remove the token from the end if they do.
+    // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
+    return token?.trim().split("?authToken=").at(-1)?.toUpperCase();
+};
+
+export const isValidGroupToken = (token: string) => {
+    return token && token.length >= 6 && token.length <= 8 && /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]+$/.test(token);
+};
+
+export const NO_GROUP_CODE_ERROR = showErrorToast("No group code provided", "You have to enter a group code!");
+export const INVALID_GROUP_CODE_ERROR = showErrorToast("Invalid group code", "The group code you entered is not valid. Group codes are 6-8 characters in length and contain only letters and numbers.");
+
 export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdit}: TeacherConnectionsProps) => {
     const dispatch = useAppDispatch();
     const groupQuery = (user.loggedIn && user.id) ? ((editingOtherUser && userToEdit?.id) || undefined) : skipToken;
@@ -132,11 +145,13 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
     const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
-        // Some users paste the URL in the token box, so remove the token from the end if they do.
-        // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
-        const sanitisedToken = token?.split("?authToken=").at(-1)?.toUpperCase().replace(/ /g,'');
+        const sanitisedToken = sanitiseGroupToken(token ?? "");
         if (!sanitisedToken) {
-            dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
+            dispatch(NO_GROUP_CODE_ERROR);
+            return;
+        }
+        else if (!isValidGroupToken(sanitisedToken)) {
+            dispatch(INVALID_GROUP_CODE_ERROR);
             return;
         }
         else if (isPhy && isFirstLoginInPersistence()) {

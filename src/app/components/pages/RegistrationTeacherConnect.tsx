@@ -18,13 +18,13 @@ import {history, isAda, KEY, persistence, SITE_TITLE, siteSpecific} from "../../
 import {
     openActiveModal,
     selectors,
-    showErrorToast,
     useAppDispatch,
     useAppSelector,
     useGetActiveAuthorisationsQuery,
     useLazyGetTokenOwnerQuery
 } from "../../state";
 import {tokenVerificationModal} from "../elements/modals/TeacherConnectionModalCreators";
+import { INVALID_GROUP_CODE_ERROR, isValidGroupToken, NO_GROUP_CODE_ERROR, sanitiseGroupToken } from "../elements/panels/TeacherConnections";
 
 export const RegistrationTeacherConnect = () => {
 
@@ -32,15 +32,17 @@ export const RegistrationTeacherConnect = () => {
 
     const user = useAppSelector(selectors.user.orNull);
 
-    // todo: address code duplication with TeacherConnections.tsx
+    // todo: address code duplication with TeacherConnections.tsx and StudentDashboard.tsx
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
 
     const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
-        // Some users paste the URL in the token box, so remove the token from the end if they do.
-        // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
-        const sanitisedToken = token?.split("?authToken=").at(-1)?.toUpperCase().replace(/ /g,'');
+        const sanitisedToken = sanitiseGroupToken(token ?? "");
         if (!sanitisedToken) {
-            dispatch(showErrorToast("No group code provided", "Please enter the group code provided by your teacher."));
+            dispatch(NO_GROUP_CODE_ERROR);
+            return;
+        }
+        else if (!isValidGroupToken(sanitisedToken)) {
+            dispatch(INVALID_GROUP_CODE_ERROR);
             return;
         }
         const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);

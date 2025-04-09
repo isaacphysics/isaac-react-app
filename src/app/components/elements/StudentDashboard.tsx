@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { openActiveModal, selectors, showErrorToast, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
+import { openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { getActiveWorkCount } from '../navigation/NavigationBar';
 import { Spacer } from './Spacer';
 import classNames from 'classnames';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
+import { INVALID_GROUP_CODE_ERROR, isValidGroupToken, NO_GROUP_CODE_ERROR, sanitiseGroupToken } from './panels/TeacherConnections';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -18,14 +19,19 @@ const GroupJoinPanel = () => {
     const [authenticationToken, setAuthenticationToken] = useState<string | null>();
 
     const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
-        if (!token) {
-            dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
+        const sanitisedToken = sanitiseGroupToken(token ?? "");
+        if (!sanitisedToken) {
+            dispatch(NO_GROUP_CODE_ERROR);
+            return;
+        }
+        else if (!isValidGroupToken(sanitisedToken)) {
+            dispatch(INVALID_GROUP_CODE_ERROR);
             return;
         }
         else {
-            const {data: usersToGrantAccess} = await getTokenOwner(token);
+            const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
             if (usersToGrantAccess && usersToGrantAccess.length) {
-                dispatch(openActiveModal(tokenVerificationModal(userId, token, usersToGrantAccess)));
+                dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)));
             }
         }
     };
