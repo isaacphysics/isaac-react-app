@@ -34,6 +34,11 @@ describe("QuizView", () => {
         expect(editButton()).toBe(null);
     });
 
+    it("does not show Test sections", async () => {
+        await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
+        expect(testSectionsHeader()).toBe(null);
+    });
+
     describe('for teachers', () => {
         it('shows the Set Test button', async () => {
             await renderQuizView({ role: 'TEACHER', pathname: `/test/view/${rubricId}/` });
@@ -78,4 +83,5 @@ describe("QuizView", () => {
 
 const expectErrorMessage = expectTextInElementWithId('error-message');
 const setTestButton = () => screen.queryByRole('button', {name: "Set Test"});
-const editButton = () => screen.queryByRole('header', {name: "Published ✎"});
+const editButton = () => screen.queryByRole('heading', {name: "Published ✎"});
+const testSectionsHeader = () => screen.queryByRole('heading', {name: "Test sections"});
