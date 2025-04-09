@@ -5,6 +5,8 @@ import {
     BookingStatus,
     EmailVerificationStatus,
     EventStatus,
+    IsaacRubricDTO,
+    USER_ROLES,
     UserRole,
     UserSummaryWithGroupMembershipDTO
 } from "../IsaacApiTypes";
@@ -2256,6 +2258,31 @@ export const mockGameboards = {
     totalInProgress: 0,
     totalCompleted: 0,
     totalResults: 7
+};
+
+export const mockRubrics: Record<string, IsaacRubricDTO> = {
+    a_level_1d_motion_test: {
+        id: "a_level_1d_motion_test",
+        title: "A Level 1-d Motion Test",
+        type: "isaacQuiz",
+        tags: [],
+        url: "/isaac-api/api/quiz/a_level_1d_motion_test",
+        hiddenFromRoles: [USER_ROLES[0], USER_ROLES[1]],
+        rubric:{
+            type: "content",
+            encoding: "markdown",
+            children:[
+                {
+                    type:"content",
+                    encoding:"markdown",
+                    children:[],
+                    value:"We recommend completing this test after studying the relevant concepts Equations of Motion, either in school or by doing the appropriate sections in the Essential Pre-Uni Physics book.\\n\\nFor this test make sure to follow the Isaac Physics rules for significant figures.",
+                    tags:[]
+                }
+            ],
+            "tags":[]
+        }
+    }
 };
 
 export const mockMyAssignments = [

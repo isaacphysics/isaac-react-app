@@ -14,7 +14,8 @@ import {
     mockUserPreferences,
     mockRegressionTestQuestions,
     mockQuestionFinderResults,
-    mockConceptPage
+    mockConceptPage,
+    mockRubrics
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -62,6 +63,18 @@ export const handlers = [
         return HttpResponse.json(mockQuizAssignments, {
             status: 200,
         });
+    }),
+    http.get(API_PATH + "/quiz/:quizId/rubric", ({ params }) => {
+        const quizId = params.quizId as string;
+        if (quizId in mockRubrics) {
+            return HttpResponse.json(mockRubrics[quizId], { status: 200 });
+        } 
+        return HttpResponse.json({
+            bypassGenericSiteErrorPage: false,
+            errorMessage: "This test has become unavailable.",
+            responseCode: 404,
+            responseCodeType: "Not found"
+        },  { status: 404 });
     }),
     http.get(API_PATH + "/assignments/assign/:assignmentId", ({params}) => {
         const {assignmentId: _assignmentId} = params;

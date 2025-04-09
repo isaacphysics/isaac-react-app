@@ -214,6 +214,14 @@ export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
     individualFeedback?: QuizFeedbackDTO;
 }
 
+export interface IsaacRubricDTO extends HasTitleOrId{
+    rubric?: ContentDTO;
+    hiddenFromRoles: UserRole[];
+    tags: string[];
+    type: string;
+    url: string
+}
+
 export interface IsaacQuizSectionDTO extends SeguePageDTO {
 }
 
@@ -411,7 +419,7 @@ export interface ContentDTO extends ContentBaseDTO {
     encoding?: string;
     layout?: string;
     expandable?: boolean;
-    children?: ContentBaseDTO[];
+    children?: ContentDTO[];
     value?: string;
     attribution?: string;
     relatedContent?: ContentSummaryDTO[];
