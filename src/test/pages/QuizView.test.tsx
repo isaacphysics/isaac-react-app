@@ -1,4 +1,4 @@
-import {act, screen} from "@testing-library/react";
+import {act, screen, within} from "@testing-library/react";
 import {expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, renderTestEnvironment, setUrl, waitForLoaded} from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
 import {isPhy} from "../../app/services";
@@ -18,9 +18,23 @@ describe("QuizView", () => {
         await waitForLoaded();
     };
 
-    it('shows the rubric for the quiz', async () => {
+    it('shows the breadcrumbs', async () => {
+        await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
+        expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, mockRubric.title]);
+    });
+
+    it('shows the quiz title', async () => {
         await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
         expectH1(mockRubric.title);
+    });
+
+    it('shows what page you are on', async () => {
+        await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
+        expectActionMessage('You are viewing the rubric for this test.');
+    });
+
+    it('shows the quiz rubric', async () => {
+        await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
         expectTitledSection("Instructions", mockRubric.rubric?.children?.[0].value);
     });
 
@@ -72,9 +86,14 @@ describe("QuizView", () => {
     });
 
     describe('when a quiz does not exist', () => {
+        it ('shows the breadcrumbs', async () => {
+            await renderQuizView({ role: 'STUDENT', pathname: '/test/view/some_non_existent_test'});
+            expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, "Unknown Test"]);
+        });
+        
         it('shows an error', async () => {
             await renderQuizView({ role: 'STUDENT', pathname: '/test/view/some_non_existent_test'});
-            expectH1('Viewing Test');
+            expectH1('Unknown Test');
             expectH4('There was an error loading that test.');
             expectErrorMessage('This test has become unavailable.');
         });
@@ -82,6 +101,15 @@ describe("QuizView", () => {
 });
 
 const expectErrorMessage = expectTextInElementWithId('error-message');
+const expectActionMessage = expectTextInElementWithId('quiz-action');
 const setTestButton = () => screen.queryByRole('button', {name: "Set Test"});
 const editButton = () => screen.queryByRole('heading', {name: "Published ✎"});
 const testSectionsHeader = () => screen.queryByRole('heading', {name: "Test sections"});
+const expectBreadcrumbs = ([first, second, third]: [{href: string, text: string}, {href: string, text: string}, string | undefined]) => {
+    const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');
+    expect(Array.from(breadcrumbs.children).map(e => e.innerHTML)).toEqual([
+        `<a href="${first.href}"><span>${first.text}</span></a>`,
+        `<a href="${second.href}"><span>${second.text}</span></a>`,
+        `<span>${third}</span>`
+    ]);
+};

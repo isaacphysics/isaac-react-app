@@ -45,6 +45,7 @@ export interface QuizAttemptProps {
     pageLink: PageLinkCreator;
     pageHelp: React.ReactElement;
     preview?: boolean;
+    view?: boolean;
     studentUser?: UserSummaryDTO;
     quizAssignmentId?: string;
 }
@@ -107,14 +108,14 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
     }
 }
 
-function QuizHeader({attempt, preview, user}: QuizAttemptProps) {
+function QuizHeader({attempt, preview, view, user}: QuizAttemptProps) {
     const dispatch = useAppDispatch();
     const assignment = attempt.quizAssignment;
-    if (preview) {
+    if (preview || view) {
         return <>
             <EditContentButton doc={attempt.quiz} />
-            <div className="d-flex">
-                <span>You are previewing this test.</span>
+            <div data-testId="quiz-action" className="d-flex">
+                <span>{ preview ? "You are previewing this test." : "You are viewing the rubric for this test."}</span>
                 <Spacer />
                 {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</Button>}
             </div>
@@ -217,7 +218,17 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
 
 export const myQuizzesCrumbs = [{title: siteSpecific("My Tests", "My tests"), to: `/tests`}];
 export const teacherQuizzesCrumbs = [{title: siteSpecific("Set / Manage Tests", "Set tests"), to: `/set_tests`}];
-const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser, user}: QuizAttemptProps) => {
+export const rubricCrumbs = [{title: "Practice Tests", to: "/practice_tests"}];
+const getCrumbs = (preview: boolean | undefined, view: boolean | undefined, user: RegisteredUserDTO) => {
+    if (preview && isTeacherOrAbove(user)) {
+        return teacherQuizzesCrumbs;
+    } if (view) {
+        return rubricCrumbs;
+    }
+    return myQuizzesCrumbs;
+};
+
+const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, view, studentUser, user}: QuizAttemptProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Test";
     if (isDefined(attempt.completedDate)) {
         quizTitle += " Feedback";
@@ -228,7 +239,8 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser, use
     if (preview) {
         quizTitle += " Preview";
     }
-    const crumbs = preview && isTeacherOrAbove(user) ? teacherQuizzesCrumbs : myQuizzesCrumbs;
+
+    const crumbs = getCrumbs(preview, view, user);
     if (page === null) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
             intermediateCrumbs={crumbs} icon={{"type": "hex", "icon": "icon-tests"}}
