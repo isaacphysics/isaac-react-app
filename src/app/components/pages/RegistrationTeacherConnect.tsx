@@ -16,41 +16,19 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {history, isAda, KEY, persistence, SITE_TITLE, siteSpecific} from "../../services";
 import {
-    openActiveModal,
     selectors,
     useAppDispatch,
     useAppSelector,
     useGetActiveAuthorisationsQuery,
     useLazyGetTokenOwnerQuery
 } from "../../state";
-import {tokenVerificationModal} from "../elements/modals/TeacherConnectionModalCreators";
-import { INVALID_GROUP_CODE_ERROR, isValidGroupToken, NO_GROUP_CODE_ERROR, sanitiseGroupToken } from "../elements/panels/TeacherConnections";
+import { authenticateWithTokenAfterPrompt } from "../elements/panels/TeacherConnections";
 
 export const RegistrationTeacherConnect = () => {
-
     const dispatch = useAppDispatch();
-
     const user = useAppSelector(selectors.user.orNull);
 
-    // todo: address code duplication with TeacherConnections.tsx and StudentDashboard.tsx
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
-
-    const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
-        const sanitisedToken = sanitiseGroupToken(token ?? "");
-        if (!sanitisedToken) {
-            dispatch(NO_GROUP_CODE_ERROR);
-            return;
-        }
-        else if (!isValidGroupToken(sanitisedToken)) {
-            dispatch(INVALID_GROUP_CODE_ERROR);
-            return;
-        }
-        const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
-        if (usersToGrantAccess && usersToGrantAccess.length) {
-            dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)));
-        }
-    };
-
     const [authenticationToken, setAuthenticationToken] = useState<string | undefined>("");
     const [submissionAttempted, setSubmissionAttempted] = useState<boolean>(false);
 
@@ -62,7 +40,7 @@ export const RegistrationTeacherConnect = () => {
         if (event) {event.preventDefault(); event.stopPropagation();}
         setSubmissionAttempted(true);
         if (user && user.loggedIn && user.id && codeIsValid) {
-            authenticateWithTokenAfterPrompt(user.id, authenticationToken);
+            authenticateWithTokenAfterPrompt(user.id, authenticationToken, dispatch, getTokenOwner);
         }
     }
 

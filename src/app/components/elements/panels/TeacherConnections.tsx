@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {GroupMembershipDetailDTO, LoggedInUser, PotentialUser} from "../../../../IsaacAppTypes";
 import {
+    AppDispatch,
     openActiveModal,
     showErrorToast,
     useAppDispatch,
@@ -95,18 +96,31 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
     </div>;
 };
 
-export const sanitiseGroupToken = (token: string) => {
+export const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null, dispatch: AppDispatch, getTokenOwner: any) => {
     // Some users paste the URL in the token box, so remove the token from the end if they do.
     // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
-    return token?.trim().split("?authToken=").at(-1)?.toUpperCase();
+    const sanitisedToken = token?.trim().split("?authToken=").at(-1)?.toUpperCase();
+    if (!sanitisedToken) {
+        dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
+        return;
+    }
+    else if (!(sanitisedToken && sanitisedToken.length >= 6 && sanitisedToken.length <= 8 && /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]+$/.test(sanitisedToken))) {
+        dispatch(showErrorToast("Invalid group code", "The group code you entered is not valid. Group codes are 6-8 characters in length and contain only letters and numbers."));
+        return;
+    }
+    else if (isPhy && isFirstLoginInPersistence()) {
+        history.push("/register/group_invitation?authToken=" + encodeURIComponent(sanitisedToken));
+    }
+    else {
+        const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
+        if (usersToGrantAccess && usersToGrantAccess.length) {
+            // TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
+            //      their data
+            // TODO highlight teachers who have already been granted access? (see verification modal code)
+            dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
+        }
+    }
 };
-
-export const isValidGroupToken = (token: string) => {
-    return token && token.length >= 6 && token.length <= 8 && /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]+$/.test(token);
-};
-
-export const NO_GROUP_CODE_ERROR = showErrorToast("No group code provided", "You have to enter a group code!");
-export const INVALID_GROUP_CODE_ERROR = showErrorToast("Invalid group code", "The group code you entered is not valid. Group codes are 6-8 characters in length and contain only letters and numbers.");
 
 export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdit}: TeacherConnectionsProps) => {
     const dispatch = useAppDispatch();
@@ -144,33 +158,10 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     });
 
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
-    const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
-        const sanitisedToken = sanitiseGroupToken(token ?? "");
-        if (!sanitisedToken) {
-            dispatch(NO_GROUP_CODE_ERROR);
-            return;
-        }
-        else if (!isValidGroupToken(sanitisedToken)) {
-            dispatch(INVALID_GROUP_CODE_ERROR);
-            return;
-        }
-        else if (isPhy && isFirstLoginInPersistence()) {
-            history.push("/register/group_invitation?authToken=" + encodeURIComponent(sanitisedToken));
-        }
-        else {
-            const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
-            if (usersToGrantAccess && usersToGrantAccess.length) {
-                // TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
-                //      their data
-                // TODO highlight teachers who have already been granted access? (see verification modal code)
-                dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
-            }
-        }
-    };
 
     useEffect(() => {
         if (authToken && user.loggedIn && user.id) {
-            authenticateWithTokenAfterPrompt(user.id, authToken);
+            authenticateWithTokenAfterPrompt(user.id, authToken, dispatch, getTokenOwner);
         }
     }, [authToken]);
 
@@ -179,7 +170,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     function processToken(event: React.FormEvent<HTMLFormElement | HTMLButtonElement | HTMLInputElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
         if (user.loggedIn && user.id) {
-            authenticateWithTokenAfterPrompt(user.id, authenticationToken);
+            authenticateWithTokenAfterPrompt(user.id, authenticationToken, dispatch, getTokenOwner);
         }
     }
 
