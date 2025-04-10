@@ -1,11 +1,11 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {withRouter} from "react-router-dom";
-import {AppState, fetchDoc, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {selectors, useAppSelector} from "../../state";
 import {Col, Container, Row} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, Subject, above, below, usePreviousPageContext, isAda, isPhy, useDeviceSize, useNavigation, siteSpecific} from "../../services";
+import {Subject, above, below, usePreviousPageContext, isAda, isPhy, useDeviceSize, useNavigation, siteSpecific} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -24,6 +24,7 @@ import {ReportButton} from "../elements/ReportButton";
 import classNames from "classnames";
 import { ConceptSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { TeacherNotes } from "../elements/TeacherNotes";
+import { useGetConceptQuery } from "../../state/slices/api/conceptsApi";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -33,15 +34,13 @@ interface ConceptPageProps {
 }
 
 export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride, preview}: ConceptPageProps) => {
-    const dispatch = useAppDispatch();
     const conceptId = conceptIdOverride || params.conceptId;
     const user = useAppSelector(selectors.user.orNull);
-    useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
-    const doc = useAppSelector((state: AppState) => state?.doc || null);
-    const navigation = useNavigation(doc);
+    const {data: doc, isLoading} = useGetConceptQuery(conceptId);
+    const navigation = useNavigation(doc ?? null);
     const deviceSize = useDeviceSize();
 
-    const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && doc !== 404 ? doc : undefined);
+    const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
 
     const ManageButtons = () => <div className={classNames("no-print d-flex justify-content-end mt-1 ms-2", {"gap-2": isPhy})}>
         <div className="question-actions">

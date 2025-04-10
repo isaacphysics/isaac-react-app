@@ -519,7 +519,6 @@ export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
     let apiEndpoint;
     switch (documentType) {
-        case DOCUMENT_TYPE.CONCEPT: apiEndpoint = api.concepts; break;
         case DOCUMENT_TYPE.QUESTION: apiEndpoint = api.questions; break;
         case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
     }
@@ -764,15 +763,15 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
 };
 
 // Concepts
-export const fetchConcepts = (conceptIds?: string, tagIds?: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONCEPTS_REQUEST});
-    try {
-        const concepts = await api.concepts.list(conceptIds, tagIds);
-        dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS, concepts: concepts.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Loading Concepts Failed", e));
-    }};
+// export const fetchConcepts = (conceptIds?: string, tagIds?: string) => async (dispatch: Dispatch<Action>) => {
+//     dispatch({type: ACTION_TYPE.CONCEPTS_REQUEST});
+//     try {
+//         const concepts = await api.concepts.list(conceptIds, tagIds);
+//         dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS, concepts: concepts.data});
+//     } catch (e) {
+//         dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE});
+//         dispatch(showAxiosErrorToastIfNeeded("Loading Concepts Failed", e));
+//     }};
 
 // SERVICE ACTIONS (w/o dispatch)
 
