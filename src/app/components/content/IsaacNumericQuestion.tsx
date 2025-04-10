@@ -131,7 +131,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                 disabled={readonly || !noDisplayUnit}
                                 className={classNames("feedback-zone w-md-auto h-100 px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong && noDisplayUnit, "bg-white": isPhy})}
                                 color={noDisplayUnit ? siteSpecific("dropdown", undefined) : "white"}
-                                caret={isPhy}
+                                caret={isPhy && noDisplayUnit}
                             >
                                 <Markup encoding={"latex"}>
                                     {wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}
@@ -140,7 +140,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                     <span className={"feedback incorrect"}>✘</span>
                                 </div>}
                             </DropdownToggle>
-                            <DropdownMenu end>
+                            <DropdownMenu end className="w-max-content">
                                 {selectedUnits.map((unit) =>
                                     <DropdownItem key={wrapUnitForSelect(unit)}
                                         data-unit={unit || 'None'}
