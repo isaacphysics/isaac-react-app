@@ -171,6 +171,8 @@ export const expectUrlParams = (text: string) => waitFor(() => {
 
 export const setUrl = (location: LocationDescriptor) => history.push(location);
 
+export const goBack = () => history.goBack();
+
 export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => void) => Promise<void>) => {
     const nextRandom = {
         values: [] as number[],

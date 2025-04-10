@@ -15,7 +15,8 @@ import {
     mockRegressionTestQuestions,
     mockQuestionFinderResults,
     mockConceptPage,
-    mockRubrics
+    mockRubrics,
+    mockAttempts
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -68,6 +69,18 @@ export const handlers = [
         const quizId = params.quizId as string;
         if (quizId in mockRubrics) {
             return HttpResponse.json(mockRubrics[quizId], { status: 200 });
+        } 
+        return HttpResponse.json({
+            bypassGenericSiteErrorPage: false,
+            errorMessage: "This test has become unavailable.",
+            responseCode: 404,
+            responseCodeType: "Not found"
+        },  { status: 404 });
+    }),
+    http.post(API_PATH + "/quiz/:quizId/attempt", ({ params }) => {
+        const quizId = params.quizId as string;
+        if (quizId in mockAttempts) {
+            return HttpResponse.json(mockAttempts[quizId], { status: 200 });
         } 
         return HttpResponse.json({
             bypassGenericSiteErrorPage: false,

@@ -12,7 +12,7 @@ import { Spacer } from "../../elements/Spacer";
 const pageLink = () => '';
 
 const pageHelp = <span>
-    View information about a test without adding it to "My Tests". This page page does not show any questions.
+    View information about a test without adding it to &quot;My Tests&quot;. This page page does not show any questions.
 </span>;
 
 const Error = buildErrorComponent("Unknown Test", "There was an error loading that test.", rubricCrumbs);
@@ -20,7 +20,7 @@ const Error = buildErrorComponent("Unknown Test", "There was an error loading th
 const QuizFooter = ({quizId}: {quizId: string}) =>
     <div className="d-flex border-top pt-2 my-2 align-items-center">
         <Spacer/>
-        <Button color="secondary" tag={Link} replace to={`/test/attempt/${quizId}`}>{"Take Test"}</Button>
+        <Button color="secondary" tag={Link} to={`/test/attempt/${quizId}`}>{"Take Test"}</Button>
     </div>;
 
 export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
