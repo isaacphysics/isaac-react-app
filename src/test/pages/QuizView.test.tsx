@@ -18,81 +18,83 @@ describe("QuizView", () => {
         await waitForLoaded();
     };
 
-    it('shows the breadcrumbs', async () => {
-        await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
+    const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` }); 
+
+    it('shows quiz title on the breadcrumbs', async () => {
+        await studentViewsQuiz();
         expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, mockRubric.title]);
     });
 
-    it('shows the quiz title', async () => {
-        await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
+    it('shows quiz title', async () => {
+        await studentViewsQuiz();
         expectH1(mockRubric.title);
     });
 
-    it('shows what page you are on', async () => {
-        await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
+    it('shows message about this page', async () => {
+        await studentViewsQuiz();
         expectActionMessage('You are viewing the rubric for this test.');
     });
 
-    it('shows the quiz rubric', async () => {
-        await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
+    it('shows quiz rubric', async () => {
+        await studentViewsQuiz();
         expectTitledSection("Instructions", mockRubric.rubric?.children?.[0].value);
     });
 
-    it('does not show the Set Test button', async () => {
-        await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
+    it('does not show Set Test button', async () => {
+        await studentViewsQuiz();
         expect(setTestButton()).toBe(null);
     });
 
-    it("does not show the edit button", async () => {
-        await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
-        expect(editButton()).toBe(null);
-    });
-
     it("does not show Test sections", async () => {
-        await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
+        await studentViewsQuiz();
         expect(testSectionsHeader()).toBe(null);
     });
 
     describe('for teachers', () => {
-        it('shows the Set Test button', async () => {
-            await renderQuizView({ role: 'TEACHER', pathname: `/test/view/${rubricId}/` });
+        const teacherViewsQuiz = () => renderQuizView({ role: 'TEACHER', pathname: `/test/view/${rubricId}/` }); 
+        
+        it('shows Set Test button', async () => {
+            await teacherViewsQuiz();
             expect(setTestButton()).toBeInTheDocument();
-        });
-
-        it("does not show the edit button", async () => {
-            await renderQuizView({ role: 'TEACHER', pathname: `/test/view/${rubricId}/` });
-            expect(editButton()).toBe(null);
         });
     });
 
     describe('for content editors', () => {
-        it('shows the Set Test Button', async () => {
-            await renderQuizView({ role: 'CONTENT_EDITOR', pathname: `/test/view/${rubricId}/` });
+        const editorViewsQuiz = () => renderQuizView({ role: 'TEACHER', pathname: `/test/view/${rubricId}/` });
+
+        it('shows Set Test Button', async () => {
+            await editorViewsQuiz();
             expect(setTestButton()).toBeInTheDocument();
         });
 
-        // we'd need canonicalSourceFile for this, which the endpoint doesn't return
-        it('does not show the edit button', async () => {
-            await renderQuizView({ role: 'CONTENT_EDITOR', pathname: `/test/view/${rubricId}/` });
+        // It'd be more consistent with, eg. the `/preview` page to show the edit button.
+        // However, we'd need `canonicalSourceFile` for this, which the `/rubric` endpoint doesn't return.
+        // For now, James suggested this was not worth the effort.
+        it('does not show edit button', async () => {
+            await editorViewsQuiz();
             expect(editButton()).toBe(null);
         });
     });
 
     describe('for unregistered users', () => {
+        const anonymousViewsMissingQuiz = () => renderQuizView({ role: 'ANONYMOUS', pathname: '/test/view/some_non_existent_test'}); 
+        
         it('redirects to log in', async () => {
-            await renderQuizView({ role: 'ANONYMOUS', pathname: '/test/view/some_non_existent_test'});
+            await anonymousViewsMissingQuiz();
             await expectUrl('/login');
         });
     });
 
-    describe('when a quiz does not exist', () => {
-        it ('shows the breadcrumbs', async () => {
-            await renderQuizView({ role: 'STUDENT', pathname: '/test/view/some_non_existent_test'});
+    describe('when quiz does not exist', () => {
+        const studentViewsMissingQuiz = () => renderQuizView({ role: 'STUDENT', pathname: '/test/view/some_non_existent_test'});
+
+        it ('shows Unknown Test on breadcrumbs', async () => {
+            await studentViewsMissingQuiz();
             expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, "Unknown Test"]);
         });
         
-        it('shows an error', async () => {
-            await renderQuizView({ role: 'STUDENT', pathname: '/test/view/some_non_existent_test'});
+        it('shows error', async () => {
+            await studentViewsMissingQuiz();
             expectH1('Unknown Test');
             expectH4('There was an error loading that test.');
             expectErrorMessage('This test has become unavailable.');
