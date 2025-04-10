@@ -1,5 +1,5 @@
-import {act, screen, within} from "@testing-library/react";
-import {expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, renderTestEnvironment, setUrl, waitForLoaded} from "../testUtils";
+import {act, screen, waitFor, within} from "@testing-library/react";
+import {clickButton, expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, goBack, renderTestEnvironment, setUrl, waitForLoaded} from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
 import {isPhy} from "../../app/services";
 import type {UserRole} from "../../IsaacApiTypes";
@@ -50,9 +50,13 @@ describe("QuizView", () => {
         expect(testSectionsHeader()).toBe(null);
     });
 
-    it('shows "Take Test" button', async () => {
+    it('shows a "Take Test" button that loads the attempts page and allows navigating back', async () => {
         await studentViewsQuiz();
-        expect(takeTestButton()).toHaveAttribute('href', `/test/attempt/${rubricId}`);
+        await clickButton("Take Test");
+        expectActionMessage("You are freely attempting this test");
+        expectH1(mockRubric.title);
+        goBack();
+        await waitFor(() => expectActionMessage("You are viewing the rubric for this test."));
     });
 
     describe('for teachers', () => {
@@ -120,4 +124,3 @@ const expectBreadcrumbs = ([first, second, third]: [{href: string, text: string}
         `<span>${third}</span>`
     ]);
 };
-const takeTestButton = () => screen.getByRole('link', { name: "Take Test" });

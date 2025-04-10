@@ -112,7 +112,7 @@ function QuizHeader({attempt, preview, view, user}: QuizAttemptProps) {
     if (preview || view) {
         return <>
             <EditContentButton doc={attempt.quiz} />
-            <div data-testId="quiz-action" className="d-flex">
+            <div data-testid="quiz-action" className="d-flex">
                 <span>{ preview ? "You are previewing this test." : "You are viewing the rubric for this test."}</span>
                 <Spacer />
                 {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</Button>}
@@ -141,7 +141,7 @@ function QuizHeader({attempt, preview, view, user}: QuizAttemptProps) {
             </Alert>}
         </>;
     } else {
-        return <p>You {attempt.completedDate ? "freely attempted" : "are freely attempting"} this test.</p>;
+        return <p data-testid="quiz-action">You {attempt.completedDate ? "freely attempted" : "are freely attempting"} this test.</p>;
     }
 }
 
