@@ -50,7 +50,7 @@ describe("QuizView", () => {
         expect(testSectionsHeader()).toBe(null);
     });
 
-    it('shows a "Take Test" button that loads the attempts page and allows navigating back', async () => {
+    it('shows "Take Test" button that loads the attempts page and allows navigating back', async () => {
         await studentViewsQuiz();
         await clickButton("Take Test");
         expectActionMessage("You are freely attempting this test");
