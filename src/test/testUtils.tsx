@@ -212,4 +212,11 @@ export const expectTitledSection = (title: string, message: string | undefined) 
     }
     const paragraph = within(titleE.parentElement).getByRole('paragraph');
     return expect(paragraph).toHaveTextContent(`${message}`);
+}
+;
+export const expectButtonWithEnabledBackwardsNavigation = async (text: string, targetHref: string, originalHref: string) => {
+    await clickButton(text);
+    await expectUrl(targetHref);
+    goBack();
+    await expectUrl(originalHref);
 };

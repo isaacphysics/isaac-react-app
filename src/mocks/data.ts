@@ -5,6 +5,7 @@ import {
     BookingStatus,
     EmailVerificationStatus,
     EventStatus,
+    IsaacQuizDTO,
     IsaacRubricDTO,
     QuizAttemptDTO,
     USER_ROLES,
@@ -2330,6 +2331,56 @@ export const mockAttempts: Record<string, QuizAttemptDTO> = {
             },
             published: false
         }
+    }
+};
+
+export const mockPreviews: Record<string, IsaacQuizDTO> = {
+    a_level_1d_motion_test: {
+        id: "a_level_1d_motion_test",
+        title: "A Level 1-d Motion Test",
+        type: "isaacQuiz",
+        encoding: "markdown",
+        canonicalSourceFile: "content/questions/physics/tests/unpublished_tests/a_level_1d_motion_test.json",
+        children: [
+            {
+                id: "a_level_1d_motion_test|6a5e50ef",
+                title: "Velocity & Acceleration",
+                type: "isaacQuizSection",
+                encoding: "markdown",
+                children: [],
+                published: false,
+                tags: []
+            },
+            {
+                id: "a_level_1d_motion_test|b76267ab",
+                title: "Problems involving Distance",
+                type: "isaacQuizSection",
+                encoding: "markdown",
+                children: [],
+                published: false,
+                tags: []
+            }
+        ],
+        tags: [],
+        hiddenFromRoles: [
+            "STUDENT",
+            "TUTOR"
+        ],
+        rubric: {
+            type: "content",
+            encoding: "markdown",
+            children: [
+                {
+                    type: "content",
+                    encoding: "markdown",
+                    children: [],
+                    value: "We recommend completing this test after studying the relevant concepts ([Equations of Motion](/concepts/cp_eq_of_motion)), either in school or by doing the appropriate sections in the [Essential Pre-Uni Physics book](/books/physics_skills_19).\n\nFor this test make sure to follow the Isaac Physics rules for [significant figures](/solving_problems#acc_solving_problems_sig_figs).",
+                    tags: []
+                }
+            ],
+            tags: []
+        },
+        published: false
     }
 };
 

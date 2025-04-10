@@ -1,5 +1,5 @@
 import {act, screen, waitFor, within} from "@testing-library/react";
-import {clickButton, expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, goBack, renderTestEnvironment, setUrl, waitForLoaded} from "../testUtils";
+import { expectButtonWithEnabledBackwardsNavigation, expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
 import {isPhy, siteSpecific} from "../../app/services";
 import type {UserRole} from "../../IsaacApiTypes";
@@ -55,11 +55,12 @@ describe("QuizView", () => {
 
     it('shows "Take Test" button that loads the attempts page and allows navigating back', async () => {
         await studentViewsQuiz();
-        await clickButton("Take Test");
-        expectActionMessage("You are freely attempting this test");
-        expectH1(mockRubric.title);
-        goBack();
-        await waitFor(() => expectActionMessage("You are viewing the rubric for this test."));
+        await expectButtonWithEnabledBackwardsNavigation("Take Test", `/test/attempt/${rubricId}`, `/test/view/${rubricId}`);
+    });
+
+    it('does not show "Preview" button', async() => {
+        await studentViewsQuiz();
+        expect(previewButton()).toBe(null);
     });
 
     describe('for teachers', () => {
@@ -68,6 +69,11 @@ describe("QuizView", () => {
         it('shows Set Test button', async () => {
             await teacherViewsQuiz();
             expect(setTestButton()).toBeInTheDocument();
+        });
+
+        it('shows "Preview" button that loads the preview page and allows navigating back', async () => {
+            await teacherViewsQuiz();
+            await expectButtonWithEnabledBackwardsNavigation("Preview", `/test/preview/${rubricId}`, `/test/view/${rubricId}`);
         });
     });
 
@@ -85,6 +91,11 @@ describe("QuizView", () => {
         it('does not show edit button', async () => {
             await editorViewsQuiz();
             expect(editButton()).toBe(null);
+        });
+
+        it('shows "Preview" button that loads the preview page and allows navigating back', async () => {
+            await editorViewsQuiz();
+            await expectButtonWithEnabledBackwardsNavigation("Preview", `/test/preview/${rubricId}`, `/test/view/${rubricId}`);
         });
     });
 
@@ -121,6 +132,7 @@ const expectErrorMessage = expectTextInElementWithId('error-message');
 const expectActionMessage = expectTextInElementWithId('quiz-action');
 const setTestButton = () => screen.queryByRole('button', {name: "Set Test"});
 const editButton = () => screen.queryByRole('heading', {name: "Published ✎"});
+const previewButton = () => screen.queryByRole('link', {name: "Preview"});
 const testSectionsHeader = () => screen.queryByRole('heading', {name: "Test sections"});
 const expectPhyBreadCrumbs = ({href, text}: {href: string, text: string}) => {
     const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');
