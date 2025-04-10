@@ -157,7 +157,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                 </Col>
                 {!readonly && isPhy && above['md'](deviceSize) && <>
                     <div className="pt-2">
-                        <Button className="numeric-help d-flex align-items-center p-0 gap-2" color="link" size="sm" innerRef={helpTooltip}>
+                        <Button className="numeric-help d-flex align-items-center p-0 gap-2" type="button" color="link" size="sm" innerRef={helpTooltip}>
                             <i className="icon icon-info icon-color-grey"/>
                             Show me some examples
                         </Button>
