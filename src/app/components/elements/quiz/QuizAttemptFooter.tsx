@@ -39,7 +39,6 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
     const sectionCount = Object.keys(sections).length;
 
     let controls;
-    let prequel = null;
     if (page === null) {
         let anyAnswered = false;
         const completedSections = Object.keys(sections).reduce((map, sectionId) => {
@@ -57,9 +56,6 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
         const totalCompleted = Object.values(completedSections).reduce((sum, complete) => sum + (complete ? 1 : 0), 0);
         const firstIncomplete = Object.values(completedSections).indexOf(false);
         const allCompleted = totalCompleted === sectionCount;
-
-        const primaryButton = anyAnswered ? "Continue" : "Start";
-        const primaryDescription = anyAnswered ? "resume" : "begin";
         const submitButton = submitting ? <IsaacSpinner /> : allCompleted ? "Submit" : "Submit anyway";
 
         if (allCompleted) {
@@ -76,7 +72,6 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
                 <Button color={siteSpecific("secondary", "primary")} onClick={submitQuiz}>{submitButton}</Button>
             </>;
         } else {
-            prequel = <p>Click &lsquo;{primaryButton}&rsquo; when you are ready to {primaryDescription} the test.</p>;
             if (anyAnswered) {
                 controls = <>
                     <div className="text-center">
@@ -85,12 +80,12 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
                     <Spacer/>
                     {totalCompleted} / {sectionCount} sections complete<br/>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "primary")} tag={Link} replace to={pageLink(firstIncomplete + 1)}>{primaryButton}</Button>
+                    <Button color={siteSpecific("secondary", "primary")} tag={Link} replace to={pageLink(firstIncomplete + 1)}>Continue</Button>
                 </>;
             } else {
                 controls = <>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "primary")} tag={Link} replace to={pageLink(1)}>{primaryButton}</Button>
+                    <Button color={siteSpecific("secondary", "primary")} tag={Link} replace to={pageLink(1)}>Continue</Button>
                 </>;
             }
         }
@@ -101,7 +96,6 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
     // Empty sidebar to match layout of quiz attempt component
     return <SidebarLayout className="d-flex flex-column align-items-end">
         <MainContent>
-            {(isAda || below["md"](deviceSize)) && prequel}
             <div className="d-flex border-top pt-2 my-2 align-items-center">
                 {controls}
             </div>
