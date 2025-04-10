@@ -18,7 +18,7 @@ describe("QuizView", () => {
         await waitForLoaded();
     };
 
-    const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` }); 
+    const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}` }); 
 
     it('shows quiz title on the breadcrumbs', async () => {
         await studentViewsQuiz();
@@ -35,14 +35,14 @@ describe("QuizView", () => {
         expectActionMessage('You are viewing the rubric for this test.');
     });
 
-    it('shows quiz rubric', async () => {
-        await studentViewsQuiz();
-        expectTitledSection("Instructions", mockRubric.rubric?.children?.[0].value);
-    });
-
     it('does not show Set Test button', async () => {
         await studentViewsQuiz();
         expect(setTestButton()).toBe(null);
+    });
+
+    it('shows quiz rubric', async () => {
+        await studentViewsQuiz();
+        expectTitledSection("Instructions", mockRubric.rubric?.children?.[0].value);
     });
 
     it("does not show Test sections", async () => {
@@ -50,8 +50,13 @@ describe("QuizView", () => {
         expect(testSectionsHeader()).toBe(null);
     });
 
+    it('shows "Take Test" button', async () => {
+        await studentViewsQuiz();
+        expect(takeTestButton()).toHaveAttribute('href', `/test/attempt/${rubricId}`);
+    });
+
     describe('for teachers', () => {
-        const teacherViewsQuiz = () => renderQuizView({ role: 'TEACHER', pathname: `/test/view/${rubricId}/` }); 
+        const teacherViewsQuiz = () => renderQuizView({ role: 'TEACHER', pathname: `/test/view/${rubricId}` }); 
         
         it('shows Set Test button', async () => {
             await teacherViewsQuiz();
@@ -60,7 +65,7 @@ describe("QuizView", () => {
     });
 
     describe('for content editors', () => {
-        const editorViewsQuiz = () => renderQuizView({ role: 'TEACHER', pathname: `/test/view/${rubricId}/` });
+        const editorViewsQuiz = () => renderQuizView({ role: 'TEACHER', pathname: `/test/view/${rubricId}` });
 
         it('shows Set Test Button', async () => {
             await editorViewsQuiz();
@@ -115,3 +120,4 @@ const expectBreadcrumbs = ([first, second, third]: [{href: string, text: string}
         `<span>${third}</span>`
     ]);
 };
+const takeTestButton = () => screen.getByRole('link', { name: "Take Test" });
