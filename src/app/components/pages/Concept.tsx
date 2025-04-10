@@ -2,7 +2,6 @@ import React from "react";
 import {withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Col, Container, Row} from "reactstrap";
-import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
 import {Subject, above, below, usePreviousPageContext, isAda, isPhy, useDeviceSize, useNavigation, siteSpecific} from "../../services";
@@ -25,6 +24,8 @@ import classNames from "classnames";
 import { ConceptSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { TeacherNotes } from "../elements/TeacherNotes";
 import { useGetConceptQuery } from "../../state/slices/api/conceptsApi";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { NotFound } from "./NotFound";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -36,7 +37,8 @@ interface ConceptPageProps {
 export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride, preview}: ConceptPageProps) => {
     const conceptId = conceptIdOverride || params.conceptId;
     const user = useAppSelector(selectors.user.orNull);
-    const {data: doc, isLoading} = useGetConceptQuery(conceptId);
+    const conceptQuery = useGetConceptQuery(conceptId);
+    const {data: doc, isLoading} = conceptQuery;
     const navigation = useNavigation(doc ?? null);
     const deviceSize = useDeviceSize();
 
@@ -54,82 +56,87 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
         </div>
     </div>;
 
-    return <ShowLoading until={doc} thenRender={supertypedDoc => {
-        const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
-        return <GameboardContext.Provider value={navigation.currentGameboard}>
-            <Container data-bs-theme={doc.subjectId ?? pageContext?.subject}>
-                <TitleAndBreadcrumb
-                    intermediateCrumbs={navigation.breadcrumbHistory}
-                    currentPageTitle={siteSpecific("Concept", doc.title as string)}
-                    collectionType={navigation.collectionType}
-                    subTitle={siteSpecific(undefined, doc.subtitle as string)}
-                    preview={preview} 
-                    icon={{type: "hex", subject: doc.subjectId as Subject, icon: "icon-concept"}}
-                />
-                {!preview && <>
-                    <MetaDescription description={doc.summary} />
-                    <CanonicalHrefElement />
-                </>}
-                <SidebarLayout>
-                    <ConceptSidebar relatedContent={doc.relatedContent} />
-                    <MainContent>
-                        {isPhy && <>
-                            <div className="no-print d-flex align-items-center my-3">
-                                <div>
-                                    <h2 className="text-theme-dark"><Markup encoding="latex">{doc.title as string}</Markup></h2>
-                                    {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
+    return <ShowLoadingQuery
+        query={conceptQuery}
+        defaultErrorTitle="Unable to load concept"
+        ifNotFound={<NotFound />}
+        thenRender={supertypedDoc => {
+            const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
+            return <GameboardContext.Provider value={navigation.currentGameboard}>
+                <Container data-bs-theme={doc.subjectId ?? pageContext?.subject}>
+                    <TitleAndBreadcrumb
+                        intermediateCrumbs={navigation.breadcrumbHistory}
+                        currentPageTitle={siteSpecific("Concept", doc.title as string)}
+                        collectionType={navigation.collectionType}
+                        subTitle={siteSpecific(undefined, doc.subtitle as string)}
+                        preview={preview} 
+                        icon={{type: "hex", subject: doc.subjectId as Subject, icon: "icon-concept"}}
+                    />
+                    {!preview && <>
+                        <MetaDescription description={doc.summary} />
+                        <CanonicalHrefElement />
+                    </>}
+                    <SidebarLayout>
+                        <ConceptSidebar relatedContent={doc.relatedContent} />
+                        <MainContent>
+                            {isPhy && <>
+                                <div className="no-print d-flex align-items-center my-3">
+                                    <div>
+                                        <h2 className="text-theme-dark"><Markup encoding="latex">{doc.title as string}</Markup></h2>
+                                        {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
+                                    </div>
+                                    <div className="d-flex gap-2 ms-auto">
+                                        <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
+                                        <PrintButton />
+                                        <ReportButton pageId={conceptId}/>
+                                    </div>
                                 </div>
-                                <div className="d-flex gap-2 ms-auto">
-                                    <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
-                                    <PrintButton />
-                                    <ReportButton pageId={conceptId}/>
+
+                                <div className="section-divider"/>
+
+                                <div className="d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
+                                    <EditContentButton doc={doc} />
+                                    <UserContextPicker />
                                 </div>
-                            </div>
+                            </>}
 
-                            <div className="section-divider"/>
+                            {isAda && <>
+                                {below["sm"](deviceSize) && <ManageButtons />}
 
-                            <div className="d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
-                                <EditContentButton doc={doc} />
-                                <UserContextPicker />
-                            </div>
-                        </>}
+                                <div className="d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
+                                    <UserContextPicker />
+                                    {above["md"](deviceSize) && <ManageButtons />}
+                                </div>
+                            </>}
 
-                        {isAda && <>
-                            {below["sm"](deviceSize) && <ManageButtons />}
+                            <TeacherNotes notes={doc.teacherNotes} />
 
-                            <div className="d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
-                                <UserContextPicker />
-                                {above["md"](deviceSize) && <ManageButtons />}
-                            </div>
-                        </>}
+                            <Row className="concept-content-container">
+                                <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
 
-                        <TeacherNotes notes={doc.teacherNotes} />
+                                    <SupersededDeprecatedWarningBanner doc={doc} />
 
-                        <Row className="concept-content-container">
-                            <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
+                                    {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
-                                <SupersededDeprecatedWarningBanner doc={doc} />
+                                    <WithFigureNumbering doc={doc}>
+                                        <IsaacContent doc={doc} />
+                                    </WithFigureNumbering>
 
-                                {isAda && <IntendedAudienceWarningBanner doc={doc} />}
+                                    {doc.attribution && <p className="text-muted">
+                                        <Markup trusted-markup-encoding={"markdown"}>
+                                            {doc.attribution}
+                                        </Markup>
+                                    </p>}
 
-                                <WithFigureNumbering doc={doc}>
-                                    <IsaacContent doc={doc} />
-                                </WithFigureNumbering>
+                                    {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
-                                {doc.attribution && <p className="text-muted">
-                                    <Markup trusted-markup-encoding={"markdown"}>
-                                        {doc.attribution}
-                                    </Markup>
-                                </p>}
-
-                                {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
-
-                                <NavigationLinks navigation={navigation} />
-                            </Col>
-                        </Row>
-                    </MainContent>
-                </SidebarLayout>
-            </Container>
-        </GameboardContext.Provider>;
-    }}/>;
+                                    <NavigationLinks navigation={navigation} />
+                                </Col>
+                            </Row>
+                        </MainContent>
+                    </SidebarLayout>
+                </Container>
+            </GameboardContext.Provider>;
+        }}
+    />; 
 });

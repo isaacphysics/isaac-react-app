@@ -153,9 +153,6 @@ export const api = {
         }
     },
     questions: {
-        get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
-            return endpoint.get(`/pages/questions/${id}`);
-        },
         search: (query: QuestionSearchQuery): AxiosPromise<ApiTypes.SearchResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
             return endpoint.get(`/pages/questions/`, {
                 params: query,
@@ -176,11 +173,6 @@ export const api = {
         testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
             return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
         }
-    },
-    pages: {
-        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
-            return endpoint.get(`/pages/${id}`);
-        },
     },
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
