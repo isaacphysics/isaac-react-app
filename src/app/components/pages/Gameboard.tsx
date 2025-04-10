@@ -161,7 +161,7 @@ export const Gameboard = withRouter(({ location }) => {
         }
     }, [dispatch, gameboard]);
 
-    const notFoundComponent = <Container>
+    const notFoundComponent = <>
         <TitleAndBreadcrumb 
             breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")} 
             currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`} 
@@ -172,7 +172,7 @@ export const Gameboard = withRouter(({ location }) => {
                 {`We're sorry, we were not able to find a ${siteSpecific("question deck", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
             </small>
         </h3>
-    </Container>;
+    </>;
     return !gameboardId
         ? <Redirect to={PATHS.QUESTION_FINDER} />
         : <Container className="mb-5">
