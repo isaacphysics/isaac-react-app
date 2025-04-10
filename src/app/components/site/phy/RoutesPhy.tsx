@@ -185,7 +185,7 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/gameboard_builder" to={PATHS.GAMEBOARD_BUILDER} />,
     <Redirect key={key++} exact from="/add_gameboard/:id" to={`${PATHS.ADD_GAMEBOARD}/:id`} />,
     <Redirect key={key++} exact from="/board/:id" to={`${PATHS.GAMEBOARD}#:id`} />,
-    <Route key={key++} exact path="/gameboards" render={(props) => <Redirect to={`${PATHS.GAMEBOARD}${props.location.hash ?? ""}`}/>} />, // Route wrapper needed to handle hash
+    <Redirect key={key++} exact from="/gameboards" to={{pathname: PATHS.GAMEBOARD, hash: window.location.hash}} />,
     <Redirect key={key++} exact from="/gcsebook" to="/books/phys_book_gcse" />,
     <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_14" />,
     <Redirect key={key++} exact from="/book" to="/books/physics_skills_14" />,
