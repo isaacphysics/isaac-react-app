@@ -257,7 +257,7 @@ export const AdminUserManager = () => {
                 <CardFooter>
                     <Row>
                         <Col md={{size: 4, offset: 4}} >
-                            <Input type="submit" value="Search" className="btn w-100 btn-secondary border-0"/>
+                            <Input type="submit" value="Search" className="btn btn-secondary"/>
                         </Col>
                     </Row>
                 </CardFooter>
@@ -305,7 +305,7 @@ export const AdminUserManager = () => {
                         </UncontrolledButtonDropdown>}
                     </Col>
                     <Col>
-                        <Link className="btn float-end btn-secondary border-0" to={{
+                        <Link className="btn btn-secondary float-end" to={{
                             pathname: "/admin/emails",
                             state: {
                                 csvIDs: selectedUserIds
@@ -388,7 +388,7 @@ export const AdminUserManager = () => {
                 <CardBody>
                     <h3>Merge user accounts</h3>
                     <FormGroup className="form-group">
-                        <InputGroup className={"separate-input-group"}>
+                        <InputGroup className={"separate-input-group d-flex align-items-center"}>
                             <Input
                                 type="text"
                                 placeholder="User ID to keep"
@@ -402,7 +402,7 @@ export const AdminUserManager = () => {
                                 onChange={(e => setMergeSourceId(e.target.value))}
                             />
                             <Button
-                                type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
+                                type="button"
                                 disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
                                 onClick={confirmMergeUsers}
                             >
