@@ -179,7 +179,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
     }, {
         id: "my_gameboards",
         title: "My Question Decks",
-        terms: ["gameboards", "gameboard", "my gameboards", "question deck", "question decks", "my question decks"],
+        terms: ["gameboards", "gameboard", "my gameboards", "boards", "question deck", "question decks", "my question decks", "decks"],
         summary: "View your saved question decks.",
         url: PATHS.MY_GAMEBOARDS,
         hash: "my_gameboards",
