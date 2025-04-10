@@ -1,9 +1,9 @@
 import React from "react";
 import {useGetQuizRubricQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {tags} from "../../../services";
+import {isTeacherOrAbove, tags} from "../../../services";
 import {QuizAttemptComponent, rubricCrumbs} from "../../elements/quiz/QuizAttemptComponent";
-import {Button, Container} from "reactstrap";
+import {Button, Col, Container, Row} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import type { RegisteredUserDTO } from "../../../../IsaacApiTypes";
 import { buildErrorComponent } from "../../elements/quiz/builErrorComponent";
@@ -17,10 +17,19 @@ const pageHelp = <span>
 
 const Error = buildErrorComponent("Unknown Test", "There was an error loading that test.", rubricCrumbs);
 
-const QuizFooter = ({quizId}: {quizId: string}) =>
+const FooterButton = ({link, label}: {link: string, label: string}) => <Col className="d-flex">
+    <Button className="flex-fill d-flex align-items-center justify-content-center mb-3" color="secondary" tag={Link} to={link}>
+        {label}
+    </Button>
+</Col>; 
+
+const QuizFooter = ({quizId, user}: {quizId: string, user: RegisteredUserDTO}) =>
     <div className="d-flex border-top pt-2 my-2 align-items-center">
-        <Spacer/>
-        <Button color="secondary" tag={Link} to={`/test/attempt/${quizId}`}>{"Take Test"}</Button>
+        <Spacer />
+        <Row>
+            {isTeacherOrAbove(user) && <FooterButton link={`/test/preview/${quizId}`} label="Preview" />}
+            <FooterButton link={`/test/attempt/${quizId}`} label="Take Test" />
+        </Row>
     </div>;
 
 export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
@@ -34,7 +43,7 @@ export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
     return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoadingQuery query={quizRubricQuery} ifError={Error}>
             <QuizAttemptComponent view attempt={attempt} page={null} questions={[]} sections={{}} pageLink={pageLink} pageHelp={pageHelp} user={user} />
-            <QuizFooter quizId={quizId} />
+            <QuizFooter quizId={quizId} user={user} />
         </ShowLoadingQuery>
     </Container>;
 };
