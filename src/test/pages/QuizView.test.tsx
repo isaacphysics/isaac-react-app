@@ -1,5 +1,5 @@
 import {act, screen, within} from "@testing-library/react";
-import { expectButtonWithEnabledBackwardsNavigation, expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
+import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
 import {siteSpecific} from "../../app/services";
 import type {UserRole} from "../../IsaacApiTypes";
@@ -51,7 +51,7 @@ describe("QuizView", () => {
 
     it('shows "Take Test" button that loads the attempts page and allows navigating back', async () => {
         await studentViewsQuiz();
-        await expectButtonWithEnabledBackwardsNavigation("Take Test", `/test/attempt/${quizId}`, `/test/view/${quizId}`);
+        await expectLinkWithEnabledBackwardsNavigation("Take Test", `/test/attempt/${quizId}`, `/test/view/${quizId}`);
     });
 
     it('does not show "Preview" button', async() => {
@@ -69,7 +69,7 @@ describe("QuizView", () => {
 
         it('shows "Preview" button that loads the preview page and allows navigating back', async () => {
             await teacherViewsQuiz();
-            await expectButtonWithEnabledBackwardsNavigation("Preview", `/test/preview/${quizId}`, `/test/view/${quizId}`);
+            await expectLinkWithEnabledBackwardsNavigation("Preview", `/test/preview/${quizId}`, `/test/view/${quizId}`);
         });
     });
 
@@ -91,7 +91,7 @@ describe("QuizView", () => {
 
         it('shows "Preview" button that loads the preview page and allows navigating back', async () => {
             await editorViewsQuiz();
-            await expectButtonWithEnabledBackwardsNavigation("Preview", `/test/preview/${quizId}`, `/test/view/${quizId}`);
+            await expectLinkWithEnabledBackwardsNavigation("Preview", `/test/preview/${quizId}`, `/test/view/${quizId}`);
         });
     });
 

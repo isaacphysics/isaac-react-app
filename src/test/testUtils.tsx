@@ -141,12 +141,12 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     await userEvent.click(tabLink);
 };
 
-export const clickButton = async (text: string, container?: Promise<HTMLElement>) => {
-    const [button] = await (container ? within(await container).findAllByText(text).then(e => e) : screen.findAllByText(text));
-    if (button.hasAttribute('disabled')) {
-        throw new Error(`Can't click on disabled button ${button.textContent}`);
+export const clickOn = async (text: string, container?: Promise<HTMLElement>) => {
+    const [target] = await (container ? within(await container).findAllByText(text).then(e => e) : screen.findAllByText(text));
+    if (target.hasAttribute('disabled')) {
+        throw new Error(`Can't click on disabled button ${target.textContent}`);
     }
-    await userEvent.click(button);
+    await userEvent.click(target);
 };
 
 export const enterInput = async (placeholder: string, input: string) => {
@@ -214,8 +214,11 @@ export const expectTitledSection = (title: string, message: string | undefined) 
     return expect(paragraph).toHaveTextContent(`${message}`);
 }
 ;
-export const expectButtonWithEnabledBackwardsNavigation = async (text: string, targetHref: string, originalHref: string) => {
-    await clickButton(text);
+export const expectLinkWithEnabledBackwardsNavigation = async (text: string | undefined, targetHref: string, originalHref: string) => {
+    if (text === undefined) {
+        throw new Error("Target text is undefined");
+    }
+    await clickOn(text);
     await expectUrl(targetHref);
     goBack();
     await expectUrl(originalHref);

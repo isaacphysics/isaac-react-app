@@ -74,7 +74,7 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
                             const section = sections[k];
                             return <tr key={k}>
                                 {attempt.feedbackMode === 'DETAILED_FEEDBACK' ?
-                                    <td><Link replace to={pageLink(index + 1)}>{section.title}</Link></td> :
+                                    <td><Link to={pageLink(index + 1)}>{section.title}</Link></td> :
                                     <td>{section.title}</td>
                                 }
                                 <td>
@@ -98,7 +98,7 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
                     const answerCount = questionsInSection.filter(q => q.bestAttempt !== undefined).length;
                     const completed = questionsInSection.length === answerCount;
                     return <li key={k}>
-                        <Link replace to={pageLink(index + 1)}>{section.title}</Link>
+                        <Link to={pageLink(index + 1)}>{section.title}</Link>
                         {" "}
                         <small className="text-muted">{completed ? "Completed" : anyStarted ? `${answerCount} / ${questionsInSection.length}` : ""}</small>
                     </li>;
@@ -269,9 +269,9 @@ export function QuizPagination({page, sections, pageLink, finalLabel}: QuizAttem
     const nextLink = pageLink(!finalSection ? page + 1 : undefined);
 
     return <div className="d-flex w-100 justify-content-between align-items-center">
-        <Button color="primary" outline={isAda} size={below["sm"](deviceSize) ? "sm" : ""} className={classNames({"btn btn-keyline": isPhy})} tag={Link} replace to={backLink}>Back</Button>
+        <Button color="primary" outline={isAda} size={below["sm"](deviceSize) ? "sm" : ""} className={classNames({"btn btn-keyline": isPhy})} tag={Link} to={backLink}>Back</Button>
         <div className="d-none d-md-block">Section {page} / {sectionCount}</div>
-        <Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} replace to={nextLink}>{finalSection ? finalLabel : "Next"}</Button>
+        <Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={nextLink}>{finalSection ? finalLabel : "Next"}</Button>
     </div>;
 }
 

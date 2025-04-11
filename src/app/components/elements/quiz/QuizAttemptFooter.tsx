@@ -62,8 +62,8 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
             controls = <>
                 {
                     siteSpecific(
-                        <Button className="btn btn-keyline" tag={Link} replace to={pageLink(1)}>Review answers</Button>,
-                        <Button outline color="secondary" tag={Link} replace to={pageLink(1)}>Review answers</Button>
+                        <Button className="btn btn-keyline" tag={Link} to={pageLink(1)}>Review answers</Button>,
+                        <Button outline color="secondary" tag={Link} to={pageLink(1)}>Review answers</Button>
                     )
                 }
                 <Spacer/>
@@ -80,7 +80,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
                     <Spacer/>
                     {totalCompleted} / {sectionCount} sections complete<br/>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "primary")} tag={Link} replace to={pageLink(firstIncomplete + 1)}>Continue</Button>
+                    <Button color={siteSpecific("secondary", "primary")} tag={Link} to={pageLink(firstIncomplete + 1)}>Continue</Button>
                 </>;
             } else {
                 controls = <>
