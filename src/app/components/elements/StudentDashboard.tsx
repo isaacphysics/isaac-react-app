@@ -86,7 +86,7 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
         </div>
         <Spacer/>
         <Button className="numeric-help d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
-            <i className="icon icon-info icon-color-grey"/> What is this?
+            <i className="icon icon-info layered icon-color-grey"/> What is this?
         </Button>
         {tooltip}
     </div>;
