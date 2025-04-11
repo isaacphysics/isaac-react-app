@@ -113,7 +113,7 @@ function QuizHeader({attempt, preview, view, user}: QuizAttemptProps) {
         return <>
             <EditContentButton doc={attempt.quiz} />
             <div data-testid="quiz-action" className="d-flex">
-                <span>{ preview ? "You are previewing this test." : "You are viewing the rubric for this test."}</span>
+                <p>{ preview ? "You are previewing this test." : "You are viewing the rubric for this test."}</p>
                 <Spacer />
                 {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</Button>}
             </div>
