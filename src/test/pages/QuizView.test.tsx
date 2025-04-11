@@ -1,14 +1,10 @@
 import {act, screen, within} from "@testing-library/react";
 import { expectButtonWithEnabledBackwardsNavigation, expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
-import {isPhy, siteSpecific} from "../../app/services";
+import {siteSpecific} from "../../app/services";
 import type {UserRole} from "../../IsaacApiTypes";
 
 describe("QuizView", () => {
-    if (!isPhy) {
-        return it('does not exist yet', () => {});
-    };
-
     const rubricId = Object.keys(mockRubrics)[0];
     const mockRubric = mockRubrics[rubricId];
 
