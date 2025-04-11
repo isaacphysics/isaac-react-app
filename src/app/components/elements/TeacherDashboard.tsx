@@ -28,8 +28,11 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
                 </div>
                 <Spacer/>
                 <Link to="/groups" className="d-inline panel-link mt-3">See all groups</Link>
-            </>
-            : <div className="text-center mt-lg-3">You have no active groups.<Button tag={Link} to="/groups" size="sm" className="mt-3">Create new group</Button></div>}
+            </> :
+            <>
+                <div className="text-center mt-lg-3">You have no active groups.</div>
+                <div className="text-center"><Button tag={Link} to="/groups" size="sm" className="mt-3">Create new group</Button></div>
+            </>}
     </div>;
 };
 
