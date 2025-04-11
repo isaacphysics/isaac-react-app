@@ -146,10 +146,10 @@ export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
+    const url = item.type === DOCUMENT_TYPE.GENERIC ? `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}` : item.url?.concat(item.hash ? `#${item.hash}` : "");
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question", size: "lg"}}
+        icon={{type: "hex", icon: "icon-concept", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
