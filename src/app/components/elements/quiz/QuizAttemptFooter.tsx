@@ -83,7 +83,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
             } else {
                 controls = <>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "primary")} tag={Link} replace to={pageLink(1)}>Continue</Button>
+                    <Button color={siteSpecific("secondary", "primary")} tag={Link} to={pageLink(1)}>Continue</Button>
                 </>;
             }
         }

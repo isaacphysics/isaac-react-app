@@ -4,25 +4,25 @@ import {mockRubrics} from "../../mocks/data";
 import type {UserRole} from "../../IsaacApiTypes";
 
 describe("QuizView", () => {
-    const rubricId = Object.keys(mockRubrics)[0];
-    const mockRubric = mockRubrics[rubricId];
+    const quizId = Object.keys(mockRubrics)[0];
+    const rubric = mockRubrics[quizId];
 
-    const renderQuizView =  async ({role, pathname}: {role: UserRole | "ANONYMOUS", pathname: string}) => {
+    const renderQuizView =  async ({role, quizId}: {role: UserRole | "ANONYMOUS", quizId: string}) => {
         await act(async () => renderTestEnvironment({ role }));
-        await act(async () => setUrl({ pathname }));
+        await act(async () => setUrl({ pathname: `/test/view/${quizId}` }));
         await waitForLoaded();
     };
 
-    const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}` }); 
+    const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', quizId }); 
 
     it('shows quiz title on the breadcrumbs', async () => {
         await studentViewsQuiz();
-        expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, mockRubric.title]);
+        expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, rubric.title]);
     });
 
     it('shows quiz title', async () => {
         await studentViewsQuiz();
-        expectH1(mockRubric.title);
+        expectH1(rubric.title);
     });
 
     it('shows message about this page', async () => {
@@ -37,7 +37,7 @@ describe("QuizView", () => {
 
     it('shows quiz rubric', async () => {
         await studentViewsQuiz();
-        expectTitledSection("Instructions", mockRubric.rubric?.children?.[0].value);
+        expectTitledSection("Instructions", rubric.rubric?.children?.[0].value);
     });
 
     it("does not show Test sections", async () => {
@@ -47,7 +47,7 @@ describe("QuizView", () => {
 
     it('shows "Take Test" button that loads the attempts page and allows navigating back', async () => {
         await studentViewsQuiz();
-        await expectButtonWithEnabledBackwardsNavigation("Take Test", `/test/attempt/${rubricId}`, `/test/view/${rubricId}`);
+        await expectButtonWithEnabledBackwardsNavigation("Take Test", `/test/attempt/${quizId}`, `/test/view/${quizId}`);
     });
 
     it('does not show "Preview" button', async() => {
@@ -56,7 +56,7 @@ describe("QuizView", () => {
     });
 
     describe('for teachers', () => {
-        const teacherViewsQuiz = () => renderQuizView({ role: 'TEACHER', pathname: `/test/view/${rubricId}` }); 
+        const teacherViewsQuiz = () => renderQuizView({ role: 'TEACHER', quizId }); 
         
         it('shows Set Test button', async () => {
             await teacherViewsQuiz();
@@ -65,12 +65,12 @@ describe("QuizView", () => {
 
         it('shows "Preview" button that loads the preview page and allows navigating back', async () => {
             await teacherViewsQuiz();
-            await expectButtonWithEnabledBackwardsNavigation("Preview", `/test/preview/${rubricId}`, `/test/view/${rubricId}`);
+            await expectButtonWithEnabledBackwardsNavigation("Preview", `/test/preview/${quizId}`, `/test/view/${quizId}`);
         });
     });
 
     describe('for content editors', () => {
-        const editorViewsQuiz = () => renderQuizView({ role: 'TEACHER', pathname: `/test/view/${rubricId}` });
+        const editorViewsQuiz = () => renderQuizView({ role: 'TEACHER', quizId });
 
         it('shows Set Test Button', async () => {
             await editorViewsQuiz();
@@ -87,12 +87,12 @@ describe("QuizView", () => {
 
         it('shows "Preview" button that loads the preview page and allows navigating back', async () => {
             await editorViewsQuiz();
-            await expectButtonWithEnabledBackwardsNavigation("Preview", `/test/preview/${rubricId}`, `/test/view/${rubricId}`);
+            await expectButtonWithEnabledBackwardsNavigation("Preview", `/test/preview/${quizId}`, `/test/view/${quizId}`);
         });
     });
 
     describe('for unregistered users', () => {
-        const anonymousViewsMissingQuiz = () => renderQuizView({ role: 'ANONYMOUS', pathname: '/test/view/some_non_existent_test'}); 
+        const anonymousViewsMissingQuiz = () => renderQuizView({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'}); 
         
         it('redirects to log in', async () => {
             await anonymousViewsMissingQuiz();
@@ -101,7 +101,7 @@ describe("QuizView", () => {
     });
 
     describe('when quiz does not exist', () => {
-        const studentViewsMissingQuiz = () => renderQuizView({ role: 'STUDENT', pathname: '/test/view/some_non_existent_test'});
+        const studentViewsMissingQuiz = () => renderQuizView({ role: 'STUDENT', quizId: 'some_non_existent_test'});
 
         it ('shows Unknown Test on breadcrumbs', async () => {
             await studentViewsMissingQuiz();
