@@ -1,4 +1,4 @@
-import {act, screen, waitFor, within} from "@testing-library/react";
+import {act, screen, within} from "@testing-library/react";
 import { expectButtonWithEnabledBackwardsNavigation, expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
 import {isPhy, siteSpecific} from "../../app/services";

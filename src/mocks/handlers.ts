@@ -22,6 +22,7 @@ import {
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
 import {School} from "../IsaacAppTypes";
+import { errorResponses } from "../test/test-factory";
 
 export const handlers = [
     http.get(API_PATH + "/gameboards/user_gameboards", ({request}) => {
@@ -71,36 +72,21 @@ export const handlers = [
         if (quizId in mockRubrics) {
             return HttpResponse.json(mockRubrics[quizId], { status: 200 });
         } 
-        return HttpResponse.json({
-            bypassGenericSiteErrorPage: false,
-            errorMessage: "This test has become unavailable.",
-            responseCode: 404,
-            responseCodeType: "Not found"
-        },  { status: 404 });
+        return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.get(API_PATH + "/quiz/:quizId/preview", ({ params }) => {
         const quizId = params.quizId as string;
         if (quizId in mockPreviews) {
             return HttpResponse.json(mockPreviews[quizId], { status: 200 });
         } 
-        return HttpResponse.json({
-            bypassGenericSiteErrorPage: false,
-            errorMessage: "This test has become unavailable.",
-            responseCode: 404,
-            responseCodeType: "Not found"
-        },  { status: 404 });
+        return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.post(API_PATH + "/quiz/:quizId/attempt", ({ params }) => {
         const quizId = params.quizId as string;
         if (quizId in mockAttempts) {
             return HttpResponse.json(mockAttempts[quizId], { status: 200 });
         } 
-        return HttpResponse.json({
-            bypassGenericSiteErrorPage: false,
-            errorMessage: "This test has become unavailable.",
-            responseCode: 404,
-            responseCodeType: "Not found"
-        },  { status: 404 });
+        return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.get(API_PATH + "/assignments/assign/:assignmentId", ({params}) => {
         const {assignmentId: _assignmentId} = params;
