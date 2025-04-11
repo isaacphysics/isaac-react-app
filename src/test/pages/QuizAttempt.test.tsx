@@ -1,5 +1,5 @@
 import {act, screen, within} from "@testing-library/react";
-import { expectButtonWithEnabledBackwardsNavigation, expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
+import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
 import {mockAttempts} from "../../mocks/data";
 import type {UserRole} from "../../IsaacApiTypes";
 import { siteSpecific } from "../../app/services";
@@ -7,6 +7,7 @@ import { siteSpecific } from "../../app/services";
 describe("QuizAttempt", () => {
     const quizId = Object.keys(mockAttempts)[0];
     const attempt = mockAttempts[quizId];
+    const sections = attempt.quiz?.children;
 
     const renderQuizAttempt =  async ({role, quizId}: {role: UserRole | "ANONYMOUS", quizId: string}) => {
         await act(async () => renderTestEnvironment({ role }));
@@ -37,18 +38,39 @@ describe("QuizAttempt", () => {
             expectTitledSection("Instructions", attempt.quiz?.rubric?.children?.[0].value);
         });
 
-        // TODO: assert what the sections are
-        it("shows Test sections", async () => {
+        it("shows Test sections that load section and allow navigating back", async () => {
             await studentAttemptsQuiz();
             expect(testSectionsHeader()).toBeInTheDocument();
+            await expectLinkWithEnabledBackwardsNavigation(sections?.[0].title, `/test/attempt/${quizId}/page/1`, `/test/attempt/${quizId}`);
+            await expectLinkWithEnabledBackwardsNavigation(sections?.[1].title, `/test/attempt/${quizId}/page/2`, `/test/attempt/${quizId}`);
         });
 
-        it('shows "Continue" button that loads the attempts page and allows navigating back', async () => {
+        it('shows "Continue" button that loads first page and allows navigating back', async () => {
             await studentAttemptsQuiz();
-            await expectButtonWithEnabledBackwardsNavigation("Continue", `/test/attempt/${quizId}/page/1`, `/test/attempt/${quizId}`);
+            await expectLinkWithEnabledBackwardsNavigation("Continue", `/test/attempt/${quizId}/page/1`, `/test/attempt/${quizId}`);
         });
     });
 
+    describe("question page", () => {
+        const studentAttemptsQuestionPage = (p: number) => renderQuizAttempt({ role: 'STUDENT', quizId: `${quizId}/page/${p}` });
+
+        it('shows "Back" button that loads previous page and allows navigating back', async () => {
+            await studentAttemptsQuestionPage(1);
+            await expectLinkWithEnabledBackwardsNavigation("Back", `/test/attempt/${quizId}`, `/test/attempt/${quizId}/page/1`);
+        });
+
+        it('shows "Next" button that loads following page and allows navigating back', async () => {
+            await studentAttemptsQuestionPage(1);
+            await expectLinkWithEnabledBackwardsNavigation("Next", `/test/attempt/${quizId}/page/2`, `/test/attempt/${quizId}/page/1`);
+        });
+
+        describe('on the last page', () => {
+            it('shows "Finish" button that loads overview page and allows navigating back', async () => {
+                await studentAttemptsQuestionPage(2);
+                await expectLinkWithEnabledBackwardsNavigation("Finish", `/test/attempt/${quizId}`, `/test/attempt/${quizId}/page/2`);
+            });
+        });
+    });
 
     describe('for unregistered users', () => {
         const anonymousAttemptsMissingQuiz = () => renderQuizAttempt({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'}); 

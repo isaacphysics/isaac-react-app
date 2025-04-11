@@ -1,5 +1,5 @@
 import {act, screen, waitFor, within} from "@testing-library/react";
-import { clickButton, enterInput, expectUrlParams, renderTestEnvironment, setUrl, withMockedRandom} from "../testUtils";
+import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, setUrl, withMockedRandom} from "../testUtils";
 import { buildMockQuestionFinderResults, buildMockQuestions, mockQuestionFinderResults } from "../../mocks/data";
 import _ from "lodash";
 import { buildFunctionHandler } from "../../mocks/handlers";
@@ -49,7 +49,7 @@ describe("QuestionFinder", () => {
                 await setFilter("GCSE");
                 await expectQuestions(questions.slice(0, 30));
                     
-                await clickButton("Shuffle questions");
+                await clickOn("Shuffle questions");
                 await expectQuestions(shuffledQuestions.slice(0, 30));
             });
         });
@@ -60,7 +60,7 @@ describe("QuestionFinder", () => {
                    
                 await renderQuestionFinderPage({ questionsSearchResponse });
                 await setFilter("GCSE");
-                await clickButton("Shuffle questions");
+                await clickOn("Shuffle questions");
                 await expectUrlParams("?randomSeed=1&stages=gcse");
             });
         });
@@ -100,11 +100,11 @@ describe("QuestionFinder", () => {
                 await expectQuestions(questions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
                     
-                await clickButton("Shuffle questions");
+                await clickOn("Shuffle questions");
                 await expectQuestions(shuffledQuestions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
 
-                await clickButton("Load more");
+                await clickOn("Load more");
                 await expectQuestions(shuffledQuestions);
                 await expectPageIndicator("Showing 40 of 40.");
             });
@@ -136,6 +136,6 @@ const expectPageIndicator = (content: string) => screen.findByTestId("question-f
     expect(found.querySelectorAll('.col')[0].textContent).toBe(content);
 });
 const setFilter = async (filter: string) => {
-    await clickButton(filter, mainContainer());
-    await clickButton("Apply filters");
+    await clickOn(filter, mainContainer());
+    await clickOn("Apply filters");
 };
