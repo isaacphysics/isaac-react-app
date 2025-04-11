@@ -9,6 +9,7 @@ import {
     isFound,
     isIntendedAudience,
     isPhy,
+    isRelevantPageContextOrIntendedAudience,
     makeIntendedAudienceComparator,
     mergeDisplayOptions,
     siteSpecific,
@@ -17,7 +18,7 @@ import {
     stringifyAudience,
     useUserViewingContext
 } from "../../services";
-import {AppState, selectors, useAppSelector} from "../../state";
+import {selectors, useAppSelector} from "../../state";
 import {useLocation} from "react-router-dom";
 
 const defaultConceptDisplay = siteSpecific(
@@ -74,7 +75,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         // Handle conditional display settings
         .map(section => {
             const sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
-            const sectionDisplaySettings = isIntendedAudience(section.audience, userContext, user) 
+            const sectionDisplaySettings = isRelevantPageContextOrIntendedAudience(section.audience, userContext, user, pageContext) 
                 ? sectionDisplay?.["audience"] 
                 : sectionDisplay?.["nonAudience"];
             if (sectionDisplaySettings?.includes("open")) {section.startOpen = true;}
