@@ -42,7 +42,7 @@ let nextClientId = 0;
 export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useAppDispatch();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
-    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
+    const page = useAppSelector(selectors.doc.get);
 
     const deviceSize = useDeviceSize();
 

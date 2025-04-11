@@ -18,7 +18,10 @@ export const selectors = {
     },
 
     doc: {
-        get: (state: AppState) => state?.doc || null,
+        get: (state: AppState) => state?.page?.doc || null,
+        getWithout404: (state: AppState) => {
+            return state?.page?.doc === NOT_FOUND ? null : state?.page?.doc ?? null;
+        }
     },
 
     questions: {

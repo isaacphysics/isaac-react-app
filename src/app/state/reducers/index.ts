@@ -9,7 +9,7 @@ import {
     transientUserContextSlice,
     glossaryTerms,
     concepts,
-    doc,
+    docSlice,
     questions,
     activeModals,
     notifications,
@@ -58,7 +58,7 @@ export const rootReducer = combineReducers({
     glossaryTerms,
 
     // Content
-    doc,
+    page: docSlice.reducer,
     concepts,
 
     // Question
