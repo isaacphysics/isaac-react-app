@@ -2,7 +2,7 @@ import React from "react";
 import {SeguePageDTO} from "../../../IsaacApiTypes";
 import {RenderNothing} from "../elements/RenderNothing";
 import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {isAQuestionLikeDoc, isStudent, isTutorOrAbove} from "../../services";
+import {isAQuestionLikeDoc, isStudent, isTutorOrAbove, siteSpecific} from "../../services";
 import { UncontrolledTooltip, Alert, Button } from "reactstrap";
 
 export function SupersededDeprecatedWarningBanner({doc}: {doc: SeguePageDTO}) {
@@ -31,7 +31,7 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: SeguePageDTO}) {
             <div className="text-start">
                 {supersededBy && <>
                     We periodically update questions into new formats.<br />
-                    If this question appears on one of your gameboards, you may want to update the gameboard.<br />
+                    If this question appears on one of your <>{siteSpecific("question decks", "quizzes")}</>, you may want to update the <>{siteSpecific("question deck", "quiz")}</>.<br />
                     You can find help for this at Help and support &gt; Teacher Support &gt; Assigning Work.<br /><br />
                     Students will not see this message, but will see a smaller note at the bottom of the page.{doc.deprecated && <br/>}
                 </>}

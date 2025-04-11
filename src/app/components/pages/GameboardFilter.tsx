@@ -217,7 +217,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
         {filterExpanded && <>
             <Row className="mb-sm-4">
                 <Col xs={12}>
-                    <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
+                    <div className="mb-1"><strong>Click these buttons to choose your question deck</strong></div>
                 </Col>
                 <Col lg={4}>
                     <div>
@@ -607,7 +607,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     }
 
     const pageHelp = <span>
-        You can build a {siteSpecific("gameboard", "quiz")} by selecting the areas of interest, stage and difficulties.
+        You can build a {siteSpecific("question deck", "quiz")} by selecting the areas of interest, stage and difficulties.
         <br />
         You can select more than one entry in each area.
     </span>;
@@ -699,7 +699,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                             to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}/${encodeURIComponent(customBoardTitle ?? gameboard.title ?? "")}`}
                             onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
                         >
-                            {siteSpecific(<>Save to My&nbsp;Gameboards</>, "Save to my quizzes")}
+                            {siteSpecific(<>Save to My&nbsp;Question Decks</>, "Save to my quizzes")}
                         </Button>
                     </Col>
                 </div>
