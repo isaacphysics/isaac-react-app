@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { InlineStringEntryZone } from "../../inputs/InlineStringEntryZone";
 import { InlineNumericEntryZone } from "../../inputs/InlineNumericEntryZone";
 import { InlineMultiChoiceEntryZone } from "../../inputs/InlineMultiChoiceEntryZone";
-import { IsaacMultiChoiceQuestionDTO, IsaacNumericQuestionDTO, IsaacStringMatchQuestionDTO, QuantityDTO } from "../../../../../IsaacApiTypes";
+import { IsaacMultiChoiceQuestionDTO, IsaacNumericQuestionDTO, IsaacRegexMatchQuestionDTO, IsaacStringMatchQuestionDTO, QuantityDTO } from "../../../../../IsaacApiTypes";
 import { InputProps } from "reactstrap";
 
 export function correctnessClass(correctness: QuestionCorrectness) {
@@ -61,6 +61,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
                 return questionDTO?.currentAttempt?.value === undefined && (questionDTO?.currentAttempt as QuantityDTO)?.units === undefined;  
             case "isaacStringMatchQuestion":
             case "isaacMultiChoiceQuestion":
+            case "isaacRegexMatchQuestion":
             default:
                 return questionDTO?.currentAttempt?.value === undefined;
         }  
@@ -178,6 +179,18 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
                 return <InlineMultiChoiceEntryZone
                     correctness={correctness}
                     questionDTO={questionDTO as IsaacMultiChoiceQuestionDTO & AppQuestionDTO} 
+                    className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
+                    contentClasses={contentClasses}
+                    contentStyle={{width: widthPx, height: heightPx}}
+                    setModified={setModified}
+                    onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
+                    focusRef={focusRef}
+                />;
+            }
+            case "isaacRegexMatchQuestion": {
+                return <InlineStringEntryZone 
+                    correctness={correctness}
+                    questionDTO={questionDTO as IsaacRegexMatchQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
                     contentStyle={{width: widthPx, height: heightPx}}
