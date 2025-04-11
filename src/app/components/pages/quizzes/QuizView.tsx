@@ -1,7 +1,7 @@
 import React from "react";
 import {useGetQuizRubricQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {isTeacherOrAbove, tags} from "../../../services";
+import {isTeacherOrAbove, siteSpecific, tags} from "../../../services";
 import {QuizAttemptComponent, rubricCrumbs} from "../../elements/quiz/QuizAttemptComponent";
 import {Button, Col, Container, Row} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
@@ -10,7 +10,7 @@ import { buildErrorComponent } from "../../elements/quiz/builErrorComponent";
 import { Spacer } from "../../elements/Spacer";
 
 const pageHelp = <span>
-    View information about a test without adding it to &quot;My Tests&quot;. This page page does not show any questions.
+    View information about a test without adding it to {siteSpecific('"My Tests"', '"My tests"')}. This page page does not show any questions.
 </span>;
 
 const Error = buildErrorComponent("Unknown Test", "There was an error loading that test.", rubricCrumbs);

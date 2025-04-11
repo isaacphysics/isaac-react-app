@@ -1,7 +1,7 @@
 import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTitledSection, expectUrl } from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
-import {siteSpecific} from "../../app/services";
 import { editButton, expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, previewButton, renderQuizPage, setTestButton, testSectionsHeader } from "../helpers/quiz";
+import { siteSpecific } from "../../app/services";
 
 describe("QuizView", () => {
     const quizId = Object.keys(mockRubrics)[0];
@@ -14,7 +14,7 @@ describe("QuizView", () => {
         await studentViewsQuiz();
         siteSpecific(
             () => expectPhyBreadCrumbs({href: "/practice_tests", text: "Practice Tests"}),
-            () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, rubric.title])
+            () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice tests"}, rubric.title])
         )();
     });
 
@@ -105,7 +105,7 @@ describe("QuizView", () => {
             await studentViewsMissingQuiz();
             siteSpecific(
                 () => expectPhyBreadCrumbs({href: '/practice_tests', text: "Practice Tests"}),
-                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, "Unknown Test"])
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice tests"}, "Unknown Test"])
             )();
         });
         
