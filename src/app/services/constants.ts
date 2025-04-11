@@ -1165,7 +1165,7 @@ export const NULL_CLOZE_ITEM: ItemDTO = {
 // Matches: all legacy, [inline-question:questionId class="{classes}"]
 export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+)(?<params> *\| *(?<width>w-\d+)?(?<height>h-\d+)?| +class=(?:["']|&apos;|&[rl]?quot;)(?<classes>[a-zA-Z0-9 _-]+?)(?:["']|&apos;|&[rl]?quot;))?\]/g;
 
-export type InlineQuestionType = "isaacStringMatchQuestion" | "isaacNumericQuestion" | "isaacMultiChoiceQuestion";
+export type InlineQuestionType = "isaacStringMatchQuestion" | "isaacNumericQuestion" | "isaacMultiChoiceQuestion" | "isaacRegexMatchQuestion";
 
 export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "RASPBERRYPI": "Raspberry Pi Foundation",
