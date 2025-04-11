@@ -99,9 +99,10 @@ const MyIsaacPanel = () => {
                 <Link to="/assignment_progress" className='d-block panel-my-isaac-link'>
                     Assignment progress
                 </Link>
-                <Link to="/set_tests" className='d-block panel-my-isaac-link'>
-                    Set / manage tests
-                </Link>
+                {!isTutor(user) &&
+                    <Link to="/set_tests" className='d-block panel-my-isaac-link'>
+                        Set / manage tests
+                    </Link>}
             </div>
         </div>
         <div className="section-divider" />
