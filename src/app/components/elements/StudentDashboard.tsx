@@ -1,15 +1,15 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { openActiveModal, selectors, showErrorToast, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
+import { selectors, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { convertAssignmentToQuiz, filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTutorOrAbove, PATHS, QuizStatus, sortUpcomingAssignments, useDeviceSize } from '../../services';
-import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
 import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
 import { getActiveWorkCount } from '../navigation/NavigationBar';
 import { Spacer } from './Spacer';
 import classNames from 'classnames';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
+import { authenticateWithTokenAfterPrompt } from './panels/TeacherConnections';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -17,23 +17,10 @@ const GroupJoinPanel = () => {
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
     const [authenticationToken, setAuthenticationToken] = useState<string | null>();
 
-    const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
-        if (!token) {
-            dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
-            return;
-        }
-        else {
-            const {data: usersToGrantAccess} = await getTokenOwner(token);
-            if (usersToGrantAccess && usersToGrantAccess.length) {
-                dispatch(openActiveModal(tokenVerificationModal(userId, token, usersToGrantAccess)));
-            }
-        }
-    };
-
     function processToken(event: React.FormEvent<HTMLFormElement | HTMLButtonElement | HTMLInputElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
         if (user && user.loggedIn && user.id && isDefined(authenticationToken)) {
-            authenticateWithTokenAfterPrompt(user.id, authenticationToken);
+            authenticateWithTokenAfterPrompt(user.id, authenticationToken, dispatch, getTokenOwner);
         }
     }
 
