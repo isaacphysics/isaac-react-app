@@ -210,7 +210,7 @@ export const expectTitledSection = (title: string, message: string | undefined) 
     if (titleE.parentElement === null) {
         throw new Error(`Could not find parent for heading: ${title}`);
     }
-    const paragraph = within(titleE.parentElement).getByRole('paragraph');
+    const [paragraph] = within(titleE.parentElement).getAllByRole('paragraph');
     return expect(paragraph).toHaveTextContent(`${message}`);
 }
 ;
