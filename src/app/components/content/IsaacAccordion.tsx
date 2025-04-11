@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useMemo } from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {Accordion} from "../elements/Accordion";
 import {IsaacContent} from "./IsaacContent";
@@ -19,7 +19,6 @@ import {
 } from "../../services";
 import {AppState, selectors, useAppSelector} from "../../state";
 import {useLocation} from "react-router-dom";
-import { IsConceptContext } from "../../../IsaacAppTypes";
 
 const defaultConceptDisplay = siteSpecific(
     {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
@@ -48,10 +47,12 @@ const StageInsert = ({stage}: {stage: string}) => {
 };
 
 export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
-    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
+    const page = useAppSelector(selectors.doc.get);
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
-    const conceptContext = useContext(IsConceptContext);
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
+    const isConceptPage = page && page !== 404 && page.type === DOCUMENT_TYPE.CONCEPT;
 
     // Select different default display depending on page type
     const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
@@ -97,7 +98,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         .filter(section => !section.hidden);
 
     const stageIndices = useMemo(() => {
-        let stageToFirstIndexMap = conceptContext && sections
+        let stageToFirstIndexMap = isConceptPage && sections
             ?.reduce((acc, section, index) => {
                 if (!section.audience?.[0].stage?.[0]) {
                     // ignore sections without a stage
@@ -144,7 +145,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         }
 
         return stageToFirstIndexMap;
-    }, [conceptContext, sections, userContext.stage]);
+    }, [isConceptPage, sections, userContext.stage]);
 
     const stageInserts = useMemo(() => {
         // flip key and value; we don't construct it this way as when building we need fast lookup of audience
