@@ -3,7 +3,7 @@ import { selectors, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } 
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { convertAssignmentToQuiz, filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTeacherOrAbove, PATHS, QuizStatus, sortUpcomingAssignments, useDeviceSize } from '../../services';
+import { convertAssignmentToQuiz, filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTutorOrAbove, PATHS, QuizStatus, sortUpcomingAssignments, useDeviceSize } from '../../services';
 import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
 import { getActiveWorkCount } from '../navigation/NavigationBar';
 import { Spacer } from './Spacer';
@@ -214,11 +214,11 @@ interface StudentDashboardProps {
 export const StudentDashboard = ({assignments, quizAssignments, streakRecord, groups}: StudentDashboardProps) => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
-    const nameToDisplay = isLoggedIn(user) && !isTeacherOrAbove(user) && user.givenName;
+    const nameToDisplay = isLoggedIn(user) && !isTutorOrAbove(user) && user.givenName;
 
     const {assignmentsCount, quizzesCount} = getActiveWorkCount(assignments, quizAssignments);
 
-    return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTeacherOrAbove(user)})}>
+    return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
         {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
         {deviceSize === "lg"
             ? <>
