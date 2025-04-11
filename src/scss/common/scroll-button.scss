@@ -17,6 +17,10 @@ button.scroll-btn.scroll-btn {
   &.is-sticky {
     opacity: 1;
   }
+
+  &:not(.is-sticky) {
+    pointer-events: none;
+  }
   
   > img {
     margin-top: -4px;
