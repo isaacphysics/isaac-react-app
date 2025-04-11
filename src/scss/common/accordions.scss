@@ -104,7 +104,7 @@
     }
 
     &:hover {
-      .accordion-title {
+      .accordion-title > :not(.inline-stage-label) {
         text-decoration: underline;
       }
     }

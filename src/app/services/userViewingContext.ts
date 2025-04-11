@@ -7,8 +7,11 @@ import {
     examBoardLabelMap,
     isAda,
     isDefined,
+    isFullyDefinedContext,
     isLoggedIn,
     isPhy,
+    isSingleStageContext,
+    LEARNING_STAGE_TO_STAGES,
     roleRequirements,
     siteSpecific,
     STAGE,
@@ -35,7 +38,7 @@ import {
     useAppDispatch,
     useAppSelector
 } from "../state";
-import {DisplaySettings, GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
+import {DisplaySettings, GameboardContext, PageContextState, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import {useContext} from "react";
 import {Immutable} from "immer";
 
@@ -343,6 +346,25 @@ export function filterAudienceViewsByProperties(views: ViewingContext[], propert
         }
     });
     return filteredViews;
+}
+
+export function isRelevantPageContextOrIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null, pageContext: PageContextState) {
+    
+    // return true if there is any overlap between the page context (as mapped to STAGEs) and the intended audience
+    if (isFullyDefinedContext(pageContext) 
+        && isSingleStageContext(pageContext) 
+        && intendedAudience?.some(audience => 
+            audience.stage?.some(auStage => 
+                pageContext.stage.some(pcStage => 
+                    LEARNING_STAGE_TO_STAGES[pcStage].includes(auStage as STAGE)
+                )
+            )
+        )
+    ) {
+        return true;
+    }
+
+    return isIntendedAudience(intendedAudience, userContext, user);
 }
 
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null): boolean {
