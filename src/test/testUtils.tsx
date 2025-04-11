@@ -141,12 +141,12 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     await userEvent.click(tabLink);
 };
 
-export const clickButton = async (text: string, container?: Promise<HTMLElement>) => {
-    const [button] = await (container ? within(await container).findAllByText(text).then(e => e) : screen.findAllByText(text));
-    if (button.hasAttribute('disabled')) {
-        throw new Error(`Can't click on disabled button ${button.textContent}`);
+export const clickOn = async (text: string, container?: Promise<HTMLElement>) => {
+    const [target] = await (container ? within(await container).findAllByText(text).then(e => e) : screen.findAllByText(text));
+    if (target.hasAttribute('disabled')) {
+        throw new Error(`Can't click on disabled button ${target.textContent}`);
     }
-    await userEvent.click(button);
+    await userEvent.click(target);
 };
 
 export const enterInput = async (placeholder: string, input: string) => {
@@ -161,11 +161,17 @@ export const waitForLoaded = () => waitFor(() => {
     expect(screen.queryAllByText("Loading...")).toHaveLength(0);
 });
 
+export const expectUrl = (text: string) => waitFor(() => {
+    expect(history.location.pathname).toBe(text);
+});
+
 export const expectUrlParams = (text: string) => waitFor(() => {
     expect(history.location.search).toBe(text);
 });
 
 export const setUrl = (location: LocationDescriptor) => history.push(location);
+
+export const goBack = () => history.goBack();
 
 export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => void) => Promise<void>) => {
     const nextRandom = {
@@ -189,4 +195,31 @@ export const withMockedDate = async (date: number, fn: () => Promise<void>) => {
     } finally {
         jest.spyOn(global.Date, 'now').mockRestore();
     }
+};
+
+const expectHeading = (n: number) => (txt?: string) => expect(screen.getByRole('heading', { level: n })).toHaveTextContent(`${txt}`);
+
+export const expectH1 = expectHeading(1);
+
+export const expectH4 = expectHeading(4);
+
+export const expectTextInElementWithId = (testId: string) => (msg: string) => expect(screen.getByTestId(testId)).toHaveTextContent(msg);
+
+export const expectTitledSection = (title: string, message: string | undefined) => {
+    const titleE = screen.getByRole('heading', { name: title });
+    if (titleE.parentElement === null) {
+        throw new Error(`Could not find parent for heading: ${title}`);
+    }
+    const [paragraph] = within(titleE.parentElement).getAllByRole('paragraph');
+    return expect(paragraph).toHaveTextContent(`${message}`);
+}
+;
+export const expectLinkWithEnabledBackwardsNavigation = async (text: string | undefined, targetHref: string, originalHref: string) => {
+    if (text === undefined) {
+        throw new Error("Target text is undefined");
+    }
+    await clickOn(text);
+    await expectUrl(targetHref);
+    goBack();
+    await expectUrl(originalHref);
 };

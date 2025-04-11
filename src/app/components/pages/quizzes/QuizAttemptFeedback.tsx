@@ -22,7 +22,7 @@ function QuizFooter(props: QuizAttemptProps) {
         prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {isDefined(studentUser) ? "their" : "your"} detailed feedback.</p>;
         controls = <>
             <Spacer/>
-            <Button tag={Link} replace to={pageLink(1)}>Next</Button>
+            <Button tag={Link} to={pageLink(1)}>Next</Button>
         </>;
     } else {
         controls = <QuizPagination {...props} page={page} finalLabel="Back to Overview" />;
