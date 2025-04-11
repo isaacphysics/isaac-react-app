@@ -2299,17 +2299,37 @@ export const mockAttempts: Record<string, QuizAttemptDTO> = {
             type: "isaacQuiz",
             encoding: "markdown",
             canonicalSourceFile: "content/questions/physics/tests/unpublished_tests/a_level_1d_motion_test.json",
-            children: [
-                {
-                    id: "a_level_1d_motion_test|6a5e50ef",
-                    title: "Velocity & Acceleration",
-                    type: "isaacQuizSection",
+            children: [{
+                id: "a_level_1d_motion_test|6a5e50ef",
+                title: "Velocity & Acceleration",
+                type: "isaacQuizSection",
+                encoding: "markdown",
+                children: [{
+                    id:"a_level_1d_motion_test|6a5e50ef|a15b8ea9-603a-445c-b792-aa17430d578d",
+                    type: "isaacNumericQuestion",
                     encoding: "markdown",
                     children: [],
-                    published: false,
-                    tags: []
-                }
-            ],
+                    value: "If an object accelerates from rest at $\\\\quantity{2.5}{m\\\\\\\\,s^{-2}}$, what will be its speed after $\\\\quantity{8.0}{s}$?",
+                    published:false,
+                }],
+                published: false,
+                tags: []
+            }, {
+                id: "a_level_1d_motion_test|b76267ab",
+                title: "Problems involving Distance",
+                type: "isaacQuizSection",
+                encoding: "markdown",
+                children:[{
+                    id: "a_level_1d_motion_test|b76267ab|aa19154e-228a-4b94-b8e3-55fcbd708c5a",
+                    type: "isaacNumericQuestion",
+                    encoding: "markdown",
+                    children:[],
+                    value: "If an object accelerates from rest at $\\\\quantity{1.8}{m\\\\\\\\,s^{-2}}$, how far does it travel in the first $\\\\quantity{7.0}{s}$ of its motion?",
+                    published: false, 
+                }], 
+                published:false,
+                tags:[]
+            }],
             tags: [],
             hiddenFromRoles: [
                 "STUDENT",
@@ -2323,7 +2343,7 @@ export const mockAttempts: Record<string, QuizAttemptDTO> = {
                         type: "content",
                         encoding: "markdown",
                         children: [],
-                        value: "We recommend completing this test after studying the relevant concepts ([Equations of Motion](/concepts/cp_eq_of_motion)), either in school or by doing the appropriate sections in the [Essential Pre-Uni Physics book](/books/physics_skills_19).\n\nFor this test make sure to follow the Isaac Physics rules for [significant figures](/solving_problems#acc_solving_problems_sig_figs).",
+                        value: "We recommend completing this test after studying the relevant concepts (Equations of Motion), either in school or by doing the appropriate sections in the Essential Pre-Uni Physics book.",
                         tags: []
                     }
                 ],

@@ -51,7 +51,7 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
                 <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "hex", icon: "icon-error"}} />
                 <Alert color={assignedQuizError ? "warning" : "danger"} className="mt-4">
                     <h4 className="alert-heading">{assignedQuizError ? "You have been set this test" : "Error loading test!"}</h4>
-                    {!assignedQuizError && <p>{error}</p>}
+                    {!assignedQuizError && <p data-testId="error-message">{error}</p>}
                     {assignedQuizError && <>
                         <p>Your teacher has set this test to you.  You may not practise it in advance.<br/>
                             If you are ready to take the test, click on it in your <a href={"/tests"} target="_self" rel="noopener noreferrer">assigned tests</a> page.
