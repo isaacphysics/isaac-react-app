@@ -9,8 +9,6 @@ import type { RegisteredUserDTO } from "../../../../IsaacApiTypes";
 import { buildErrorComponent } from "../../elements/quiz/builErrorComponent";
 import { Spacer } from "../../elements/Spacer";
 
-const pageLink = () => '';
-
 const pageHelp = <span>
     View information about a test without adding it to &quot;My Tests&quot;. This page page does not show any questions.
 </span>;
@@ -42,7 +40,7 @@ export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoadingQuery query={quizRubricQuery} ifError={Error}>
-            <QuizAttemptComponent view attempt={attempt} page={null} questions={[]} sections={{}} pageLink={pageLink} pageHelp={pageHelp} user={user} />
+            <QuizAttemptComponent view attempt={attempt} page={null} questions={[]} sections={{}} pageLink={() => ''} pageHelp={pageHelp} user={user} />
             <QuizFooter quizId={quizId} user={user} />
         </ShowLoadingQuery>
     </Container>;
