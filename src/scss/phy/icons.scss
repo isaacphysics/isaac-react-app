@@ -108,10 +108,6 @@
   @include svg-icon('/assets/phy/icons/redesign/search.svg', 16px, 16px);
 }
 
-.icon-info {
-  @include svg-icon('/assets/phy/icons/redesign/info.svg', 16px, 16px);
-}
-
 .icon-flag {
   @include svg-icon('/assets/phy/icons/redesign/flag.svg', 16px, 16px);
 }
@@ -219,6 +215,14 @@
   );
 }
 
+.icon-info {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/info-fg.svg',
+    '/assets/phy/icons/redesign/info-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 50%)
+  );
+}
+
 .icon-events {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-event-fg.svg',
@@ -319,7 +323,6 @@ i.icon {
 .icon {
   --icon-size: 16px;
   --mask-size: 100%;
-  
 }
 
 .icon-lg {
