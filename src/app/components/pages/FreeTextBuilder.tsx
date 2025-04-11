@@ -376,7 +376,7 @@ export const FreeTextBuilder = () => {
             </Card>
 
             <div className="mb-5 text-center">
-                <Input type="submit" value="Test question" className="btn btn-xl btn-secondary border-0" />
+                <Input type="submit" value="Test question" className="btn btn-xl btn-secondary" />
             </div>
         </Form>
     </Container>;
