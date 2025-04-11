@@ -1,7 +1,7 @@
 import {act, screen, within} from "@testing-library/react";
 import {expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, renderTestEnvironment, setUrl, waitForLoaded} from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
-import {isPhy} from "../../app/services";
+import {isPhy, siteSpecific} from "../../app/services";
 import type {UserRole} from "../../IsaacApiTypes";
 
 describe("QuizView", () => {
@@ -20,7 +20,10 @@ describe("QuizView", () => {
 
     it('shows the breadcrumbs', async () => {
         await renderQuizView({ role: 'STUDENT', pathname: `/test/view/${rubricId}/` });
-        expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, mockRubric.title]);
+        siteSpecific(
+            () => expectPhyBreadCrumbs({href: "/practice_tests", text: "Practice Tests"}),
+            () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, mockRubric.title])
+        )();
     });
 
     it('shows the quiz title', async () => {
@@ -88,7 +91,10 @@ describe("QuizView", () => {
     describe('when a quiz does not exist', () => {
         it ('shows the breadcrumbs', async () => {
             await renderQuizView({ role: 'STUDENT', pathname: '/test/view/some_non_existent_test'});
-            expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, "Unknown Test"]);
+            siteSpecific(
+                () => expectPhyBreadCrumbs({href: '/practice_tests', text: "Practice Tests"}),
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, "Unknown Test"])
+            )();
         });
         
         it('shows an error', async () => {
@@ -105,7 +111,13 @@ const expectActionMessage = expectTextInElementWithId('quiz-action');
 const setTestButton = () => screen.queryByRole('button', {name: "Set Test"});
 const editButton = () => screen.queryByRole('heading', {name: "Published ✎"});
 const testSectionsHeader = () => screen.queryByRole('heading', {name: "Test sections"});
-const expectBreadcrumbs = ([first, second, third]: [{href: string, text: string}, {href: string, text: string}, string | undefined]) => {
+const expectPhyBreadCrumbs = ({href, text}: {href: string, text: string}) => {
+    const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');
+    expect(Array.from(breadcrumbs.children).map(e => e.innerHTML)).toEqual([
+        `<a href="${href}"><span>${text}</span></a>`,
+    ]);
+};
+const expectAdaBreadCrumbs = ([first, second, third]: [{href: string, text: string}, {href: string, text: string}, string | undefined]) => {
     const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');
     expect(Array.from(breadcrumbs.children).map(e => e.innerHTML)).toEqual([
         `<a href="${first.href}"><span>${first.text}</span></a>`,
