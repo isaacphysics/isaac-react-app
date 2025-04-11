@@ -18,7 +18,7 @@ const pageHelp = <span>
 const Error = buildErrorComponent("Unknown Test", "There was an error loading that test.", rubricCrumbs);
 
 const FooterButton = ({link, label}: {link: string, label: string}) => <Col className="d-flex">
-    <Button className="flex-fill d-flex align-items-center justify-content-center mb-3" color="secondary" tag={Link} to={link}>
+    <Button className="flex-fill d-flex text-nowrap align-items-center justify-content-center mb-3" color="secondary" tag={Link} to={link}>
         {label}
     </Button>
 </Col>; 
