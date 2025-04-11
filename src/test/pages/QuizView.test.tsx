@@ -1,18 +1,12 @@
-import {act, screen, within} from "@testing-library/react";
-import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTextInElementWithId, expectTitledSection, expectUrl, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
+import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTitledSection, expectUrl } from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
-import type {UserRole} from "../../IsaacApiTypes";
+import { editButton, expectActionMessage, expectBreadcrumbs, expectErrorMessage, previewButton, renderQuizPage, setTestButton, testSectionsHeader } from "../helpers/quiz";
 
 describe("QuizView", () => {
     const quizId = Object.keys(mockRubrics)[0];
     const rubric = mockRubrics[quizId];
 
-    const renderQuizView =  async ({role, quizId}: {role: UserRole | "ANONYMOUS", quizId: string}) => {
-        await act(async () => renderTestEnvironment({ role }));
-        await act(async () => setUrl({ pathname: `/test/view/${quizId}` }));
-        await waitForLoaded();
-    };
-
+    const renderQuizView = renderQuizPage('/test/view');
     const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', quizId }); 
 
     it('shows quiz title on the breadcrumbs', async () => {
@@ -116,18 +110,3 @@ describe("QuizView", () => {
         });
     });
 });
-
-const expectErrorMessage = expectTextInElementWithId('error-message');
-const expectActionMessage = expectTextInElementWithId('quiz-action');
-const setTestButton = () => screen.queryByRole('button', {name: "Set Test"});
-const editButton = () => screen.queryByRole('heading', {name: "Published ✎"});
-const previewButton = () => screen.queryByRole('link', {name: "Preview"});
-const testSectionsHeader = () => screen.queryByRole('heading', {name: "Test sections"});
-const expectBreadcrumbs = ([first, second, third]: [{href: string, text: string}, {href: string, text: string}, string | undefined]) => {
-    const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');
-    expect(Array.from(breadcrumbs.children).map(e => e.innerHTML)).toEqual([
-        `<a href="${first.href}"><span>${first.text}</span></a>`,
-        `<a href="${second.href}"><span>${second.text}</span></a>`,
-        `<span>${third}</span>`
-    ]);
-};
