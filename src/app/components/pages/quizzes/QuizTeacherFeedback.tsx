@@ -72,7 +72,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const quizTitle = (quizAssignment?.quiz?.title || quizAssignment?.quiz?.id || "Test") + (assignmentNotYetStarted ? ` (starts ${formatDate(assignmentStartDate)})` : " results");
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
-        <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
+        <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "hex", icon: "icon-error"}}/>
         <Alert color="danger">
             <h4 className="alert-heading">Error loading test feedback</h4>
             <p>{getRTKQueryErrorMessage(error)?.message}</p>
@@ -84,7 +84,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
             query={quizAssignmentQuery}
             ifError={buildErrorComponent}
             thenRender={quizAssignment => <>
-                <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
+                <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "hex", icon: "icon-tests"}}/>
                 <div className="d-flex mb-4">
                     <span>
                         Set by: {extractTeacherName(quizAssignment.assignerSummary)} on {formatDate(quizAssignment.creationDate)}

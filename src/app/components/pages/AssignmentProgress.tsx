@@ -439,7 +439,10 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
         <div id={`progress-${group.id}`} onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
             <div className={classNames("group-name ps-2 ps-md-3 justify-content-between", {"flex-grow-1" : below['xs'](deviceSize)})}>
                 <div className="d-flex align-items-center">
-                    <span className="icon-group"/>
+                    {siteSpecific(
+                        <i className="icon icon-group icon-color-white layered me-2"/>,
+                        <span className="icon-group"/>
+                    )}
                     <span data-testid={"group-name"}>{group.groupName}</span>
                 </div>
                 <div className="flex-grow-1 flex-grow-sm-0"/>
@@ -504,6 +507,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 subTitle={"Track your group performance" + (isPhy ? " by question" : "")}
                 help={pageHelp}
                 modalId="help_modal_assignment_progress"
+                icon={{type: "hex", icon: "icon-revision"}}
             />
             <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_help")} ifNotFound={RenderNothing} />
             <div className="w-100 text-end">

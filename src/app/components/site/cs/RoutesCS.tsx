@@ -34,6 +34,7 @@ import { StudentResources } from "../../pages/StudentResources";
 import { TeacherResources } from "../../pages/TeacherResources";
 import { CSProjects } from "../../pages/CSProjects";
 import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
+import {StudentChallenges} from "../../pages/StudentChallenges";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -127,4 +128,7 @@ export const RoutesCS = [
 
     // <TrackedRoute key={key++} exact path="/coming_soon" component={ComingSoon} />,
     <TrackedRoute key={key++} exact path="/equality" ifUser={isStaff} component={Equality} />,
+
+    <TrackedRoute key={key++} exact path={"/student_challenges"} component={StudentChallenges} />,
+    <Redirect key={key++} from={"/pages/student_challenges"} to={"/student_challenges"} />
 ];

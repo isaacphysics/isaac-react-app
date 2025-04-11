@@ -26,14 +26,6 @@
   background: url(/assets/phy/ru.png) -296px -316px no-repeat;
   margin: 0 10px 0 0;
 }
-.icon-group {
-  float: left;
-  width: 23px;
-  min-width: 23px;
-  height: 19px;
-  background: url(/assets/phy/ru.png) -330px -321px no-repeat;
-  margin: 10px 10px 10px 0;
-}
 .icon-group-table-person {
   float: left;
   width: 11px;
@@ -52,7 +44,6 @@
 .icon-person,
 .icon-warning,
 .icon-help,
-.icon-group,
 .icon-group-table-person
 {
   background-image: url(/assets/phy/ru.png) !important;
@@ -236,11 +227,67 @@
   );
 }
 
-.icon-account {
-  @include svg-icon(
-    '/assets/phy/icons/redesign/my-isaac.svg', 
-    var(--icon-size), var(--icon-size), var(--mask-size, 63%) // no background - generic hex background clashes with foreground hex
+.icon-contact {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-contact-fg.svg', 
+    '/assets/phy/icons/redesign/page-contact-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), 58% 53%
   );
+}
+
+.icon-group {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-group-fg.svg', 
+    '/assets/phy/icons/redesign/page-group-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 65%)
+  );
+}
+
+.icon-account {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-account-fg.svg',
+    '/assets/phy/icons/redesign/page-account-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 63%)
+);
+}
+
+.icon-progress {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-progress-fg.svg',
+    '/assets/phy/icons/redesign/page-progress-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 58%), 52% center
+  );
+}
+
+.icon-news {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-news-fg.svg', 
+    '/assets/phy/icons/redesign/page-news-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%)
+  );
+}
+
+.icon-error {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-error-fg.svg', 
+    '/assets/phy/icons/redesign/page-error-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), center 43%
+  );
+}
+
+.icon-mail {
+  @include svg-icon(
+    '/assets/phy/icons/redesign/page-mail.svg', 
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), center 55%
+  );
+}
+
+.icon-book {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-book-fg.svg',
+    '/assets/phy/icons/redesign/page-book-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 58%)
+  )
 }
 
 svg {
@@ -291,14 +338,30 @@ i.icon {
 // These are !important by the same logic as Bootstrap classes; if you have specified this as an explicit classname, you want it to take precedence.
 
 // the default icon colour for `neutral` is $color-theme-500 (green), but we use black icons in a few places across e.g. navigation
+@mixin icon-color-override($color) {
+  &.layered {
+    &::before {
+      background-color: $color !important;
+    }
+    &::after {
+      background-color: $color !important;
+    }
+  }
+
+  // .layered is a bit grim; if we could set something in @svg-icon-layered as a flag instead this would be ideal.
+  &:not(.layered) {
+    background-color: $color !important;
+  }
+}
+
 i.icon.icon-color-black {
-  background-color: $color-neutral-900 !important;
+  @include icon-color-override($color-neutral-900);
 }
 
 i.icon.icon-color-grey {
-  background-color: $color-neutral-500 !important;
+  @include icon-color-override($color-neutral-500);
 }
 
 i.icon.icon-color-white {
-  background-color: white;
+  @include icon-color-override($color-neutral-white);
 }

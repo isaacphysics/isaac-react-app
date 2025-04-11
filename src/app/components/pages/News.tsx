@@ -33,7 +33,7 @@ export const News = () => {
         "Get all the latest news about Ada Computer Science, and read the stories of recent graduates who now have exciting careers in computer science.");
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"News"} />
+        <TitleAndBreadcrumb currentPageTitle={"News"} icon={{type: "hex", icon: "icon-news"}} />
         <MetaDescription description={metaDescription} />
         {allNews.length === 0 ? 
             <ShowLoadingQuery

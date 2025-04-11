@@ -565,7 +565,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                 {tabs.map((tab, index) => {
                     return <NavItem key={index} className={classNames({"px-2": isPhy, "active": tab.active()})}>
                         <NavLink
-                            className={classNames("text-center", {"group-nav-tab border-radius-2": isPhy}, {"px-2": isAda})} tabIndex={0}
+                            className={classNames("text-center", {"group-nav-tab": isPhy}, {"px-2": isAda})} tabIndex={0}
                             onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
                         >
                             {tab.name}
@@ -666,7 +666,9 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
     </span>;
 
     const GroupsPhy = <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="help_modal_groups" /> {/* TODO groups page icon? */}
+        <TitleAndBreadcrumb 
+            currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="help_modal_groups" icon={{type: "hex", icon: "icon-group"}}
+        />
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <SidebarLayout>
                 <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}

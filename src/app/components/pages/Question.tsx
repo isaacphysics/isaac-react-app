@@ -42,6 +42,7 @@ import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestion
 import { LLMFreeTextQuestionIndicator } from "../elements/LLMFreeTextQuestionIndicator";
 import { GameboardQuestionSidebar, MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StageAndDifficultySummaryIcons } from "../elements/StageAndDifficultySummaryIcons";
+import { TeacherNotes } from "../elements/TeacherNotes";
 import { skipToken } from "@reduxjs/toolkit/query";
 
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
@@ -102,6 +103,8 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                         : <QuestionSidebar relatedContent={doc.relatedContent} />}
                     <MainContent>
                         {!preview && <CanonicalHrefElement />}
+
+                        <TeacherNotes notes={doc.teacherNotes} />
 
                         <div className={classNames("no-print d-flex align-items-center", siteSpecific("my-3", "mt-3"))}>
                             {isAda && <>

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { ReactNode, useLayoutEffect, useRef, useState } from "react";
 import { Col, Row } from "reactstrap";
 import { Spacer } from "./Spacer";
 import { FilterCount } from "./svg/FilterCount";
@@ -6,12 +6,13 @@ import classNames from "classnames";
 import { isAda, isPhy } from "../../services";
 
 export interface CollapsibleListProps {
-    title?: string;
+    title?: ReactNode;
     asSubList?: boolean;
     expanded: boolean;
     toggle: () => void;
     numberSelected?: number;
     children?: React.ReactNode;
+    additionalOffset?: string | number; // css value for additional space to add to the bottom of the list when expanded; e.g. 4px, 1rem
     className?: string;
 }
 
@@ -28,13 +29,21 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
 
     useLayoutEffect(() => {
         if (expanded) {
-            setExpandedHeight(listRef?.current ? [...listRef.current.children].map(c => 
-                c.getAttribute("data-targetHeight") ? parseInt(c.getAttribute("data-targetHeight") as string) : c.clientHeight
-            ).reduce((a, b) => a + b, 0) : 0);
+            setExpandedHeight(listRef?.current 
+                // clientHeight cannot determine margin (nor can any reasonable alternative, since margins can overlap)! this will be smaller than the true height
+                // if margin exists. if this is the case, use additionalOffset to add additional space to the bottom of the list
+                ? Math.max([...listRef.current.children].map(c => c.getAttribute("data-targetHeight") 
+                    ? parseInt(c.getAttribute("data-targetHeight") as string) 
+                    : c.clientHeight
+                ).reduce((a, b) => a + b, 0), listRef.current.clientHeight) 
+                : 0
+            );
         }
     }, [expanded, props.children]);
 
-    const title = props.title && props.asSubList ? props.title : <b>{props.title}</b>;
+    const title = typeof props.title === "string" // auto styling for plain strings; prefer this where possible
+        ? <span>{props.title && props.asSubList ? props.title : <b>{props.title}</b>}</span>
+        : props.title;
 
     return <Col className={props.className} data-targetHeight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
         <div className="row collapsible-head" ref={headRef}>
@@ -46,15 +55,13 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
                 <img className={classNames("icon-dropdown-90", {"active": expanded})} src={"/assets/common/icons/chevron_right.svg"} alt="" />
             </button>
         </div>
-        <Row 
+        <div
             className={`collapsible-body overflow-hidden ${expanded ? "open" : "closed"}`} 
-            style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0}}
+            style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0, marginBottom: expanded ? (props.additionalOffset ?? 0) : 0}}
         >
-            <Col>
-                <div ref={listRef} className={classNames({"ms-2": props.asSubList})}>
-                    {props.children}
-                </div>
-            </Col>
-        </Row>
+            <div ref={listRef} className={classNames({"ms-2": props.asSubList})}>
+                {props.children}
+            </div>
+        </div>
     </Col>;
 };

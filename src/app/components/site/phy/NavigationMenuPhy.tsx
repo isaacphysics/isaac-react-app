@@ -75,7 +75,7 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isHovered]);
 
-    return <Dropdown {...rest} nav inNavbar className={classNames(className, "hoverable", { "active": isOpen || isActiveUnderContext?.(pageContext)})} isOpen={isOpen} 
+    return <Dropdown {...rest} nav inNavbar className={classNames(className, "hoverable", { "active": isOpen || isActiveUnderContext?.(pageContext)})} isOpen={isOpen}
         onMouseEnter={() => setIsHovered(true)}
         onPointerDown={(e) => {if (e.pointerType === "touch") {
             setIsHovered(true);
@@ -109,7 +109,7 @@ const StaticNavigationDropdown = (props: NavigationDropdownProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, ikey]);
 
-    return <Dropdown {...rest} nav inNavbar className={classNames(className, { "active": isOpen })} isOpen={isOpen} toggle={toggle} 
+    return <Dropdown {...rest} nav inNavbar className={classNames(className, { "active": isOpen })} isOpen={isOpen} toggle={toggle}
         title={""} aria-label={ariaTitle ?? title?.valueOf() as string}
     >
         <DropdownToggle nav className="py-4 px-3 px-lg-4" tabIndex={0}>
@@ -133,7 +133,7 @@ const ContentNavHoverableWrapper = (props : ContentNavWrapperProps) => {
         <ul className="d-flex p-0 gap-2 m-0">
             {children}
         </ul>
-    </div>; 
+    </div>;
 };
 
 const ContentNavAccordionWrapper = (props : ContentNavWrapperProps) => {
@@ -178,7 +178,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
     const deviceSize = useDeviceSize();
     const pageContext = useAppSelector(selectors.pageContext.context);
 
-    return above["xl"](deviceSize) 
+    return above["xl"](deviceSize)
         // full-width, hoverable dropdowns
         ? <ContentNavHoverableWrapper title={title} {...rest}>
             {categories?.map((category, i, catsArr) => {
@@ -195,7 +195,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                         quickSwitcher = {
                             subject: pageContext.subject,
                             stage: category.subcategories[0].stage as LearningStage
-                        }; 
+                        };
                     }
                 } else if (category.type === "subject") {
                     if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && category.subcategories[0].subject !== pageContext.subject) {
@@ -206,7 +206,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     }
                 }
 
-                return <HoverableNavigationDropdown 
+                return <HoverableNavigationDropdown
                     key={i} ikey={props.ikey * keyBase + i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}
                     isActiveUnderContext={(context) => {
                         if (!isFullyDefinedContext(context) || !isSingleStageContext(context)) return false;
@@ -230,7 +230,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                             {`${HUMAN_STAGES[quickSwitcher.stage]} ${HUMAN_SUBJECTS[quickSwitcher.subject]}`}
                         </span>
                     </NavigationItem>
-                    
+
                     }
                     {category.subcategories.map((subcategory, j) => {
                         return <NavigationItem key={i * keyBase + j} className="align-items-center" href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.subject })}>
@@ -240,9 +240,9 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     })}
                 </HoverableNavigationDropdown>;
             })}
-        </ContentNavHoverableWrapper> 
+        </ContentNavHoverableWrapper>
         // restricted width, static dropdowns
-        : above["md"](deviceSize) 
+        : above["md"](deviceSize)
             ? <div className="explore-group">
                 <ul className="d-flex p-0 gap-2 m-0">
                     <StaticNavigationDropdown title={title} {...rest}>
@@ -300,16 +300,16 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                             My assignments
                             {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
                         </NavigationItemClose>
-                        <NavigationItemClose href="/progress">
-                            My progress
-                        </NavigationItemClose>
                         <NavigationItemClose href="/tests" className="d-flex align-items-center">
                             My tests
                             {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
                         </NavigationItemClose>
+                        <NavigationItemClose href="/progress">
+                            My progress
+                        </NavigationItemClose>
                     </div>
 
-                    {isTeacherOrAbove(user) && <>                    
+                    {isTeacherOrAbove(user) && <>
                         <div className={above["sm"](deviceSize) ? "section-divider-y" : "section-divider"}/>
                         <div>
                             <h5 className="pt-2 pt-sm-0">{"TEACHER"}</h5>
@@ -372,16 +372,16 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
         </span>}
     </div>;
 
-    return above["md"](deviceSize) 
-        ? <ContentNavHoverableWrapper className="ps-0"> 
-            <HoverableNavigationDropdown 
-                ariaTitle={`My Isaac (${taskCount} tasks to do)`} 
-                title={title} 
+    return above["md"](deviceSize)
+        ? <ContentNavHoverableWrapper className="ps-0">
+            <HoverableNavigationDropdown
+                ariaTitle={`My Isaac (${taskCount} tasks to do)`}
+                title={title}
                 id="my-isaac-dropdown"
                 toggleClassName="ps-0"
                 ikey={-1}
             >
-                {profileTabContents}   
+                {profileTabContents}
             </HoverableNavigationDropdown>
         </ContentNavHoverableWrapper>
         : <ContentNavAccordionWrapper title={title}>
@@ -403,9 +403,9 @@ const NavigationItem = (props: NavigationItemProps) => {
 
 export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
     const openHoverable = useRef<number | undefined>(undefined);
-    // we use a ref over useState for tracking which hoverable is open as the delay from using setState can lead to this not being reset to undefined 
+    // we use a ref over useState for tracking which hoverable is open as the delay from using setState can lead to this not being reset to undefined
     // while moving the mouse between two hoverables, preventing the second dropdown from opening.
-    
+
     const deviceSize = useDeviceSize();
 
     const stageCategories : NavigationCategory[] = Object.entries(PHY_NAV_STAGES).map(([stage, subjects]) => {
@@ -443,10 +443,14 @@ export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
     });
 
     return <HoverableNavigationContext.Provider value={{openId: openHoverable}}>
+        {below["sm"](deviceSize) && <div className="w-100 align-self-end d-print-none mb-3">
+            <MainSearchInput onSearch={toggleMenu}/>
+        </div>}
+
         <ContentNavProfile toggleMenu={toggleMenu}/>
         <ContentNavSection title="Explore by learning stage" categories={stageCategories} className="border-start" ikey={0} toggleMenu={toggleMenu}/>
         <ContentNavSection title="Explore by subject" categories={subjectCategories} className="border-start" ikey={1} toggleMenu={toggleMenu}/>
-        
+
         {above["md"](deviceSize) && <>
             <Spacer />
             <div className="header-search align-self-center d-print-none">

@@ -230,7 +230,7 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser, use
     const crumbs = preview && isTeacherOrAbove(user) ? teacherQuizzesCrumbs : myQuizzesCrumbs;
     if (page === null) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
-            intermediateCrumbs={crumbs}
+            intermediateCrumbs={crumbs} icon={{"type": "hex", "icon": "icon-tests"}}
         />;
     } else {
         const sections = attempt.quiz?.children;
@@ -238,6 +238,7 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser, use
         const sectionTitle = section?.title ?? "Section " + page;
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
             intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink()}]}
+            icon={{"type": "hex", "icon": "icon-tests"}}
         />;
     }
 };

@@ -1,7 +1,7 @@
 import React, {ContextType, lazy} from "react";
-import {AppQuestionDTO, InlineContext, IsaacQuestionProps, ValidatedChoice} from "../../IsaacAppTypes";
+import {AppQuestionDTO, InlineContext, IsaacQuestionProps, PageContextState, ValidatedChoice} from "../../IsaacAppTypes";
 import {ChoiceDTO, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isNotPartiallyLoggedIn, wasTodayUTC} from './';
+import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isNotPartiallyLoggedIn, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
 import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
@@ -208,4 +208,31 @@ export const getMostRecentCorrectAttemptDate = (questions: AppQuestionDTO[] | un
         if (!current) return prev;
         return prev > current ? prev : current;
     }, undefined);
+};
+
+const questionPlaceholdersByContext: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: string}} = {
+    "physics": {
+        "11_14": "New Planet",
+        "gcse": "Momentum of a Whale",
+        "a_level": "Man vs. Horse",
+        "university": "Light Clock",
+    },
+    "chemistry": {
+        "gcse": "Catalyser",
+        "a_level": "Keep Hydrated",
+        "university": "Propanal Problem",
+    },
+    "maths": {
+        "gcse": "Density of Air",
+        "a_level": "Crossing Paths",
+        "university": "Hyperbolic Integrals",
+    },
+    "biology": {
+        "a_level": "Adrenaline",
+    },
+};
+
+export const getQuestionPlaceholder = (context: PageContextState): string => {
+    if (!isFullyDefinedContext(context) || !isSingleStageContext(context)) return questionPlaceholdersByContext["physics"]["a_level"];
+    return questionPlaceholdersByContext[context.subject][context.stage[0] as keyof typeof questionPlaceholdersByContext[typeof context.subject]];
 };

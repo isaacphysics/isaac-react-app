@@ -106,13 +106,13 @@ export const QuizListViewItem = ({item, isQuizSetter, ...rest}: {item: QuizSumma
     />;
 };
 
-export const QuestionPackListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
+export const QuestionDeckListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question", size: "lg"}}
+        icon={{type: "hex", icon: "icon-question-deck", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
@@ -170,8 +170,8 @@ export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & {sh
     </ListGroup>;
 };
 
-export const ListView = ({items, ...rest}: {items: ShortcutResponse[], fullWidth?: boolean, isQuizSetter?: boolean}) => {
-    return <ListGroup className="link-list list-group-links">
+export const ListView = ({items, className, ...rest}: {items: ShortcutResponse[], className?: string, fullWidth?: boolean, isQuizSetter?: boolean}) => {
+    return <ListGroup className={`link-list list-group-links ${className}`}>
         {items.map((item, index) => {
             switch (item.type) {
                 case (DOCUMENT_TYPE.GENERIC):
@@ -186,6 +186,8 @@ export const ListView = ({items, ...rest}: {items: ShortcutResponse[], fullWidth
                     return <EventListViewItem key={index} item={item} {...rest}/>;
                 case (DOCUMENT_TYPE.QUIZ):
                     return <QuizListViewItem key={index} item={item} {...rest}/>;
+                case SEARCH_RESULT_TYPE.GAMEBOARD:
+                    return <QuestionDeckListViewItem key={index} item={item} {...rest}/>;
                 default:
                     // Do not render this item if there is no matching DOCUMENT_TYPE
                     console.error("Not able to display item as a ListViewItem: ", item);

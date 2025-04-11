@@ -30,6 +30,7 @@ import {
     userSlice,
     interstitialCookieSlice,
     pageContextSlice,
+    linkableSettingSlice,
 } from "../index";
 
 export const rootReducer = combineReducers({
@@ -91,6 +92,9 @@ export const rootReducer = combineReducers({
 
     // Context
     pageContext: pageContextSlice.reducer,
+
+    // Linkable settings
+    linkableSetting: linkableSettingSlice.reducer,
 
     // API reducer
     [isaacApi.reducerPath]: isaacApi.reducer

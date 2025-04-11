@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import {Button, Col, Label, Row} from "reactstrap";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
-import {PATHS, siteSpecific} from "../../../services";
+import {PATHS, siteSpecific, isAda} from "../../../services";
 
 const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
     <Row className="mb-2">
@@ -36,7 +36,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
         </Col>
         <Col sm={12} lg={4} className="mb-1">
             <Button
-                className="w-100 h-100" color="primary" outline
+                className="w-100 h-100" color={siteSpecific("secondary", "primary")} outline={isAda}
                 onClick={() => {resetBuilder(); closeModal();}}
             >
                 Create another {siteSpecific("question deck", "quiz")}
@@ -44,7 +44,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
         </Col>
         <Col sm={12} lg={4} className="mb-1">
             <Button
-                className="w-100 h-100" tag={Link} to={PATHS.SET_ASSIGNMENTS} color="primary" outline
+                className="w-100 h-100" tag={Link} to={PATHS.SET_ASSIGNMENTS} color={siteSpecific("secondary", "primary")} outline={isAda}
                 onClick={closeModal}
             >
                 View all of your {siteSpecific("question decks", "quizzes")}

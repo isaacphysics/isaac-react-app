@@ -45,12 +45,13 @@ export function HierarchyFilterTreeList({tier, index, choices, selections, quest
             return <div key={choice.value} className={classNames("ps-2", {"search-field": tier===2, "checkbox-region": isSelected && tier !== 2, "hierarchy-true-root": root && tier === 0})}>
                 <div className="d-flex align-items-center">
                     <StyledCheckbox
+                        partial
                         color="white"
                         bsSize={root ? "lg" : "sm"}
                         checked={isSelected}
                         onChange={selectValue}
                         label={<span>{choice.label}</span>}
-                        className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && !isLeaf, "icon-checkbox-selected": isLeaf})} 
+                        className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && !isLeaf, "icon-checkbox-selected": isLeaf})}
                     />
                 </div>
                 {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
