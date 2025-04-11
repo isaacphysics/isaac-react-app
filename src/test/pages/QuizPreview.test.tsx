@@ -3,7 +3,7 @@ import {mockPreviews} from "../../mocks/data";
 import { siteSpecific } from "../../app/services";
 import { expectActionMessage, expectBreadcrumbs, expectErrorMessage, renderQuizPage, testSectionsHeader } from "../helpers/quiz";
 
-describe("QuizAttempt", () => {
+describe("QuizPreview", () => {
     const quizId = Object.keys(mockPreviews)[0];
     const preview = mockPreviews[quizId];
     const sections = preview.children;

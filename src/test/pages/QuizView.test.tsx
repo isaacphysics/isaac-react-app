@@ -1,6 +1,7 @@
 import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTitledSection, expectUrl } from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
 import { editButton, expectActionMessage, expectBreadcrumbs, expectErrorMessage, previewButton, renderQuizPage, setTestButton, testSectionsHeader } from "../helpers/quiz";
+import { siteSpecific } from "../../app/services";
 
 describe("QuizView", () => {
     const quizId = Object.keys(mockRubrics)[0];
@@ -11,7 +12,7 @@ describe("QuizView", () => {
 
     it('shows quiz title on the breadcrumbs', async () => {
         await studentViewsQuiz();
-        expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, rubric.title]);
+        expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: siteSpecific("Practice Tests", "Practice tests")}, rubric.title]);
     });
 
     it('shows quiz title', async () => {
@@ -99,7 +100,7 @@ describe("QuizView", () => {
 
         it ('shows Unknown Test on breadcrumbs', async () => {
             await studentViewsMissingQuiz();
-            expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice Tests"}, "Unknown Test"]);
+            expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: siteSpecific("Practice Tests", "Practice tests")}, "Unknown Test"]);
         });
         
         it('shows error', async () => {
