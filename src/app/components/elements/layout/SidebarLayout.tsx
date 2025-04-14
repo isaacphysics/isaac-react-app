@@ -1027,30 +1027,24 @@ export const EventsSidebar = (props: SidebarProps) => {
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])
                     .map(([statusLabel, statusValue]) =>
                         <li className="list-unstyled" key={statusValue}>
-                            <Label className="py-1 label-radio d-flex">
-                                <Input                                   
-                                    id={statusValue}
-                                    name="event-status"
-                                    color="primary"
-                                    type="radio"
-                                    defaultChecked={
-                                        (!isDefined(query.event_status) && statusValue === EventStatusFilter["Upcoming events"]) ||
-                                        (query.show_booked_only && statusValue === EventStatusFilter["My booked events"]) ||
-                                        (query.show_reservations_only && statusValue === EventStatusFilter["My event reservations"]) ||
-                                        (query.event_status === "all" && statusValue === EventStatusFilter["All events"])
-                                    }
-                                    onChange={() => {
-                                        const selectedFilter = statusValue;
-                                        query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
-                                        query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
-                                        query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
-                                        history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
-                                    }}
-                                />
-                                <div className="flex-fill overflow-x-auto">
-                                    <span>{statusLabel}</span>
-                                </div>
-                            </Label>
+                            <StyledTabPicker                                   
+                                id={statusValue}
+                                checkboxTitle={statusLabel}
+                                color="primary"
+                                checked={
+                                    (!isDefined(query.event_status) && !query.show_booked_only && !query.show_reservations_only && statusValue === EventStatusFilter["Upcoming events"]) ||
+                                    (query.show_booked_only && statusValue === EventStatusFilter["My booked events"]) ||
+                                    (query.show_reservations_only && statusValue === EventStatusFilter["My event reservations"]) ||
+                                    (query.event_status === "all" && statusValue === EventStatusFilter["All events"])
+                                }
+                                onChange={() => {
+                                    const selectedFilter = statusValue;
+                                    query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
+                                    query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
+                                    query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
+                                    history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                                }}
+                            />
                         </li>
                     )
                 }
@@ -1061,22 +1055,16 @@ export const EventsSidebar = (props: SidebarProps) => {
             <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                     <li className="list-unstyled" key={typeValue}>
-                        <Label className="py-1 label-radio d-flex">
-                            <Input                                   
-                                id={typeValue}
-                                name="event-type"
-                                color="primary"
-                                type="radio"
-                                defaultChecked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All groups"]}
-                                onChange={() => {
-                                    const selectedType = typeValue;
-                                    query.types = selectedType !== EventTypeFilter["All groups"] ? selectedType : undefined;
-                                    history.push({pathname: location.pathname, search: queryString.stringify(query as any)});}}
-                            />
-                            <div className="flex-fill overflow-x-auto">
-                                <span>{typeLabel}</span>
-                            </div>
-                        </Label>
+                        <StyledTabPicker                                   
+                            id={typeValue}
+                            checkboxTitle={typeLabel}
+                            color="primary"
+                            checked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All groups"]}
+                            onChange={() => {
+                                const selectedType = typeValue;
+                                query.types = selectedType !== EventTypeFilter["All groups"] ? selectedType : undefined;
+                                history.push({pathname: location.pathname, search: queryString.stringify(query as any)});}}
+                        />
                     </li>
                 )
                 }
@@ -1087,22 +1075,16 @@ export const EventsSidebar = (props: SidebarProps) => {
             <ul>               
                 {Object.entries(EventStageMap).map(([label, value]) =>
                     <li className="list-unstyled" key={value}>
-                        <Label className="py-1 label-radio d-flex">
-                            <Input                                   
-                                id={value}
-                                name="event-stage"
-                                color="primary"
-                                type="radio"
-                                defaultChecked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
-                                onChange={() => {
-                                    query.show_stage_only = value !== STAGE.ALL ? value : undefined;
-                                    history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
-                                }}
-                            />
-                            <div className="flex-fill overflow-x-auto">
-                                <span>{label}</span>
-                            </div>
-                        </Label>
+                        <StyledTabPicker                                                           
+                            id={value}
+                            checkboxTitle={label} 
+                            color="primary"
+                            checked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
+                            onChange={() => {
+                                query.show_stage_only = value !== STAGE.ALL ? value : undefined;
+                                history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                            }}
+                        />
                     </li>
                 )
                 }
