@@ -146,10 +146,31 @@ export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question", size: "lg"}}
+        icon={{type: "hex", icon: "icon-info", size: "lg"}}
+        title={item.title ?? ""}
+        subject={itemSubject}
+        subtitle={item.subtitle}
+        tags={item.tags}
+        supersededBy={item.supersededBy}
+        breadcrumb={breadcrumb}
+        status={item.state}
+        url={url}
+        audienceViews={audienceViews}
+        {...rest}
+    />;
+};
+
+export const ShortcutListViewItem = ({item, ...rest}: {item: ShortcutResponse} & ListGroupItemProps) => {
+    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+    const url = `${item.url}${item.hash ? `#${item.hash}` : ""}`;
+
+    return <AbstractListViewItem
+        icon={{type: "hex", icon: "icon-concept", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
@@ -175,8 +196,9 @@ export const ListView = ({items, className, ...rest}: {items: ShortcutResponse[]
         {items.map((item, index) => {
             switch (item.type) {
                 case (DOCUMENT_TYPE.GENERIC):
-                case (SEARCH_RESULT_TYPE.SHORTCUT):
                     return <GenericListViewItem key={index} item={item} {...rest}/>;
+                case (SEARCH_RESULT_TYPE.SHORTCUT):
+                    return <ShortcutListViewItem key={index} item={item} {...rest}/>;
                 case (DOCUMENT_TYPE.QUESTION):
                 case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
                     return <QuestionListViewItem key={index} item={item} {...rest}/>;

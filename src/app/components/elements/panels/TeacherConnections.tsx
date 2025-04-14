@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {GroupMembershipDetailDTO, LoggedInUser, PotentialUser} from "../../../../IsaacAppTypes";
 import {
+    AppDispatch,
     openActiveModal,
     showErrorToast,
     useAppDispatch,
@@ -95,6 +96,32 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
     </div>;
 };
 
+export const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null, dispatch: AppDispatch, getTokenOwner: any) => {
+    // Some users paste the URL in the token box, so remove the token from the end if they do.
+    // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
+    const sanitisedToken = token?.trim().split("?authToken=").at(-1)?.toUpperCase();
+    if (!sanitisedToken) {
+        dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
+        return;
+    }
+    else if (!(sanitisedToken && sanitisedToken.length >= 6 && sanitisedToken.length <= 8 && /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]+$/.test(sanitisedToken))) {
+        dispatch(showErrorToast("Invalid group code", "The group code you entered is not valid. Group codes are 6-8 characters in length and contain only letters and numbers."));
+        return;
+    }
+    else if (isPhy && isFirstLoginInPersistence()) {
+        history.push("/register/group_invitation?authToken=" + encodeURIComponent(sanitisedToken));
+    }
+    else {
+        const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
+        if (usersToGrantAccess && usersToGrantAccess.length) {
+            // TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
+            //      their data
+            // TODO highlight teachers who have already been granted access? (see verification modal code)
+            dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
+        }
+    }
+};
+
 export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdit}: TeacherConnectionsProps) => {
     const dispatch = useAppDispatch();
     const groupQuery = (user.loggedIn && user.id) ? ((editingOtherUser && userToEdit?.id) || undefined) : skipToken;
@@ -131,31 +158,10 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     });
 
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
-    const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
-        // Some users paste the URL in the token box, so remove the token from the end if they do.
-        // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
-        const sanitisedToken = token?.split("?authToken=").at(-1)?.toUpperCase().replace(/ /g,'');
-        if (!sanitisedToken) {
-            dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
-            return;
-        }
-        else if (isPhy && isFirstLoginInPersistence()) {
-            history.push("/register/group_invitation?authToken=" + encodeURIComponent(sanitisedToken));
-        }
-        else {
-            const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
-            if (usersToGrantAccess && usersToGrantAccess.length) {
-                // TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
-                //      their data
-                // TODO highlight teachers who have already been granted access? (see verification modal code)
-                dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
-            }
-        }
-    };
 
     useEffect(() => {
         if (authToken && user.loggedIn && user.id) {
-            authenticateWithTokenAfterPrompt(user.id, authToken);
+            authenticateWithTokenAfterPrompt(user.id, authToken, dispatch, getTokenOwner);
         }
     }, [authToken]);
 
@@ -164,7 +170,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     function processToken(event: React.FormEvent<HTMLFormElement | HTMLButtonElement | HTMLInputElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
         if (user.loggedIn && user.id) {
-            authenticateWithTokenAfterPrompt(user.id, authenticationToken);
+            authenticateWithTokenAfterPrompt(user.id, authenticationToken, dispatch, getTokenOwner);
         }
     }
 
@@ -175,7 +181,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         </>}
         rightColumn={<>
             <h3>
-                <span className={isPhy ? "h4" : ""}>Teacher connection code<span id="teacher-connections-title" className={siteSpecific("mx-2 icon-chevron-down", "icon-help")} /></span>
+                <span className={isPhy ? "h4" : ""}>Teacher connection code<i id="teacher-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
                 <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your {siteSpecific("Isaac", "Ada")} assignment progress.
                 </UncontrolledTooltip>
@@ -244,7 +250,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
                 <h3>
-                    <span className={isPhy ? "h4" : ""}>Your student connections<span id="student-connections-title" className={siteSpecific("mx-2 icon-chevron-down", "icon-help")} /></span>
+                    <span className={isPhy ? "h4" : ""}>Your student connections<i id="student-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
                     <UncontrolledTooltip placement="bottom" target="student-connections-title">
                         These are the students who have shared their {siteSpecific("Isaac", "Ada")} data with you.
                         These students are also able to view your name and email address on their Teacher connections page.
@@ -306,7 +312,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             <h3>
                 <span className={isPhy ? "h4" : ""}>
                     Your group memberships
-                    <span id="group-memberships-title" className={siteSpecific("mx-2 icon-chevron-down", "icon-help")} />
+                    <i id="group-memberships-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} />
                 </span>
                 <UncontrolledTooltip placement="bottom" target="group-memberships-title">
                     These are the groups you are currently a member of.
@@ -362,7 +368,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                         Leave
                                                     </Button>
                                                     {isPhy && <>
-                                                        <span id={`leave-group-action-${membership.group.id}`} className={siteSpecific("mx-2 icon-chevron-down", "icon-help membership-status-help-button")} />
+                                                        <i id={`leave-group-action-${membership.group.id}`} className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help membership-status-help-button")} />
                                                         <UncontrolledTooltip placement="bottom" target={`leave-group-action-${membership.group.id}`}
                                                             modifiers={[preventOverflow]}
                                                         >
@@ -378,7 +384,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                         Rejoin
                                                     </Button>
                                                     {isPhy && <>
-                                                        <span id={`rejoin-group-action-${membership.group.id}`} className={siteSpecific("mx-2 icon-chevron-down", "icon-help membership-status-help-button")} />
+                                                        <i id={`rejoin-group-action-${membership.group.id}`} className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help membership-status-help-button")} />
                                                         <UncontrolledTooltip placement="bottom" target={`rejoin-group-action-${membership.group.id}`}
                                                             modifiers={[preventOverflow]}
                                                         >

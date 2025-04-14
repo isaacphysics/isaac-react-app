@@ -1,7 +1,7 @@
 import React, {lazy} from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
-import {Redirect, Route, RouteComponentProps} from "react-router";
+import {Redirect, RouteComponentProps} from "react-router";
 import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";

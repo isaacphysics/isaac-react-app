@@ -1,15 +1,15 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { openActiveModal, selectors, showErrorToast, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
+import { selectors, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { convertAssignmentToQuiz, filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTeacherOrAbove, PATHS, QuizStatus, sortUpcomingAssignments, useDeviceSize } from '../../services';
-import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
+import { convertAssignmentToQuiz, filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTutorOrAbove, PATHS, QuizStatus, sortUpcomingAssignments, useDeviceSize } from '../../services';
 import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
 import { getActiveWorkCount } from '../navigation/NavigationBar';
 import { Spacer } from './Spacer';
 import classNames from 'classnames';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
+import { authenticateWithTokenAfterPrompt } from './panels/TeacherConnections';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -17,23 +17,10 @@ const GroupJoinPanel = () => {
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
     const [authenticationToken, setAuthenticationToken] = useState<string | null>();
 
-    const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
-        if (!token) {
-            dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
-            return;
-        }
-        else {
-            const {data: usersToGrantAccess} = await getTokenOwner(token);
-            if (usersToGrantAccess && usersToGrantAccess.length) {
-                dispatch(openActiveModal(tokenVerificationModal(userId, token, usersToGrantAccess)));
-            }
-        }
-    };
-
     function processToken(event: React.FormEvent<HTMLFormElement | HTMLButtonElement | HTMLInputElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
         if (user && user.loggedIn && user.id && isDefined(authenticationToken)) {
-            authenticateWithTokenAfterPrompt(user.id, authenticationToken);
+            authenticateWithTokenAfterPrompt(user.id, authenticationToken, dispatch, getTokenOwner);
         }
     }
 
@@ -86,7 +73,7 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
         </div>
         <Spacer/>
         <Button className="numeric-help d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
-            <i className="icon icon-info icon-color-grey"/> What is this?
+            <i className="icon icon-info layered icon-color-grey"/> What is this?
         </Button>
         {tooltip}
     </div>;
@@ -227,11 +214,11 @@ interface StudentDashboardProps {
 export const StudentDashboard = ({assignments, quizAssignments, streakRecord, groups}: StudentDashboardProps) => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
-    const nameToDisplay = isLoggedIn(user) && !isTeacherOrAbove(user) && user.givenName;
+    const nameToDisplay = isLoggedIn(user) && !isTutorOrAbove(user) && user.givenName;
 
     const {assignmentsCount, quizzesCount} = getActiveWorkCount(assignments, quizAssignments);
 
-    return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTeacherOrAbove(user)})}>
+    return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
         {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
         {deviceSize === "lg"
             ? <>
