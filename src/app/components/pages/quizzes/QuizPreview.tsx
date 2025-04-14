@@ -8,16 +8,17 @@ import {Spacer} from "../../elements/Spacer";
 import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {buildErrorComponent} from "../../elements/quiz/builErrorComponent";
+import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
 
 const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
-    <div className="d-flex border-top pt-2 my-2 align-items-center">
+    <QuizSidebarLayout>
         {isDefined(page)
             ? <QuizPagination {...rest} page={page} pageLink={pageLink} finalLabel="Back to Contents" />
             : <>
                 <Spacer/>
                 <Button color="secondary" tag={Link} to={pageLink(1)}>{"View questions"}</Button>
             </>}
-    </div>;
+    </QuizSidebarLayout>;
 
 const pageHelp = <span>
     Preview the questions on this test.

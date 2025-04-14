@@ -8,6 +8,7 @@ import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import type { RegisteredUserDTO } from "../../../../IsaacApiTypes";
 import { buildErrorComponent } from "../../elements/quiz/builErrorComponent";
 import { Spacer } from "../../elements/Spacer";
+import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
 
 const pageHelp = <span>
     View information about a test without adding it to {siteSpecific('"My Tests"', '"My tests"')}. This page page does not show any questions.
@@ -22,14 +23,14 @@ const FooterButton = ({link, label}: {link: string, label: string}) => <Col clas
 </Col>; 
 
 const QuizFooter = ({quizId, user}: {quizId: string, user: RegisteredUserDTO}) =>
-    <div className="d-flex border-top pt-2 my-2 align-items-center">
+    <QuizSidebarLayout>
         <Spacer />
         <Row>
             {isTeacherOrAbove(user) && <FooterButton link={`/test/preview/${quizId}`} label="Preview" />}
             <FooterButton link={`/test/attempt/${quizId}`} label="Take Test" />
         </Row>
-    </div>;
-
+    </QuizSidebarLayout>;
+    
 export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
     const {quizId} = useParams<{quizId: string}>();
     const quizRubricQuery = useGetQuizRubricQuery(quizId);

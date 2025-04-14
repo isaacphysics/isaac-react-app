@@ -12,6 +12,7 @@ import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
 import {below, confirmThen, isAda, siteSpecific, useDeviceSize} from "../../../services";
 import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
+import { QuizSidebarLayout } from "./QuizSidebarLayout";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
@@ -94,11 +95,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
     }
 
     // Empty sidebar to match layout of quiz attempt component
-    return <SidebarLayout className="d-flex flex-column align-items-end">
-        <MainContent>
-            <div className="d-flex border-top pt-2 my-2 align-items-center">
-                {controls}
-            </div>
-        </MainContent>
-    </SidebarLayout>;
+    return <QuizSidebarLayout>
+        {controls}
+    </QuizSidebarLayout>;
 }
