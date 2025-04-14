@@ -149,7 +149,7 @@ const RequiredAccountInfoBody = () => {
         <CardBody className="py-0">
             <Row className="text-center pb-3">
                 <Col md={{size: 6, offset: 3}}>
-                    <Input type="submit" value={isMobile() ? "Update" : "Update account"} className="btn btn-secondary border-0 px-0 px-md-2 my-1" />
+                    <Input type="submit" value={isMobile() ? "Update" : "Update account"} className="btn btn-secondary px-0 px-md-2 my-1" />
                 </Col>
             </Row>
         </CardBody>

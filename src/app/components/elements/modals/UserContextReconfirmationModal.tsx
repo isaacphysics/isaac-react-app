@@ -177,7 +177,7 @@ const UserContextReconfirmationModalBody = () => {
         </div>}
 
         <div className="text-center pb-3 pt-1">
-            <Button type={"submit"} color={"secondary"} className={"border-0 my-1 w-lg-50 w-100"}>
+            <Button type={"submit"} color={"secondary"} className={"my-1 w-lg-50 w-100"}>
                 Update details
             </Button>
         </div>

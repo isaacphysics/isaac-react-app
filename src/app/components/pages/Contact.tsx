@@ -212,7 +212,7 @@ export const Contact = () => {
                                             </span>}                                  
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
-                                            <Input type="submit" value="Submit" className="btn w-100 btn-secondary border-0" />
+                                            <Input type="submit" value="Submit" className="btn w-100 btn-secondary" />
                                         </Col>
                                     </Row>
                                 </CardFooter>

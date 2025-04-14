@@ -158,7 +158,7 @@ const ContentEmails = (props: ContentEmailsProps) => {
                             </div>}
                             <Input
                                 type="button" value="Send emails"
-                                className={"btn btn-xl btn-secondary border-0 " + classnames({disabled: !canSubmit})}
+                                className={"btn btn-xl btn-secondary " + classnames({disabled: !canSubmit})}
                                 disabled={!canSubmit}
                                 onClick={() => {
                                     if (window.confirm(`Are you sure you want to send a ${emailType} email to ${numberOfUsers} user${numberOfUsers > 1 ? "s" : ""}?`)) {
