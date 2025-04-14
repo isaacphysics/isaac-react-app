@@ -30,7 +30,7 @@ describe("Breadcrumb trails", () => {
             const expected = [
                 {
                     title: "Maths Stage 1 - Revision & Practice",
-                    to: "/gameboards#ft_core_2018"
+                    to: `${PATHS.GAMEBOARD}#ft_core_2018`
                 }
             ];
 

@@ -167,7 +167,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                 if (mutationSucceeded(gameboardResponse)) {
                     cloneGameboard(gameboardResponse.data);
                 } else {
-                    console.error(`Failed to create ${siteSpecific("gameboard", "quiz")} from concepts.`);
+                    console.error(`Failed to create ${siteSpecific("question deck", "quiz")} from concepts.`);
                 }
             });
         }
@@ -181,10 +181,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const pageHelp = <span>
         You can create custom question sets to assign to your groups. Search by question title or topic and add up to
-        ten questions to a {siteSpecific("gameboard", "quiz")}.
+        ten questions to a {siteSpecific("question deck", "quiz")}.
         <br/>
-        You cannot modify a {siteSpecific("gameboard", "quiz")} after it has been created. You&apos;ll find a
-        link underneath any existing {siteSpecific("gameboard", "quiz")} to duplicate and edit it.
+        You cannot modify a {siteSpecific("question deck", "quiz")} after it has been created. You&apos;ll find a
+        link underneath any existing {siteSpecific("question deck", "quiz")} to duplicate and edit it.
     </span>;
 
     const sentinel = useRef<HTMLDivElement>(null);
@@ -214,13 +214,13 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="gameboard-builder" fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
         <div ref={sentinel}/>
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Gameboard", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_gameboard_builder"/>
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question Deck", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_gameboard_builder"/>
 
         <Card className="p-3 mt-4 mb-5">
             <CardBody>
                 <Row>
                     <Col>
-                        <Label htmlFor="gameboard-builder-name">{siteSpecific("Gameboard", "Quiz")} title:</Label>
+                        <Label htmlFor="gameboard-builder-name">{siteSpecific("Question Deck", "Quiz")} title:</Label>
                         <Input id="gameboard-builder-name"
                             type="text"
                             placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
@@ -252,7 +252,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         />
                     </Col>
                     <Col>
-                        <Label htmlFor="gameboard-builder-url">{siteSpecific("Gameboard", "Quiz")} ID</Label>
+                        <Label htmlFor="gameboard-builder-url">{siteSpecific("Question Deck", "Quiz")} ID</Label>
                         <Input id="gameboard-builder-url"
                             type="text"
                             placeholder="Optional"
@@ -441,7 +441,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
                                     dispatch(openActiveModal({
                                         closeAction: () => dispatch(closeActiveModal()),
-                                        title: `${siteSpecific("Gameboard", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
+                                        title: `${siteSpecific("Question Deck", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
                                         body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
                                     }));
                                 });
@@ -451,7 +451,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             }}
                         >
                             {isWaitingForCreateGameboard ?
-                                <Spinner size={"md"}/> : siteSpecific("Save Gameboard", "Save quiz")}
+                                <Spinner size={"md"}/> : siteSpecific("Save Question Deck", "Save quiz")}
                         </Button>
                     </Col>
                 </Row>
@@ -460,9 +460,9 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     id="gameboard-help" color="light"
                     className={`text-center mb-0 pt-3 pb-0 ${selectedQuestions.size > 10 ? "text-danger" : ""}`}
                 >
-                    {siteSpecific("Gameboards", "Quizzes")} require both a title and between 1 and 10 questions.
+                    {siteSpecific("Question Decks", "Quizzes")} require both a title and between 1 and 10 questions.
                     {!isValidGameboardId(gameboardURL) && <div className="text-danger">
-                        The {siteSpecific("gameboard", "quiz")} ID should contain numbers, lowercase letters, underscores and hyphens only.<br/>
+                        The {siteSpecific("question deck", "quiz")} ID should contain numbers, lowercase letters, underscores and hyphens only.<br/>
                         It should not be the full URL.
                     </div>}
                 </div>}

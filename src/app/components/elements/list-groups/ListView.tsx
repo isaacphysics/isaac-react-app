@@ -2,7 +2,7 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, ListViewTagProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupItemProps, ListGroupProps } from "reactstrap";
 import { TitleIconProps } from "../PageTitle";
 import { AffixButton } from "../AffixButton";
@@ -109,7 +109,7 @@ export const QuizListViewItem = ({item, isQuizSetter, ...rest}: {item: QuizSumma
 export const QuestionDeckListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `/gameboards#${item.id}`;
+    const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
         icon={{type: "hex", icon: "icon-question-deck", size: "lg"}}
@@ -126,7 +126,7 @@ export const QuickQuizListViewItem = ({item, ...rest}: {item: ShortcutResponse})
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `/gameboards#${item.id}`;
+    const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
         icon={{type: "hex", icon: "icon-question", size: "lg"}}
