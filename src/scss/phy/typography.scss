@@ -10,7 +10,7 @@ p {
 .btn {
   &.btn-sm {
     &.a-alt {
-      color: $purple;
+      color: var(--subject-color-800);
       font-family: $secondary-font-medium;
       text-decoration: underline;
     }
