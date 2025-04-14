@@ -10,7 +10,7 @@ import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
 import {MemoryRouter} from "react-router";
-import {screen, waitFor, within} from "@testing-library/react";
+import {fireEvent, screen, waitFor, within, act} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
@@ -168,6 +168,27 @@ export const expectUrl = (text: string) => waitFor(() => {
 export const expectUrlParams = (text: string) => waitFor(() => {
     expect(history.location.search).toBe(text);
 });
+
+export const withSizedWindow = async (width: number, height: number, cb: () => void) => {
+    const originalWindow = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+    try {
+        await act(async () => {
+            window.innerWidth = width;
+            window.innerHeight = height;    
+        });
+        fireEvent(window, new Event('resize'));
+        cb();
+    } finally {
+        await act(async () => {
+            window.innerWidth = originalWindow.width;
+            window.innerHeight = originalWindow.height;    
+        });
+        fireEvent(window, new Event('resize'));
+    }
+};
 
 export const setUrl = (location: LocationDescriptor) => history.push(location);
 

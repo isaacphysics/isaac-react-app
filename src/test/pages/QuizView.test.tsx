@@ -1,6 +1,6 @@
 import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTitledSection, expectUrl } from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
-import { editButton, expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, previewButton, renderQuizPage, setTestButton, testSectionsHeader } from "../helpers/quiz";
+import { editButton, expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectSidebarToggle, previewButton, renderQuizPage, setTestButton, sideBarTestCases, testSectionsHeader } from "../helpers/quiz";
 import { isPhy, siteSpecific } from "../../app/services";
 import { screen } from "@testing-library/react";
 
@@ -58,6 +58,15 @@ describe("QuizView", () => {
     it('does not show "Preview" button', async() => {
         await studentViewsQuiz();
         expect(previewButton()).toBe(null);
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    isPhy && describe('sidebar on redesigned Physics site', sideBarTestCases(studentViewsQuiz));
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    isPhy && it('sidebar toggle is called "Details"', async () => {
+        await studentViewsQuiz();
+        await expectSidebarToggle("Details");
     });
 
     describe('for teachers', () => {

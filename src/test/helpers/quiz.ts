@@ -1,11 +1,23 @@
 import {act, screen, within } from "@testing-library/react";
-import { expectTextInElementWithId, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
+import { expectTextInElementWithId, renderTestEnvironment, withSizedWindow, setUrl, waitForLoaded } from "../testUtils";
 import { UserRole } from "../../IsaacApiTypes";
 
 export const renderQuizPage = (baseUrl: string) => async ({role, quizId}: {role: UserRole | "ANONYMOUS", quizId: string}) => {
     await act(async () => renderTestEnvironment({ role }));
     await act(async () => setUrl({ pathname: `${baseUrl}/${quizId}` }));
     await waitForLoaded();
+};
+
+export const sideBarTestCases = (init: () => Promise<void>) => () => {
+    it('shows subject on sidebar', async () => {
+        await init();
+        expect(subject()).toHaveTextContent('Physics');
+    });
+
+    it('shows topics on sidebar', async () => {
+        await init();
+        expect(topic()).toHaveTextContent("Mechanics");
+    });
 };
 
 export const expectErrorMessage = expectTextInElementWithId('error-message');
@@ -35,3 +47,21 @@ export const expectAdaBreadCrumbs = ([first, second, third]: [{href: string, tex
         `<span>${third}</span>`
     ]);
 };
+
+const sidebar = () => screen.getByTestId('sidebar');
+
+const subject = () => within(
+    within(sidebar()).getByText(/Subject/)
+).getByRole('generic');
+
+const topic = () => within(
+    within(sidebar()).getByText(/Topic/)
+).getByRole('generic');
+
+const sidebarToggle = () => screen.getByTestId('sidebar-toggle');
+
+export const expectSidebarToggle = async (text: string) => {
+    await withSizedWindow(400, 400, () => {
+        expect(sidebarToggle()).toHaveTextContent(text);
+    });
+}; 

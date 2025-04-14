@@ -1,7 +1,7 @@
 import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTitledSection, expectUrl } from "../testUtils";
 import { mockPreviews } from "../../mocks/data";
 import { isPhy, siteSpecific } from "../../app/services";
-import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, renderQuizPage, testSectionsHeader } from "../helpers/quiz";
+import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectSidebarToggle, renderQuizPage, sideBarTestCases, testSectionsHeader } from "../helpers/quiz";
 import { screen } from "@testing-library/react";
 
 describe("QuizPreview", () => {
@@ -52,6 +52,15 @@ describe("QuizPreview", () => {
         it('shows "View questions" button that loads first page and allows navigating back', async () => {
             await teacherPreviewsQuiz();
             await expectLinkWithEnabledBackwardsNavigation("View questions", `/test/preview/${quizId}/page/1`, `/test/preview/${quizId}`);
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        isPhy && describe('sidebar on redesigned Physics site', sideBarTestCases(teacherPreviewsQuiz));
+        
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        isPhy && it('sidebar toggle is called "Sections"', async () => {
+            await teacherPreviewsQuiz();
+            await expectSidebarToggle("Sections");
         });
     });
 
