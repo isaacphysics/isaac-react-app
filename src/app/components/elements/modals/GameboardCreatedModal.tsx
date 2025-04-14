@@ -15,7 +15,7 @@ const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
 
 const GameboardSuccessfullyCreated = () =>
     <Label className="mx-3 mb-2">
-        Your {siteSpecific("question deck", "quiz")} has been created. You can now set it as an assignment, create another {siteSpecific("board", "quiz")} or view all of your {siteSpecific("boards", "quizzes")}.
+        Your {siteSpecific("question deck", "quiz")} has been created. You can now set it as an assignment, create another {siteSpecific("question deck", "quiz")} or view all of your {siteSpecific("question decks", "quizzes")}.
     </Label>;
 
 const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId: string | undefined, resetBuilder: () => void}) => {

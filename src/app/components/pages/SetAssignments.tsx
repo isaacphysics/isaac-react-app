@@ -197,7 +197,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
             <AssignGroup {...props} />
             <hr className="text-center" />
             <div className="py-2 border-bottom" data-testid="currently-assigned-to">
-                <Label>{siteSpecific("Board", "Quiz")} currently assigned to:</Label>
+                <Label>{siteSpecific("Question Deck", "Quiz")} currently assigned to:</Label>
                 {startedAssignees.length > 0
                     ? <Container className="mb-4">{startedAssignees.map(assignee =>
                         <div data-testid={"current-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
@@ -378,7 +378,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </Col>
             <Col xs={{size: 12, order: 3}} md={{size: 4, offset: 1, order: 1}} lg={{size: 4, offset: 3}} xl={{size: 4, offset: 3}}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter {siteSpecific("boards", "quizzes")} by name</span><Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} />
+                    <span className={"text-nowrap"}>Filter {siteSpecific("question decks", "quizzes")} by name</span><Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} />
                 </Label>
             </Col>
             <Col xs={6} md={{size: 3, order: 2}} lg={2} xl={2}>

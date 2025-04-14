@@ -56,7 +56,7 @@ const CSTable = (props: GameboardsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <SortItemHeader<AssignmentBoardOrder> colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
-            {siteSpecific("Board name", "Quiz name")}
+            {siteSpecific("Question Deck name", "Quiz name")}
         </SortItemHeader>
         <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}>
             Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
