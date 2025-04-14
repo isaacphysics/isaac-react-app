@@ -1014,23 +1014,24 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
 };
 
 export const EventsSidebar = (props: SidebarProps) => {
+    const deviceSize = useDeviceSize();
     const history = useHistory();
     const query: EventsPageQueryParams = queryString.parse(history.location.search);
     const user = useAppSelector(selectors.user.orNull);
 
-    return <ContentSidebar style={{marginTop: "65px"}} buttonTitle="Filter events" {...props}>
+    return <ContentSidebar buttonTitle="Filter events" {...props}>
         <Form>
+            {above["lg"](deviceSize) && <div className="section-divider mt-5"/>}
             <h5 className="mb-3">Event type</h5>
             <ul>               
                 {Object.entries(EventStatusFilter)
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])
                     .map(([statusLabel, statusValue]) =>
-                        <li className="list-unstyled" key={statusValue}>
+                        <li key={statusValue}>
                             <StyledTabPicker                                   
                                 id={statusValue}
                                 checkboxTitle={statusLabel}
-                                color="primary"
                                 checked={
                                     (!isDefined(query.event_status) && !query.show_booked_only && !query.show_reservations_only && statusValue === EventStatusFilter["Upcoming events"]) ||
                                     (query.show_booked_only && statusValue === EventStatusFilter["My booked events"]) ||
@@ -1054,11 +1055,10 @@ export const EventsSidebar = (props: SidebarProps) => {
             <h5 className="mb-3">Groups</h5>
             <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
-                    <li className="list-unstyled" key={typeValue}>
+                    <li key={typeValue}>
                         <StyledTabPicker                                   
                             id={typeValue}
                             checkboxTitle={typeLabel}
-                            color="primary"
                             checked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All groups"]}
                             onChange={() => {
                                 const selectedType = typeValue;
@@ -1074,11 +1074,10 @@ export const EventsSidebar = (props: SidebarProps) => {
             <h5 className="mb-3">Stages</h5>
             <ul>               
                 {Object.entries(EventStageMap).map(([label, value]) =>
-                    <li className="list-unstyled" key={value}>
+                    <li key={value}>
                         <StyledTabPicker                                                           
                             id={value}
-                            checkboxTitle={label} 
-                            color="primary"
+                            checkboxTitle={label}
                             checked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
                             onChange={() => {
                                 query.show_stage_only = value !== STAGE.ALL ? value : undefined;
