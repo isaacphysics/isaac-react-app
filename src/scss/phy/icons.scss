@@ -306,10 +306,24 @@ svg {
 
 i.icon {
   background-color: var(--icon-primary);
+  @include not-reduced-motion {
+    transition: background-color 0.15s ease-in-out; // mirrors BS's $btn-transition
+  }
 
   // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
   &::after {
     background-color: var(--icon-primary);
+    @include not-reduced-motion {
+      transition: background-color 0.15s ease-in-out;
+    }
+  }
+}
+
+.btn.btn-keyline:hover > i.icon, .btn.btn-tint:hover > i.icon {
+  background-color: var(--icon-hover);
+
+  &::after {
+    background-color: var(--icon-hover);
   }
 }
 
