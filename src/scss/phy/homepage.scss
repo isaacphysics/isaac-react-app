@@ -207,8 +207,7 @@ $dashboard-panel-padding: 30px;
 }
 
 .book-panel {
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
 
   .dashboard-book {
     font-size: 13px;
