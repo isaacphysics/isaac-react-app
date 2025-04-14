@@ -1,7 +1,8 @@
 import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTitledSection, expectUrl } from "../testUtils";
-import {mockPreviews} from "../../mocks/data";
-import { siteSpecific } from "../../app/services";
+import { mockPreviews } from "../../mocks/data";
+import { isPhy, siteSpecific } from "../../app/services";
 import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, renderQuizPage, testSectionsHeader } from "../helpers/quiz";
+import { screen } from "@testing-library/react";
 
 describe("QuizPreview", () => {
     const quizId = Object.keys(mockPreviews)[0];
@@ -12,6 +13,12 @@ describe("QuizPreview", () => {
     const teacherPreviewsQuiz = () => rederQuizPreview({ role: 'TEACHER', quizId });
 
     describe("overview", () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        isPhy && it('applies subject-specific theme', async () => {
+            await teacherPreviewsQuiz();
+            expect(screen.getByTestId('quiz-preview')).toHaveAttribute('data-bs-theme', 'physics');
+        });
+
         it('shows quiz title on the breadcrumbs', async () => {
             await teacherPreviewsQuiz();
             siteSpecific(

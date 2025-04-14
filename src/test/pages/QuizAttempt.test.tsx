@@ -1,7 +1,8 @@
 import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTitledSection, expectUrl } from "../testUtils";
 import {mockAttempts} from "../../mocks/data";
-import { siteSpecific } from "../../app/services";
+import { isPhy, siteSpecific } from "../../app/services";
 import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, renderQuizPage, testSectionsHeader } from "../helpers/quiz";
+import { screen } from "@testing-library/react";
 
 describe("QuizAttempt", () => {
     const quizId = Object.keys(mockAttempts)[0];
@@ -12,6 +13,12 @@ describe("QuizAttempt", () => {
     const studentAttemptsQuiz = () => renderQuizAttempt({ role: 'STUDENT', quizId });
 
     describe("overview", () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        isPhy && it('applies subject-specific theme', async () => {
+            await studentAttemptsQuiz();
+            expect(screen.getByTestId('quiz-attempt')).toHaveAttribute('data-bs-theme', 'physics');
+        });
+        
         it('shows quiz title on the breadcrumbs', async () => {
             await studentAttemptsQuiz();
             siteSpecific(

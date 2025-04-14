@@ -1,7 +1,7 @@
 import React from "react";
 import {useGetQuizRubricQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {isTeacherOrAbove, siteSpecific, tags} from "../../../services";
+import {getThemeFromTags, isTeacherOrAbove, siteSpecific, tags} from "../../../services";
 import {QuizAttemptComponent, rubricCrumbs} from "../../elements/quiz/QuizAttemptComponent";
 import {Button, Col, Container, Row} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
@@ -38,7 +38,7 @@ export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
         quizId: quizRubricQuery.data?.id,
     };
 
-    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
+    return <Container data-testid="quiz-view" className={`mb-5 ${attempt?.quiz?.subjectId}`} data-bs-theme={getThemeFromTags(attempt.quiz?.tags)}>
         <ShowLoadingQuery query={quizRubricQuery} ifError={Error}>
             <QuizAttemptComponent view attempt={attempt} page={null} questions={[]} sections={{}} pageLink={() => ''} pageHelp={pageHelp} user={user} />
             <QuizFooter quizId={quizId} user={user} />

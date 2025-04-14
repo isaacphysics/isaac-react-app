@@ -2267,7 +2267,7 @@ export const mockRubrics: Record<string, IsaacRubricDTO> = {
         id: "a_level_1d_motion_test",
         title: "A Level 1-d Motion Test",
         type: "isaacQuiz",
-        tags: [],
+        tags: ["physics"],
         url: "/isaac-api/api/quiz/a_level_1d_motion_test",
         hiddenFromRoles: [USER_ROLES[0], USER_ROLES[1]],
         rubric:{
@@ -2330,7 +2330,7 @@ export const mockAttempts: Record<string, QuizAttemptDTO> = {
                 published:false,
                 tags:[]
             }],
-            tags: [],
+            tags: ["physics"],
             hiddenFromRoles: [
                 "STUDENT",
                 "TUTOR"
@@ -2392,7 +2392,7 @@ export const mockPreviews: Record<string, IsaacQuizDTO> = {
             published:false,
             tags:[]
         }],
-        tags: [],
+        tags: ["physics"],
         hiddenFromRoles: [
             "STUDENT",
             "TUTOR"

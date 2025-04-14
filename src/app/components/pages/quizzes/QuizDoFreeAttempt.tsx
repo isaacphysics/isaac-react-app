@@ -41,7 +41,7 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
     // Importantly, these are only used if attempt is defined
     const subProps: QuizAttemptProps & {feedbackLink: string} = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user, feedbackLink};
 
-    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`} data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
+    return <Container data-testId="quiz-attempt" className={`mb-5 ${attempt?.quiz?.subjectId}`} data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
         <ShowLoading until={attempt || error}>
             {attempt && <>
                 <QuizAttemptComponent {...subProps} />

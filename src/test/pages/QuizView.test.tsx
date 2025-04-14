@@ -1,7 +1,8 @@
 import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTitledSection, expectUrl } from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
 import { editButton, expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, previewButton, renderQuizPage, setTestButton, testSectionsHeader } from "../helpers/quiz";
-import { siteSpecific } from "../../app/services";
+import { isPhy, siteSpecific } from "../../app/services";
+import { screen } from "@testing-library/react";
 
 describe("QuizView", () => {
     const quizId = Object.keys(mockRubrics)[0];
@@ -9,6 +10,12 @@ describe("QuizView", () => {
 
     const renderQuizView = renderQuizPage('/test/view');
     const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', quizId }); 
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    isPhy && it('applies subject-specific theme', async () => {
+        await studentViewsQuiz();
+        expect(screen.getByTestId('quiz-view')).toHaveAttribute('data-bs-theme', 'physics');
+    });
 
     it('shows quiz title on the breadcrumbs', async () => {
         await studentViewsQuiz();
