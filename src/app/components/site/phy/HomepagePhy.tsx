@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery, useLazyGetGroupsQuery, useLazyGetMyAssignmentsQuery, useLazyGetMySetAssignmentsQuery, useLazyGetQuizAssignmentsAssignedToMeQuery, useLazyGetQuizAssignmentsSetByMeQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardProps, CardText, CardTitle, Col, Container, Row} from "reactstrap";
-import {above, EventStatusFilter, EventTypeFilter, HUMAN_STAGES, HUMAN_SUBJECTS, isDefined, isLoggedIn, isTutorOrAbove, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, Subject, useDeviceSize} from "../../../services";
+import {above, EventStatusFilter, EventTypeFilter, HUMAN_STAGES, HUMAN_SUBJECTS, isDefined, isLoggedIn, isTutor, isTutorOrAbove, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, Subject, useDeviceSize} from "../../../services";
 import { NewsCard } from "../../elements/cards/NewsCard";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { EventCard } from "../../elements/cards/EventCard";
@@ -142,8 +142,10 @@ export const HomepagePhy = () => {
     useEffect(() => {
         if (dashboardView === "teacher" && (!isDefined(assignmentsSetByMe) || !isDefined(quizzesSetByMe) || !isDefined(groups))) {
             getAssignmentsSetByMe(undefined);
-            getQuizzesSetByMe(undefined);
             getGroups(false);
+            if (!isTutor(user)) {
+                getQuizzesSetByMe(undefined);
+            }
         } else if (dashboardView === "student" && (!isDefined(myAssignments) || !isDefined(myQuizAssignments))) {
             getMyAssignments(undefined);
             getMyQuizAssignments(undefined);
@@ -161,7 +163,8 @@ export const HomepagePhy = () => {
         <div id="homepage" className="homepage pb-5">
             <section id="dashboard">
                 {isLoggedIn(user) && (isTutorOrAbove(user)
-                    ? <TeacherDashboard assignmentsSetByMe={assignmentsSetByMe} quizzesSetByMe={quizzesSetByMe} groups={groups} myAssignments={myAssignments} myQuizAssignments={myQuizAssignments} streakRecord={streakRecord} dashboardView={dashboardView} setDashboardView={setDashboardView} /> 
+                    ? <TeacherDashboard assignmentsSetByMe={assignmentsSetByMe} quizzesSetByMe={isTutor(user) ? [] : quizzesSetByMe} groups={groups} myAssignments={myAssignments}
+                        myQuizAssignments={myQuizAssignments} streakRecord={streakRecord} dashboardView={dashboardView} setDashboardView={setDashboardView} /> 
                     : <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} />)}
             </section>
             <section id="homepage-hero">               

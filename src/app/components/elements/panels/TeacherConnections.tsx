@@ -384,7 +384,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                         Rejoin
                                                     </Button>
                                                     {isPhy && <>
-                                                        <span id={`rejoin-group-action-${membership.group.id}`} className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help membership-status-help-button")} />
+                                                        <i id={`rejoin-group-action-${membership.group.id}`} className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help membership-status-help-button")} />
                                                         <UncontrolledTooltip placement="bottom" target={`rejoin-group-action-${membership.group.id}`}
                                                             modifiers={[preventOverflow]}
                                                         >
