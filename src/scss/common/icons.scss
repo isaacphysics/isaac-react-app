@@ -63,3 +63,36 @@ polygon.fill-secondary {
 img[aria-disabled="true"] {
   opacity: 0.5;
 }
+
+.icon-download {
+  @include svg-icon('/assets/common/icons/download.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-chevron-right {
+  @include svg-icon('/assets/common/icons/arrow-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+i.icon {
+  &, &[color="primary"] {
+    background-color: var(--icon-primary);
+  
+    // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
+    &::after {
+      background-color: var(--icon-primary);
+    }
+  }
+
+  &[color="secondary"] {
+    background-color: var(--icon-secondary);
+    &::after {
+      background-color: var(--icon-secondary);
+    }
+  }
+
+  &[color="tertiary"] {
+    background-color: var(--icon-tertiary);
+    &::after {
+      background-color: var(--icon-tertiary);
+    }
+  }
+}

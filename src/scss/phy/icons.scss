@@ -304,15 +304,6 @@ svg {
   }
 }
 
-i.icon {
-  background-color: var(--icon-primary);
-
-  // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
-  &::after {
-    background-color: var(--icon-primary);
-  }
-}
-
 .phy-hex-icon {
   // this is essentially an .icon, but needs different colouring; override size as needed with icon-lg, icon-xl, etc.
   @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), var(--icon-size, 75px), var(--icon-size, 75px), 100%);
