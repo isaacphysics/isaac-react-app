@@ -214,14 +214,6 @@ export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
     individualFeedback?: QuizFeedbackDTO;
 }
 
-export interface IsaacRubricDTO extends HasTitleOrId{
-    rubric?: ContentDTO;
-    hiddenFromRoles: UserRole[];
-    tags: string[];
-    type: string;
-    url: string
-}
-
 export interface IsaacQuizSectionDTO extends SeguePageDTO {
 }
 
@@ -451,6 +443,10 @@ export interface ContentSummaryDTO {
 export interface QuizSummaryDTO extends ContentSummaryDTO {
     visibleToStudents?: boolean;
     hiddenFromRoles?: UserRole[];
+}
+
+export interface DetailedQuizSummaryDTO extends QuizSummaryDTO {
+    rubric: ContentDTO;
 }
 
 export interface EmailTemplateDTO extends ContentDTO {

@@ -1,4 +1,5 @@
 import {
+    DetailedQuizSummaryDTO,
     IsaacQuizDTO,
     IsaacQuizSectionDTO,
     QuestionDTO,
@@ -17,6 +18,8 @@ import {
     isTeacherOrAbove,
     QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP,
     siteSpecific,
+    SUBJECTS,
+    TAG_ID,
     useDeviceSize
 } from "../../../services";
 import {Spacer} from "../Spacer";
@@ -36,8 +39,7 @@ import { MainContent, QuizSidebar, SidebarLayout } from "../layout/SidebarLayout
 
 type PageLinkCreator = (page?: number) => string;
 
-export interface QuizAttemptProps {
-    attempt: QuizAttemptDTO;
+interface QuizProps {
     user: RegisteredUserDTO;
     page: number | null;
     questions: QuestionDTO[];
@@ -45,17 +47,27 @@ export interface QuizAttemptProps {
     pageLink: PageLinkCreator;
     pageHelp: React.ReactElement;
     preview?: boolean;
-    view?: boolean;
     studentUser?: UserSummaryDTO;
     quizAssignmentId?: string;
+}
+export interface QuizAttemptProps extends QuizProps {
+    attempt: QuizAttemptDTO
+    view?: false;
+}
+
+export type QuizViewAttempt = { quiz?: DetailedQuizSummaryDTO & { subjectId: SUBJECTS | TAG_ID }, quizId: string | undefined };
+
+export interface QuizViewProps extends QuizProps {
+    attempt: QuizViewAttempt;
+    view: true;
 }
 
 function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
     return questions.filter(q => q.id?.startsWith(section.id as string + "|"));
 }
 
-function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps) {
-    if (isDefined(attempt.completedDate)) {
+function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps | QuizViewProps) {
+    if ('completedDate' in attempt && isDefined(attempt.completedDate)) {
         return attempt.feedbackMode === "NONE" ?
             <h4>No feedback available</h4>
             : attempt.feedbackMode === "OVERALL_MARK" ?
@@ -108,19 +120,19 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
     }
 }
 
-function QuizHeader({attempt, preview, view, user}: QuizAttemptProps) {
+function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewProps) {
     const dispatch = useAppDispatch();
-    const assignment = attempt.quizAssignment;
     if (preview || view) {
         return <>
-            <EditContentButton doc={attempt.quiz} />
+            {!view && <EditContentButton doc={attempt.quiz} />}
             <div data-testid="quiz-action" className="d-flex">
                 <p>{ preview ? "You are previewing this test." : "You are viewing the rubric for this test."}</p>
                 <Spacer />
                 {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</Button>}
             </div>
         </>;
-    } else if (isDefined(assignment)) {
+    } else if (isDefined(attempt.quizAssignment)) {
+        const assignment = attempt.quizAssignment;
         return <>
             <p className="d-flex">
                 <span>
@@ -147,7 +159,7 @@ function QuizHeader({attempt, preview, view, user}: QuizAttemptProps) {
     }
 }
 
-function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
+function QuizRubric({attempt}: {attempt: QuizAttemptDTO | QuizViewAttempt}) {
     const rubric = attempt.quiz?.rubric;
     const renderRubric = (rubric?.children || []).length > 0;
     return <div>
@@ -228,9 +240,9 @@ const getCrumbs = (preview: boolean | undefined, view: boolean | undefined, user
     return myQuizzesCrumbs;
 };
 
-const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, view, studentUser, user}: QuizAttemptProps) => {
+const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, view, studentUser, user}: QuizAttemptProps | QuizViewProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Test";
-    if (isDefined(attempt.completedDate)) {
+    if ('completedDate' in attempt && isDefined(attempt.completedDate)) {
         quizTitle += " Feedback";
     }
     if (isDefined(studentUser)) {
@@ -241,7 +253,7 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, view, studentUse
     }
 
     const crumbs = getCrumbs(preview, view, user);
-    if (page === null) {
+    if (page === null || view) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
             intermediateCrumbs={crumbs} icon={{"type": "hex", "icon": "icon-tests"}}
         />;
@@ -281,17 +293,18 @@ export enum SectionProgress {
     COMPLETED = "Completed"
 }
 
-export function QuizAttemptComponent(props: QuizAttemptProps) {
-    const {page, questions, studentUser, user, quizAssignmentId, sections, attempt} = props;
+export function QuizAttemptComponent(props: QuizAttemptProps | QuizViewProps) {
+    const {view, studentUser, user, quizAssignmentId, sections, attempt} = props;
     // Assumes that ids of questions are defined - I don't know why this is not enforced in the editor/backend, because
     // we do unchecked casts of "possibly undefined" content ids to strings almost everywhere
-    const questionNumbers = Object.assign({}, ...questions.map((q, i) => ({[q.id as string]: i + 1})));
+    
+    const questionNumbers = 'questions' in props ? Object.assign({}, ...props.questions.map((q, i) => ({[q.id as string]: i + 1}))) : {};
     const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
     const sectionCount = Object.keys(sections).length;
     const sectionTitles = Object.keys(sections).map(k => sections[k].title || "Section " + k);
 
     const sectionState = (section: IsaacQuizSectionDTO) => {
-        const sectionQs = section ? inSection(section, questions) : undefined;
+        const sectionQs = section ? inSection(section, props.questions) : undefined;
         const isStarted = sectionQs?.some(q => q.bestAttempt !== undefined);
         const isCompleted = sectionQs?.every(q => q.bestAttempt !== undefined);
         return isCompleted ? SectionProgress.COMPLETED : isStarted ? SectionProgress.STARTED : SectionProgress.NOT_STARTED;
@@ -299,12 +312,16 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
 
     const sectionStates = Object.values(sections).map(section => sectionState(section));
 
-    return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
+    return <>
         <QuizTitle {...props} />
         <SidebarLayout>
-            <QuizSidebar attempt={attempt} viewingAsSomeoneElse={viewingAsSomeoneElse} totalSections={sectionCount} currentSection={page ? page : undefined} sectionStates={sectionStates} sectionTitles={sectionTitles}/>
+            {
+                view ?
+                    <QuizSidebar view={attempt} viewingAsSomeoneElse={viewingAsSomeoneElse} totalSections={sectionCount} currentSection={props.page ? props.page : undefined} sectionStates={sectionStates} sectionTitles={sectionTitles}/> :
+                    <QuizSidebar attempt={attempt} viewingAsSomeoneElse={viewingAsSomeoneElse} totalSections={sectionCount} currentSection={props.page ? props.page : undefined} sectionStates={sectionStates} sectionTitles={sectionTitles}/>
+            }
             <MainContent>
-                {page === null ?
+                {props.page === null || props.view ?
                     <div className="mt-4">
                         {!isDefined(studentUser?.id) && <QuizHeader {...props} />}
                         {viewingAsSomeoneElse && <div className="mb-2">
@@ -314,9 +331,11 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
                         <QuizContents {...props} />
                     </div>
                     :
-                    <QuizSection {...props} page={page}/>
+                    <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
+                        <QuizSection {...props} page={props.page}/>
+                    </QuizAttemptContext.Provider>
                 }
             </MainContent>
         </SidebarLayout>
-    </QuizAttemptContext.Provider>;
+    </>;
 }

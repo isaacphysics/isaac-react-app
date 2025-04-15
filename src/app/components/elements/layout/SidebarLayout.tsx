@@ -15,7 +15,7 @@ import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
-import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
+import { QuizRubricButton, QuizViewAttempt, SectionProgress } from "../quiz/QuizAttemptComponent";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { formatISODateOnly, getFriendlyDaysUntil } from "../DateString";
 import queryString from "query-string";
@@ -71,9 +71,7 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Isaa
     </li>;
 };
 
-interface SidebarProps extends ColProps {
-
-}
+type SidebarProps = ColProps
 
 const NavigationSidebar = (props: SidebarProps) => {
     // A navigation sidebar is used for external links that are supplementary to the main content (e.g. related content);
@@ -780,7 +778,6 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
 };
 
 interface QuizSidebarProps extends SidebarProps {
-    attempt: QuizAttemptDTO;
     viewingAsSomeoneElse: boolean;
     totalSections: number;
     currentSection?: number;
@@ -788,22 +785,32 @@ interface QuizSidebarProps extends SidebarProps {
     sectionTitles: string[];
 }
 
+interface QuizSidebarAttemptProps extends QuizSidebarProps {
+    attempt: QuizAttemptDTO;
+    view?: undefined;
+}
+
+interface QuizSidebarViewProps extends QuizSidebarProps {
+    attempt?: undefined;
+    view: QuizViewAttempt;
+}
+
 export const Pill = ({ title, theme }: {title: string, theme?: string}) =>
     <span className="badge rounded-pill bg-theme me-1" data-bs-theme={theme}> 
         {title}
     </span>;
 
-export const QuizSidebar = (props: QuizSidebarProps) => {
-    const { attempt, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
+export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProps) => {
+    const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
     const deviceSize = useDeviceSize();
     const history = useHistory();
     const location = history.location.pathname;
     const rubricPath = 
         viewingAsSomeoneElse ? location.split("/").slice(0, 6).join("/") :
-            attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
+            attempt && attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
                 location.split("/page")[0];
     const hasSections = totalSections > 0;
-    const tags = attempt.quiz?.tags;
+    const tags = attempt ? attempt.quiz?.tags : view.quiz?.tags;
     const subjects = tagsService.getSubjectTags(tags as TAG_ID[]);
     const topics = tagsService.getTopicTags(tags as TAG_ID[]);
     const fields = tagsService.getFieldTags(tags as TAG_ID[]);
@@ -816,7 +823,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     };
 
     const switchToPage = (page: string) => {
-        if (viewingAsSomeoneElse || attempt.feedbackMode) {
+        if (viewingAsSomeoneElse || attempt && attempt.feedbackMode) {
             history.push(rubricPath.concat("/", page));
         }
         else {
@@ -861,7 +868,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     };
 
     return <>
-        {below["md"](deviceSize) ?
+        {below["md"](deviceSize) && attempt ?
             <Row className="d-flex align-items-center">
                 <Col>
                     <SidebarContents/>
