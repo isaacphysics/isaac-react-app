@@ -1,6 +1,6 @@
 import React, {ChangeEvent} from "react";
-import {Button, Input, InputGroup, Label} from "reactstrap";
-import {siteSpecific, withSearch} from "../../services";
+import {Button, Input, InputGroup, InputProps, Label} from "reactstrap";
+import {ifKeyIsEnter, SEARCH_CHAR_LENGTH_LIMIT, siteSpecific, withSearch} from "../../services";
 
 const PhysicsSearchButton = () => (
     <Button color='link' aria-label='search' className='search-button'>
@@ -108,3 +108,23 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
 
 export const SearchPageSearch = siteSpecific(PhySimpleSearch, AdaHeaderSearch);
 export const MainSearchInput = siteSpecific(PhySearchInput, AdaSearchInput);
+
+
+interface SearchButtonWithIconProps extends InputProps {
+    onSearch?: () => void;
+}
+
+export const SearchInputWithIcon = (props: SearchButtonWithIconProps) => {
+    const {onSearch, ...rest} = props;
+    return <InputGroup className="search-input-icon">
+        <Input {...rest}
+            id="question-search-title"
+            type="text"
+            maxLength={SEARCH_CHAR_LENGTH_LIMIT}
+            {...(onSearch ? {"onKeyDown": ifKeyIsEnter(onSearch)} : {})}
+        />
+        <button className="d-flex align-items-center justify-content-center" onClick={onSearch} aria-label="Search">
+            <i className="icon icon-search" color="tertiary"/>
+        </button>
+    </InputGroup>;
+}
