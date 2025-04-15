@@ -22,7 +22,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
     const dispatch = useAppDispatch();
     const closeModal = () => dispatch(closeActiveModal());
     return <Row className={"my-3 d-flex justify-content-center"}>
-        <Col sm={12} lg="auto" className="mb-1">
+        <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
             <Button
                 className="w-100" tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="secondary" block
                 disabled={!gameboardId} onClick={closeModal}
@@ -30,7 +30,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 Set as assignment
             </Button>
         </Col>
-        <Col sm={12} lg="auto" className="mb-1">
+        <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
             <Button
                 className="w-100" color={siteSpecific("secondary", "primary")} outline={isAda}
                 onClick={() => {resetBuilder(); closeModal();}}
@@ -38,7 +38,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 Create another {siteSpecific("question deck", "quiz")}
             </Button>
         </Col>
-        <Col sm={12} lg="auto" className="mb-1">
+        <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
             <Button
                 className="w-100" tag={Link} to={PATHS.SET_ASSIGNMENTS} color={siteSpecific("secondary", "primary")} outline={isAda}
                 onClick={closeModal}
