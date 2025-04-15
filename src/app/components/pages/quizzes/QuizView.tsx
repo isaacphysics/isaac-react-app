@@ -6,7 +6,7 @@ import {QuizAttemptComponent, rubricCrumbs} from "../../elements/quiz/QuizAttemp
 import {Button, Col, Container, Row} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import type { RegisteredUserDTO } from "../../../../IsaacApiTypes";
-import { buildErrorComponent } from "../../elements/quiz/builErrorComponent";
+import { buildErrorComponent } from "../../elements/quiz/buildErrorComponent";
 import { Spacer } from "../../elements/Spacer";
 
 const pageHelp = <span>

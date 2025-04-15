@@ -1,5 +1,5 @@
 import React from "react";
-import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
+import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {Alert} from "reactstrap";
 import { getRTKQueryErrorMessage } from "../../../state";
 import type {FetchBaseQueryError} from "@reduxjs/toolkit/query";

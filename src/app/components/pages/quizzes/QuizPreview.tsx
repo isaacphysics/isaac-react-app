@@ -7,7 +7,7 @@ import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
-import {buildErrorComponent} from "../../elements/quiz/builErrorComponent";
+import {buildErrorComponent} from "../../elements/quiz/buildErrorComponent";
 
 const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
     <div className="d-flex border-top pt-2 my-2 align-items-center">
