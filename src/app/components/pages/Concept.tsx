@@ -64,7 +64,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     currentPageTitle={siteSpecific("Concept", doc.title as string)}
                     collectionType={navigation.collectionType}
                     subTitle={siteSpecific(undefined, doc.subtitle as string)}
-                    preview={preview} 
+                    preview={preview}
                     icon={{type: "hex", subject: doc.subjectId as Subject, icon: "icon-concept"}}
                 />
                 {!preview && <>
@@ -99,6 +99,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                             {below["sm"](deviceSize) && <ManageButtons />}
 
                             <div className="d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
+                                <EditContentButton doc={doc} />
                                 <UserContextPicker />
                                 {above["md"](deviceSize) && <ManageButtons />}
                             </div>
