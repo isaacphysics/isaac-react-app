@@ -100,6 +100,8 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
                                     </div>
                                 </ListGroupItem>)}
                             </ListGroup>
+                            {quizzes.filter((quiz) => showQuiz(quiz) && quiz.title?.toLowerCase().includes(filterText.toLowerCase())).length === 0 &&
+                                <p><em>No relevant practice tests were found.</em></p>}
                         </>}
                     </ShowLoading>
                 }
