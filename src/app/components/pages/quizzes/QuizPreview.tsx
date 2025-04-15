@@ -7,7 +7,7 @@ import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
-import {buildErrorComponent} from "../../elements/quiz/builErrorComponent";
+import {buildErrorComponent} from "../../elements/quiz/buildErrorComponent";
 import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
 
 const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
