@@ -3,10 +3,10 @@ import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO, SOME_FIXED_FUTURE_DATE} from "../test/dateUtils";
 import {
     BookingStatus,
+    DetailedQuizSummaryDTO,
     EmailVerificationStatus,
     EventStatus,
     IsaacQuizDTO,
-    IsaacRubricDTO,
     QuizAttemptDTO,
     USER_ROLES,
     UserRole,
@@ -2262,7 +2262,7 @@ export const mockGameboards = {
     totalResults: 7
 };
 
-export const mockRubrics: Record<string, IsaacRubricDTO> = {
+export const mockRubrics: Record<string, DetailedQuizSummaryDTO> = {
     a_level_1d_motion_test: {
         id: "a_level_1d_motion_test",
         title: "A Level 1-d Motion Test",

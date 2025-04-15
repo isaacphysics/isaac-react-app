@@ -2,8 +2,8 @@ import {isaacApi} from "./baseApi";
 import {
     AssignmentStatusDTO,
     ChoiceDTO,
+    DetailedQuizSummaryDTO,
     IsaacQuizDTO,
-    IsaacRubricDTO,
     QuestionValidationResponseDTO,
     QuizAssignmentDTO,
     QuizAttemptDTO,
@@ -89,7 +89,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             })
         }),
 
-        getQuizRubric: build.query<IsaacRubricDTO, string>({
+        getQuizRubric: build.query<DetailedQuizSummaryDTO, string>({
             query: (quizId) => `/quiz/${quizId}/rubric`,
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading test rubric failed",
