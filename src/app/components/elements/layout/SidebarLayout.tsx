@@ -1039,10 +1039,9 @@ export const EventsSidebar = (props: SidebarProps) => {
                                     (query.event_status === "all" && statusValue === EventStatusFilter["All events"])
                                 }
                                 onChange={() => {
-                                    const selectedFilter = statusValue;
-                                    query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
-                                    query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
-                                    query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
+                                    query.show_booked_only = statusValue === EventStatusFilter["My booked events"] ? true : undefined;
+                                    query.show_reservations_only = statusValue === EventStatusFilter["My event reservations"] ? true : undefined;
+                                    query.event_status = statusValue === EventStatusFilter["All events"] ? "all" : undefined;
                                     history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
                                 }}
                             />
@@ -1061,8 +1060,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                             checkboxTitle={typeLabel}
                             checked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All groups"]}
                             onChange={() => {
-                                const selectedType = typeValue;
-                                query.types = selectedType !== EventTypeFilter["All groups"] ? selectedType : undefined;
+                                query.types = typeValue !== EventTypeFilter["All groups"] ? typeValue : undefined;
                                 history.push({pathname: location.pathname, search: queryString.stringify(query as any)});}}
                         />
                     </li>
