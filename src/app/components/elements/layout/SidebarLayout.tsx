@@ -540,9 +540,35 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
     </ContentSidebar>;
 };
 
-export const PracticeQuizzesSidebar = (props: SidebarProps) => {
-    // TODO
-    return <ContentSidebar {...props}/>;
+interface PracticeQuizzesSidebarProps extends SidebarProps {
+    searchText: string;
+    setSearchText: (searchText: string) => void;
+}
+
+export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
+    const { searchText, setSearchText, ...rest } = props;
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
+    return <ContentSidebar {...rest}>
+        <div className="section-divider"/>
+        <h5>Search practice tests</h5>
+        <Input type="search" placeholder="Search" value={searchText} className="search--filter-input my-3"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)} />
+        {pageContext?.subject && pageContext?.stage && <>
+            <div className="section-divider"/>
+            <div className="sidebar-help">
+                <p>The practice tests shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                <p>If you want to explore our full range of practice tests, you can view the main practice tests page:</p>
+                <AffixButton size="md" color="keyline" tag={Link} to="/practice_tests" affix={{
+                    affix: "icon-right",
+                    position: "suffix",
+                    type: "icon"
+                }}>
+                    Browse all practice tests
+                </AffixButton>
+            </div>
+        </>}
+    </ContentSidebar>;
 };
 
 export const LessonsAndRevisionSidebar = (props: SidebarProps) => {

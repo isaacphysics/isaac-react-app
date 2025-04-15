@@ -2,8 +2,8 @@ import { withRouter } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Button, ListGroupItem, Input, ListGroup, Col, Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
-import { isEventLeaderOrStaff, isLoggedIn, isTutorOrAbove, siteSpecific } from "../../../services";
-import { QuizSummaryDTO } from "../../../../IsaacApiTypes";
+import { isAda, isEventLeaderOrStaff, isLoggedIn, isTutorOrAbove, siteSpecific } from "../../../services";
+import { AudienceContext, QuizSummaryDTO, Stage } from "../../../../IsaacApiTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { useGetAvailableQuizzesQuery } from "../../../state/slices/api/quizApi";
 import { QuizzesPageProps } from "./MyQuizzes";
@@ -22,6 +22,8 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
     const user = useAppSelector(selectors.user.orNull);
 
     const pageContext = useUrlPageTheme();
+    const pageSubject = pageContext?.subject;
+    const pageStage = pageContext?.stage ? pageContext.stage[0] : undefined;
 
     useEffect(() => {
         if (location.search.includes("filter")) {
@@ -30,7 +32,12 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
     }, []);
 
     const showQuiz = (quiz: QuizSummaryDTO) => {
-        if (!user || !isLoggedIn(user)) return false; 
+        if (!user || !isLoggedIn(user)) return false;
+        if (pageSubject && !quiz.tags?.includes(pageSubject)) return false;
+
+        const isAudienceMatch = (audience: AudienceContext) => audience.stage?.includes(pageStage as Stage) || (pageStage === "11_14" && (audience.stage?.includes("year_7_and_8") || audience.stage?.includes("year_9")));
+        if (pageStage && !quiz.audience?.some(isAudienceMatch)) return false;
+
         switch (user.role) {
             case "STUDENT":
             case "TUTOR":
@@ -56,7 +63,7 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
             icon={{"type": "hex", "icon": "icon-tests"}}
         />
         <SidebarLayout>
-            <PracticeQuizzesSidebar />
+            <PracticeQuizzesSidebar searchText={filterText} setSearchText={setFilterText} />
             <MainContent>
                 <PageFragment fragmentId="help_toptext_practice_tests" />
                 {!user 
@@ -65,7 +72,7 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
                         {quizzes && <>
                             {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
                             <Col xs={12} className="mb-4">
-                                <Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />
+                                {isAda && <Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />}
                                 <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
                                     if (filterText.trim()) {
                                         navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
