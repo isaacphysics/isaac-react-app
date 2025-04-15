@@ -10,7 +10,7 @@ import { buildErrorComponent } from "../../elements/quiz/buildErrorComponent";
 import { Spacer } from "../../elements/Spacer";
 
 const pageHelp = <span>
-    View information about a test without adding it to {siteSpecific('"My Tests"', '"My tests"')}. This page page does not show any questions.
+    View information about a test without adding it to {siteSpecific('"My Tests"', '"My tests"')}. This page does not show any questions.
 </span>;
 
 const Error = buildErrorComponent("Unknown Test", "There was an error loading that test.", rubricCrumbs);
