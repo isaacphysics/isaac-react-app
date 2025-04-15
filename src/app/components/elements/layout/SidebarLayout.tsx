@@ -1205,10 +1205,12 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                 {statusOptions.map(state => <QuizStatusCheckbox 
                     key={state} status={state} count={undefined} statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} 
                 />)}
-                <h5 className="my-3">Filter by assigner</h5>
-                <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
-                    {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
-                </Input>
+                {activeTab === 1 && <>
+                    <h5 className="my-3">Filter by assigner</h5>
+                    <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
+                        {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
+                    </Input>
+                </>}
                 <div className="section-divider mt-4"/>
                 <h5 className="mb-3">Display</h5>
                 <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
