@@ -72,6 +72,10 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/arrow-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-search {
+  @include svg-icon('/assets/common/icons/search-icon.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 i.icon {
   &, &[color="primary"] {
     background-color: var(--icon-primary);
