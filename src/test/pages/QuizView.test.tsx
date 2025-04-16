@@ -11,12 +11,6 @@ describe("QuizView", () => {
     const renderQuizView = renderQuizPage('/test/view');
     const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', quizId }); 
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    isPhy && it('applies subject-specific theme', async () => {
-        await studentViewsQuiz();
-        expect(screen.getByTestId('quiz-view')).toHaveAttribute('data-bs-theme', 'physics');
-    });
-
     it('shows quiz title on the breadcrumbs', async () => {
         await studentViewsQuiz();
         siteSpecific(
@@ -58,15 +52,6 @@ describe("QuizView", () => {
     it('does not show "Preview" button', async() => {
         await studentViewsQuiz();
         expect(previewButton()).toBe(null);
-    });
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    isPhy && describe('sidebar on redesigned Physics site', sideBarTestCases(studentViewsQuiz));
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    isPhy && it('sidebar toggle is called "Details"', async () => {
-        await studentViewsQuiz();
-        await expectSidebarToggle("Details");
     });
 
     describe('for teachers', () => {
@@ -132,4 +117,18 @@ describe("QuizView", () => {
             expectErrorMessage('This test has become unavailable.');
         });
     });
+
+    if (isPhy) {
+        it('applies subject-specific theme', async () => {
+            await studentViewsQuiz();
+            expect(screen.getByTestId('quiz-view')).toHaveAttribute('data-bs-theme', 'physics');
+        });
+
+        describe('shows the redesigned sidebar', sideBarTestCases(studentViewsQuiz));
+
+        it('sidebar toggle is called "Details"', async () => {
+            await studentViewsQuiz();
+            await expectSidebarToggle("Details");
+        });
+    }
 });

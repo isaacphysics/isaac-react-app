@@ -13,12 +13,6 @@ describe("QuizPreview", () => {
     const teacherPreviewsQuiz = () => rederQuizPreview({ role: 'TEACHER', quizId });
 
     describe("overview", () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        isPhy && it('applies subject-specific theme', async () => {
-            await teacherPreviewsQuiz();
-            expect(screen.getByTestId('quiz-preview')).toHaveAttribute('data-bs-theme', 'physics');
-        });
-
         it('shows quiz title on the breadcrumbs', async () => {
             await teacherPreviewsQuiz();
             siteSpecific(
@@ -52,15 +46,6 @@ describe("QuizPreview", () => {
         it('shows "View questions" button that loads first page and allows navigating back', async () => {
             await teacherPreviewsQuiz();
             await expectLinkWithEnabledBackwardsNavigation("View questions", `/test/preview/${quizId}/page/1`, `/test/preview/${quizId}`);
-        });
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        isPhy && describe('sidebar on redesigned Physics site', sideBarTestCases(teacherPreviewsQuiz));
-        
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        isPhy && it('sidebar toggle is called "Sections"', async () => {
-            await teacherPreviewsQuiz();
-            await expectSidebarToggle("Sections");
         });
     });
 
@@ -121,4 +106,18 @@ describe("QuizPreview", () => {
             expectErrorMessage('This test has become unavailable.');
         });
     });
+
+    if (isPhy) {
+        it('applies subject-specific theme', async () => {
+            await teacherPreviewsQuiz();
+            expect(screen.getByTestId('quiz-preview')).toHaveAttribute('data-bs-theme', 'physics');
+        });
+
+        describe('shows the redesigned sidebar', sideBarTestCases(teacherPreviewsQuiz));
+        
+        it('sidebar toggle is called "Sections"', async () => {
+            await teacherPreviewsQuiz();
+            await expectSidebarToggle("Sections");
+        });
+    }
 });

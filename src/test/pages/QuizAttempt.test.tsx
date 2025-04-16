@@ -13,12 +13,6 @@ describe("QuizAttempt", () => {
     const studentAttemptsQuiz = () => renderQuizAttempt({ role: 'STUDENT', quizId });
 
     describe("overview", () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        isPhy && it('applies subject-specific theme', async () => {
-            await studentAttemptsQuiz();
-            expect(screen.getByTestId('quiz-attempt')).toHaveAttribute('data-bs-theme', 'physics');
-        });
-        
         it('shows quiz title on the breadcrumbs', async () => {
             await studentAttemptsQuiz();
             siteSpecific(
@@ -52,15 +46,6 @@ describe("QuizAttempt", () => {
         it('shows "Continue" button that loads first page and allows navigating back', async () => {
             await studentAttemptsQuiz();
             await expectLinkWithEnabledBackwardsNavigation("Continue", `/test/attempt/${quizId}/page/1`, `/test/attempt/${quizId}`);
-        });
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        isPhy && describe('sidebar on redesigned Physics site', sideBarTestCases(studentAttemptsQuiz));
-       
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        isPhy && it('sidebar toggle is called "Sections"', async () => {
-            await studentAttemptsQuiz();
-            await expectSidebarToggle("Sections");
         });
     });
 
@@ -112,4 +97,18 @@ describe("QuizAttempt", () => {
             expectErrorMessage('This test has become unavailable.');
         });
     });
+
+    if (isPhy) {
+        it('applies subject-specific theme', async () => {
+            await studentAttemptsQuiz();
+            expect(screen.getByTestId('quiz-attempt')).toHaveAttribute('data-bs-theme', 'physics');
+        });
+
+        describe('sidebar on redesigned Physics site', sideBarTestCases(studentAttemptsQuiz));
+        
+        it('sidebar toggle is called "Sections"', async () => {
+            await studentAttemptsQuiz();
+            await expectSidebarToggle("Sections");
+        });
+    }
 });
