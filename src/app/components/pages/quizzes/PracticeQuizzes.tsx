@@ -113,7 +113,7 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
                                     setCopied(true);
                                 }} onMouseLeave={() => setCopied(false)} />
                             </Col>
-                            <ListGroup className={siteSpecific("list-results-container p-2 my-4", "mb-3")}>
+                            {quizzes.filter((quiz) => isRelevant(quiz)).length > 0 && <ListGroup className={siteSpecific("list-results-container p-2 my-4", "mb-3")}>
                                 {quizzes.filter((quiz) => isRelevant(quiz)).map(quiz => <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                     <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3 quiz-list">
                                         {isPhy && <PhyHexIcon icon={"icon-tests"} subject={pageSubject} size={"lg"} />}
@@ -142,7 +142,7 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
                                             </Button>)}
                                     </div>
                                 </ListGroupItem>)}
-                            </ListGroup>
+                            </ListGroup>}
                             {quizzes.filter((quiz) => isRelevant(quiz)).length === 0 &&
                                 <p><em>No relevant practice tests were found.</em></p>}
                         </>}
