@@ -39,7 +39,7 @@ export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
         quizId: quizRubricQuery.data?.id,
     };
 
-    return <Container data-testid="quiz-view" className={`mb-5 ${view?.quiz?.subjectId}`} data-bs-theme={getThemeFromTags(view.quiz?.tags)}>
+    return <Container data-testid="quiz-view" className="mb-5" data-bs-theme={getThemeFromTags(view.quiz?.tags)}>
         <ShowLoadingQuery query={quizRubricQuery} ifError={Error}>
             <QuizContentsComponent view={view} pageHelp={pageHelp} user={user} />
             <QuizFooter quizId={quizId} user={user} />

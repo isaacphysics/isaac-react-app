@@ -1,7 +1,7 @@
 import React, {useCallback} from "react";
 import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {isDefined, useQuizAttemptFeedback} from "../../../services";
+import {getThemeFromTags, isDefined, useQuizAttemptFeedback} from "../../../services";
 import {
     myQuizzesCrumbs,
     QuizContentsComponent,
@@ -63,7 +63,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber,
         questions, sections, pageLink, pageHelp, studentUser, user, quizAssignmentId};
 
-    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
+    return <Container className="mb-5" data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
         <ShowLoading until={attempt || error}>
             {isDefined(attempt) && <>
                 <QuizContentsComponent {...subProps} />
