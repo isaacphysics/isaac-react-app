@@ -556,7 +556,6 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
     const { searchText, setSearchText, filterSubject, setFilterSubject, subjectCounts,
         allFields, filterField, setFilterField, fieldCounts, ...rest } = props;
     const pageContext = useAppSelector(selectors.pageContext.context);
-    const totalCount = Object.values(subjectCounts).reduce((a, b) => a + b, 0);
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
@@ -570,7 +569,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             <ul>
                 <li>
                     <StyledTabPicker id="all" checkboxTitle="Show all" checked={!filterSubject}
-                        count={totalCount} onInputChange={() => {setFilterSubject(undefined);}}/>
+                        count={Object.values(subjectCounts).reduce((a, b) => a + b, 0)} onInputChange={() => {setFilterSubject(undefined);}}/>
                 </li>
                 <div className="section-divider-small"/>
                 {Subjects.filter(s => subjectCounts[s] > 0).map((subject, i) =>
@@ -587,7 +586,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             <ul>
                 <li>
                     <StyledTabPicker id="all" checkboxTitle="Show all" checked={!filterField}
-                        count={totalCount} onInputChange={() => {setFilterField("");}}/>
+                        count={Object.values(fieldCounts).reduce((a, b) => a + b, 0)} onInputChange={() => {setFilterField("");}}/>
                 </li>
                 <div className="section-divider-small"/>
                 {allFields.filter(f => fieldCounts[f] > 0).map((field, i) =>
