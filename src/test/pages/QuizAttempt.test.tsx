@@ -22,7 +22,7 @@ describe("QuizAttempt", () => {
         it('shows quiz title on the breadcrumbs', async () => {
             await studentAttemptsQuiz();
             siteSpecific(
-                () => expectPhyBreadCrumbs({href: "/tests", text: "My Tests"}),
+                () => expectPhyBreadCrumbs({href: "/tests", text: "My tests"}),
                 () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "My tests"}, attempt.quiz?.title])
             )();
         });
@@ -100,7 +100,7 @@ describe("QuizAttempt", () => {
         it ('shows Test on breadcrumbs', async () => {
             await studentAttemptsMissingQuiz();
             siteSpecific(
-                () => expectPhyBreadCrumbs({href: "/tests", text: "My Tests"}),
+                () => expectPhyBreadCrumbs({href: "/tests", text: "My tests"}),
                 () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "My tests"}, "Test"])
             )();
         });

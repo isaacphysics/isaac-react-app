@@ -22,7 +22,7 @@ describe("QuizPreview", () => {
         it('shows quiz title on the breadcrumbs', async () => {
             await teacherPreviewsQuiz();
             siteSpecific(
-                () => expectPhyBreadCrumbs({href: "/set_tests", text: "Set / Manage Tests"}),
+                () => expectPhyBreadCrumbs({href: "/set_tests", text: "Set / Manage tests"}),
                 () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/set_tests", text: "Set tests"}, `${preview.title} Preview`])
             )();
         });
@@ -109,7 +109,7 @@ describe("QuizPreview", () => {
         it ('shows Test Preview on breadcrumbs', async () => {
             await teacherPreviewsMissingQuiz();
             siteSpecific(
-                () => expectPhyBreadCrumbs({href: '/tests', text: "My Tests"}),
+                () => expectPhyBreadCrumbs({href: '/tests', text: "My tests"}),
                 () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "My tests"}, "Test Preview"])
             )();
         });
