@@ -597,7 +597,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             </ul>
         </>}
 
-        {pageContext?.subject && pageContext?.stage && <>
+        {isFullyDefinedContext(pageContext) && <>
             <div className="section-divider"/>
             <div className="sidebar-help">
                 <p>The practice tests shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>

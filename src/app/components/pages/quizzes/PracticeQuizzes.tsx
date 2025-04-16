@@ -155,7 +155,7 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
                                     </div>
                                 </ListGroupItem>)}
                             </ListGroup>}
-                            {quizzes.filter((quiz) => isRelevant(quiz)).length === 0 &&
+                            {quizzes.length !== 0 && quizzes.filter((quiz) => isRelevant(quiz)).length === 0 &&
                                 <p><em>No relevant practice tests were found.</em></p>}
                         </>}
                     </ShowLoading>
