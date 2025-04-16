@@ -4,10 +4,10 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {isDefined, useQuizAttemptFeedback} from "../../../services";
 import {
     myQuizzesCrumbs,
-    QuizAttemptComponent,
+    QuizContentsComponent,
     QuizAttemptProps,
     QuizPagination
-} from "../../elements/quiz/QuizAttemptComponent";
+} from "../../elements/quiz/QuizContentsComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
@@ -66,7 +66,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
     return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoading until={attempt || error}>
             {isDefined(attempt) && <>
-                <QuizAttemptComponent {...subProps} />
+                <QuizContentsComponent {...subProps} />
                 <SidebarLayout>
                     <Col lg={4} xl={3} className={classNames("d-none d-lg-flex flex-column sidebar p-4 order-0")} />
                     <MainContent>

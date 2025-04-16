@@ -54,7 +54,7 @@ export interface QuizAttemptProps extends QuizProps {
     questions: QuestionDTO[];
     sections: { [id: string]: IsaacQuizSectionDTO };
 }
-export interface QuizViewProps extends QuizProps {
+interface QuizViewProps extends QuizProps {
     attempt?: undefined;
     view: QuizView;
     preview?: undefined;
@@ -68,8 +68,8 @@ function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
     return questions.filter(q => q.id?.startsWith(section.id as string + "|"));
 }
 
-function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps) {
-    if (isDefined(attempt?.completedDate)) {
+function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps) {
+    if (isDefined(attempt.completedDate)) {
         return attempt.feedbackMode === "NONE" ?
             <h4>No feedback available</h4>
             : attempt.feedbackMode === "OVERALL_MARK" ?
@@ -127,7 +127,7 @@ function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewP
     if (preview || view) {
         const quiz = view ? view.quiz : attempt.quiz;
         return <>
-            {preview && <EditContentButton doc={attempt?.quiz} />}
+            {preview && <EditContentButton doc={attempt.quiz} />}
             <div data-testid="quiz-action" className="d-flex">
                 <p>{ preview ? "You are previewing this test." : "You are viewing the rubric for this test."}</p>
                 <Spacer />
@@ -183,7 +183,7 @@ export function QuizRubricButton({attempt}: {attempt: QuizAttemptDTO}) {
     const openQuestionModal = (attempt: QuizAttemptDTO) => {
         dispatch(openActiveModal({
             closeAction: () => {dispatch(closeActiveModal());}, size: "lg",
-            title: "Test Instructions", body: <QuizRubric attempt={attempt}/>
+            title: "Test Instructions", body: <QuizRubric attempt={attempt} />
         }));
     };
 
@@ -244,7 +244,7 @@ const getCrumbs = (preview: boolean | undefined, view: boolean | undefined, user
 };
 
 const QuizTitle = ({attempt, view, page, pageLink, pageHelp, preview, studentUser, user}: QuizAttemptProps | QuizViewProps) => {
-    const quiz = attempt?.quiz ?? view?.quiz;
+    const quiz = attempt ? attempt.quiz : view.quiz;
     let quizTitle = quiz?.title || quiz?.id || "Test";
     if (isDefined(attempt?.completedDate)) {
         quizTitle += " Feedback";
@@ -305,7 +305,7 @@ function QuizOverview(props: (QuizAttemptProps | QuizViewProps) & { viewingAsSom
             You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
         </div>}
         <QuizRubric {...props}/>
-        {attempt && <QuizContents {...props} />}
+        {attempt && <QuizDetails {...props} />}
     </div>;
 }
 
@@ -319,7 +319,7 @@ function QuizQuestions(props: Omit<QuizAttemptProps, 'page'> & {page: number}) {
     </QuizAttemptContext.Provider>;
 }
 
-export function QuizAttemptComponent(props: QuizAttemptProps | QuizViewProps) {
+export function QuizContentsComponent(props: QuizAttemptProps | QuizViewProps) {
     const {attempt, view, studentUser, user} = props;
 
     const questions = attempt ? props.questions : [];

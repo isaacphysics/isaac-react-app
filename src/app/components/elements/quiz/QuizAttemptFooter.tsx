@@ -1,4 +1,4 @@
-import {QuizAttemptProps, QuizPagination} from "./QuizAttemptComponent";
+import {QuizAttemptProps, QuizPagination} from "./QuizContentsComponent";
 import {
     mutationSucceeded,
     showSuccessToast,

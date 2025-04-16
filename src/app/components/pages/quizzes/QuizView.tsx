@@ -2,7 +2,7 @@ import React from "react";
 import {useGetQuizRubricQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {getThemeFromTags, isTeacherOrAbove, siteSpecific, tags} from "../../../services";
-import {QuizAttemptComponent, rubricCrumbs} from "../../elements/quiz/QuizAttemptComponent";
+import {QuizContentsComponent, rubricCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {Button, Col, Container, Row} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import type { RegisteredUserDTO } from "../../../../IsaacApiTypes";
@@ -34,14 +34,14 @@ const QuizFooter = ({quizId, user}: {quizId: string, user: RegisteredUserDTO}) =
 export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
     const {quizId} = useParams<{quizId: string}>();
     const quizRubricQuery = useGetQuizRubricQuery(quizId);
-    const attempt = {
+    const view = {
         quiz: quizRubricQuery.data && tags.augmentDocWithSubject(quizRubricQuery.data),
         quizId: quizRubricQuery.data?.id,
     };
 
-    return <Container data-testid="quiz-view" className={`mb-5 ${attempt?.quiz?.subjectId}`} data-bs-theme={getThemeFromTags(attempt.quiz?.tags)}>
+    return <Container data-testid="quiz-view" className={`mb-5 ${view?.quiz?.subjectId}`} data-bs-theme={getThemeFromTags(view.quiz?.tags)}>
         <ShowLoadingQuery query={quizRubricQuery} ifError={Error}>
-            <QuizAttemptComponent view={attempt} pageHelp={pageHelp} user={user} />
+            <QuizContentsComponent view={view} pageHelp={pageHelp} user={user} />
             <QuizFooter quizId={quizId} user={user} />
         </ShowLoadingQuery>
     </Container>;

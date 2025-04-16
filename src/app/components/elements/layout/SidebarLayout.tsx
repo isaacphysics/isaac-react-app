@@ -15,7 +15,7 @@ import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
-import { QuizRubricButton, QuizView, SectionProgress } from "../quiz/QuizAttemptComponent";
+import { QuizRubricButton, QuizView, SectionProgress } from "../quiz/QuizContentsComponent";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { formatISODateOnly, getFriendlyDaysUntil } from "../DateString";
 import queryString from "query-string";

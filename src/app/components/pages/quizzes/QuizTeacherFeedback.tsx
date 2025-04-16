@@ -21,7 +21,7 @@ import {
     isAuthorisedFullAccess
 } from "../../../services";
 import {AuthorisedAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
-import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
+import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
 import {ResultsTable, passMark} from "../../elements/quiz/QuizProgressCommon";
