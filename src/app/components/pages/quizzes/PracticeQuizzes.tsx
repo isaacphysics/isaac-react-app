@@ -2,7 +2,7 @@ import { withRouter } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Button, ListGroupItem, Input, ListGroup, Col, Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
-import { isAda, isDefined, isEventLeaderOrStaff, isLoggedIn, isTutorOrAbove, siteSpecific, Subject, Subjects, TAG_ID, tags } from "../../../services";
+import { isAda, isDefined, isEventLeaderOrStaff, isLoggedIn, isPhy, isTutorOrAbove, siteSpecific, Subject, Subjects, TAG_ID, tags } from "../../../services";
 import { AudienceContext, QuizSummaryDTO, Stage } from "../../../../IsaacApiTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { useGetAvailableQuizzesQuery } from "../../../state/slices/api/quizApi";
@@ -13,6 +13,9 @@ import { PageFragment } from "../../elements/PageFragment";
 import { MainContent, PracticeQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { useUrlPageTheme } from "../../../services/pageContext";
 import { selectors, useAppSelector } from "../../../state";
+import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
+import { AffixButton } from "../../elements/AffixButton";
+import classNames from "classnames";
 
 const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
     const {data: quizzes} = useGetAvailableQuizzesQuery(0);
@@ -110,23 +113,33 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
                                     setCopied(true);
                                 }} onMouseLeave={() => setCopied(false)} />
                             </Col>
-                            <ListGroup className="mb-3 quiz-list">
+                            <ListGroup className={siteSpecific("list-results-container p-2 my-4", "mb-3")}>
                                 {quizzes.filter((quiz) => isRelevant(quiz)).map(quiz => <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                                    <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
+                                    <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3 quiz-list">
+                                        {isPhy && <PhyHexIcon icon={"icon-tests"} subject={pageSubject} size={"lg"} />}
                                         <div>
-                                            <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
+                                            <span className={classNames("mb-2 mb-sm-0 pe-2", {"fw-bold": isPhy})}>{quiz.title}</span>
                                             {roleVisibilitySummary(quiz)}
                                             {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                         </div>
                                         <Spacer />
                                         {isTutorOrAbove(user) && <div className="d-none d-md-flex align-items-center me-4">
-                                            <Link to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                <span>Preview</span>
-                                            </Link>
+                                            {siteSpecific(
+                                                <Button tag={Link} to={{pathname: `/test/preview/${quiz.id}`}} color="keyline" aria-label={`Preview ${quiz.title}`}>
+                                                    Preview
+                                                </Button>,
+                                                <Link to={{pathname: `/test/preview/${quiz.id}`}}>
+                                                    <span>Preview</span>
+                                                </Link>)}
                                         </div>}
-                                        <Button tag={Link} to={{pathname: `/test/attempt/${quiz.id}`}}>
-                                            {siteSpecific("Take Test", "Take test")}
-                                        </Button>
+                                        {siteSpecific(
+                                            <AffixButton size="md" color={pageSubject ? "solid" : "keyline"} tag={Link} to={`/test/attempt/${quiz.id}`}
+                                                aria-label={`Take test ${quiz.title}`} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                                                Take the test
+                                            </AffixButton>,                                               
+                                            <Button tag={Link} to={{pathname: `/test/attempt/${quiz.id}`}}>
+                                                Take test
+                                            </Button>)}
                                     </div>
                                 </ListGroupItem>)}
                             </ListGroup>

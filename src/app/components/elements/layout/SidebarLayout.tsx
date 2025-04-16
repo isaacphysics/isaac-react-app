@@ -573,7 +573,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                         count={totalCount} onInputChange={() => {setFilterSubject(undefined);}}/>
                 </li>
                 <div className="section-divider-small"/>
-                {Subjects.map((subject, i) =>
+                {Subjects.filter(s => subjectCounts[s] > 0).map((subject, i) =>
                     <li key={i}>
                         <StyledTabPicker checkboxTitle={HUMAN_SUBJECTS[subject]} checked={filterSubject === subject}
                             count={subjectCounts[subject]} onInputChange={() => {setFilterSubject(subject);}}/>
@@ -590,7 +590,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                         count={totalCount} onInputChange={() => {setFilterField("");}}/>
                 </li>
                 <div className="section-divider-small"/>
-                {allFields.map((field, i) =>
+                {allFields.filter(f => fieldCounts[f] > 0).map((field, i) =>
                     <li key={i}>
                         <StyledTabPicker checkboxTitle={field} checked={filterField === field}
                             count={fieldCounts[field]} onInputChange={() => {setFilterField(field);}}/>
