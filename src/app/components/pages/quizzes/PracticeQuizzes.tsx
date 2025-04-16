@@ -11,11 +11,13 @@ import { Spacer } from "../../elements/Spacer";
 import { Link } from "react-router-dom";
 import { PageFragment } from "../../elements/PageFragment";
 import { MainContent, PracticeQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
-import { useUrlPageTheme } from "../../../services/pageContext";
+import { isFullyDefinedContext, useUrlPageTheme } from "../../../services/pageContext";
 import { selectors, useAppSelector } from "../../../state";
 import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
 import { AffixButton } from "../../elements/AffixButton";
 import classNames from "classnames";
+import { PrintButton } from "../../elements/PrintButton";
+import { ShareLink } from "../../elements/ShareLink";
 
 const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
     const {data: quizzes} = useGetAvailableQuizzesQuery(0);
@@ -94,11 +96,21 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
             currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} 
             icon={{"type": "hex", "icon": "icon-tests"}}
         />
+        <div className="d-flex align-items-center">
+            <span><PageFragment fragmentId="help_toptext_practice_tests"/></span>
+            {isPhy && <div className="no-print d-flex gap-2 ms-auto">
+                <div className="question-actions question-actions-leftmost">
+                    <ShareLink linkUrl={isFullyDefinedContext(pageContext) ? `/${pageSubject}/${pageStage}/practice_tests` : "/practice_tests"}/>
+                </div>
+                <div className="question-actions not-mobile">
+                    <PrintButton/>
+                </div>
+            </div>}
+        </div>
         <SidebarLayout>
             <PracticeQuizzesSidebar searchText={filterText} setSearchText={setFilterText} filterSubject={filterSubject} setFilterSubject={setFilterSubject}
                 subjectCounts={subjectCounts()} allFields={fields} filterField={filterField} setFilterField={setFilterField} fieldCounts={fieldCounts()}/>
             <MainContent>
-                <PageFragment fragmentId="help_toptext_practice_tests" />
                 {!user 
                     ? <b>You must be logged in to view practice tests.</b> 
                     : <ShowLoading until={quizzes}>
