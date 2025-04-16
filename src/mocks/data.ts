@@ -13,6 +13,7 @@ import {
     UserSummaryWithGroupMembershipDTO
 } from "../IsaacApiTypes";
 import {School} from "../IsaacAppTypes";
+import {recordOf} from "./utils";
 
 export const mockUser = {
     givenName: "Test",
@@ -2262,7 +2263,7 @@ export const mockGameboards = {
     totalResults: 7
 };
 
-export const mockRubrics: Record<string, DetailedQuizSummaryDTO> = {
+export const mockRubrics = recordOf<string, DetailedQuizSummaryDTO>()({
     a_level_1d_motion_test: {
         id: "a_level_1d_motion_test",
         title: "A Level 1-d Motion Test",
@@ -2270,10 +2271,10 @@ export const mockRubrics: Record<string, DetailedQuizSummaryDTO> = {
         tags: ["physics", "mechanics"],
         url: "/isaac-api/api/quiz/a_level_1d_motion_test",
         hiddenFromRoles: [USER_ROLES[0], USER_ROLES[1]],
-        rubric:{
+        rubric: {
             type: "content",
             encoding: "markdown",
-            children:[
+            children: [
                 {
                     type:"content",
                     encoding:"markdown",
@@ -2282,12 +2283,12 @@ export const mockRubrics: Record<string, DetailedQuizSummaryDTO> = {
                     tags:[]
                 }
             ],
-            "tags":[]
+            tags:[]
         }
     }
-};
+});
 
-export const mockAttempts: Record<string, QuizAttemptDTO> = {
+export const mockAttempts = recordOf<string, QuizAttemptDTO>()({
     a_level_1d_motion_test: {
         id: 4,
         userId: 1,
@@ -2352,9 +2353,9 @@ export const mockAttempts: Record<string, QuizAttemptDTO> = {
             published: false
         }
     }
-};
+});
 
-export const mockPreviews: Record<string, IsaacQuizDTO> = {
+export const mockPreviews = recordOf<string, IsaacQuizDTO>()({
     a_level_1d_motion_test: {
         id: "a_level_1d_motion_test",
         title: "A Level 1-d Motion Test",
@@ -2413,7 +2414,7 @@ export const mockPreviews: Record<string, IsaacQuizDTO> = {
         },
         published: false
     }
-};
+});
 
 export const mockMyAssignments = [
     {
