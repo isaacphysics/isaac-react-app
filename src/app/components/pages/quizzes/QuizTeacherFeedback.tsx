@@ -7,7 +7,6 @@ import {
 import {Link, useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {AssignmentProgressDTO, ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
-import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
@@ -40,6 +39,7 @@ import {
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
+import { AssignmentProgressLegend } from "../SingleAssignmentProgress";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.
