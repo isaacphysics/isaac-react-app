@@ -208,7 +208,10 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                     : <p>No groups.</p>}
             </div>
             <div className="py-2">
-                <Label>Pending {siteSpecific("assignments", "quiz assignments")}: <span className="icon-help mx-1" id={`pending-assignments-help-${board?.id}`}/></Label>
+                <Label className={siteSpecific("d-flex align-items-center", "")}>
+                    Pending {siteSpecific("assignments", "quiz assignments")}:
+                    <span className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help mx-1")} id={`pending-assignments-help-${board?.id}`}/>
+                </Label>
                 <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
                     These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the morning of the scheduled date, students
                     will be able to see the {siteSpecific("assignment", "quiz")}, and will receive a notification email.
@@ -267,8 +270,10 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
             Board name
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
-            Stages and Difficulties
-            <span id="difficulties-help" className="icon-help mx-1"></span>
+            <div className="d-flex align-items-center">
+                Stages and Difficulties
+                <span id="difficulties-help" className="icon icon-info layered icon-color-grey ms-2"></span>
+            </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}

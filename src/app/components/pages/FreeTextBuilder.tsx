@@ -4,7 +4,7 @@ import {ContentBase, TestCaseDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AppState, testQuestion, useAppDispatch, useAppSelector} from "../../state";
 import {Tabs} from "../elements/Tabs";
-import {atLeastOne} from "../../services";
+import {atLeastOne, siteSpecific} from "../../services";
 import {IsaacContent} from "../content/IsaacContent";
 import { Container, Form, Card, CardBody, Table, Label, Input, UncontrolledTooltip, Row, Col, Button } from "reactstrap";
 
@@ -168,7 +168,7 @@ export const FreeTextBuilder = () => {
                                                         className="w-100" type="text" value={choice.value}
                                                         onChange={e => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, value: e.target.value} : c))}
                                                     />
-                                                    <span id={`choice-help-${choice.choiceNumber}`} className="icon-help me-2" />
+                                                    <span id={`choice-help-${choice.choiceNumber}`} className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help me-2")} />
                                                 </div>
                                             </Label>
                                             <UncontrolledTooltip target={`choice-help-${choice.choiceNumber}`} placement="bottom" innerClassName="">
