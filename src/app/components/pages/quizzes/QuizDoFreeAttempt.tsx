@@ -3,7 +3,7 @@ import {clearQuizAttempt, loadFreeQuizAttempt, useAppDispatch} from "../../../st
 import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {isDefined, useCurrentQuizAttempt} from "../../../services";
-import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps} from "../../elements/quiz/QuizAttemptComponent";
+import {myQuizzesCrumbs, QuizContentsComponent, QuizAttemptProps} from "../../elements/quiz/QuizContentsComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
@@ -44,7 +44,7 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
     return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoading until={attempt || error}>
             {attempt && <>
-                <QuizAttemptComponent {...subProps} />
+                <QuizContentsComponent {...subProps} />
                 <QuizAttemptFooter {...subProps} />
             </>}
             {error && <>

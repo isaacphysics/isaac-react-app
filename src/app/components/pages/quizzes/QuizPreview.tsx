@@ -2,7 +2,7 @@ import React, {useCallback, useMemo} from "react";
 import {useGetQuizPreviewQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {isDefined, tags, useQuizQuestions, useQuizSections} from "../../../services";
-import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizAttemptComponent";
+import {myQuizzesCrumbs, QuizContentsComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizContentsComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {Button, Container} from "reactstrap";
@@ -53,7 +53,7 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoadingQuery query={quizPreviewQuery} ifError={Error}>
-            <QuizAttemptComponent preview {...subProps} />
+            <QuizContentsComponent preview {...subProps} />
             <QuizFooter {...subProps} />
         </ShowLoadingQuery>
     </Container>;
