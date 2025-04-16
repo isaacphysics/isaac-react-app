@@ -1,6 +1,5 @@
 import {
     DetailedQuizSummaryDTO,
-    IsaacQuizDTO,
     IsaacQuizSectionDTO,
     QuestionDTO,
     QuizAttemptDTO,
@@ -36,36 +35,39 @@ import {Markup} from "../markup";
 import classNames from "classnames";
 
 type PageLinkCreator = (page?: number) => string;
+type QuizView = { quiz?: DetailedQuizSummaryDTO & { subjectId: SUBJECTS | TAG_ID }, quizId: string | undefined };
 
 interface QuizProps {
     user: RegisteredUserDTO;
-    page: number | null;
-    questions: QuestionDTO[];
-    sections: { [id: string]: IsaacQuizSectionDTO };
-    pageLink: PageLinkCreator;
     pageHelp: React.ReactElement;
-    preview?: boolean;
     studentUser?: UserSummaryDTO;
     quizAssignmentId?: string;
 }
 export interface QuizAttemptProps extends QuizProps {
     attempt: QuizAttemptDTO
-    view?: false;
+    view?: undefined;
+    preview?: boolean;
+    page: number | null;
+    pageLink: PageLinkCreator;
+    questions: QuestionDTO[];
+    sections: { [id: string]: IsaacQuizSectionDTO };
 }
-
-type QuizViewAttempt = { quiz?: DetailedQuizSummaryDTO & { subjectId: SUBJECTS | TAG_ID }, quizId: string | undefined };
-
 export interface QuizViewProps extends QuizProps {
-    attempt: QuizViewAttempt;
-    view: true;
+    attempt?: undefined;
+    view: QuizView;
+    preview?: undefined;
+    page?: undefined;
+    pageLink?: undefined;
+    questions?: undefined;
+    sections?: undefined;
 }
 
 function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
     return questions.filter(q => q.id?.startsWith(section.id as string + "|"));
 }
 
-function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps | QuizViewProps) {
-    if ('completedDate' in attempt && isDefined(attempt.completedDate)) {
+function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps) {
+    if (isDefined(attempt?.completedDate)) {
         return attempt.feedbackMode === "NONE" ?
             <h4>No feedback available</h4>
             : attempt.feedbackMode === "OVERALL_MARK" ?
@@ -121,12 +123,13 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
 function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewProps) {
     const dispatch = useAppDispatch();
     if (preview || view) {
+        const quiz = view ? view.quiz : attempt.quiz;
         return <>
-            {!view && <EditContentButton doc={attempt.quiz} />}
+            {preview && <EditContentButton doc={attempt?.quiz} />}
             <div data-testid="quiz-action" className="d-flex">
                 <p>{ preview ? "You are previewing this test." : "You are viewing the rubric for this test."}</p>
                 <Spacer />
-                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</Button>}
+                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(quiz!))}>Set Test</Button>}
             </div>
         </>;
     } else if (isDefined(attempt.quizAssignment)) {
@@ -157,8 +160,8 @@ function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewP
     }
 }
 
-function QuizRubric({attempt}: {attempt: QuizAttemptDTO | QuizViewAttempt}) {
-    const rubric = attempt.quiz?.rubric;
+function QuizRubric({attempt, view}: Pick<QuizAttemptProps | QuizViewProps, "attempt" | "view">) {
+    const rubric = attempt ? attempt.quiz?.rubric : view?.quiz?.rubric;
     const renderRubric = (rubric?.children || []).length > 0;
     return <div>
         {rubric && renderRubric && <div>
@@ -181,7 +184,7 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
     const openQuestionModal = (attempt: QuizAttemptDTO) => {
         dispatch(openActiveModal({
             closeAction: () => {dispatch(closeActiveModal());}, size: "lg",
-            title: "Test Instructions", body: <QuizRubric attempt={attempt} />
+            title: "Test Instructions", body: <QuizRubric attempt={attempt}/>
         }));
     };
 
@@ -231,9 +234,10 @@ const getCrumbs = (preview: boolean | undefined, view: boolean | undefined, user
     return myQuizzesCrumbs;
 };
 
-const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, view, studentUser, user}: QuizAttemptProps | QuizViewProps) => {
-    let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Test";
-    if ('completedDate' in attempt && isDefined(attempt.completedDate)) {
+const QuizTitle = ({attempt, view, page, pageLink, pageHelp, preview, studentUser, user}: QuizAttemptProps | QuizViewProps) => {
+    const quiz = attempt?.quiz ?? view?.quiz;
+    let quizTitle = quiz?.title || quiz?.id || "Test";
+    if (isDefined(attempt?.completedDate)) {
         quizTitle += " Feedback";
     }
     if (isDefined(studentUser)) {
@@ -243,8 +247,8 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, view, studentUse
         quizTitle += " Preview";
     }
 
-    const crumbs = getCrumbs(preview, view, user);
-    if (page === null || view) {
+    const crumbs = getCrumbs(preview, !!view, user);
+    if (page === null || page === undefined) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
             intermediateCrumbs={crumbs}
         />;
@@ -277,28 +281,32 @@ export function QuizPagination({page, sections, pageLink, finalLabel}: QuizAttem
     </div>;
 }
 
-export function QuizAttemptComponent(props: QuizAttemptProps | QuizViewProps) {
+function QuizOverview(props: QuizAttemptProps | QuizViewProps) {
     const {studentUser, user, quizAssignmentId} = props;
+    const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
+    return <div className="mt-4">
+        {!isDefined(studentUser?.id) && <QuizHeader {...props} />}
+        {viewingAsSomeoneElse && <div className="mb-2">
+            You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
+        </div>}
+        <QuizRubric {...props}/>
+        { props.attempt && <QuizContents {...props} /> }
+    </div>;
+}
+
+function QuizQuestions(props: Omit<QuizAttemptProps, 'page'> & {page: number}) {
     // Assumes that ids of questions are defined - I don't know why this is not enforced in the editor/backend, because
     // we do unchecked casts of "possibly undefined" content ids to strings almost everywhere
+    const questionNumbers = Object.assign({}, ...props.questions.map((q, i) => ({[q.id as string]: i + 1})));
     
-    const questionNumbers = 'questions' in props ? Object.assign({}, ...props.questions.map((q, i) => ({[q.id as string]: i + 1}))) : {};
-    const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
+    return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
+        <QuizSection {...props} page={props.page}/>
+    </QuizAttemptContext.Provider>;
+}
+
+export function QuizAttemptComponent(props: QuizAttemptProps | QuizViewProps) {
     return <>
         <QuizTitle {...props} />
-        {props.page === null || props.view ?
-            <div className="mt-4">
-                {!isDefined(studentUser?.id) && <QuizHeader {...props} />}
-                {viewingAsSomeoneElse && <div className="mb-2">
-                    You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
-                </div>}
-                <QuizRubric {...props}/>
-                <QuizContents {...props} />
-            </div>
-            :
-            <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
-                <QuizSection {...props} page={props.page}/>
-            </QuizAttemptContext.Provider>
-        }
+        {props.page === null || props.page === undefined ? <QuizOverview {...props}/> : <QuizQuestions {...props} page={props.page} />}
     </>;
 }

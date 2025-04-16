@@ -40,7 +40,7 @@ export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoadingQuery query={quizRubricQuery} ifError={Error}>
-            <QuizAttemptComponent view attempt={attempt} page={null} questions={[]} sections={{}} pageLink={() => ''} pageHelp={pageHelp} user={user} />
+            <QuizAttemptComponent view={attempt} pageHelp={pageHelp} user={user} />
             <QuizFooter quizId={quizId} user={user} />
         </ShowLoadingQuery>
     </Container>;
