@@ -1,59 +1,40 @@
 @use "sass:math";
 
-.assignment-progress-container {
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
 @include respond-below(sm) {
-  .assignment-progress-container {
-    margin: 0 -1px;
-    padding: 0;
-  }
-
   .assignment-progress-gameboard {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
 }
 
+a:has(> .assignment-progress-group) {
+  text-decoration: none !important;
+  color: inherit;
+}
+
 .assignment-progress-group {
   border: 1px solid $gray-118;
-  margin-top: 1rem !important;
-  user-select: none;
+  border-radius: 0.5rem;
+  line-height: 2rem;
+  // user-select: none;
   cursor: pointer;
-  display: flex;
-  align-items: stretch;
   background: white;
-}
-
-.assignment-progress-group > div {
-  display: inline-block;
-  flex: 0 0 auto;
-  align-self: baseline;
-  padding-right: 0.5rem;
-}
-
-.assignment-progress-group .group-name {
-  align-self: stretch;
-  display: flex;
-  font-weight: bold;
-  flex-shrink: 1;
-  width: 300px;
-  @include respond-above(sm) {
-    font-size: 1.1rem;
-  }
-
-  @include respond-below(xs) {
-    width: unset;
+  font-size: 1rem;
+  
+  a {
+    font-size: inherit;
+    width: max-content;
+    align-content: center;
   }
 }
-.assignment-progress-group .group-name span {
-  margin: auto 0;
-  & + span {
-    padding-left: 1rem;
+
+.assignment-progress-group-overview {
+  > :not(:first-child)::before {
+    content: '';
+    display: inline-block;
+    padding-right: 0.8rem;
+    height: 100%;
+    border-left: 1px solid $gray-118;
   }
 }
 

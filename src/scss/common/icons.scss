@@ -76,6 +76,18 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/search-icon.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-file {
+  @include svg-icon('/assets/common/icons/file.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-school {
+  @include svg-icon('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-event-upcoming {
+  @include svg-icon('/assets/common/icons/event-upcoming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 i.icon {
   &, &[color="primary"] {
     background-color: var(--icon-primary);
@@ -97,6 +109,13 @@ i.icon {
     background-color: var(--icon-tertiary);
     &::after {
       background-color: var(--icon-tertiary);
+    }
+  }
+
+  &[color="white"] {
+    background-color: $white;
+    &::after {
+      background-color: $white;
     }
   }
 }

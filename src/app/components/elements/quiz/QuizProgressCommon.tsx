@@ -230,7 +230,7 @@ export function ResultsTable<Q extends QuestionType>({
                             const fullAccess = isAuthorisedFullAccess(studentProgress);
                             return <tr key={studentProgress.user?.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
                                 <th className="student-name">
-                                    {fullAccess && pageSettings.isTeacher ?
+                                    {fullAccess && pageSettings?.isTeacher ?
                                         (
                                             isAssignment ?
                                                 <Link to={`/progress/${studentProgress.user?.id}`} target="_blank">
@@ -268,7 +268,7 @@ export function ResultsTable<Q extends QuestionType>({
                                     <td key={q.id} className={isSelected(questions[index]) + " " + markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestionNumber(index)}>
                                         {isAssignment ? (fullAccess ? formatMark((studentProgress.correctPartResults || [])[index],
                                             questions[index].questionPartsTotal as number,
-                                            pageSettings.formatAsPercentage) : ""
+                                            !!pageSettings?.formatAsPercentage) : ""
                                         ) : 
                                             (studentProgress.correctPartResults || [])[index] === 1 ? ICON.correct :
                                                 (studentProgress.incorrectPartResults || [])[index] === 1 ? ICON.incorrect :
@@ -280,18 +280,18 @@ export function ResultsTable<Q extends QuestionType>({
                                     <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
                                         {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
-                                            pageSettings.formatAsPercentage) : ""}
+                                            !!pageSettings?.formatAsPercentage) : ""}
                                     </th>
                                     <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
                                         {fullAccess ? formatMark(studentProgress.tickCount,
                                             questions.length,
-                                            pageSettings.formatAsPercentage) : ""}
+                                            !!pageSettings?.formatAsPercentage) : ""}
                                     </th>
                                 </> : 
                                     <th className="total-column" title={fullAccess ? undefined : "Not Sharing"}>
                                         {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
-                                            pageSettings.formatAsPercentage) : ""}
+                                            !!pageSettings?.formatAsPercentage) : ""}
                                     </th>
                                 }
                             </tr>;
