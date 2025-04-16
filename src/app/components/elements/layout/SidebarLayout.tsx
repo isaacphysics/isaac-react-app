@@ -15,7 +15,7 @@ import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
-import { QuizRubricButton, QuizViewAttempt, SectionProgress } from "../quiz/QuizAttemptComponent";
+import { QuizRubricButton, QuizView, SectionProgress } from "../quiz/QuizAttemptComponent";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { formatISODateOnly, getFriendlyDaysUntil } from "../DateString";
 import queryString from "query-string";
@@ -785,14 +785,14 @@ interface QuizSidebarProps extends SidebarProps {
     sectionTitles: string[];
 }
 
-interface QuizSidebarAttemptProps extends QuizSidebarProps {
+export interface QuizSidebarAttemptProps extends QuizSidebarProps {
     attempt: QuizAttemptDTO;
     view?: undefined;
 }
 
-interface QuizSidebarViewProps extends QuizSidebarProps {
+export interface QuizSidebarViewProps extends QuizSidebarProps {
     attempt?: undefined;
-    view: QuizViewAttempt;
+    view: QuizView;
 }
 
 export const Pill = ({ title, theme }: {title: string, theme?: string}) =>
