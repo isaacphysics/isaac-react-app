@@ -386,7 +386,7 @@ export interface ContentDTO extends ContentBaseDTO {
     encoding?: string;
     layout?: string;
     expandable?: boolean;
-    children?: ContentDTO[];
+    children?: ContentBaseDTO[];
     value?: string;
     attribution?: string;
     relatedContent?: ContentSummaryDTO[];
@@ -421,7 +421,7 @@ export interface QuizSummaryDTO extends ContentSummaryDTO {
 }
 
 export interface DetailedQuizSummaryDTO extends QuizSummaryDTO {
-    rubric: ContentDTO;
+    rubric?: ContentDTO;
 }
 
 export interface EmailTemplateDTO extends ContentDTO {
