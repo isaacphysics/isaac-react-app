@@ -3,12 +3,17 @@ import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO, SOME_FIXED_FUTURE_DATE} from "../test/dateUtils";
 import {
     BookingStatus,
+    DetailedQuizSummaryDTO,
     EmailVerificationStatus,
     EventStatus,
+    IsaacQuizDTO,
+    QuizAttemptDTO,
+    USER_ROLES,
     UserRole,
     UserSummaryWithGroupMembershipDTO
 } from "../IsaacApiTypes";
 import {School} from "../IsaacAppTypes";
+import {recordOf} from "./utils";
 
 export const mockUser = {
     givenName: "Test",
@@ -2257,6 +2262,159 @@ export const mockGameboards = {
     totalCompleted: 0,
     totalResults: 7
 };
+
+export const mockRubrics = recordOf<string, DetailedQuizSummaryDTO>()({
+    a_level_1d_motion_test: {
+        id: "a_level_1d_motion_test",
+        title: "A Level 1-d Motion Test",
+        type: "isaacQuiz",
+        tags: [],
+        url: "/isaac-api/api/quiz/a_level_1d_motion_test",
+        hiddenFromRoles: [USER_ROLES[0], USER_ROLES[1]],
+        rubric: {
+            type: "content",
+            encoding: "markdown",
+            children: [
+                {
+                    type:"content",
+                    encoding:"markdown",
+                    children:[],
+                    value:"We recommend completing this test after studying the relevant concepts Equations of Motion, either in school or by doing the appropriate sections in the Essential Pre-Uni Physics book.\\n\\nFor this test make sure to follow the Isaac Physics rules for significant figures.",
+                    tags:[]
+                }
+            ],
+            tags:[]
+        }
+    }
+});
+
+export const mockAttempts = recordOf<string, QuizAttemptDTO>()({
+    a_level_1d_motion_test: {
+        id: 4,
+        userId: 1,
+        quizId: "a_level_1d_motion_test",
+        startDate: new Date(1744125060688),
+        quiz: {
+            id: "a_level_1d_motion_test",
+            title: "A Level 1-d Motion Test",
+            type: "isaacQuiz",
+            encoding: "markdown",
+            canonicalSourceFile: "content/questions/physics/tests/unpublished_tests/a_level_1d_motion_test.json",
+            children: [{
+                id: "a_level_1d_motion_test|6a5e50ef",
+                title: "Velocity & Acceleration",
+                type: "isaacQuizSection",
+                encoding: "markdown",
+                children: [{
+                    id:"a_level_1d_motion_test|6a5e50ef|a15b8ea9-603a-445c-b792-aa17430d578d",
+                    type: "isaacNumericQuestion",
+                    encoding: "markdown",
+                    children: [],
+                    value: "If an object accelerates from rest at $\\\\quantity{2.5}{m\\\\\\\\,s^{-2}}$, what will be its speed after $\\\\quantity{8.0}{s}$?",
+                    published:false,
+                }],
+                published: false,
+                tags: []
+            }, {
+                id: "a_level_1d_motion_test|b76267ab",
+                title: "Problems involving Distance",
+                type: "isaacQuizSection",
+                encoding: "markdown",
+                children:[{
+                    id: "a_level_1d_motion_test|b76267ab|aa19154e-228a-4b94-b8e3-55fcbd708c5a",
+                    type: "isaacNumericQuestion",
+                    encoding: "markdown",
+                    children:[],
+                    value: "If an object accelerates from rest at $\\\\quantity{1.8}{m\\\\\\\\,s^{-2}}$, how far does it travel in the first $\\\\quantity{7.0}{s}$ of its motion?",
+                    published: false, 
+                }], 
+                published:false,
+                tags:[]
+            }],
+            tags: [],
+            hiddenFromRoles: [
+                "STUDENT",
+                "TUTOR"
+            ],
+            rubric: {
+                type: "content",
+                encoding: "markdown",
+                children: [
+                    {
+                        type: "content",
+                        encoding: "markdown",
+                        children: [],
+                        value: "We recommend completing this test after studying the relevant concepts (Equations of Motion), either in school or by doing the appropriate sections in the Essential Pre-Uni Physics book.",
+                        tags: []
+                    }
+                ],
+                tags: []
+            },
+            published: false
+        }
+    }
+});
+
+export const mockPreviews = recordOf<string, IsaacQuizDTO>()({
+    a_level_1d_motion_test: {
+        id: "a_level_1d_motion_test",
+        title: "A Level 1-d Motion Test",
+        type: "isaacQuiz",
+        encoding: "markdown",
+        canonicalSourceFile: "content/questions/physics/tests/unpublished_tests/a_level_1d_motion_test.json",
+        children: [{
+            id: "a_level_1d_motion_test|6a5e50ef",
+            title: "Velocity & Acceleration",
+            type: "isaacQuizSection",
+            encoding: "markdown",
+            children: [{
+                id:"a_level_1d_motion_test|6a5e50ef|a15b8ea9-603a-445c-b792-aa17430d578d",
+                type: "isaacNumericQuestion",
+                encoding: "markdown",
+                children: [],
+                value: "If an object accelerates from rest at $\\\\quantity{2.5}{m\\\\\\\\,s^{-2}}$, what will be its speed after $\\\\quantity{8.0}{s}$?",
+                published:false,
+            }],
+            published: false,
+            tags: []
+        }, {
+            id: "a_level_1d_motion_test|b76267ab",
+            title: "Problems involving Distance",
+            type: "isaacQuizSection",
+            encoding: "markdown",
+            children:[{
+                id: "a_level_1d_motion_test|b76267ab|aa19154e-228a-4b94-b8e3-55fcbd708c5a",
+                type: "isaacNumericQuestion",
+                encoding: "markdown",
+                children:[],
+                value: "If an object accelerates from rest at $\\\\quantity{1.8}{m\\\\\\\\,s^{-2}}$, how far does it travel in the first $\\\\quantity{7.0}{s}$ of its motion?",
+                published: false, 
+            }], 
+            published:false,
+            tags:[]
+        }],
+        tags: [],
+        hiddenFromRoles: [
+            "STUDENT",
+            "TUTOR"
+        ],
+        rubric: {
+            type: "content",
+            encoding: "markdown",
+            children: [
+                {
+                    type: "content",
+                    encoding: "markdown",
+                    children: [],
+                    value: "We recommend completing this test after studying the relevant concepts (Equations of Motion), either in school or by doing the appropriate sections in the Essential Pre-Uni Physics book.",
+                    tags: []
+                }
+            ],
+            tags: []
+        },
+        published: false
+    }
+});
 
 export const mockMyAssignments = [
     {

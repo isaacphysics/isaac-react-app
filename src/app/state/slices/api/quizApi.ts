@@ -2,6 +2,7 @@ import {isaacApi} from "./baseApi";
 import {
     AssignmentStatusDTO,
     ChoiceDTO,
+    DetailedQuizSummaryDTO,
     IsaacQuizDTO,
     QuestionValidationResponseDTO,
     QuizAssignmentDTO,
@@ -85,6 +86,13 @@ export const quizApi = isaacApi.enhanceEndpoints({
             query: (quizId) => `/quiz/${quizId}/preview`,
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading test preview failed",
+            })
+        }),
+
+        getQuizRubric: build.query<DetailedQuizSummaryDTO, string>({
+            query: (quizId) => `/quiz/${quizId}/rubric`,
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Loading test rubric failed",
             })
         }),
 
@@ -231,6 +239,7 @@ export const {
     useGetQuizAssignmentsAssignedToMeQuery,
     useMarkQuizAttemptAsCompleteMutation,
     useGetQuizPreviewQuery,
+    useGetQuizRubricQuery,
     useLogQuizSectionViewMutation,
     useGetStudentQuizAttemptWithFeedbackQuery,
     useAssignQuizMutation,

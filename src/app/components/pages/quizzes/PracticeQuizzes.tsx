@@ -70,13 +70,8 @@ const PracticeQuizzesComponent = ({user}: QuizzesPageProps) => {
                                 {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                             </div>
                             <Spacer />
-                            {isTutorOrAbove(user) && <div className="d-none d-md-flex align-items-center me-4">
-                                <Link to={{pathname: `/test/preview/${quiz.id}`}}>
-                                    <span>Preview</span>
-                                </Link>
-                            </div>}
-                            <Button tag={Link} to={{pathname: `/test/attempt/${quiz.id}`}}>
-                                {siteSpecific("Take Test", "Take test")}
+                            <Button tag={Link} to={{pathname: `/test/view/${quiz.id}`}}>
+                                {siteSpecific("View Test", "View test")}
                             </Button>
                         </div>
                     </ListGroupItem>)}
