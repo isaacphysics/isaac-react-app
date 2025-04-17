@@ -1,5 +1,5 @@
 import React, {ReactNode, useEffect, useRef, useState} from "react";
-import {Button, ButtonGroup, Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
+import {Button, ButtonGroup, Card, Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {isAda, isDefined, siteSpecific} from "../../services";
 import classNames from "classnames";
@@ -22,7 +22,7 @@ interface TabsProps {
     refreshHash?: string;
     expandable?: boolean;
     singleLine?: boolean;
-    style?: "tabs" | "buttons" | "dropdowns";
+    style?: "tabs" | "buttons" | "dropdowns" | "cards";
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabTitle: string, tabIndex: number) {
@@ -103,6 +103,16 @@ const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: Tabs
     </div>;
 };
 
+const CardsNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+    return <div className="d-flex card-tabs">
+        {Object.keys(children).map((tabTitle, i) =>
+            <button key={i} className={classNames(tabTitleClass, "flex-grow-1 py-3 card-tab", {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} type="button">
+                <span>{tabTitle}</span>
+            </button>
+        )}
+    </div>;
+};
+
 export const Tabs = (props: TabsProps) => {
     const {
         className="", tabContentClass="", children, activeTabOverride, onActiveTabChange,
@@ -134,12 +144,20 @@ export const Tabs = (props: TabsProps) => {
     return <div className={classNames({"mt-4": isDefined(expandButton)}, outerClasses)} ref={updateExpandRef}>
         {expandButton}
         <div className={classNames(className, innerClasses, "position-relative")}>
-            {style === "tabs"
-                ? <TabNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</TabNavbar>
-                : style === "buttons"
-                    ? <ButtonNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</ButtonNavbar>
-                    : <DropdownNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</DropdownNavbar>
-            }
+            {(() => {
+                switch(style) {
+                    case "tabs":
+                        return <TabNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</TabNavbar>;
+                    case "buttons":
+                        return <ButtonNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</ButtonNavbar>;
+                    case "dropdowns":
+                        return <DropdownNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</DropdownNavbar>;
+                    case "cards":
+                        return <CardsNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</CardsNavbar>;
+                    default:
+                        return null;
+                }
+            })()}
             <ExpandableParentContext.Provider value={true}>
                 <TabContent activeTab={activeTab} className={tabContentClass}>
                     {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {

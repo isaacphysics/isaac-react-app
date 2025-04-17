@@ -139,3 +139,29 @@
     }
   }
 }
+
+.card-tabs {
+  > .card-tab {
+    border-radius: 1rem 1rem 0 0;
+    &.active {
+      background-color: var(--bs-body-bg);
+      > span {
+        border-bottom: 3px solid var(--subject-color-500);
+      }
+    }
+    &:not(.active) {
+      background-color: transparent;
+    }
+    &:hover:not(.active) > span {
+      border-bottom: 3px solid $gray-118;
+    }
+  }
+
+  &:has(:first-child.active) ~ .tab-content .card {
+    border-top-left-radius: 0;
+  }
+
+  &:has(:last-child.active) ~ .tab-content .card {
+    border-top-right-radius: 0;
+  }
+}
