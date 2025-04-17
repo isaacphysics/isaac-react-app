@@ -575,7 +575,9 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                 {Subjects.filter(s => subjectCounts[s] > 0).map((subject, i) =>
                     <li key={i}>
                         <StyledTabPicker checkboxTitle={HUMAN_SUBJECTS[subject]} checked={filterSubject === subject}
-                            count={subjectCounts[subject]} onInputChange={() => {setFilterSubject(subject);}}/>
+                            count={subjectCounts[subject]} onInputChange={() => {setFilterSubject(subject);}}
+                            data-bs-theme={subject}
+                        />
                     </li>)}
             </ul>
         </>}
