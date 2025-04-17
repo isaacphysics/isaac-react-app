@@ -119,7 +119,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             icon={{type: "hex", icon: "icon-groups"}}
         />
 
-        {isDefined(group?.id) && <div className="d-flex my-4 gap-3">
+        {isDefined(group?.id) && <div className="d-flex flex-wrap my-4 gap-3">
             <Button className="d-flex align-items-center" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupProgressCSVDownloadLink(group.id as number))))}>
                 Download assignments CSV
                 <i className="icon icon-download ms-2" color="white"/>
@@ -132,7 +132,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
 
         {/* group overview */}
         <Card className="my-4">
-            <CardBody className="d-flex assignment-progress-group-overview">
+            <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className="icon icon-group icon-md me-2" color="secondary"/>
                     {groupMembers?.length ? `${groupMembers?.length} student${groupMembers?.length !== 1 ? "s" : ""}` : "Unknown"}
