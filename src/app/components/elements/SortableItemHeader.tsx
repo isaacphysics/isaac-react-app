@@ -58,12 +58,11 @@ export const SortItemHeader = <T,>(props: SortItemHeaderProps<NonUndefined<T>>) 
 
     const justify = props.alignment ? "justify-content-" + props.alignment : siteSpecific("justify-content-center", "justify-content-start");
 
-    const sortArrows = <button
+    const sortArrow = <button
         className="sort"
         onClick={() => {toggleSort(defaultOrder, reverseOrder, currentOrder, setOrder);}}
     >
-        <span className="up">▲</span>
-        <span className="down">▼</span>
+        <span className="arrow">▲</span>
     </button>;
 
     return <th {...rest}
@@ -72,8 +71,8 @@ export const SortItemHeader = <T,>(props: SortItemHeaderProps<NonUndefined<T>>) 
     >
         <div className={`d-flex ${justify} align-items-center`}>
             {props.children}
+            {!hideIcons && sortArrow}
             {justify === "justify-content-start" && <Spacer/>}
-            {!hideIcons && sortArrows}
         </div>
     </th>;
 };

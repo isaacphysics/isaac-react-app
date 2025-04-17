@@ -20,6 +20,7 @@ import {
     getGroupProgressCSVDownloadLink,
     getGroupQuizProgressCSVDownloadLink,
     GroupSortOrder,
+    isPhy,
     isTeacherOrAbove,
     PATHS,
     siteSpecific} from "../../services";
@@ -30,6 +31,7 @@ import { Spacer } from "../elements/Spacer";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { SearchInputWithIcon } from "../elements/SearchInputs";
 import { StyledDropdown } from "../elements/inputs/DropdownInput";
+import classNames from "classnames";
 
 // const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) => {
 //     const dispatch = useAppDispatch();
@@ -175,19 +177,19 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
     //     {isExpanded && <GroupDetails group={group} user={user} />}
     // </>;
 
-    return <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${group.id}`} className="no-underline">
-        <div className="d-flex assignment-progress-group w-100 p-3 my-3 align-items-center">
+    return <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${group.id}`} className="w-100 no-underline my-2">
+        <div className="d-flex assignment-progress-group w-100 p-3 align-items-center">
             <div className="d-flex flex-grow-1 flex-column flex-lg-row">
                 <b data-testid="group-name">{group.groupName}</b>
                 <Spacer/>
                 <strong>
-                    <a className="d-flex align-items-center pe-3" href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
+                    <a className={classNames("d-flex align-items-center pe-3", {"text-brand": isPhy})} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
                         Download assignments CSV
                         <i className="icon icon-download ms-2"/>
                     </a>
                 </strong>
                 {isTeacherOrAbove(user) && <strong>
-                    <a className="d-flex align-items-center" href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
+                    <a className={classNames("d-flex align-items-center", {"text-brand": isPhy})} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
                         Download tests CSV
                         <i className="icon icon-download ms-2"/>
                     </a>

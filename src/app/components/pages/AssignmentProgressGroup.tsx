@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments } from '../../state';
 import { AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment } from '../../../IsaacAppTypes';
-import { AssignmentOrder, getAssignmentCSVDownloadLink, getGroupProgressCSVDownloadLink, getGroupQuizProgressCSVDownloadLink, isDefined, isQuiz, isTeacherOrAbove, PATHS, siteSpecific, SortOrder } from '../../services';
+import { AssignmentOrder, getAssignmentCSVDownloadLink, getGroupProgressCSVDownloadLink, getGroupQuizProgressCSVDownloadLink, isDefined, isPhy, isQuiz, isTeacherOrAbove, PATHS, siteSpecific, SortOrder } from '../../services';
 import { RegisteredUserDTO } from '../../../IsaacApiTypes';
 import { Link } from 'react-router-dom';
 import { Spacer } from '../elements/Spacer';
@@ -13,6 +13,7 @@ import { InlineTabs } from '../elements/InlineTabs';
 import { StyledDropdown } from '../elements/inputs/DropdownInput';
 import { Loading } from '../handlers/IsaacSpinner';
 import { skipToken } from '@reduxjs/toolkit/query';
+import classNames from 'classnames';
 
 // const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
 //     const dispatch = useAppDispatch();
@@ -71,12 +72,12 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
-    return <Link to={quiz ? `/test/assignment/${assignment.id}/feedback` : `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} className="no-underline">
-        <div className="d-flex align-items-center assignment-progress-group w-100 p-3 my-3">
+    return <Link to={quiz ? `/test/assignment/${assignment.id}/feedback` : `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} className="w-100 no-underline my-2">
+        <div className="d-flex align-items-center assignment-progress-group w-100 p-3">
             <div className="d-flex flex-column">
                 <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
                 <div className="d-flex">
-                    {assignment.dueDate && <Badge className="d-flex align-items-center me-2 text-black fw-bold" color="cultured-grey">
+                    {assignment.dueDate && <Badge className="d-flex align-items-center me-2 text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                         <i className="icon icon-event-upcoming me-2" color="primary"/>
                         {`Due: ${formatDate(assignment.dueDate)}`}
                     </Badge>}
@@ -116,15 +117,15 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         <TitleAndBreadcrumb
             currentPageTitle={group?.groupName ?? "Group progress"}
             intermediateCrumbs={[{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}]}
-            icon={{type: "hex", icon: "icon-groups"}}
+            icon={{type: "hex", icon: "icon-group"}}
         />
 
         {isDefined(group?.id) && <div className="d-flex flex-wrap my-4 gap-3">
-            <Button className="d-flex align-items-center" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupProgressCSVDownloadLink(group.id as number))))}>
+            <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupProgressCSVDownloadLink(group.id as number))))}>
                 Download assignments CSV
                 <i className="icon icon-download ms-2" color="white"/>
             </Button>
-            {isTeacherOrAbove(user) && <Button className="d-flex align-items-center" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupQuizProgressCSVDownloadLink(group.id as number))))}>
+            {isTeacherOrAbove(user) && <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupQuizProgressCSVDownloadLink(group.id as number))))}>
                 Download quizzes CSV
                 <i className="icon icon-download ms-2" color="white"/>
             </Button>}
@@ -181,9 +182,9 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                         ? <Loading/>
                         : assignmentLikeListing?.length
                             ? assignmentLikeListing.map(assignment => <AssignmentLikeLink key={assignment.id} assignment={assignment} />)
-                            : <div className="d-flex flex-column m-2 p-2 bg-cultured-grey hf-12 text-center gap-2 justify-content-center">
+                            : <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
                                 <span>You haven&apos;t {activeTab === "assignments" ? "set any assignments" : "assigned any tests"} yet.</span>
-                                <strong><Link to={activeTab === "assignments" ? PATHS.SET_ASSIGNMENTS : "/set_tests"} className="btn btn-link">
+                                <strong><Link to={activeTab === "assignments" ? PATHS.SET_ASSIGNMENTS : "/set_tests"} className={classNames("btn btn-link", {"fw-bold": isPhy})}>
                                     {activeTab === "assignments" ? "Manage assignments" : "Manage tests"}
                                 </Link></strong>
                             </div>
