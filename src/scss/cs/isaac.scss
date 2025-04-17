@@ -328,6 +328,9 @@ $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to ge
 
 $enable-negative-margins: true;
 
+$card-border-width: 0;
+$card-border-radius: 1rem;
+
 // all Bootstrap overrides must appear before this
 @import "~bootstrap/scss/bootstrap"; 
 @import "~katex/dist/katex.min.css";

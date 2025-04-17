@@ -9,18 +9,12 @@ import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStude
 import { SortItemHeader } from "../SortableItemHeader";
 import { AssignmentProgressDTO } from "../../../../IsaacApiTypes";
 
-export const ICON = siteSpecific(
-    {
-        correct: <svg style={{width: 30, height: 30}}><use href={`/assets/phy/icons/tick-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/></svg>,
-        incorrect: <svg style={{width: 30, height: 30}}><use href={`/assets/phy/icons/cross-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/cross-rp-hex.svg#icon`}/></svg>,
-        notAttempted: <svg  style={{width: 30, height: 30}}><use href={`/assets/phy/icons/dash-hex.svg#icon`} xlinkHref={`/assets/phy/icons/dash-hex.svg#icon`}/></svg>,
-    },
-    {
-        correct: <img src="/assets/cs/icons/tick-rp.svg" alt="Correct" style={{width: 30}} />,
-        incorrect: <img src="/assets/cs/icons/cross-rp.svg" alt="Incorrect" style={{width: 30}} />,
-        notAttempted: <img src="/assets/cs/icons/dash.svg" alt="Not attempted" style={{width: 30}} />,
-    }
-);
+export const ICON = {
+    correct: <i className="icon-md icon-correct"/>,
+    incorrect: <i className="icon-md icon-incorrect"/>,
+    notAttempted: <i className="icon-md icon-not-attempted"/>,
+    partial: <i className="icon-md icon-partial"/>,
+};
 
 export const passMark = 0.75;
 
@@ -33,6 +27,18 @@ export function formatMark(numerator: number, denominator: number, formatAsPerce
     }
     return result;
 }
+
+export const generateCorrectnessIcon = (correct: number, incorrect: number, notAttempted: number, totalParts: number) => {
+    if (correct === totalParts) {
+        return ICON.correct;
+    } else if (notAttempted === totalParts) {
+        return ICON.notAttempted;
+    } else if (correct === 0) {
+        return ICON.incorrect;
+    } else {
+        return ICON.partial;
+    }
+};
 
 export interface QuestionType {
     id?: string | undefined;
@@ -134,9 +140,16 @@ export function ResultsTable<Q extends QuestionType>({
     }, [reverseOrder ? "desc" : "asc"])
     , [semiSortedProgress, reverseOrder, sortOrder]);
 
-    const tableHeaderFooter = <tr className="progress-table-header-footer">
-        <SortItemHeader<ProgressSortOrder> className="student-name" defaultOrder={"name"} reverseOrder={"name"} currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}/>
-        {questions.map((q, index) =>
+    const tableHeaderFooter = <tr className="progress-table-header-footer fw-bold">
+        <SortItemHeader<ProgressSortOrder> 
+            className="student-name ps-3 py-3" 
+            defaultOrder={"name"} 
+            reverseOrder={"name"} 
+            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+        >
+            Name
+        </SortItemHeader>
+        {/* {questions.map((q, index) =>
             <SortItemHeader<ProgressSortOrder>
                 key={q.id} className={`${isSelected(q)}`}
                 defaultOrder={index} reverseOrder={index} currentOrder={sortOrder}
@@ -147,8 +160,23 @@ export function ResultsTable<Q extends QuestionType>({
             >
                 {assignmentAverages[index]}%
             </SortItemHeader>
+        )} */}
+        <SortItemHeader<ProgressSortOrder>
+            className="ps-3"
+            defaultOrder={"totalQuestionPercentage"}
+            reverseOrder={"totalQuestionPercentage"}
+            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+        >
+            Correct
+        </SortItemHeader>
+        {questions.map((q, index) =>
+            <th key={index}>
+                <a className="d-block" href={`/questions/${q.id}`}>
+                    {index + 1}
+                </a>
+            </th>
         )}
-        {isAssignment ? <>
+        {/* {isAssignment ? <>
             <SortItemHeader<ProgressSortOrder>
                 className="total-column left"
                 defaultOrder={"totalQuestionPartPercentage"}
@@ -172,7 +200,7 @@ export function ResultsTable<Q extends QuestionType>({
             >
                 Overall
             </SortItemHeader>
-        }
+        } */}
     </tr>;
 
     const tableRef = useRef<HTMLTableElement>(null);
@@ -207,9 +235,9 @@ export function ResultsTable<Q extends QuestionType>({
     }, [selectedQuestionNumber]);
 
     return <div className="assignment-progress-progress">
-        {header}
+        {/* {header} */}
         {progress && progress.length > 0 && <>
-            <div className="progress-questions">
+            {/* <div className="progress-questions">
                 <Button color="tertiary" disabled={selectedQuestionNumber == 0}
                     // on OSX chrome, the left- and right- pointing triangles are different, so construct these by flipping the same one
                     className="flip-x"
@@ -219,7 +247,7 @@ export function ResultsTable<Q extends QuestionType>({
                 </div>
                 <Button color="tertiary" disabled={selectedQuestionNumber === questions.length - 1}
                     onClick={() => setSelectedQuestionNumber(selectedQuestionNumber + 1)}>►</Button>
-            </div>
+            </div> */}
             <div className="assignment-progress-table-wrapper">
                 <table ref={tableRef} className="progress-table w-100 border">
                     <thead>
@@ -229,13 +257,16 @@ export function ResultsTable<Q extends QuestionType>({
                         {sortedProgress.map((studentProgress, index) => {
                             const fullAccess = isAuthorisedFullAccess(studentProgress);
                             return <tr key={studentProgress.user?.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
-                                <th className="student-name">
+                                <th className="student-name py-3 fw-bold">
                                     {fullAccess && pageSettings?.isTeacher ?
                                         (
                                             isAssignment ?
-                                                <Link to={`/progress/${studentProgress.user?.id}`} target="_blank">
-                                                    {studentProgress.user?.givenName}
-                                                    <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
+                                                <Link className="d-flex justify-content-center align-items-center gap-2" to={`/progress/${studentProgress.user?.id}`} target="_blank">
+                                                    <i className="icon icon-person icon-md" color="tertiary"/>
+                                                    <span className="pe-3">
+                                                        {studentProgress.user?.givenName}
+                                                        <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
+                                                    </span>
                                                 </Link>
                                                 : <>
                                                     <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
@@ -264,42 +295,51 @@ export function ResultsTable<Q extends QuestionType>({
                                         <span>{studentProgress.user?.givenName} {studentProgress.user?.familyName}</span>
                                     }
                                 </th>
+                                <th title={fullAccess ? undefined : "Not Sharing"}>
+                                    {fullAccess ? formatMark(studentProgress.tickCount,
+                                        questions.length,
+                                        !!pageSettings?.formatAsPercentage) : ""}
+                                </th>
                                 {questions.map((q, index) =>
-                                    <td key={q.id} className={isSelected(questions[index]) + " " + markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestionNumber(index)}>
-                                        {isAssignment ? (fullAccess ? formatMark((studentProgress.correctPartResults || [])[index],
-                                            questions[index].questionPartsTotal as number,
-                                            !!pageSettings?.formatAsPercentage) : ""
-                                        ) : 
-                                            (studentProgress.correctPartResults || [])[index] === 1 ? ICON.correct :
+                                    <td key={q.id}>
+                                        {isAssignment 
+                                            ? (fullAccess 
+                                                // ? formatMark(
+                                                //     (studentProgress.correctPartResults || [])[index], 
+                                                //     questions[index].questionPartsTotal as number, 
+                                                //     !!pageSettings?.formatAsPercentage
+                                                // ) 
+                                                ? generateCorrectnessIcon(
+                                                    (studentProgress.correctPartResults || [])[index],
+                                                    (studentProgress.incorrectPartResults || [])[index],
+                                                    (studentProgress.notAttemptedPartResults || [])[index],
+                                                    questions[index].questionPartsTotal as number
+                                                )
+                                                : ""
+                                            )
+                                            : (studentProgress.correctPartResults || [])[index] === 1 ? ICON.correct :
                                                 (studentProgress.incorrectPartResults || [])[index] === 1 ? ICON.incorrect :
                                                 /* default */ ICON.notAttempted
                                         }
                                     </td> 
                                 )}
-                                {isAssignment ? <>
+                                {/* {isAssignment ? <>
                                     <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
                                         {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
                                             !!pageSettings?.formatAsPercentage) : ""}
                                     </th>
-                                    <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark(studentProgress.tickCount,
-                                            questions.length,
-                                            !!pageSettings?.formatAsPercentage) : ""}
-                                    </th>
+                                    
                                 </> : 
                                     <th className="total-column" title={fullAccess ? undefined : "Not Sharing"}>
                                         {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
                                             !!pageSettings?.formatAsPercentage) : ""}
                                     </th>
-                                }
+                                } */}
                             </tr>;
                         })}
                     </tbody>
-                    <tfoot>
-                        {tableHeaderFooter}
-                    </tfoot>
                 </table>
             </div>
         </>}

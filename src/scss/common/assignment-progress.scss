@@ -29,12 +29,14 @@ a:has(> .assignment-progress-group) {
 }
 
 .assignment-progress-group-overview {
-  > :not(:first-child)::before {
-    content: '';
-    display: inline-block;
-    padding-right: 0.8rem;
-    height: 100%;
-    border-left: 1px solid $gray-118;
+  @include media-breakpoint-up(lg) {
+    > :not(:first-child)::before {
+      content: '';
+      display: inline-block;
+      padding-right: 0.8rem;
+      height: 100%;
+      border-left: 1px solid $gray-118;
+    }
   }
 }
 
@@ -133,7 +135,7 @@ $failed-bg-size: 25%;
   }
 
   .completed th {
-    &:first-child, .icon-person { color: rgba($perfect-fill, 1); }
+    &:first-child { color: rgba($perfect-fill, 1); }
     &.total-column {
       background-image: $completed-total-bg-img;
       background-size: $completed-bg-size;
@@ -141,7 +143,7 @@ $failed-bg-size: 25%;
   }
 
   .passed th {
-    &:first-child, .icon-person { color: rgba($passed-fill, 1); }
+    &:first-child { color: rgba($passed-fill, 1); }
     &.total-column {
       background-image: $passed-total-bg-img;
       background-size: $passed-bg-size;
@@ -149,7 +151,7 @@ $failed-bg-size: 25%;
   }
 
   .in-progress th {
-    &:first-child, .icon-person  { color: rgba($default-name-fill, 1); }
+    &:first-child  { color: rgba($default-name-fill, 1); }
     &.total-column {
       background-image: $in-progress-total-bg-img;
       background-size: $in-progress-bg-size;
@@ -157,7 +159,7 @@ $failed-bg-size: 25%;
   }
 
   .failed th {
-    &:first-child, .icon-person { color: rgba($failed-fill, 1); }
+    &:first-child { color: rgba($failed-fill, 1); }
     &.total-column {
       background-image: $failed-total-bg-img;
       background-size: $failed-bg-size;
@@ -166,12 +168,12 @@ $failed-bg-size: 25%;
 
   .not-attempted {
     th {
-      &:first-child, .icon-person  { color: rgba($default-name-fill, 1); }
+      &:first-child { color: rgba($default-name-fill, 1); }
     }
   }
   .revoked {
     th {
-      &:first-child, .icon-person {
+      &:first-child {
         color: gray;
       }
     }
@@ -291,7 +293,10 @@ $failed-bg-size: 25%;
   overflow: auto hidden;
 }
 
-.assignment-progress-progress,
+.assignment-progress-progress {
+  background: $gray-103;
+}
+
 .group-progress-summary {
   background: $gray-103;
   border: 1px solid $gray-118;
@@ -424,10 +429,6 @@ $failed-bg-size: 25%;
       border-top-color: #fff;
       background: #fff;
     }
-    &:not(.selected):after {
-      @include after-border;
-      border-top: 2px solid $gray-160;
-    }
   }
 
   tfoot th {
@@ -493,22 +494,12 @@ $failed-bg-size: 25%;
   }
 
   .student-name {
-    font-weight: bold;
-    color: $text-muted;
-    padding-top: 5px;
-    padding-bottom: 5px;
     min-width: 130px;
 
     @include table-sticky;
     left: 0;
     top: 0;
     width: 195px;
-    &:after {
-      @include after-border;
-      border-right: 1px solid $gray-118;
-      border-left: 1px solid $gray-118;
-      pointer-events: none; // don't intercept clicks as we want links in the th element
-    }
   }
 
   .total-column {
