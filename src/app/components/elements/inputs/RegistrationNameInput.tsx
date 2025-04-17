@@ -32,6 +32,7 @@ export const RegistrationNameInput = ({ userToUpdate, setUserToUpdate, attempted
         <Col md={6} key={each.name}>
           <FormGroup>
             <Label htmlFor={`${each.name}-input`}>{each.label}</Label>
+            <span className="asterisk"> *</span>
             <Input
               id={`${each.name}-input`}
               defaultValue={each.value}

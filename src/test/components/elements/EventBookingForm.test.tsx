@@ -67,7 +67,7 @@ describe("EventBookingForm", () => {
     "Email address",
     "Stage",
     "Exam board",
-    "My current school or college",
+    "My current school or college *",
   ];
   it.each(inputFields)("%s input field renders and is disabled", async (input) => {
     setupTest({ role: "STUDENT", user: mockUserSummary });

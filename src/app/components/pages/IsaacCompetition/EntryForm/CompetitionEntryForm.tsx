@@ -75,7 +75,7 @@ const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormProps) =
                 {targetUser && (
                   <FormGroup>
                     <Label className="entry-form-sub-title">
-                      School <span className="entry-form-astrisk">*</span>
+                      School <span className="entry-form-asterisk">*</span>
                     </Label>
                     <SchoolInput
                       disableInput={true}

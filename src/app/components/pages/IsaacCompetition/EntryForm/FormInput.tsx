@@ -34,7 +34,7 @@ const FormInput = ({
   return (
     <FormGroup>
       <Label className="entry-form-sub-title">
-        {label} {required && <span className="entry-form-astrisk">*</span>}
+        {label} {required && <span className="entry-form-asterisk">*</span>}
       </Label>
       {subLabel && <div className="entry-form-sub-title">{subLabel}</div>}
       {type === "select" ? (

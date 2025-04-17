@@ -23,7 +23,9 @@ export const EmailInput = ({
 
   return (
     <FormGroup>
-      <Label htmlFor="email-input">Email address</Label>
+      <Label htmlFor="email-input">
+        Email address <span className="asterisk">*</span>
+      </Label>
       <Input
         id="email-input"
         name="email"

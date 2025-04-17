@@ -53,7 +53,11 @@ export const RegistrationDobInput = ({
             className="larger-checkbox mt-3"
             checked={confirmedOverThirteen}
             required
-            label="I am at least 13 years old"
+            label={
+              <>
+                I am at least 13 years old <span className="asterisk">*</span>
+              </>
+            }
             disabled={!!userToUpdate.dateOfBirth}
             onChange={(e) => setDobOver13CheckboxChecked(e?.target.checked)}
             invalid={dobTooYoung}

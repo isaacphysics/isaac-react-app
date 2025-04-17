@@ -282,7 +282,9 @@ const StudentContext = ({
   return (
     <>
       <Label htmlFor="user-context-selector">
-        <span>I am studying</span>
+        <span>
+          I am studying <span className="asterisk">*</span>
+        </span>
       </Label>
       <React.Fragment>
         <span id={`show-me-content`} className="icon-help" />

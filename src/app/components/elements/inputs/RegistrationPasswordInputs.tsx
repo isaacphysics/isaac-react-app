@@ -30,7 +30,9 @@ export const RegistrationPasswordInputs = ({
     <Row>
       <Col md={6}>
         <FormGroup>
-          <Label htmlFor="new-password">Password</Label>
+          <Label htmlFor="new-password">
+            Password <span className="asterisk">*</span>
+          </Label>
           <span id={`password-help-tooltip`} className="icon-help ml-1" />
           <UncontrolledTooltip target={`password-help-tooltip`} placement="bottom">
             {PASSWORD_REQUIREMENTS}
@@ -60,7 +62,9 @@ export const RegistrationPasswordInputs = ({
       </Col>
       <Col md={6}>
         <FormGroup>
-          <Label htmlFor="password-confirm">Re-enter password</Label>
+          <Label htmlFor="password-confirm">
+            Re-enter password <span className="asterisk">*</span>
+          </Label>
           <Password
             passwordFieldType="Confirm"
             isPasswordVisible={isPasswordVisible}

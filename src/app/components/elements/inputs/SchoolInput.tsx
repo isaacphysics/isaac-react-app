@@ -4,6 +4,7 @@ import { School, ValidationUser } from "../../../../IsaacAppTypes";
 import { api, schoolNameWithPostcode, throttledSchoolSearch, validateUserSchool } from "../../../services";
 import { Immutable } from "immer";
 import { CustomInput, FormGroup, Label } from "reactstrap";
+import CustomTooltip from "../../../components/elements/CustomTooltip";
 
 interface SchoolInputProps {
   userToUpdate: Immutable<ValidationUser>;
@@ -78,7 +79,15 @@ export const SchoolInput = ({
   const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
   return (
     <FormGroup className={`school ${className}`}>
-      {showLabel && <Label htmlFor={`school-input-${randomNumber}`}>My current school or college</Label>}
+      {showLabel && (
+        <Label htmlFor={`school-input-${randomNumber}`}>
+          My current school or college <span className="asterisk">*</span>{" "}
+          <CustomTooltip
+            id="school-input-id-tooltip"
+            message="Please start typing the name of your school or college and select it from the dropdown list. If you are not currently associated with a school or college, check the box below instead."
+          />
+        </Label>
+      )}
       {userToUpdate.schoolOther !== NOT_APPLICABLE && (
         <React.Fragment>
           <AsyncCreatableSelect

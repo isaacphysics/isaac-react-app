@@ -40,7 +40,9 @@ export const RegistrationEmailPreference = ({
 
   return (
     <CardBody className="p-0">
-      <h3 className="pb-4">Your communication preferences</h3>
+      <h3 className="pb-4">
+        Your communication preferences <span className="asterisk">*</span>
+      </h3>
       <FormGroup className="overflow-auto">
         <Table className="mb-0">
           <tbody>

@@ -19,7 +19,9 @@ export const GenderInput = ({
 }: GenderInputProps) => {
   return (
     <FormGroup>
-      <Label htmlFor={`${idPrefix}-gender-select`}>Gender</Label>
+      <Label htmlFor={`${idPrefix}-gender-select`}>
+        Gender <span className="asterisk">*</span>
+      </Label>
       <Input
         className="pl-2"
         type="select"
