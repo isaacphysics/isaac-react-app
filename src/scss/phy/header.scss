@@ -154,9 +154,10 @@ header {
       }
 
       div.dropdown-menu {
-        border: none;
-        border-radius: 0;
+        border: 2px solid $color-neutral-200;
+        border-radius: 8px;
         margin-top: -2px;
+        padding-top: 20px;
         background-color: $color-neutral-50;
         min-width: 268px;
 
