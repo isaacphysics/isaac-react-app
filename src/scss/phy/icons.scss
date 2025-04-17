@@ -18,14 +18,6 @@
   background: url(/assets/phy/ru.png) -296px -302px no-repeat;
   margin: 3px 10px 0 0;
 }
-.icon-person {
-  float: left;
-  width: 9px;
-  min-width: 9px;
-  height: 14px;
-  background: url(/assets/phy/ru.png) -296px -316px no-repeat;
-  margin: 0 10px 0 0;
-}
 .icon-group-table-person {
   float: left;
   width: 11px;
@@ -41,7 +33,6 @@
 }
 
 .icon-person-active,
-.icon-person,
 .icon-warning,
 .icon-help,
 .icon-group-table-person
@@ -311,7 +302,7 @@ svg {
 }
 
 // Icon sizing
-.icon {
+.icon, .icon-sm {
   --icon-size: 16px;
   --mask-size: 100%;
 }
