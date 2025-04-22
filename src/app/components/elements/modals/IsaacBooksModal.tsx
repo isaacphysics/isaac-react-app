@@ -13,7 +13,7 @@ interface BookInfo {
 const isaacBooks: BookInfo[] = siteSpecific(
     [
         {
-            title: "Step up to GCSE Physics",
+            title: "Step Up to GCSE Physics",
             image: "assets/phy/books/step_up_phys.jpg",
             path: "/books/step_up_phys"
         },
