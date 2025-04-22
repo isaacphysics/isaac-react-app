@@ -138,6 +138,57 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setWildcardId(undefined);
     };
 
+    const onSaveQuiz = () => {
+        let wildcard = undefined;
+        if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
+            wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
+        }
+
+        let subjects = [];
+
+        if (isAda) {
+            subjects.push("computer_science");
+        } else {
+            const definedSubjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
+            selectedQuestions?.forEach((item) => {
+                const tags = intersection(definedSubjects, item.tags || []);
+                tags.forEach((tag: string) => subjects.push(tag));
+            });
+            // If none of the questions have a subject tag, default to physics
+            if (subjects.length === 0) {
+                subjects.push(TAG_ID.physics);
+            }
+            subjects = Array.from(new Set(subjects));
+        }
+
+        createGameboard({
+            gameboard: {
+                id: gameboardURL,
+                title: gameboardTitle,
+                contents: questionOrder.map((questionId) => {
+                    const question = selectedQuestions.get(questionId);
+                    return question && convertContentSummaryToGameboardItem(question);
+                }).filter((question) => question !== undefined) as GameboardItem[],
+                wildCard: wildcard,
+                wildCardPosition: 0,
+                gameFilter: {subjects: subjects},
+                tags: gameboardTags.map(getValue)
+            },
+            previousId: baseGameboardId
+        }).then(gameboardOrError => {
+            const error = 'error' in gameboardOrError ? gameboardOrError.error : undefined;
+            const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
+            dispatch(openActiveModal({
+                closeAction: () => dispatch(closeActiveModal()),
+                title: `${siteSpecific("Question Deck", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
+                body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
+            }));
+        });
+
+        logEvent(eventLog, "SAVE_GAMEBOARD", {});
+        dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
+    };
+
     useEffect(() => {
         if (baseGameboard) {
             cloneGameboard(baseGameboard);
@@ -398,57 +449,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <Button
                             id="gameboard-save-button" disabled={!canSubmit} color="secondary"
                             aria-describedby="gameboard-help"
-                            onClick={() => {
-                                // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
-                                let wildcard = undefined;
-                                if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
-                                    wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
-                                }
-
-                                let subjects = [];
-
-                                if (isAda) {
-                                    subjects.push("computer_science");
-                                } else {
-                                    const definedSubjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
-                                    selectedQuestions?.forEach((item) => {
-                                        const tags = intersection(definedSubjects, item.tags || []);
-                                        tags.forEach((tag: string) => subjects.push(tag));
-                                    });
-                                    // If none of the questions have a subject tag, default to physics
-                                    if (subjects.length === 0) {
-                                        subjects.push(TAG_ID.physics);
-                                    }
-                                    subjects = Array.from(new Set(subjects));
-                                }
-
-                                createGameboard({
-                                    gameboard: {
-                                        id: gameboardURL,
-                                        title: gameboardTitle,
-                                        contents: questionOrder.map((questionId) => {
-                                            const question = selectedQuestions.get(questionId);
-                                            return question && convertContentSummaryToGameboardItem(question);
-                                        }).filter((question) => question !== undefined) as GameboardItem[],
-                                        wildCard: wildcard,
-                                        wildCardPosition: 0,
-                                        gameFilter: {subjects: subjects},
-                                        tags: gameboardTags.map(getValue)
-                                    },
-                                    previousId: baseGameboardId
-                                }).then(gameboardOrError => {
-                                    const error = 'error' in gameboardOrError ? gameboardOrError.error : undefined;
-                                    const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
-                                    dispatch(openActiveModal({
-                                        closeAction: () => dispatch(closeActiveModal()),
-                                        title: `${siteSpecific("Question Deck", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
-                                        body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
-                                    }));
-                                });
-
-                                logEvent(eventLog, "SAVE_GAMEBOARD", {});
-                                dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
-                            }}
+                            onClick={onSaveQuiz}
                         >
                             {isWaitingForCreateGameboard ?
                                 <Spinner size={"md"}/> : siteSpecific("Save Question Deck", "Save quiz")}
