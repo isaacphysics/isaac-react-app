@@ -49,26 +49,8 @@ export const getThemeFromTags = (tags?: (TAG_ID | string)[]): SiteTheme => {
     return subjectTags[0] || "neutral";
 };
 
-/**
- * Gets the page context for the current page, based on the previous page context, the user's registered contexts, and the audience and tags of the current page.
- * 
- * As a general rule, if the previous context can be maintained, it will be. 
- *   - If the stage hasn't changed (e.g. GCSE => GCSE, even if the question is marked as belonging to other stages too), it will remain at GCSE.
- *     If the stage has changed, if the new stage is relevant to a user context, the context will be displayed in that single stage. 
- *     If the question is only targeted at a single stage, that stage is used. Otherwise, no single stage can be determined, so the default of `"all"` is used.
- *   - If the subject hasn't changed (e.g. Physics => Physics, even if the question is tagged as belonging to other subjects too), it will remain at Physics.
- *     If the subject has changed, the subject with the highest priority will be used. If no subject can be determined, the default of `"neutral"` is used.
- * 
- * @param previousContext - The page context from the previous page, if any.
- * @param userContexts - The user's registered contexts, if logged in and any exist.
- * @param doc - The current page DTO. The audience and tags of this object will be used to determine the new context.
- * @returns The page context for this page.
- */
-export const usePreviousPageContext = (userContexts: readonly UserContext[] | undefined, doc: ContentBaseDTO | undefined): PageContextState => {
-    const previousContext = useAppSelector(selectors.pageContext.previousContext) as PageContextState;
-    const dispatch = useAppDispatch();
-
-    const newContext = useMemo(() => ({stage: undefined, subject: undefined, previousContext} as NonNullable<PageContextState>), [previousContext]);
+function determinePageContextFromPreviousPageContext(userContexts: readonly UserContext[] | undefined, previousContext: PageContextState, doc: ContentBaseDTO | undefined): PageContextState {
+    const newContext = {stage: undefined, subject: undefined, previousContext} as NonNullable<PageContextState>;
 
     // if we haven't changed learning stage (GCSE => GCSE), use the learning stage from the old context
     if (previousContext?.stage && doc?.audience?.some(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s]).filter(isDefined).some(s => previousContext.stage?.includes(s)))) {
@@ -107,19 +89,47 @@ export const usePreviousPageContext = (userContexts: readonly UserContext[] | un
     }
     // otherwise we cannot infer a subject to show, so the default of "neutral" is used
 
+    return newContext;
+}
+
+/**
+ * Gets the page context for the current page, based on the previous page context, the user's registered contexts, and the audience and tags of the current page.
+ * 
+ * As a general rule, if the previous context can be maintained, it will be. 
+ *   - If the stage hasn't changed (e.g. GCSE => GCSE, even if the question is marked as belonging to other stages too), it will remain at GCSE.
+ *     If the stage has changed, if the new stage is relevant to a user context, the context will be displayed in that single stage. 
+ *     If the question is only targeted at a single stage, that stage is used. Otherwise, no single stage can be determined, so the default of `"all"` is used.
+ *   - If the subject hasn't changed (e.g. Physics => Physics, even if the question is tagged as belonging to other subjects too), it will remain at Physics.
+ *     If the subject has changed, the subject with the highest priority will be used. If no subject can be determined, the default of `"neutral"` is used.
+ * 
+ * @param previousContext - The page context from the previous page, if any.
+ * @param userContexts - The user's registered contexts, if logged in and any exist.
+ * @param doc - The current page DTO. The audience and tags of this object will be used to determine the new context.
+ * @returns The page context for this page.
+ */
+export const usePreviousPageContext = (userContexts: readonly UserContext[] | undefined, doc: ContentBaseDTO | undefined): PageContextState => {
+    const previousContext = useAppSelector(selectors.pageContext.previousContext) as PageContextState;
+    const dispatch = useAppDispatch();
+
+    const [previousPageContext, setPreviousPageContext] = useState<PageContextState>(() => (
+        {stage: undefined, subject: undefined, previousContext} as NonNullable<PageContextState>)
+    );
+
     useEffect(() => {
+        const newContext = determinePageContextFromPreviousPageContext(userContexts, previousContext, doc);
+        setPreviousPageContext(newContext);
         dispatch(pageContextSlice.actions.updatePageContext(newContext));
 
         return () => {
             dispatch(pageContextSlice.actions.updatePageContext({
                 subject: undefined,
                 stage: undefined,
-                previousContext: {subject: newContext.subject, stage: newContext.stage},
+                previousContext: {subject: newContext?.subject, stage: newContext?.stage},
             }));
         };
-    }, [dispatch, doc]);
+    }, [dispatch, doc, previousContext, userContexts]);
 
-    return newContext;
+    return previousPageContext;
 };
 
 /**
