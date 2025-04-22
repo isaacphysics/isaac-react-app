@@ -8,7 +8,6 @@ import {
     printingSettingsSlice,
     transientUserContextSlice,
     glossaryTerms,
-    concepts,
     docSlice,
     questions,
     activeModals,
@@ -59,7 +58,6 @@ export const rootReducer = combineReducers({
 
     // Content
     page: docSlice.reducer,
-    concepts,
 
     // Question
     questions,
