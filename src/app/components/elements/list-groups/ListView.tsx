@@ -2,7 +2,7 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, ListViewTagProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupItemProps, ListGroupProps } from "reactstrap";
 import { TitleIconProps } from "../PageTitle";
 import { AffixButton } from "../AffixButton";
@@ -106,13 +106,13 @@ export const QuizListViewItem = ({item, isQuizSetter, ...rest}: {item: QuizSumma
     />;
 };
 
-export const QuestionPackListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
+export const QuestionDeckListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `/gameboards#${item.id}`;
+    const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question", size: "lg"}}
+        icon={{type: "hex", icon: "icon-question-deck", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
@@ -126,7 +126,7 @@ export const QuickQuizListViewItem = ({item, ...rest}: {item: ShortcutResponse})
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `/gameboards#${item.id}`;
+    const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
         icon={{type: "hex", icon: "icon-question", size: "lg"}}
@@ -146,10 +146,31 @@ export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question", size: "lg"}}
+        icon={{type: "hex", icon: "icon-info", size: "lg"}}
+        title={item.title ?? ""}
+        subject={itemSubject}
+        subtitle={item.subtitle}
+        tags={item.tags}
+        supersededBy={item.supersededBy}
+        breadcrumb={breadcrumb}
+        status={item.state}
+        url={url}
+        audienceViews={audienceViews}
+        {...rest}
+    />;
+};
+
+export const ShortcutListViewItem = ({item, ...rest}: {item: ShortcutResponse} & ListGroupItemProps) => {
+    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+    const url = `${item.url}${item.hash ? `#${item.hash}` : ""}`;
+
+    return <AbstractListViewItem
+        icon={{type: "hex", icon: "icon-concept", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
@@ -170,13 +191,14 @@ export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & {sh
     </ListGroup>;
 };
 
-export const ListView = ({items, ...rest}: {items: ShortcutResponse[], fullWidth?: boolean, isQuizSetter?: boolean}) => {
-    return <ListGroup className="link-list list-group-links">
+export const ListView = ({items, className, ...rest}: {items: ShortcutResponse[], className?: string, fullWidth?: boolean, isQuizSetter?: boolean}) => {
+    return <ListGroup className={`link-list list-group-links ${className}`}>
         {items.map((item, index) => {
             switch (item.type) {
                 case (DOCUMENT_TYPE.GENERIC):
-                case (SEARCH_RESULT_TYPE.SHORTCUT):
                     return <GenericListViewItem key={index} item={item} {...rest}/>;
+                case (SEARCH_RESULT_TYPE.SHORTCUT):
+                    return <ShortcutListViewItem key={index} item={item} {...rest}/>;
                 case (DOCUMENT_TYPE.QUESTION):
                 case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
                     return <QuestionListViewItem key={index} item={item} {...rest}/>;
@@ -186,6 +208,8 @@ export const ListView = ({items, ...rest}: {items: ShortcutResponse[], fullWidth
                     return <EventListViewItem key={index} item={item} {...rest}/>;
                 case (DOCUMENT_TYPE.QUIZ):
                     return <QuizListViewItem key={index} item={item} {...rest}/>;
+                case SEARCH_RESULT_TYPE.GAMEBOARD:
+                    return <QuestionDeckListViewItem key={index} item={item} {...rest}/>;
                 default:
                     // Do not render this item if there is no matching DOCUMENT_TYPE
                     console.error("Not able to display item as a ListViewItem: ", item);

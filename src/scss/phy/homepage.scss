@@ -275,3 +275,32 @@ a:has(.assignment-card) {
 .random-question-panel {
   background-color: $color-neutral-100;
 }
+
+.dashboard-scroll-shadow {
+  position: sticky;
+  overflow: hidden;
+  height: auto;
+  display: block;
+  z-index: 1;
+  width: 10%;
+  margin-right: -10%;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+
+  &.left {
+    left: 0;
+    background: linear-gradient(to right, $color-neutral-50 0%, color-mix(in srgb, $color-neutral-50, transparent 100%) 100%);
+  }
+
+  &.right {
+    left: 90%;
+    background: linear-gradient(to left, $color-neutral-50 0%, color-mix(in srgb, $color-neutral-50, transparent 100%) 100%);
+  }
+}
+
+.books-select {
+  border: none;
+  border-bottom: 1px solid $color-neutral-300;
+  background-color: transparent;
+}

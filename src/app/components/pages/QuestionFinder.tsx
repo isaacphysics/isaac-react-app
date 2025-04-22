@@ -8,6 +8,7 @@ import {
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     getHumanContext,
+    getQuestionPlaceholder,
     ISAAC_BOOKS,
     isAda,
     isDefined,
@@ -502,7 +503,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 type="text"
                                 maxLength={SEARCH_CHAR_LENGTH_LIMIT}
                                 defaultValue={searchQuery}
-                                placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
+                                placeholder={siteSpecific(`e.g. ${getQuestionPlaceholder(pageContext)}`, "e.g. Creating an AST")}
                                 onChange={(e) => {
                                     debouncedSearchHandler(e.target.value);
                                     setRandomSeed(undefined); // This random seed reset is for Ada only! This is managed in the filtersChanged useEffect for Phy

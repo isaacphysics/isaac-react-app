@@ -33,7 +33,7 @@ function useEventPropertyState<T>(element: HTMLElement | undefined, initialState
     return [state, setState];
 }
 
-export const ScrollShadows = <T extends HTMLElement>({element} : {element : T | undefined}) => {
+export const ScrollShadows = <T extends HTMLElement>({element, shadowType} : {element : T | undefined, shadowType?: string}) => {
     const [clientWidth, setClientWidth] = useState<number>(0);
     const [scrollWidth, setScrollWidth] = useState<number>(0);
     const [scrollLeft, setScrollLeft] = useEventPropertyState(element, 0, "scrollLeft", ["scroll"]);
@@ -58,7 +58,7 @@ export const ScrollShadows = <T extends HTMLElement>({element} : {element : T | 
         : 0;
 
     return (scrollWidth - clientWidth) > 5 ? <>
-        <div aria-hidden className={classNames("scroll-shadow left")} style={{opacity: leftOpacity}}/>
-        <div aria-hidden className={classNames("scroll-shadow right")} style={{opacity: rightOpacity}}/>
+        <div aria-hidden className={classNames(shadowType ?? "scroll-shadow", "left")} style={{opacity: leftOpacity}}/>
+        <div aria-hidden className={classNames(shadowType ?? "scroll-shadow", "right")} style={{opacity: rightOpacity}}/>
     </> : null;
 };

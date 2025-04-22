@@ -33,7 +33,7 @@
 
 .search--main-group {
   &.form-group {
-    @include respond-below(lg) {
+    @media (min-width: 768px) and (max-width: 1199px) {
       width: 130px;
     }
     input.form-control {
@@ -47,6 +47,14 @@
   border: 1px solid $color-neutral-300;
   background: $color-neutral-white url(/assets/cs/icons/search-jet.svg) no-repeat 95%;
   background-size: 20px;
+}
+
+[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    margin-right: 24px;
+    height: 16px;
+    width: 16px;
+    background: url(/assets/phy/icons/redesign/close.svg);
 }
 
 select.form-select {

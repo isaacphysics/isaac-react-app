@@ -37,7 +37,7 @@ export const RegistrationGroupInvite = ()  => {
 
     if(!isGroupValid){
         return <Container>
-            <TitleAndBreadcrumb currentPageTitle={`Group not found`} className="mb-4" />
+            <TitleAndBreadcrumb currentPageTitle={`Group not found`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
             <Card className="my-5">
                 <CardBody>
                     <p>You came here via a group join link, but the group code is invalid.</p>
@@ -49,7 +49,7 @@ export const RegistrationGroupInvite = ()  => {
         </Container>;
     }
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Join group`} className="mb-4" />
+        <TitleAndBreadcrumb currentPageTitle={`Join group`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
         <Card className="my-5">
             <CardBody>
                 <p>You came here via a group join link. Are you happy to join the group and allow

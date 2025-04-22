@@ -4,7 +4,7 @@
     @content;
   }
 
-  @at-root main[data-reduced-motion="true"] & {
+  @at-root #root:has(main[data-reduced-motion="true"]) & {
     @content;
   }
 }
@@ -12,7 +12,7 @@
 @mixin not-reduced-motion {
   // if reduced motion is not enabled in the browser or the app, don't apply these motion styles e.g. hover scale effects
   @media (prefers-reduced-motion: no-preference) {
-    @at-root main[data-reduced-motion="false"] & {
+    @at-root #root:has(main[data-reduced-motion="false"]) & {
       @content;
     }
   }

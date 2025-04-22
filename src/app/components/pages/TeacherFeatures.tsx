@@ -6,37 +6,35 @@ import {isLoggedIn, isTeacherOrAbove, PATHS} from "../../services";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
 
+interface TeacherFeatureCardProps {
+    url: string;
+    imgSrc: string;
+    title: string;
+    subtitle: string;
+    disabled?: boolean;
+}
+
+export const TeacherFeatureCard = (props: TeacherFeatureCardProps) => {
+    const {url, imgSrc, title, subtitle, disabled} = props;
+    return <Link to={url} className="h-100 w-100" aria-label={title} aria-disabled={disabled} style={{textDecoration: "none"}}>
+        <Card className={classNames("p-3 teacher-features h-100", {"disabled": disabled})}>
+            <div className="d-flex justify-content-between">
+                <h5 className="mt-3 me-2">{title}</h5>
+                <img src={imgSrc} alt=""/>
+            </div>
+            <p>{subtitle}</p>
+        </Card>
+    </Link>;
+};
+
 export const TeacherFeatures = () => {
-
     const user = useAppSelector(selectors.user.orNull);
-
     const isDisabled = !isLoggedIn(user) || !isTeacherOrAbove(user);
-
-    interface TeacherFeatureCardProps {
-        url: string;
-        imgSrc: string;
-        title: string;
-        subtitle: string;
-        disabled?: boolean;
-    }
-
-    const TeacherFeatureCard = (props: TeacherFeatureCardProps) => {
-        const {url, imgSrc, title, subtitle, disabled} = props;
-        return <Link to={url} className="h-100 w-100" aria-label={title} aria-disabled={disabled} style={{textDecoration: "none"}}>
-            <Card className={classNames("p-3 teacher-features h-100", {"disabled": disabled})}>
-                <div className="d-flex justify-content-between">
-                    <h5 className="mt-3 me-2">{title}</h5>
-                    <img src={imgSrc} alt=""/>
-                </div>
-                <p>{subtitle}</p>
-            </Card>
-        </Link>;
-    };
 
     return <Container>
         <Row className="mb-4">
             <Col>
-                <TitleAndBreadcrumb currentPageTitle={"Teacher Features"} />
+                <TitleAndBreadcrumb currentPageTitle={"Teacher Features"} icon={{type: "hex", icon: "icon-account"}}/>
             </Col>
         </Row>
         <Row className="mb-3">

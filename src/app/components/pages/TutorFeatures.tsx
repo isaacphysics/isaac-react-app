@@ -4,7 +4,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useAppSelector, selectors} from "../../state";
 import {isLoggedIn, isTutorOrAbove, PATHS} from "../../services";
 import {Link} from "react-router-dom";
-import {IsaacCard} from "../content/IsaacCard";
+import { TeacherFeatureCard } from "./TeacherFeatures";
 
 // A version of the "teacher features" page to showcase tutor account features
 export const TutorFeatures = () => {
@@ -16,7 +16,7 @@ export const TutorFeatures = () => {
     return<Container>
         <Row className="mb-4">
             <Col>
-                <TitleAndBreadcrumb currentPageTitle={"Tutor Features"} />
+                <TitleAndBreadcrumb currentPageTitle={"Tutor Features"} icon={{type: "hex", icon: "icon-account"}}/>
             </Col>
         </Row>
         <Row className="mb-3">
@@ -31,75 +31,61 @@ export const TutorFeatures = () => {
         </Row>
         <Row className="isaac-cards-body px-3">
             <Col sm={6} md={4} className="mb-3 mb-md-0">
-                <IsaacCard doc={{ clickUrl: "/groups",
-                    image: {src: "/assets/phy/icons/teacher_features_sprite.svg#groups"},
-                    title: "1. Create a Group",
-                    disabled: isDisabled,
-                    verticalContent: true,
-                    subtitle: "Create and manage student groups."}}
-                imageClassName="teacher-features"
-                className="w-100"
+                <TeacherFeatureCard
+                    url = "/groups"
+                    imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#groups"
+                    title = "1. Create a Group"
+                    subtitle = "Create and manage student groups."
+                    disabled = {isDisabled}
                 />
             </Col>
             <Col sm={6} md={4} className="mb-3 mb-md-0">
-                <IsaacCard doc={{ clickUrl: PATHS.SET_ASSIGNMENTS,
-                    image: {src: "/assets/phy/icons/teacher_features_sprite.svg#set-assignments"},
-                    title: "2. Set Assignments",
-                    disabled: isDisabled,
-                    verticalContent: true,
-                    subtitle: "Set assignments from our skills books, pre-made boards or create your own."}}
-                imageClassName="teacher-features"
-                className="w-100"
+                <TeacherFeatureCard
+                    url = {PATHS.SET_ASSIGNMENTS}
+                    imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#set-assignments"
+                    title = "2. Set Assignments"
+                    subtitle = "Set assignments from our skills books, pre-made boards or create your own."
+                    disabled = {isDisabled}
                 />
             </Col>
             <Col xs={0} sm={3} className="d-md-none"/>
             <Col sm={6} md={4}>
-                <IsaacCard doc={{ clickUrl: PATHS.ASSIGNMENT_PROGRESS,
-                    image: {src: "/assets/phy/icons/teacher_features_sprite.svg#track-progress"},
-                    title: "3. Assignment Progress",
-                    disabled: isDisabled,
-                    verticalContent: true,
-                    subtitle: "View your tutees’ progress through their assignments."}}
-                imageClassName="teacher-features"
-                className="w-100"
+                <TeacherFeatureCard
+                    url = {PATHS.ASSIGNMENT_PROGRESS}
+                    imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#track-progress"
+                    title = "3. Assignment Progress"
+                    subtitle = "View your tutees’ progress through their assignments."
+                    disabled = {isDisabled}
                 />
             </Col>
         </Row>
         <Row className="my-4">
-            <Col>
-                <h3 className="h-title text-end">Tutor Support and Resources</h3>
-            </Col>
+            <h4>Tutor Support and Resources</h4>
         </Row>
         <Row className="isaac-cards-body mb-5 mt-2 px-3">
             <Col sm={6} md={4} className="mb-3 mb-md-0">
-                <IsaacCard doc={{ clickUrl: "/support/tutor/general",
-                    image: {src: "/assets/phy/icons/teacher_features_sprite.svg#teacher-forum"},
-                    title: "Tutor FAQ",
-                    verticalContent: true,
-                    subtitle: "Answers to your questions and how-to guides."}}
-                imageClassName="teacher-features"
-                className="w-100"
+                <TeacherFeatureCard               
+                    url = "/support/tutor/general"
+                    imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#teacher-forum"
+                    title = "Tutor FAQ"
+                    subtitle = "Answers to your questions and how-to guides."
                 />
             </Col>
             <Col sm={6} md={4} className="mb-3 mb-md-0">
-                <IsaacCard doc={{ clickUrl: "/pages/order_books",
-                    image: {src: "/assets/phy/icons/teacher_features_sprite.svg#skills-book-cover"},
-                    title: "Isaac Physics Books",
-                    verticalContent: true,
-                    subtitle: "Buy one of our Skills Mastery books at cost."}}
-                imageClassName="teacher-features"
-                className="w-100"
+                <TeacherFeatureCard
+                    url = "/pages/order_books"
+                    imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#skills-book-cover"
+                    title = "Isaac Books"
+                    subtitle = "Buy one of our Skills Mastery books at cost."
                 />
             </Col>
             <Col xs={0} sm={3} className="d-md-none"/>
             <Col sm={6} md={4}>
-                <IsaacCard doc={{ clickUrl: "/pages/pre_made_gameboards",
-                    image: {src: "/assets/phy/icons/key_stage_sprite.svg#triple"},
-                    title: "Boards by Topic",
-                    verticalContent: true,
-                    subtitle: isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}}
-                imageClassName="teacher-features"
-                className="w-100"
+                <TeacherFeatureCard
+                    url = "/pages/pre_made_gameboards"
+                    imgSrc = "/assets/phy/icons/key_stage_sprite.svg#triple"
+                    title = "Boards by Topic"
+                    subtitle = {isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}
                 />
             </Col>
         </Row>

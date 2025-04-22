@@ -118,7 +118,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
         <Container id="search-page">
             <Row>
                 <Col>
-                    <TitleAndBreadcrumb currentPageTitle="Search" />
+                    <TitleAndBreadcrumb currentPageTitle="Search" icon={{type: "hex", icon: "icon-finder"}}/>
                 </Col>
             </Row>
             <Row>

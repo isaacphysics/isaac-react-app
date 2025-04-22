@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useGetNewsPodListQuery} from "../../../state";
+import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardFooter, CardTitle, Col, Container, Row} from "reactstrap";
 import {PATHS, SITE_TITLE, useDeviceSize} from "../../../services";
@@ -13,12 +13,16 @@ import { IconCard } from "../../elements/cards/IconCard";
 import { TextBlock } from "../../elements/layout/TextBlock";
 import { ColumnSlice } from "../../elements/layout/ColumnSlice";
 import { AdaCard } from "../../elements/cards/AdaCard";
+import {useLinkableSetting} from "../../../services/linkableSetting";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
     const featuredNewsItem = news ? news[0] : undefined;
     const deviceSize = useDeviceSize();
+    const {setLinkedSetting} = useLinkableSetting();
+    const userPreferences = useAppSelector(selectors.user.preferences);
+    const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
 
     return <>
         {/*<WarningBanner/>*/}
@@ -54,11 +58,17 @@ export const HomepageCS = () => {
             </section>
             <section id="news-and-updates">
                 <Container className="homepage-padding mw-1600 position-relative" fluid>
-                    <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                     <ColumnSlice>
                         <TextBlock className="pe-5">
                             <h2>Our latest updates</h2>
-                            <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read the latest news and updates from the team.</p>
+                            <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read
+                                the latest news and updates from the team.</p>
+                            {showNewsletterPrompts && <div className={"d-none d-lg-block"}>
+                                <Button onClick={() => {setLinkedSetting("news-preference");}} color={"primary"}
+                                    tag={Link} to={"/account#notifications"}>
+                                    Join our newsletter
+                                </Button>
+                            </div>}
                         </TextBlock>
                         {featuredNewsItem && featuredNewsItem.title && featuredNewsItem.value ? <IconCard card={{
                             title: featuredNewsItem.title,
@@ -70,10 +80,17 @@ export const HomepageCS = () => {
                             buttonStyle: "link"
                         }}/> : <div/>}
                     </ColumnSlice>
+                    {showNewsletterPrompts && <div className={"mt-4 mt-lg-5 w-100 text-center d-lg-none"}>
+                        <Button onClick={() => {setLinkedSetting("news-preference");}} color={"primary"}
+                            tag={Link} to={"/account#notifications"}>
+                                Join our newsletter
+                        </Button>
+                    </div>
+                    }
                 </Container>
             </section>
             <section id="benefits-for-teachers-and-students" className="bg-white">
-                <Container className={"homepage-padding mw-1600"}>                    
+                <Container className={"homepage-padding mw-1600"}>
                     <Row className={"align-items-center"}>
                         <Col xs={12} lg={5} className="mt-4 mt-lg-4 order-1 order-lg-0">
                             <picture>
@@ -217,6 +234,20 @@ export const HomepageCS = () => {
                     <div className={"mt-4 mt-lg-5 w-100 text-center"}>
                         <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
                     </div>
+                    {showNewsletterPrompts &&
+                        <Row xs={12} className="d-flex flex-row row-cols-1 row-cols-md-2 mt-3">
+                            <IconCard
+                                card={{
+                                    title: "Stay updated",
+                                    icon: {src: "/assets/cs/icons/mail.svg"},
+                                    bodyText: "Update your preferences and be the first to hear about new features, challenges, topics, and improvements on the platform.",
+                                    clickUrl: "/account#notifications",
+                                    buttonText: "Join our newsletter",
+                                    onButtonClick: () => {setLinkedSetting("news-preference");}
+                                }}
+                            />
+                        </Row>
+                    }
                 </Container>
             </section>}
 

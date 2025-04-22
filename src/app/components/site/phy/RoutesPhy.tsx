@@ -1,24 +1,12 @@
 import React, {lazy} from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
-import {PhysicsSkills19} from "../../pages/books/physics_skills_19";
-import {PhysBookGcse} from "../../pages/books/phys_book_gcse";
-import {PhysicsSkills14} from "../../pages/books/physics_skills_14";
-import {PreUniMaths} from "../../pages/books/pre_uni_maths";
-import {PreUniMaths2e} from "../../pages/books/pre_uni_maths_2e";
-import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect, RouteComponentProps} from "react-router";
 import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
-import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
-import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
-import {MathsBookGcse} from "../../pages/books/maths_book_gcse";
-import {PhysBookYrNine} from "../../pages/books/phys_book_yr9";
-import {StepUpPhys} from "../../pages/books/step_up_phys";
-import {LinkingConcepts} from "../../pages/books/linking_concepts";
 import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
 import {QuizDoAssignment} from "../../pages/quizzes/QuizDoAssignment";
 import {QuizAttemptFeedback} from "../../pages/quizzes/QuizAttemptFeedback";
@@ -49,6 +37,17 @@ import { QuickQuizzes } from "../../pages/QuickQuizzes";
 import { LessonsAndRevision } from "../../pages/LessonsAndRevision";
 import { SubjectOverviewPage } from "../../pages/SubjectOverviewPage";
 import { Glossary } from "../../pages/Glossary";
+import { Book } from "../../elements/Book";
+import { QuantumMechanicsPrimer } from "../../pages/books_old/QuantumMechanicsPrimer";
+import { SolvingPhysProblems } from "../../pages/books_old/SolvingPhysProblems";
+import { Chemistry16 } from "../../pages/books_old/chemistry_16";
+import { LinkingConcepts } from "../../pages/books_old/linking_concepts";
+import { MathsBookGcse } from "../../pages/books_old/maths_book_gcse";
+import { PhysBookYrNine } from "../../pages/books_old/phys_book_yr9";
+import { PreUniMaths } from "../../pages/books_old/pre_uni_maths";
+import { PreUniMaths2e } from "../../pages/books_old/pre_uni_maths_2e";
+import { StepUpPhys } from "../../pages/books_old/step_up_phys";
+import { QuizView } from "../../pages/quizzes/QuizView";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -64,6 +63,19 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
     "/quick_quizzes": QuickQuizzes,
     "/question_decks": QuestionDecks,
     "/glossary": Glossary,
+};
+
+// TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
+const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
+    "/books/pre_uni_maths": PreUniMaths,
+    "/books/pre_uni_maths_2e": PreUniMaths2e,
+    "/books/chemistry_16": Chemistry16,
+    "/books/quantum_mechanics_primer": QuantumMechanicsPrimer,
+    "/books/solve_physics_problems": SolvingPhysProblems,
+    "/books/maths_book_gcse": MathsBookGcse,
+    "/books/phys_book_yr9": PhysBookYrNine,
+    "/books/step_up_phys": StepUpPhys,
+    "/books/linking_concepts": LinkingConcepts,
 };
 
 let key = 0;
@@ -105,6 +117,8 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/test/preview/:quizId/page/:page" ifUser={isTutorOrAbove} component={QuizPreview} />,
     <TrackedRoute key={key++} exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
     <TrackedRoute key={key++} exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
+    <TrackedRoute key={key++} exact path="/test/view/:quizId" ifUser={isLoggedIn} component={QuizView} />,
+
     // The order of these redirects matters to prevent substring replacement
     <Redirect key={key++} from="/quiz/assignment/:quizAssignmentId/feedback"   to="/test/assignment/:quizAssignmentId/feedback" />,
     <Redirect key={key++} from="/quiz/assignment/:quizAssignmentId/page/:page" to="/test/assignment/:quizAssignmentId/page/:page" />,
@@ -118,19 +132,15 @@ export const RoutesPhy = [
     <Redirect key={key++} from="/quiz/attempt/:quizId/page/:page"              to="/test/attempt/:quizId/page/:page" />,
     <Redirect key={key++} from="/quiz/attempt/:quizId"                         to="/test/attempt/:quizId" />,
 
-    // Books
-    <TrackedRoute key={key++} exact path="/books/physics_skills_19" component={PhysicsSkills19}/>,
-    <TrackedRoute key={key++} exact path="/books/phys_book_gcse" component={PhysBookGcse}/>,
-    <TrackedRoute key={key++} exact path="/books/physics_skills_14" component={PhysicsSkills14}/>,
-    <TrackedRoute key={key++} exact path="/books/pre_uni_maths" component={PreUniMaths}/>,
-    <TrackedRoute key={key++} exact path="/books/pre_uni_maths_2e" component={PreUniMaths2e}/>,
-    <TrackedRoute key={key++} exact path="/books/chemistry_16" component={Chemistry16}/>,
-    <TrackedRoute key={key++} exact path="/books/quantum_mechanics_primer" component={QuantumMechanicsPrimer}/>,
-    <TrackedRoute key={key++} exact path="/books/solve_physics_problems" component={SolvingPhysProblems}/>,
-    <TrackedRoute key={key++} exact path="/books/maths_book_gcse" component={MathsBookGcse}/>,
-    <TrackedRoute key={key++} exact path="/books/phys_book_yr9" component={PhysBookYrNine}/>,
-    <TrackedRoute key={key++} exact path="/books/step_up_phys" component={StepUpPhys}/>,
-    <TrackedRoute key={key++} exact path="/books/linking_concepts" component={LinkingConcepts}/>,
+    // Books (old)
+    ...(Object.entries(old_books).map(([path, component]) => [
+        <TrackedRoute key={key++} exact path={path} component={component} />,
+        <TrackedRoute key={key++} exact path={`${path}/:pageId`} component={component} />,
+    ]).flat()),
+
+    // Books (new)
+    <TrackedRoute key={key++} exact path={"/books/:bookId"} component={Book} />,
+    <TrackedRoute key={key++} exact path={"/books/:bookId/:pageId"} component={Book} />,
 
     // Subject-stage pages -- see subjectSpecificPages, defined above
     ...(Object.entries(subjectStagePairPages).map(([path, component]) => (
@@ -179,9 +189,13 @@ export const RoutesPhy = [
 
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,
-    <Redirect key={key++} exact from="/boards" to="/my_gameboards" />,
+    <Redirect key={key++} exact from="/boards" to={PATHS.MY_GAMEBOARDS} />,
+    <Redirect key={key++} exact from="/my_gameboards" to={PATHS.MY_GAMEBOARDS} />,
     <Redirect key={key++} exact from="/game_builder" to={PATHS.GAMEBOARD_BUILDER} />,
+    <Redirect key={key++} exact from="/gameboard_builder" to={PATHS.GAMEBOARD_BUILDER} />,
+    <Redirect key={key++} exact from="/add_gameboard/:id" to={`${PATHS.ADD_GAMEBOARD}/:id`} />,
     <Redirect key={key++} exact from="/board/:id" to={`${PATHS.GAMEBOARD}#:id`} />,
+    <Redirect key={key++} exact from="/gameboards" to={{pathname: PATHS.GAMEBOARD, hash: window.location.hash}} />,
     <Redirect key={key++} exact from="/gcsebook" to="/books/phys_book_gcse" />,
     <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_14" />,
     <Redirect key={key++} exact from="/book" to="/books/physics_skills_14" />,

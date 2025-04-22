@@ -247,7 +247,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
         <Container>
             <Row>
                 <Col>
-                    <TitleAndBreadcrumb currentPageTitle="Equation editor demo page" />
+                    <TitleAndBreadcrumb currentPageTitle="Equation editor demo page" icon={{type: "hex", icon: "icon-concept"}} />
                 </Col>
             </Row>
             <Row>
@@ -277,7 +277,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                                 placeholder="Type your expression here"/>
                             <>
                                 {siteSpecific(
-                                    <Button type="button" className="eqn-editor-help pt-2" id="inequality-help" size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>,
+                                    <Button type="button" className="eqn-editor-help d-flex align-items-center" id="inequality-help" size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>,
                                     <span id={"inequality-help"} className="icon-help-q my-auto ms-2"/>
                                 )}
                                 <UncontrolledTooltip placement="top" autohide={false} target='inequality-help'>

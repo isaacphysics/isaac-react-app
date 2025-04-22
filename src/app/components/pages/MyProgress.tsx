@@ -105,133 +105,125 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
     return <Container id="my-progress" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} disallowLaTeX />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-progress"}} disallowLaTeX />
         <Card className="mt-4">
             <CardBody>
-                <Tabs tabContentClass="mt-3">{{
-                    "Question activity": <div>
+                <div>
+                    <Row>
+                        <Col>
+                            <AggregateQuestionStats userProgress={progress} />
+                        </Col>
+                        {isPhy && <Col className="align-self-center" xs={12} md={3}>
+                            <StreakPanel userProgress={progress} />
+                        </Col>}
+                    </Row>
+
+                    <Card className="mt-4">
+                        <CardBody>
+                            <Tabs tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
+                                const flush = tabRefs[tabIndex - 1].current;
+                                if (flush) {
+                                    // Don't call the flush in an event handler that causes the render, that's too early.
+                                    // Call it once that's done.
+                                    requestAnimationFrame(() => {
+                                        flush();
+                                        // You'd think this wouldn't do anything, but it fixes the vertical position of the
+                                        // legend. I'm beginning to dislike this library.
+                                        flush();
+                                    });
+                                }
+                            }}>
+                                {{
+                                    "Correct questions": <QuestionProgressCharts
+                                        subId="correct"
+                                        questionsByTag={(progress?.correctByTag) || {}}
+                                        questionsByLevel={(progress?.correctByLevel) || {}}
+                                        questionsByStageAndDifficulty={(progress?.correctByStageAndDifficulty) || {}}
+                                        flushRef={tabRefs[0]} />,
+                                    "Attempted questions": <QuestionProgressCharts
+                                        subId="attempted"
+                                        questionsByTag={(progress?.attemptsByTag) || {}}
+                                        questionsByLevel={(progress?.attemptsByLevel) || {}}
+                                        questionsByStageAndDifficulty={(progress?.attemptsByStageAndDifficulty) || {}}
+                                        flushRef={tabRefs[1]}/>
+                                }}
+                            </Tabs>
+                        </CardBody>
+                    </Card>
+
+                    <div className="mt-4">
+                        <h4>Question parts correct by Type</h4>
                         <Row>
-                            <Col>
-                                <AggregateQuestionStats userProgress={progress} />
-                            </Col>
-                            {isPhy && <Col className="align-self-center" xs={12} md={3}>
-                                <StreakPanel userProgress={progress} />
-                            </Col>}
+                            {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
+                                const correct = progress?.correctByType?.[qType] || null;
+                                const attempts = progress?.attemptsByType?.[qType] || null;
+                                const percentage = safePercentage(correct, attempts);
+                                return <Col key={qType} className={`${siteSpecificStats.typeColWidth} mt-2 type-progress-bar`}>
+                                    <div className={"px-2"}>
+                                        {HUMAN_QUESTION_TYPES[qType]} questions correct
+                                    </div>
+                                    <div className={"px-2"}>
+                                        <ProgressBar percentage={percentage || 0}>
+                                            {percentage == null ? "No data" : `${correct} of ${attempts}`}
+                                        </ProgressBar>
+                                    </div>
+                                </Col>;
+                            })}
                         </Row>
+                    </div>
 
-                        <Card className="mt-4">
-                            <CardBody>
-                                <Tabs tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
-                                    const flush = tabRefs[tabIndex - 1].current;
-                                    if (flush) {
-                                        // Don't call the flush in an event handler that causes the render, that's too early.
-                                        // Call it once that's done.
-                                        requestAnimationFrame(() => {
-                                            flush();
-                                            // You'd think this wouldn't do anything, but it fixes the vertical position of the
-                                            // legend. I'm beginning to dislike this library.
-                                            flush();
-                                        });
-                                    }
-                                }}>
-                                    {{
-                                        "Correct questions": <QuestionProgressCharts
-                                            subId="correct"
-                                            questionsByTag={(progress?.correctByTag) || {}}
-                                            questionsByLevel={(progress?.correctByLevel) || {}}
-                                            questionsByStageAndDifficulty={(progress?.correctByStageAndDifficulty) || {}}
-                                            flushRef={tabRefs[0]} />,
-                                        "Attempted questions": <QuestionProgressCharts
-                                            subId="attempted"
-                                            questionsByTag={(progress?.attemptsByTag) || {}}
-                                            questionsByLevel={(progress?.attemptsByLevel) || {}}
-                                            questionsByStageAndDifficulty={(progress?.attemptsByStageAndDifficulty) || {}}
-                                            flushRef={tabRefs[1]}/>
-                                    }}
-                                </Tabs>
-                            </CardBody>
-                        </Card>
+                    {isPhy && <div className="mt-4">
+                        <h4>Isaac Books</h4>
+                        Questions completed correctly, against questions attempted for each of our <a href={"/pages/order_books"}>mastery books</a>.
+                        <Row>
+                            {Object.entries(siteSpecificStats.questionCountByTag).map(([qType, total]) => {
+                                const correct = Math.min(progress?.correctByTag?.[qType] || 0, total);
+                                const attempted = Math.min(progress?.attemptsByTag?.[qType] || 0, total);
+                                const correctPercentage = safePercentage(correct, total) || 0;
+                                const attemptedPercentage = safePercentage(attempted, total) || 0;
+                                return total > 0 && <Col key={qType} className={`${siteSpecificStats.tagColWidth} mt-2 type-progress-bar`}>
+                                    <div className={"px-2"}>
+                                        {HUMAN_QUESTION_TAGS.get(qType)} questions
+                                    </div>
+                                    <div className={"px-2"}>
+                                        <ProgressBar percentage={correctPercentage} primaryTitle={`${correct} correct out of ${total}`} secondaryPercentage={attemptedPercentage} secondaryTitle={`${attempted} attempted out of ${total}`} type={qType}>
+                                            <span aria-hidden>{`${correct} of ${total}`}</span>
+                                        </ProgressBar>
+                                    </div>
+                                </Col>;
+                            })}
+                        </Row>
+                    </div>}
 
-                        <div className="mt-4">
-                            <h4>Question parts correct by Type</h4>
-                            <Row>
-                                {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
-                                    const correct = progress?.correctByType?.[qType] || null;
-                                    const attempts = progress?.attemptsByType?.[qType] || null;
-                                    const percentage = safePercentage(correct, attempts);
-                                    return <Col key={qType} className={`${siteSpecificStats.typeColWidth} mt-2 type-progress-bar`}>
-                                        <div className={"px-2"}>
-                                            {HUMAN_QUESTION_TYPES[qType]} questions correct
-                                        </div>
-                                        <div className={"px-2"}>
-                                            <ProgressBar percentage={percentage || 0}>
-                                                {percentage == null ? "No data" : `${correct} of ${attempts}`}
-                                            </ProgressBar>
-                                        </div>
-                                    </Col>;
-                                })}
-                            </Row>
+                    {answeredQuestionsByDate && <div className="mt-4">
+                        <h4>Question attempts over time</h4>
+                        <div>
+                            <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
                         </div>
-
-                        {isPhy && <div className="mt-4">
-                            <h4>Isaac Books</h4>
-                            Questions completed correctly, against questions attempted for each of our <a href={"/pages/order_books"}>mastery books</a>.
-                            <Row>
-                                {Object.entries(siteSpecificStats.questionCountByTag).map(([qType, total]) => {
-                                    const correct = Math.min(progress?.correctByTag?.[qType] || 0, total);
-                                    const attempted = Math.min(progress?.attemptsByTag?.[qType] || 0, total);
-                                    const correctPercentage = safePercentage(correct, total) || 0;
-                                    const attemptedPercentage = safePercentage(attempted, total) || 0;
-                                    return total > 0 && <Col key={qType} className={`${siteSpecificStats.tagColWidth} mt-2 type-progress-bar`}>
-                                        <div className={"px-2"}>
-                                            {HUMAN_QUESTION_TAGS.get(qType)} questions
-                                        </div>
-                                        <div className={"px-2"}>
-                                            <ProgressBar percentage={correctPercentage} primaryTitle={`${correct} correct out of ${total}`} secondaryPercentage={attemptedPercentage} secondaryTitle={`${attempted} attempted out of ${total}`} type={qType}>
-                                                <span aria-hidden>{`${correct} of ${total}`}</span>
-                                            </ProgressBar>
-                                        </div>
-                                    </Col>;
-                                })}
-                            </Row>
-                        </div>}
-
-                        {answeredQuestionsByDate && <div className="mt-4">
-                            <h4>Question attempts over time</h4>
-                            <div>
-                                <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
-                            </div>
-                        </div>}
-                        <Row id="progress-questions">
-                            {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
-                                <h4>Most recently answered questions</h4>
-                                {isPhy ? 
-                                    <ListView items={progress.mostRecentQuestions} fullWidth={below["lg"](screenSize)}/> :
-                                    <LinkToContentSummaryList 
-                                        items={progress.mostRecentQuestions} 
-                                        contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN} 
-                                        ignoreIntendedAudience
-                                    />}
-                            </Col>}
-                            {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
-                                <h4>Oldest unsolved questions</h4>
-                                {isPhy ? 
-                                    <ListView items={progress.oldestIncompleteQuestions} fullWidth={below["lg"](screenSize)}/> :
-                                    <LinkToContentSummaryList 
-                                        items={progress.oldestIncompleteQuestions} 
-                                        contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN} 
-                                        ignoreIntendedAudience
-                                    />}
-                            </Col>}
-                        </Row>
-                    </div>,
-                    ...(isPhy && viewingOwnData && isTeacherOrAbove(user) && {"Teacher Activity": <div>
-                        <Alert color="danger" className="mt-4">
-                            We have now removed these teacher activity badges. Use the contact form
-                            to <a href="/contact?subject=Teacher%20Badges">send us any feedback about badges</a>.
-                        </Alert>
-                    </div>}),
-                }}</Tabs>
+                    </div>}
+                    <Row id="progress-questions">
+                        {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
+                            <h4>Most recently answered questions</h4>
+                            {isPhy ?
+                                <ListView items={progress.mostRecentQuestions} fullWidth={below["lg"](screenSize)}/> :
+                                <LinkToContentSummaryList
+                                    items={progress.mostRecentQuestions}
+                                    contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN}
+                                    ignoreIntendedAudience
+                                />}
+                        </Col>}
+                        {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
+                            <h4>Oldest unsolved questions</h4>
+                            {isPhy ?
+                                <ListView items={progress.oldestIncompleteQuestions} fullWidth={below["lg"](screenSize)}/> :
+                                <LinkToContentSummaryList
+                                    items={progress.oldestIncompleteQuestions}
+                                    contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN}
+                                    ignoreIntendedAudience
+                                />}
+                        </Col>}
+                    </Row>
+                </div>
             </CardBody>
         </Card>
     </Container>;

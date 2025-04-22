@@ -165,7 +165,7 @@ export const MyGameboards = () => {
     }, [boards]);
 
     const pageHelp = <span>
-        A summary of your {siteSpecific("gameboards", "quizzes")}
+        A summary of your {siteSpecific("question decks", "quizzes")}
     </span>;
 
     const tableProps: GameboardsTableProps = {
@@ -181,7 +181,7 @@ export const MyGameboards = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My gameboards", "My quizzes")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
         <PageFragment fragmentId={`${siteSpecific("gameboards", "quizzes")}_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
         <SidebarLayout>
             <MyGameboardsSidebar
@@ -194,13 +194,13 @@ export const MyGameboards = () => {
             <MainContent>
                 {boards && boards.totalResults == 0 ?
                     <>
-                        <h3 className="text-center mt-4">You have no {siteSpecific("gameboards", "quizzes")} to view.</h3>
+                        <h3 className="text-center mt-4">You have no {siteSpecific("question decks", "quizzes")} to view.</h3>
                     </>
                     :
                     <>
                         <div className="mt-4 mb-2">
                             {boards 
-                                ? <h4>Showing <strong>{inProgress + notStarted}</strong> {siteSpecific("gameboards", "quizzes")}, with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>
+                                ? <h4>Showing <strong>{inProgress + notStarted}</strong> {siteSpecific("question decks", "quizzes")}, with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>
                                 : <IsaacSpinner size="sm" inline />
                             }
                         </div>

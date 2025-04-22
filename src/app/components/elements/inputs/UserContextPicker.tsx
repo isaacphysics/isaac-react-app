@@ -22,7 +22,7 @@ import classNames from "classnames";
 const contextExplanationMap: {[key in CONTEXT_SOURCE]: string} = {
     [CONTEXT_SOURCE.TRANSIENT]: "these context picker settings",
     [CONTEXT_SOURCE.REGISTERED]: "your account settings",
-    [CONTEXT_SOURCE.GAMEBOARD]: `the ${siteSpecific("gameboard", "quiz")} settings`,
+    [CONTEXT_SOURCE.GAMEBOARD]: `the ${siteSpecific("question deck", "quiz")} settings`,
     [CONTEXT_SOURCE.DEFAULT]: `${SITE_TITLE_SHORT}'s default settings`,
     [CONTEXT_SOURCE.NOT_IMPLEMENTED]: "the site's settings"
 };

@@ -1,15 +1,16 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { openActiveModal, selectors, showErrorToast, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
+import { selectors, useAppDispatch, useAppSelector, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row, UncontrolledTooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { convertAssignmentToQuiz, filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTeacherOrAbove, PATHS, QuizStatus, sortUpcomingAssignments, useDeviceSize } from '../../services';
-import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
+import { convertAssignmentToQuiz, filterAssignmentsByStatus, isAssignment, isDefined, isLoggedIn, isOverdue, isQuiz, isTutorOrAbove, PATHS, QuizStatus, sortUpcomingAssignments, useDeviceSize } from '../../services';
 import { AssignmentDTO, IAssignmentLike, QuizAssignmentDTO } from '../../../IsaacApiTypes';
 import { getActiveWorkCount } from '../navigation/NavigationBar';
 import { Spacer } from './Spacer';
 import classNames from 'classnames';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
+import { authenticateWithTokenAfterPrompt } from './panels/TeacherConnections';
+import { getFriendlyDaysUntil } from './DateString';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -17,23 +18,10 @@ const GroupJoinPanel = () => {
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
     const [authenticationToken, setAuthenticationToken] = useState<string | null>();
 
-    const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
-        if (!token) {
-            dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
-            return;
-        }
-        else {
-            const {data: usersToGrantAccess} = await getTokenOwner(token);
-            if (usersToGrantAccess && usersToGrantAccess.length) {
-                dispatch(openActiveModal(tokenVerificationModal(userId, token, usersToGrantAccess)));
-            }
-        }
-    };
-
     function processToken(event: React.FormEvent<HTMLFormElement | HTMLButtonElement | HTMLInputElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
         if (user && user.loggedIn && user.id && isDefined(authenticationToken)) {
-            authenticateWithTokenAfterPrompt(user.id, authenticationToken);
+            authenticateWithTokenAfterPrompt(user.id, authenticationToken, dispatch, getTokenOwner);
         }
     }
 
@@ -86,7 +74,7 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
         </div>
         <Spacer/>
         <Button className="numeric-help d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
-            <i className="icon icon-info icon-color-grey"/> What is this?
+            <i className="icon icon-info layered icon-color-grey"/> What is this?
         </Button>
         {tooltip}
     </div>;
@@ -100,9 +88,7 @@ interface AssignmentCardProps {
 
 export const AssignmentCard = (props: AssignmentCardProps) => {
     const { assignment, isTeacherDashboard, groups } = props;
-    const today = new Date();
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
-    const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
 
     // QuizAssignmentDTOs don't have group names
     const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
@@ -131,7 +117,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
             </h5>
             <Spacer/>
             <div className="d-flex text-nowrap">
-                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
+                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due {getFriendlyDaysUntil(dueDate)}</span>)}
                 <span className="group-name">{groupName}</span>
             </div>
         </Card>
@@ -195,8 +181,8 @@ const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
     return <div className='w-100 dashboard-panel'>
         <h4>More in My Isaac</h4>
         <div className="d-flex flex-column">
-            <Link to="/my_gameboards" className="panel-my-isaac-link">
-                My question packs
+            <Link to={PATHS.MY_GAMEBOARDS} className="panel-my-isaac-link">
+                My question decks
             </Link>
             <Link to="/assignments" className="panel-my-isaac-link">
                 My assignments
@@ -227,11 +213,11 @@ interface StudentDashboardProps {
 export const StudentDashboard = ({assignments, quizAssignments, streakRecord, groups}: StudentDashboardProps) => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
-    const nameToDisplay = isLoggedIn(user) && !isTeacherOrAbove(user) && user.givenName;
+    const nameToDisplay = isLoggedIn(user) && !isTutorOrAbove(user) && user.givenName;
 
     const {assignmentsCount, quizzesCount} = getActiveWorkCount(assignments, quizAssignments);
 
-    return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTeacherOrAbove(user)})}>
+    return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
         {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
         {deviceSize === "lg"
             ? <>

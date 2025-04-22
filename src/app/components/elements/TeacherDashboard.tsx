@@ -2,14 +2,15 @@ import React, { ChangeEvent, useState } from 'react';
 import { selectors, useAppSelector } from '../../state';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
+import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, isOverdue, isTutor, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
 import { AssignmentDTO, QuizAssignmentDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
-import { StyledDropdown } from './inputs/DropdownInput';
 import StyledToggle from './inputs/StyledToggle';
 import { AssignmentCard, StudentDashboard } from './StudentDashboard';
 import sortBy from 'lodash/sortBy';
 import { Spacer } from './Spacer';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
+import { useStatefulElementRef } from './markup/portals/utils';
+import { ScrollShadows } from './ScrollShadows';
 
 interface GroupsPanelProps {
     groups: AppGroup[] | undefined;
@@ -19,7 +20,7 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
     const sortedGroups = sortBy(groups, g => g.created).reverse().slice(0, 5);
 
     return <div className="dashboard-panel">
-        <h4>Manage my groups</h4>
+        <h4>Manage group progress</h4>
         {sortedGroups.length ?
             <>
                 <div className="overflow-hidden">
@@ -27,8 +28,11 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
                 </div>
                 <Spacer/>
                 <Link to="/groups" className="d-inline panel-link mt-3">See all groups</Link>
-            </>
-            : <div className="text-center mt-lg-3">You have no active groups.<Button tag={Link} to="/groups" size="sm" className="mt-3">Create new group</Button></div>}
+            </> :
+            <>
+                <div className="text-center mt-lg-3">You have no active groups.</div>
+                <div className="text-center"><Button tag={Link} to="/groups" size="sm" className="mt-3">Create new group</Button></div>
+            </>}
     </div>;
 };
 
@@ -39,15 +43,16 @@ interface AssignmentsPanelProps {
 };
 
 const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProps) => {
-    
+    const user = useAppSelector(selectors.user.orNull);
+
     if (!isDefined(assignments) || !isDefined(quizzes)) {
         return <div className="dashboard-panel"/>;
     }
     
-    const upcomingAssignments = assignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
+    const upcomingAssignments = assignments?.filter(a => !isOverdue(a)); // Filter out past assignments
     const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
 
-    const upcomingQuizAssignments = quizzes?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past quizzes
+    const upcomingQuizAssignments = quizzes?.filter(a => !isOverdue(a)); // Filter out past quizzes
     const sortedQuizAssignments = upcomingQuizAssignments ? sortUpcomingAssignments(upcomingQuizAssignments) : [];
 
     // Get the 3 most urgent due dates from assignments & quizzes combined
@@ -57,7 +62,7 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
     const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
     return <div className="dashboard-panel">
-        <h4>Assignment schedule</h4>
+        <h4>View scheduled work</h4>
         {soonestDeadlines.length ? soonestDeadlines.map(assignment => <div className="mb-3" key={assignment.id}><AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} /></div>)
             : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>}
         <Spacer/>
@@ -65,21 +70,26 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
             <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
                 See all assignments
             </Link>
-            <Link to="/set_tests#manage" className="d-inline text-center panel-link ms-auto">
+            {!isTutor(user) && <Link to="/set_tests#manage" className="d-inline text-center panel-link ms-auto">
                 See all tests
-            </Link>
+            </Link>}
         </div>
     </div>;
 };
 
 const MyIsaacPanel = () => {
+    const user = useAppSelector(selectors.user.orNull);
     return <div className='dashboard-panel'>
         <h4>More in My Isaac</h4>
         <div className="d-flex flex-column">
             <div className="col">
-                <Link to="/teacher_features" className='d-block panel-my-isaac-link'>
-                    Teacher features
-                </Link>
+                {isTutor(user) 
+                    ? <Link to="/tutor_features" className='d-block panel-my-isaac-link'>
+                        Tutor features
+                    </Link>
+                    : <Link to="/teacher_features" className='d-block panel-my-isaac-link'>
+                        Teacher features
+                    </Link>}
                 <Link to="/groups" className='d-block panel-my-isaac-link'>
                     Manage groups
                 </Link>
@@ -92,9 +102,10 @@ const MyIsaacPanel = () => {
                 <Link to="/assignment_progress" className='d-block panel-my-isaac-link'>
                     Assignment progress
                 </Link>
-                <Link to="/set_tests" className='d-block panel-my-isaac-link'>
-                    Set / manage tests
-                </Link>
+                {!isTutor(user) &&
+                    <Link to="/set_tests" className='d-block panel-my-isaac-link'>
+                        Set / manage tests
+                    </Link>}
             </div>
         </div>
         <div className="section-divider" />
@@ -117,27 +128,30 @@ const BookCard = ({title, image, path}: BookInfo) => {
 
 const BooksPanel = () => {
     const [subject, setSubject] = useState<Subject | "all">("all");
+    const [scrollRef, setScrollRef] = useStatefulElementRef<HTMLElement>();
+
     return <div className="w-100 dashboard-panel book-panel">
         <div className="d-flex align-items-center">
-            <h4>Books</h4>
-            <div className="w-50 ms-auto">
-                <StyledDropdown value={subject}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSubject(e.target.value as Subject)}>
-                    <option value="all">All</option>
-                    <option value="physics">Physics</option>
-                    <option value="maths">Maths</option>
-                    <option value="chemistry">Chemistry</option>
-                    {/* No biology books */}
-                </StyledDropdown>
-            </div>
+            <h4>Explore our books</h4>
+            <Spacer/>
+            <select className="books-select ms-2 mb-3" value={subject}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => setSubject(e.target.value as Subject)}>
+                <option value="all">All</option>
+                <option value="physics">Physics</option>
+                <option value="maths">Maths</option>
+                <option value="chemistry">Chemistry</option>
+                {/* No biology books */}
+            </select>
         </div>
-        <Row className="mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
+        <div ref={setScrollRef} className="row position-relative mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
+            {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
+            {window.ResizeObserver && <ScrollShadows element={scrollRef ?? undefined} shadowType="dashboard-scroll-shadow" />}
             {ISAAC_BOOKS.filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2 me-1 p-0">
                         <BookCard {...book}/>
                     </Col>)}
-        </Row>
+        </div>
         <Spacer/>
         <Link to="/publications" className="d-inline panel-link">See all books</Link>
     </div>;
@@ -166,7 +180,7 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
                 <div className="text-center">Dashboard view</div>
                 <StyledToggle
                     checked={dashboardView === "student"}
-                    falseLabel="Teacher"
+                    falseLabel={isTutor(user) ? "Tutor" : "Teacher"}
                     trueLabel="Student"
                     onChange={() => setDashboardView(studentView => studentView === "teacher" ? "student" : "teacher")}             
                 />

@@ -3,7 +3,7 @@ import {clearQuizAttempt, loadQuizAssignmentAttempt, useAppDispatch} from "../..
 import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {getThemeFromTags, isDefined, useCurrentQuizAttempt} from "../../../services";
-import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps} from "../../elements/quiz/QuizAttemptComponent";
+import {myQuizzesCrumbs, QuizContentsComponent, QuizAttemptProps} from "../../elements/quiz/QuizContentsComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
@@ -38,14 +38,14 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
     // Importantly, these are only used if attempt is defined
     const subProps: QuizAttemptProps & {feedbackLink: string} = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user, feedbackLink};
 
-    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`} data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
+    return <Container className="mb-5" data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
         <ShowLoading until={attempt || error}>
             {attempt && <>
-                <QuizAttemptComponent {...subProps} />
+                <QuizContentsComponent {...subProps} />
                 <QuizAttemptFooter {...subProps} />
             </>}
             {error && <>
-                <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} />
+                <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "hex", icon: "icon-error"}} />
                 <Alert color="danger">
                     <h4 className="alert-heading">Error loading assignment!</h4>
                     <p>{error}</p>

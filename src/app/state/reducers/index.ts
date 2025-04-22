@@ -8,8 +8,7 @@ import {
     printingSettingsSlice,
     transientUserContextSlice,
     glossaryTerms,
-    concepts,
-    doc,
+    docSlice,
     questions,
     activeModals,
     notifications,
@@ -30,6 +29,7 @@ import {
     userSlice,
     interstitialCookieSlice,
     pageContextSlice,
+    linkableSettingSlice,
 } from "../index";
 
 export const rootReducer = combineReducers({
@@ -57,8 +57,7 @@ export const rootReducer = combineReducers({
     glossaryTerms,
 
     // Content
-    doc,
-    concepts,
+    page: docSlice.reducer,
 
     // Question
     questions,
@@ -91,6 +90,9 @@ export const rootReducer = combineReducers({
 
     // Context
     pageContext: pageContextSlice.reducer,
+
+    // Linkable settings
+    linkableSetting: linkableSettingSlice.reducer,
 
     // API reducer
     [isaacApi.reducerPath]: isaacApi.reducer

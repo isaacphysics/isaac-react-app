@@ -10,7 +10,7 @@ export const SessionCookieExpired = () => {
 
     return <Container>
         <div>
-            <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired" currentPageTitle="Your session has expired"/>
+            <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired" currentPageTitle="Your session has expired" icon={{type: "hex", icon: "icon-error"}}/>
             <p className="pb-2">{`Sorry, your ${SITE_TITLE} session has expired. Please log in again to continue.`}</p>
             <Button color="primary" href="/login">Back to login</Button>
         </div>

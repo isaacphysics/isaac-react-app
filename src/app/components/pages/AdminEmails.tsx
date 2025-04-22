@@ -40,7 +40,10 @@ export const AdminEmails = (props: AdminEmailsProps) => {
     }, [user]);
 
     return <Container id="admin-emails-page">
-        <TitleAndBreadcrumb currentPageTitle="Admin emails" />
+        <TitleAndBreadcrumb 
+            currentPageTitle="Admin emails" 
+            icon={{type: "hex", icon: "icon-contact"}}
+        />
 
         <Card className="p-3 my-3">
             <CardTitle tag="h2">User selection</CardTitle>
@@ -95,7 +98,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                     <Col>
                         <Input
                             type="submit" value="Load template"
-                            className={"btn w-100 btn-secondary border-0 " + classnames({disabled: contentObjectID.length == 0})}
+                            className={"btn btn-secondary " + classnames({disabled: contentObjectID.length == 0})}
                             disabled={contentObjectID.length == 0}
                             onClick={() => getEmailTemplate(contentObjectID)}
                         />
@@ -148,7 +151,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                             </div>}
                             <Input
                                 type="button" value="Send emails"
-                                className={"btn btn-xl btn-secondary border-0 " + classnames({disabled: !canSubmit})}
+                                className={"btn btn-xl btn-secondary " + classnames({disabled: !canSubmit})}
                                 disabled={!canSubmit}
                                 onClick={() => {
                                     if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${numberOfUsers} user${numberOfUsers > 1 ? "s" : ""}?`)) {

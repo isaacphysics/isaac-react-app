@@ -2,8 +2,8 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacBookIndexPageDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -15,15 +15,17 @@ import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
-import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
+import { QuizRubricButton, QuizView, SectionProgress } from "../quiz/QuizContentsComponent";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { formatISODateOnly, getFriendlyDaysUntil } from "../DateString";
 import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
 import { StyledSelect } from "../inputs/StyledSelect";
+import { CollapsibleList } from "../CollapsibleList";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { getProgressIcon } from "../../pages/Gameboard";
+import { tags as tagsService } from "../../../services";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -69,9 +71,7 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Isaa
     </li>;
 };
 
-interface SidebarProps extends ColProps {
-
-}
+type SidebarProps = ColProps
 
 const NavigationSidebar = (props: SidebarProps) => {
     // A navigation sidebar is used for external links that are supplementary to the main content (e.g. related content);
@@ -93,15 +93,17 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(m => !m);
 
+    const pageTheme = useAppSelector(selectors.pageContext.subject);
+
     if (isAda) return <></>;
 
     const { className, buttonTitle, ...rest } = props;
     return <>
         {above['lg'](deviceSize) 
-            ? <Col lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
+            ? <Col data-testId="sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
                 <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
-                    <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
+                    <AffixButton data-testId="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
                         affix: "icon-sidebar", 
                         position: "prefix", 
                         type: "icon"
@@ -109,7 +111,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                         {buttonTitle ?? "Search and filter"}
                     </AffixButton>
                 </div>
-                <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root">
+                <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
                             <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
@@ -510,7 +512,7 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
         <Input
             className='search--filter-input my-4'
             type="search" value={internalSearchText || ""}
-            placeholder="e.g. Man vs. Horse"
+            placeholder={`e.g. ${getQuestionPlaceholder(pageContext)}`}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 setInternalSearchText(e.target.value);
                 setSearchText(e.target.value);
@@ -683,7 +685,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
-        <h5>Search gameboards</h5>
+        <h5>Search question decks</h5>
         <Input
             className='search--filter-input my-3'
             type="search" value={boardTitleFilter || ""}
@@ -735,7 +737,7 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
-        <h5>Search gameboards</h5>
+        <h5>Search question decks</h5>
         <Input
             className='search--filter-input my-3'
             type="search" value={boardTitleFilter || ""}
@@ -770,13 +772,12 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
             ).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
         </Input>
         {sortDisabled && <div className="small text-muted mt-2">
-            Sorting is disabled if some gameboards are hidden. Increase the display limit to show all gameboards.
+            Sorting is disabled if some question decks are hidden. Increase the display limit to show all question decks.
         </div>}
     </ContentSidebar>;
 };
 
 interface QuizSidebarProps extends SidebarProps {
-    attempt: QuizAttemptDTO;
     viewingAsSomeoneElse: boolean;
     totalSections: number;
     currentSection?: number;
@@ -784,16 +785,37 @@ interface QuizSidebarProps extends SidebarProps {
     sectionTitles: string[];
 }
 
-export const QuizSidebar = (props: QuizSidebarProps) => {
-    const { attempt, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles } = props;
+export interface QuizSidebarAttemptProps extends QuizSidebarProps {
+    attempt: QuizAttemptDTO;
+    view?: undefined;
+}
+
+export interface QuizSidebarViewProps extends QuizSidebarProps {
+    attempt?: undefined;
+    view: QuizView;
+}
+
+export const Pill = ({ title, theme }: {title: string, theme?: string}) =>
+    <span className="badge rounded-pill bg-theme me-1" data-bs-theme={theme}> 
+        {title}
+    </span>;
+
+export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProps) => {
+    const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
     const deviceSize = useDeviceSize();
     const history = useHistory();
     const location = history.location.pathname;
     const rubricPath = 
         viewingAsSomeoneElse ? location.split("/").slice(0, 6).join("/") :
-            attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
+            attempt && attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
                 location.split("/page")[0];
-
+    const hasSections = totalSections > 0;
+    const tags = attempt ? attempt.quiz?.tags : view.quiz?.tags;
+    const subjects = tagsService.getSubjectTags(tags as TAG_ID[]);
+    const topics = tagsService.getTopicTags(tags as TAG_ID[]);
+    const fields = tagsService.getFieldTags(tags as TAG_ID[]);
+    const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A"}];
+    
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon-correct"
             : sectionStates[section] === SectionProgress.STARTED ? "icon-in-progress"
@@ -801,7 +823,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     };
 
     const switchToPage = (page: string) => {
-        if (viewingAsSomeoneElse || attempt.feedbackMode) {
+        if (viewingAsSomeoneElse || attempt && attempt.feedbackMode) {
             history.push(rubricPath.concat("/", page));
         }
         else {
@@ -810,34 +832,43 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     };
 
     const SidebarContents = () => {
-        return <ContentSidebar buttonTitle="Sections">
+        return <ContentSidebar buttonTitle={hasSections ? "Sections" : "Details"}>
             <div className="section-divider"/>
-            <h5 className="mb-3">Sections</h5>
-            <ul>
-                <li>
-                    <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
-                </li>
-                {Array.from({length: totalSections}, (_, i) => i).map(section => 
-                    <li key={section}>
-                        <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section+1} onClick={() => switchToPage(String(section+1))}
-                            suffix={{icon: progressIcon(section), info: sectionStates[section]}}/>
-                    </li>)}
-            </ul>
+            <h5 className="mb-3">Test</h5>
+            <div className="mb-2">Subject{subjects?.length > 1 && "s"}: {subjects.map(s => <Pill key={s.id} title={s.title} theme={s.id}/>)}</div>
+            <div className="mb-2">Topic{topicsAndFields?.length > 1 && "s"}: {topicsAndFields.map(e => <Pill key={e.id} title={e.title} theme="neutral"/>)}</div>
 
-            <div className="section-divider"/>
-
-            <div className="d-flex flex-column sidebar-key">
-                Key
+            {hasSections && <>
+                <div className="section-divider"/>
+                <h5 className="mb-3">Sections</h5>
                 <ul>
-                    <KeyItem icon="status-in-progress" text="Section in progress"/>
-                    <KeyItem icon="status-correct" text="Section completed"/>
+                    <li>
+                        <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
+                    </li>
+                    {Array.from({length: totalSections}, (_, i) => i).map(section => 
+                        <li key={section}>
+                            <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section+1} onClick={() => switchToPage(String(section+1))}
+                                suffix={{icon: progressIcon(section), info: sectionStates[section]}}/>
+                        </li>)}
                 </ul>
-            </div>
+
+                <div className="section-divider"/>
+
+                <div className="d-flex flex-column sidebar-key">
+                Key
+                    <ul>
+                        <KeyItem icon="status-not-started" text="Section not started"/>
+                        <KeyItem icon="status-in-progress" text="Section in progress"/>
+                        <KeyItem icon="status-correct" text="Section completed"/>
+                    </ul>
+                </div>
+            </>}
+
         </ContentSidebar>;
     };
 
     return <>
-        {below["md"](deviceSize) ?
+        {below["md"](deviceSize) && attempt ?
             <Row className="d-flex align-items-center">
                 <Col>
                     <SidebarContents/>
@@ -957,7 +988,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
     const deviceSize = useDeviceSize();
     
     const dateFilterTypeSelector = (dateFilterType: string, setDateFilterType: React.Dispatch<React.SetStateAction<string>>) => <UncontrolledDropdown>
-        <DropdownToggle className="bg-transparent border-0 px-2" caret>{dateFilterType}</DropdownToggle>
+        <DropdownToggle className="bg-transparent border-0 px-2" color="dropdown" caret>{dateFilterType}</DropdownToggle>
         <DropdownMenu>
             <DropdownItem onClick={() => setDateFilterType('after')}>
                 after
@@ -998,7 +1029,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
             value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
             placeholder="Filter by set date" aria-label="Filter by set date"
         />
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center mt-2">
             <span className="quiz-filter-date-span">Due</span>
             {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
         </div>
@@ -1305,6 +1336,58 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
     </ContentSidebar>;
 };
 
+export interface BookSidebarProps extends SidebarProps {
+    book: IsaacBookIndexPageDTO;
+    urlBookId: string;
+    pageId: string | undefined;
+};
+
+export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
+
+    const [expandedTab, setExpandedTab] = useState<number | undefined>(undefined);
+    useEffect(() => {
+        const activeChapter = book.chapters?.map(chapter => chapter.sections?.some(section => section.bookPageId === pageId)).indexOf(true);
+        setExpandedTab(activeChapter === -1 ? undefined : activeChapter);
+    }, [book.chapters, pageId]);
+
+    const history = useHistory();
+
+    return <ContentSidebar buttonTitle="Contents">
+        <ul className="m-0 p-0">
+            <button className="w-100 d-flex align-items-center p-3 text-start bg-transparent" onClick={() => history.push(`/books/${urlBookId}`)}>
+                <h5 className={classNames("m-0", {"text-theme": pageId === undefined})}>Overview</h5>
+                <Spacer/>
+            </button>
+            {book.chapters?.map((chapter, index) => {
+                const chapterActive = chapter.sections?.some(section => section.bookPageId === pageId);
+
+                return <CollapsibleList
+                    title={<div className="d-flex flex-column gap-2 chapter-title">
+                        <span className="text-theme">Chapter {chapter.label}</span>
+                        <h6 className={classNames("m-0", {"text-theme fw-semibold": chapterActive})}>{chapter.title}</h6>
+                    </div>}
+                    key={index}
+                    expanded={expandedTab === index}
+                    toggle={() => setExpandedTab(expandedTab === index ? undefined : index)}
+                    additionalOffset={"4px"}
+                >
+                    {chapter.sections?.map((section, sectionIndex) =>
+                        <li key={sectionIndex}>
+                            <StyledTabPicker
+                                checkboxTitle={<div className="d-flex">
+                                    <span className="text-theme me-2">{section.label}</span>
+                                    <span className="flex-grow-1">{section.title}</span>
+                                </div>}
+                                checked={pageId === section.bookPageId}
+                                onClick={() => history.push(`/books/${urlBookId}/${section.bookPageId?.slice((book.id?.length ?? 0) + 1)}`)}
+                            />
+                        </li>
+                    )}
+                </CollapsibleList>;
+            })}
+        </ul>
+    </ContentSidebar>;
+};
 
 export const GenericPageSidebar = () => {
     // Default sidebar for general pages that don't have a custom sidebar

@@ -5,7 +5,7 @@ import { isDefined } from "./miscUtils";
 import { useLocation } from "react-router";
 import { HUMAN_STAGES, HUMAN_SUBJECTS } from "./constants";
 import { pageContextSlice, selectors, useAppDispatch, useAppSelector } from "../state";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const filterBySubjects = (tags: (TAG_ID | string)[]): SiteTheme[] => {
     // filtering this const list against the passed-in tags maintains the order (and thus precedence) of the subjects
@@ -47,6 +47,38 @@ export const getThemeFromTags = (tags?: (TAG_ID | string)[]): SiteTheme => {
     
     const subjectTags = filterBySubjects(tags);
     return subjectTags[0] || "neutral";
+};
+
+/**
+ * Gets the page context for the current page, based exclusively on the tags of the content. Used e.g. for books.
+ * 
+ * @param doc - The current page DTO. The tags of this object will be used to determine the new context.
+ * @returns The page context state based on the content object tags.
+ */
+export const useContextFromContentObjectTags = (doc: ContentBaseDTO | undefined): PageContextState => {
+    const dispatch = useAppDispatch();
+    const tags = doc?.tags || [];
+
+    const newContext = { stage: undefined, subject: undefined, previousContext: undefined } as NonNullable<PageContextState>;
+
+    if (tags.length) {
+        newContext.subject = filterBySubjects(tags)[0] as Subject;
+    }
+
+    useEffect(() => {
+        dispatch(pageContextSlice.actions.updatePageContext(newContext));
+
+        return () => {
+            dispatch(pageContextSlice.actions.updatePageContext({
+                subject: undefined,
+                stage: undefined,
+                previousContext: newContext,
+            }));
+        };
+    }
+    , [dispatch, doc]);
+
+    return useAppSelector(selectors.pageContext.context);
 };
 
 function determinePageContextFromPreviousPageContext(userContexts: readonly UserContext[] | undefined, previousContext: PageContextState, doc: ContentBaseDTO | undefined): PageContextState {

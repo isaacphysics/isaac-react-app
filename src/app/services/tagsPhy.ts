@@ -1,6 +1,6 @@
 import {AbstractBaseTagService, subject, TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag} from "../../IsaacAppTypes";
-import {ContentDTO} from "../../IsaacApiTypes";
+import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 
 const softHyphen = "\u00AD";
 
@@ -189,7 +189,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}
-    public augmentDocWithSubject<T extends ContentDTO>(doc: T) {
+    public augmentDocWithSubject<T extends ContentDTO | ContentSummaryDTO>(doc: T) {
         const documentSubject = this.getPageSubjectTag((doc.tags || []) as TAG_ID[]);
         return {...doc, subjectId: documentSubject && documentSubject.id};
     }

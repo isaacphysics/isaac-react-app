@@ -1,6 +1,6 @@
 import React, {RefObject, useContext, useEffect} from 'react';
 import {AnvilAppDTO} from "../../../IsaacApiTypes";
-import {AppState, selectors, useAppSelector} from "../../state";
+import {selectors, useAppSelector} from "../../state";
 import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
 import {selectQuestionPart} from "../../services";
 import { AnvilCookieHandler } from '../handlers/InterstitialCookieHandler';
@@ -14,7 +14,7 @@ const sessionIdentifier = Math.random();
 export const AnvilApp = ({doc}: AnvilAppProps) => {
     const baseURL = `https://${doc.appId}.anvil.app/${doc.appAccessKey}?s=new${sessionIdentifier}`;
     const title = doc.value || "Anvil app";
-    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
+    const page = useAppSelector(selectors.doc.get);
     const user = useAppSelector(selectors.user.orNull);
 
     const iframeRef = React.useRef() as RefObject<HTMLIFrameElement>;

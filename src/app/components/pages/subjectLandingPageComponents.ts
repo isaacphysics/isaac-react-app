@@ -73,7 +73,7 @@ const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListVie
         title: "Glossary",
         subtitle: "Explore our glossary of terms and definitions."
     },
-    icon: {type: "hex", icon: "icon-finder"},
+    icon: {type: "hex", icon: "icon-tests"},
     subject: context.subject,
     linkTags: [{tag: "View glossary", url: extendUrl(context, 'glossary')}]
 });
@@ -93,7 +93,7 @@ const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): ListVi
 };
 
 const SPCCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Senior Physics Challenge", "Take your problem solving skills to the next level in the Senior Physics Challenge, a competition open to all UK resident A Level students.", [{tag: "Find out more", url: extendUrl(context, '/pages/spc')}])(context);
+    return ArbitraryPageLinkCard("Senior Physics Challenge", "Take your problem solving skills to the next level in the Senior Physics Challenge, a competition open to all UK resident A Level students.", [{tag: "Find out more", url: '/pages/spc'}])(context);
 };
 
 const MathsSkillsQuestionsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {

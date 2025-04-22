@@ -115,21 +115,17 @@ export const AdminUserManager = () => {
             if (filter && filter !== "postcodeRadius") {
                 hasFilterSet = true;
             }
-        }    
+        }
         if (!hasFilterSet) {
             alert("At least one search filter must be set.");
-        } 
+        }
         else if (searchQuery.postcode && !/^[A-Z]{1,2}[0-9][A-Z0-9]? ?([0-9][A-Z]{2})?$/i.test(searchQuery.postcode)) {
             alert("Postcode input invalid");
-        } 
+        }
         else {
             adminSearchResultsRef.current?.scrollIntoView({behavior: "smooth"});
             searchUsers(searchQuery);
         }
-    };
-
-    const editUser = (userid: number | undefined) => {
-        window.open(`/account?userId=${userid}`, '_blank');
     };
 
     const confirmDeleteUser = (userid?: number) => {
@@ -156,7 +152,7 @@ export const AdminUserManager = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager"/>
+        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager" icon={{type: "hex", icon: "icon-account"}}/>
 
         {/* Search */}
         <Card className="mt-5">
@@ -257,7 +253,7 @@ export const AdminUserManager = () => {
                 <CardFooter>
                     <Row>
                         <Col md={{size: 4, offset: 4}} >
-                            <Input type="submit" value="Search" className="btn w-100 btn-secondary border-0"/>
+                            <Input type="submit" value="Search" className="btn btn-secondary"/>
                         </Col>
                     </Row>
                 </CardFooter>
@@ -305,7 +301,7 @@ export const AdminUserManager = () => {
                         </UncontrolledButtonDropdown>}
                     </Col>
                     <Col>
-                        <Link className="btn float-end btn-secondary border-0" to={{
+                        <Link className="btn btn-secondary float-end" to={{
                             pathname: "/admin/emails",
                             state: {
                                 csvIDs: selectedUserIds
@@ -353,7 +349,7 @@ export const AdminUserManager = () => {
                                                         <Button color="secondary btn-sm m-1" tag={Link} to={`/progress/${user.id}`} target="_blank">
                                                             View
                                                         </Button>
-                                                        <Button color="secondary btn-sm m-1" onClick={() => editUser(user.id)}>
+                                                        <Button color="secondary btn-sm m-1" tag={Link} to={`/account?userId=${user.id}`} target="_blank">
                                                             Edit
                                                         </Button>
                                                         <Button color="secondary btn-sm m-1" onClick={() => confirmDeleteUser(user.id)}>
@@ -388,7 +384,7 @@ export const AdminUserManager = () => {
                 <CardBody>
                     <h3>Merge user accounts</h3>
                     <FormGroup className="form-group">
-                        <InputGroup className={"separate-input-group"}>
+                        <InputGroup className={"separate-input-group d-flex align-items-center"}>
                             <Input
                                 type="text"
                                 placeholder="User ID to keep"
@@ -402,7 +398,7 @@ export const AdminUserManager = () => {
                                 onChange={(e => setMergeSourceId(e.target.value))}
                             />
                             <Button
-                                type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
+                                type="button"
                                 disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
                                 onClick={confirmMergeUsers}
                             >
