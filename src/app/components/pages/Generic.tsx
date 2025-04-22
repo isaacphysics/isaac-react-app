@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
-import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {SeguePageDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
 import {isAda, isPhy, useUrlHashValue} from "../../services";
 import {withRouter} from "react-router-dom";
@@ -47,8 +47,6 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
 
     const pageQuery = useGetGenericPageQuery(pageId);
 
-    console.log(pageQuery);
-
     const hash = useUntilFound(pageQuery.currentData, useUrlHashValue());
 
     useEffect(() => {
@@ -66,7 +64,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
         defaultErrorTitle="Unable to load page"
         ifNotFound={<NotFound />}
         thenRender={supertypedDoc => {
-            const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+            const doc = supertypedDoc as SeguePageDTO & DocumentSubject;
             
             return <Container data-bs-theme={doc.subjectId}>
                 <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} /> {/* TODO add page icon, replace main title with "General"?? */}
