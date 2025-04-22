@@ -28,7 +28,7 @@ interface SectionWithDisplaySettings extends ContentDTO {
     hidden?: boolean;
 }
 export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
-    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
+    const page = useAppSelector(selectors.doc.get);
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
 
