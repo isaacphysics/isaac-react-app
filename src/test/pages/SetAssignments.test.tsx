@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, SOME_FIXED_FUTURE_DATE} from "../dateUtils";
-import {clickButton, renderTestEnvironment, withMockedDate} from "../testUtils";
+import {clickOn, renderTestEnvironment, withMockedDate} from "../testUtils";
 
 import {API_PATH, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
 import { http, HttpHandler, HttpResponse } from "msw";
@@ -183,7 +183,7 @@ describe("SetAssignments", () => {
         expect(allAssignments[0].textContent).toContain(mockActiveGroups[0].groupName);
 
         // Click button
-        await clickButton('Assign to group', Promise.resolve(modal));
+        await clickOn('Assign to group', Promise.resolve(modal));
 
         // Expect request to be sent off with expected parameters
         await waitFor(() => {
@@ -254,7 +254,7 @@ describe("SetAssignments", () => {
 
                 await toggleGroupSelect();
                 await selectGroup(mockActiveGroups[1].groupName);
-                await clickButton('Assign to group', modal());
+                await clickOn('Assign to group', modal());
 
                 await waitFor(() => expect(observer.observedParams![0].dueDate).toEqual(expectedDueDatePosted)); // Sunday
             });
@@ -280,7 +280,7 @@ describe("SetAssignments", () => {
 
                 await toggleGroupSelect();
                 await selectGroup(mockActiveGroups[1].groupName);
-                await clickButton('Assign to group', modal());
+                await clickOn('Assign to group', modal());
 
                 expect(await groupSelector()).toHaveTextContent('Group(s):None');
                 expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');

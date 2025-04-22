@@ -41,7 +41,7 @@ export const assignGameboard = createAsyncThunk(
         const appDispatch = dispatch as AppDispatch;
         if (groups.length === 0) {
             appDispatch(showErrorToast(
-                `${siteSpecific("Gameboard", "Quiz")} assignment failed`,
+                `${siteSpecific("Question Deck", "Quiz")} assignment failed`,
                 "Error: Please choose one or more groups."
             ));
             return rejectWithValue(null);
@@ -88,7 +88,7 @@ export const assignGameboard = createAsyncThunk(
                 // Show each group assignment error in a separate toast
                 failedIds.forEach(({groupId, errorMessage}) => {
                     appDispatch(showErrorToast(
-                        `${siteSpecific("Gameboard", "Quiz")} assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`,
+                        `${siteSpecific("Question Deck", "Quiz")} assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`,
                         errorMessage as string
                     ));
                 });
@@ -129,7 +129,7 @@ export const assignGameboard = createAsyncThunk(
             return newAssignments;
         } else {
             appDispatch(showRTKQueryErrorToastIfNeeded(
-                `${siteSpecific("Gameboard", "Quiz")} assignment${groups.length > 1 ? "(s)" : ""} failed`,
+                `${siteSpecific("Question Deck", "Quiz")} assignment${groups.length > 1 ? "(s)" : ""} failed`,
                 response
             ));
             return rejectWithValue(null);
@@ -143,8 +143,8 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
         if (!isDefined(boardId)) {
             // This really shouldn't happen!
             dispatch(showErrorToast(
-                `${siteSpecific("Gameboard", "Quiz")} deletion failed`,
-                `${siteSpecific("Gameboard", "Quiz")} ID is missing: please contact us about this error.`
+                `${siteSpecific("Question Deck", "Quiz")} deletion failed`,
+                `${siteSpecific("Question Deck", "Quiz")} ID is missing: please contact us about this error.`
             ) as any);
             return rejectWithValue(null);
         }
@@ -159,13 +159,13 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
                 const hasAssignedGroups = (assignmentsByMe?.filter(a => a.gameboardId === boardId) ?? []).length > 0;
                 if (hasAssignedGroups) {
                     if (reduxState && reduxState.user && reduxState.user.loggedIn && isAdminOrEventManager(reduxState.user)) {
-                        if (!confirm(`Warning: You currently have groups assigned to ${boardTitle}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("gameboard", "quiz")} in your assigned gameboards or 'My gameboards' page.`)) {
+                        if (!confirm(`Warning: You currently have groups assigned to ${boardTitle}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("question deck", "quiz")} on the ${siteSpecific("Set assignments", "Manage assignments")} page.`)) {
                             return rejectWithValue(null);
                         }
                     } else {
                         dispatch(showErrorToast(
-                            `${siteSpecific("Gameboard", "Quiz")} deletion not allowed`,
-                            `You have groups assigned to ${boardTitle}. To delete this ${siteSpecific("gameboard", "quiz")}, you must unassign all groups.`
+                            `${siteSpecific("Question Deck", "Quiz")} deletion not allowed`,
+                            `You have groups assigned to ${boardTitle}. To delete this ${siteSpecific("question deck", "quiz")}, you must unassign all groups.`
                         ) as any);
                         return rejectWithValue(null);
                     }
@@ -174,14 +174,14 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
                 return mutationSucceeded(deleteResponse) ? boardId : rejectWithValue(null);
             } else {
                 dispatch(showErrorToast(
-                    `${siteSpecific("Gameboard", "Quiz")} deletion failed`,
-                    `Could not fetch assignments to determine if the ${siteSpecific("gameboard", "quiz")} deletion is safe.`
+                    `${siteSpecific("Question Deck", "Quiz")} deletion failed`,
+                    `Could not fetch assignments to determine if the ${siteSpecific("question deck", "quiz")} deletion is safe.`
                 ) as any);
                 return rejectWithValue(null);
             }
         } catch (e) {
             dispatch(showRTKQueryErrorToastIfNeeded(
-                `${siteSpecific("Gameboard", "Quiz")} deletion failed`,
+                `${siteSpecific("Question Deck", "Quiz")} deletion failed`,
                 e
             ) as any);
             return rejectWithValue(null);

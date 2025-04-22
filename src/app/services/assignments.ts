@@ -15,13 +15,13 @@ function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO
     return {...assignment, startDate: assignmentStartDate};
 }
 
+const now = new Date();
+const midnightLastNight = new Date(now);
+midnightLastNight.setHours(0, 0, 0, 0);
+
 type AssignmentStatus = "inProgressRecent" | "inProgressOld" | "allAttempted" | "allCorrect";
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {
-    const now = new Date();
     const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));
-    // Midnight last night:
-    const midnightLastNight = new Date(now);
-    midnightLastNight.setHours(0, 0, 0, 0);
 
     const myAssignments: Record<AssignmentStatus, (AssignmentDTO & {startDate: Date | number})[]> = {
         inProgressRecent: [],
@@ -118,4 +118,4 @@ export const getAssignmentStartDate = (a: AssignmentDTO): number => (a.scheduled
 
 export const hasAssignmentStarted = (a: AssignmentDTO): boolean => getAssignmentStartDate(a) <= Date.now();
 
-export const isOverdue = (a: IAssignmentLike) =>  a.dueDate && a.dueDate < new Date();
+export const isOverdue = (a: IAssignmentLike) =>  a.dueDate && a.dueDate < midnightLastNight;

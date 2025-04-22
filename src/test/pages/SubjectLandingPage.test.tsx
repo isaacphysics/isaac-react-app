@@ -1,5 +1,5 @@
 import {act, screen} from "@testing-library/react";
-import { clickButton, renderTestEnvironment, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
+import { clickOn, renderTestEnvironment, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults } from "../../mocks/data";
 import { isAda } from "../../app/services";
 import { buildFunctionHandler } from "../../mocks/handlers";
@@ -58,7 +58,7 @@ describe("SubjectLandingPage", () => {
                     await waitForLoaded();
                     await expectInDocument(questions[0].title);
     
-                    await clickButton("Get a different question");
+                    await clickOn("Get a different question");
                     await waitForLoaded();
                     await expectInDocument(questions[1].title);
                     expect(requestCounter.count).toEqual(2);

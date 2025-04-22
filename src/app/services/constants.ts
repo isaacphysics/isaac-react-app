@@ -1127,14 +1127,14 @@ export const NEWS_PODS_PER_PAGE = 12; // <= api.MAX_PODS_TO_RETURN (if lower, th
 
 export const PATHS = siteSpecific({
     ASSIGNMENT_PROGRESS: "/assignment_progress",
-    MY_GAMEBOARDS: "/my_gameboards",
+    MY_GAMEBOARDS: "/my_question_decks",
     MY_ASSIGNMENTS: "/assignments",
     QUESTION_FINDER: "/questions",
-    GAMEBOARD_FILTER: "/gameboards/new",
-    GAMEBOARD: "/gameboards",
+    GAMEBOARD_FILTER: "/question_decks/new",
+    GAMEBOARD: "/question_decks",
     SET_ASSIGNMENTS: "/set_assignments",
-    GAMEBOARD_BUILDER: "/gameboard_builder",
-    ADD_GAMEBOARD: "/add_gameboard",
+    GAMEBOARD_BUILDER: "/question_deck_builder",
+    ADD_GAMEBOARD: "/add_question_deck",
     PREVIEW_TEST: "/test/preview",
     TEST: "/test/assignment",
 }, {
@@ -1165,7 +1165,7 @@ export const NULL_CLOZE_ITEM: ItemDTO = {
 // Matches: all legacy, [inline-question:questionId class="{classes}"]
 export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+)(?<params> *\| *(?<width>w-\d+)?(?<height>h-\d+)?| +class=(?:["']|&apos;|&[rl]?quot;)(?<classes>[a-zA-Z0-9 _-]+?)(?:["']|&apos;|&[rl]?quot;))?\]/g;
 
-export type InlineQuestionType = "isaacStringMatchQuestion" | "isaacNumericQuestion" | "isaacMultiChoiceQuestion";
+export type InlineQuestionType = "isaacStringMatchQuestion" | "isaacNumericQuestion" | "isaacMultiChoiceQuestion" | "isaacRegexMatchQuestion";
 
 export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "RASPBERRYPI": "Raspberry Pi Foundation",

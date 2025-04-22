@@ -54,7 +54,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                                 tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                             >
                                 <title>
-                                    {`${isSelected ? "Remove" : "Add"} difficulty ${difficultyOption.label} ${isSelected ? "from" : "to"} your ${siteSpecific("gameboard", "quiz")} filter`}
+                                    {`${isSelected ? "Remove" : "Add"} difficulty ${difficultyOption.label} ${isSelected ? "from" : "to"} your ${siteSpecific("question deck", "quiz")} filter`}
                                 </title>
                             </Hexagon>
                             {[1, 0, -1].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
@@ -89,7 +89,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                             tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                         >
                             <title>
-                                {`${isSelected ? "Remove" : "Add"} difficulty ${difficultyOption.label} ${isSelected ? "from" : "to"} your ${siteSpecific("gameboard", "quiz")} filter`}
+                                {`${isSelected ? "Remove" : "Add"} difficulty ${difficultyOption.label} ${isSelected ? "from" : "to"} your ${siteSpecific("question deck", "quiz")} filter`}
                             </title>
                         </Rectangle>
                         {[0, 1, 2].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>

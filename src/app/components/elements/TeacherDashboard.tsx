@@ -2,9 +2,8 @@ import React, { ChangeEvent, useState } from 'react';
 import { selectors, useAppSelector } from '../../state';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
+import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, isOverdue, isTutor, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
 import { AssignmentDTO, QuizAssignmentDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
-import { StyledDropdown } from './inputs/DropdownInput';
 import StyledToggle from './inputs/StyledToggle';
 import { AssignmentCard, StudentDashboard } from './StudentDashboard';
 import sortBy from 'lodash/sortBy';
@@ -29,8 +28,11 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
                 </div>
                 <Spacer/>
                 <Link to="/groups" className="d-inline panel-link mt-3">See all groups</Link>
-            </>
-            : <div className="text-center mt-lg-3">You have no active groups.<Button tag={Link} to="/groups" size="sm" className="mt-3">Create new group</Button></div>}
+            </> :
+            <>
+                <div className="text-center mt-lg-3">You have no active groups.</div>
+                <div className="text-center"><Button tag={Link} to="/groups" size="sm" className="mt-3">Create new group</Button></div>
+            </>}
     </div>;
 };
 
@@ -41,15 +43,16 @@ interface AssignmentsPanelProps {
 };
 
 const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProps) => {
-    
+    const user = useAppSelector(selectors.user.orNull);
+
     if (!isDefined(assignments) || !isDefined(quizzes)) {
         return <div className="dashboard-panel"/>;
     }
     
-    const upcomingAssignments = assignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
+    const upcomingAssignments = assignments?.filter(a => !isOverdue(a)); // Filter out past assignments
     const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
 
-    const upcomingQuizAssignments = quizzes?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past quizzes
+    const upcomingQuizAssignments = quizzes?.filter(a => !isOverdue(a)); // Filter out past quizzes
     const sortedQuizAssignments = upcomingQuizAssignments ? sortUpcomingAssignments(upcomingQuizAssignments) : [];
 
     // Get the 3 most urgent due dates from assignments & quizzes combined
@@ -67,21 +70,26 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
             <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
                 See all assignments
             </Link>
-            <Link to="/set_tests#manage" className="d-inline text-center panel-link ms-auto">
+            {!isTutor(user) && <Link to="/set_tests#manage" className="d-inline text-center panel-link ms-auto">
                 See all tests
-            </Link>
+            </Link>}
         </div>
     </div>;
 };
 
 const MyIsaacPanel = () => {
+    const user = useAppSelector(selectors.user.orNull);
     return <div className='dashboard-panel'>
         <h4>More in My Isaac</h4>
         <div className="d-flex flex-column">
             <div className="col">
-                <Link to="/teacher_features" className='d-block panel-my-isaac-link'>
-                    Teacher features
-                </Link>
+                {isTutor(user) 
+                    ? <Link to="/tutor_features" className='d-block panel-my-isaac-link'>
+                        Tutor features
+                    </Link>
+                    : <Link to="/teacher_features" className='d-block panel-my-isaac-link'>
+                        Teacher features
+                    </Link>}
                 <Link to="/groups" className='d-block panel-my-isaac-link'>
                     Manage groups
                 </Link>
@@ -94,9 +102,10 @@ const MyIsaacPanel = () => {
                 <Link to="/assignment_progress" className='d-block panel-my-isaac-link'>
                     Assignment progress
                 </Link>
-                <Link to="/set_tests" className='d-block panel-my-isaac-link'>
-                    Set / manage tests
-                </Link>
+                {!isTutor(user) &&
+                    <Link to="/set_tests" className='d-block panel-my-isaac-link'>
+                        Set / manage tests
+                    </Link>}
             </div>
         </div>
         <div className="section-divider" />
@@ -171,7 +180,7 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
                 <div className="text-center">Dashboard view</div>
                 <StyledToggle
                     checked={dashboardView === "student"}
-                    falseLabel="Teacher"
+                    falseLabel={isTutor(user) ? "Tutor" : "Teacher"}
                     trueLabel="Student"
                     onChange={() => setDashboardView(studentView => studentView === "teacher" ? "student" : "teacher")}             
                 />

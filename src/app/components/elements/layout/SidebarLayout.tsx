@@ -15,7 +15,7 @@ import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
-import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
+import { QuizRubricButton, QuizView, SectionProgress } from "../quiz/QuizContentsComponent";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { formatISODateOnly, getFriendlyDaysUntil } from "../DateString";
 import queryString from "query-string";
@@ -25,6 +25,7 @@ import { StyledSelect } from "../inputs/StyledSelect";
 import { CollapsibleList } from "../CollapsibleList";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { getProgressIcon } from "../../pages/Gameboard";
+import { tags as tagsService } from "../../../services";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -70,9 +71,7 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Isaa
     </li>;
 };
 
-interface SidebarProps extends ColProps {
-
-}
+type SidebarProps = ColProps
 
 const NavigationSidebar = (props: SidebarProps) => {
     // A navigation sidebar is used for external links that are supplementary to the main content (e.g. related content);
@@ -101,10 +100,10 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     const { className, buttonTitle, ...rest } = props;
     return <>
         {above['lg'](deviceSize) 
-            ? <Col lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
+            ? <Col data-testId="sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
                 <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
-                    <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
+                    <AffixButton data-testId="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
                         affix: "icon-sidebar", 
                         position: "prefix", 
                         type: "icon"
@@ -686,7 +685,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
-        <h5>Search gameboards</h5>
+        <h5>Search question decks</h5>
         <Input
             className='search--filter-input my-3'
             type="search" value={boardTitleFilter || ""}
@@ -738,7 +737,7 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
-        <h5>Search gameboards</h5>
+        <h5>Search question decks</h5>
         <Input
             className='search--filter-input my-3'
             type="search" value={boardTitleFilter || ""}
@@ -773,13 +772,12 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
             ).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
         </Input>
         {sortDisabled && <div className="small text-muted mt-2">
-            Sorting is disabled if some gameboards are hidden. Increase the display limit to show all gameboards.
+            Sorting is disabled if some question decks are hidden. Increase the display limit to show all question decks.
         </div>}
     </ContentSidebar>;
 };
 
 interface QuizSidebarProps extends SidebarProps {
-    attempt: QuizAttemptDTO;
     viewingAsSomeoneElse: boolean;
     totalSections: number;
     currentSection?: number;
@@ -787,16 +785,37 @@ interface QuizSidebarProps extends SidebarProps {
     sectionTitles: string[];
 }
 
-export const QuizSidebar = (props: QuizSidebarProps) => {
-    const { attempt, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles } = props;
+export interface QuizSidebarAttemptProps extends QuizSidebarProps {
+    attempt: QuizAttemptDTO;
+    view?: undefined;
+}
+
+export interface QuizSidebarViewProps extends QuizSidebarProps {
+    attempt?: undefined;
+    view: QuizView;
+}
+
+export const Pill = ({ title, theme }: {title: string, theme?: string}) =>
+    <span className="badge rounded-pill bg-theme me-1" data-bs-theme={theme}> 
+        {title}
+    </span>;
+
+export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProps) => {
+    const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
     const deviceSize = useDeviceSize();
     const history = useHistory();
     const location = history.location.pathname;
     const rubricPath = 
         viewingAsSomeoneElse ? location.split("/").slice(0, 6).join("/") :
-            attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
+            attempt && attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
                 location.split("/page")[0];
-
+    const hasSections = totalSections > 0;
+    const tags = attempt ? attempt.quiz?.tags : view.quiz?.tags;
+    const subjects = tagsService.getSubjectTags(tags as TAG_ID[]);
+    const topics = tagsService.getTopicTags(tags as TAG_ID[]);
+    const fields = tagsService.getFieldTags(tags as TAG_ID[]);
+    const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A"}];
+    
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon-correct"
             : sectionStates[section] === SectionProgress.STARTED ? "icon-in-progress"
@@ -804,7 +823,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     };
 
     const switchToPage = (page: string) => {
-        if (viewingAsSomeoneElse || attempt.feedbackMode) {
+        if (viewingAsSomeoneElse || attempt && attempt.feedbackMode) {
             history.push(rubricPath.concat("/", page));
         }
         else {
@@ -813,34 +832,43 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     };
 
     const SidebarContents = () => {
-        return <ContentSidebar buttonTitle="Sections">
+        return <ContentSidebar buttonTitle={hasSections ? "Sections" : "Details"}>
             <div className="section-divider"/>
-            <h5 className="mb-3">Sections</h5>
-            <ul>
-                <li>
-                    <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
-                </li>
-                {Array.from({length: totalSections}, (_, i) => i).map(section => 
-                    <li key={section}>
-                        <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section+1} onClick={() => switchToPage(String(section+1))}
-                            suffix={{icon: progressIcon(section), info: sectionStates[section]}}/>
-                    </li>)}
-            </ul>
+            <h5 className="mb-3">Test</h5>
+            <div className="mb-2">Subject{subjects?.length > 1 && "s"}: {subjects.map(s => <Pill key={s.id} title={s.title} theme={s.id}/>)}</div>
+            <div className="mb-2">Topic{topicsAndFields?.length > 1 && "s"}: {topicsAndFields.map(e => <Pill key={e.id} title={e.title} theme="neutral"/>)}</div>
 
-            <div className="section-divider"/>
-
-            <div className="d-flex flex-column sidebar-key">
-                Key
+            {hasSections && <>
+                <div className="section-divider"/>
+                <h5 className="mb-3">Sections</h5>
                 <ul>
-                    <KeyItem icon="status-in-progress" text="Section in progress"/>
-                    <KeyItem icon="status-correct" text="Section completed"/>
+                    <li>
+                        <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
+                    </li>
+                    {Array.from({length: totalSections}, (_, i) => i).map(section => 
+                        <li key={section}>
+                            <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section+1} onClick={() => switchToPage(String(section+1))}
+                                suffix={{icon: progressIcon(section), info: sectionStates[section]}}/>
+                        </li>)}
                 </ul>
-            </div>
+
+                <div className="section-divider"/>
+
+                <div className="d-flex flex-column sidebar-key">
+                Key
+                    <ul>
+                        <KeyItem icon="status-not-started" text="Section not started"/>
+                        <KeyItem icon="status-in-progress" text="Section in progress"/>
+                        <KeyItem icon="status-correct" text="Section completed"/>
+                    </ul>
+                </div>
+            </>}
+
         </ContentSidebar>;
     };
 
     return <>
-        {below["md"](deviceSize) ?
+        {below["md"](deviceSize) && attempt ?
             <Row className="d-flex align-items-center">
                 <Col>
                     <SidebarContents/>

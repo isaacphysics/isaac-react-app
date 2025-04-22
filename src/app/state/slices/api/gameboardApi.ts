@@ -2,7 +2,7 @@ import {isaacApi} from "./baseApi";
 import {AssignmentBoardOrder, Boards, NumberOfBoards} from "../../../../IsaacAppTypes";
 import {GameboardDTO, GameboardListDTO, IsaacWildcard} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
-import {isPhy, QUESTION_CATEGORY, siteSpecific} from "../../../services";
+import {isPhy, PATHS, QUESTION_CATEGORY, siteSpecific} from "../../../services";
 import {logAction} from "../../actions/logging";
 
 export const gameboardApi = isaacApi.injectEndpoints({
@@ -19,7 +19,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 totalResults: response.totalResults ?? 0
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: `Loading ${siteSpecific("gameboards", "quizzes")} failed`
+                errorTitle: `Loading ${siteSpecific("question decks", "quizzes")} failed`
             })
         }),
 
@@ -63,7 +63,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                         }));
                     }
                 },
-                errorTitle: `Error creating ${siteSpecific("gameboard", "quiz")}`
+                errorTitle: `Error creating ${siteSpecific("question deck", "quiz")}`
             })
         }),
 
@@ -86,7 +86,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 };
             },
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: `Error creating temporary ${siteSpecific("gameboard", "quiz")}`
+                errorTitle: `Error creating temporary ${siteSpecific("question deck", "quiz")}`
             })
         }),
 
@@ -98,7 +98,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
             }),
             invalidatesTags: ["AllGameboards"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: `Linking the ${siteSpecific("gameboard", "quiz")} to your account failed`
+                errorTitle: `Linking the ${siteSpecific("question deck", "quiz")} to your account failed`
             })
         }),
 
@@ -109,7 +109,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
             }),
             invalidatesTags: ["AllGameboards"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: `Linking the ${siteSpecific("gameboard", "quiz")} to your account failed`
+                errorTitle: `Linking the ${siteSpecific("question deck", "quiz")} to your account failed`
             })
         }),
 
@@ -120,9 +120,9 @@ export const gameboardApi = isaacApi.injectEndpoints({
             }),
             invalidatesTags: (_, error, boardId) => !error ? [{type: "Gameboard", id: boardId}] : [],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: `${siteSpecific("Gameboard", "Quiz")} deleted`,
-                successMessage: `You have successfully unlinked your account from this ${siteSpecific("gameboard", "quiz")}.`,
-                errorTitle: `${siteSpecific("Gameboard", "Quiz")} deletion failed`
+                successTitle: `${siteSpecific("Question Deck", "Quiz")} deleted`,
+                successMessage: `You have successfully unlinked your account from this ${siteSpecific("question deck", "quiz")}.`,
+                errorTitle: `${siteSpecific("Question Deck", "Quiz")} deletion failed`
             })
         }),
     })
