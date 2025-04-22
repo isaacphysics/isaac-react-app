@@ -5,7 +5,7 @@ import {Col, Container, Row} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, Subject, above, below, usePreviousPageContext, isAda, isPhy, useDeviceSize, useNavigation, siteSpecific} from "../../services";
+import {DOCUMENT_TYPE, Subject, above, below, usePreviousPageContext, isAda, isPhy, useDeviceSize, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -40,8 +40,23 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     const doc = useAppSelector((state: AppState) => state?.doc || null);
     const navigation = useNavigation(doc);
     const deviceSize = useDeviceSize();
-
+    
+    const userContext = useUserViewingContext();
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && doc !== 404 ? doc : undefined);
+
+    useEffect(() => {
+        if (pageContext) {
+            // the page context, if single stage, overrides the user context
+            if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
+                const newStage = LEARNING_STAGE_TO_STAGES[pageContext.stage[0]];
+                if (newStage) {
+                    userContext.setStage(newStage[0]);
+                }
+            }
+
+            // all other cases use the default behaviour
+        }
+    }, [pageContext]);
 
     const ManageButtons = () => <div className={classNames("no-print d-flex justify-content-end mt-1 ms-2", {"gap-2": isPhy})}>
         <div className="question-actions">
