@@ -154,7 +154,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setWildcardId(undefined);
     };
 
-    const onSaveQuiz = (e: React.FormEvent<HTMLFormElement>) => {
+    const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setSubmissionAttempted(true);
@@ -303,7 +303,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <p>Please correct the problems below.</p>
                     </ExigentAlert>
                 }
-                <Form onSubmit={onSaveQuiz}>
+                <Form onSubmit={submit}>
                     <Row>
                         <Col>
                             <Label className={"fw-bold form-required"} htmlFor="gameboard-builder-name">Title</Label>
