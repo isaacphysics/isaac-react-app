@@ -8,13 +8,13 @@ import {BookChapter} from "../../elements/BookChapter";
 export const StepUpPhys = () => {
 
     const pageHelp = <span>
-        The Isaac Physics Step up to GCSE Physics book
+        The Isaac Physics Step Up to GCSE Physics book
     </span>;
 
     return <Container className="physics">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-5" currentPageTitle="NEW - Step up to GCSE Physics - NEW" help={pageHelp} />
+                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Step Up to GCSE Physics" help={pageHelp} />
                 <img className="book-cover" src="/assets/phy/books/step_up_phys.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="phys_book_step_up_intro"/>
             </div>

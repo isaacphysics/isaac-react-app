@@ -66,7 +66,7 @@ export function isQuestion(doc: ContentDTO) {
 }
 
 export const HUMAN_QUESTION_TAGS = new Map([
-    ["phys_book_step_up", "Step up to GCSE Physics"],
+    ["phys_book_step_up", "Step Up to GCSE Physics"],
     ["phys_book_gcse", "Mastering Essential GCSE Physics"],
     ["physics_skills_14", "Mastering Essential Pre-University Physics (2nd Edition)"],
     ["physics_skills_19", "Mastering Essential Pre-University Physics (3rd Edition)"],
