@@ -29,7 +29,7 @@ import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {Immutable} from "immer";
 import { AccountTypeMessage } from "../AccountTypeMessage";
 import {useEmailPreferenceState, UserEmailPreferencesInput} from "../inputs/UserEmailPreferencesInput";
-import { Form, CardBody, Row, Col, Input } from "reactstrap";
+import { Form, CardBody, Row, Col, Button } from "reactstrap";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -149,7 +149,7 @@ const RequiredAccountInfoBody = () => {
         <CardBody className="py-0">
             <Row className="text-center pb-3">
                 <Col md={{size: 6, offset: 3}}>
-                    <Input type="submit" value={isMobile() ? "Update" : "Update account"} className="btn btn-secondary px-0 px-md-2 my-1" />
+                    <Button type="submit" color="secondary" className="w-100 my-1">{isMobile() ? "Update" : "Update account"}</Button>
                 </Col>
             </Row>
         </CardBody>
