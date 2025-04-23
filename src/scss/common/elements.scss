@@ -289,6 +289,10 @@ iframe.email-html {
   border-width: 1px;
   border-color: $gray-107;
 
+  > button:focus-visible {
+    @include focus-outline;
+  }
+
   img {
     transition: transform 0.1s ease;
   }
