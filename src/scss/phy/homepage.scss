@@ -102,12 +102,6 @@
   &.dashboard-outer { // avoids double-padding for teachers viewing student dashboard
     padding: 30px 30px 50px;
   }
-
-  .welcome-text {
-    font-family: $secondary-font-bold;
-    font-size: 24px;
-    margin-top: 10px;
-  }
 }
 
 $dashboard-panel-size: 120px;

@@ -175,7 +175,7 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
              
     return <div className="dashboard dashboard-outer w-100">
         <div className="d-flex">
-            {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
+            {nameToDisplay && <h3>Welcome back, {nameToDisplay}!</h3>}
             <span className="ms-auto">
                 <div className="text-center">Dashboard view</div>
                 <StyledToggle
