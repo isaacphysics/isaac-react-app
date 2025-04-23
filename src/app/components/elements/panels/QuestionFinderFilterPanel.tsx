@@ -158,7 +158,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
     const pageContext = useAppSelector(selectors.pageContext.context);
-    const bookOptions = ISAAC_BOOKS.filter(book => !pageContext?.subject || book.subject === pageContext?.subject);
+    const bookOptions = ISAAC_BOOKS.filter(b => !b.hidden).filter(book => !pageContext?.subject || book.subject === pageContext?.subject);
 
     const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));
 
@@ -331,16 +331,16 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         />
                     </div>
                     {bookOptions.map((book, index) => (
-                        <div className={classNames("w-100 ps-3 py-1 ms-2", {"checkbox-region": searchBooks.includes(book.value) && !excludeBooks})} key={index}>
+                        <div className={classNames("w-100 ps-3 py-1 ms-2", {"checkbox-region": searchBooks.includes(book.tag) && !excludeBooks})} key={index}>
                             <StyledCheckbox
                                 color="primary" disabled={excludeBooks}
-                                checked={searchBooks.includes(book.value) && !excludeBooks}
+                                checked={searchBooks.includes(book.tag) && !excludeBooks}
                                 onChange={() => setSearchBooks(
-                                    s => s.includes(book.value)
-                                        ? s.filter(v => v !== book.value)
-                                        : [...s, book.value]
+                                    s => s.includes(book.tag)
+                                        ? s.filter(v => v !== book.tag)
+                                        : [...s, book.tag]
                                 )}
-                                label={<span className="me-2">{book.label ?? book.title}</span>}
+                                label={<span className="me-2">{book.shortTitle ?? book.title}</span>}
                             />
                         </div>
                     ))}

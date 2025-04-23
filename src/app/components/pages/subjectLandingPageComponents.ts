@@ -161,8 +161,9 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
 
 export const getBooksForContext = (context: PageContextState): BookInfo[] => {
     if (!isFullyDefinedContext(context)) return [];
+    
     if (!context?.stage?.length) {
-        return ISAAC_BOOKS.filter(book => book.subject === context.subject);
+        return ISAAC_BOOKS.filter(b => !b.hidden).filter(book => book.subject === context.subject);
     }
     
     if (!isFullyDefinedContext(context)) return []; // this is implied by the above, but this has a type guard

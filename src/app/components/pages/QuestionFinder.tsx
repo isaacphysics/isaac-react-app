@@ -433,13 +433,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         const stageList: STAGE[] = searchStages.filter(stage => isSolitaryStage ? !pageStageToSearchStage(pageContext?.stage).includes(stage) : true);
         const selectionList: Item<TAG_ID>[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext?.subject);
         const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
-        const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.value));
+        const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.tag));
 
         const categories = [
             searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
             stageList.map(s => {return {value: s, label: stageLabelMap[s]};}),
             statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
-            excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.value, label: book.label};}),
+            excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
             selectionList,
         ].flat();
 
