@@ -155,7 +155,8 @@ header {
 
       div.dropdown-menu {
         border: 2px solid $color-neutral-200;
-        border-radius: 8px;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
         margin-top: -2px;
         padding-top: 20px;
         background-color: $color-neutral-50;
