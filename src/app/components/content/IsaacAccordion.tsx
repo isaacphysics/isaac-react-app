@@ -10,10 +10,12 @@ import {
     isIntendedAudience,
     isPhy,
     isRelevantPageContextOrIntendedAudience,
+    LEARNING_STAGE_TO_STAGES,
     makeIntendedAudienceComparator,
     mergeDisplayOptions,
     siteSpecific,
     STAGE,
+    STAGE_TO_LEARNING_STAGE,
     stageLabelMap,
     stringifyAudience,
     useUserViewingContext
@@ -99,6 +101,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         .filter(section => !section.hidden);
 
     const stageIndices = useMemo(() => {
+        // this assumes pages display sections in increasing stage order! true for phy, not for ada
         let stageToFirstIndexMap = isConceptPage && sections
             ?.reduce((acc, section, index) => {
                 if (!section.audience?.[0].stage?.[0]) {
@@ -115,13 +118,22 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         // at this point, there exists a stageIndex for each unique stage.
         // now collapse indices before/after the userContext stage into "additional learning stages" when there are multiple
 
+        const getMaxRelevantIndex = () => {
+            const learningStage = STAGE_TO_LEARNING_STAGE[userContext.stage];
+            if (learningStage) {
+                const applicableStages = LEARNING_STAGE_TO_STAGES[learningStage];
+                return Math.max(...applicableStages.map(stage => stageToFirstIndexMap[stage] ?? -1));
+            }
+            return -1; // only occurs when userContext.stage === STAGE.ALL
+        };
+
         // if we need to show everything, don't remove anything
         if (userContext.stage && isDefined(stageToFirstIndexMap[userContext.stage]) && userContext.stage !== STAGE.ALL) {
             const beforeUserStage = Object.keys(stageToFirstIndexMap).filter(stage => {
                 return stageToFirstIndexMap[stage] < stageToFirstIndexMap[userContext.stage];
             });
             const afterUserStage = Object.keys(stageToFirstIndexMap).filter(stage => {
-                return stageToFirstIndexMap[stage] > stageToFirstIndexMap[userContext.stage];
+                return stageToFirstIndexMap[stage] > getMaxRelevantIndex();
             });
 
             if (beforeUserStage.length > 1) {
