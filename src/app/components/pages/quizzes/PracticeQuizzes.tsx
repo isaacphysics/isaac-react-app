@@ -14,7 +14,7 @@ import { MainContent, PracticeQuizzesSidebar, SidebarLayout } from "../../elemen
 import { isFullyDefinedContext, useUrlPageTheme } from "../../../services/pageContext";
 import { selectors, useAppSelector } from "../../../state";
 import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
-import { AffixButton } from "../../elements/AffixButton";
+
 import classNames from "classnames";
 import { PrintButton } from "../../elements/PrintButton";
 import { ShareLink } from "../../elements/ShareLink";
