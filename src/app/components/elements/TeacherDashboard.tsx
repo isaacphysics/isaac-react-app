@@ -23,7 +23,7 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
         <h4>Manage group progress</h4>
         {sortedGroups.length ?
             <>
-                <div className="overflow-hidden">
+                <div>
                     {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress#${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
                 </div>
                 <Spacer/>
