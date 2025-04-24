@@ -107,7 +107,7 @@ export const QuestionSearchModal = (
                 return;
             }
 
-            const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ");
+            const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(",");
 
             setIsSearching(true);
 
