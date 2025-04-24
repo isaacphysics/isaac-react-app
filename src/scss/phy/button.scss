@@ -11,7 +11,7 @@
   line-height: normal;
   opacity: 100%;
 
-  &:focus {
+  &:focus:not(:focus-visible) {
     outline: none !important;
     box-shadow: 0 0 0 3px var(--buttons-light), 0 0 0 4.5px var(--buttons-focus-ring) !important;
   }
@@ -47,6 +47,10 @@
   &:disabled, &.disabled {
     background-color: var(--buttons-dark-disabled);
     color: var(--buttons-dark-text);
+  }
+
+  &:focus-visible {
+    --focus-outline-color: #{$a11y_blue};
   }
 
   i.icon:not(:has(::after)) {
@@ -119,7 +123,7 @@
     text-decoration: none;
   }
 
-  &:focus {
+  &:focus:not(:focus-visible) {
     // TODO: depending on use case (colour of background this is used on), we may need to change how this offset border is generated
     box-shadow: 0 0 0 3px var(--buttons-dark), 0 0 0 4.5px var(--buttons-focus-ring) !important;
   }
@@ -128,6 +132,8 @@
     color: var(--buttons-dark-disabled-text);
   }
 }
+
+// TODO: plan removing all below button styling?
 
 .btn, input.btn {
   border-radius: 22.5rem;
@@ -183,12 +189,6 @@
       border-color: $gray-118;
     }
 
-    &.focus,
-    &:focus,
-    &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem $shadow-3;
-    }
-
     &.disabled,
     &:disabled {
       color: $gray-136;
@@ -223,12 +223,6 @@
     &:not(:disabled):not(.disabled):active {
       background-color: $gray-118;
       border-color: $gray-118;
-    }
-
-    &.focus,
-    &:focus,
-    &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem $shadow-3;
     }
 
     &.disabled,
@@ -295,12 +289,6 @@ a.btn {
       border-color: $gray-136;
     }
 
-    &.focus,
-    &:focus,
-    &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem $shadow-08;
-    }
-
     &.disabled,
     &:disabled {
       border-color: $gray-107;
@@ -334,12 +322,6 @@ a.btn {
     &:not(:disabled):not(.disabled):active {
       background-color: $gray-118;
       border-color: $gray-118;
-    }
-
-    &.focus,
-    &:focus,
-    &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem $shadow-3;
     }
 
     &.disabled,
@@ -431,52 +413,6 @@ button.close { // default <button class="close"/> components;
   @extend .btn-close;
   background-image: url(/assets/common/icons/plus.svg) !important;
   border: none;
-}
-
-.print-icon {
-  @extend .hex-icon;
-  background-image: url(/assets/common/icons/print.svg);
-}
-
-.report-icon {
-  @extend .hex-icon;
-  background-image: url(/assets/common/icons/flag.svg);
-}
-
-// Button focus selectors
-
-.btn.btn-link:focus {
-  box-shadow: 0 0 0 0.2rem $focus-blue !important;
-  outline: none !important;
-  border-radius: 3px;
-}
-
-.btn-action:focus {
-  box-shadow: 0 0 0 2pt black !important;
-  border-radius: 2px;
-  outline: none !important;
-}
-
-.btn.btn-outline-primary:focus {
-  box-shadow: 0 0 0 2pt $secondary !important;
-  border-radius: 8px;
-  outline: none !important;
-}
-
-.btn-danger:focus {
-  box-shadow: 0 0 0 2pt black !important;
-  border-radius: 8px;
-  outline: none !important;
-}
-
-.btn-outline-primary:focus {
-  border-color: $secondary !important;
-}
-
-.btn.btn-sm.a-alt:focus {
-  box-shadow: 0 0 0 0.2rem $focus-blue !important;
-  outline: none !important;
-  border-radius: 3px;
 }
 
 .bin-icon {

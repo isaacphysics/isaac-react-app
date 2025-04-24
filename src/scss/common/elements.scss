@@ -289,10 +289,6 @@ iframe.email-html {
   border-width: 1px;
   border-color: $gray-107;
 
-  > button:focus-visible {
-    @include focus-outline;
-  }
-
   img {
     transition: transform 0.1s ease;
   }
@@ -404,8 +400,7 @@ iframe.email-html {
   }
 
   &:has(> input:focus-visible) {
-    // TODO: find-replace all instances of this with some SCSS vars defined in isaac.scss
-    box-shadow: 0 0 0 2pt black !important;
+    @include focus-outline;
   }
 
   &:focus:not(:focus-visible) {
