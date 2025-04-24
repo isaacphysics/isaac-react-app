@@ -610,6 +610,7 @@ export enum TAG_ID {
     evolution = "evolution",
     genetics = "genetics",
     physiology = "physiology",
+    bioMathsSkills = "bio_maths_skills",
 
     // Physics Topics ---
 
@@ -754,6 +755,8 @@ export enum TAG_ID {
     variation = "variation",
     theory = "theory",
     phylogenetics = "phylogenetics",
+    // Biology Maths Skills
+    bioStatisticalTests = "bio_statistical_tests",
 }
 
 export enum TAG_LEVEL {
