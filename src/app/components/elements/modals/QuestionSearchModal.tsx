@@ -108,16 +108,15 @@ export const QuestionSearchModal = (
             }
 
             const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ");
-            const examBoardString = examBoards.join(",");
 
             setIsSearching(true);
 
             dispatch(searchQuestions({
-                searchString: searchString,
-                tags,
+                searchString: searchString || undefined,
+                tags: tags || undefined,
                 stages: stages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
-                examBoards: examBoardString,
+                examBoards: examBoards.join(",") || undefined,
                 fasttrack,
                 startIndex,
                 limit: 300
