@@ -52,9 +52,9 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                 const newStage = LEARNING_STAGE_TO_STAGES[pageContext.stage[0]];
                 if (newStage) {
                     userContext.setStage(newStage[0]);
+                    userContext.setFixedContext(true);
                 }
             }
-
             // all other cases use the default behaviour
         }
     }, [pageContext]);
