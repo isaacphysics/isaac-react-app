@@ -151,8 +151,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(
         processTagHierarchy(
-            arrayFromPossibleCsv(params.subjects), 
-            arrayFromPossibleCsv(params.fields), 
+            arrayFromPossibleCsv(params.subjects),
+            arrayFromPossibleCsv(params.fields),
             arrayFromPossibleCsv(params.topics)
         )
     );
@@ -210,22 +210,21 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             } else {
                 filterParams["topics"] = [...topics].filter((query) => query != "");
             }
-            const examBoardString = examBoards.join(",");
 
             dispatch(searchQuestions({
-                searchString: searchString,
-                tags: "", // Tags currently not used
+                searchString: searchString || undefined,
+                tags: undefined, // Tags currently not used
                 fields: filterParams.fields?.join(",") || undefined,
                 subjects: filterParams.subjects?.join(",") || undefined,
                 topics: filterParams.topics?.join(",") || undefined,
                 books: (!excludeBooks && book.join(",")) || undefined,
                 stages: stages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
-                examBoards: examBoardString,
+                examBoards: examBoards.join(",") || undefined,
                 questionCategories: isPhy
                     ? (excludeBooks ? "problem_solving" : "problem_solving,book")
                     : undefined,
-                statuses: questionStatusToURIComponent(questionStatuses),
+                statuses: questionStatusToURIComponent(questionStatuses), // Must not be undefined, to get attempt augmentation!
                 fasttrack: false,
                 startIndex,
                 limit: SEARCH_RESULTS_PER_PAGE + 1, // request one more than we need to know if there are more results
