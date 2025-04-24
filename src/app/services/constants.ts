@@ -238,10 +238,6 @@ export enum ACTION_TYPE {
     GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS = "GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS",
     GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE = "GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE",
 
-    CONCEPTS_REQUEST = "CONCEPTS_REQUEST",
-    CONCEPTS_RESPONSE_SUCCESS = "CONCEPTS_RESPONSE_SUCCESS",
-    CONCEPTS_RESPONSE_FAILURE = "CONCEPTS_RESPONSE_FAILURE",
-
     // Different ways of loading attempts, but ultimately either an attempt is loaded or it isn't
     QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST = "QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST",
     QUIZ_START_FREE_ATTEMPT_REQUEST = "QUIZ_START_FREE_ATTEMPT_REQUEST",
@@ -724,6 +720,7 @@ export enum TAG_ID {
     evolution = "evolution",
     genetics = "genetics",
     physiology = "physiology",
+    bioMathsSkills = "bio_maths_skills",
 
     // Physics Topics ---
 
@@ -868,6 +865,8 @@ export enum TAG_ID {
     variation = "variation",
     theory = "theory",
     phylogenetics = "phylogenetics",
+    // Biology Maths Skills
+    bioStatisticalTests = "bio_statistical_tests",
 }
 
 export enum TAG_LEVEL {

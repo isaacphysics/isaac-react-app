@@ -155,23 +155,9 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
                                             {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                         </div>
                                         <Spacer />
-                                        {isTutorOrAbove(user) && <div className="d-none d-md-flex align-items-center me-4">
-                                            {siteSpecific(
-                                                <Button tag={Link} to={{pathname: `/test/preview/${quiz.id}`}} color="keyline" aria-label={`Preview ${quiz.title}`}>
-                                                    Preview
-                                                </Button>,
-                                                <Link to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                    <span>Preview</span>
-                                                </Link>)}
-                                        </div>}
-                                        {siteSpecific(
-                                            <AffixButton size="md" color={pageSubject ? "solid" : "keyline"} tag={Link} to={`/test/attempt/${quiz.id}`}
-                                                aria-label={`Take test ${quiz.title}`} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
-                                                Take the test
-                                            </AffixButton>,                                               
-                                            <Button tag={Link} to={{pathname: `/test/attempt/${quiz.id}`}}>
-                                                Take test
-                                            </Button>)}
+                                        <Button tag={Link} to={{pathname: `/test/view/${quiz.id}`}}>
+                                            {siteSpecific("View Test", "View test")}
+                                        </Button>
                                     </div>
                                 </ListGroupItem>)}
                             </ListGroup>}

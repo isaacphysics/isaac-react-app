@@ -1,10 +1,8 @@
 import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
-import {AppState, fetchDoc, useAppDispatch, useAppSelector} from "../../state";
-import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {ShowLoading} from "../handlers/ShowLoading";
+import {SeguePageDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
-import {DOCUMENT_TYPE, isAda, isPhy, useUrlHashValue} from "../../services";
+import {isAda, isPhy, useUrlHashValue} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -18,6 +16,9 @@ import classNames from "classnames";
 import { useUntilFound } from "./Glossary";
 import { MainContent, SidebarLayout, GenericPageSidebar, PolicyPageSidebar } from "../elements/layout/SidebarLayout";
 import { TeacherNotes } from "../elements/TeacherNotes";
+import { useGetGenericPageQuery } from "../../state/slices/api/genericApi";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { NotFound } from "./NotFound";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -44,11 +45,9 @@ const PHY_SIDEBAR = new Map<string, () => React.JSX.Element>([
 export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
     const pageId = pageIdOverride || params.pageId;
 
-    const dispatch = useAppDispatch();
-    useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.GENERIC, pageId));}, [dispatch, pageId]);
-    const doc = useAppSelector((state: AppState) => state?.doc || null);
+    const pageQuery = useGetGenericPageQuery(pageId);
 
-    const hash = useUntilFound(doc, useUrlHashValue());
+    const hash = useUntilFound(pageQuery.currentData, useUrlHashValue());
 
     useEffect(() => {
         if (hash) {
@@ -60,38 +59,43 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
         }
     }, [hash]);
 
-    return <ShowLoading until={doc} thenRender={supertypedDoc => {
-        const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
-        
-        return <Container data-bs-theme={doc.subjectId}>
-            <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} /> {/* TODO add page icon, replace main title with "General"?? */}
-            <MetaDescription description={doc.summary} />
-            <SidebarLayout>
-                {PHY_SIDEBAR.has(pageId) ? PHY_SIDEBAR.get(pageId)!() : <GenericPageSidebar/>}
-                <MainContent>
-                    <div className="no-print d-flex align-items-center">
-                        <EditContentButton doc={doc} />
-                        <div className={classNames("question-actions question-actions-leftmost mt-3", {"gap-2": isPhy})}>
-                            <ShareLink linkUrl={`/pages/${doc.id}`}/>
+    return <ShowLoadingQuery 
+        query={pageQuery}
+        defaultErrorTitle="Unable to load page"
+        ifNotFound={<NotFound />}
+        thenRender={supertypedDoc => {
+            const doc = supertypedDoc as SeguePageDTO & DocumentSubject;
+            
+            return <Container data-bs-theme={doc.subjectId}>
+                <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} /> {/* TODO add page icon, replace main title with "General"?? */}
+                <MetaDescription description={doc.summary} />
+                <SidebarLayout>
+                    {PHY_SIDEBAR.has(pageId) ? PHY_SIDEBAR.get(pageId)!() : <GenericPageSidebar/>}
+                    <MainContent>
+                        <div className="no-print d-flex align-items-center">
+                            <EditContentButton doc={doc} />
+                            <div className={classNames("question-actions question-actions-leftmost mt-3", {"gap-2": isPhy})}>
+                                <ShareLink linkUrl={`/pages/${doc.id}`}/>
+                            </div>
+                            <div className="question-actions mt-3 not-mobile">
+                                <PrintButton/>
+                            </div>
                         </div>
-                        <div className="question-actions mt-3 not-mobile">
-                            <PrintButton/>
-                        </div>
-                    </div>
-                    
-                    <TeacherNotes notes={doc.teacherNotes} />
+                        
+                        <TeacherNotes notes={doc.teacherNotes} />
 
-                    <Row className="generic-content-container">
-                        <Col className={classNames("py-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
-                            <WithFigureNumbering doc={doc}>
-                                <IsaacContent doc={doc} />
-                            </WithFigureNumbering>
-                        </Col>
-                    </Row>
-                </MainContent>
-            </SidebarLayout>
+                        <Row className="generic-content-container">
+                            <Col className={classNames("py-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
+                                <WithFigureNumbering doc={doc}>
+                                    <IsaacContent doc={doc} />
+                                </WithFigureNumbering>
+                            </Col>
+                        </Row>
+                    </MainContent>
+                </SidebarLayout>
 
-            {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
-        </Container>;
-    }}/>;
+                {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+            </Container>;
+        }}
+    />;
 });
