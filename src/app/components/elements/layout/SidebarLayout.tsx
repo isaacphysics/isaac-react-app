@@ -3,7 +3,10 @@ import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHead
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacBookIndexPageDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, Subject, Subjects } from "../../../services";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
+    EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
+    ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
+    Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, Subject, Subjects, getFilteredStageOptions } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -541,35 +544,37 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
 };
 
 interface PracticeQuizzesSidebarProps extends SidebarProps {
-    searchText: string;
-    setSearchText: (searchText: string) => void;
+    filterText: string;
+    setFilterText: (searchText: string) => void;
     filterSubject?: Subject;
     setFilterSubject: (subject: Subject | undefined) => void;
     subjectCounts: Record<string, number>;
-    allFields: string[];
+    fields: string[];
     filterField?: string;
     setFilterField: (field: string) => void;
     fieldCounts: Record<string, number>;
+    filterStage?: Stage;
+    setFilterStage: (stage: Stage | undefined) => void;
+    stageCounts: Record<string, number>;
 }
 
 export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
-    const { searchText, setSearchText, filterSubject, setFilterSubject, subjectCounts,
-        allFields, filterField, setFilterField, fieldCounts, ...rest } = props;
+    const { filterText, setFilterText, filterSubject, setFilterSubject, subjectCounts, fields,
+        filterField, setFilterField, fieldCounts, filterStage, setFilterStage, stageCounts, ...rest } = props;
     const pageContext = useAppSelector(selectors.pageContext.context);
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <h5>Search practice tests</h5>
-        <Input type="search" placeholder="e.g. Challenge" value={searchText} className="search--filter-input my-3"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)} />
+        <Input type="search" placeholder="e.g. Challenge" value={filterText} className="search--filter-input my-3"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)} />
 
         {!pageContext?.subject && <>
             <div className="section-divider"/>
             <h5>Filter by subject</h5>
             <ul>
                 <li>
-                    <StyledTabPicker id="all" checkboxTitle="Show all" checked={!filterSubject}
-                        count={Object.values(subjectCounts).reduce((a, b) => a + b, 0)} onInputChange={() => {setFilterSubject(undefined);}}/>
+                    <StyledTabPicker id="all" checkboxTitle="Show all" checked={!filterSubject} onInputChange={() => {setFilterSubject(undefined);}}/>
                 </li>
                 <div className="section-divider-small"/>
                 {Subjects.filter(s => subjectCounts[s] > 0).map((subject, i) =>
@@ -582,19 +587,36 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             </ul>
         </>}
 
-        {pageContext?.subject && allFields.length > 0 && <>
+        {pageContext?.subject && fields.length > 0 && <>
             <div className="section-divider"/>
             <h5>Filter by topic</h5>
             <ul>
                 <li>
-                    <StyledTabPicker id="all" checkboxTitle="Show all" checked={!filterField}
-                        count={Object.values(fieldCounts).reduce((a, b) => a + b, 0)} onInputChange={() => {setFilterField("");}}/>
+                    <StyledTabPicker id="all" checkboxTitle="Show all" checked={!filterField} onInputChange={() => {setFilterField("");}}/>
                 </li>
                 <div className="section-divider-small"/>
-                {allFields.filter(f => fieldCounts[f] > 0).map((field, i) =>
+                {fields.filter(f => fieldCounts[f] > 0).map((field, i) =>
                     <li key={i}>
                         <StyledTabPicker checkboxTitle={field} checked={filterField === field}
                             count={fieldCounts[field]} onInputChange={() => {setFilterField(field);}}/>
+                    </li>)}
+            </ul>
+        </>}
+
+        {!isSingleStageContext(pageContext) && <>
+            <div className="section-divider"/>
+            <h5>Filter by stage</h5>
+            <ul>
+                <li>
+                    <StyledTabPicker id="all" checkboxTitle="Show all" checked={!filterStage}
+                        onInputChange={() => {setFilterStage(undefined);}} data-bs-theme={filterSubject}/>
+                </li>
+                <div className="section-divider-small"/>
+                {getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).map((stage, i) =>
+                    <li key={i}>
+                        <StyledTabPicker checkboxTitle={stage.label} checked={filterStage === stage.value}
+                            count={stageCounts[stage.label]}
+                            onInputChange={() => {setFilterStage(stage.value);}} data-bs-theme={filterSubject}/>
                     </li>)}
             </ul>
         </>}

@@ -2,7 +2,7 @@ import { withRouter } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Button, ListGroupItem, Input, ListGroup, Col, Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
-import { isAda, isDefined, isEventLeaderOrStaff, isLoggedIn, isPhy, isTutorOrAbove, siteSpecific, Subject, Subjects, TAG_ID, tags } from "../../../services";
+import { getFilteredStageOptions, isAda, isDefined, isEventLeaderOrStaff, isLoggedIn, isPhy, isTutorOrAbove, LearningStage, siteSpecific, STAGE_TO_LEARNING_STAGE, Subject, Subjects, TAG_ID, tags } from "../../../services";
 import { AudienceContext, QuizSummaryDTO, Stage } from "../../../../IsaacApiTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { useGetAvailableQuizzesQuery } from "../../../state/slices/api/quizApi";
@@ -24,6 +24,7 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
     const [filterText, setFilterText] = useState<string>("");
     const [filterSubject, setFilterSubject] = useState<Subject>();
     const [filterField, setFilterField] = useState<string>("");
+    const [filterStage, setFilterStage] = useState<Stage>();
     const [copied, setCopied] = useState(false);
 
     const user = useAppSelector(selectors.user.orNull);
@@ -31,6 +32,10 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
     const pageContext = useUrlPageTheme();
     const pageSubject = pageContext?.subject;
     const pageStage = pageContext?.stage ? pageContext.stage[0] : undefined;
+
+    const isAudienceMatch = (selectedStage: Stage | LearningStage) => (contentAudience: AudienceContext) =>
+        contentAudience.stage?.includes(selectedStage as Stage) ||
+        contentAudience.stage?.map(s => STAGE_TO_LEARNING_STAGE[s]).includes(selectedStage as LearningStage);
 
     useEffect(() => {
         if (location.search.includes("filter")) {
@@ -42,8 +47,7 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
         if (!user || !isLoggedIn(user)) return false;
         if (pageSubject && !quiz.tags?.includes(pageSubject)) return false;
 
-        const isAudienceMatch = (audience: AudienceContext) => audience.stage?.includes(pageStage as Stage) || (pageStage === "11_14" && (audience.stage?.includes("year_7_and_8") || audience.stage?.includes("year_9")));
-        if (pageStage && !quiz.audience?.some(isAudienceMatch)) return false;
+        if (pageStage && !quiz.audience?.some(isAudienceMatch(pageStage))) return false;
 
         switch (user.role) {
             case "STUDENT":
@@ -64,10 +68,15 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
         {isTutorOrAbove(user) && ((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
     </>;
 
+    const textMatch = (quiz: QuizSummaryDTO) => quiz.title?.toLowerCase().includes(filterText.toLowerCase());
+    const subjectMatch = (quiz: QuizSummaryDTO) => !filterSubject || quiz.tags?.includes(filterSubject);
+    const fieldMatch = (quiz: QuizSummaryDTO) => !filterField || quiz.tags?.includes(filterField.toLowerCase());
+    const stageMatch = (quiz: QuizSummaryDTO) => !filterStage || quiz.audience?.some(isAudienceMatch(filterStage));
+
     const subjectCounts = () => {
         const counts: {[key: string]: number} = {};
         Subjects.forEach(subject => {
-            counts[subject] = quizzes?.filter(quiz => quiz.tags?.includes(subject) && showQuiz(quiz)).length || 0;
+            counts[subject] = quizzes?.filter(quiz => quiz.tags?.includes(subject) && showQuiz(quiz) && textMatch(quiz) && stageMatch(quiz)).length || 0;
         });
         return counts;
     };
@@ -82,13 +91,25 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
     const fieldCounts = () => {
         const counts: {[key: string]: number} = {};
         fields.forEach(field => {
-            counts[field] = quizzes?.filter(quiz => quiz.tags?.includes(field.toLowerCase()) && showQuiz(quiz)).length || 0;
+            counts[field] = quizzes?.filter(quiz => quiz.tags?.includes(field.toLowerCase()) && showQuiz(quiz) && textMatch(quiz) && stageMatch(quiz)).length || 0;
         });
         return counts;
     };
 
-    const isRelevant = (quiz: QuizSummaryDTO) => {
-        return showQuiz(quiz) && quiz.title?.toLowerCase().includes(filterText.toLowerCase()) && (!filterSubject || quiz.tags?.includes(filterSubject)) && (!filterField || quiz.tags?.includes(filterField.toLowerCase()));
+    const stageCounts = () => {
+        const counts: {[key: string]: number} = {};
+        getFilteredStageOptions().forEach(stage => {
+            counts[stage.label] = quizzes?.filter(quiz => quiz.audience?.some(isAudienceMatch(stage.value))
+                && showQuiz(quiz) && textMatch(quiz) && subjectMatch(quiz) && fieldMatch(quiz)).length || 0;
+        });
+        return counts;
+    };
+
+    const isRelevant = (quiz: QuizSummaryDTO) => showQuiz(quiz) && textMatch(quiz) && subjectMatch(quiz) && fieldMatch(quiz) && stageMatch(quiz);
+
+    const sidebarProps = {
+        filterText, setFilterText, filterSubject, setFilterSubject, subjectCounts: subjectCounts(), fields, filterField,
+        setFilterField, fieldCounts: fieldCounts(), filterStage, setFilterStage, stageCounts: stageCounts()
     };
 
     return <Container { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
@@ -108,8 +129,7 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
             </div>}
         </div>
         <SidebarLayout>
-            <PracticeQuizzesSidebar searchText={filterText} setSearchText={setFilterText} filterSubject={filterSubject} setFilterSubject={setFilterSubject}
-                subjectCounts={subjectCounts()} allFields={fields} filterField={filterField} setFilterField={setFilterField} fieldCounts={fieldCounts()}/>
+            <PracticeQuizzesSidebar {...sidebarProps}/>
             <MainContent>
                 {!user 
                     ? <b>You must be logged in to view practice tests.</b> 
