@@ -388,11 +388,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         You can select more than one entry in each area.
     </span>, undefined);
 
-    const description = siteSpecific(
-        (pageContext?.subject && pageContext.stage ? `Use our question finder to find questions to try on ${getHumanContext(pageContext)} topics.` : "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.") 
-        + " Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.",
-        "");
-
     const metaDescription = siteSpecific(
         "Find physics, maths, chemistry and biology questions by topic and difficulty.",
         "Search for the perfect computer science questions to study. For revision. For homework. For the classroom."
@@ -458,24 +453,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
-            currentPageTitle={siteSpecific("Question Finder", "Questions")}
-            description={description} help={pageHelp}
-            intermediateCrumbs={crumb ? [crumb] : []}
+            currentPageTitle={siteSpecific("Question Finder", "Questions")} 
+            help={pageHelp}
+            intermediateCrumbs={crumb ? [crumb] : []} 
             icon={{type: "hex", icon: "icon-finder"}}
         />
-        {siteSpecific(<div className="d-flex align-items-center">
-            <span>Use the search box and/or filters to find questions; you can then refine your search further with the filters.</span>
-            <Spacer/>
-            <div className="no-print d-flex align-items-center gap-2">
-                <div className="question-actions question-actions-leftmost mt-3">
-                    <ShareLink linkUrl={`/questions`}/>
-                </div>
-                <div className="question-actions mt-3 not-mobile">
-                    <PrintButton/>
-                </div>
-            </div>
-        </div>, 
-        <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />)}
+
         <SidebarLayout>
             <QuestionFinderSidebar 
                 searchText={searchQuery} setSearchText={debouncedSearchHandler} topLevelFilters={[]} 
@@ -495,6 +478,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             <MainContent>
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
+
+                {siteSpecific(
+                    <div className="my-3">
+                        {(pageContext?.subject && pageContext.stage 
+                            ? `Use our question finder to find questions to try on ${getHumanContext(pageContext)} topics.` 
+                            : "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology."
+                        ) + " Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions."}
+                    </div>,
+                    <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
+                )}
 
                 {isAda && <Row>
                     <Col lg={6} md={12} xs={12} className="finder-search">
@@ -517,7 +510,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
                 {isPhy && <FilterSummary/>}
 
-                <Row className="mt-4 position-relative finder-panel">
+                <Row className={classNames(siteSpecific("mt-2", "mt-4"), "position-relative finder-panel")}>
                     {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")} data-testid="question-finder-filters">
                         <QuestionFinderFilterPanel {...{
                             searchDifficulties, setSearchDifficulties,
