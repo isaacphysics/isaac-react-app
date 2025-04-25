@@ -558,6 +558,15 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
     const pageContext = useAppSelector(selectors.pageContext.context);
     const fields = pageContext?.subject ? tags.getDirectDescendents(pageContext.subject as TAG_ID) : [];
 
+    const updateFilterTags = (tag: Tag) => {
+        if (filterTags?.includes(tag)) {
+            setFilterTags(filterTags.filter(t => t !== tag));
+        }
+        else {
+            setFilterTags([...(filterTags ?? []), tag]);
+        }
+    };
+
     const updateFilterStages = (stage: Stage) => {
         if (filterStages?.includes(stage)) {
             setFilterStages(filterStages.filter(s => s !== stage));
@@ -613,10 +622,8 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             <ul>
                 {fields.filter(tag => tagCounts[tag.id] > 0)
                     .map((tag, j) => <li key={j} >
-                        <FilterCheckbox
-                            checkboxStyle="button" color="theme" data-bs-theme={pageContext.subject} tag={tag} conceptFilters={filterTags as Tag[]} 
-                            setConceptFilters={setFilterTags} tagCounts={tagCounts}
-                        />
+                        <StyledTabPicker checkboxTitle={tag.title} checked={filterTags?.includes(tag)}
+                            count={tagCounts[tag.id]} onInputChange={() => updateFilterTags(tag)}/>
                     </li>)}
             </ul>
         </>}
