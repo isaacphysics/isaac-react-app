@@ -7,8 +7,11 @@ import {
     examBoardLabelMap,
     isAda,
     isDefined,
+    isFullyDefinedContext,
     isLoggedIn,
     isPhy,
+    isSingleStageContext,
+    LEARNING_STAGE_TO_STAGES,
     roleRequirements,
     siteSpecific,
     STAGE,
@@ -35,7 +38,7 @@ import {
     useAppDispatch,
     useAppSelector
 } from "../state";
-import {DisplaySettings, GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
+import {DisplaySettings, GameboardContext, PageContextState, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import {useContext} from "react";
 import {Immutable} from "immer";
 
@@ -44,6 +47,8 @@ export interface UseUserContextReturnType {
     setStage: (stage: STAGE) => void;
     examBoard: EXAM_BOARD;
     setExamBoard: (stage: EXAM_BOARD) => void;
+    isFixedContext: boolean;
+    setFixedContext: (isFixedContext: boolean) => void;
     explanation: {stage: CONTEXT_SOURCE, examBoard: CONTEXT_SOURCE};
     hasDefaultPreferences: boolean;
 }
@@ -60,6 +65,7 @@ export enum CONTEXT_SOURCE {
     TRANSIENT = "TRANSIENT",
     REGISTERED = "REGISTERED",
     GAMEBOARD = "GAMEBOARD",
+    PAGE_CONTEXT = "PAGE_CONTEXT",
     DEFAULT = "DEFAULT",
     NOT_IMPLEMENTED = "NOT_IMPLEMENTED"
 }
@@ -80,10 +86,11 @@ export function useUserViewingContext(): UseUserContextReturnType {
 
     const setStage = (stage: STAGE) => dispatch(transientUserContextSlice?.actions.setStage(stage));
     const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));
+    const setFixedContext = (isFixedContext: boolean) => dispatch(transientUserContextSlice?.actions.setFixedContext(isFixedContext));
 
     const context = determineUserContext(transientUserContext, registeredContext, gameboardAndPathInfo, displaySettings);
 
-    return { ...context, setStage, setExamBoard };
+    return { ...context, setStage, setExamBoard, setFixedContext };
 }
 
 export const determineUserContext = (transientUserContext: TransientUserContextState, registeredContext: UserContext | undefined,
@@ -150,7 +157,13 @@ export const determineUserContext = (transientUserContext: TransientUserContextS
         }
     }
 
-    return { stage, examBoard, hasDefaultPreferences, explanation };
+    const isFixedContext = !!transientUserContext?.isFixedContext;
+
+    if (isFixedContext) {
+        explanation.stage = CONTEXT_SOURCE.PAGE_CONTEXT;
+    }
+
+    return { stage, examBoard, isFixedContext, hasDefaultPreferences, explanation };
 };
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
@@ -343,6 +356,23 @@ export function filterAudienceViewsByProperties(views: ViewingContext[], propert
         }
     });
     return filteredViews;
+}
+
+export function isRelevantPageContextOrIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null, pageContext: PageContextState) {
+    
+    // if we are in a subject-stage-specific route, this is only relevant if there is some overlap between that route and the content object; we ignore the user entirely.
+    if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
+        return !!intendedAudience?.some(audience => 
+            audience.stage?.some(auStage => 
+                pageContext.stage.some(pcStage => 
+                    LEARNING_STAGE_TO_STAGES[pcStage].includes(auStage as STAGE)
+                )
+            )
+        );
+    }
+
+    // otherwise, check the user context against the intended audience as normal
+    return isIntendedAudience(intendedAudience, userContext, user);
 }
 
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null): boolean {

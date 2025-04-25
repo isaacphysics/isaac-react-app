@@ -482,6 +482,13 @@ export const STAGE_TO_LEARNING_STAGE: {[stage in STAGE]: LearningStage | undefin
     advanced: "a_level",
 };
 
+export const LEARNING_STAGE_TO_STAGES: {[stage in LearningStage]: STAGE[]} = {
+    "11_14": [STAGE.YEAR_7_AND_8, STAGE.YEAR_9],
+    gcse: [STAGE.GCSE, STAGE.SCOTLAND_NATIONAL_5, STAGE.CORE],
+    a_level: [STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.ADVANCED],
+    university: [STAGE.UNIVERSITY],
+};
+
 export const HUMAN_STAGES: {[key: string]: string} = {
     "11_14": "11-14",
     "gcse": "GCSE",
@@ -745,6 +752,7 @@ export enum TAG_ID {
     evolution = "evolution",
     genetics = "genetics",
     physiology = "physiology",
+    bioMathsSkills = "bio_maths_skills",
 
     // Physics Topics ---
 
@@ -889,6 +897,8 @@ export enum TAG_ID {
     variation = "variation",
     theory = "theory",
     phylogenetics = "phylogenetics",
+    // Biology Maths Skills
+    bioStatisticalTests = "bio_statistical_tests",
 }
 
 export enum TAG_LEVEL {
