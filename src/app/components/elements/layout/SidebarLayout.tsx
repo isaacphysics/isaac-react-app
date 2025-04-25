@@ -6,7 +6,7 @@ import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacBoo
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
-    Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, Subject, Subjects, getFilteredStageOptions } from "../../../services";
+    Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -544,7 +544,7 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
 
 interface PracticeQuizzesSidebarProps extends SidebarProps {
     filterText: string;
-    setFilterText: (searchText: string) => void;
+    setFilterText: Dispatch<SetStateAction<string>>;
     filterTags?: Tag[];
     setFilterTags: Dispatch<SetStateAction<Tag[]>>;
     tagCounts: Record<string, number>;
@@ -566,11 +566,9 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
         }
     };
 
-    // Clear stage filters if incompatible with subject selection
+    // Clear stage filters on subject change, since previous stages may not be visible to deselect
     useEffect(() => {
-        if (!filterStages?.every(s => stageCounts[s] > 0)) {
-            setFilterStages(undefined);
-        }
+        setFilterStages(undefined);
     }, [filterTags]);
 
     return <ContentSidebar {...rest}>
@@ -579,7 +577,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
         <Input type="search" placeholder="e.g. Challenge" value={filterText} className="search--filter-input my-3"
             onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)} />
 
-        {!pageContext?.subject && <>
+        {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
             <div className="section-divider"/>
             <h5>Filter by subject</h5>
             <ul>
@@ -609,7 +607,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             </ul>
         </>}
 
-        {pageContext?.subject && fields.length > 0 && <>
+        {pageContext?.subject && fields.filter(tag => tagCounts[tag.id] > 0).length > 0 && <>
             <div className="section-divider"/>
             <h5>Filter by topic</h5>
             <ul>
@@ -623,7 +621,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             </ul>
         </>}
 
-        {!isSingleStageContext(pageContext) && <>
+        {!isSingleStageContext(pageContext) && getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).length > 0 && <>
             <div className="section-divider"/>
             <h5>Filter by stage</h5>
             <ul>
