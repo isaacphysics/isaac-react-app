@@ -46,9 +46,6 @@ import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, L
 import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { PrintButton } from "../elements/PrintButton";
-import { ShareLink } from "../elements/ShareLink";
-import { Spacer } from "../elements/Spacer";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { PageFragment } from "../elements/PageFragment";
