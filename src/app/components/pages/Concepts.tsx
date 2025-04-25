@@ -14,6 +14,7 @@ import { isFullyDefinedContext, useUrlPageTheme } from "../../services/pageConte
 import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { ContentSummaryDTO } from "../../../IsaacApiTypes";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 // This component is Isaac Physics only (currently)
 export const Concepts = withRouter((props: RouteComponentProps) => {
@@ -21,7 +22,10 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const user = useAppSelector(selectors.user.orNull);
     const pageContext = useUrlPageTheme();
 
-    const listConceptsQuery = useListConceptsQuery({conceptIds: undefined, tagIds: pageContext?.subject});
+    const listConceptsQuery = useListConceptsQuery(pageContext 
+        ? {conceptIds: undefined, tagIds: pageContext?.subject ?? tags.allSubjectTags.map(t => t.id).join(",")}
+        : skipToken
+    );
 
     const subjectToTagMap = {
         physics: TAG_ID.physics,
@@ -30,23 +34,25 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         maths: TAG_ID.maths,
     };
     
-    const applicableTags = pageContext?.subject ? tags.getDirectDescendents(subjectToTagMap[pageContext.subject]) : tags.allFieldTags;
+    const applicableTags = pageContext?.subject 
+        // this includes all subject tags and all field tags
+        ? [tags.getById(subjectToTagMap[pageContext.subject]), ...tags.getDirectDescendents(subjectToTagMap[pageContext.subject])]
+        : [...tags.allSubjectTags, ...tags.allFieldTags];
     
     const tagCounts : Record<string, number> = [...applicableTags, ...(pageContext?.subject ? [tags.getById(pageContext?.subject as TAG_ID)] : [])].reduce((acc, t) => ({...acc, [t.id]: listConceptsQuery?.data?.results?.filter(c => c.tags?.includes(t.id)).length || 0}), {});
 
-    const searchParsed = queryString.parse(location.search);
+    const searchParsed = queryString.parse(location.search, {arrayFormat: "comma"});
 
-    const queryParsed = searchParsed.query || "";
-    const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
+    const queryParsed = searchParsed.query || null;
+    const query = Array.isArray(queryParsed) ? queryParsed.join(",") : queryParsed;
 
-    const filterParsed = (searchParsed.types || (TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry + "," + TAG_ID.biology));
-    const filters = (Array.isArray(filterParsed) ? filterParsed[0] || "" : filterParsed || "").split(",");
+    const filterParsed = searchParsed.types || null;
+    const filters = Array.isArray(filterParsed) ? filterParsed.filter(x => !!x) as string[] : filterParsed?.split(",") ?? [];
 
     const [searchText, setSearchText] = useState(query);
-    const [conceptFilters, setConceptFilters] = useState<Tag[]>([
-        ...(pageContext?.subject ? [tags.getById(subjectToTagMap[pageContext.subject])] : []),
-        ...applicableTags.filter(f => filters.includes(f.id))
-    ]);
+    const [conceptFilters, setConceptFilters] = useState<Tag[]>(
+        applicableTags.filter(f => filters.includes(f.id))
+    );
 
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
@@ -74,14 +80,13 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     useEffect(() => {doSearch();}, [conceptFilters]);
 
     const shortcutAndFilter = (concepts?: ContentSummaryDTO[]) => {
-        const searchResults = concepts
-            ?.filter(c =>
-                matchesAllWordsInAnyOrder(c.title, searchText || "") ||
-                matchesAllWordsInAnyOrder(c.summary, searchText || "")
-            );
-    
+        const searchResults = concepts?.filter(c =>
+            matchesAllWordsInAnyOrder(c.title, searchText || "") ||
+            matchesAllWordsInAnyOrder(c.summary, searchText || "")
+        );
+        
         const filteredSearchResults = searchResults
-            ?.filter((result) => result?.tags?.some(t => filters.includes(t)))
+            ?.filter((result) => !filters.length || result?.tags?.some(t => filters.includes(t)))
             .filter((result) => searchResultIsPublic(result, user));
     
         const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
