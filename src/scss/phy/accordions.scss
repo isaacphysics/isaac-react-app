@@ -17,14 +17,11 @@
     border-radius: 8px;
   }
 
-  &:has(> .accordion-header:focus-visible) {
-    outline: 2px solid var(--subject-color-300);
-    outline-offset: 2px;
-  }
-
   .accordion-header {
     background: rgba(white, 1);
     border-radius: 8px;
+
+    z-index: 1; // so that bottom of :focus-visible outline is visible
 
     .accordion-part {
       font-size: 16px;
