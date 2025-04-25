@@ -2,8 +2,9 @@ import { withRouter } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Button, ListGroupItem, Input, ListGroup, Col, Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
-import { getFilteredStageOptions, isAda, isDefined, isEventLeaderOrStaff, isLoggedIn, isPhy, isTutorOrAbove, LearningStage, siteSpecific, STAGE_TO_LEARNING_STAGE, Subject, Subjects, TAG_ID, tags } from "../../../services";
+import { getFilteredStageOptions, isAda, isDefined, isEventLeaderOrStaff, isLoggedIn, isPhy, isTutorOrAbove, LearningStage, siteSpecific, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
 import { AudienceContext, QuizSummaryDTO, Stage } from "../../../../IsaacApiTypes";
+import { Tag} from "../../../../IsaacAppTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { useGetAvailableQuizzesQuery } from "../../../state/slices/api/quizApi";
 import { QuizzesPageProps } from "./MyQuizzes";
@@ -14,28 +15,29 @@ import { MainContent, PracticeQuizzesSidebar, SidebarLayout } from "../../elemen
 import { isFullyDefinedContext, useUrlPageTheme } from "../../../services/pageContext";
 import { selectors, useAppSelector } from "../../../state";
 import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
-
 import classNames from "classnames";
 import { PrintButton } from "../../elements/PrintButton";
 import { ShareLink } from "../../elements/ShareLink";
 
 const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
-    const {data: quizzes} = useGetAvailableQuizzesQuery(0);
-    const [filterText, setFilterText] = useState<string>("");
-    const [filterSubject, setFilterSubject] = useState<Subject>();
-    const [filterField, setFilterField] = useState<string>("");
-    const [filterStage, setFilterStage] = useState<Stage>();
-    const [copied, setCopied] = useState(false);
-
-    const user = useAppSelector(selectors.user.orNull);
-
     const pageContext = useUrlPageTheme();
     const pageSubject = pageContext?.subject;
     const pageStage = pageContext?.stage ? pageContext.stage[0] : undefined;
 
-    const isAudienceMatch = (selectedStage: Stage | LearningStage) => (contentAudience: AudienceContext) =>
-        contentAudience.stage?.includes(selectedStage as Stage) ||
-        contentAudience.stage?.map(s => STAGE_TO_LEARNING_STAGE[s]).includes(selectedStage as LearningStage);
+    const {data: quizzes} = useGetAvailableQuizzesQuery(0);
+    const user = useAppSelector(selectors.user.orNull);
+    
+    // If the user is event admin or above, and the quiz is hidden from teachers, then show that
+    // If the user is teacher or above, show if the quiz is visible to students
+    const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
+        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
+        {isTutorOrAbove(user) && ((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
+    </>;
+
+    const [filterText, setFilterText] = useState<string>("");
+    const [filterTags, setFilterTags] = useState<Tag[]>([]); // Subjects & fields
+    const [filterStages, setFilterStages] = useState<Stage[]>();
+    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
         if (location.search.includes("filter")) {
@@ -43,11 +45,14 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
         }
     }, []);
 
+    const audienceMatch = (selectedStage: Stage | LearningStage) => (contentAudience: AudienceContext) =>
+        contentAudience.stage?.includes(selectedStage as Stage) ||
+        contentAudience.stage?.map(s => STAGE_TO_LEARNING_STAGE[s]).includes(selectedStage as LearningStage);
+
     const showQuiz = (quiz: QuizSummaryDTO) => {
         if (!user || !isLoggedIn(user)) return false;
         if (pageSubject && !quiz.tags?.includes(pageSubject)) return false;
-
-        if (pageStage && !quiz.audience?.some(isAudienceMatch(pageStage))) return false;
+        if (pageStage && !quiz.audience?.some(audienceMatch(pageStage))) return false;
 
         switch (user.role) {
             case "STUDENT":
@@ -61,37 +66,22 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
         }
     };
 
-    // If the user is event admin or above, and the quiz is hidden from teachers, then show that
-    // If the user is teacher or above, show if the quiz is visible to students
-    const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
-        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
-        {isTutorOrAbove(user) && ((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
-    </>;
-
     const textMatch = (quiz: QuizSummaryDTO) => quiz.title?.toLowerCase().includes(filterText.toLowerCase());
-    const subjectMatch = (quiz: QuizSummaryDTO) => !filterSubject || quiz.tags?.includes(filterSubject);
-    const fieldMatch = (quiz: QuizSummaryDTO) => !filterField || quiz.tags?.includes(filterField.toLowerCase());
-    const stageMatch = (quiz: QuizSummaryDTO) => !filterStage || quiz.audience?.some(isAudienceMatch(filterStage));
+    const tagMatch = (quiz: QuizSummaryDTO) => filterTags.length === 0 || quiz.tags?.some(t => (filterTags.map(tag => tag.id as string)).includes(t));
+    const stageMatch = (quiz: QuizSummaryDTO) => !filterStages || filterStages.length === 0 || filterStages.some(s => quiz.audience?.some(audienceMatch(s)));
+    const isRelevant = (quiz: QuizSummaryDTO) => showQuiz(quiz) && textMatch(quiz) && tagMatch(quiz) && stageMatch(quiz);
 
-    const subjectCounts = () => {
-        const counts: {[key: string]: number} = {};
-        Subjects.forEach(subject => {
-            counts[subject] = quizzes?.filter(quiz => quiz.tags?.includes(subject) && showQuiz(quiz) && textMatch(quiz) && stageMatch(quiz)).length || 0;
-        });
-        return counts;
-    };
-
-    const fields = tags.getFieldTags(Array.from((quizzes || []).filter(q => pageSubject && q.tags?.includes(pageSubject)).reduce((a, c) => {
+    const fields = tags.getFieldTags(Array.from((quizzes || []).reduce((a, c) => {
         if (isDefined(c.tags) && c.tags.length > 0) {
             return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
         }
         return a;
-    }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
+    }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).sort();
 
-    const fieldCounts = () => {
+    const tagCounts = () => {
         const counts: {[key: string]: number} = {};
-        fields.forEach(field => {
-            counts[field] = quizzes?.filter(quiz => quiz.tags?.includes(field.toLowerCase()) && showQuiz(quiz) && textMatch(quiz) && stageMatch(quiz)).length || 0;
+        [...Subjects, ...fields.map(field => field.id)].forEach(tag => {
+            counts[tag] = quizzes?.filter(quiz => quiz.tags?.includes(tag) && showQuiz(quiz) && textMatch(quiz) && stageMatch(quiz)).length || 0;
         });
         return counts;
     };
@@ -99,18 +89,12 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
     const stageCounts = () => {
         const counts: {[key: string]: number} = {};
         getFilteredStageOptions().forEach(stage => {
-            counts[stage.label] = quizzes?.filter(quiz => quiz.audience?.some(isAudienceMatch(stage.value))
-                && showQuiz(quiz) && textMatch(quiz) && subjectMatch(quiz) && fieldMatch(quiz)).length || 0;
+            counts[stage.label] = quizzes?.filter(quiz => quiz.audience?.some(audienceMatch(stage.value)) && showQuiz(quiz) && textMatch(quiz) && tagMatch(quiz)).length || 0;
         });
         return counts;
     };
 
-    const isRelevant = (quiz: QuizSummaryDTO) => showQuiz(quiz) && textMatch(quiz) && subjectMatch(quiz) && fieldMatch(quiz) && stageMatch(quiz);
-
-    const sidebarProps = {
-        filterText, setFilterText, filterSubject, setFilterSubject, subjectCounts: subjectCounts(), fields, filterField,
-        setFilterField, fieldCounts: fieldCounts(), filterStage, setFilterStage, stageCounts: stageCounts()
-    };
+    const sidebarProps = {filterText, setFilterText, filterTags, setFilterTags, tagCounts: tagCounts(), filterStages, setFilterStages, stageCounts: stageCounts()};
 
     return <Container { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 

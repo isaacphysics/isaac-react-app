@@ -1,4 +1,4 @@
-import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
@@ -545,22 +545,33 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
 interface PracticeQuizzesSidebarProps extends SidebarProps {
     filterText: string;
     setFilterText: (searchText: string) => void;
-    filterSubject?: Subject;
-    setFilterSubject: (subject: Subject | undefined) => void;
-    subjectCounts: Record<string, number>;
-    fields: string[];
-    filterField?: string;
-    setFilterField: (field: string) => void;
-    fieldCounts: Record<string, number>;
-    filterStage?: Stage;
-    setFilterStage: (stage: Stage | undefined) => void;
+    filterTags?: Tag[];
+    setFilterTags: Dispatch<SetStateAction<Tag[]>>;
+    tagCounts: Record<string, number>;
+    filterStages?: Stage[];
+    setFilterStages: Dispatch<SetStateAction<Stage[] | undefined>>;
     stageCounts: Record<string, number>;
 }
 
 export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
-    const { filterText, setFilterText, filterSubject, setFilterSubject, subjectCounts, fields,
-        filterField, setFilterField, fieldCounts, filterStage, setFilterStage, stageCounts, ...rest } = props;
+    const { filterText, setFilterText, filterTags, setFilterTags, tagCounts, filterStages, setFilterStages, stageCounts, ...rest } = props;
     const pageContext = useAppSelector(selectors.pageContext.context);
+    const fields = pageContext?.subject ? tags.getDirectDescendents(pageContext.subject as TAG_ID) : [];
+
+    const updateFilterStages = (stage: Stage) => {
+        if (filterStages?.includes(stage)) {
+            setFilterStages(filterStages.filter(s => s !== stage));
+        } else {
+            setFilterStages([...(filterStages ?? []), stage]);
+        }
+    };
+
+    // Clear stage filters if incompatible with subject selection
+    useEffect(() => {
+        if (!filterStages?.every(s => stageCounts[s] > 0)) {
+            setFilterStages(undefined);
+        }
+    }, [filterTags]);
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
@@ -572,17 +583,29 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             <div className="section-divider"/>
             <h5>Filter by subject</h5>
             <ul>
-                <li>
-                    <StyledTabPicker id="all" checkboxTitle="Show all" checked={!filterSubject} onInputChange={() => {setFilterSubject(undefined);}}/>
-                </li>
-                <div className="section-divider-small"/>
-                {Subjects.filter(s => subjectCounts[s] > 0).map((subject, i) =>
-                    <li key={i}>
-                        <StyledTabPicker checkboxTitle={HUMAN_SUBJECTS[subject]} checked={filterSubject === subject}
-                            count={subjectCounts[subject]} onInputChange={() => {setFilterSubject(subject);}}
-                            data-bs-theme={subject}
+                {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
+                    const subjectTag = tags.getById(subject as TAG_ID);
+                    const descendentTags = tags.getDirectDescendents(subjectTag.id);
+                    const isSelected = filterTags?.includes(subjectTag) || descendentTags.some(tag => filterTags?.includes(tag));
+                    const isPartial = descendentTags.some(tag => filterTags?.includes(tag)) && descendentTags.some(tag => !filterTags?.includes(tag));
+                    return <li key={i} className={classNames("ps-2", {"checkbox-region": isSelected})}>
+                        <FilterCheckbox 
+                            checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={filterTags as Tag[]} 
+                            setConceptFilters={setFilterTags} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
+                            partiallySelected={descendentTags.some(tag => filterTags?.includes(tag))}
+                            className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
                         />
-                    </li>)}
+                        {isSelected && <ul className="ms-3 ps-2">
+                            {descendentTags.filter(tag => tagCounts[tag.id] > 0)
+                                .map((tag, j) => <li key={j}>
+                                    <FilterCheckbox
+                                        checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={filterTags as Tag[]} 
+                                        setConceptFilters={setFilterTags} tagCounts={tagCounts} incompatibleTags={[subjectTag]}
+                                    />
+                                </li>)}
+                        </ul>}
+                    </li>;
+                })}
             </ul>
         </>}
 
@@ -590,14 +613,12 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             <div className="section-divider"/>
             <h5>Filter by topic</h5>
             <ul>
-                <li>
-                    <StyledTabPicker id="all" checkboxTitle="Show all" checked={!filterField} onInputChange={() => {setFilterField("");}}/>
-                </li>
-                <div className="section-divider-small"/>
-                {fields.filter(f => fieldCounts[f] > 0).map((field, i) =>
-                    <li key={i}>
-                        <StyledTabPicker checkboxTitle={field} checked={filterField === field}
-                            count={fieldCounts[field]} onInputChange={() => {setFilterField(field);}}/>
+                {fields.filter(tag => tagCounts[tag.id] > 0)
+                    .map((tag, j) => <li key={j} >
+                        <FilterCheckbox
+                            checkboxStyle="button" color="theme" data-bs-theme={pageContext.subject} tag={tag} conceptFilters={filterTags as Tag[]} 
+                            setConceptFilters={setFilterTags} tagCounts={tagCounts}
+                        />
                     </li>)}
             </ul>
         </>}
@@ -606,16 +627,12 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             <div className="section-divider"/>
             <h5>Filter by stage</h5>
             <ul>
-                <li>
-                    <StyledTabPicker id="all" checkboxTitle="Show all" checked={!filterStage}
-                        onInputChange={() => {setFilterStage(undefined);}} data-bs-theme={filterSubject}/>
-                </li>
-                <div className="section-divider-small"/>
                 {getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).map((stage, i) =>
                     <li key={i}>
-                        <StyledTabPicker checkboxTitle={stage.label} checked={filterStage === stage.value}
-                            count={stageCounts[stage.label]}
-                            onInputChange={() => {setFilterStage(stage.value);}} data-bs-theme={filterSubject}/>
+                        <StyledCheckbox checked={filterStages?.includes(stage.value)}
+                            label={<>{stage.label} {tagCounts && <span className="text-muted">({stageCounts[stage.label]})</span>}</>}
+                            color="theme" data-bs-theme={filterTags?.length === 1 ? filterTags[0].id : undefined}
+                            onChange={() => {updateFilterStages(stage.value);}}/>
                     </li>)}
             </ul>
         </>}
