@@ -131,7 +131,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [readingFromUrlParams, setReadingFromUrlParams] = useState(FILTER_PARAMS.some(p => params[p]));
 
     useEffect(function populateFiltersFromAccountSettings() {
-        if (isLoggedIn(user)) {
+        // on isaac, we should only do this if we are not on a subject-specific QF
+        if (isLoggedIn(user) && (!isPhy || (pageContext && !pageContext.subject))) {
             const filtersHaveNotBeenSpecifiedByQueryParams = FILTER_PARAMS.every(p => !params[p]);
             if (filtersHaveNotBeenSpecifiedByQueryParams) {
                 const accountStages = user.registeredContexts?.map(c => c.stage).filter(s => s) as STAGE[];
@@ -147,7 +148,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- we don't want this to re-run on params change.
-    }, [user]);
+    }, [user, pageContext]);
 
     useEffect(() => {
         if (pageContext) {
