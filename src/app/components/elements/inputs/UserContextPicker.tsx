@@ -8,6 +8,7 @@ import {
     getFilteredStageOptions,
     isAda,
     isLoggedIn,
+    isPhy,
     isStaff,
     SITE_TITLE_SHORT,
     siteSpecific,
@@ -64,7 +65,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         return <Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
             <Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}>
                 {/* Stage Selector */}
-                <div className={classNames("form-group w-100 d-flex justify-content-end m-0", {"mb-3": isAda})}>
+                <div className={classNames("form-group w-100 d-flex justify-content-end m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}
                     {!userContext.hasDefaultPreferences && (userContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
                         <button className={"icon-reset mt-2"} aria-label={"Reset viewing context"} onClick={() => {
@@ -127,7 +128,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     }
 
                     <div className="mt-2 ms-1">
-                        <span id={`viewing-context-explanation`} className="icon-help mx-1"/>
+                        <span id={`viewing-context-explanation`} className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help mx-1")}/>
                         <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
                             You are seeing {stageLabelMap[userContext.stage]}{isAda ? ` - ${examBoardLabelMap[userContext.examBoard]}` : ""}
                             &nbsp;content.&nbsp;
