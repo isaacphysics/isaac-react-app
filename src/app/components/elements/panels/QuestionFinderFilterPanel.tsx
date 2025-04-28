@@ -160,7 +160,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     const pageContext = useAppSelector(selectors.pageContext.context);
     const bookOptions = ISAAC_BOOKS.filter(b => !b.hidden).filter(book => 
         (!pageContext?.subject || book.subject === pageContext?.subject)
-        && (!pageContext?.stage || book.stages.some(x => pageContext?.stage?.includes(x)))
+        && (!pageContext?.stage?.length || book.stages.some(x => pageContext?.stage?.includes(x)))
     );
 
     const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));

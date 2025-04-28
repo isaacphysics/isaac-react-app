@@ -64,7 +64,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         
         const filteredSearchResults = searchResults
             ?.filter((result) => excludeTopicFiltering || !filters.length || result?.tags?.some(t => filters.includes(t)))
-            .filter((result) => !pageContext?.stage || isRelevantToPageContext(result.audience, pageContext))
+            .filter((result) => !pageContext?.stage?.length || isRelevantToPageContext(result.audience, pageContext))
             .filter((result) => searchResultIsPublic(result, user));
     
         const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
