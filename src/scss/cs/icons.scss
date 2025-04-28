@@ -121,20 +121,3 @@ icon-status {
 .bg-grey {
   background: $cs-silver;
 }
-
-
-// Icon sizing
-.icon {
-  --icon-size: 16px;
-  --mask-size: 100%;
-}
-
-.icon-lg {
-  --icon-size: 60px;
-  --mask-size: initial;
-}
-
-.icon-xl {
-  --icon-size: 75px;
-  --mask-size: initial;
-}
