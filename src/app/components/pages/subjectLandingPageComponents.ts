@@ -1,5 +1,5 @@
 import { PageContextState } from "../../../IsaacAppTypes";
-import { BookInfo, getHumanContext, interleave, ISAAC_BOOKS, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS, Writeable } from "../../services";
+import { BookInfo, getHumanContext, interleave, ISAAC_BOOKS, ISAAC_BOOKS_BY_TAG, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS } from "../../services";
 import { ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
 import { ListViewCardProps } from "../elements/list-groups/ListView";
 
@@ -127,16 +127,27 @@ const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
     }
 };
 
-// constructs a map similar to above for relevant books (pulled from isaacBooks).
-const subjectSpecificBooksMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: BookInfo[]}} = (
-    Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
-        acc[subject as keyof typeof PHY_NAV_SUBJECTS] = stages.reduce((stageAcc, stage) => {
-            stageAcc[stage] = ISAAC_BOOKS.filter(book => book.subject === subject && book.stages.includes(stage));
-            return stageAcc;
-        }, {} as {[stage in typeof stages[number]]: BookInfo[]});
-        return acc;
-    }, {} as Writeable<{[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: BookInfo[]}}>)
-);
+const subjectSpecificBooksMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (keyof typeof ISAAC_BOOKS_BY_TAG)[]}} = {
+    "physics": {
+        "11_14": ["phys_book_step_into", "phys_book_step_up"],
+        "gcse": ["phys_book_gcse", "maths_book_gcse", "phys_book_step_up"],
+        "a_level": ["physics_skills_19", "maths_book_2e", "physics_linking_concepts", "solving_physics_problems"],
+        "university": ["qmp", "physics_linking_concepts", "maths_book_2e", "solving_physics_problems"],
+    },
+    "maths": {
+        "gcse": ["maths_book_gcse"],
+        "a_level": ["maths_book_gcse"],
+        "university": ["maths_book_2e", "qmp"],
+    },
+    "chemistry": {
+        "gcse": ["maths_book_gcse"],
+        "a_level": ["chemistry_16", "maths_book_2e", "maths_book_gcse"],
+        "university": ["maths_book_2e"],
+    },
+    "biology": {
+        "a_level": ["maths_book_2e", "maths_book_gcse"]
+    }
+};
 
 type LandingPageCard =  ((context: NonNullable<Required<PageContextState>>) => ListViewCardProps);
 
@@ -161,12 +172,12 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
 
 export const getBooksForContext = (context: PageContextState): BookInfo[] => {
     if (!isFullyDefinedContext(context)) return [];
+    
     if (!context?.stage?.length) {
-        return ISAAC_BOOKS.filter(book => book.subject === context.subject);
+        return ISAAC_BOOKS.filter(b => !b.hidden).filter(book => book.subject === context.subject);
     }
     
-    if (!isFullyDefinedContext(context)) return []; // this is implied by the above, but this has a type guard
     if (!isSingleStageContext(context)) return [];
     
-    return subjectSpecificBooksMap[context.subject][context.stage[0] as keyof typeof subjectSpecificBooksMap[typeof context.subject]] || [];
+    return (subjectSpecificBooksMap[context.subject][context.stage[0] as keyof typeof subjectSpecificBooksMap[typeof context.subject]] || []).map(tag => ISAAC_BOOKS_BY_TAG[tag]);
 };

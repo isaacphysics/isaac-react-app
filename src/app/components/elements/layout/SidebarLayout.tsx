@@ -307,13 +307,14 @@ interface FilterCheckboxProps extends React.HTMLAttributes<HTMLElement> {
     incompatibleTags?: Tag[]; // tags that are removed when this tag is added
     dependentTags?: Tag[]; // tags that are removed when this tag is removed
     baseTag?: Tag; // tag to add when all tags are removed
+    partial?: boolean; // if true, the checkbox can be partially selected
     partiallySelected?: boolean;
     checkboxStyle?: "tab" | "button";
     bsSize?: "sm" | "lg";
 }
 
 const FilterCheckbox = (props : FilterCheckboxProps) => {
-    const {tag, conceptFilters, setConceptFilters, tagCounts, checkboxStyle, incompatibleTags, dependentTags, baseTag, partiallySelected, ...rest} = props;
+    const {tag, conceptFilters, setConceptFilters, tagCounts, checkboxStyle, incompatibleTags, dependentTags, baseTag, partial, partiallySelected, ...rest} = props;
     const [checked, setChecked] = useState(conceptFilters.includes(tag));
 
     useEffect(() => {
@@ -331,6 +332,7 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
         ? <StyledCheckbox {...rest} id={tag.id} checked={checked}
             onChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
             label={<span>{tag.title} {tagCounts && isDefined(tagCounts[tag.id]) && <span className="text-muted">({tagCounts[tag.id]})</span>}</span>}
+            partial={partial}
         />
         : <StyledTabPicker {...rest} id={tag.id} checked={checked} 
             onInputChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
@@ -454,8 +456,8 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
                     <FilterCheckbox 
                         checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
                         setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
-                        partiallySelected={descendentTags.some(tag => conceptFilters.includes(tag))} // not quite isPartial; this is also true if all descendents selected
-                        className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
+                        partial partiallySelected={descendentTags.some(tag => conceptFilters.includes(tag))} // not quite isPartial; this is also true if all descendents selected
+                        className={classNames("icon", {"icon-checkbox-off": !isSelected, "icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
                     />
                     {isSelected && <div className="ms-3 ps-2">
                         {descendentTags

@@ -358,17 +358,21 @@ export function filterAudienceViewsByProperties(views: ViewingContext[], propert
     return filteredViews;
 }
 
+export function isRelevantToPageContext(intendedAudience: ContentBaseDTO['audience'], pageContext: PageContextState) {
+    return isFullyDefinedContext(pageContext) && !!intendedAudience?.some(audience => 
+        audience.stage?.some(auStage => 
+            pageContext.stage.some(pcStage => 
+                LEARNING_STAGE_TO_STAGES[pcStage].includes(auStage as STAGE)
+            )
+        )
+    );
+}
+
 export function isRelevantPageContextOrIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null, pageContext: PageContextState) {
     
     // if we are in a subject-stage-specific route, this is only relevant if there is some overlap between that route and the content object; we ignore the user entirely.
     if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
-        return !!intendedAudience?.some(audience => 
-            audience.stage?.some(auStage => 
-                pageContext.stage.some(pcStage => 
-                    LEARNING_STAGE_TO_STAGES[pcStage].includes(auStage as STAGE)
-                )
-            )
-        );
+        return isRelevantToPageContext(intendedAudience, pageContext);
     }
 
     // otherwise, check the user context against the intended audience as normal
