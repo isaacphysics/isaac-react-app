@@ -222,7 +222,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             setIsCurrentSearchEmpty(false);
 
             dispatch(searchQuestions({
-                searchString: searchString,
+                searchString: searchString || undefined,
                 tags: getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value).join(",") || undefined,
                 topics: siteSpecific(undefined, [...topics].filter((query) => query != "").join(",") || undefined),
                 books: (!excludeBooks && book.join(",")) || undefined,

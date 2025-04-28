@@ -10,6 +10,7 @@ import { Spacer } from './Spacer';
 import classNames from 'classnames';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 import { authenticateWithTokenAfterPrompt } from './panels/TeacherConnections';
+import { getFriendlyDaysUntil } from './DateString';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -87,9 +88,7 @@ interface AssignmentCardProps {
 
 export const AssignmentCard = (props: AssignmentCardProps) => {
     const { assignment, isTeacherDashboard, groups } = props;
-    const today = new Date();
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
-    const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
 
     // QuizAssignmentDTOs don't have group names
     const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
@@ -118,7 +117,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
             </h5>
             <Spacer/>
             <div className="d-flex text-nowrap">
-                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
+                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due {getFriendlyDaysUntil(dueDate)}</span>)}
                 <span className="group-name">{groupName}</span>
             </div>
         </Card>

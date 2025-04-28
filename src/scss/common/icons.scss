@@ -79,10 +79,18 @@ img[aria-disabled="true"] {
 i.icon {
   &, &[color="primary"] {
     background-color: var(--icon-primary);
+    
+    @include not-reduced-motion {
+      transition: background-color 0.15s ease-in-out; // mirrors BS's $btn-transition
+    }
   
     // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
     &::after {
       background-color: var(--icon-primary);
+      
+      @include not-reduced-motion {
+        transition: background-color 0.15s ease-in-out;
+      }
     }
   }
 

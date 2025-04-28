@@ -303,6 +303,13 @@ svg {
     fill: $phy_green;
   }
 }
+.btn.btn-keyline:hover > i.icon, .btn.btn-tint:hover > i.icon {
+  background-color: var(--icon-hover);
+
+  &::after {
+    background-color: var(--icon-hover);
+  }
+}
 
 .phy-hex-icon {
   // this is essentially an .icon, but needs different colouring; override size as needed with icon-lg, icon-xl, etc.

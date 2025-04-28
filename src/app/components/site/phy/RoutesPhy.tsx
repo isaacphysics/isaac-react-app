@@ -47,6 +47,7 @@ import { PhysBookYrNine } from "../../pages/books_old/phys_book_yr9";
 import { PreUniMaths } from "../../pages/books_old/pre_uni_maths";
 import { PreUniMaths2e } from "../../pages/books_old/pre_uni_maths_2e";
 import { StepUpPhys } from "../../pages/books_old/step_up_phys";
+import { QuizView } from "../../pages/quizzes/QuizView";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -116,6 +117,8 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/test/preview/:quizId/page/:page" ifUser={isTutorOrAbove} component={QuizPreview} />,
     <TrackedRoute key={key++} exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
     <TrackedRoute key={key++} exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
+    <TrackedRoute key={key++} exact path="/test/view/:quizId" ifUser={isLoggedIn} component={QuizView} />,
+
     // The order of these redirects matters to prevent substring replacement
     <Redirect key={key++} from="/quiz/assignment/:quizAssignmentId/feedback"   to="/test/assignment/:quizAssignmentId/feedback" />,
     <Redirect key={key++} from="/quiz/assignment/:quizAssignmentId/page/:page" to="/test/assignment/:quizAssignmentId/page/:page" />,

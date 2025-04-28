@@ -88,10 +88,17 @@ const subjectCategories = Object.entries(PHY_NAV_SUBJECTS).map(([subject, stages
     };
 });
 
+const subjectDescriptions: Record<Subject, string> = {
+    "physics": "Discover how the universe works using our question decks, quizzes, lessons and revision, and much more.  Click on a learning stage below to explore!",
+    "maths": "Unlock the language of science to hold the keys to describing our world using our question decks, apps, and much more.  Click on a learning stage below to explore!",
+    "chemistry": "Grasp the fundamentals of matter using our question decks, glossary, apps, and much more. Click on a learning stage below to explore!",
+    "biology": "Uncover the the science of life using our question decks, glossary, extension materials, and much more. Click on the learning stage below to explore!",
+};
+
 const getListViewSubjectCard = (sc: subjectCategory) => {
     const item: ShortcutResponse = {
         title: sc.humanSubject,
-        subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris faucibus est vulputate augue tristique, sed vehicula turpis pellentesque.",
+        subtitle: subjectDescriptions[sc.subject as Subject],
     };
 
     const listViewSubjectCard: ListViewCardProps = {

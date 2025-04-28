@@ -24,6 +24,7 @@ const contextExplanationMap: {[key in CONTEXT_SOURCE]: string} = {
     [CONTEXT_SOURCE.REGISTERED]: "your account settings",
     [CONTEXT_SOURCE.GAMEBOARD]: `the ${siteSpecific("question deck", "quiz")} settings`,
     [CONTEXT_SOURCE.DEFAULT]: `${SITE_TITLE_SHORT}'s default settings`,
+    [CONTEXT_SOURCE.PAGE_CONTEXT]: "the page context, which always takes precedence over the context picker settings. Try reloading to remove the page context to switch",
     [CONTEXT_SOURCE.NOT_IMPLEMENTED]: "the site's settings"
 };
 
@@ -76,6 +77,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
                         value={userContext.stage}
+                        disabled={userContext.isFixedContext}
                         onChange={e => {
                             const newParams: { [key: string]: unknown } = {...qParams, stage: e.target.value};
                             const stage = e.target.value as STAGE;
@@ -127,7 +129,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     <div className="mt-2 ms-1">
                         <span id={`viewing-context-explanation`} className="icon-help mx-1"/>
                         <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
-                            You are seeing {stageLabelMap[userContext.stage]} {isAda ? ` - ${examBoardLabelMap[userContext.examBoard]}` : ""}
+                            You are seeing {stageLabelMap[userContext.stage]}{isAda ? ` - ${examBoardLabelMap[userContext.examBoard]}` : ""}
                             &nbsp;content.&nbsp;
                             {formatContextExplanation(userContext.explanation.stage, userContext.explanation.examBoard)}&nbsp;
                             {isAda && !isLoggedIn(user) && !userContext.hasDefaultPreferences ?

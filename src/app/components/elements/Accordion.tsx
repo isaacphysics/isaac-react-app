@@ -42,7 +42,7 @@ let nextClientId = 0;
 export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useAppDispatch();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
-    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
+    const page = useAppSelector(selectors.doc.get);
 
     const deviceSize = useDeviceSize();
 
@@ -182,21 +182,22 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             }}
             aria-expanded={isOpen ? "true" : "false"}
         >
-            {isConceptPage && audienceString && <span className={
-                classNames("stage-label d-flex align-items-center p-2 justify-content-center ", {[audienceStyle(audienceString)]: isAda, "bg-theme text-white": isPhy})
+            {isConceptPage && audienceString && isAda && <span className={
+                classNames("stage-label d-flex align-items-center p-2 justify-content-center ", audienceStyle(audienceString))
             }>
-                {siteSpecific(
-                    audienceString,
-                    above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")
+                {(above["sm"](deviceSize) 
+                    ? audienceString 
+                    : audienceString.replaceAll(",", "\n")
                 ).split("\n").map(
                     (line, i, arr) => <>
                         {line}{i < arr.length && <br/>}
                     </>
                 )}
             </span>}
-            <div className={classNames("d-flex flex-grow-1", siteSpecific("flex-column ps-3 pt-3", "align-items-center ps-1"))}>
+            <div className={classNames("d-flex flex-grow-1", siteSpecific(`flex-column ps-3 ${isConceptPage && audienceString ? "pt-1" : "pt-3"}`, "align-items-center ps-1"))}>
                 {isDefined(index) && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>}
                 <div className={classNames("accordion-title p-3 ps-1", siteSpecific("pt-0", ""))}>
+                    {isConceptPage && audienceString && isPhy && <span className="inline-stage-label">{audienceString}<br/></span>}
                     <Markup encoding={"latex"}>
                         {trustedTitle || (isAda ? "" : (isDefined(index) ? `(${ALPHABET[index % ALPHABET.length].toLowerCase()})` : "Untitled"))}
                     </Markup>

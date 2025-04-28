@@ -7,12 +7,19 @@ import {
 } from "../IsaacApiTypes";
 import {UserPreferencesDTO} from "../IsaacAppTypes";
 
-export const errorResponses: {[key: string]: object} = {
+export type ErrorType = 'mustBeLoggedIn401' | 'testUnavailable404';
+export const errorResponses: Record<ErrorType, object> = {
     mustBeLoggedIn401: {
-        "responseCode":401,
-        "responseCodeType":"Unauthorized",
-        "errorMessage":"You must be logged in to access this resource.",
-        "bypassGenericSiteErrorPage":false
+        responseCode: 401,
+        responseCodeType: "Unauthorized",
+        errorMessage: "You must be logged in to access this resource.",
+        bypassGenericSiteErrorPage: false
+    },
+    testUnavailable404: {
+        responseCode: 404,
+        responseCodeType: "Not found",
+        errorMessage: "This test has become unavailable.",
+        bypassGenericSiteErrorPage: false
     }
 };
 

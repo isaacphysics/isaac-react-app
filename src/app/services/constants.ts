@@ -238,10 +238,6 @@ export enum ACTION_TYPE {
     GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS = "GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS",
     GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE = "GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE",
 
-    CONCEPTS_REQUEST = "CONCEPTS_REQUEST",
-    CONCEPTS_RESPONSE_SUCCESS = "CONCEPTS_RESPONSE_SUCCESS",
-    CONCEPTS_RESPONSE_FAILURE = "CONCEPTS_RESPONSE_FAILURE",
-
     // Different ways of loading attempts, but ultimately either an attempt is loaded or it isn't
     QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST = "QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST",
     QUIZ_START_FREE_ATTEMPT_REQUEST = "QUIZ_START_FREE_ATTEMPT_REQUEST",
@@ -486,6 +482,13 @@ export const STAGE_TO_LEARNING_STAGE: {[stage in STAGE]: LearningStage | undefin
     advanced: "a_level",
 };
 
+export const LEARNING_STAGE_TO_STAGES: {[stage in LearningStage]: STAGE[]} = {
+    "11_14": [STAGE.YEAR_7_AND_8, STAGE.YEAR_9],
+    gcse: [STAGE.GCSE, STAGE.SCOTLAND_NATIONAL_5, STAGE.CORE],
+    a_level: [STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.ADVANCED],
+    university: [STAGE.UNIVERSITY],
+};
+
 export const HUMAN_STAGES: {[key: string]: string} = {
     "11_14": "11-14",
     "gcse": "GCSE",
@@ -724,6 +727,7 @@ export enum TAG_ID {
     evolution = "evolution",
     genetics = "genetics",
     physiology = "physiology",
+    bioMathsSkills = "bio_maths_skills",
 
     // Physics Topics ---
 
@@ -868,6 +872,8 @@ export enum TAG_ID {
     variation = "variation",
     theory = "theory",
     phylogenetics = "phylogenetics",
+    // Biology Maths Skills
+    bioStatisticalTests = "bio_statistical_tests",
 }
 
 export enum TAG_LEVEL {
@@ -1165,7 +1171,7 @@ export const NULL_CLOZE_ITEM: ItemDTO = {
 // Matches: all legacy, [inline-question:questionId class="{classes}"]
 export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+)(?<params> *\| *(?<width>w-\d+)?(?<height>h-\d+)?| +class=(?:["']|&apos;|&[rl]?quot;)(?<classes>[a-zA-Z0-9 _-]+?)(?:["']|&apos;|&[rl]?quot;))?\]/g;
 
-export type InlineQuestionType = "isaacStringMatchQuestion" | "isaacNumericQuestion" | "isaacMultiChoiceQuestion";
+export type InlineQuestionType = "isaacStringMatchQuestion" | "isaacNumericQuestion" | "isaacMultiChoiceQuestion" | "isaacRegexMatchQuestion";
 
 export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "RASPBERRYPI": "Raspberry Pi Foundation",

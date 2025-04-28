@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState } from 'react';
 import { selectors, useAppSelector } from '../../state';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, isTutor, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
+import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, isOverdue, isTutor, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
 import { AssignmentDTO, QuizAssignmentDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
 import StyledToggle from './inputs/StyledToggle';
 import { AssignmentCard, StudentDashboard } from './StudentDashboard';
@@ -49,10 +49,10 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
         return <div className="dashboard-panel"/>;
     }
     
-    const upcomingAssignments = assignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
+    const upcomingAssignments = assignments?.filter(a => !isOverdue(a)); // Filter out past assignments
     const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
 
-    const upcomingQuizAssignments = quizzes?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past quizzes
+    const upcomingQuizAssignments = quizzes?.filter(a => !isOverdue(a)); // Filter out past quizzes
     const sortedQuizAssignments = upcomingQuizAssignments ? sortUpcomingAssignments(upcomingQuizAssignments) : [];
 
     // Get the 3 most urgent due dates from assignments & quizzes combined
