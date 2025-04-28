@@ -1,6 +1,60 @@
-import React, {ChangeEvent} from "react";
-import {Button, Input, InputGroup, InputProps, Label} from "reactstrap";
-import {ifKeyIsEnter, SEARCH_CHAR_LENGTH_LIMIT, siteSpecific, withSearch} from "../../services";
+import React, {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
+import {Button, Form, Input, InputGroup, InputProps, Label} from "reactstrap";
+import {ifKeyIsEnter, pushSearchToHistory, SEARCH_CHAR_LENGTH_LIMIT, siteSpecific} from "../../services";
+import classNames from "classnames";
+import { useHistory, useLocation } from "react-router";
+
+interface SearchInputProps {
+    setSearchText: (s: string) => void;
+    searchText: string;
+    inputProps: {
+        innerRef: React.RefObject<HTMLInputElement>;
+        "aria-label": "Search";
+        type: "search";
+        name: "query";
+        maxLength: typeof SEARCH_CHAR_LENGTH_LIMIT;
+        placeholder: "Search";
+    };
+}
+
+// HOC pattern for making different flavour search bars
+function withSearch(Component: React.FC<SearchInputProps>) {
+    const SearchComponent = ({className, inline, onSearch, initialValue}: {className?: string; inline?: boolean; onSearch?: (searchText: string) => void; initialValue?: string}) => {
+        const [searchText, setSearchText] = useState(initialValue ?? "");
+        const searchInputRef = useRef<HTMLInputElement>(null);
+
+        const history = useHistory();
+        function doSearch(e: FormEvent<HTMLFormElement>) {
+            e.preventDefault();
+            if (searchText === "") {
+                if (searchInputRef.current) searchInputRef.current.focus();
+            } else {
+                onSearch?.(searchText);
+                pushSearchToHistory(history, searchText, []);
+            }
+        }
+
+        // Clear this search field on location (i.e. search query) change - user should use the main search bar
+        const location = useLocation();
+        useEffect(() => { if (location.pathname === "/search") { setSearchText(initialValue ?? ""); }}, [location]);
+
+        return <Form onSubmit={doSearch} className={classNames(className, {"form-inline" : inline})}>
+            <div className='form-group search--main-group'>
+                <Component inputProps={{
+                    maxLength: SEARCH_CHAR_LENGTH_LIMIT,
+                    type: "search",
+                    name: "query",
+                    "aria-label": "Search",
+                    innerRef: searchInputRef,
+                    placeholder: "Search"
+                }} setSearchText={setSearchText} searchText={searchText} />
+                <input type="hidden" name="types" value="isaacQuestionPage,isaacConceptPage" />
+            </div>
+        </Form>;
+    };
+    SearchComponent.displayName = "SearchComponent";
+    return SearchComponent;
+}
 
 const PhysicsSearchButton = () => (
     <Button color='link' aria-label='search' className='search-button'>
@@ -127,4 +181,4 @@ export const SearchInputWithIcon = (props: SearchButtonWithIconProps) => {
             <i className="icon icon-search" color="tertiary"/>
         </button>
     </InputGroup>;
-}
+};
