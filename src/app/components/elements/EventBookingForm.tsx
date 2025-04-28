@@ -147,7 +147,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                 {!event.isVirtual && <div>
                     <div>
                         <Label htmlFor="medical-reqs">
-                            <span className="d-flex align-items-center">
+                            <span className={siteSpecific("d-flex align-items-center", "")}>
                                 Dietary requirements or relevant medical conditions
                                 <span id="dietary-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help has-tip")} />
                             </span>
@@ -163,7 +163,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
 
                     <div>
                         <Label htmlFor="access-reqs">
-                            <span className="d-flex align-items-center">
+                            <span className={siteSpecific("d-flex align-items-center", "")}>
                                 Accessibility requirements
                                 <span id="access-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help has-tip")} />
                             </span>

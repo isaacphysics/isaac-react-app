@@ -296,7 +296,7 @@ export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey
                 </div>
 
                 <div className="d-flex flex-column align-items-center mt-2">
-                    <div className="d-flex flex-row align-items-center h-100">
+                    <div className={classNames("d-flex flex-row h-100", {"align-items-center": isPhy})}>
                         <span>Class average mode</span>
                         {above["md"](deviceSize) && <>
                             <span id={`attempted-toggle-${id}`} className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help")}/>
