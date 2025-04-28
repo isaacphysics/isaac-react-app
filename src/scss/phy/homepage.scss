@@ -239,6 +239,11 @@ a:has(.assignment-card) {
   h5 {
     font-size: 17px;
     font-family: $secondary-font-semi-bold;
+    
+    i.icon {
+      vertical-align: middle;
+      margin-top: -2px;
+    }
   }
 
   > div > i.icon:first-child {
