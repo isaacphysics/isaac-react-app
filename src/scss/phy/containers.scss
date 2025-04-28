@@ -20,8 +20,6 @@ $container-breakpoints: map-merge(
     )
 );
 
-@debug $container-breakpoints;
-
 .container {
     @each $bp, $_ in $container-breakpoints {
         @include media-breakpoint-only($bp, $container-breakpoints) {
