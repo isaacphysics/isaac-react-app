@@ -1,6 +1,6 @@
 import { withRouter } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { Button, ListGroupItem, Input, ListGroup, Col, Container } from "reactstrap";
+import { Input, Col, Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
 import { getFilteredStageOptions, isAda, isDefined, isEventLeaderOrStaff, isLoggedIn, isPhy, isTutorOrAbove, LearningStage, siteSpecific, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
 import { AudienceContext, QuizSummaryDTO, Stage } from "../../../../IsaacApiTypes";
@@ -8,16 +8,13 @@ import { Tag} from "../../../../IsaacAppTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { useGetAvailableQuizzesQuery } from "../../../state/slices/api/quizApi";
 import { QuizzesPageProps } from "./MyQuizzes";
-import { Spacer } from "../../elements/Spacer";
-import { Link } from "react-router-dom";
 import { PageFragment } from "../../elements/PageFragment";
 import { MainContent, PracticeQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { isFullyDefinedContext, useUrlPageTheme } from "../../../services/pageContext";
 import { selectors, useAppSelector } from "../../../state";
-import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
-import classNames from "classnames";
 import { PrintButton } from "../../elements/PrintButton";
 import { ShareLink } from "../../elements/ShareLink";
+import { ListView } from "../../elements/list-groups/ListView";
 
 const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
     const pageContext = useUrlPageTheme();
@@ -129,24 +126,7 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
                                     setCopied(true);
                                 }} onMouseLeave={() => setCopied(false)} />
                             </Col>
-                            {quizzes.filter((quiz) => isRelevant(quiz)).length > 0 && <ListGroup className={siteSpecific("list-results-container p-2 my-4", "mb-3")}>
-                                {quizzes.filter((quiz) => isRelevant(quiz)).map(quiz => <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                                    <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3 quiz-list">
-                                        {isPhy && <PhyHexIcon icon={"icon-tests"} subject={pageSubject} size={"lg"} />}
-                                        <div>
-                                            <span className={classNames("mb-2 mb-sm-0 pe-2", {"fw-bold": isPhy})}>{quiz.title}</span>
-                                            {roleVisibilitySummary(quiz)}
-                                            {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
-                                        </div>
-                                        <Spacer />
-                                        <Button tag={Link} to={{pathname: `/test/view/${quiz.id}`}}>
-                                            {siteSpecific("View Test", "View test")}
-                                        </Button>
-                                    </div>
-                                </ListGroupItem>)}
-                            </ListGroup>}
-                            {quizzes.length !== 0 && quizzes.filter((quiz) => isRelevant(quiz)).length === 0 &&
-                                <p><em>No relevant practice tests were found.</em></p>}
+                            <ListView items={quizzes.filter((quiz) => isRelevant(quiz))} useViewQuizLink/>
                         </>}
                     </ShowLoading>
                 }
