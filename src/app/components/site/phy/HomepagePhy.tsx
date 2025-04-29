@@ -58,7 +58,7 @@ const HomepageHero = () => {
                 <Row className="row-cols-1 row-cols-md-2">
                     <Col className="mb-3">
                         <HomepageHeroCard
-                            title="Build Confidence in Physics through Practice"
+                            title="Build confidence in science through practice"
                             content="Tackle interactive questions, explore varying difficulty levels, and strengthen problem-solving skills with concept guides, video lessons, and events."
                             isStudent={true}/>
                     </Col>

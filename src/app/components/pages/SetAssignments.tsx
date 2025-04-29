@@ -197,7 +197,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
             <AssignGroup {...props} />
             <hr className="text-center" />
             <div className="py-2 border-bottom" data-testid="currently-assigned-to">
-                <Label>{siteSpecific("Board", "Quiz")} currently assigned to:</Label>
+                <Label>{siteSpecific("Question deck", "Quiz")} currently assigned to:</Label>
                 {startedAssignees.length > 0
                     ? <Container className="mb-4">{startedAssignees.map(assignee =>
                         <div data-testid={"current-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
@@ -208,7 +208,10 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                     : <p>No groups.</p>}
             </div>
             <div className="py-2">
-                <Label>Pending {siteSpecific("assignments", "quiz assignments")}: <span className="icon-help mx-1" id={`pending-assignments-help-${board?.id}`}/></Label>
+                <Label className={siteSpecific("d-flex align-items-center", "")}>
+                    Pending {siteSpecific("assignments", "quiz assignments")}:
+                    <span className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help mx-1")} id={`pending-assignments-help-${board?.id}`}/>
+                </Label>
                 <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
                     These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the morning of the scheduled date, students
                     will be able to see the {siteSpecific("assignment", "quiz")}, and will receive a notification email.
@@ -267,8 +270,10 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
             Board name
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
-            Stages and Difficulties
-            <span id="difficulties-help" className="icon-help mx-1"></span>
+            <div className="d-flex align-items-center">
+                Stages and Difficulties
+                <span id="difficulties-help" className="icon icon-info layered icon-color-grey ms-2"></span>
+            </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
@@ -378,7 +383,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </Col>
             <Col xs={{size: 12, order: 3}} md={{size: 4, offset: 1, order: 1}} lg={{size: 4, offset: 3}} xl={{size: 4, offset: 3}}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter {siteSpecific("boards", "quizzes")} by name</span><Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} />
+                    <span className={"text-nowrap"}>Filter {siteSpecific("question decks", "quizzes")} by name</span><Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} />
                 </Label>
             </Col>
             <Col xs={6} md={{size: 3, order: 2}} lg={2} xl={2}>

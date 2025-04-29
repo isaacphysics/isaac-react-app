@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 import {convert} from 'html-to-text';
 import {siteSpecific} from "../../services";
 import {EmailTemplateDTO} from "../../../IsaacApiTypes";
-import { Container, Card, CardTitle, CardBody, Label, Input } from 'reactstrap';
+import { Container, Card, CardTitle, CardBody, Label, Input, Button } from 'reactstrap';
 
 interface ContentEmailsProps {
     location: {
@@ -156,9 +156,8 @@ const ContentEmails = (props: ContentEmailsProps) => {
                             {numberOfUsers >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
                                 <strong>Warning:</strong> There are currently <strong>{numberOfUsers}</strong> selected recipients.
                             </div>}
-                            <Input
-                                type="button" value="Send emails"
-                                className={"btn btn-xl btn-secondary border-0 " + classnames({disabled: !canSubmit})}
+                            <Button
+                                type="button" color="secondary" className={siteSpecific("btn-xl", "form-control border-0")}
                                 disabled={!canSubmit}
                                 onClick={() => {
                                     if (window.confirm(`Are you sure you want to send a ${emailType} email to ${numberOfUsers} user${numberOfUsers > 1 ? "s" : ""}?`)) {
@@ -166,7 +165,7 @@ const ContentEmails = (props: ContentEmailsProps) => {
                                         sendProvidedEmailWithUserIds({emailTemplate, emailType, ids: csvIDs});
                                     }
                                 }}
-                            />
+                            >Send emails</Button>
                         </React.Fragment>
                         :
                         <React.Fragment>Request made, to send another refresh.</React.Fragment>

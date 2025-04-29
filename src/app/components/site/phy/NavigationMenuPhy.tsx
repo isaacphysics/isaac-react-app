@@ -250,7 +250,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                             return <div key={i}>
                                 <h5 className="px-4 m-0 py-2">{category.title}</h5>
                                 {category.subcategories.map((subcategory, j) => {
-                                    return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.subject}>
+                                    return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject}>
                                         <i className="icon icon-hexagon me-1" />
                                         <span>{subcategory.fullTitle}</span>
                                     </NavigationItem>;
@@ -267,7 +267,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     return <div key={i}>
                         <h5 className="px-4 m-0 py-2">{category.title}</h5>
                         {category.subcategories.map((subcategory, j) => {
-                            return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.subject} onClick={toggleMenu}>
+                            return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject} onClick={toggleMenu}>
                                 <i className="icon icon-hexagon me-1"/>
                                 <span>{subcategory.fullTitle}</span>
                             </NavigationItem>;

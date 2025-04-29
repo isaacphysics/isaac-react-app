@@ -1,9 +1,9 @@
-import React, {FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
+import React, {FormEvent, MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
-import {isAda, isPhy, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
+import {isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -14,6 +14,14 @@ import { isFullyDefinedContext, useUrlPageTheme } from "../../services/pageConte
 import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { ContentSummaryDTO } from "../../../IsaacApiTypes";
+import { skipToken } from "@reduxjs/toolkit/query";
+
+const subjectToTagMap = {
+    physics: TAG_ID.physics,
+    chemistry: TAG_ID.chemistry,
+    biology: TAG_ID.biology,
+    maths: TAG_ID.maths,
+};
 
 // This component is Isaac Physics only (currently)
 export const Concepts = withRouter((props: RouteComponentProps) => {
@@ -21,34 +29,57 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const user = useAppSelector(selectors.user.orNull);
     const pageContext = useUrlPageTheme();
 
-    const listConceptsQuery = useListConceptsQuery({conceptIds: undefined, tagIds: pageContext?.subject});
+    const searchParsed = queryString.parse(location.search, {arrayFormat: "comma"});
 
-    const subjectToTagMap = {
-        physics: TAG_ID.physics,
-        chemistry: TAG_ID.chemistry,
-        biology: TAG_ID.biology,
-        maths: TAG_ID.maths,
-    };
+    const [query, filters] = useMemo(() => {
+        const queryParsed = searchParsed.query || null;
+        const query = Array.isArray(queryParsed) ? queryParsed.join(",") : queryParsed;
     
-    const applicableTags = pageContext?.subject ? tags.getDirectDescendents(subjectToTagMap[pageContext.subject]) : tags.allFieldTags;
-    
-    const tagCounts : Record<string, number> = [...applicableTags, ...(pageContext?.subject ? [tags.getById(pageContext?.subject as TAG_ID)] : [])].reduce((acc, t) => ({...acc, [t.id]: listConceptsQuery?.data?.results?.filter(c => c.tags?.includes(t.id)).length || 0}), {});
+        const filterParsed = searchParsed.types || null;
+        const filters = Array.isArray(filterParsed) ? filterParsed.filter(x => !!x) as string[] : filterParsed?.split(",") ?? [];
+        return [query, filters];
+    }, [searchParsed]);
 
-    const searchParsed = queryString.parse(location.search);
-
-    const queryParsed = searchParsed.query || "";
-    const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
-
-    const filterParsed = (searchParsed.types || (TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry + "," + TAG_ID.biology));
-    const filters = (Array.isArray(filterParsed) ? filterParsed[0] || "" : filterParsed || "").split(",");
+    const applicableTags = pageContext?.subject 
+        // this includes all subject tags and all field tags
+        ? [tags.getById(subjectToTagMap[pageContext.subject]), ...tags.getDirectDescendents(subjectToTagMap[pageContext.subject])]
+        : [...tags.allSubjectTags, ...tags.allFieldTags];
 
     const [searchText, setSearchText] = useState(query);
-    const [conceptFilters, setConceptFilters] = useState<Tag[]>([
-        ...(pageContext?.subject ? [tags.getById(subjectToTagMap[pageContext.subject])] : []),
-        ...applicableTags.filter(f => filters.includes(f.id))
-    ]);
-
+    const [conceptFilters, setConceptFilters] = useState<Tag[]>(
+        applicableTags.filter(f => filters.includes(f.id))
+    );
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
+
+    const listConceptsQuery = useListConceptsQuery(pageContext 
+        ? {conceptIds: undefined, tagIds: pageContext?.subject ?? tags.allSubjectTags.map(t => t.id).join(",")}
+        : skipToken
+    );
+
+    const shortcutAndFilter = (concepts?: ContentSummaryDTO[], excludeTopicFiltering?: boolean) => {
+        const searchResults = concepts?.filter(c =>
+            matchesAllWordsInAnyOrder(c.title, searchText || "") ||
+            matchesAllWordsInAnyOrder(c.summary, searchText || "")
+        );
+        
+        const filteredSearchResults = searchResults
+            ?.filter((result) => excludeTopicFiltering || !filters.length || result?.tags?.some(t => filters.includes(t)))
+            .filter((result) => !pageContext?.stage?.length || isRelevantToPageContext(result.audience, pageContext))
+            .filter((result) => searchResultIsPublic(result, user));
+    
+        const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
+
+        return shortcutAndFilteredSearchResults;
+    };
+    
+    const tagCounts : Record<string, number> = [
+        ...applicableTags, 
+        ...(pageContext?.subject ? [tags.getById(pageContext?.subject as TAG_ID)] : [])
+    ].reduce((acc, t) => ({
+        ...acc, 
+        // we exclude topics when filtering here to avoid selecting a filter changing the tag counts
+        [t.id]: shortcutAndFilter(listConceptsQuery?.data?.results, true)?.filter(c => c.tags?.includes(t.id)).length || 0
+    }), {});
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {
@@ -72,22 +103,6 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     }, [searchText]);
 
     useEffect(() => {doSearch();}, [conceptFilters]);
-
-    const shortcutAndFilter = (concepts?: ContentSummaryDTO[]) => {
-        const searchResults = concepts
-            ?.filter(c =>
-                matchesAllWordsInAnyOrder(c.title, searchText || "") ||
-                matchesAllWordsInAnyOrder(c.summary, searchText || "")
-            );
-    
-        const filteredSearchResults = searchResults
-            ?.filter((result) => result?.tags?.some(t => filters.includes(t)))
-            .filter((result) => searchResultIsPublic(result, user));
-    
-        const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
-
-        return shortcutAndFilteredSearchResults;
-    };
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 

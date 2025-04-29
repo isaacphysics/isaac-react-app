@@ -4,6 +4,7 @@ import {ContentSummaryDTO} from "../../IsaacApiTypes";
 import {PotentialUser} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {Immutable} from "immer";
+import pickBy from "lodash/pickBy";
 
 export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {
     const previousQuery = queryString.parse(history.location.search);
@@ -18,9 +19,13 @@ export const pushSearchToHistory = function(history: History, searchQuery: strin
 };
 
 export const pushConceptsToHistory = function(history: History, searchText: string, subjects: TAG_ID[]) {
+    const queryOptions = {
+        "query": encodeURIComponent(searchText),
+        "types": subjects.join(","),
+    };
     history.push({
         pathname: history.location.pathname,
-        search: `?query=${encodeURIComponent(searchText)}&types=${subjects.join(",")}`,
+        search: queryString.stringify(pickBy(queryOptions), {encode: false}),
     });
 };
 
