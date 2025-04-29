@@ -14,6 +14,7 @@ import { selectors, useAppSelector } from "../../../state";
 import { PrintButton } from "../../elements/PrintButton";
 import { ShareLink } from "../../elements/ShareLink";
 import { ListView } from "../../elements/list-groups/ListView";
+import classNames from "classnames";
 
 const PracticeQuizzesComponent = () => {
     const pageContext = useUrlPageTheme();
@@ -118,7 +119,11 @@ const PracticeQuizzesComponent = () => {
                                     setCopied(true);
                                 }} onMouseLeave={() => setCopied(false)} />
                             </Col>
-                            <ListView items={quizzes.filter((quiz) => isRelevant(quiz))} useViewQuizLink/>
+                            <ListView 
+                                items={quizzes.filter((quiz) => isRelevant(quiz))} 
+                                className={classNames({"quiz-list border-radius-2 mb-3": isAda})}
+                                useViewQuizLink
+                            />
                         </>}
                     </ShowLoading>
                 }
