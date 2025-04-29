@@ -90,7 +90,7 @@ const GameboardBuilderRow = (
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
                     {isAda && provided
-                        ? <Button outline className="bin-icon d-inline-block outline"
+                        ? <Button outline className="bin-icon-small d-inline-block outline"
                             id={`gameboard-builder-include-${question.id}`}
                             title="Remove question"
                             aria-label="Remove question"
