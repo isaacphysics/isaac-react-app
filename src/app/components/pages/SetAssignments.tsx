@@ -75,9 +75,10 @@ import { MainContent, SetAssignmentsSidebar, SidebarLayout } from "../elements/l
 interface AssignGroupProps {
     groups: UserGroupDTO[];
     board: GameboardDTO | undefined;
+    closeModal: () => void;
 }
 
-const AssignGroup = ({groups, board}: AssignGroupProps) => {
+const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date | undefined>(UTC_MIDNIGHT_IN_SIX_DAYS);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
@@ -94,6 +95,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
                 setDueDate(UTC_MIDNIGHT_IN_SIX_DAYS);
                 setScheduledStartDate(undefined);
                 setAssignmentNotes('');
+                closeModal();
             }
         });
     }
@@ -194,7 +196,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
         <ModalBody>
             <p className="px-1">{description}</p>
             <hr className="text-center" />
-            <AssignGroup {...props} />
+            <AssignGroup closeModal={toggle} {...props} />
             <hr className="text-center" />
             <div className="py-2 border-bottom" data-testid="currently-assigned-to">
                 <Label>{siteSpecific("Question deck", "Quiz")} currently assigned to:</Label>
