@@ -2,12 +2,11 @@ import { withRouter } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Input, Col, Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
-import { getFilteredStageOptions, isAda, isDefined, isEventLeaderOrStaff, isLoggedIn, isPhy, isTutorOrAbove, LearningStage, siteSpecific, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
+import { getFilteredStageOptions, isAda, isDefined, isLoggedIn, isPhy, LearningStage, siteSpecific, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
 import { AudienceContext, QuizSummaryDTO, Stage } from "../../../../IsaacApiTypes";
 import { Tag} from "../../../../IsaacAppTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { useGetAvailableQuizzesQuery } from "../../../state/slices/api/quizApi";
-import { QuizzesPageProps } from "./MyQuizzes";
 import { PageFragment } from "../../elements/PageFragment";
 import { MainContent, PracticeQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { isFullyDefinedContext, useUrlPageTheme } from "../../../services/pageContext";
@@ -16,20 +15,13 @@ import { PrintButton } from "../../elements/PrintButton";
 import { ShareLink } from "../../elements/ShareLink";
 import { ListView } from "../../elements/list-groups/ListView";
 
-const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
+const PracticeQuizzesComponent = () => {
     const pageContext = useUrlPageTheme();
     const pageSubject = pageContext?.subject;
     const pageStage = pageContext?.stage ? pageContext.stage[0] : undefined;
 
     const {data: quizzes} = useGetAvailableQuizzesQuery(0);
     const user = useAppSelector(selectors.user.orNull);
-    
-    // If the user is event admin or above, and the quiz is hidden from teachers, then show that
-    // If the user is teacher or above, show if the quiz is visible to students
-    const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
-        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
-        {isTutorOrAbove(user) && ((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
-    </>;
 
     const [filterText, setFilterText] = useState<string>("");
     const [filterTags, setFilterTags] = useState<Tag[]>([]); // Subjects & fields
