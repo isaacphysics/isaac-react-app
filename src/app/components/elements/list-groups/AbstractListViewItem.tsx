@@ -62,7 +62,7 @@ export interface ListViewTagProps {
 }
 
 export interface AbstractListViewItemProps extends ListGroupItemProps {
-    title: string;
+    title?: string;
     icon?: TitleIconProps;
     subject?: Subject;
     subtitle?: string;
