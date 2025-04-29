@@ -25,6 +25,7 @@ import { Spacer } from "./Spacer";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
 import { StyledCheckbox } from "./inputs/StyledCheckbox";
 import { Markup } from "./markup";
+import { Button } from "reactstrap";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -62,38 +63,47 @@ const GameboardBuilderRow = (
     const cellClasses = "text-start align-middle";
     const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
 
+    const handleCheckboxChange = () => {
+        if (question.id) {
+            const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
+            const newQuestionOrder = [...currentQuestions.questionOrder];
+            if (newSelectedQuestions.has(question.id)) {
+                newSelectedQuestions.delete(question.id);
+                newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
+            } else {
+                newSelectedQuestions.set(question.id, {...question, creationContext});
+                newQuestionOrder.push(question.id);
+            }
+            currentQuestions.setSelectedQuestions(newSelectedQuestions);
+            currentQuestions.setQuestionOrder(newQuestionOrder);
+            if (provided) {
+                undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
+                redoStack.clear();
+            }
+        }
+    };
+
     return filteredAudienceViews.map((view, i, arr) => <tr
         key={`${question.id} ${i}`}
     >
         {i === 0 && <>
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
-                    <StyledCheckbox
-                        id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
-                        aria-label={!isSelected ? "Select question" : "Deselect question"}
-                        title={!isSelected ? "Select question" : "Deselect question"}
-                        color="primary"
-                        checked={isSelected}
-                        onChange={() => {
-                            if (question.id) {
-                                const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
-                                const newQuestionOrder = [...currentQuestions.questionOrder];
-                                if (newSelectedQuestions.has(question.id)) {
-                                    newSelectedQuestions.delete(question.id);
-                                    newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
-                                } else {
-                                    newSelectedQuestions.set(question.id, {...question, creationContext});
-                                    newQuestionOrder.push(question.id);
-                                }
-                                currentQuestions.setSelectedQuestions(newSelectedQuestions);
-                                currentQuestions.setQuestionOrder(newQuestionOrder);
-                                if (provided) {
-                                    undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
-                                    redoStack.clear();
-                                }
-                            }
-                        }}
-                    />
+                    {isAda && provided
+                        ? <Button outline className="bin-icon d-inline-block outline"
+                            id={`gameboard-builder-include-${question.id}`}
+                            title="Deselect question"
+                            aria-label="Deselect question"
+                            type="button"
+                            onClick={handleCheckboxChange}/>
+                        : <StyledCheckbox
+                            id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
+                            aria-label={!isSelected ? "Select question" : "Deselect question"}
+                            title={!isSelected ? "Select question" : "Deselect question"}
+                            color="primary"
+                            checked={isSelected}
+                            onChange={handleCheckboxChange}
+                        />}
                 </div>
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
