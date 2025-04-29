@@ -92,8 +92,8 @@ const GameboardBuilderRow = (
                     {isAda && provided
                         ? <Button outline className="bin-icon d-inline-block outline"
                             id={`gameboard-builder-include-${question.id}`}
-                            title="Deselect question"
-                            aria-label="Deselect question"
+                            title="Remove question"
+                            aria-label="Remove question"
                             type="button"
                             onClick={handleCheckboxChange}/>
                         : <StyledCheckbox
