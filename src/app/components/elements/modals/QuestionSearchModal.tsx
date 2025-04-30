@@ -107,17 +107,16 @@ export const QuestionSearchModal = (
                 return;
             }
 
-            const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ");
-            const examBoardString = examBoards.join(",");
+            const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(",");
 
             setIsSearching(true);
 
             dispatch(searchQuestions({
-                searchString: searchString,
-                tags,
+                searchString: searchString || undefined,
+                tags: tags || undefined,
                 stages: stages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
-                examBoards: examBoardString,
+                examBoards: examBoards.join(",") || undefined,
                 fasttrack,
                 startIndex,
                 limit: 300
@@ -191,7 +190,7 @@ export const QuestionSearchModal = (
                         selectOnChange(setSearchBook, true)(e);
                         sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
                     }}
-                    options={ISAAC_BOOKS.map(book => ({value: book.value, label: book.label}))}
+                    options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
                 />
             </Col>}
             <Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>

@@ -80,6 +80,7 @@ header {
       }
 
       .quick-switch {
+        margin-top: -2px;
         background-color: var(--subject-color-700);
         
         span:first-child {
@@ -154,9 +155,10 @@ header {
       }
 
       div.dropdown-menu {
-        border: none;
-        border-radius: 0;
-        margin-top: -2px;
+        border: 1px solid $border-color;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        margin-top: 0px;
         background-color: $color-neutral-50;
         min-width: 268px;
 

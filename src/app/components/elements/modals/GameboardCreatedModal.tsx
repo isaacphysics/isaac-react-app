@@ -7,44 +7,40 @@ import {SerializedError} from "@reduxjs/toolkit";
 import {PATHS, siteSpecific, isAda} from "../../../services";
 
 const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
-    <Row className="mb-2">
-        <Label className="mx-3">
-            Your {siteSpecific("question deck", "quiz")} was not successfully created.
-            <br/>
-            {errorMessage}
-        </Label>
-    </Row>;
+    <Label className="mx-3 mb-2">
+        Your {siteSpecific("question deck", "quiz")} was not successfully created.
+        <br/>
+        {errorMessage}
+    </Label>;
 
 const GameboardSuccessfullyCreated = () =>
-    <Row className="mb-2">
-        <Label className="mx-3">
-            Your {siteSpecific("question deck", "quiz")} has been created. You can now set it as an assignment, create another {siteSpecific("board", "quiz")} or view all of your {siteSpecific("boards", "quizzes")}.
-        </Label>
-    </Row>;
+    <Label className="mx-3 mb-2">
+        Your {siteSpecific("question deck", "quiz")} has been created. You can now set it as an assignment, create another {siteSpecific("question deck", "quiz")} or view all of your {siteSpecific("question decks", "quizzes")}.
+    </Label>;
 
 const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId: string | undefined, resetBuilder: () => void}) => {
     const dispatch = useAppDispatch();
     const closeModal = () => dispatch(closeActiveModal());
-    return <Row className={"my-3"}>
-        <Col sm={12} lg={4} className="mb-1">
+    return <Row className={"my-3 d-flex justify-content-center"}>
+        <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
             <Button
-                className="w-100 h-100" tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="secondary" block
+                className="w-100" tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="secondary" block
                 disabled={!gameboardId} onClick={closeModal}
             >
                 Set as assignment
             </Button>
         </Col>
-        <Col sm={12} lg={4} className="mb-1">
+        <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
             <Button
-                className="w-100 h-100" color={siteSpecific("secondary", "primary")} outline={isAda}
+                className="w-100" color={siteSpecific("secondary", "primary")} outline={isAda}
                 onClick={() => {resetBuilder(); closeModal();}}
             >
                 Create another {siteSpecific("question deck", "quiz")}
             </Button>
         </Col>
-        <Col sm={12} lg={4} className="mb-1">
+        <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
             <Button
-                className="w-100 h-100" tag={Link} to={PATHS.SET_ASSIGNMENTS} color={siteSpecific("secondary", "primary")} outline={isAda}
+                className="w-100" tag={Link} to={PATHS.SET_ASSIGNMENTS} color={siteSpecific("secondary", "primary")} outline={isAda}
                 onClick={closeModal}
             >
                 View all of your {siteSpecific("question decks", "quizzes")}

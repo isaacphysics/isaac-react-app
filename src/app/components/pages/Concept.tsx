@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Col, Container, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
-import {Subject, above, below, usePreviousPageContext, isAda, isPhy, useDeviceSize, useNavigation, siteSpecific} from "../../services";
+import {Subject, above, below, usePreviousPageContext, isAda, isPhy, useDeviceSize, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -41,8 +41,23 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     const {data: doc, isLoading} = conceptQuery;
     const navigation = useNavigation(doc ?? null);
     const deviceSize = useDeviceSize();
-
+    
+    const userContext = useUserViewingContext();
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
+
+    useEffect(() => {
+        if (pageContext) {
+            // the page context, if single stage, overrides the user context
+            if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
+                const newStage = LEARNING_STAGE_TO_STAGES[pageContext.stage[0]];
+                if (newStage) {
+                    userContext.setStage(newStage[0]);
+                    userContext.setFixedContext(true);
+                }
+            }
+            // all other cases use the default behaviour
+        }
+    }, [pageContext]);
 
     const ManageButtons = () => <div className={classNames("no-print d-flex justify-content-end mt-1 ms-2", {"gap-2": isPhy})}>
         <div className="question-actions">

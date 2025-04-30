@@ -253,7 +253,7 @@ export const AdminUserManager = () => {
                 <CardFooter>
                     <Row>
                         <Col md={{size: 4, offset: 4}} >
-                            <Input type="submit" value="Search" className="btn btn-secondary"/>
+                            <Button type="submit" color="secondary" className="w-100">Search</Button>
                         </Col>
                     </Row>
                 </CardFooter>

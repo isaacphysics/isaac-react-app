@@ -146,7 +146,7 @@ const BooksPanel = () => {
         <div ref={setScrollRef} className="row position-relative mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
             {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
             {window.ResizeObserver && <ScrollShadows element={scrollRef ?? undefined} shadowType="dashboard-scroll-shadow" />}
-            {ISAAC_BOOKS.filter(book => book.subject === subject || subject === "all")
+            {ISAAC_BOOKS.filter(b => !b.hidden).filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2 me-1 p-0">
                         <BookCard {...book}/>
