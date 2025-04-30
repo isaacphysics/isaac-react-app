@@ -78,6 +78,19 @@ const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListVie
     linkTags: [{tag: "View glossary", url: extendUrl(context, 'glossary')}]
 });
 
+const BookCard = (book: BookInfo, description: string) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+    item: {
+        title: book.title,
+        subtitle: description
+    },
+    icon: {type: "hex", icon: "icon-book"},
+    subject: context.subject,
+    linkTags: [{tag: book.title, url: book.path}]
+});
+
+const StepIntoPhyCard = BookCard(ISAAC_BOOKS_BY_TAG["phys_book_step_into"], "Discover secondary physics ideas and interesting experiments. Aimed at students in years 7 and 8.");
+const StepUpPhyCard = BookCard(ISAAC_BOOKS_BY_TAG["phys_book_step_up"], "Build a strong foundation in physics. Aimed at students in year 9.");
+
 const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListViewTagProps[]) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
         title,
@@ -106,7 +119,7 @@ const BiologyExtensionQuestionsCard = (context: NonNullable<Required<PageContext
 
 const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
     "physics": {
-        "11_14": [BoardsByTopicCard, null, null],
+        "11_14": [StepUpPhyCard, QuickQuizzesCard, null],
         "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, QuickQuizzesCard],
         "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, SPCCard],
         "university": [BoardsByTopicCard, null, null],
@@ -159,11 +172,10 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
     if (!isFullyDefinedContext(context)) return [];
     if (!isSingleStageContext(context)) return [];
 
-    const baseCards: LandingPageCard[] = [
-        QuestionFinderCard,
-        ConceptPageCard,
-        PracticeTestsCard
-    ];
+    const baseCards: LandingPageCard[] = 
+        context.stage.includes("11_14") && context.subject === "physics"
+            ? [StepIntoPhyCard, ConceptPageCard, QuestionFinderCard]
+            : [QuestionFinderCard, ConceptPageCard, PracticeTestsCard];
 
     const subjectSpecificCards = subjectSpecificCardsMap[context.subject]?.[context.stage[0] as keyof typeof subjectSpecificCardsMap[typeof context.subject]] || [];
 
