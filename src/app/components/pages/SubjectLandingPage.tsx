@@ -5,9 +5,8 @@ import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { above, below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, nextSeed, STAGE, useDeviceSize } from "../../services";
+import { below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, nextSeed, STAGE, useDeviceSize } from "../../services";
 import { PageContextState } from "../../../IsaacAppTypes";
-import { PhyHexIcon } from "../elements/svg/PhyHexIcon";
 import { Link } from "react-router-dom";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { searchQuestions, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery } from "../../state";
@@ -63,50 +62,26 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 
     return <div className="py-4 container-override random-question-panel">
         <Row className="my-3">
-            <Col lg={7}>
-                <div className="d-flex justify-content-between align-items-center">
-                    <h4 className="m-0">Try a random question!</h4>
-                    <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
-                        Get a different question
-                        <i className="icon icon-refresh icon-color-black"/>
-                    </button>
-                </div>
-            </Col>
+            <div className="d-flex justify-content-between align-items-center">
+                <h4 className="m-0">Try a random question!</h4>
+                <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
+                    Get a different question
+                    <i className="icon icon-refresh icon-color-black"/>
+                </button>
+            </div>
         </Row>
         <Row>
-            <Col lg={7}>
-                <Card>
-                    {question
-                        ? <ListView items={[{
-                            type: DOCUMENT_TYPE.QUESTION,
-                            title: question.title,
-                            tags: question.tags,
-                            id: question.id,
-                            audience: question.audience,
-                        }]}/>
-                        : <Loading />}
-                </Card>
-            </Col>
-            <Col lg={5} className="ps-lg-5 m-3 m-lg-0">
-                <div className="d-flex align-items-center">
-                    {above['lg'](deviceSize) && <PhyHexIcon className="w-min-content" icon={"icon-concept"} />}
-                    <h5 className="m-0">Explore related concepts:</h5>
-                </div>
-                <div className="d-flex flex-wrap gap-2 mt-3">
-                    {/* TODO: replace this with "recommended content" or similar */}
-                    {/* {question?.relatedContent.filter(rc => rc.type === "isaacConceptPage").slice(0, 5).map((rc, i) => (
-                        <Link to={`/concepts/${rc.id}`} key={i}>
-                            <AffixButton key={i} color="keyline" className="px-3 py-2" affix={{
-                                affix: "icon-concept",
-                                position: "prefix",
-                                type: "icon"
-                            }}>
-                                {rc.title}
-                            </AffixButton>
-                        </Link>
-                    ))} */}
-                </div>
-            </Col>
+            <Card className="px-0">
+                {question
+                    ? <ListView items={[{
+                        type: DOCUMENT_TYPE.QUESTION,
+                        title: question.title,
+                        tags: question.tags,
+                        id: question.id,
+                        audience: question.audience,
+                    }]}/>
+                    : <Loading />}
+            </Card>
         </Row>
     </div>;
 };
