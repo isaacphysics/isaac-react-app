@@ -6,7 +6,7 @@ import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPag
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
 import { below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, nextSeed, STAGE, useDeviceSize } from "../../services";
-import { PageContextState } from "../../../IsaacAppTypes";
+import { AugmentedEvent, PageContextState } from "../../../IsaacAppTypes";
 import { Link } from "react-router-dom";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { searchQuestions, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery } from "../../state";
@@ -15,10 +15,10 @@ import debounce from "lodash/debounce";
 import { Loading } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
+import { Stage } from "../../../IsaacApiTypes";
 
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
-    const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
     const [randomSeed, setrandomSeed] = useState(nextSeed);
 
@@ -145,8 +145,9 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                 query={eventsQuery}
                 defaultErrorTitle={"Error loading events list"}
                 thenRender={({events}) => {
-                    // TODO: filter by audience, once that data is available
-                    const relevantEvents = events.filter(event => context?.subject && event.tags?.includes(context.subject)).slice(0, 2);
+                    const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage).flat() ?? [];
+                    const relevantEvents = events.filter(event => context?.subject && event.tags?.includes(context.subject)
+                        && context?.stage && eventStages(event).includes(context.stage[0] as Stage)).slice(0, 2);
                     return <Row className="h-100">
                         {relevantEvents.length
                             ? relevantEvents.map((event, i) =>
