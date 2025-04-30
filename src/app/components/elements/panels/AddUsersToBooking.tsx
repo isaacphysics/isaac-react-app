@@ -83,7 +83,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
             </Row>
             <Row>
                 <Col>
-                    <Input type="submit" className="btn w-100 btn-secondary my-2" value="Find user" />
+                    <Button type="submit" color="secondary" className="w-100 my-2">Find user</Button>
                 </Col>
             </Row>
         </Form>

@@ -1,7 +1,8 @@
 import React from "react";
-import {PageNavigation} from "../../services";
+import {isAda, isPhy, PageNavigation} from "../../services";
 import {Link} from "react-router-dom";
 import {Markup} from "./markup";
+import classNames from "classnames";
 
 export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
     const backToCollectionLink = navigation.backToCollection && <div className="w-50 w-md-auto mb-4">
@@ -15,7 +16,7 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
 
     const nextItemLink = navigation.nextItem && <div className="w-50 w-md-auto text-end mb-4">
         <Link to={{pathname: navigation.nextItem.to, search: navigation.search}} className="d-inline-block">
-            <div className="isaac-nav-link float-end a-alt lrg-text fw-bold">
+            <div className={classNames("isaac-nav-link float-end lrg-text fw-bold", {"a-alt": isAda}, {"text-dark": isPhy})}>
                 <Markup trusted-markup-encoding={"html"}>{navigation.nextItem.title}</Markup>
             </div>
             <div className="isaac-nav-link float-end next-link">Next</div>
@@ -24,7 +25,7 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
 
     const previousItemLink = navigation.previousItem && <div className="w-50 w-md-auto text-start mb-4">
         <Link to={{pathname: navigation.previousItem.to, search: navigation.search}} className="d-inline-block">
-            <div className="isaac-nav-link float-start a-alt lrg-text fw-bold">
+            <div className={classNames("isaac-nav-link float-start lrg-text fw-bold", {"a-alt": isAda}, {"text-dark": isPhy})}>
                 <Markup trusted-markup-encoding={"html"}>{navigation.previousItem.title}</Markup>
             </div>
             <div className="isaac-nav-link float-start previous-link">Previous</div>

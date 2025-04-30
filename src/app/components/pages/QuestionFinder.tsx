@@ -46,9 +46,6 @@ import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, L
 import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { PrintButton } from "../elements/PrintButton";
-import { ShareLink } from "../elements/ShareLink";
-import { Spacer } from "../elements/Spacer";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { PageFragment } from "../elements/PageFragment";
@@ -131,7 +128,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [readingFromUrlParams, setReadingFromUrlParams] = useState(FILTER_PARAMS.some(p => params[p]));
 
     useEffect(function populateFiltersFromAccountSettings() {
-        if (isLoggedIn(user)) {
+        // on isaac, we should only do this if we are not on a subject-specific QF
+        if (isLoggedIn(user) && (!isPhy || (pageContext && !pageContext.subject))) {
             const filtersHaveNotBeenSpecifiedByQueryParams = FILTER_PARAMS.every(p => !params[p]);
             if (filtersHaveNotBeenSpecifiedByQueryParams) {
                 const accountStages = user.registeredContexts?.map(c => c.stage).filter(s => s) as STAGE[];
@@ -147,7 +145,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- we don't want this to re-run on params change.
-    }, [user]);
+    }, [user, pageContext]);
 
     useEffect(() => {
         if (pageContext) {
@@ -221,7 +219,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             setIsCurrentSearchEmpty(false);
 
             dispatch(searchQuestions({
-                searchString: searchString,
+                searchString: searchString || undefined,
                 tags: getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value).join(",") || undefined,
                 topics: siteSpecific(undefined, [...topics].filter((query) => query != "").join(",") || undefined),
                 books: (!excludeBooks && book.join(",")) || undefined,
@@ -387,11 +385,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         You can select more than one entry in each area.
     </span>, undefined);
 
-    const description = siteSpecific(
-        (pageContext?.subject && pageContext.stage ? `Use our question finder to find questions to try on ${getHumanContext(pageContext)} topics.` : "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.") 
-        + " Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.",
-        "");
-
     const metaDescription = siteSpecific(
         "Find physics, maths, chemistry and biology questions by topic and difficulty.",
         "Search for the perfect computer science questions to study. For revision. For homework. For the classroom."
@@ -433,13 +426,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         const stageList: STAGE[] = searchStages.filter(stage => isSolitaryStage ? !pageStageToSearchStage(pageContext?.stage).includes(stage) : true);
         const selectionList: Item<TAG_ID>[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext?.subject);
         const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
-        const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.value));
+        const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.tag));
 
         const categories = [
             searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
             stageList.map(s => {return {value: s, label: stageLabelMap[s]};}),
             statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
-            excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.value, label: book.label};}),
+            excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
             selectionList,
         ].flat();
 
@@ -457,24 +450,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
-            currentPageTitle={siteSpecific("Question Finder", "Questions")}
-            description={description} help={pageHelp}
-            intermediateCrumbs={crumb ? [crumb] : []}
+            currentPageTitle={siteSpecific("Question Finder", "Questions")} 
+            help={pageHelp}
+            intermediateCrumbs={crumb ? [crumb] : []} 
             icon={{type: "hex", icon: "icon-finder"}}
         />
-        {siteSpecific(<div className="d-flex align-items-center">
-            <span>Use the search box and/or filters to find questions; you can then refine your search further with the filters.</span>
-            <Spacer/>
-            <div className="no-print d-flex align-items-center gap-2">
-                <div className="question-actions question-actions-leftmost mt-3">
-                    <ShareLink linkUrl={`/questions`}/>
-                </div>
-                <div className="question-actions mt-3 not-mobile">
-                    <PrintButton/>
-                </div>
-            </div>
-        </div>, 
-        <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />)}
+
         <SidebarLayout>
             <QuestionFinderSidebar 
                 searchText={searchQuery} setSearchText={debouncedSearchHandler} topLevelFilters={[]} 
@@ -494,6 +475,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             <MainContent>
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
+
+                {siteSpecific(
+                    <div className="my-3">
+                        {(pageContext?.subject && pageContext.stage 
+                            ? `Use our question finder to find questions to try on ${getHumanContext(pageContext)} topics.` 
+                            : "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology."
+                        ) + " Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions."}
+                    </div>,
+                    <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
+                )}
 
                 {isAda && <Row>
                     <Col lg={6} md={12} xs={12} className="finder-search">
@@ -516,7 +507,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
                 {isPhy && <FilterSummary/>}
 
-                <Row className="mt-4 position-relative finder-panel">
+                <Row className={classNames(siteSpecific("mt-2", "mt-4"), "position-relative finder-panel")}>
                     {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")} data-testid="question-finder-filters">
                         <QuestionFinderFilterPanel {...{
                             searchDifficulties, setSearchDifficulties,

@@ -201,8 +201,7 @@ $dashboard-panel-padding: 30px;
 }
 
 .book-panel {
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
 
   .dashboard-book {
     font-size: 13px;
@@ -233,6 +232,15 @@ a:has(.assignment-card) {
   h5 {
     font-size: 17px;
     font-family: $secondary-font-semi-bold;
+
+    max-height: 5rem;
+    overflow: hidden;
+
+    // if below is not supported, it is still capped at 5rem
+    display: -webkit-box !important;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
   }
 
   > div > i.icon:first-child {

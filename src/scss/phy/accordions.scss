@@ -15,6 +15,10 @@
   &:has(> .accordion-header.active) {
     border-color: var(--nav-primary);
     border-radius: 8px;
+
+    &:has(.de-emphasised) {
+      border-color: $color-neutral-500;
+    }
   }
 
   .accordion-header {
@@ -32,7 +36,13 @@
     }
 
     .accordion-title {
-      color: var(--subject-color-900);
+      color: var(--subject-color-800);
+
+      > span.inline-stage-label {
+        font-size: 13px;
+        color: $color-neutral-400;
+        font-family: $primary-font;
+      }
     }
 
     .accordion-title::after {
@@ -43,9 +53,26 @@
       width: 16px;
       margin-left: 8px;
     }
+
+    .stage-label {
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;      
+    }
+
+    &.de-emphasised {
+      .accordion-title {
+        color: $color-neutral-800;
+      }
+    }
   
-    &.active .accordion-title::after {
-      transform: rotate(180deg);
+    &.active {
+      .stage-label {
+        border-bottom-left-radius: 0;
+      }
+
+      .accordion-title::after {
+        transform: rotate(180deg);
+      }
     }
   }
 
