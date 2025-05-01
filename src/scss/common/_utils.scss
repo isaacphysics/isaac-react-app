@@ -80,3 +80,9 @@
 .d-contents {
   display: contents !important;
 }
+
+.text-overflow-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

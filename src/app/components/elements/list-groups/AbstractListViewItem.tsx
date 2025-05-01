@@ -94,8 +94,8 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
                         : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/> : undefined)}
             </div>
-            <div className="align-content-center">
-                <div className="d-flex">
+            <div className="align-content-center text-overflow-ellipsis pe-2">
+                <div className="d-flex text-wrap">
                     <span className="question-link-title"><Markup encoding="latex">{title}</Markup></span>
                     {quizTag && <span className="quiz-level-1-tag ms-sm-2">{quizTag}</span>}
                     {isPhy && <div className="d-flex flex-column justify-self-end">
@@ -112,9 +112,9 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {subtitle && <div className="small text-muted">
                     {subtitle}
                 </div>}
-                {breadcrumb && <div className="hierarchy-tags">
+                {breadcrumb && <span className="hierarchy-tags">
                     <Breadcrumb breadcrumb={breadcrumb}/>
-                </div>}
+                </span>}
                 {audienceViews && fullWidth && <div className="d-flex mt-1"> 
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack/> 
                 </div>}
@@ -134,8 +134,8 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {!isQuiz && (audienceViews || status) && <Col xl={2} className={classNames("d-none d-xl-flex", {"list-view-border": (status && status !== CompletionState.NOT_ATTEMPTED)})}>
                     <StatusDisplay status={status ?? CompletionState.NOT_ATTEMPTED}/>
                 </Col>}
-                {audienceViews && <Col md={4} lg={5} xl={4} xxl={3} className="d-none d-md-flex justify-content-end">
-                    <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack spacerWidth={5} className={classNames({"list-view-border": audienceViews.length > 0})}/> 
+                {audienceViews && <Col md={4} lg={5} xl={4} xxl={3} className={classNames("d-none d-md-flex justify-content-end", {"list-view-border": audienceViews.length > 0})}>
+                    <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack className="w-100"/> 
                 </Col>}
                 {previewQuizUrl && quizButton && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                     <QuizLinks previewQuizUrl={previewQuizUrl} quizButton={quizButton}/> 
