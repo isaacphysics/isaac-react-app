@@ -1,27 +1,33 @@
 import { withRouter } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { Button, ListGroupItem, Input, ListGroup, Col, Container } from "reactstrap";
+import { Input, Col, Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
-import { isEventLeaderOrStaff, isLoggedIn, isTutorOrAbove, siteSpecific } from "../../../services";
-import { QuizSummaryDTO } from "../../../../IsaacApiTypes";
+import { getFilteredStageOptions, isAda, isDefined, isLoggedIn, isPhy, LearningStage, siteSpecific, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
+import { AudienceContext, QuizSummaryDTO, Stage } from "../../../../IsaacApiTypes";
+import { Tag} from "../../../../IsaacAppTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { useGetAvailableQuizzesQuery } from "../../../state/slices/api/quizApi";
-import { QuizzesPageProps } from "./MyQuizzes";
-import { Spacer } from "../../elements/Spacer";
-import { Link } from "react-router-dom";
 import { PageFragment } from "../../elements/PageFragment";
 import { MainContent, PracticeQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
-import { useUrlPageTheme } from "../../../services/pageContext";
+import { isFullyDefinedContext, useUrlPageTheme } from "../../../services/pageContext";
 import { selectors, useAppSelector } from "../../../state";
+import { PrintButton } from "../../elements/PrintButton";
+import { ShareLink } from "../../elements/ShareLink";
+import { ListView } from "../../elements/list-groups/ListView";
+import classNames from "classnames";
 
-const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
+const PracticeQuizzesComponent = () => {
+    const pageContext = useUrlPageTheme();
+    const pageSubject = pageContext?.subject;
+    const pageStage = pageContext?.stage ? pageContext.stage[0] : undefined;
+
     const {data: quizzes} = useGetAvailableQuizzesQuery(0);
-    const [filterText, setFilterText] = useState<string>("");
-    const [copied, setCopied] = useState(false);
-
     const user = useAppSelector(selectors.user.orNull);
 
-    const pageContext = useUrlPageTheme();
+    const [filterText, setFilterText] = useState<string>("");
+    const [filterTags, setFilterTags] = useState<Tag[]>([]); // Subjects & fields
+    const [filterStages, setFilterStages] = useState<Stage[]>();
+    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
         if (location.search.includes("filter")) {
@@ -29,8 +35,15 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
         }
     }, []);
 
+    const audienceMatch = (selectedStage: Stage | LearningStage) => (contentAudience: AudienceContext) =>
+        contentAudience.stage?.includes(selectedStage as Stage) ||
+        contentAudience.stage?.map(s => STAGE_TO_LEARNING_STAGE[s]).includes(selectedStage as LearningStage);
+
     const showQuiz = (quiz: QuizSummaryDTO) => {
-        if (!user || !isLoggedIn(user)) return false; 
+        if (!user || !isLoggedIn(user)) return false;
+        if (pageSubject && !quiz.tags?.includes(pageSubject)) return false;
+        if (pageStage && !quiz.audience?.some(audienceMatch(pageStage))) return false;
+
         switch (user.role) {
             case "STUDENT":
             case "TUTOR":
@@ -43,45 +56,79 @@ const PracticeQuizzesComponent = (props: QuizzesPageProps) => {
         }
     };
 
-    // If the user is event admin or above, and the quiz is hidden from teachers, then show that
-    // If the user is teacher or above, show if the quiz is visible to students
-    const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
-        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
-        {isTutorOrAbove(user) && ((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
-    </>;
+    const textMatch = (quiz: QuizSummaryDTO) => quiz.title?.toLowerCase().includes(filterText.toLowerCase());
+    const tagMatch = (quiz: QuizSummaryDTO) => filterTags.length === 0 || quiz.tags?.some(t => (filterTags.map(tag => tag.id as string)).includes(t));
+    const stageMatch = (quiz: QuizSummaryDTO) => !filterStages || filterStages.length === 0 || filterStages.some(s => quiz.audience?.some(audienceMatch(s)));
+    const isRelevant = (quiz: QuizSummaryDTO) => showQuiz(quiz) && textMatch(quiz) && tagMatch(quiz) && stageMatch(quiz);
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} />
-        <PageFragment fragmentId="help_toptext_practice_tests" />
-        <ShowLoading until={quizzes}>
-            {quizzes && <>
-                {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
-                <Col xs={12} className="mb-4">
-                    <Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />
-                    <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
-                        if (filterText.trim()) {
-                            navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
-                        }
-                        setCopied(true);
-                    }} onMouseLeave={() => setCopied(false)} />
-                </Col>
-                <ListGroup className="mb-3 quiz-list">
-                    {quizzes.filter((quiz) => showQuiz(quiz) && quiz.title?.toLowerCase().includes(filterText.toLowerCase())).map(quiz => <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                        <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
-                            <div>
-                                <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
-                                {roleVisibilitySummary(quiz)}
-                                {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
-                            </div>
-                            <Spacer />
-                            <Button tag={Link} to={{pathname: `/test/view/${quiz.id}`}}>
-                                {siteSpecific("View Test", "View test")}
-                            </Button>
-                        </div>
-                    </ListGroupItem>)}
-                </ListGroup>
-            </>}
-        </ShowLoading>
+    const fields = tags.getFieldTags(Array.from((quizzes || []).reduce((a, c) => {
+        if (isDefined(c.tags) && c.tags.length > 0) {
+            return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
+        }
+        return a;
+    }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).sort();
+
+    const tagCounts = () => {
+        const counts: {[key: string]: number} = {};
+        [...Subjects, ...fields.map(field => field.id)].forEach(tag => {
+            counts[tag] = quizzes?.filter(quiz => quiz.tags?.includes(tag) && showQuiz(quiz) && textMatch(quiz) && stageMatch(quiz)).length || 0;
+        });
+        return counts;
+    };
+
+    const stageCounts = () => {
+        const counts: {[key: string]: number} = {};
+        getFilteredStageOptions().forEach(stage => {
+            counts[stage.label] = quizzes?.filter(quiz => quiz.audience?.some(audienceMatch(stage.value)) && showQuiz(quiz) && textMatch(quiz) && tagMatch(quiz)).length || 0;
+        });
+        return counts;
+    };
+
+    const sidebarProps = {filterText, setFilterText, filterTags, setFilterTags, tagCounts: tagCounts(), filterStages, setFilterStages, stageCounts: stageCounts()};
+
+    return <Container { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
+        <TitleAndBreadcrumb 
+            currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} 
+            icon={{"type": "hex", "icon": "icon-tests"}}
+        />
+        <div className="d-flex align-items-center">
+            <span><PageFragment fragmentId="help_toptext_practice_tests"/></span>
+            {isPhy && <div className="no-print d-flex gap-2 ms-auto">
+                <div className="question-actions question-actions-leftmost">
+                    <ShareLink linkUrl={isFullyDefinedContext(pageContext) ? `/${pageSubject}/${pageStage}/practice_tests` : "/practice_tests"}/>
+                </div>
+                <div className="question-actions not-mobile">
+                    <PrintButton/>
+                </div>
+            </div>}
+        </div>
+        <SidebarLayout>
+            <PracticeQuizzesSidebar {...sidebarProps}/>
+            <MainContent>
+                {!user 
+                    ? <b>You must be logged in to view practice tests.</b> 
+                    : <ShowLoading until={quizzes}>
+                        {quizzes && <>
+                            {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
+                            <Col xs={12} className="mb-4">
+                                {isAda && <Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />}
+                                <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
+                                    if (filterText.trim()) {
+                                        navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
+                                    }
+                                    setCopied(true);
+                                }} onMouseLeave={() => setCopied(false)} />
+                            </Col>
+                            <ListView 
+                                items={quizzes.filter((quiz) => isRelevant(quiz))} 
+                                className={classNames({"quiz-list border-radius-2 mb-3": isAda})}
+                                useViewQuizLink
+                            />
+                        </>}
+                    </ShowLoading>
+                }
+            </MainContent>
+        </SidebarLayout>
     </Container>;
 };
 
