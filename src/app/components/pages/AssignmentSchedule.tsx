@@ -331,7 +331,7 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
                 </svg>
                 {<foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
                     <div className={"position-relative w-100"}>
-                        <h3 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h3>
+                        <h4 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%, 4%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h4>
                     </div>
                 </foreignObject>}
             </svg>
