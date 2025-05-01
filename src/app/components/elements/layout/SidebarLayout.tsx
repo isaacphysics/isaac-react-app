@@ -631,7 +631,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
         {pageContext?.subject && fields.filter(tag => tagCounts[tag.id] > 0).length > 0 && <>
             <div className="section-divider"/>
             <h5>Filter by topic</h5>
-            <ul>
+            <ul className="ps-2">
                 {fields.filter(tag => tagCounts[tag.id] > 0)
                     .map((tag, j) => <li key={j} >
                         <StyledTabPicker checkboxTitle={tag.title} checked={filterTags?.includes(tag)}
@@ -643,7 +643,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
         {!isSingleStageContext(pageContext) && getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).length > 0 && <>
             <div className="section-divider"/>
             <h5>Filter by stage</h5>
-            <ul>
+            <ul className="ps-2">
                 {getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).map((stage, i) =>
                     <li key={i}>
                         <StyledCheckbox checked={filterStages?.includes(stage.value)}
