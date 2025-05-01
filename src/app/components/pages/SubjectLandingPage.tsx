@@ -147,7 +147,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                 thenRender={({events}) => {
                     const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage).flat() ?? [];
                     const relevantEvents = events.filter(event => context?.subject && event.tags?.includes(context.subject)
-                        && context?.stage && eventStages(event).includes(context.stage[0] as Stage)).slice(0, 2);
+                        && (!context?.stage?.length || eventStages(event).includes(context.stage[0] as Stage))).slice(0, 2);
                     return <Row className="h-100">
                         {relevantEvents.length
                             ? relevantEvents.map((event, i) =>
