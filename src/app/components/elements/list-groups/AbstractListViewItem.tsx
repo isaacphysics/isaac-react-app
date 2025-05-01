@@ -85,10 +85,9 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
     const isQuiz: boolean = (previewQuizUrl && quizButton) ? true : false;
     
     fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewQuizUrl || quizButton) ? false : true);
-    const colWidths = fullWidth ? [12,12,12,12,12] : isQuiz ? [12,6,6,6,6] : [12,8,7,6,7];
     const cardBody =
     <div className="w-100 d-flex flex-row">
-        <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} xxl={colWidths[4]} className={classNames("d-flex", {"mt-3": isCard && linkTags?.length, "mb-3": isCard && !linkTags?.length})}>
+        <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard && linkTags?.length, "mb-3": isCard && !linkTags?.length})}>
             <div>
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
@@ -109,7 +108,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                         >NO-FILTER</span>}
                     </div>}
                 </div>
-                {subtitle && <div className="small text-muted">
+                {subtitle && <div className="small text-muted text-wrap">
                     {subtitle}
                 </div>}
                 {breadcrumb && <span className="hierarchy-tags">
