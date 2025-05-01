@@ -39,6 +39,7 @@ import {
     difficultyShortLabelMap,
     formatBoardOwner,
     getAssignmentStartDate,
+    isAda,
     isDefined,
     isStaff,
     Item,
@@ -158,15 +159,15 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
                     <ButtonGroup className={"w-100 pt-3"}>
                         <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-end-0 px-1 px-lg-3"} id={"start-date-button"}
-                            color={viewBy === "startDate" ? "secondary" : "primary"}
-                            outline={viewBy !== "startDate"}
+                            color={viewBy === "startDate" ? siteSpecific("solid", "primary") : siteSpecific("keyline", "secondary")}
+                            outline={isAda && viewBy !== "startDate"}
                             onClick={() => setViewBy("startDate")}
                         >
                             By start date
                         </Button>
                         <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-start-0 px-1 px-lg-3"} id={"due-date-button"}
-                            color={viewBy === "dueDate" ? "secondary" : "primary"}
-                            outline={viewBy !== "dueDate"}
+                            color={viewBy === "dueDate" ? siteSpecific("solid", "primary") : siteSpecific("keyline", "secondary")}
+                            outline={isAda && viewBy !== "dueDate"}
                             onClick={() => setViewBy("dueDate")}
                         >
                             By due date
