@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React, { ReactNode } from "react";
+import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
@@ -34,12 +34,19 @@ const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: C
     }
 };
 
-const LinkTags = ({linkTags}: {linkTags: {tag: string, url?: string}[];}) => {
+export interface ListViewTagProps extends HTMLAttributes<HTMLElement> {
+    tag: string;
+    url?: string;
+}
+
+const LinkTags = ({linkTags}: {linkTags: ListViewTagProps[];}) => {
     return <>
-        {linkTags.map(t => t.url ?
-            <Link to={t.url} className="card-tag" key={t.tag}>{t.tag}</Link> :
-            <div className="card-tag" key={t.tag}>{t.tag}</div>
-        )}
+        {linkTags.map(t => {
+            const {url, tag, ...rest} = t;
+            return url ?
+                <Link {...rest} to={url} className="card-tag" key={tag}>{tag}</Link> :
+                <div {...rest} className="card-tag" key={tag}>{tag}</div>;
+        })}
     </>;
 };
 
@@ -52,12 +59,6 @@ const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUr
         {quizButton}
     </span>;
 };
-
-export interface ListViewTagProps {
-    tag: string;
-    url?: string;
-}
-
 export interface AbstractListViewItemProps extends ListGroupItemProps {
     title?: string;
     icon?: TitleIconProps;

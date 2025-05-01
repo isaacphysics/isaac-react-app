@@ -343,7 +343,7 @@ $enable-negative-margins: true;
 @import "../common/_utils";
 
 // Theming
-@import "../common/accessibility";
+@import "accessibility";
 
 // Atoms
 @import "fonts";

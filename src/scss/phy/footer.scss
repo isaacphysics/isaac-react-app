@@ -2,6 +2,8 @@
 
 // Fluent footer theme
 footer {
+  --focus-outline-color: #{$color-neutral-white};
+  
   background-color: $color-neutral-900;
 
   li {
@@ -18,12 +20,6 @@ footer {
       text-decoration: underline;
       color: $color-neutral-200;
     }
-  }
-
-  a:focus {
-    box-shadow: 0 0 0 2pt white;
-    border-radius: 3px;
-    outline: none !important;
   }
   
   .logo-text {

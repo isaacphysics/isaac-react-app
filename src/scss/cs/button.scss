@@ -19,23 +19,11 @@
     background-color: $active-color !important;
     box-shadow: none !important;
   }
-  &:focus:not(.disabled) {
-    box-shadow: none;
-  }
-  &:focus-visible {
-    box-shadow: 0 0 0 3px $focus-blue !important;
-  }
   &.disabled, &:disabled {
     color: $cs-jet;
     background-color: $cs-silver;
     border-color: $cs-silver;
   }
-}
-
-.btn.btn-link:focus {
-  box-shadow: 0 0 0 0.2rem $focus-blue !important;
-  outline: none !important;
-  border-radius: 3px;
 }
 
 @mixin ada-button-outline($color, $hover-color, $active-color) {
@@ -55,12 +43,6 @@
     border-color: $active-color !important;
     background-color: transparent !important;
     box-shadow: none !important;
-  }
-  &:focus:not(.disabled) {
-    box-shadow: none;
-  }
-  &:focus-visible {
-    box-shadow: 0 0 0 3px $focus-blue !important;
   }
   &.disabled, &:disabled {
     color: $cs-jet;
@@ -132,7 +114,6 @@
     background: none !important;
     border: none !important;
     border-radius: 0 !important;
-    box-shadow: none !important;
   }
 }
 
@@ -147,7 +128,6 @@
     color: $light-active-dark-pink;
   }
   &:focus-visible {
-    outline: 2px solid $focus-blue !important;
     border-radius: 0 !important;
     z-index: 10;
   }
@@ -314,7 +294,6 @@ a:not(.btn):not(.nav-link) {
     outline: none;
   }
   &:focus-visible {
-    outline: 2px solid $focus-blue;
     border-radius: 0 !important;
     z-index: 10;
   }

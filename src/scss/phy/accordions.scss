@@ -21,18 +21,11 @@
     }
   }
 
-  &:has(> .accordion-header:focus-visible) {
-    outline-offset: 2px;
-    outline: 2px solid var(--subject-color-300);
-
-    &:has(> .de-emphasised) {
-      outline-color: $color-neutral-300;
-    }
-  }
-
   .accordion-header {
     background: rgba(white, 1);
     border-radius: 8px;
+
+    z-index: 1; // so that bottom of :focus-visible outline is visible
 
     .accordion-part {
       font-size: 16px;

@@ -10,7 +10,7 @@ export const FooterCS = () => (
             <Container fluid className="py-5">
                 <Row className="justify-content-start">
                     <Col xs={"auto"} className={"me-5 mb-4 mb-md-0"}>
-                        <Link to="/">
+                        <Link to="/" className="d-block">
                             <img
                                 src="/assets/common/logos/ada_logo_stamp_aqua.svg"
                                 className="footer-logo"
