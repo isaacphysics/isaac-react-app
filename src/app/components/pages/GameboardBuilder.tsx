@@ -394,7 +394,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                             innerRef={providedDrop.innerRef}>
                                             <thead>
                                                 <tr>
-                                                    <th className="w-5"/>
+                                                    <th className="w-5">{isAda && selectedQuestions.size > 0 && "Remove"}</th>
                                                     <th className={siteSpecific("w-40", "w-30")}>Question title</th>
                                                     <th className={siteSpecific("w-25", "w-20")}>Topic</th>
                                                     <th className="w-15">Stage</th>

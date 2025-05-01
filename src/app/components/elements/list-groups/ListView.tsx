@@ -2,8 +2,8 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, ListViewTagProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
-import { ListGroup, ListGroupItem, ListGroupItemProps, ListGroupProps } from "reactstrap";
+import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, PATHS, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { TitleIconProps } from "../PageTitle";
 import { AffixButton } from "../AffixButton";
 import { QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { selectors, showQuizSettingModal, useAppDispatch, useAppSelector } from "../../../state";
 import classNames from "classnames";
 
-export interface ListViewCardProps extends ListGroupItemProps {
+export interface ListViewCardProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "linkTags" | "isCard"> {
     item: ShortcutResponse;
     icon?: TitleIconProps;
     subject?: Subject;
@@ -31,7 +31,9 @@ export const ListViewCard = ({item, icon, subject, linkTags, ...rest}: ListViewC
     />;
 };
 
-type QuestionListViewItemProps = {item: ShortcutResponse} & Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "tags" | "supersededBy" | "subtitle" | "breadcrumb" | "status" | "url" | "audienceViews">;
+interface QuestionListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "tags" | "supersededBy" | "subtitle" | "breadcrumb" | "status" | "url" | "audienceViews"> {
+    item: ShortcutResponse;
+}
 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const { item, ...rest } = props;
@@ -56,7 +58,11 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     />;
 };
 
-export const ConceptListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
+interface ConceptListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "url"> {
+    item: ShortcutResponse;
+}
+
+export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
@@ -71,7 +77,11 @@ export const ConceptListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
     />;
 };
 
-export const EventListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
+interface EventListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "url"> {
+    item: ShortcutResponse;
+}
+
+export const EventListViewItem = ({item, ...rest}: EventListViewItemProps) => {
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
 
@@ -85,14 +95,20 @@ export const EventListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => 
     />;
 };
 
-export const QuizListViewItem = ({item, isQuizSetter, ...rest}: {item: QuizSummaryDTO, isQuizSetter?: boolean}) => {
+interface QuizListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "previewQuizIrl" | "quizButton"> {
+    item: QuizSummaryDTO;
+    isQuizSetter?: boolean;
+    useViewQuizLink?: boolean;
+}
+
+export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}: QuizListViewItemProps) => {
     const dispatch = useAppDispatch();
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const quizButton = isQuizSetter ? 
-        <AffixButton size="md" color="solid" onClick={() => (dispatch(showQuizSettingModal(item)))} affix={{ affix: "icon-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color={siteSpecific("solid", "primary")} onClick={() => (dispatch(showQuizSettingModal(item)))} affix={{ affix: "icon-right", position: "suffix", type: "icon" }}>
             Set test
         </AffixButton> :
-        <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/${item.id}`} tag={Link} affix={{ affix: "icon-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color={siteSpecific("solid", "primary")} to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-right", position: "suffix", type: "icon" }}>
             Take the test
         </AffixButton>;
 
@@ -100,13 +116,17 @@ export const QuizListViewItem = ({item, isQuizSetter, ...rest}: {item: QuizSumma
         icon={{type: "hex", icon: "icon-tests", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
-        previewQuizUrl={`/test/preview/${item.id}`}
-        quizButton={quizButton}
+        previewQuizUrl={useViewQuizLink ? `/test/view/${item.id}` : `/test/preview/${item.id}`}
+        quizButton={useViewQuizLink ? undefined : quizButton}
         {...rest}
     />;
 };
 
-export const QuestionDeckListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
+interface QuestionDeckListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "breadcrumb" | "url"> {
+    item: ShortcutResponse;
+}
+
+export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewItemProps) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
@@ -122,7 +142,11 @@ export const QuestionDeckListViewItem = ({item, ...rest}: {item: ShortcutRespons
     />;
 };
 
-export const QuickQuizListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
+interface QuickQuizListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "breadcrumb" | "status" | "quizTag" | "url" | "audienceViews"> {
+    item: ShortcutResponse;
+}
+
+export const QuickQuizListViewItem = ({item, ...rest}: QuickQuizListViewItemProps) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
@@ -142,7 +166,11 @@ export const QuickQuizListViewItem = ({item, ...rest}: {item: ShortcutResponse})
     />;
 };
 
-export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
+interface GenericListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "tags" | "supersededBy" | "breadcrumb" | "status" | "url" | "audienceViews"> {
+    item: ShortcutResponse;
+}
+
+export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
@@ -163,7 +191,11 @@ export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
     />;
 };
 
-export const ShortcutListViewItem = ({item, ...rest}: {item: ShortcutResponse} & ListGroupItemProps) => {
+interface ShortcutListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "tags" | "supersededBy" | "breadcrumb" | "status" | "url" | "audienceViews"> {
+    item: ShortcutResponse;
+}
+
+export const ShortcutListViewItem = ({item, ...rest}: ShortcutListViewItemProps) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
@@ -191,25 +223,41 @@ export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & {sh
     </ListGroup>;
 };
 
-export const ListView = ({items, className, ...rest}: {items: ShortcutResponse[], className?: string, fullWidth?: boolean, isQuizSetter?: boolean}) => {
+type ListViewItemProps = 
+    | Omit<ListViewCardProps, "item"> 
+    | Omit<QuestionListViewItemProps, "item"> 
+    | Omit<ConceptListViewItemProps, "item"> 
+    | Omit<EventListViewItemProps, "item"> 
+    | Omit<QuizListViewItemProps, "item"> 
+    | Omit<QuestionDeckListViewItemProps, "item"> 
+    | Omit<QuickQuizListViewItemProps, "item">
+    | Omit<GenericListViewItemProps, "item"> 
+    | Omit<ShortcutListViewItemProps, "item">;
+
+interface ListViewProps {
+    items: ShortcutResponse[];
+    className?: string;
+}
+
+export const ListView = ({items, className, ...rest}: ListViewProps & ListViewItemProps) => {
     return <ListGroup className={`link-list list-group-links ${className}`}>
         {items.map((item, index) => {
             switch (item.type) {
                 case (DOCUMENT_TYPE.GENERIC):
-                    return <GenericListViewItem key={index} item={item} {...rest}/>;
+                    return <GenericListViewItem key={index} {...rest} item={item}/>;
                 case (SEARCH_RESULT_TYPE.SHORTCUT):
-                    return <ShortcutListViewItem key={index} item={item} {...rest}/>;
+                    return <ShortcutListViewItem key={index} {...rest} item={item}/>;
                 case (DOCUMENT_TYPE.QUESTION):
                 case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
-                    return <QuestionListViewItem key={index} item={item} {...rest}/>;
+                    return <QuestionListViewItem key={index} {...rest} item={item}/>;
                 case (DOCUMENT_TYPE.CONCEPT):
-                    return <ConceptListViewItem key={index} item={item} {...rest}/>;
+                    return <ConceptListViewItem key={index} {...rest} item={item}/>;
                 case (DOCUMENT_TYPE.EVENT):
-                    return <EventListViewItem key={index} item={item} {...rest}/>;
+                    return <EventListViewItem key={index} {...rest} item={item}/>;
                 case (DOCUMENT_TYPE.QUIZ):
-                    return <QuizListViewItem key={index} item={item} {...rest}/>;
+                    return <QuizListViewItem key={index} {...rest} item={item}/>;
                 case SEARCH_RESULT_TYPE.GAMEBOARD:
-                    return <QuestionDeckListViewItem key={index} item={item} {...rest}/>;
+                    return <QuestionDeckListViewItem key={index} {...rest} item={item}/>;
                 default:
                     // Do not render this item if there is no matching DOCUMENT_TYPE
                     console.error("Not able to display item as a ListViewItem: ", item);

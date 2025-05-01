@@ -88,7 +88,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
             </span>
             <div className={classNames({"d-flex py-3 pe-3 flex-column flex-md-row flex-fill": isAda, "d-flex flex-column flex-sm-row align-items-sm-center w-100": isPhy})}>
                 <div>
-                    <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-theme me-2": isPhy})}>
+                    <Markup encoding={"latex"} className={classNames( "link-title question-link-title", {"text-theme me-2": isPhy})}>
                         {generateQuestionTitle(question)}
                     </Markup>
                     {isPhy && question.subtitle && <div className="small text-muted d-none d-sm-block">

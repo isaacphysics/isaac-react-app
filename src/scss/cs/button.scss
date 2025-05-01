@@ -199,6 +199,17 @@
   margin-left: 7.5px;
 }
 
+.bin-icon-small {
+  &:not(.outline) {
+    @include ada-icon-button-base(30px, 30px, false);
+    background-image: url("/assets/cs/icons/bin.svg");
+  }
+  &.outline {
+    @include ada-icon-button-base(30px, 30px, true);
+    background-image: url("/assets/cs/icons/bin-pink.svg");
+  }
+}
+
 .btn.plus-button {
   position: relative;
   &::after {

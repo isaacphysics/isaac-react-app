@@ -57,8 +57,11 @@
 }
 
 .list-group-links {
-  .question-link-title {
+  .link-title {
     color: var(--subject-color-900);
+  }
+
+  .question-link-title {
     font-family: $secondary-font-medium;
   }
 }
