@@ -91,7 +91,7 @@ function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsState {
         ...subListState,
         stage: {state: true, subList: false},
         examBoard: {state: false, subList: false},
-        topics: {state: false, subList: false},
+        topics: {state: isPhy, subList: false},
         difficulty: {state: false, subList: false},
         books: {state: false, subList: false},
         questionStatus: {state: false, subList: false}
@@ -165,13 +165,16 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     const handleFilterPanelExpansion = (e? : React.MouseEvent<HTMLElement>) => {
         e?.stopPropagation();
         if (below["md"](deviceSize)) {
-            listStateDispatch({type: "expandAll", expand: false});
+            listStateDispatch({
+                type: "expandAll", 
+                expand: false
+            });
             setFiltersVisible(p => !p);
         } else {
             listStateDispatch({
                 type: "expandAll",
-                expand: !Object.values(listState).some(v => v.state && !v.subList
-                )});
+                expand: !Object.values(listState).some(v => v.state && !v.subList)
+            });
         }
     };
 
