@@ -49,7 +49,7 @@ export const HeaderPhy = () => {
                             {/* mobile hamburger menu */}
                             <div className="d-flex justify-content-end align-items-center flex-wrap py-3 gap-3">
                                 <LoginLogoutButton/>
-                                <AffixButton color="tint" size="lg" onClick={toggleMenu} affix={{
+                                <AffixButton color="tint" size="lg" onClick={toggleMenu} data-testid="nav-menu-toggle" affix={{
                                     affix: "icon-menu", 
                                     position: "suffix", 
                                     type: "icon"

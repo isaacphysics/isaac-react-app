@@ -27,10 +27,9 @@ it('Navigation menu should have no visual regressions', () => {
         cy.wait(1000);
 
         // Act
-        cy.get('button.navbar-toggler[aria-label="Open menu"]').click();
+        cy.get('[data-testid="nav-menu-toggle"]').click();
         // click on the second menu item
-        cy.get('button.navbar-toggler[aria-label="Close menu"] ~ div.navbar-collapse > ul > li').eq(1).click();
-        cy.scrollTo('top');
+        cy.get('ul#main-menu > li').eq(1).click();
 
         cy.wait(1000);
 
