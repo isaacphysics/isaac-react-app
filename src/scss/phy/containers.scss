@@ -2,9 +2,27 @@
 
 // Fluent containers
 
+$spacing-container-margins: (
+    // the spacing on either side of the container
+    xs: 24px,
+    sm: 30px,
+    md: 30px,
+    lg: 44px,
+    xl: 85px,
+    xxl: 110px,
+    3xl: 15vw,
+);
+
+$container-breakpoints: map-merge(
+    $grid-breakpoints,
+    (
+        3xl: 1800px,
+    )
+);
+
 .container {
-    @each $bp, $_ in $grid-breakpoints {
-        @include media-breakpoint-only($bp) {
+    @each $bp, $_ in $container-breakpoints {
+        @include media-breakpoint-only($bp, $container-breakpoints) {
             width: auto;
             padding-left: map.get($spacing-container-margins, $bp);
             padding-right: map.get($spacing-container-margins, $bp);
@@ -13,12 +31,20 @@
 }
 
 .container-override {
-    @each $bp, $_ in $grid-breakpoints {
-        @include media-breakpoint-only($bp) {
+    @each $bp, $_ in $container-breakpoints {
+        @include media-breakpoint-only($bp, $container-breakpoints) {
             margin-left: calc(-1 * map.get($spacing-container-margins, $bp));
             margin-right: calc(-1 * map.get($spacing-container-margins, $bp));
             padding-left: map.get($spacing-container-margins, $bp);
             padding-right: map.get($spacing-container-margins, $bp);
         }
+    }
+}
+
+div.dashboard.dashboard-outer {
+    @include media-breakpoint-only(3xl, $container-breakpoints) {
+        width: auto;
+        padding-left: calc(map.get($spacing-container-margins, 3xl) / 1.5);
+        padding-right: calc(map.get($spacing-container-margins, 3xl) / 1.5);
     }
 }

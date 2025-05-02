@@ -221,8 +221,8 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
     const assignmentHasNotStarted = !hasAssignmentStarted(assignment);
 
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
-        <div className={classNames("gameboard-header", {"text-muted": assignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)}>
-            <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)} alt={`Expand assignment ${assignment.gameboard?.title}`}>
+        <button className={classNames("gameboard-header fw-bold p-0 w-100", {"text-muted": assignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)} aria-label={`Expand assignment ${assignment.gameboard?.title}`}>
+            <div className="gameboard-title align-items-center">
                 <span className={classNames({"text-muted": assignmentHasNotStarted})}>
                     {assignment.gameboard?.title}
                     {assignmentHasNotStarted && <span className="gameboard-due-date">
@@ -233,7 +233,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
                         (Due:&nbsp;{formatDate(assignment.dueDate)})
                     </span>}
                 </span>
-            </Button>
+            </div>
             <div className="gameboard-links align-items-center">
                 <Button className="d-none d-md-inline me-0" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id as number)} onClick={openAssignmentDownloadLink}>
                     Download CSV
@@ -244,7 +244,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
                 </Button>
                 <img src={"/assets/common/icons/chevron-up.svg"} alt="" className={classNames("accordion-arrow", {"active" : isExpanded})}/>
             </div>
-        </div>
+        </button>
         {isExpanded && <ProgressLoader assignment={assignment} />}
     </div>;
 };
@@ -347,8 +347,8 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
     const quizAssignmentHasNotStarted = quizAssignment.scheduledStartDate && quizAssignment.scheduledStartDate.valueOf() > Date.now();
 
     return isDefined(quizAssignment.id) && quizAssignment.id > 0 ? <div className="assignment-progress-gameboard" key={quizAssignment.id}>
-        <div className={classNames("gameboard-header", {"text-muted": quizAssignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)}>
-            <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
+        <button className={classNames("gameboard-header fw-bold p-0 w-100", {"text-muted": quizAssignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)}>
+            <div color="link" className="gameboard-title align-items-center">
                 <span className={classNames({"text-muted": quizAssignmentHasNotStarted})}>
                     {quizAssignment.quizSummary?.title || "This test has no title"}
                     {quizAssignmentHasNotStarted && <span className="gameboard-due-date">
@@ -358,7 +358,7 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
                         (Due:&nbsp;{formatDate(quizAssignment.dueDate)})
                     </span>}
                 </span>
-            </Button>
+            </div>
             <div className="gameboard-links align-items-center">
                 <Button className="d-none d-md-inline me-0" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>
                     Download CSV
@@ -367,7 +367,7 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={`/test/assignment/${quizAssignment.id}/feedback`} onClick={openSingleAssignment}>View individual test</Button>
                 <img src={"/assets/common/icons/chevron-up.svg"} alt="" className={classNames("accordion-arrow", {"active" : isExpanded})}/>
             </div>
-        </div>
+        </button>
         {isExpanded && <QuizProgressLoader key={quizAssignment.quizId} quizAssignmentId={quizAssignment.id} />}
     </div> : null;
 };
