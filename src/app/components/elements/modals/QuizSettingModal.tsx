@@ -85,6 +85,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 setDueDate(null);
                 setScheduledStartDate(null);
                 setFeedbackMode(null);
+                dispatch(closeActiveModal());
             }
         });
     }
