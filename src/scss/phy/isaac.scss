@@ -234,18 +234,6 @@ $typography-font-weights-text-light: 300;
 $typography-font-weights-text-regular: 400;
 $typography-font-weights-text-semibold: 600;
 
-/* spacing */
-$spacing-container-margins: (
-    // the spacing on either side of the container
-    xs: 24px,
-    sm: 30px,
-    md: 30px,
-    lg: 44px,
-    xl: 85px,
-    xxl: 110px
-
-);
-
 // ISAAC
 // Node module imports
 @import "~bootstrap/scss/functions";

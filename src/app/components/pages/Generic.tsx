@@ -72,9 +72,9 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 <SidebarLayout>
                     {PHY_SIDEBAR.has(pageId) ? PHY_SIDEBAR.get(pageId)!() : <GenericPageSidebar/>}
                     <MainContent>
-                        <div className="no-print d-flex align-items-center">
+                        <div className={classNames("no-print d-flex align-items-center", {"gap-2": isPhy})} >
                             <EditContentButton doc={doc} />
-                            <div className={classNames("question-actions question-actions-leftmost mt-3", {"gap-2": isPhy})}>
+                            <div className="question-actions question-actions-leftmost mt-3">
                                 <ShareLink linkUrl={`/pages/${doc.id}`}/>
                             </div>
                             <div className="question-actions mt-3 not-mobile">
