@@ -5,7 +5,7 @@ import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, nextSeed, STAGE, useDeviceSize } from "../../services";
+import { below, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, nextSeed, STAGE, STAGE_TO_LEARNING_STAGE, useDeviceSize } from "../../services";
 import { AugmentedEvent, PageContextState } from "../../../IsaacAppTypes";
 import { Link } from "react-router-dom";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
@@ -145,9 +145,9 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                 query={eventsQuery}
                 defaultErrorTitle={"Error loading events list"}
                 thenRender={({events}) => {
-                    const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage).flat() ?? [];
+                    const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s])).flat() ?? [];
                     const relevantEvents = events.filter(event => context?.subject && event.tags?.includes(context.subject)
-                        && (!context?.stage?.length || eventStages(event).includes(context.stage[0] as Stage))).slice(0, 2);
+                        && (!context?.stage?.length || eventStages(event).includes(context.stage[0]))).slice(0, 2);
                     return <Row className="h-100">
                         {relevantEvents.length
                             ? relevantEvents.map((event, i) =>
