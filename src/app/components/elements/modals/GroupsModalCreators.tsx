@@ -210,6 +210,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
     </p>;
 
     return !group ? <Loading/> : <div className={"mb-4"}>
+        <h3>Selected group: {group.groupName}</h3>
         <h4>Sharing permissions</h4>
         <p>
             When you share this group, other teachers can:
@@ -319,7 +320,7 @@ export const groupManagersModal = (group: AppGroup, user: RegisteredUserDTO) => 
     const userIsOwner = user?.id === group.ownerId;
     return {
         closeAction: () => store.dispatch(closeActiveModal()),
-        title: `Selected group: ${group.groupName}`,
+        title: userIsOwner ? "Share your group" : "Shared group",
         body: <CurrentGroupManagersModal groupId={group.id as number} archived={!!group.archived} userIsOwner={userIsOwner} user={user} />,
     };
 };
