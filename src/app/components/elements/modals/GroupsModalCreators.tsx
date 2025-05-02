@@ -15,7 +15,7 @@ import {
     groupsApi,
 } from "../../../state";
 import sortBy from "lodash/sortBy";
-import {history, isAda, isDefined, isPhy, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
+import {history, isAda, isDefined, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
 import {Row, Col, Form, Input, Table, Alert, Label} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
