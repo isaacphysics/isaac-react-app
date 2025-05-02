@@ -44,7 +44,7 @@ const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): Li
     },
     icon: {type: "hex", icon: "icon-question-deck"},
     subject: context.subject,
-    linkTags: [{tag: "Explore topic question decks", url: extendUrl(context, 'question_decks')}]
+    linkTags: [{tag: "View topic question decks", url: extendUrl(context, 'question_decks')}]
 });
 
 // TODO: replace the link tags with links to lessons by *field* (see designs)
@@ -61,7 +61,7 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
 const CoreSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
         title: "Core skills practice",
-        subtitle: `Practice core skills required in ${getHumanContext(context)}.`
+        subtitle: `Practise core skills required in ${getHumanContext(context)}.`
     },
     icon: {type: "hex", icon: "icon-quiz"},
     subject: context.subject,
@@ -118,7 +118,7 @@ const AlgebraSkillsCard = (context: NonNullable<Required<PageContextState>>): Li
 };
 
 const MathsSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Core skills practice", `Practice those core skills, such as rearranging equations, vital for ${getHumanContext(context)}.`, [{tag: "Practise core skills", url: extendUrl(context, "skills_questions")}])(context);
+    return ArbitraryPageLinkCard("Core skills practice", `Practise those core skills, such as rearranging equations, vital for ${getHumanContext(context)}.`, [{tag: "Practise core skills", url: extendUrl(context, "skills_questions")}])(context);
 };
 
 const MathsRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
@@ -130,7 +130,7 @@ const BiologyExtensionQuestionsCard = (context: NonNullable<Required<PageContext
 };
 
 const MathsUniCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard(context.subject === "maths" ? "Revision" : `Maths revision for ${context.subject}`, `Refresh your maths skills in preparation for ${context.subject} at university.`, [{tag: "In development", url: extendUrl(context, "")}])(context);
+    return ArbitraryPageLinkCard(context.subject === "maths" ? "Revision" : `Maths revision for ${context.subject}`, `Refresh your maths skills in preparation for ${context.subject} at university.`, [{tag: "List of revision areas", url: extendUrl(context, "")}])(context);
 };
 
 const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
@@ -188,7 +188,7 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
     if (!isFullyDefinedContext(context)) return [];
     if (!isSingleStageContext(context)) return [];
 
-    const baseCards: LandingPageCard[] = 
+    const baseCards: LandingPageCard[] =
         context.stage.includes("11_14") && context.subject === "physics"
             ? [StepIntoPhyCard, ConceptPageCard, QuestionFinderCard]
             : context.stage.includes("gcse") && (context.subject === "chemistry" || context.subject === "maths")
