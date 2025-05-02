@@ -221,7 +221,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
     const assignmentHasNotStarted = !hasAssignmentStarted(assignment);
 
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
-        <button className={classNames("gameboard-header p-0 w-100", {"text-muted": assignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)} aria-label={`Expand assignment ${assignment.gameboard?.title}`}>
+        <button className={classNames("gameboard-header fw-bold p-0 w-100", {"text-muted": assignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)} aria-label={`Expand assignment ${assignment.gameboard?.title}`}>
             <div className="gameboard-title align-items-center">
                 <span className={classNames({"text-muted": assignmentHasNotStarted})}>
                     {assignment.gameboard?.title}
@@ -347,7 +347,7 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
     const quizAssignmentHasNotStarted = quizAssignment.scheduledStartDate && quizAssignment.scheduledStartDate.valueOf() > Date.now();
 
     return isDefined(quizAssignment.id) && quizAssignment.id > 0 ? <div className="assignment-progress-gameboard" key={quizAssignment.id}>
-        <button className={classNames("gameboard-header p-0 w-100", {"text-muted": quizAssignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)}>
+        <button className={classNames("gameboard-header fw-bold p-0 w-100", {"text-muted": quizAssignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)}>
             <div color="link" className="gameboard-title align-items-center">
                 <span className={classNames({"text-muted": quizAssignmentHasNotStarted})}>
                     {quizAssignment.quizSummary?.title || "This test has no title"}
