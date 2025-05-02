@@ -113,6 +113,10 @@ const MentoringSchemeCard = (context: NonNullable<Required<PageContextState>>): 
     return ArbitraryPageLinkCard("Mentoring scheme", "Take your problem solving skills to the next level by joining the mentoring scheme.", [{tag: "Find out more", url: "/pages/isaac_mentor"}])(context);
 };
 
+const AlgebraSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard("Core skills", "Keep training those maths skills with our algebra app.", [{tag: "Practise core skills", url: extendUrl(context, "skills_questions")}])(context);
+};
+
 const MathsSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
     return ArbitraryPageLinkCard("Core skills practice", `Practice those core skills, such as rearranging equations, vital for ${getHumanContext(context)}.`, [{tag: "Practise core skills", url: extendUrl(context, "skills_questions")}])(context);
 };
@@ -125,27 +129,27 @@ const BiologyExtensionQuestionsCard = (context: NonNullable<Required<PageContext
     return ArbitraryPageLinkCard("Biology extension", "Stretch your understanding of biology with our extension questions that make you think outside the box.", [{tag: "View extension questions", url: "/pages/biology_extension_questions"}])(context);
 };
 
-const ChemistryMathsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Maths revision for chemistry", "Refresh your maths skills in preparation for chemistry at university.", [{tag: "In development", url: extendUrl(context, "")}])(context);
+const MathsUniCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard(context.subject === "maths" ? "Revision" : `Maths revision for ${context.subject}`, `Refresh your maths skills in preparation for ${context.subject} at university.`, [{tag: "In development", url: extendUrl(context, "")}])(context);
 };
 
 const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
     "physics": {
-        "11_14": [StepUpPhyCard, MathsSkillsCard, null],
+        "11_14": [StepUpPhyCard, AlgebraSkillsCard, null],
         "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, CoreSkillsCard],
         "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, MentoringSchemeCard],
-        "university": [BoardsByTopicCard, null, null],
+        "university": [BoardsByTopicCard, MathsUniCard, null],
     },
     "chemistry": {
         "gcse": [CoreSkillsCard, GlossaryCard],
         "a_level": [BoardsByTopicCard, GlossaryCard, CoreSkillsCard],
-        "university": [BoardsByTopicCard, AnvilAppsCard, ChemistryMathsCard],
+        "university": [BoardsByTopicCard, AnvilAppsCard, MathsUniCard],
     },
     "maths": {
         "gcse": [BoardsByTopicCard, MathsSkillsCard],
         // "practice maths" is boards by topic for maths – needs renaming
         "a_level": [BoardsByTopicCard, MathsRevisionCard, MathsSkillsCard],
-        "university": [BoardsByTopicCard, LessonsAndRevisionCard, null],
+        "university": [BoardsByTopicCard, MathsUniCard, null],
     },
     "biology": {
         "a_level": [BoardsByTopicCard, GlossaryCard, BiologyExtensionQuestionsCard],
