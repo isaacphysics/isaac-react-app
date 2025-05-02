@@ -10,7 +10,7 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag } from "../../../../IsaacAppTypes";
+import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag, ContentSidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
 import { AssignmentState } from "../../pages/MyAssignments";
@@ -131,7 +131,9 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                         </div>
                     }/>
                     <OffcanvasBody>
-                        <Col {...rest} className={classNames("sidebar p-4 pt-0", className)} />
+                        <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: () => setMenuOpen(false)}}>
+                            <Col {...rest} className={classNames("sidebar p-4 pt-0", className)} />
+                        </ContentSidebarContext.Provider>
                     </OffcanvasBody>
                 </Offcanvas>
             </>
@@ -1038,10 +1040,14 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
-            <StyledTabPicker
-                key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
-                onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
-            />
+            <ContentSidebarContext.Consumer key={tab}>
+                {(context) => 
+                    <StyledTabPicker
+                        key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
+                        onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}
+                    />
+                }
+            </ContentSidebarContext.Consumer>
         )}
     </ContentSidebar>;
 };
