@@ -13,8 +13,9 @@ describe("My Account", () => {
                     cy.get('[data-testid="account-nav"]').contains(tab.title).click();
                 }
                 else {
-                    cy.get('[data-testid="sidebar-toggle"]').click();
-                    cy.get('#content-sidebar-offcanvas').contains(tab.title).click();
+                    cy.openSidebar();
+                    cy.getComponent("sidebar").contains(tab.title).click();
+                    // sidebar closes automatically on click
                 }
                 cy.wait(500);
                 

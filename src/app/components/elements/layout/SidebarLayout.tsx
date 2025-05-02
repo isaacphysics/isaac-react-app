@@ -121,7 +121,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
-                            <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
+                            <AffixButton color="keyline" size="lg" onClick={toggleMenu} data-testid="close-sidebar-button" affix={{
                                 affix: "icon-close", 
                                 position: "prefix", 
                                 type: "icon"
@@ -847,7 +847,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
             <div className="section-divider"/>
             <h5 className="mb-4">Display</h5>
             <div className="d-flex flex-xl-column flex-xxl-row">
-                <Input className="w-auto" type="select" aria-label="Set display mode" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                <Input className="w-auto" type="select" aria-label="Set display mode" data-testid="display-select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
                 {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
