@@ -40,3 +40,11 @@ $container-breakpoints: map-merge(
         }
     }
 }
+
+div.dashboard.dashboard-outer {
+    @include media-breakpoint-only(3xl, $container-breakpoints) {
+        width: auto;
+        padding-left: calc(map.get($spacing-container-margins, 3xl) / 1.5);
+        padding-right: calc(map.get($spacing-container-margins, 3xl) / 1.5);
+    }
+}
