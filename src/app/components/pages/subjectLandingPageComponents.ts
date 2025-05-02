@@ -137,12 +137,12 @@ const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
         "university": [BoardsByTopicCard, null, null],
     },
     "chemistry": {
-        "gcse": [CoreSkillsCard, GlossaryCard, null],
+        "gcse": [CoreSkillsCard, GlossaryCard],
         "a_level": [BoardsByTopicCard, GlossaryCard, CoreSkillsCard],
         "university": [BoardsByTopicCard, AnvilAppsCard, ChemistryMathsCard],
     },
     "maths": {
-        "gcse": [BoardsByTopicCard, MathsSkillsCard, null],
+        "gcse": [BoardsByTopicCard, MathsSkillsCard],
         // "practice maths" is boards by topic for maths – needs renaming
         "a_level": [BoardsByTopicCard, MathsRevisionCard, MathsSkillsCard],
         "university": [BoardsByTopicCard, LessonsAndRevisionCard, null],
@@ -187,7 +187,9 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
     const baseCards: LandingPageCard[] = 
         context.stage.includes("11_14") && context.subject === "physics"
             ? [StepIntoPhyCard, ConceptPageCard, QuestionFinderCard]
-            : [QuestionFinderCard, ConceptPageCard, PracticeTestsCard];
+            : context.stage.includes("gcse") && (context.subject === "chemistry" || context.subject === "maths")
+                ? [QuestionFinderCard, ConceptPageCard]
+                : [QuestionFinderCard, ConceptPageCard, PracticeTestsCard];
 
     const subjectSpecificCards = subjectSpecificCardsMap[context.subject]?.[context.stage[0] as keyof typeof subjectSpecificCardsMap[typeof context.subject]] || [];
 
