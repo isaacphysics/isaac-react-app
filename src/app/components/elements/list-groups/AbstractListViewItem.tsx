@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
-import React from "react";
+import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Button, Col, ListGroupItem, ListGroupItemProps, Row } from "reactstrap";
-import { Spacer } from "../Spacer";
+import { Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
 import { CompletionState } from "../../../../IsaacApiTypes";
-import { below, isPhy, Subject, useDeviceSize } from "../../../services";
+import { below, isPhy, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
@@ -35,34 +34,33 @@ const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: C
     }
 };
 
-const LinkTags = ({linkTags}: {linkTags: {tag: string, url?: string}[];}) => {
-    return <>
-        {linkTags.map(t => t.url ?
-            <Link to={t.url} className="card-tag" key={t.tag}>{t.tag}</Link> :
-            <div className="card-tag" key={t.tag}>{t.tag}</div>
-        )}
-    </>;
-};
-
-const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUrl: string, quizButton: JSX.Element}) => {
-    const { previewQuizUrl, quizButton, ...rest } = props;
-    return <span {...rest} className={classNames(rest.className, "d-flex")}>
-        <Spacer/>
-        <Button to={previewQuizUrl} color="keyline" tag={Link} className="set-quiz-button-md">
-            Preview
-        </Button>
-        <span style={{minWidth: "20px"}}/>
-        {quizButton}
-    </span>;
-};
-
-export interface ListViewTagProps {
+export interface ListViewTagProps extends HTMLAttributes<HTMLElement> {
     tag: string;
     url?: string;
 }
 
+const LinkTags = ({linkTags}: {linkTags: ListViewTagProps[];}) => {
+    return <>
+        {linkTags.map(t => {
+            const {url, tag, ...rest} = t;
+            return url ?
+                <Link {...rest} to={url} className="card-tag" key={tag}>{tag}</Link> :
+                <div {...rest} className="card-tag" key={tag}>{tag}</div>;
+        })}
+    </>;
+};
+
+const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUrl?: string, quizButton?: ReactNode}) => {
+    const { previewQuizUrl, quizButton, ...rest } = props;
+    return <span {...rest} className={classNames(rest.className, "d-flex justify-content-end gap-3")}>
+        {previewQuizUrl && <Button to={previewQuizUrl} color={siteSpecific("keyline", "secondary")} tag={Link} className="set-quiz-button-md">
+            {previewQuizUrl.includes("/preview/") ? "Preview" : "View test"}
+        </Button>}
+        {quizButton}
+    </span>;
+};
 export interface AbstractListViewItemProps extends ListGroupItemProps {
-    title: string;
+    title?: string;
     icon?: TitleIconProps;
     subject?: Subject;
     subtitle?: string;
@@ -82,7 +80,7 @@ export interface AbstractListViewItemProps extends ListGroupItemProps {
 
 export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, supersededBy, linkTags, quizTag, url, audienceViews, previewQuizUrl, quizButton, isCard, fullWidth, ...rest}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
-    const isQuiz: boolean = (previewQuizUrl && quizButton) ? true : false;
+    const isQuiz: boolean = !!(previewQuizUrl || quizButton);
     
     fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewQuizUrl || quizButton) ? false : true);
     const cardBody =
@@ -95,7 +93,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
             </div>
             <div className="align-content-center text-overflow-ellipsis pe-2">
                 <div className="d-flex text-wrap">
-                    <span className="question-link-title"><Markup encoding="latex">{title}</Markup></span>
+                    <span className={classNames("link-title", {"question-link-title": isPhy || !isQuiz})}><Markup encoding="latex">{title}</Markup></span>
                     {quizTag && <span className="quiz-level-1-tag ms-sm-2">{quizTag}</span>}
                     {isPhy && <div className="d-flex flex-column justify-self-end">
                         {supersededBy && <a 
@@ -123,7 +121,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {linkTags && <div className="d-flex py-3 flex-wrap">
                     <LinkTags linkTags={linkTags}/>
                 </div>}
-                {previewQuizUrl && quizButton && fullWidth && <div className="d-flex d-md-none align-items-center">
+                {isQuiz && fullWidth && <div className="d-flex d-md-none align-items-center">
                     <QuizLinks previewQuizUrl={previewQuizUrl} quizButton={quizButton}/>
                 </div>}
             </div>
@@ -136,7 +134,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {audienceViews && <Col md={4} lg={5} xl={4} xxl={3} className={classNames("d-none d-md-flex justify-content-end", {"list-view-border": audienceViews.length > 0})}>
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack className="w-100"/> 
                 </Col>}
-                {previewQuizUrl && quizButton && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
+                {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                     <QuizLinks previewQuizUrl={previewQuizUrl} quizButton={quizButton}/> 
                 </Col>}
             </>

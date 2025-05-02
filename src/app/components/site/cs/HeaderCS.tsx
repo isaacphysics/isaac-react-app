@@ -75,6 +75,7 @@ export const HeaderCS = () => {
                             <LinkItem to="/pages/revision_quizzes">Revision quizzes</LinkItem>
                             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             <LinkItem to="/pages/online_courses">Online courses</LinkItem>
+                            <LinkItem to="/pages/teacher_mentoring_2024">Mentoring programme</LinkItem>
                             <LinkItem to="/support/teacher">Support</LinkItem>
                         </NavigationSection>
 

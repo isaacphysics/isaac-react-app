@@ -59,7 +59,8 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
             className={`collapsible-body overflow-hidden ${expanded ? "open" : "closed"}`} 
             style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0, marginBottom: expanded ? (props.additionalOffset ?? 0) : 0}}
         >
-            <div ref={listRef} className={classNames({"ms-2": props.asSubList})}>
+            <div ref={listRef} className={classNames({"ms-2": props.asSubList})} {...{"inert": expanded ? undefined : "true"}}> 
+                {/* when react is updated to v19, switch inert definition to regular prop */}
                 {props.children}
             </div>
         </div>

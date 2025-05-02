@@ -62,21 +62,6 @@
   }
 }
 
-.quick-question {
-  button {
-    border-radius: 0 !important;
-
-    &.active {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-  }
-  .alert {
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-  }
-}
-
 .concept-content-container, .generic-content-container {
   .quick-question {
     .question-content, .content-value, .btn {

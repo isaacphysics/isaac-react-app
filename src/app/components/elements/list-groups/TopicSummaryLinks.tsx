@@ -67,7 +67,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                                 </Markup>
                             </div>
                             {isPhy && item.deEmphasised && <div className="ms-auto me-3 d-flex align-items-center">
-                                <span id={`audience-help-${index}`} className="icon-help mx-1" />
+                                <span id={`audience-help-${index}`} className="icon icon-info layered icon-color-grey" />
                                 <UncontrolledTooltip placement="bottom" target={`audience-help-${index}`}>
                                     {`This content has ${notRelevantMessage(userContext)}.`}
                                 </UncontrolledTooltip>

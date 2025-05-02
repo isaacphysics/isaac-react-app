@@ -32,7 +32,15 @@
   @include reduced-motion-compliant-animation;
 }
 
-#main {
-  // default values for all accessibility variables
-  --focus-outline: 2px solid #000; // TODO use this
+@mixin focus-outline($color: var(--focus-outline-color), $width: var(--focus-outline-width)) {
+  // see https://stackoverflow.com/a/52616313
+  box-shadow: 0px 0px 0px var(--focus-outline-width) var(--focus-outline-color);
+
+  outline: $width solid transparent;
+}
+
+:root {
+  // default values for all accessibility variables; override as needed in /phy/accessibility.scss and /ada/accessibility.scss
+  --focus-outline-color: #000;
+  --focus-outline-width: 0.2rem;
 }

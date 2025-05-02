@@ -23,7 +23,7 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
         <h4>Manage group progress</h4>
         {sortedGroups.length ?
             <>
-                <div className="overflow-hidden">
+                <div>
                     {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress#${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
                 </div>
                 <Spacer/>
@@ -146,7 +146,7 @@ const BooksPanel = () => {
         <div ref={setScrollRef} className="row position-relative mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
             {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
             {window.ResizeObserver && <ScrollShadows element={scrollRef ?? undefined} shadowType="dashboard-scroll-shadow" />}
-            {ISAAC_BOOKS.filter(book => book.subject === subject || subject === "all")
+            {ISAAC_BOOKS.filter(b => !b.hidden).filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2 me-1 p-0">
                         <BookCard {...book}/>
@@ -175,7 +175,7 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
              
     return <div className="dashboard dashboard-outer w-100">
         <div className="d-flex">
-            {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
+            {nameToDisplay && <h3>Welcome back, {nameToDisplay}!</h3>}
             <span className="ms-auto">
                 <div className="text-center">Dashboard view</div>
                 <StyledToggle

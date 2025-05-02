@@ -190,7 +190,7 @@ export const QuestionSearchModal = (
                         selectOnChange(setSearchBook, true)(e);
                         sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
                     }}
-                    options={ISAAC_BOOKS.map(book => ({value: book.value, label: book.label}))}
+                    options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
                 />
             </Col>}
             <Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>

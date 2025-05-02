@@ -38,12 +38,12 @@ export const HomepageCS = () => {
                             </h1>
                             <Row className="justify-content-start align-items-center my-3">
                                 <Col xs={6} sm={3}>
-                                    <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
+                                    <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="d-block">
                                         <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
                                     </a>
                                 </Col>
                                 <Col xs={6} sm={3}>
-                                    <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
+                                    <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener" className="d-block">
                                         <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
                                     </a>
                                 </Col>

@@ -4,8 +4,10 @@
   border: 0;
   border-radius: 0;
   .list-group-item {
-    .question-link-title {
+    .link-title {
       @extend .font-size-1-25;
+    }
+    .question-link-title {
       @extend .fw-semi-bold;
     }
     border-color: $cs-list-outline-gray;
