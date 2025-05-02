@@ -15,7 +15,7 @@ import {
     groupsApi,
 } from "../../../state";
 import sortBy from "lodash/sortBy";
-import {history, isAda, isDefined, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
+import {history, isAda, isDefined, isPhy, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
 import {Row, Col, Form, Input, Table, Alert, Label} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
@@ -210,14 +210,19 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
     </p>;
 
     return !group ? <Loading/> : <div className={"mb-4"}>
-        <span className={siteSpecific("h3", "h2")}>Selected group: {group.groupName}</span>
-
+        <div className={siteSpecific("h3", "h2")}>Selected group: {group.groupName}</div>
+        <b>Sharing permissions</b>
         <p>
-            Sharing this group lets other teachers add and remove students, set new assignments or tests and view progress.
-            It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.
+            When you share this group, other teachers can:
+            <ul>
+                <li>Add and remove students</li>
+                <li>Set new assignments or tests</li>
+                <li>View student progress</li>
+            </ul>
+            Additional {siteSpecific("managers", "teachers")} will not automatically see detailed mark data unless students give them access.
         </p>
 
-        <p>
+        {isPhy && <p>
             {group.additionalManagerPrivileges
                 ? <>Additional managers have been allowed by the group owner to:
                     <ul>
@@ -230,7 +235,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
                 </>
                 : "Additional managers cannot modify or delete each others assignments by default, archive and rename the group, or remove group members, but these features can be enabled by the group owner."
             }
-        </p>
+        </p>}
 
         {!userIsOwner && group.ownerSummary && <div>
             <h4>Group owner:</h4>
@@ -290,14 +295,22 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
             </div>
             {group.additionalManagerPrivileges
                 ? <>
-                    <span className={"fw-bold"}>Caution</span>: All other group managers are allowed delete
-                    and modify any assignments set to this group (by any other manager including the owner), remove
-                    group members, and archive and rename the group. <br/>
+                    <span className={"fw-bold"}>Caution</span>: All other group managers are allowed to:
+                    <ul>
+                        <li>Modify or delete <b>all assignments</b>, including those set by the owner</li>
+                        <li>Remove group members</li>
+                        <li>Archive and rename the group</li>
+                    </ul>                                                       
                     Additional managers cannot add or remove other managers. <br/>
                     Un-tick the above box if you would like to remove these additional privileges.
                 </>
-                : <>Enabling this allows other group managers to delete and modify <b>all assignments</b> set to this group
-                    (by any other manager, including the owner), remove group members, and archive and rename the group.
+                : <>
+                    Enabling this option allows additional managers to:
+                    <ul>
+                        <li>Modify or delete <b>all assignments</b>, including those set by the owner</li>
+                        <li>Remove group members</li>
+                        <li>Archive and rename the group</li>
+                    </ul>
                 </>
             }
         </Alert>}
