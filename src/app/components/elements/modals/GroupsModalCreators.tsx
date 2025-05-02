@@ -282,7 +282,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
             </tbody>
         </Table>
 
-        {userIsOwner && <Alert className={classNames("px-2 py-2 mb-2", {"my-3": isAda})} color={group.additionalManagerPrivileges ? "danger" : "warning"}>
+        {userIsOwner && <Alert className={classNames("px-2 py-2 mb-2", {"my-3": isAda})} color={group.additionalManagerPrivileges ? siteSpecific("danger", "info") : "warning"}>
             <div>
                 <Input
                     id="additional-manager-privileges-check"
