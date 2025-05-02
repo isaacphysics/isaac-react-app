@@ -287,7 +287,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
                 <Input
                     id="additional-manager-privileges-check"
                     checked={group.additionalManagerPrivileges}
-                    className={"mb-2"}
+                    className={"mb-2 checkbox-bold"}
                     type="checkbox"
                     onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
                 />
