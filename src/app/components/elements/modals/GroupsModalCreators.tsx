@@ -210,8 +210,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
     </p>;
 
     return !group ? <Loading/> : <div className={"mb-4"}>
-        <div className={siteSpecific("h3", "h2")}>Selected group: {group.groupName}</div>
-        <b>Sharing permissions</b>
+        <h4>Sharing permissions</h4>
         <p>
             When you share this group, other teachers can:
             <ul>
@@ -221,21 +220,6 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
             </ul>
             Additional {siteSpecific("managers", "teachers")} will not automatically see detailed mark data unless students give them access.
         </p>
-
-        {isPhy && <p>
-            {group.additionalManagerPrivileges
-                ? <>Additional managers have been allowed by the group owner to:
-                    <ul>
-                        <li>Modify and delete all assignments to the group</li>
-                        <li>Remove group members</li>
-                        <li>Archive the group</li>
-                        <li>Rename the group</li>
-                    </ul>
-                    Additional managers cannot add or remove other managers.
-                </>
-                : "Additional managers cannot modify or delete each others assignments by default, archive and rename the group, or remove group members, but these features can be enabled by the group owner."
-            }
-        </p>}
 
         {!userIsOwner && group.ownerSummary && <div>
             <h4>Group owner:</h4>
@@ -287,7 +271,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
                 <Input
                     id="additional-manager-privileges-check"
                     checked={group.additionalManagerPrivileges}
-                    className={"mb-2 checkbox-bold"}
+                    className={classNames("mb-2", {"checkbox-bold": isAda})}
                     type="checkbox"
                     onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
                 />
@@ -316,7 +300,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
         </Alert>}
 
         {userIsOwner && <>
-            <h4 className={classNames({"mt-2": isAda})}>Add additional managers</h4>
+            <h4 className="mt-3">Add additional managers</h4>
             <p>Enter the email of another {siteSpecific("Isaac", "Ada")} teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
             <Form onSubmit={addManager}>
                 <Input type="text" value={newManagerEmail} placeholder="Enter email address here" onChange={event => setNewManagerEmail(event.target.value)}/>
@@ -335,7 +319,7 @@ export const groupManagersModal = (group: AppGroup, user: RegisteredUserDTO) => 
     const userIsOwner = user?.id === group.ownerId;
     return {
         closeAction: () => store.dispatch(closeActiveModal()),
-        title: userIsOwner ? "Share your group" : "Shared group",
+        title: `Selected group: ${group.groupName}`,
         body: <CurrentGroupManagersModal groupId={group.id as number} archived={!!group.archived} userIsOwner={userIsOwner} user={user} />,
     };
 };
