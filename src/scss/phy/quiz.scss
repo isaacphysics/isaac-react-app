@@ -32,3 +32,8 @@
   font-weight: bold;
   overflow-wrap: break-word;
 }
+
+.subject-quiz-title {
+  @extend .manage-quiz-title;
+  color: var(--subject-color-900);
+}
