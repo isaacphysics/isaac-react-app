@@ -90,6 +90,7 @@ const PracticeQuizzesComponent = () => {
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} 
             icon={{"type": "hex", "icon": "icon-tests"}}
+            className={siteSpecific("mb-4", "")} 
         />
         <SidebarLayout>
             <PracticeQuizzesSidebar {...sidebarProps}/>
