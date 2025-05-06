@@ -23,7 +23,7 @@ export const STAGING_URL = siteSpecific(
     "https://staging.adacomputerscience.org"
 );
 
- 
+
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
 /*
@@ -534,12 +534,12 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
         },
         {
             title: "Mastering Essential GCSE Physics", tag: "phys_book_gcse",
-            shortTitle: "GCSE Physics", image: "/assets/phy/books/phys_book_gcse.jpg",
+            shortTitle: "GCSE Physics", image: "/assets/phy/books/2025_phys_book_gcse.png",
             path: "/books/phys_book_gcse", subject: "physics", stages: ["gcse"],
         },
         {
             title: "Mastering Essential Pre-University Physics", tag: "physics_skills_19",
-            shortTitle: "A Level Physics (3rd edition)", image: "/assets/phy/books/physics_skills_19.jpg",
+            shortTitle: "A Level Physics (3rd edition)", image: "/assets/phy/books/2025_physics_skills_19.png",
             path: "/books/physics_skills_19", subject: "physics", stages: ["a_level"],
         },
         {
@@ -561,7 +561,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
         },
         {
             title: "Using Essential GCSE Mathematics", tag: "maths_book_gcse",
-            shortTitle: "GCSE Maths", image: "/assets/phy/books/2021_maths_book_gcse.jpg",
+            shortTitle: "GCSE Maths", image: "/assets/phy/books/2025_maths_book_gcse.png",
             path: "/books/maths_book_gcse", subject: "maths", stages: ["gcse"],
         },
         {
@@ -577,7 +577,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
         },
         {
             title: "Mastering Essential Pre-University Physical Chemistry", tag: "chemistry_16",
-            shortTitle: "A Level Physical Chemistry", image: "/assets/phy/books/chemistry_16.jpg",
+            shortTitle: "A Level Physical Chemistry", image: "/assets/phy/books/2025_chemistry_16.png",
             path: "/books/chemistry_16", subject: "chemistry", stages: ["a_level"],
         },
     ] as const,
