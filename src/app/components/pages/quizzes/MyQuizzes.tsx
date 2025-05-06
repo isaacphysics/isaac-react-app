@@ -443,7 +443,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     }</span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} className={siteSpecific("mb-4", "")} />
         <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <SidebarLayout>
             <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter} 

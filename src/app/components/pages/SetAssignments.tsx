@@ -532,7 +532,8 @@ export const SetAssignments = () => {
             assignees={(isDefined(modalBoard) && isDefined(modalBoard?.id) && groupsByGameboard[modalBoard.id]) || []}
         />
 
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_set_assignments"/>
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
+            modalId="help_modal_set_assignments" className={siteSpecific("mb-4", "")} />
         <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
         <SidebarLayout>
             <SetAssignmentsSidebar
