@@ -1,0 +1,6 @@
+@import '../common/accessibility';
+
+:root {
+  --focus-outline-color: #{$focus-blue};
+  --focus-outline-width: 2px;
+}

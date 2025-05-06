@@ -17,7 +17,6 @@ div.header-progress {
   .navbar-toggler {
     padding: 0.25rem;
     &:focus-visible {
-      border-color: $cyan-300;
       border-radius: 0;
     }
     &:focus:not(:focus-visible) {
@@ -54,7 +53,6 @@ div.header-progress {
     background: none;
     &:focus-visible {
       box-sizing: content-box;
-      border: 0.2rem solid $cyan-300;
       border-radius: 0;
     }
     &:focus:not(:focus-visible) {
@@ -74,6 +72,8 @@ div.header-progress {
 header {
   position: relative;
   z-index: 20;
+
+  --focus-outline-color: #{$cyan-300};
 
   a:not(.navbar-brand), .nav-link {
     text-decoration: none !important;
@@ -99,7 +99,7 @@ header {
         top: 0;
         left: 0;
         height: 100%;
-        border: $cyan-300 solid 2px;
+        @include focus-outline;
       }
     }
 

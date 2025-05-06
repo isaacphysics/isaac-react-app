@@ -537,14 +537,12 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
             {showCreateGroup && isDefined(createNewGroup) && <>
                 <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
                 <div className="d-none d-lg-block mb-3">
-                    <Link to="/groups" className="w-100" style={{textDecoration: "none"}}>
-                        <Button block color={siteSpecific("secondary", "primary")} outline={isAda} onClick={() => {
-                            setSelectedGroupId(undefined);
-                            if (groupNameInputRef.current) {
-                                groupNameInputRef.current.focus();
-                            }
-                        }}>Create new group</Button>
-                    </Link>
+                    <Button block color={siteSpecific("secondary", "primary")} outline={isAda} onClick={() => {
+                        setSelectedGroupId(undefined);
+                        if (groupNameInputRef.current) {
+                            groupNameInputRef.current.focus();
+                        }
+                    }}>Create new group</Button>
                 </div>
                 {siteSpecific(<div className="section-divider"/>, <hr/>)}
             </>}

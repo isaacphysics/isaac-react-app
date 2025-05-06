@@ -263,6 +263,7 @@ $failed-bg-size: 25%;
   display: flex;
   cursor: pointer;
   justify-content: space-between;
+  align-items: stretch;
 }
 
 .assignment-progress-gameboard .gameboard-title {
@@ -278,7 +279,7 @@ $failed-bg-size: 25%;
   background: $gray-118 !important;
   counter-increment: board-count;
   content: counter(board-count) ". ";
-  display: inline-block;
+  display: inline-grid;
   height: 100%;
   padding: 0.5rem 1rem;
   font-weight: bold;

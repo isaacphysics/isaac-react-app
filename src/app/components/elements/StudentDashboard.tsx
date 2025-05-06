@@ -218,7 +218,7 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     const {assignmentsCount, quizzesCount} = getActiveWorkCount(assignments, quizAssignments);
 
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
-        {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
+        {nameToDisplay && <h3>Welcome back, {nameToDisplay}!</h3>}
         {deviceSize === "lg"
             ? <>
                 <Row>

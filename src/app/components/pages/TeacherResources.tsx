@@ -63,7 +63,7 @@ export const TeacherResources = () => {
                     </ImageBlock>
                     <TextBlock>
                         <h2>A full curriculum of topics</h2>
-                        <p>We have over 65 learning topics that cover everything you need to teach computer science. From computing systems and networks, to AI, machine learning, and much more.</p>
+                        <p>We have over 50 learning topics that cover everything you need to teach computer science. From computing systems and networks, to AI, machine learning, and much more.</p>
                         <p>They&apos;re created by expert educators and are regularly updated. You can even filter content for different age groups and exams.</p>
                         <Button tag={Link} to={"/topics"}>Explore all topics</Button>
                     </TextBlock>

@@ -57,8 +57,11 @@
 }
 
 .list-group-links {
-  .question-link-title {
+  .link-title {
     color: var(--subject-color-900);
+  }
+
+  .question-link-title {
     font-family: $secondary-font-medium;
   }
 }
@@ -78,6 +81,10 @@
 .filter-tag {
   @include pill-tag($color-neutral-900, $color-neutral-100, $color-neutral-200);
   border-width: 2px;
+
+  &:focus-within {
+    @include focus-outline;
+  }
 
   .icon {
     background-color: var(--buttons-light-icon);
