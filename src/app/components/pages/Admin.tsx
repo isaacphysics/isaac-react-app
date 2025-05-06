@@ -4,7 +4,7 @@ import {
 } from "../../state";
 import {Link} from "react-router-dom";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {EDITOR_COMPARE_URL, isAdmin, isDefined, isPhy, siteSpecific} from "../../services";
+import {EDITOR_COMPARE_URL, isAdmin, isAdminOrEventManager, isDefined, isPhy, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {AnonymisationCheckboxes} from "../elements/AnonymisationCheckboxes";
@@ -99,7 +99,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                             <Button
                                                 type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
                                                 onClick={startVersionUpdate}
-                                                disabled={!isAdmin(user) || displayVersion === liveContentVersion}
+                                                disabled={!isAdminOrEventManager(user) || displayVersion === liveContentVersion}
                                             >
                                                 Set Version
                                             </Button>
