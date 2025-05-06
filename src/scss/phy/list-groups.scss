@@ -64,6 +64,10 @@
   .question-link-title {
     font-family: $secondary-font-medium;
   }
+
+  li.list-group-item.correct, .bg-success {
+    background-color: $color-misc-correct;
+  }
 }
 
 .quiz-level-1-tag {
@@ -102,4 +106,13 @@
 
 .list-results-container {
   background-color: $color-neutral-100;
+}
+
+.list-view-status-indicator {
+  position: absolute;
+  top: 0;
+  right: 16px;
+  > i {
+    display: inline-block;
+  }
 }
