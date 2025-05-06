@@ -93,10 +93,10 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                     <Col className="d-flex flex-column align-items-start col-sm-8">
                         <div className="d-flex align-items-center">
                             <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
-                                <PhyHexIcon icon="icon-tests" subject={subject as Subject} className="assignment-hex ps-3"/>
+                                <PhyHexIcon icon="icon-tests" subject={subject as Subject} className="assignment-hex ps-3" size="lg"/>
                             </div>
                             <div className="d-flex flex-column flex-grow-1">
-                                <h4>{quiz.title || quiz.id }</h4>
+                                <span className="subject-quiz-title" data-bs-theme={subject}>{quiz.title || quiz.id}</span>
                                 {above['sm'](deviceSize) && isDefined(subject) && <div className="d-flex align-items-center mb-2">
                                     <span className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>
                                 </div>}
@@ -112,9 +112,9 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                             Set: <strong>{getFriendlyDaysUntil(assignmentStartDate as Date)}</strong>
                             {quiz.assignerSummary && <> by {extractTeacherName(quiz.assignerSummary)}</>}
                         </p>}
-                        {quiz.attempt && <p>
-                            {quiz.status === QuizStatus.Complete ?
-                                <>Completed: <strong>{getFriendlyDaysUntil(quiz.attempt.completedDate as Date)}</strong></>
+                        {!quiz.isAssigned && quiz.attempt && <p>
+                            {quiz.status === QuizStatus.Complete
+                                ? <>Completed: <strong>{getFriendlyDaysUntil(quiz.attempt.completedDate as Date)}</strong></>
                                 : <>Started: <strong>{getFriendlyDaysUntil(quiz.attempt.startDate as Date)}</strong></>
                             }
                         </p>}
