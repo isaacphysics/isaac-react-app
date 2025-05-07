@@ -40,9 +40,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         return [query, filters];
     }, [searchParsed]);
 
-    const applicableTags = pageContext?.subject 
-        // this includes all subject tags and all field tags
-        ? [tags.getById(subjectToTagMap[pageContext.subject]), ...tags.getDirectDescendents(subjectToTagMap[pageContext.subject])]
+    const applicableTags = pageContext?.subject
+        ? tags.getDirectDescendents(subjectToTagMap[pageContext.subject])
         : [...tags.allSubjectTags, ...tags.allFieldTags];
 
     const [searchText, setSearchText] = useState(query);
