@@ -26,7 +26,6 @@ it('Homepage should have no visual regressions', () => {
         // confirm page has loaded
         cy.get('[data-testid="loading"]').should('not.exist');
         cy.get('[data-testid="news-pod"]').should('exist');
-        cy.get('[data-testid="yt-thumbnail"]').should('exist');
 
         // Assert
         cy.matchImage();

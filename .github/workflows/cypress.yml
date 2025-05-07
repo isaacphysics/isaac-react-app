@@ -33,8 +33,6 @@ jobs:
           browser: chrome
         env:
           CYPRESS_SITE: phy
-        # Temporary: ignore failures during redesign
-        continue-on-error: true
       - name: VRT update - create or update branch
         id: cypress-create-branch
         if: ${{ failure() }}

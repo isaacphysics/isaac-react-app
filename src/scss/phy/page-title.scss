@@ -8,6 +8,7 @@
         height: 100%;
         width: 100%;
         left: 0;
+        overflow: hidden;
 
         &::before {
             @include pseudo-element;
