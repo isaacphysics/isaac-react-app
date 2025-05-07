@@ -155,17 +155,17 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         let confirm_text = "";
         if (group?.additionalManagerPrivileges) {
             confirm_text = `
-Are you sure you want to promote this manager to group owner?
-They will inherit the ability to add additional managers to, archive and delete this group.
-You will be demoted to an additional group manager.
-You will no longer be able to add or remove other managers, but you will still be able to modify or delete assignments, archive or rename the group or remove group members.
+Are you sure you want to promote this manager to group owner?\n
+• They will inherit the ability to add additional managers to, archive and delete this group.\n
+• You will be demoted to an additional group manager.\n
+• You will no longer be able to add or remove other managers, but you will still be able to modify or delete assignments, archive or rename the group or remove group members.
             `;
         } else {
             confirm_text = `
-Are you sure you want to promote this manager to group owner?
-They will inherit the ability to add additional managers to, archive and delete this group.
-You will be demoted to an additional group manager, and will not be able to modify or delete assignments, archive or rename the group or remove group members.
-If you wish to retain these privileges, but transfer ownership, click 'cancel' here and then tick the box to give additional managers extra privileges before transferring ownership.
+Are you sure you want to promote this manager to group owner?\n
+• They will inherit the ability to add additional managers to, archive and delete this group.\n
+• You will be demoted to an additional group manager, and will not be able to modify or delete assignments, archive or rename the group or remove group members.\n
+• If you wish to retain these privileges, but transfer ownership, click 'cancel' here and then tick the box to give additional managers extra privileges before transferring ownership.
             `;
         }
 
@@ -191,7 +191,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
 
     function removeManager(manager: UserSummaryWithEmailAddressDTO) {
         if (group?.id) {
-            if (confirm("Are you sure you want to remove this teacher from the group?\nThey may still have access to student data until students revoke the connection from their My account pages.")) {
+            if (confirm("Are you sure you want to remove this teacher from the group?\n\nThey may still have access to student data until students revoke the connection from their " + siteSpecific("\"My Account\"", "\"My account\"") + " page.")) {
                 deleteGroupManager({groupId: group.id, managerUserId: manager.id as number});
             }
         }
@@ -256,7 +256,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
                             </Button>
                         </td>}
                         {(userIsOwner || user?.id === manager.id) && <td className={"text-center"}>
-                            <Button className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "secondary")} 
+                            <Button className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "secondary")}
                                 onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}
                             >
                                 Remove
@@ -285,7 +285,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
                         <li>Modify or delete <b>all assignments</b>, including those set by the owner</li>
                         <li>Remove group members</li>
                         <li>Archive and rename the group</li>
-                    </ul>                                                       
+                    </ul>
                     Additional managers cannot add or remove other managers. <br/>
                     Un-tick the above box if you would like to remove these additional privileges.
                 </>
