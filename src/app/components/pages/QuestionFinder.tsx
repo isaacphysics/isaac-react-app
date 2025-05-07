@@ -508,7 +508,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 {isPhy && <FilterSummary/>}
 
                 <Row className={classNames(siteSpecific("mt-2", "mt-4"), "position-relative finder-panel")}>
-                    {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")} data-testid="question-finder-filters">
+                    {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")}>
                         <QuestionFinderFilterPanel {...{
                             searchDifficulties, setSearchDifficulties,
                             searchTopics, setSearchTopics,
