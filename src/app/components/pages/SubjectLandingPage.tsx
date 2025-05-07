@@ -15,7 +15,6 @@ import debounce from "lodash/debounce";
 import { Loading } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
-import { Stage } from "../../../IsaacApiTypes";
 
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
