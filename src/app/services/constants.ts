@@ -524,7 +524,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
     [
         {
             title: "Step into Physics", tag: "phys_book_step_into",
-            shortTitle: "Step into Physics", image: "/assets/phy/books/2024_step_into_physics.jpg",
+            shortTitle: "Step into Physics", image: "/assets/phy/books/2025_step_into_physics.png",
             path: "/books/step_into_phys", subject: "physics", stages: ["11_14"],
         },
         {
@@ -566,7 +566,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
         },
         {
             title: "Pre-University Mathematics for Sciences (2nd edition)", tag: "maths_book_2e",
-            shortTitle: "Pre-Uni Maths (2nd edition)", image: "/assets/phy/books/pre_uni_maths_2e.jpg",
+            shortTitle: "Pre-Uni Maths (2nd edition)", image: "/assets/phy/books/2025_pre_uni_maths_2e.png",
             path: "/books/pre_uni_maths_2e", subject: "maths", stages: ["a_level", "university"],
         },
         {
