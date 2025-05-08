@@ -7,7 +7,6 @@ import {
   EXAM_BOARDS_CS_GCSE,
   examBoardBooleanNotationMap,
   examBoardLabelMap,
-  history,
   isDefined,
   isLoggedIn,
   PROGRAMMING_LANGUAGE,
@@ -21,11 +20,11 @@ import {
   useQueryParams,
 } from "./";
 import { AudienceContext, ContentBaseDTO, ContentDTO, Role, Stage, UserContext } from "../../IsaacApiTypes";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AppState, useAppSelector } from "../state";
 import { GameboardContext, PotentialUser, ViewingContext } from "../../IsaacAppTypes";
-import queryString from "query-string";
-import { useContext, useEffect } from "react";
+
+import { useContext } from "react";
 import { Immutable } from "immer";
 
 export interface UseUserContextReturnType {
@@ -41,7 +40,6 @@ const urlMessage = "URL query parameters";
 const gameboardMessage = "gameboard settings";
 
 export function useUserContext(): UseUserContextReturnType {
-  const existingLocation = useLocation();
   const queryParams = useQueryParams(true);
 
   const user = useAppSelector((state: AppState) => state && state.user);
@@ -143,30 +141,6 @@ export function useUserContext(): UseUserContextReturnType {
   } else {
     showOtherContent = true;
   }
-
-  // Replace query params
-  useEffect(() => {
-    const actualParams = queryString.parse(window.location.search);
-    if (stage !== actualParams.stage || examBoard !== actualParams.examBoard) {
-      try {
-        history.replace({
-          ...existingLocation,
-          search: queryString.stringify(
-            {
-              ...queryParams,
-              stage,
-              examBoard: examBoard,
-            },
-            { encode: false },
-          ),
-        });
-      } catch (e) {
-        // This is to handle the case where the existingLocation pathname is invalid, i.e. "isaacphysics.org//".
-        // In that case history.replace(...) throws an exception, and it will do this while the ErrorBoundary is
-        // trying to render, causing a loop and a spike in client-side errors.
-      }
-    }
-  }, [stage, examBoard, queryParams.stage, queryParams.examBoard]);
 
   return {
     stage,
