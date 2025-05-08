@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Container } from "reactstrap";
+import { Container } from "reactstrap";
 import { BookSidebar, MainContent, SidebarLayout } from "./layout/SidebarLayout";
 import { Markup } from "./markup";
 import { TitleAndBreadcrumb } from "./TitleAndBreadcrumb";
@@ -9,6 +9,7 @@ import { useGetBookDetailPageQuery, useGetBookIndexPageQuery } from "../../state
 import { BookPage } from "./BookPage";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { TeacherNotes } from "./TeacherNotes";
     
 interface BookProps {
     match: { params: { bookId: string } };
@@ -60,12 +61,15 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                     defaultErrorTitle="Unable to load book page."
                                     thenRender={(bookDetailPage) => <BookPage page={bookDetailPage} />}
                                 />
-                                : <div>
-                                    <div className="book-image-container mx-3 float-end">
-                                        <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
+                                : <>
+                                    <TeacherNotes notes={definedBookIndexPage.teacherNotes} />
+                                    <div>
+                                        <div className="book-image-container mx-3 float-end">
+                                            <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
+                                        </div>
+                                        <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBookIndexPage.value}</Markup>
                                     </div>
-                                    <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBookIndexPage.value}</Markup>
-                                </div>
+                                </>
                             }
                         </MainContent>
                     </>;
