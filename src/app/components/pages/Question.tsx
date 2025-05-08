@@ -142,10 +142,6 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                         </>)}
                                     </div>
                                 </Col>
-                                <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0 pb-sm-0">
-                                    <span>Stage & difficulty</span>
-                                    <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/> 
-                                </Col>
                                 <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0">
                                     <span>Status</span>
                                     {allQuestionsCorrect 
@@ -154,6 +150,10 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                             ? <div className="d-flex align-items-center"><span className="icon-in-progress me-2"/> In Progress</div>
                                             : <div className="d-flex align-items-center"><span className="icon-not-started me-2"/> Not Started</div>
                                     }
+                                </Col>
+                                <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0 pb-sm-0">
+                                    <span>Stage & difficulty</span>
+                                    <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/> 
                                 </Col>
                             </Row>}
 

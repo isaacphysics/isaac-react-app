@@ -298,6 +298,9 @@ $theme-colour-overrides: (
     biology: $color-biology-500,
     neutral: $color-neutral-500,
 
+    correct: $color-misc-correct,
+
+    // these are intended for "action states", e.g. event status, not question feedback
     success: #208838,
     in-progress: #fe8e15,
     failed: #dc3545,
