@@ -63,3 +63,80 @@ polygon.fill-secondary {
 img[aria-disabled="true"] {
   opacity: 0.5;
 }
+
+.icon-download {
+  @include svg-icon('/assets/common/icons/download.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-chevron-right {
+  @include svg-icon('/assets/common/icons/arrow-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-search {
+  @include svg-icon('/assets/common/icons/search-icon.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+// Icon sizing
+.icon {
+  --icon-size: 16px;
+  --mask-size: 100%;
+}
+
+.icon-lg {
+  --icon-size: 60px;
+  --mask-size: initial;
+}
+
+.icon-xl {
+  --icon-size: 75px;
+  --mask-size: initial;
+}
+
+@mixin icon-color-override($color) {
+  &.layered {
+    &::before {
+      background-color: $color !important;
+    }
+    &::after {
+      background-color: $color !important;
+    }
+  }
+
+  // .layered is a bit grim; if we could set something in @svg-icon-layered as a flag instead this would be ideal.
+  &:not(.layered) {
+    background-color: $color !important;
+  }
+}
+
+i.icon:not(.icon-raw) {
+  &, &[color="primary"] {
+    background-color: var(--icon-primary);
+    
+    @include not-reduced-motion {
+      transition: background-color 0.15s ease-in-out; // mirrors BS's $btn-transition
+    }
+  
+    // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
+    &::after {
+      background-color: var(--icon-primary);
+      
+      @include not-reduced-motion {
+        transition: background-color 0.15s ease-in-out;
+      }
+    }
+  }
+
+  &[color="secondary"] {
+    background-color: var(--icon-secondary);
+    &::after {
+      background-color: var(--icon-secondary);
+    }
+  }
+
+  &[color="tertiary"] {
+    background-color: var(--icon-tertiary);
+    &::after {
+      background-color: var(--icon-tertiary);
+    }
+  }
+}

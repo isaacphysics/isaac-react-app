@@ -155,17 +155,17 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         let confirm_text = "";
         if (group?.additionalManagerPrivileges) {
             confirm_text = `
-Are you sure you want to promote this manager to group owner?
-They will inherit the ability to add additional managers to, archive and delete this group.
-You will be demoted to an additional group manager.
-You will no longer be able to add or remove other managers, but you will still be able to modify or delete assignments, archive or rename the group or remove group members.
+Are you sure you want to promote this manager to group owner?\n
+• They will inherit the ability to add additional managers to, archive and delete this group.\n
+• You will be demoted to an additional group manager.\n
+• You will no longer be able to add or remove other managers, but you will still be able to modify or delete assignments, archive or rename the group or remove group members.
             `;
         } else {
             confirm_text = `
-Are you sure you want to promote this manager to group owner?
-They will inherit the ability to add additional managers to, archive and delete this group.
-You will be demoted to an additional group manager, and will not be able to modify or delete assignments, archive or rename the group or remove group members.
-If you wish to retain these privileges, but transfer ownership, click 'cancel' here and then tick the box to give additional managers extra privileges before transferring ownership.
+Are you sure you want to promote this manager to group owner?\n
+• They will inherit the ability to add additional managers to, archive and delete this group.\n
+• You will be demoted to an additional group manager, and will not be able to modify or delete assignments, archive or rename the group or remove group members.\n
+• If you wish to retain these privileges, but transfer ownership, click 'cancel' here and then tick the box to give additional managers extra privileges before transferring ownership.
             `;
         }
 
@@ -191,7 +191,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
 
     function removeManager(manager: UserSummaryWithEmailAddressDTO) {
         if (group?.id) {
-            if (confirm("Are you sure you want to remove this teacher from the group?\nThey may still have access to student data until students revoke the connection from their My account pages.")) {
+            if (confirm("Are you sure you want to remove this teacher from the group?\n\nThey may still have access to student data until students revoke the connection from their " + siteSpecific("\"My Account\"", "\"My account\"") + " page.")) {
                 deleteGroupManager({groupId: group.id, managerUserId: manager.id as number});
             }
         }
@@ -210,26 +210,16 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
     </p>;
 
     return !group ? <Loading/> : <div className={"mb-4"}>
-        <span className={siteSpecific("h3", "h2")}>Selected group: {group.groupName}</span>
-
+        <h3>Selected group: {group.groupName}</h3>
+        <h4>Sharing permissions</h4>
         <p>
-            Sharing this group lets other teachers add and remove students, set new assignments or tests and view progress.
-            It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.
-        </p>
-
-        <p>
-            {group.additionalManagerPrivileges
-                ? <>Additional managers have been allowed by the group owner to:
-                    <ul>
-                        <li>Modify and delete all assignments to the group</li>
-                        <li>Remove group members</li>
-                        <li>Archive the group</li>
-                        <li>Rename the group</li>
-                    </ul>
-                    Additional managers cannot add or remove other managers.
-                </>
-                : "Additional managers cannot modify or delete each others assignments by default, archive and rename the group, or remove group members, but these features can be enabled by the group owner."
-            }
+            When you share this group, other teachers can:
+            <ul>
+                <li>Add and remove students</li>
+                <li>Set new assignments or tests</li>
+                <li>View student progress</li>
+            </ul>
+            Additional {siteSpecific("managers", "teachers")} will not automatically see detailed mark data unless students give them access.
         </p>
 
         {!userIsOwner && group.ownerSummary && <div>
@@ -266,7 +256,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
                             </Button>
                         </td>}
                         {(userIsOwner || user?.id === manager.id) && <td className={"text-center"}>
-                            <Button className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "secondary")} 
+                            <Button className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "secondary")}
                                 onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}
                             >
                                 Remove
@@ -277,12 +267,12 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
             </tbody>
         </Table>
 
-        {userIsOwner && <Alert className={classNames("px-2 py-2 mb-2", {"my-3": isAda})} color={group.additionalManagerPrivileges ? "danger" : "warning"}>
+        {userIsOwner && <Alert className={classNames("px-2 py-2 mb-2", {"my-3": isAda})} color={group.additionalManagerPrivileges ? siteSpecific("danger", "info") : "warning"}>
             <div>
                 <Input
                     id="additional-manager-privileges-check"
                     checked={group.additionalManagerPrivileges}
-                    className={"mb-2"}
+                    className={classNames("mb-2", {"checkbox-bold": isAda})}
                     type="checkbox"
                     onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
                 />
@@ -290,20 +280,28 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
             </div>
             {group.additionalManagerPrivileges
                 ? <>
-                    <span className={"fw-bold"}>Caution</span>: All other group managers are allowed delete
-                    and modify any assignments set to this group (by any other manager including the owner), remove
-                    group members, and archive and rename the group. <br/>
+                    <span className={"fw-bold"}>Caution</span>: All other group managers are allowed to:
+                    <ul>
+                        <li>Modify or delete <b>all assignments</b>, including those set by the owner</li>
+                        <li>Remove group members</li>
+                        <li>Archive and rename the group</li>
+                    </ul>
                     Additional managers cannot add or remove other managers. <br/>
                     Un-tick the above box if you would like to remove these additional privileges.
                 </>
-                : <>Enabling this allows other group managers to delete and modify <b>all assignments</b> set to this group
-                    (by any other manager, including the owner), remove group members, and archive and rename the group.
+                : <>
+                    Enabling this option allows additional managers to:
+                    <ul>
+                        <li>Modify or delete <b>all assignments</b>, including those set by the owner</li>
+                        <li>Remove group members</li>
+                        <li>Archive and rename the group</li>
+                    </ul>
                 </>
             }
         </Alert>}
 
         {userIsOwner && <>
-            <h4 className={classNames({"mt-2": isAda})}>Add additional managers</h4>
+            <h4 className="mt-3">Add additional managers</h4>
             <p>Enter the email of another {siteSpecific("Isaac", "Ada")} teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
             <Form onSubmit={addManager}>
                 <Input type="text" value={newManagerEmail} placeholder="Enter email address here" onChange={event => setNewManagerEmail(event.target.value)}/>

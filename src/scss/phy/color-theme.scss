@@ -41,8 +41,8 @@
     // NAVIGATION
     --nav-primary: #{map.get($subject-colors, 500)};
     --nav-secondary: #{map.get($subject-colors, 400)};
-    --sidebar-tab-active: #{map.get($subject-colors, 500)};
-    --sidebar-tab-hover: #{map.get($subject-colors, 300)};
+    --tab-active: #{map.get($subject-colors, 500)};
+    --tab-hover: #{map.get($subject-colors, 300)};
 
     // ICONS
     --icon-primary: #{map.get($subject-colors, 500)};
@@ -75,8 +75,8 @@
       --buttons-light-hover-prefix: #{$color-neutral-200};
 
       --nav-primary: #{$color-brand-500};
-      --sidebar-tab-active: #{$color-brand-500};
-      --sidebar-tab-hover: #{$color-neutral-300};
+      --tab-active: #{$color-brand-500};
+      --tab-hover: #{$color-neutral-300};
 
       --icon-primary: #{$color-brand-500};
 
