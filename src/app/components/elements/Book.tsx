@@ -6,7 +6,6 @@ import { TitleAndBreadcrumb } from "./TitleAndBreadcrumb";
 import { useContextFromContentObjectTags } from "../../services";
 import { useHistory } from "react-router";
 import { useGetBookDetailPageQuery, useGetBookIndexPageQuery } from "../../state/slices/api/booksApi";
-import { ShowLoading } from "../handlers/ShowLoading";
 import { BookPage } from "./BookPage";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
@@ -19,8 +18,10 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
 
     const [pageId, setPageId] = useState<string | undefined>(undefined);
     
-    const { data: book }  = useGetBookIndexPageQuery({id: `book_${bookId}`});
+    const bookIndexPageQuery = useGetBookIndexPageQuery({id: `book_${bookId}`});
     const bookDetailPageQuery = useGetBookDetailPageQuery(pageId ? { id: pageId } : skipToken);
+
+    const { data: book } = bookIndexPageQuery;
 
     const history = useHistory();
 
@@ -46,10 +47,10 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
             icon={{type: "hex", icon: "icon-book"}}
         />
         <SidebarLayout>
-            <ShowLoading
-                until={book ? {definedBookIndexPage: book} : undefined}
-                ifNotFound={<Alert color="warning">Book contents could not be loaded, please try refreshing the page.</Alert>}
-                thenRender={({definedBookIndexPage}) => {
+            <ShowLoadingQuery
+                query={bookIndexPageQuery}
+                defaultErrorTitle="Unable to load book contents."
+                thenRender={(definedBookIndexPage) => {
                     return <>
                         <BookSidebar book={definedBookIndexPage} urlBookId={bookId} pageId={pageId} />
                         <MainContent className="mt-4">
