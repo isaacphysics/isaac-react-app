@@ -1,4 +1,4 @@
-import React, {lazy, Suspense, useCallback, useEffect, useMemo, useState} from "react";
+import React, {lazy, Suspense, useCallback, useEffect, useMemo, useReducer, useState} from "react";
 import {
     AppState,
     clearQuestionSearch,
@@ -29,7 +29,12 @@ import {
     sortQuestions,
     STAGE,
     useUserViewingContext,
-    ISAAC_BOOKS
+    ISAAC_BOOKS,
+    TAG_LEVEL,
+    itemiseTag,
+    TAG_ID,
+    below,
+    useDeviceSize
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -39,6 +44,10 @@ import {StyledSelect} from "../inputs/StyledSelect";
 import { SortItemHeader } from "../SortableItemHeader";
 import { Input, Row, Col, Label, Form, Table } from "reactstrap";
 import classNames from "classnames";
+import { HierarchyFilterTreeList } from "../svg/HierarchyFilter";
+import { ChoiceTree, getChoiceTreeLeaves, initialiseListState, listStateReducer } from "../panels/QuestionFinderFilterPanel";
+import { CollapsibleList } from "../CollapsibleList";
+import { StyledCheckbox } from "../inputs/StyledCheckbox";
 
 // Immediately load GameboardBuilderRow, but allow splitting
 const importGameboardBuilderRow = import("../GameboardBuilderRow");
@@ -59,7 +68,10 @@ export const QuestionSearchModal = (
     {currentQuestions, undoStack, redoStack, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserViewingContext();
+    const deviceSize = useDeviceSize();
+    const sublistDelimiter = " >>> ";
 
+    const [selections, setSelections] = useState<ChoiceTree[]>([]); 
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
     const [searchQuestionName, setSearchQuestionName] = useState("");
     const [searchStages, setSearchStages] = useState<STAGE[]>([]);
@@ -135,6 +147,7 @@ export const QuestionSearchModal = (
 
     const tagOptions: { options: Item<string>[]; label: string }[] = isPhy ? tags.allTags.map(groupTagSelectionsByParent) : tags.allSubcategoryTags.map(groupTagSelectionsByParent);
     const groupBaseTagOptions: GroupBase<Item<string>>[] = tagOptions;
+    const [listState, listStateDispatch] = useReducer(listStateReducer, groupBaseTagOptions, initialiseListState);
 
     useEffect(() => {
         searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
@@ -154,7 +167,7 @@ export const QuestionSearchModal = (
         );
     }, [questions, user, searchTopics, isBookSearch, questionsSort, creationContext]);
 
-    const addSelectionsRow = <div className="d-lg-flex align-items-baseline">
+    const addSelectionsRow = <>
         <div className="flex-grow-1 mb-1">
             <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
                 {siteSpecific(
@@ -178,11 +191,36 @@ export const QuestionSearchModal = (
                 }}
             />
         </div>
-    </div>;
+    </>;
 
-    return <div className="mb-4">
-        <Row>
-            {isPhy && <Col lg={3} className="text-wrap my-2">
+    const choices = useMemo(() => {
+        const choices: ChoiceTree[] = [];
+        if (!isBookSearch) {
+            choices.push({"subject": tags.allSubjectTags.map(itemiseTag)});
+        } else {
+            choices.push({});
+            const subject = ISAAC_BOOKS.filter(book => book.tag === searchBook[0])[0].subject as TAG_ID;
+            choices[0][subject] = tags.getChildren(subject).map(itemiseTag);
+        }
+        for (let tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
+            if (Object.keys(selections[tierIndex]).length > 0) {
+                choices[tierIndex+1] = {};
+                for (const v of Object.values(selections[tierIndex])) {
+                    for (const v2 of v) 
+                        choices[tierIndex+1][v2.value] = tags.getChildren(v2.value).map(itemiseTag);
+                }
+            }
+        }
+        return choices;
+    }, [selections, searchBook]);
+
+    useEffect(() => {
+        setSearchTopics(getChoiceTreeLeaves(selections).map((s) => s.value));
+    }, [selections]);
+
+    return <Row>
+        <Col className="col-3">
+            {isPhy && <div className="mb-2">
                 <Label htmlFor="question-search-book">Book</Label>
                 <StyledSelect
                     inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
@@ -192,99 +230,109 @@ export const QuestionSearchModal = (
                     }}
                     options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
                 />
-            </Col>}
-            <Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
-                <Label htmlFor="question-search-topic">Topic</Label>
-                <StyledSelect
-                    inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
-                    options={groupBaseTagOptions} onChange={(x : readonly Item<string>[], {action: _action}) => {
-                        selectOnChange(setSearchTopics, true)(x);
-                    }}
-                />
-            </Col>
-        </Row>
-        <Row className={isBookSearch ? "d-none" : ""}>
-            <Col lg={6} className={`text-wrap my-2`}>
+            </div>}
+            <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
                 <Label htmlFor="question-search-stage">Stage</Label>
                 <StyledSelect
                     inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
                     options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                 />
-            </Col>
-            <Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
+            </div>
+            <div className="mb-2">
+                {siteSpecific(
+                    <>
+                        <Label htmlFor="question-search-topic">Topic</Label>
+                        <HierarchyFilterTreeList root {...{
+                            tier: 0,
+                            index: isBookSearch ? ISAAC_BOOKS.filter(book => book.tag === searchBook[0])[0].subject as TAG_ID : TAG_LEVEL.subject,
+                            choices, selections, setSelections}}/>
+                    </>,
+                    <CollapsibleList title="Topic" expanded={listState.topics.state}
+                        toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}>
+                        {groupBaseTagOptions.map((tag, index) => (
+                            <CollapsibleList title={tag.label} key={index} asSubList
+                                expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
+                                toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}>
+                                {tag.options.map((topic, index) => (
+                                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
+                                        <StyledCheckbox color="primary" checked={searchTopics.includes(topic.value)}
+                                            onChange={() => setSearchTopics(
+                                                s => s.includes(topic.value)
+                                                    ? s.filter(v => v !== topic.value)
+                                                    : [...s, topic.value])}
+                                            label={<span>{topic.label}</span>}
+                                            className="ps-3"
+                                        />
+                                    </div>))}
+                            </CollapsibleList>))}
+                    </CollapsibleList>)}
+            </div>
+            <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
                 <Label htmlFor="question-search-difficulty">Difficulty</Label>
                 <StyledSelect
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
                     options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
-            </Col>
-            {isAda && <Col lg={6} className={`text-wrap my-2`}>
-                <Label htmlFor="question-search-exam-board">Exam Board</Label>
-                <StyledSelect
-                    inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
-                    value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
-                    options={getFilteredExamBoardOptions({byStages: searchStages})}
-                    onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
-                />
-            </Col>}
-        </Row>
-        <Row>
-            {isPhy && isStaff(user) && <Col className="text-wrap mb-2">
-                <Form>
+                {isAda && <>
+                    <Label htmlFor="question-search-exam-board">Exam Board</Label>
+                    <StyledSelect
+                        inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
+                        value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
+                        options={getFilteredExamBoardOptions({byStages: searchStages})}
+                        onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
+                    />
+                </>}
+            </div>
+            {isPhy && isStaff(user) &&
+                <Form className="mb-2">
                     <Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</Label>
-                </Form>
-            </Col>}
-        </Row>
-        <Row>
-            <Col lg={12} className="text-wrap mt-2">
-                <Label htmlFor="question-search-title">Search</Label>
-                <Input id="question-search-title"
-                    type="text"
-                    placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setSearchQuestionName(e.target.value);
-                    }}
-                />
-            </Col>
-        </Row>
-        <div className="mt-4">
-            {addSelectionsRow}
-        </div>
-        <Suspense fallback={<Loading/>}>
-            <Table bordered responsive className="mt-4">
-                <thead>
-                    <tr className="search-modal-table-header">
-                        <th className="w-5"> </th>
-                        <SortItemHeader<SortOrder>
-                            className={siteSpecific("w-40", "w-30")}
-                            setOrder={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
-                            defaultOrder={SortOrder.ASC}
-                            reverseOrder={SortOrder.DESC}
-                            currentOrder={questionsSort['title']}
-                            alignment="start"
-                        >Question title</SortItemHeader>
-                        <th className={siteSpecific("w-25", "w-20")}>Topic</th>
-                        <th className="w-15">Stage</th>
-                        <th className="w-15">Difficulty</th>
-                        {isAda && <th className="w-15">Exam boards</th>}
-                    </tr>
-                </thead>
-                <tbody>
-                    {isSearching ? <tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr> : sortedQuestions?.map(question =>
-                        <GameboardBuilderRow
-                            key={`question-search-modal-row-${question.id}`} 
-                            question={question}
-                            currentQuestions={modalQuestions}
-                            undoStack={undoStack}
-                            redoStack={redoStack}
-                            creationContext={creationContext}
-                        />
-                    )}
-                </tbody>
-            </Table>
-        </Suspense>
-        {questions && questions.length > 5 && <div className="mt-2">
-            {addSelectionsRow}
-        </div>}
-    </div>;
+                </Form>}
+            <Label htmlFor="question-search-title">Search</Label>
+            <Input id="question-search-title"
+                type="text"
+                placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setSearchQuestionName(e.target.value);
+                }}
+            />
+            <div className="mt-4">
+                {addSelectionsRow}
+            </div>
+        </Col>
+        <Col className="col-9">
+            <Suspense fallback={<Loading/>}>
+                <Table bordered responsive className="mt-4">
+                    <thead>
+                        <tr className="search-modal-table-header">
+                            <th className="w-5"> </th>
+                            <SortItemHeader<SortOrder>
+                                className={siteSpecific("w-40", "w-30")}
+                                setOrder={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
+                                defaultOrder={SortOrder.ASC}
+                                reverseOrder={SortOrder.DESC}
+                                currentOrder={questionsSort['title']}
+                                alignment="start"
+                            >Question title</SortItemHeader>
+                            <th className={siteSpecific("w-25", "w-20")}>Topic</th>
+                            <th className="w-15">Stage</th>
+                            <th className="w-15">Difficulty</th>
+                            {isAda && <th className="w-15">Exam boards</th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {isSearching ? <tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr> : sortedQuestions?.map(question =>
+                            <GameboardBuilderRow
+                                key={`question-search-modal-row-${question.id}`} 
+                                question={question}
+                                currentQuestions={modalQuestions}
+                                undoStack={undoStack}
+                                redoStack={redoStack}
+                                creationContext={creationContext}
+                            />
+                        )}
+                    </tbody>
+                </Table>
+            </Suspense>
+        </Col>
+    </Row>;
 };

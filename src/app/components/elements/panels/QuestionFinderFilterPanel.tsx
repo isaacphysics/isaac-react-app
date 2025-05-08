@@ -44,7 +44,7 @@ type OpenListsState = TopLevelListsState & {
 };
 type ListStateActions = {type: "toggle", id: string, focus: boolean}
     | {type: "expandAll", expand: boolean};
-function listStateReducer(state: OpenListsState, action: ListStateActions): OpenListsState {
+export function listStateReducer(state: OpenListsState, action: ListStateActions): OpenListsState {
     switch (action.type) {
         case "toggle":
             return action.focus
@@ -79,7 +79,7 @@ function listStateReducer(state: OpenListsState, action: ListStateActions): Open
             return state;
     }
 }
-function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsState {
+export function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsState {
     const subListState = Object.fromEntries(
         tags.filter(tag => tag.label)
             .map(tag => [
