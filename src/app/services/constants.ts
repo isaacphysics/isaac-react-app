@@ -529,7 +529,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
         },
         {
             title: "Step Up to GCSE Physics", tag: "phys_book_step_up",
-            shortTitle: "Step Up to GCSE Physics", image: "/assets/phy/books/step_up_phys.jpg",
+            shortTitle: "Step Up to GCSE Physics", image: "/assets/phy/books/2025_step_up_phys.png",
             path: "/books/step_up_phys", subject: "physics", stages: ["11_14", "gcse"],
         },
         {
