@@ -69,6 +69,7 @@ export interface TitleIconProps extends PhyHexIconProps {
 
 export interface PageTitleProps {
     currentPageTitle: string;
+    tabTitleOverride?: string;
     subTitle?: string;
     description?: string;
     disallowLaTeX?: boolean;
@@ -79,7 +80,7 @@ export interface PageTitleProps {
     preview?: boolean;
     icon?: TitleIconProps;
 }
-export const PageTitle = ({currentPageTitle, subTitle, description, disallowLaTeX, help, className, audienceViews, modalId, preview, icon}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, tabTitleOverride, subTitle, description, disallowLaTeX, help, className, audienceViews, modalId, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
     const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
@@ -92,7 +93,7 @@ export const PageTitle = ({currentPageTitle, subTitle, description, disallowLaTe
     }, []);
     useEffect(() => {
         if (preview) return; // Don't set the document title if we're in preview mode
-        document.title = currentPageTitle + " — " + SITE_TITLE;
+        document.title = (tabTitleOverride ?? currentPageTitle) + " — " + SITE_TITLE;
         const element = headerRef.current;
         if (element && (window as any).followedAtLeastOneSoftLink && !openModal) {
             element.focus();

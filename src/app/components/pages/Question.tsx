@@ -93,6 +93,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                 <Container className={classNames("no-shadow")} data-bs-theme={pageContext?.subject ?? doc.subjectId}>
                     <TitleAndBreadcrumb
                         currentPageTitle={siteSpecific("Question", generateQuestionTitle(doc))}
+                        tabTitleOverride={siteSpecific(generateQuestionTitle(doc), undefined)}
                         subTitle={siteSpecific(undefined, doc.subtitle)}
                         intermediateCrumbs={navigation.breadcrumbHistory}
                         collectionType={navigation.collectionType}

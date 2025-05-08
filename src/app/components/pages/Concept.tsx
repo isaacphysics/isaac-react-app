@@ -82,6 +82,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     <TitleAndBreadcrumb
                         intermediateCrumbs={navigation.breadcrumbHistory}
                         currentPageTitle={siteSpecific("Concept", doc.title as string)}
+                        tabTitleOverride={siteSpecific(doc.title, undefined)}
                         collectionType={navigation.collectionType}
                         subTitle={siteSpecific(undefined, doc.subtitle as string)}
                         preview={preview}
