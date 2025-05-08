@@ -381,17 +381,17 @@ iframe.email-html {
   transition: background-position 0.3s ease-in-out;
   
   &:has(> input:checked) {
-    border-left: solid 2px var(--sidebar-tab-active);
+    border-left: solid 2px var(--tab-active);
     background-position: 0% 0%;
     
     .badge.rounded-pill {
-      background-color: var(--sidebar-tab-active);
+      background-color: var(--tab-active);
       color: white;
     }
   }
 
   &:hover:not(:has(> input:checked, > input:disabled)) {
-    border-left: solid 2px var(--sidebar-tab-hover);
+    border-left: solid 2px var(--tab-hover);
   }
 
   &:has(> input:disabled) {

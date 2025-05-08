@@ -1,0 +1,14 @@
+// TODO: 
+// - move any colour theming from /cs/isaac.scss here
+//   - (including all colour definitions)
+// - copy any required theming from phy/isaac.scss
+// - ensure all variables are named equivalently across the two files
+
+#root {
+    --tab-active: #{$dark-pink-300};
+    --tab-hover: #{$cs-light-gray};
+
+    --icon-primary: #{$dark-pink-300};
+    --icon-secondary: #{$cyan-100};
+    --icon-tertiary: #{$cs-black};
+}
