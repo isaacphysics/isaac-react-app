@@ -32,7 +32,6 @@ import {
     ISAAC_BOOKS,
     TAG_LEVEL,
     itemiseTag,
-    TAG_ID,
     below,
     useDeviceSize
 } from "../../../services";
@@ -85,11 +84,11 @@ export const QuestionSearchModal = (
     const [searchBook, setSearchBook] = useState<string[]>([]);
     const isBookSearch = searchBook.length > 0;
 
-    const creationContext: AudienceContext = !isBookSearch ? {
+    const creationContext: AudienceContext = useMemo(() => !isBookSearch ? {
         stage: searchStages.length > 0 ? searchStages : undefined,
         difficulty: searchDifficulties.length > 0 ? searchDifficulties : undefined,
         examBoard: searchExamBoards.length > 0 ? searchExamBoards : undefined,
-    } : {};
+    } : {}, [isBookSearch, searchStages, searchDifficulties, searchExamBoards]);
 
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
 
@@ -194,13 +193,7 @@ export const QuestionSearchModal = (
 
     const choices = useMemo(() => {
         const choices: ChoiceTree[] = [];
-        if (!isBookSearch) {
-            choices.push({"subject": tags.allSubjectTags.map(itemiseTag)});
-        } else {
-            choices.push({});
-            const subject = ISAAC_BOOKS.filter(book => book.tag === searchBook[0])[0].subject as TAG_ID;
-            choices[0][subject] = tags.getChildren(subject).map(itemiseTag);
-        }
+        choices.push({"subject": tags.allSubjectTags.map(itemiseTag)});
         for (let tierIndex = 0; tierIndex < topicSelections.length && tierIndex < 2; tierIndex++)  {
             if (Object.keys(topicSelections[tierIndex]).length > 0) {
                 choices[tierIndex+1] = {};
@@ -211,7 +204,7 @@ export const QuestionSearchModal = (
             }
         }
         return choices;
-    }, [topicSelections, searchBook]);
+    }, [topicSelections]);
 
     // The (phy) hierarchy filter uses a ChoiceTree, but the search endpoint needs a string
     useEffect(() => {
