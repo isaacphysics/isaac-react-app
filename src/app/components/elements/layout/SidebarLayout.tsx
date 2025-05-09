@@ -1406,7 +1406,7 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
 };
 
 
-interface GlossarySidebarProps extends SidebarProps {
+interface GlossarySidebarProps extends ContentSidebarProps {
     searchText: string;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
     filterSubject: Tag | undefined;
@@ -1418,12 +1418,12 @@ interface GlossarySidebarProps extends SidebarProps {
 }
 
 export const GlossarySidebar = (props: GlossarySidebarProps) => {
-    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStage, setFilterStage, subjects, stages, ...rest } = props;
+    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStage, setFilterStage, subjects, stages, optionBar, ...rest } = props;
     
     const history = useHistory();
     const pageContext = useAppSelector(selectors.pageContext.context);
 
-    return <ContentSidebar buttonTitle="Search glossary" {...rest}>
+    return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
         <search>
             <h5>Search glossary</h5>
