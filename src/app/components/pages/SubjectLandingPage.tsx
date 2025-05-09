@@ -15,7 +15,6 @@ import debounce from "lodash/debounce";
 import { Loading } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
-import { Stage } from "../../../IsaacApiTypes";
 
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
@@ -70,7 +69,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                 </button>
             </div>
         </Row>
-        <Row style={{margin: "auto"}}>
+        <Row>
             <Card className="px-0">
                 {question
                     ? <ListView items={[{

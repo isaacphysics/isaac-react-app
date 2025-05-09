@@ -383,7 +383,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </div>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} className={siteSpecific("mb-4", "")} />
         <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
         <SidebarLayout>
             {activeTab === MANAGE_QUIZ_TAB.set
