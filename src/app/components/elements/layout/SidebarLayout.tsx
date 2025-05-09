@@ -91,6 +91,7 @@ const NavigationSidebar = (props: SidebarProps) => {
 
 interface ContentSidebarProps extends SidebarProps {
     buttonTitle?: string;
+    noSmallScreen?: boolean; // if true, the sidebar will not be collapsible on small screens
 }
 
 const ContentSidebar = (props: ContentSidebarProps) => {
@@ -104,11 +105,11 @@ const ContentSidebar = (props: ContentSidebarProps) => {
 
     if (isAda) return <></>;
 
-    const { className, buttonTitle, ...rest } = props;
+    const { className, buttonTitle, noSmallScreen, ...rest } = props;
     return <>
         {above['lg'](deviceSize) 
             ? <Col tag="aside" data-testId="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
-            : <>
+            : !noSmallScreen ? <>
                 <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     <AffixButton data-testId="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
                         affix: "icon-sidebar", 
@@ -136,7 +137,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                         </ContentSidebarContext.Provider>
                     </OffcanvasBody>
                 </Offcanvas>
-            </>
+            </> : <></>
         }
     </>;
 };
@@ -1530,7 +1531,7 @@ export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
 
 export const GenericPageSidebar = () => {
     // Default sidebar for general pages that don't have a custom sidebar
-    return <ContentSidebar buttonTitle="Options">
+    return <ContentSidebar buttonTitle="Options" noSmallScreen>
         <div className="section-divider"/>
         <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
             Go to homepage
