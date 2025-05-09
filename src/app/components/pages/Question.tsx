@@ -92,8 +92,8 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
             return <GameboardContext.Provider value={navigation.currentGameboard}>
                 <Container className={classNames("no-shadow")} data-bs-theme={pageContext?.subject ?? doc.subjectId}>
                     <TitleAndBreadcrumb
-                        currentPageTitle={siteSpecific("Question", generateQuestionTitle(doc))}
-                        tabTitleOverride={siteSpecific(generateQuestionTitle(doc), undefined)}
+                        currentPageTitle={generateQuestionTitle(doc)}
+                        displayTitleOverride={siteSpecific("Question", undefined)}
                         subTitle={siteSpecific(undefined, doc.subtitle)}
                         intermediateCrumbs={navigation.breadcrumbHistory}
                         collectionType={navigation.collectionType}
