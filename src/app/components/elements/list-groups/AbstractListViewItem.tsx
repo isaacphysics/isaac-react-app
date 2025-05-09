@@ -17,18 +17,12 @@ const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
 };
 
 const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: CompletionState}) => {
-    const { status, ...rest } = props;
+    const { status } = props;
     switch (status) {
         case CompletionState.IN_PROGRESS:
-            return <span {...rest} className={classNames(rest.className, "status-tag d-flex align-items-center")}>
-                <img className="pe-2" src={`/assets/phy/icons/redesign/status-in-progress.svg`} alt=""/>
-                In progress
-            </span>;
+            return <i className="icon icon-raw icon-in-progress" />;
         case CompletionState.ALL_CORRECT:
-            return <span {...rest} className={classNames(rest.className, "status-tag d-flex align-items-center")}>
-                <img className="pe-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt=""/>
-                Correct
-            </span>;
+            return <i className="icon icon-raw icon-correct" />;
         case CompletionState.NOT_ATTEMPTED:
             return;
     }
@@ -86,10 +80,14 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
     const cardBody =
     <div className="w-100 d-flex flex-row">
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard && linkTags?.length, "mb-3": isCard && !linkTags?.length})}>
-            <div>
+            <div className="position-relative">
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
-                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/> : undefined)}
+                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/> : undefined)
+                }
+                {status && <div className="list-view-status-indicator">
+                    <StatusDisplay status={status} />
+                </div>}
             </div>
             <div className="align-content-center text-overflow-ellipsis pe-2">
                 <div className="d-flex text-wrap">
@@ -115,9 +113,6 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {audienceViews && fullWidth && <div className="d-flex mt-1"> 
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack/> 
                 </div>}
-                {status && (below["lg"](deviceSize) || fullWidth) && <div className="d-flex mt-1">
-                    <StatusDisplay status={status}/>
-                </div>}
                 {linkTags && <div className="d-flex py-3 flex-wrap">
                     <LinkTags linkTags={linkTags}/>
                 </div>}
@@ -128,9 +123,6 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
         </Col>
         {!fullWidth &&
             <>
-                {!isQuiz && (audienceViews || status) && <Col xl={2} className={classNames("d-none d-xl-flex", {"list-view-border": (status && status !== CompletionState.NOT_ATTEMPTED)})}>
-                    <StatusDisplay status={status ?? CompletionState.NOT_ATTEMPTED}/>
-                </Col>}
                 {audienceViews && <Col md={4} lg={5} xl={4} xxl={3} className={classNames("d-none d-md-flex justify-content-end", {"list-view-border": audienceViews.length > 0})}>
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack className="w-100"/> 
                 </Col>}
@@ -141,7 +133,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
         }
     </div>;
 
-    return <ListGroupItem {...rest} className={classNames("content-summary-item", rest.className)} data-bs-theme={subject}>
+    return <ListGroupItem {...rest} className={classNames("content-summary-item", {"correct": status === CompletionState.ALL_CORRECT}, rest.className)} data-bs-theme={subject}>
         {url 
             ? <Link to={url} className="w-100 h-100 align-items-start"> {cardBody} </Link> 
             : cardBody
