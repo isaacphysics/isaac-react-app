@@ -123,9 +123,9 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
         </Col>
         {!fullWidth &&
             <>
-                {audienceViews && <Col md={4} lg={5} xl={4} xxl={3} className={classNames("d-none d-md-flex justify-content-end", {"list-view-border": audienceViews.length > 0})}>
+                {audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": audienceViews.length > 0})}>
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack className="w-100"/> 
-                </Col>}
+                </div>}
                 {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                     <QuizLinks previewQuizUrl={previewQuizUrl} quizButton={quizButton}/> 
                 </Col>}
