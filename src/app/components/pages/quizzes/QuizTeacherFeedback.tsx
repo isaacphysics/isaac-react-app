@@ -82,9 +82,9 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
             query={quizAssignmentQuery}
             ifError={buildErrorComponent}
             thenRender={quizAssignment => <>
-                {assignmentNotYetStarted && <div className="mb-4">
-                    <h4 className="alert-heading">This test has not yet started</h4>
-                    <p>It will be released to your group on {formatDate(assignmentStartDate)}.</p>
+                {assignmentNotYetStarted && <div className="mb-4 alert alert-info px-3 py-2 mt-4">
+                    <span className="alert-heading fw-bold">This test has not yet started. </span>
+                    <span>It will be released to your group on {formatDate(assignmentStartDate)}.</span>
                 </div>}
 
                 <div className="content-metadata-container d-flex flex-column flex-md-row">
