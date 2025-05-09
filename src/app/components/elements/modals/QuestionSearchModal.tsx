@@ -71,7 +71,7 @@ export const QuestionSearchModal = (
     const deviceSize = useDeviceSize();
     const sublistDelimiter = " >>> ";
 
-    const [selections, setSelections] = useState<ChoiceTree[]>([]); 
+    const [topicSelections, setTopicSelections] = useState<ChoiceTree[]>([]); 
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
     const [searchQuestionName, setSearchQuestionName] = useState("");
     const [searchStages, setSearchStages] = useState<STAGE[]>([]);
@@ -82,7 +82,6 @@ export const QuestionSearchModal = (
     }, [userContext.examBoard]);
 
     const [isSearching, setIsSearching] = useState(false);
-
     const [searchBook, setSearchBook] = useState<string[]>([]);
     const isBookSearch = searchBook.length > 0;
 
@@ -167,7 +166,7 @@ export const QuestionSearchModal = (
         );
     }, [questions, user, searchTopics, isBookSearch, questionsSort, creationContext]);
 
-    const addSelectionsRow = <>
+    const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center">
         <div className="flex-grow-1 mb-1">
             <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
                 {siteSpecific(
@@ -181,7 +180,7 @@ export const QuestionSearchModal = (
                 type="button"
                 value={siteSpecific("Add Selections to Question Deck", "Add selections to quiz")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
-                className={classNames("btn w-100", siteSpecific("btn-keyline", "btn-secondary border-0"))}
+                className={classNames("btn w-100 h-100", siteSpecific("btn-keyline", "btn-secondary border-0"))}
                 onClick={() => {
                     undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
                     currentQuestions.setSelectedQuestions(modalQuestions.selectedQuestions);
@@ -191,7 +190,7 @@ export const QuestionSearchModal = (
                 }}
             />
         </div>
-    </>;
+    </div>;
 
     const choices = useMemo(() => {
         const choices: ChoiceTree[] = [];
@@ -202,52 +201,28 @@ export const QuestionSearchModal = (
             const subject = ISAAC_BOOKS.filter(book => book.tag === searchBook[0])[0].subject as TAG_ID;
             choices[0][subject] = tags.getChildren(subject).map(itemiseTag);
         }
-        for (let tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
-            if (Object.keys(selections[tierIndex]).length > 0) {
+        for (let tierIndex = 0; tierIndex < topicSelections.length && tierIndex < 2; tierIndex++)  {
+            if (Object.keys(topicSelections[tierIndex]).length > 0) {
                 choices[tierIndex+1] = {};
-                for (const v of Object.values(selections[tierIndex])) {
+                for (const v of Object.values(topicSelections[tierIndex])) {
                     for (const v2 of v) 
                         choices[tierIndex+1][v2.value] = tags.getChildren(v2.value).map(itemiseTag);
                 }
             }
         }
         return choices;
-    }, [selections, searchBook]);
+    }, [topicSelections, searchBook]);
 
+    // The (phy) hierarchy filter uses a ChoiceTree, but the search endpoint needs a string
     useEffect(() => {
-        setSearchTopics(getChoiceTreeLeaves(selections).map((s) => s.value));
-    }, [selections]);
+        setSearchTopics(getChoiceTreeLeaves(topicSelections).map((s) => s.value));
+    }, [topicSelections]);
 
     return <Row>
-        <Col className="col-3">
-            {isPhy && <div className="mb-2">
-                <Label htmlFor="question-search-book">Book</Label>
-                <StyledSelect
-                    inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
-                    onChange={(e) => {
-                        selectOnChange(setSearchBook, true)(e);
-                        sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
-                    }}
-                    options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
-                />
-            </div>}
-            <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
-                <Label htmlFor="question-search-stage">Stage</Label>
-                <StyledSelect
-                    inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
-                />
-            </div>
-            <div className="mb-2">
-                {siteSpecific(
-                    <>
-                        <Label htmlFor="question-search-topic">Topic</Label>
-                        <HierarchyFilterTreeList root {...{
-                            tier: 0,
-                            index: isBookSearch ? ISAAC_BOOKS.filter(book => book.tag === searchBook[0])[0].subject as TAG_ID : TAG_LEVEL.subject,
-                            choices, selections, setSelections}}/>
-                    </>,
-                    <CollapsibleList title="Topic" expanded={listState.topics.state}
+        <Col className="col-12 col-xl-3 mt-4">
+            <Row>
+                <Col className={siteSpecific("col-12 col-lg-6 col-xl-12", "")}>
+                    {isAda && <CollapsibleList title={<span className="ms-n3">Topic</span>} expanded={listState.topics.state} className="mb-3"
                         toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}>
                         {groupBaseTagOptions.map((tag, index) => (
                             <CollapsibleList title={tag.label} key={index} asSubList
@@ -256,50 +231,76 @@ export const QuestionSearchModal = (
                                 {tag.options.map((topic, index) => (
                                     <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
                                         <StyledCheckbox color="primary" checked={searchTopics.includes(topic.value)}
-                                            onChange={() => setSearchTopics(
-                                                s => s.includes(topic.value)
-                                                    ? s.filter(v => v !== topic.value)
-                                                    : [...s, topic.value])}
-                                            label={<span>{topic.label}</span>}
-                                            className="ps-3"
-                                        />
+                                            onChange={() => setSearchTopics(s => s.includes(topic.value) ? s.filter(v => v !== topic.value) : [...s, topic.value])}
+                                            label={<span>{topic.label}</span>} className="ps-3"/>
                                     </div>))}
                             </CollapsibleList>))}
-                    </CollapsibleList>)}
-            </div>
-            <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
-                <Label htmlFor="question-search-difficulty">Difficulty</Label>
-                <StyledSelect
-                    inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
-                />
-                {isAda && <>
-                    <Label htmlFor="question-search-exam-board">Exam Board</Label>
-                    <StyledSelect
-                        inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
-                        value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
-                        options={getFilteredExamBoardOptions({byStages: searchStages})}
-                        onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
+                    </CollapsibleList>}
+                    {isPhy && <div className="mb-2">
+                        <Label htmlFor="question-search-book">Book</Label>
+                        <StyledSelect
+                            inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
+                            onChange={(e) => {
+                                selectOnChange(setSearchBook, true)(e);
+                                sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
+                            }}
+                            options={ISAAC_BOOKS.filter(b => !b.hidden).map(book => ({value: book.tag, label: book.shortTitle}))}
+                        />
+                    </div>}
+                    <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
+                        <Label htmlFor="question-search-stage">Stage</Label>
+                        <StyledSelect
+                            inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
+                            options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
+                        />
+                    </div>
+                    {isPhy && deviceSize !== "lg" && <div className="mb-2">
+                        <Label htmlFor="question-search-topic">Topic</Label>
+                        <HierarchyFilterTreeList root {...{
+                            inputId: "question-search-topic", tier: 0, choices, selections: topicSelections, setSelections: setTopicSelections,
+                            index: isBookSearch ? ISAAC_BOOKS.filter(book => book.tag === searchBook[0])[0].subject as TAG_ID : TAG_LEVEL.subject}}/>
+                    </div>}
+                    <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
+                        <Label htmlFor="question-search-difficulty">Difficulty</Label>
+                        <StyledSelect
+                            inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
+                            options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
+                        />
+                        {isAda && <>
+                            <Label htmlFor="question-search-exam-board">Exam Board</Label>
+                            <StyledSelect
+                                inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
+                                value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
+                                options={getFilteredExamBoardOptions({byStages: searchStages})}
+                                onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
+                            />
+                        </>}
+                    </div>
+                    <Label htmlFor="question-search-title">Search</Label>
+                    <Input id="question-search-title" className="mb-2"
+                        type="text"
+                        placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setSearchQuestionName(e.target.value);
+                        }}
                     />
-                </>}
-            </div>
-            {isPhy && isStaff(user) &&
-                <Form className="mb-2">
-                    <Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</Label>
-                </Form>}
-            <Label htmlFor="question-search-title">Search</Label>
-            <Input id="question-search-title"
-                type="text"
-                placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setSearchQuestionName(e.target.value);
-                }}
-            />
+                    {isPhy && isStaff(user) &&
+                        <Form className="mb-2">
+                            <Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</Label>
+                        </Form>}
+                </Col>
+                {isPhy && deviceSize === "lg" && <Col className="col-6">
+                    <Label htmlFor="question-search-topic">Topic</Label>
+                    <HierarchyFilterTreeList root {...{
+                        inputId: "question-search-topic", tier: 0, choices, selections: topicSelections, setSelections: setTopicSelections,
+                        index: isBookSearch ? ISAAC_BOOKS.filter(book => book.tag === searchBook[0])[0].subject as TAG_ID : TAG_LEVEL.subject}}/>
+                </Col>}
+            </Row>
             <div className="mt-4">
                 {addSelectionsRow}
             </div>
         </Col>
-        <Col className="col-9">
+        <Col className="col-12 col-xl-9">
             <Suspense fallback={<Loading/>}>
                 <Table bordered responsive className="mt-4">
                     <thead>
