@@ -221,7 +221,7 @@ export const QuestionSearchModal = (
     return <Row>
         <Col className="col-12 col-xl-3 mt-4">
             <Row>
-                <Col className={siteSpecific("col-12 col-lg-6 col-xl-12", "")}>
+                <Col className={isPhy && !isBookSearch ? "col-12 col-lg-6 col-xl-12" : ""}>
                     {isAda && <CollapsibleList title={<span className="ms-n3">Topic</span>} expanded={listState.topics.state} className="mb-3"
                         toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}>
                         {groupBaseTagOptions.map((tag, index) => (
@@ -254,11 +254,11 @@ export const QuestionSearchModal = (
                             options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                         />
                     </div>
-                    {isPhy && deviceSize !== "lg" && <div className="mb-2">
+                    {isPhy && !isBookSearch && deviceSize !== "lg" && <div className="mb-2">
                         <Label htmlFor="question-search-topic">Topic</Label>
                         <HierarchyFilterTreeList root {...{
-                            inputId: "question-search-topic", tier: 0, choices, selections: topicSelections, setSelections: setTopicSelections,
-                            index: isBookSearch ? ISAAC_BOOKS.filter(book => book.tag === searchBook[0])[0].subject as TAG_ID : TAG_LEVEL.subject}}/>
+                            inputId: "question-search-topic", tier: 0, index: TAG_LEVEL.subject,
+                            choices, selections: topicSelections, setSelections: setTopicSelections}}/>
                     </div>}
                     <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
                         <Label htmlFor="question-search-difficulty">Difficulty</Label>
@@ -289,16 +289,14 @@ export const QuestionSearchModal = (
                             <Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</Label>
                         </Form>}
                 </Col>
-                {isPhy && deviceSize === "lg" && <Col className="col-6">
+                {isPhy && !isBookSearch && deviceSize === "lg" && <Col className="col-6">
                     <Label htmlFor="question-search-topic">Topic</Label>
                     <HierarchyFilterTreeList root {...{
-                        inputId: "question-search-topic", tier: 0, choices, selections: topicSelections, setSelections: setTopicSelections,
-                        index: isBookSearch ? ISAAC_BOOKS.filter(book => book.tag === searchBook[0])[0].subject as TAG_ID : TAG_LEVEL.subject}}/>
+                        inputId: "question-search-topic", tier: 0, index: TAG_LEVEL.subject,
+                        choices, selections: topicSelections, setSelections: setTopicSelections}}/>
                 </Col>}
             </Row>
-            <div className="mt-4">
-                {addSelectionsRow}
-            </div>
+            {addSelectionsRow}
         </Col>
         <Col className="col-12 col-xl-9">
             <Suspense fallback={<Loading/>}>
