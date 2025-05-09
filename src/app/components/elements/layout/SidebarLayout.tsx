@@ -91,7 +91,8 @@ const NavigationSidebar = (props: SidebarProps) => {
 
 interface ContentSidebarProps extends SidebarProps {
     buttonTitle?: string;
-    noSmallScreen?: boolean; // if true, the sidebar will not be collapsible on small screens
+    hideButton?: boolean; // if true, the sidebar will not be collapsible on small screens
+    optionBar?: React.JSX.Element;
 }
 
 const ContentSidebar = (props: ContentSidebarProps) => {
@@ -105,19 +106,20 @@ const ContentSidebar = (props: ContentSidebarProps) => {
 
     if (isAda) return <></>;
 
-    const { className, buttonTitle, noSmallScreen, ...rest } = props;
+    const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
     return <>
         {above['lg'](deviceSize) 
             ? <Col tag="aside" data-testId="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
-            : !noSmallScreen ? <>
-                <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
-                    <AffixButton data-testId="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
+            : <>
+                <div className="d-flex align-items-center no-print flex-wrap pt-3 gap-3">
+                    {!hideButton && <AffixButton data-testId="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
                         affix: "icon-sidebar", 
                         position: "prefix", 
                         type: "icon"
                     }}>
                         {buttonTitle ?? "Search and filter"}
-                    </AffixButton>
+                    </AffixButton>}
+                    <div className="flex-grow-1">{optionBar}</div>
                 </div>
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
@@ -137,7 +139,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                         </ContentSidebarContext.Provider>
                     </OffcanvasBody>
                 </Offcanvas>
-            </> : <></>
+            </> 
         }
     </>;
 };
@@ -1529,9 +1531,9 @@ export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
     </ContentSidebar>;
 };
 
-export const GenericPageSidebar = () => {
+export const GenericPageSidebar = (props: ContentSidebarProps) => {
     // Default sidebar for general pages that don't have a custom sidebar
-    return <ContentSidebar buttonTitle="Options" noSmallScreen>
+    return <ContentSidebar buttonTitle="Options" hideButton optionBar={props.optionBar}>
         <div className="section-divider"/>
         <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
             Go to homepage
@@ -1539,11 +1541,11 @@ export const GenericPageSidebar = () => {
     </ContentSidebar>;
 };
 
-export const PolicyPageSidebar = () => {
+export const PolicyPageSidebar = (props: ContentSidebarProps) => {
     const history = useHistory();
     const path = useLocation().pathname;
 
-    return <ContentSidebar buttontitle="Select a page">
+    return <ContentSidebar buttonTitle="Select a page" optionBar={props.optionBar}>
         <div className="section-divider"/>
         <h5>Select a page</h5>
         <ul>
