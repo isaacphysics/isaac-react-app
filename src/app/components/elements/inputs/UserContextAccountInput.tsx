@@ -152,7 +152,7 @@ export function UserContextAccountInput({
         {siteSpecific(
             // Physics
             <React.Fragment>
-                <span id={`show-me-content-${componentId}`} className="mx-2 icon-chevron-down" />
+                <i id={`show-me-content-${componentId}`} className="mx-2 icon icon-info layered icon-color-grey" />
                 <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                     {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
                     {"You will be able to change this preference on relevant pages."}<br />
