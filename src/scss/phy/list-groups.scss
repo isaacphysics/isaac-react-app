@@ -15,7 +15,7 @@
 }
 
 .list-view-card-container {
-  border-radius: 10px; 
+  border-radius: 10px;
   border: 1px solid $gray-107;
   background: white;
 
@@ -94,6 +94,9 @@
 
 .list-group-links li a.card-tag {
   @include pill-tag($color-neutral-900, var(--subject-color-50), var(--subject-color-100));
+  width: auto;
+  white-space: normal;
+  text-align: center;
   font-family: $secondary-font;
   padding: 0.15rem 0.8rem;
   margin: 0.5rem 0.5rem 0 0;
