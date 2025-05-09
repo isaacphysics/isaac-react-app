@@ -1,6 +1,6 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {ACTION_TYPE, isDefined} from "../../services";
+import {ACTION_TYPE, isDefined, trackEvent} from "../../services";
 import {redirectTo, getUserId, logAction, setUserId, AppDispatch, changePage} from "../index";
 
 let timeoutHandle: number | undefined;
@@ -10,7 +10,6 @@ let timeoutHandle: number | undefined;
 // use it asynchronously, so that is what we do.
 
 const scheduleNextCheck = (middleware: MiddlewareAPI) => {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     timeoutHandle = window.setTimeout(() => checkUserConsistency(middleware), 1000);
 };
 
@@ -32,19 +31,13 @@ const checkUserConsistency = (middleware: MiddlewareAPI) => {
 
 
 const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
-    const dispatch = api.dispatch as AppDispatch;
     clearTimeout(timeoutHandle);
     // Only start checking if we can successfully store the user id
     if (setUserId(user._id)) {
         scheduleNextCheck(api);
     } else {
-        // eslint-disable-next-line no-console
         console.error("Cannot perform user consistency checking!");
-        const eventDetails = {
-            type: "USER_CONSISTENCY_CHECKING_FAILED",
-            userAgent: navigator.userAgent,
-        };
-        dispatch(logAction(eventDetails));
+        trackEvent("exception", { props: { description: "user_consistency_checking_failed", fatal: false }});
     }
 };
 
