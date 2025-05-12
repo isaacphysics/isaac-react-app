@@ -197,7 +197,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                 </div>
 
                 {isPhy && !isContentsIntendedAudience && <div className="ms-auto me-3 d-flex align-items-center">
-                    <span id={`audience-help-${componentId}`} className="icon icon-info layered icon-color-grey" />
+                    <i id={`audience-help-${componentId}`} className="icon icon-info layered icon-color-grey" />
                     <UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
                         {`This content has ${notRelevantMessage(userContext)}.`}
                     </UncontrolledTooltip>
