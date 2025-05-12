@@ -670,7 +670,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
             <SidebarLayout>
                 <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
                     showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup}/>
-                <MainContent className="mt-3 mt-lg-0">
+                <MainContent>
                     <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup}/>
                     {/* On small screens, the groups list should initially be accessible without needing to open the sidebar drawer */}
                     {below["md"](deviceSize) && !isDefined(selectedGroup) && <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
