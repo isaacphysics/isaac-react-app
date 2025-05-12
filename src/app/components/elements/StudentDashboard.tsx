@@ -156,7 +156,7 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
             ? <div className="mt-3 mt-lg-0 mt-xl-3 text-center">You have no active assignments.</div> 
             : <>
                 <span className="mb-2">You have assignments that are active or due soon:</span>
-                <div className="row">
+                <div className="row overflow-y-auto pt-1 mt-n1">
                     {toDo.map((assignment: IAssignmentLike) => <span key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3"><AssignmentCard assignment={assignment} groups={groups}/></span>)}
                 </div>
                 <Spacer/>
