@@ -458,7 +458,7 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
             <div className="section-divider"/>
             
             <div className="d-flex flex-column">
-                <h5>Filter by subject</h5>
+                <h5>Filter by subject and topic</h5>
                 {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
                     const subjectTag = tags.getById(subject as TAG_ID);
                     const descendentTags = tags.getDirectDescendents(subjectTag.id);
@@ -602,7 +602,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
 
         {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
             <div className="section-divider"/>
-            <h5>Filter by subject</h5>
+            <h5>Filter by subject and topic</h5>
             <ul>
                 {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
                     const subjectTag = tags.getById(subject as TAG_ID);
