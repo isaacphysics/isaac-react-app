@@ -60,7 +60,6 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_my_assignments" className="mb-4" />
-        <PageFragment fragmentId={`${siteSpecific("help_toptext_assignments", "assignments_help")}_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <SidebarLayout>
             <MyAssignmentsSidebar
                 statusFilter={assignmentStateFilter} setStatusFilter={setAssignmentStateFilter}
@@ -71,6 +70,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 assignmentQuery={assignmentQuery}
             />
             <MainContent>
+                <PageFragment fragmentId={`${siteSpecific("help_toptext_assignments", "assignments_help")}_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
                 <ShowLoadingQuery
                     query={assignmentQuery}
                     defaultErrorTitle={"Error fetching your assignments"}

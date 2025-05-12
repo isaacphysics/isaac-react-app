@@ -534,7 +534,6 @@ export const SetAssignments = () => {
 
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
             modalId="help_modal_set_assignments" className={siteSpecific("mb-4", "")} />
-        <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
         <SidebarLayout>
             <SetAssignmentsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
@@ -545,7 +544,8 @@ export const SetAssignments = () => {
                 boardCreator={boardCreator} setBoardCreator={setBoardCreator}
                 sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
             />
-            <MainContent>            
+            <MainContent>
+                <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />          
                 {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
                 {groups && groups.length === 0 && <Alert color="warning">
                     You have not created any groups to assign work to.

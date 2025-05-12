@@ -384,7 +384,6 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} className={siteSpecific("mb-4", "")} />
-        <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
         <SidebarLayout>
             {activeTab === MANAGE_QUIZ_TAB.set
                 ? <SetQuizzesSidebar titleFilter={titleFilter} setTitleFilter={setTitleFilter} />
@@ -394,6 +393,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                     quizDueDateFilterType={quizDueDateFilterType} setQuizDueDateFilterType={setQuizDueDateFilterType}
                     manageQuizzesGroupNameFilter={manageQuizzesGroupNameFilter} setManageQuizzesGroupNameFilter={setManageQuizzesGroupNameFilter}/>}
             <MainContent>
+                <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
                 <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
                     {{
                         [siteSpecific("Set Tests", "Available tests")]:

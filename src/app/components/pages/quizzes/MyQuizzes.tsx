@@ -444,11 +444,11 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} className={siteSpecific("mb-4", "")} />
-        <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <SidebarLayout>
             <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter} 
                 setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}/>
             <MainContent>
+                <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
                 <Tabs className="mb-5 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
                     history.replace({...history.location, hash: tabAnchors[index - 1]});
                     setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
