@@ -1,4 +1,4 @@
-import {AssignmentDTO} from "../../IsaacApiTypes";
+import {AssignmentDTO, IAssignmentLike} from "../../IsaacApiTypes";
 import orderBy from "lodash/orderBy";
 import {EnhancedAssignment} from "../../IsaacAppTypes";
 import {API_PATH, extractTeacherName, matchesAllWordsInAnyOrder} from "./";
@@ -15,13 +15,13 @@ function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO
     return {...assignment, startDate: assignmentStartDate};
 }
 
+const now = new Date();
+const midnightLastNight = new Date(now);
+midnightLastNight.setHours(0, 0, 0, 0);
+
 type AssignmentStatus = "inProgressRecent" | "inProgressOld" | "allAttempted" | "allCorrect";
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {
-    const now = new Date();
     const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));
-    // Midnight last night:
-    const midnightLastNight = new Date(now);
-    midnightLastNight.setHours(0, 0, 0, 0);
 
     const myAssignments: Record<AssignmentStatus, (AssignmentDTO & {startDate: Date})[]> = {
         inProgressRecent: [],
@@ -104,3 +104,5 @@ export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | unde
 export const getAssignmentStartDate = (a: AssignmentDTO): number => (a.scheduledStartDate ?? a.creationDate ?? 0).valueOf();
 
 export const hasAssignmentStarted = (a: AssignmentDTO): boolean => getAssignmentStartDate(a) <= Date.now();
+
+export const isOverdue = (a: IAssignmentLike) =>  a.dueDate && a.dueDate < midnightLastNight;
