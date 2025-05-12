@@ -16,13 +16,24 @@ const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     </>;
 };
 
-const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: CompletionState}) => {
-    const { status } = props;
+interface StatusDisplayProps extends React.HTMLAttributes<HTMLSpanElement> {
+    status: CompletionState;
+    showText?: boolean;
+}
+
+const StatusDisplay = (props: StatusDisplayProps) => {
+    const { status, showText, className, ...rest } = props;
     switch (status) {
         case CompletionState.IN_PROGRESS:
-            return <i className="icon icon-raw icon-in-progress" />;
+            return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
+                <i className="icon icon-raw icon-in-progress" />
+                {showText && "In progress"}
+            </span>;
         case CompletionState.ALL_CORRECT:
-            return <i className="icon icon-raw icon-correct" />;
+            return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
+                <i className="icon icon-raw icon-correct" />
+                {showText && "Correct"}
+            </span>;
         case CompletionState.NOT_ATTEMPTED:
             return;
     }
@@ -85,8 +96,8 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
                         : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/> : undefined)
                 }
-                {status && <div className="list-view-status-indicator">
-                    <StatusDisplay status={status} />
+                {status && status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
+                    <StatusDisplay status={status} showText={false} />
                 </div>}
             </div>
             <div className="align-content-center text-overflow-ellipsis pe-2">
@@ -95,12 +106,12 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                     {quizTag && <span className="quiz-level-1-tag ms-sm-2">{quizTag}</span>}
                     {isPhy && <div className="d-flex flex-column justify-self-end">
                         {supersededBy && <a 
-                            className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
+                            className="superseded-tag mx-1 ms-sm-3 align-self-end" 
                             href={`/questions/${supersededBy}`}
                             onClick={(e) => e.stopPropagation()}
                         >SUPERSEDED</a>}
                         {tags?.includes("nofilter") && <span
-                            className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
+                            className="superseded-tag mx-1 ms-sm-3 align-self-end" 
                         >NO-FILTER</span>}
                     </div>}
                 </div>
@@ -123,6 +134,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
         </Col>
         {!fullWidth &&
             <>
+                {status && status !== CompletionState.ALL_CORRECT && <StatusDisplay status={status} showText className="ms-2 me-3" />}
                 {audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": audienceViews.length > 0})}>
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack className="w-100"/> 
                 </div>}
