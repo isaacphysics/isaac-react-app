@@ -129,7 +129,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                         <Dropdown className="flex-grow-1" disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                             <DropdownToggle
                                 disabled={readonly || !noDisplayUnit}
-                                className={classNames("feedback-zone w-md-auto h-100 px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong && noDisplayUnit, "bg-white my-2": isPhy})}
+                                className={classNames("feedback-zone w-md-auto h-100 px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong && noDisplayUnit, "bg-white": isPhy})}
                                 color={noDisplayUnit ? siteSpecific("dropdown", undefined) : "white"}
                                 caret={isPhy && noDisplayUnit}
                             >
@@ -140,7 +140,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                     <span className={"feedback incorrect"}>✘</span>
                                 </div>}
                             </DropdownToggle>
-                            <DropdownMenu end className="w-100 w-md-50">
+                            <DropdownMenu end className="w-max-content">
                                 {selectedUnits.map((unit) =>
                                     <DropdownItem key={wrapUnitForSelect(unit)}
                                         data-unit={unit || 'None'}

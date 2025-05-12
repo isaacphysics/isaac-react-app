@@ -90,7 +90,6 @@ const PracticeQuizzesComponent = () => {
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} 
             icon={{"type": "hex", "icon": "icon-tests"}}
-            className={siteSpecific("mb-4", "")} 
         />
         <div className="d-flex align-items-center">
             <span><PageFragment fragmentId="help_toptext_practice_tests"/></span>

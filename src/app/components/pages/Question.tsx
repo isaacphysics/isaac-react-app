@@ -160,7 +160,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                             {isPhy && <EditContentButton doc={doc} />}
 
                             <Row className="question-content-container">
-                                <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
+                                <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
 
                                     <SupersededDeprecatedWarningBanner doc={doc} />
 

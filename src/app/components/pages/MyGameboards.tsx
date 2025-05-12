@@ -181,7 +181,7 @@ export const MyGameboards = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} className={siteSpecific("mb-4", "")} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
         <PageFragment fragmentId={`${siteSpecific("gameboards", "quizzes")}_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
         <SidebarLayout>
             <MyGameboardsSidebar
