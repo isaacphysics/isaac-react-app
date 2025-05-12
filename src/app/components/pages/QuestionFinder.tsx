@@ -42,7 +42,7 @@ import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
+import {Button, Card, CardBody, CardHeader, Col, Container, Label, Row} from "reactstrap";
 import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
@@ -51,6 +51,7 @@ import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/lis
 import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { processTagHierarchy, pruneTreeNode } from "../../services/questionHierarchy";
+import { SearchInputWithIcon } from "../elements/SearchInputs";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -489,26 +490,22 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 {isAda && <Row>
                     <Col lg={6} md={12} xs={12} className="finder-search">
                         <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
-                        <InputGroup>
-                            <Input id="question-search-title"
-                                type="text"
-                                maxLength={SEARCH_CHAR_LENGTH_LIMIT}
-                                defaultValue={searchQuery}
-                                placeholder={siteSpecific(`e.g. ${getQuestionPlaceholder(pageContext)}`, "e.g. Creating an AST")}
-                                onChange={(e) => {
-                                    debouncedSearchHandler(e.target.value);
-                                    setRandomSeed(undefined); // This random seed reset is for Ada only! This is managed in the filtersChanged useEffect for Phy
-                                }}
-                            />
-                            <Button className="question-search-button" onClick={searchAndUpdateURL}/>
-                        </InputGroup>
+                        <SearchInputWithIcon
+                            defaultValue={searchQuery}
+                            placeholder={siteSpecific(`e.g. ${getQuestionPlaceholder(pageContext)}`, "e.g. Creating an AST")}
+                            onChange={(e) => {
+                                debouncedSearchHandler(e.target.value);
+                                setRandomSeed(undefined); // This random seed reset is for Ada only! This is managed in the filtersChanged useEffect for Phy
+                            }}
+                            onSearch={searchAndUpdateURL}
+                        />
                     </Col>
                 </Row>}
 
                 {isPhy && <FilterSummary/>}
 
                 <Row className={classNames(siteSpecific("mt-2", "mt-4"), "position-relative finder-panel")}>
-                    {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")} data-testid="question-finder-filters">
+                    {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")}>
                         <QuestionFinderFilterPanel {...{
                             searchDifficulties, setSearchDifficulties,
                             searchTopics, setSearchTopics,

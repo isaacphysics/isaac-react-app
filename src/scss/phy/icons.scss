@@ -304,21 +304,6 @@ svg {
   }
 }
 
-i.icon {
-  background-color: var(--icon-primary);
-  @include not-reduced-motion {
-    transition: background-color 0.15s ease-in-out; // mirrors BS's $btn-transition
-  }
-
-  // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
-  &::after {
-    background-color: var(--icon-primary);
-    @include not-reduced-motion {
-      transition: background-color 0.15s ease-in-out;
-    }
-  }
-}
-
 .btn.btn-keyline:hover > i.icon, .btn.btn-tint:hover > i.icon {
   background-color: var(--icon-hover);
 
@@ -333,43 +318,12 @@ i.icon {
   position: absolute;
 }
 
-// Icon sizing
-.icon {
-  --icon-size: 16px;
-  --mask-size: 100%;
-}
-
-.icon-lg {
-  --icon-size: 60px;
-  --mask-size: initial;
-}
-
-.icon-xl {
-  --icon-size: 75px;
-  --mask-size: initial;
-}
-
 // Overrides -- ONLY use these on an individual basis to override an active theme.
 // Setting `data-bs-theme` on a parent element is the much preferred approach.
 
 // These are !important by the same logic as Bootstrap classes; if you have specified this as an explicit classname, you want it to take precedence.
 
 // the default icon colour for `neutral` is $color-theme-500 (green), but we use black icons in a few places across e.g. navigation
-@mixin icon-color-override($color) {
-  &.layered {
-    &::before {
-      background-color: $color !important;
-    }
-    &::after {
-      background-color: $color !important;
-    }
-  }
-
-  // .layered is a bit grim; if we could set something in @svg-icon-layered as a flag instead this would be ideal.
-  &:not(.layered) {
-    background-color: $color !important;
-  }
-}
 
 i.icon.icon-color-black {
   @include icon-color-override($color-neutral-900);

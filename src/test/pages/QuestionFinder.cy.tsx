@@ -1,11 +1,14 @@
 import React from "react";
 import { QuestionFinder } from "../../app/components/pages/QuestionFinder";
+import { isAda, isPhy } from "../../app/services";
 
 it('Question finder page should have no visual regressions', () => {
 
     cy.mountWithStoreAndRouter(<QuestionFinder/>, ["/questions"]);
 
     cy.get('[data-testid="loading"]').should('not.exist');
+
+    if (isPhy) cy.openSidebar();
     
     // open the filters, then the stage filter
     cy.get('[data-testid=question-finder-filters]').click();
@@ -14,7 +17,9 @@ it('Question finder page should have no visual regressions', () => {
         cy.get('input[type=checkbox]').first().click();
     });
 
-    cy.get('button').contains('Apply filters').click();
+    if (isAda) cy.get('button').contains('Apply filters').click();
+
+    if (isPhy) cy.closeSidebar();
 
     cy.scrollTo('top');
 

@@ -524,21 +524,21 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
     [
         {
             title: "Step into Physics", tag: "phys_book_step_into",
-            shortTitle: "Step into Physics", image: "/assets/phy/books/2024_step_into_physics.jpg",
+            shortTitle: "Step into Physics", image: "/assets/phy/books/2025_step_into_physics.png",
             path: "/books/step_into_phys", subject: "physics", stages: ["11_14"],
         },
         {
             title: "Step Up to GCSE Physics", tag: "phys_book_step_up",
-            shortTitle: "Step Up to GCSE Physics", image: "/assets/phy/books/step_up_phys.jpg",
+            shortTitle: "Step Up to GCSE Physics", image: "/assets/phy/books/2025_step_up_phys.png",
             path: "/books/step_up_phys", subject: "physics", stages: ["11_14", "gcse"],
         },
         {
-            title: "Mastering Essential GCSE Physics", tag: "phys_book_gcse",
+            title: "Essential GCSE Physics", tag: "phys_book_gcse",
             shortTitle: "GCSE Physics", image: "/assets/phy/books/2025_phys_book_gcse.png",
             path: "/books/phys_book_gcse", subject: "physics", stages: ["gcse"],
         },
         {
-            title: "Mastering Essential Pre-University Physics", tag: "physics_skills_19",
+            title: "Essential Pre-University Physics", tag: "physics_skills_19",
             shortTitle: "A Level Physics (3rd edition)", image: "/assets/phy/books/2025_physics_skills_19.png",
             path: "/books/physics_skills_19", subject: "physics", stages: ["a_level"],
         },
@@ -555,7 +555,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
         },
         {
             title: "A Cavendish Quantum Mechanics Primer", tag: "qmp",
-            shortTitle: "Quantum Mechanics Primer", image: "/assets/phy/books/quantum_mechanics_primer.jpg",
+            shortTitle: "Quantum Mechanics Primer", image: "/assets/phy/books/2025_quantum_mechanics_primer.png",
             path: "/books/quantum_mechanics_primer", subject: "physics", stages: ["a_level", "university"],
             hidden: true,
         },
@@ -566,7 +566,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
         },
         {
             title: "Pre-University Mathematics for Sciences (2nd edition)", tag: "maths_book_2e",
-            shortTitle: "Pre-Uni Maths (2nd edition)", image: "/assets/phy/books/pre_uni_maths_2e.jpg",
+            shortTitle: "Pre-Uni Maths (2nd edition)", image: "/assets/phy/books/2025_pre_uni_maths_2e.png",
             path: "/books/pre_uni_maths_2e", subject: "maths", stages: ["a_level", "university"],
         },
         {
@@ -576,7 +576,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
             hidden: true,
         },
         {
-            title: "Mastering Essential Pre-University Physical Chemistry", tag: "chemistry_16",
+            title: "Essential Pre-University Physical Chemistry", tag: "chemistry_16",
             shortTitle: "A Level Physical Chemistry", image: "/assets/phy/books/2025_chemistry_16.png",
             path: "/books/chemistry_16", subject: "chemistry", stages: ["a_level"],
         },

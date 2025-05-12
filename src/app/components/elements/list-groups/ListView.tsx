@@ -71,7 +71,7 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
         icon={{type: "hex", icon: "icon-concept", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
-        subtitle={item.subtitle}
+        subtitle={item.summary}
         url={url}
         {...rest}
     />;

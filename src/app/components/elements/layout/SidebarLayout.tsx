@@ -10,7 +10,7 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag } from "../../../../IsaacAppTypes";
+import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag, ContentSidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
 import { AssignmentState } from "../../pages/MyAssignments";
@@ -121,7 +121,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
-                            <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
+                            <AffixButton color="keyline" size="lg" onClick={toggleMenu} data-testid="close-sidebar-button" affix={{
                                 affix: "icon-close", 
                                 position: "prefix", 
                                 type: "icon"
@@ -131,7 +131,9 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                         </div>
                     }/>
                     <OffcanvasBody>
-                        <Col {...rest} className={classNames("sidebar p-4 pt-0", className)} />
+                        <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: () => setMenuOpen(false)}}>
+                            <Col {...rest} className={classNames("sidebar p-4 pt-0", className)} />
+                        </ContentSidebarContext.Provider>
                     </OffcanvasBody>
                 </Offcanvas>
             </>
@@ -456,7 +458,7 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
             <div className="section-divider"/>
             
             <div className="d-flex flex-column">
-                <h5>Filter by subject</h5>
+                <h5>Filter by subject and topic</h5>
                 {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
                     const subjectTag = tags.getById(subject as TAG_ID);
                     const descendentTags = tags.getDirectDescendents(subjectTag.id);
@@ -600,7 +602,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
 
         {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
             <div className="section-divider"/>
-            <h5>Filter by subject</h5>
+            <h5>Filter by subject and topic</h5>
             <ul>
                 {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
                     const subjectTag = tags.getById(subject as TAG_ID);
@@ -845,7 +847,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
             <div className="section-divider"/>
             <h5 className="mb-4">Display</h5>
             <div className="d-flex flex-xl-column flex-xxl-row">
-                <Input className="w-auto" type="select" aria-label="Set display mode" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                <Input className="w-auto" type="select" aria-label="Set display mode" data-testid="display-select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
                 {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
@@ -1038,10 +1040,14 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
-            <StyledTabPicker
-                key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
-                onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
-            />
+            <ContentSidebarContext.Consumer key={tab}>
+                {(context) => 
+                    <StyledTabPicker
+                        key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
+                        onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}
+                    />
+                }
+            </ContentSidebarContext.Consumer>
         )}
     </ContentSidebar>;
 };
@@ -1540,10 +1546,10 @@ export const PolicyPageSidebar = () => {
         <div className="section-divider"/>
         <h5>Select a page</h5>
         <ul>
-            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={path === "/accessibility"} onClick={() => history.push("/accessibility")}/></li>
-            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"} onClick={() => history.push("/privacy")}/></li>
-            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies"} onClick={() => history.push("/cookies")}/></li>
-            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms"} onClick={() => history.push("/terms")}/></li>
+            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={path === "/accessibility" || path === "/pages/accessibility_statement"} onClick={() => history.push("/accessibility")}/></li>
+            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"  || path === "/pages/privacy_policy"} onClick={() => history.push("/privacy")}/></li>
+            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies" || path === "/pages/cookie_policy"} onClick={() => history.push("/cookies")}/></li>
+            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms" || path === "/pages/terms_of_use"} onClick={() => history.push("/terms")}/></li>
         </ul>
     </ContentSidebar>;
 };
