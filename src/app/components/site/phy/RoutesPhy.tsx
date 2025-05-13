@@ -164,6 +164,7 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/about" pageId="about_us_index" />,
     <StaticPageRoute key={key++} exact path="/apply_uni" />,
     <StaticPageRoute key={key++} exact path="/publications" />,
+    <StaticPageRoute key={key++} exact path="/books" pageId="books_overview" />,
     <StaticPageRoute key={key++} exact path="/solving_problems" />,
     <StaticPageRoute key={key++} exact path="/extraordinary_problems" pageId="extraordinary_problems_index" />,
     <StaticPageRoute key={key++} exact path="/challenge_problems" pageId="challenge_problems_index" />,

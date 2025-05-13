@@ -153,7 +153,7 @@ const BooksPanel = () => {
                     </Col>)}
         </div>
         <Spacer/>
-        <Link to="/publications" className="d-inline panel-link">See all books</Link>
+        <Link to="/books" className="d-inline panel-link">See all books</Link>
     </div>;
 };
 

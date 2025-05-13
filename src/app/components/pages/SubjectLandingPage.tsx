@@ -117,7 +117,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                                 </span>
                             </div>
                         </Link>)}
-                        {books.length > 2 && <Button tag={Link} color="keyline" to={`/publications`} className="btn mt-4 mx-5">View more books</Button>}
+                        {books.length > 2 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-5">View more books</Button>}
                     </Col>
                 </>
                 : <>
