@@ -111,7 +111,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
         {above['lg'](deviceSize) 
             ? <Col tag="aside" data-testId="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
-                <div className="d-flex align-items-center no-print flex-wrap pt-3 gap-3">
+                <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     {!hideButton && <AffixButton data-testId="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
                         affix: "icon-sidebar", 
                         position: "prefix", 
