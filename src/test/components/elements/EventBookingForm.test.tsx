@@ -168,13 +168,6 @@ describe("EventBookingForm", () => {
     },
   );
 
-  it("if event is not virtual, it displays a message to advise PII information will be deleted after 30 days", () => {
-    const event = augmentEvent(mockEvent);
-    setupTest({ role: "STUDENT", user: mockUserSummary, event: { ...event, isVirtual: false } });
-    const piiMessage = screen.getByTestId("pii-message");
-    expect(piiMessage).toBeInTheDocument();
-  });
-
   const missingDetailsTestCases = [
     { field: "First name", user: { ...mockUserSummary, givenName: undefined } },
     { field: "Last name", user: { ...mockUserSummary, familyName: undefined } },

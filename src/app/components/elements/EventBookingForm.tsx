@@ -120,7 +120,7 @@ export const AccessibilityAndDietaryRequirements = ({
               id={`${id}-reqs`}
               name={`${id}-reqs`}
               type="text"
-              value={additionalInformation[type] || ""}
+              value={String(additionalInformation[type] || "")}
               onChange={(event) => updateAdditionalInformation({ [`${type}`]: event.target.value })}
             />
           </div>
@@ -367,11 +367,6 @@ export const EventBookingForm = ({
                   </Col>
                 </Row>
               )}
-              <div className="text-center alert-warning p-1 mt-3" data-testid="pii-message">
-                Any additional personal identifiable information provided on this form, i.e. dietary requirements,
-                accessibility requirements and emergency contact details, will be automatically deleted 30 days from the
-                date of the event.
-              </div>
             </div>
           )}
         </CardBody>

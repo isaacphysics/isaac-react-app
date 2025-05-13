@@ -695,6 +695,7 @@ export interface AdditionalInformation {
   authorisation?: string;
   authorisationOther?: string;
   submissionLink?: string;
+  consentGranted?: boolean;
 }
 
 export interface CredentialsAuthDTO {
