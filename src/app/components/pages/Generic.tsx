@@ -67,7 +67,11 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
             const doc = supertypedDoc as SeguePageDTO & DocumentSubject;
             
             return <Container data-bs-theme={doc.subjectId}>
-                <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} /> {/* TODO add page icon, replace main title with "General"?? */}
+                <TitleAndBreadcrumb 
+                    currentPageTitle={doc.title as string} 
+                    subTitle={doc.subtitle} 
+                    icon={{type: "hex", icon: "icon-generic"}}
+                /> 
                 <MetaDescription description={doc.summary} />
                 <SidebarLayout>
                     {PHY_SIDEBAR.has(pageId) ? PHY_SIDEBAR.get(pageId)!() : <GenericPageSidebar/>}

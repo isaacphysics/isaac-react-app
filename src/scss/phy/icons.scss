@@ -175,6 +175,14 @@
   );
 }
 
+.icon-generic {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-generic-fg.svg', 
+    '/assets/phy/icons/redesign/page-generic-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), 52% center
+  );
+}
+
 .icon-question-deck {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-question-deck-fg.svg',
