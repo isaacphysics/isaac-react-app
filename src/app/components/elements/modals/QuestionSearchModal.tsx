@@ -31,7 +31,6 @@ import {
     useUserViewingContext,
     ISAAC_BOOKS,
     TAG_LEVEL,
-    itemiseTag,
     below,
     useDeviceSize
 } from "../../../services";
@@ -44,9 +43,10 @@ import { SortItemHeader } from "../SortableItemHeader";
 import { Input, Row, Col, Label, Form, Table } from "reactstrap";
 import classNames from "classnames";
 import { HierarchyFilterTreeList } from "../svg/HierarchyFilter";
-import { ChoiceTree, getChoiceTreeLeaves, initialiseListState, listStateReducer } from "../panels/QuestionFinderFilterPanel";
+import { ChoiceTree, getChoiceTreeLeaves } from "../panels/QuestionFinderFilterPanel";
 import { CollapsibleList } from "../CollapsibleList";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
+import { updateTopicChoices, initialiseListState, listStateReducer } from "../../../services/questionSearch";
 
 // Immediately load GameboardBuilderRow, but allow splitting
 const importGameboardBuilderRow = import("../GameboardBuilderRow");
@@ -191,19 +191,8 @@ export const QuestionSearchModal = (
         </div>
     </div>;
 
-    const choices = useMemo(() => {
-        const choices: ChoiceTree[] = [];
-        choices.push({"subject": tags.allSubjectTags.map(itemiseTag)});
-        for (let tierIndex = 0; tierIndex < topicSelections.length && tierIndex < 2; tierIndex++)  {
-            if (Object.keys(topicSelections[tierIndex]).length > 0) {
-                choices[tierIndex+1] = {};
-                for (const v of Object.values(topicSelections[tierIndex])) {
-                    for (const v2 of v) 
-                        choices[tierIndex+1][v2.value] = tags.getChildren(v2.value).map(itemiseTag);
-                }
-            }
-        }
-        return choices;
+    const topicChoices = useMemo(() => {
+        return updateTopicChoices(topicSelections);
     }, [topicSelections]);
 
     // The (phy) hierarchy filter uses a ChoiceTree, but the search endpoint needs a string
@@ -251,7 +240,7 @@ export const QuestionSearchModal = (
                         <Label htmlFor="question-search-topic">Topic</Label>
                         <HierarchyFilterTreeList root {...{
                             inputId: "question-search-topic", tier: 0, index: TAG_LEVEL.subject,
-                            choices, selections: topicSelections, setSelections: setTopicSelections}}/>
+                            choices: topicChoices, selections: topicSelections, setSelections: setTopicSelections}}/>
                     </div>}
                     <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
                         <Label htmlFor="question-search-difficulty">Difficulty</Label>
@@ -286,7 +275,7 @@ export const QuestionSearchModal = (
                     <Label htmlFor="question-search-topic">Topic</Label>
                     <HierarchyFilterTreeList root {...{
                         inputId: "question-search-topic", tier: 0, index: TAG_LEVEL.subject,
-                        choices, selections: topicSelections, setSelections: setTopicSelections}}/>
+                        choices: topicChoices, selections: topicSelections, setSelections: setTopicSelections}}/>
                 </Col>}
             </Row>
             {addSelectionsRow}

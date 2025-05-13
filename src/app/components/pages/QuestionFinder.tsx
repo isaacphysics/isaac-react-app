@@ -52,6 +52,7 @@ import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { processTagHierarchy, pruneTreeNode } from "../../services/questionHierarchy";
 import { SearchInputWithIcon } from "../elements/SearchInputs";
+import { updateTopicChoices } from "../../services/questionSearch";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -165,28 +166,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
     const choices = useMemo(() => {
-        if (!selections.length) return [];
-
-        const choices: ChoiceTree[] = [];
-
-        if (!pageContext?.subject) {
-            choices.push({"subject": tags.allSubjectTags.map(itemiseTag)});
-        } else {
-            choices.push({});
-            choices[0][pageContext.subject] = tags.getChildren(pageContext.subject as TAG_ID).map(itemiseTag);
-        }
-        
-        for (let tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
-            if (Object.keys(selections[tierIndex]).length > 0) {
-                choices[tierIndex+1] = {};
-                for (const v of Object.values(selections[tierIndex])) {
-                    for (const v2 of v) 
-                        choices[tierIndex+1][v2.value] = tags.getChildren(v2.value).map(itemiseTag);
-                }
-            }
-        }
-
-        return choices;
+        return updateTopicChoices(selections, pageContext);
     }, [selections, pageContext]);
 
     const isEmptySearch = (query: string, topics: string[], books: string[], stages: string[], difficulties: string[], examBoards: string[], selections: ChoiceTree[]) => {
