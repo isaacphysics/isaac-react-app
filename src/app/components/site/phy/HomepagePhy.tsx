@@ -65,7 +65,7 @@ const HomepageHero = () => {
                     <Col className="mb-3">
                         <HomepageHeroCard
                             title="Support students in developing skills and achieving higher results"
-                            content="Assign, track, and manage student progress with ease—ideal for classwork, homework, or revision. Trusted by over 1,000 UK schools."
+                            content="Assign, track, and manage student progress with ease—ideal for classwork, homework, or revision. Trusted by more than 3,500 teachers."
                             isStudent={false}/>
                     </Col>
                 </Row>
