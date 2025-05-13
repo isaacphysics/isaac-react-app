@@ -40,13 +40,14 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { GameboardSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 export const getProgressIcon = (question: GameboardItem) => {
-    let itemClasses = classNames("content-summary-link text-info bg-white", {"p-3": isPhy, "p-0": isAda});
+    const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
+    let backgroundColor = "white";
     let icon = siteSpecific("icon-not-started", "/assets/cs/icons/question-not-started.svg");
     let message = siteSpecific("", "Not started");
     switch (question.state) {
         case "PERFECT":
             if (isPhy) {
-                itemClasses += " bg-success";
+                backgroundColor = "correct";
             }
             message = "Correct";
             icon = siteSpecific("icon-correct", "/assets/cs/icons/question-correct.svg");
@@ -61,7 +62,7 @@ export const getProgressIcon = (question: GameboardItem) => {
             icon = siteSpecific("icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
             break;
     }
-    return {itemClasses, icon, message};
+    return {itemClasses: classNames(itemClasses, `bg-${backgroundColor}`), icon, message};
 };
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {

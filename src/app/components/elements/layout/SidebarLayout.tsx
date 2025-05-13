@@ -458,7 +458,7 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
             <div className="section-divider"/>
             
             <div className="d-flex flex-column">
-                <h5>Filter by subject</h5>
+                <h5>Filter by subject and topic</h5>
                 {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
                     const subjectTag = tags.getById(subject as TAG_ID);
                     const descendentTags = tags.getDirectDescendents(subjectTag.id);
@@ -602,7 +602,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
 
         {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
             <div className="section-divider"/>
-            <h5>Filter by subject</h5>
+            <h5>Filter by subject and topic</h5>
             <ul>
                 {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
                     const subjectTag = tags.getById(subject as TAG_ID);
@@ -1546,10 +1546,10 @@ export const PolicyPageSidebar = () => {
         <div className="section-divider"/>
         <h5>Select a page</h5>
         <ul>
-            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={path === "/accessibility"} onClick={() => history.push("/accessibility")}/></li>
-            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"} onClick={() => history.push("/privacy")}/></li>
-            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies"} onClick={() => history.push("/cookies")}/></li>
-            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms"} onClick={() => history.push("/terms")}/></li>
+            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={path === "/accessibility" || path === "/pages/accessibility_statement"} onClick={() => history.push("/accessibility")}/></li>
+            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"  || path === "/pages/privacy_policy"} onClick={() => history.push("/privacy")}/></li>
+            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies" || path === "/pages/cookie_policy"} onClick={() => history.push("/cookies")}/></li>
+            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms" || path === "/pages/terms_of_use"} onClick={() => history.push("/terms")}/></li>
         </ul>
     </ContentSidebar>;
 };

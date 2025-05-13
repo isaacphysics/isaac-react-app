@@ -555,7 +555,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
         },
         {
             title: "A Cavendish Quantum Mechanics Primer", tag: "qmp",
-            shortTitle: "Quantum Mechanics Primer", image: "/assets/phy/books/quantum_mechanics_primer.jpg",
+            shortTitle: "Quantum Mechanics Primer", image: "/assets/phy/books/2025_quantum_mechanics_primer.png",
             path: "/books/quantum_mechanics_primer", subject: "physics", stages: ["a_level", "university"],
             hidden: true,
         },
