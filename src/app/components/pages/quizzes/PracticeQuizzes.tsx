@@ -97,7 +97,7 @@ const PracticeQuizzesComponent = () => {
                 <div className="question-actions question-actions-leftmost">
                     <ShareLink linkUrl={isFullyDefinedContext(pageContext) ? `/${pageSubject}/${pageStage}/practice_tests` : "/practice_tests"}/>
                 </div>
-                <div className="question-actions not-mobile">
+                <div className={classNames("question-actions", {"not-mobile": isAda})}>
                     <PrintButton/>
                 </div>
             </div>}
