@@ -124,6 +124,9 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {audienceViews && fullWidth && <div className="d-flex mt-1"> 
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack/> 
                 </div>}
+                {status && status !== CompletionState.ALL_CORRECT && fullWidth &&
+                    <StatusDisplay status={status} showText className="py-1" />
+                }
                 {linkTags && <div className="d-flex py-3 flex-wrap">
                     <LinkTags linkTags={linkTags}/>
                 </div>}
