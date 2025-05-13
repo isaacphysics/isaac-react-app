@@ -313,7 +313,7 @@ export const Glossary = () => {
                     subjects={subjects} stages={stages} optionBar={optionBar}
                 />
                 <MainContent>
-                    {above['lg'](deviceSize) && <> <div className="mt-1"/> {optionBar} </>}  
+                    {(above['lg'](deviceSize) || isAda) && <> <div className="mt-1"/> {optionBar} </>}  
                     <Row>
                         <Col md={{size: 9}} className="py-4">
                             <Row className="no-print">

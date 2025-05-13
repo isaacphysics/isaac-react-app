@@ -86,11 +86,11 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 <SidebarLayout>
                     {sidebar}
                     <MainContent>
-                        {above['lg'](deviceSize) && <> <div className="mt-1"/> {optionBar} </>}    
+                        {(above['lg'](deviceSize) || isAda) && <> <div className="mt-1"/> {optionBar} </>}
                         <TeacherNotes notes={doc.teacherNotes} />
 
                         <Row className="generic-content-container">
-                            <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
+                            <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>
                                 <WithFigureNumbering doc={doc}>
                                     <IsaacContent doc={doc} />
                                 </WithFigureNumbering>
