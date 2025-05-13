@@ -15,7 +15,7 @@ import debounce from "lodash/debounce";
 import { Loading } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
-import { Stage } from "../../../IsaacApiTypes";
+import { placeholderIcon } from "../elements/PageTitle";
 
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
@@ -174,8 +174,10 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
             icon={pageContext?.subject ? {
                 type: "img",
                 subject: pageContext.subject,
-                icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`
-            } : undefined}
+                icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`,
+                width: "70px",
+                height: "81px",
+            } : placeholderIcon({width: "70px", height: "81px"})}
         />
 
         <RandomQuestionBanner context={pageContext} />

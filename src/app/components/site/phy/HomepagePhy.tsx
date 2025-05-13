@@ -103,7 +103,12 @@ const getListViewSubjectCard = (sc: subjectCategory) => {
 
     const listViewSubjectCard: ListViewCardProps = {
         item: item,
-        icon: {type: "img", icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`},
+        icon: {
+            type: "img", 
+            icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`,
+            width: "70px",
+            height: "81px",
+        },
         subject: sc.subject as Subject,
         linkTags: sc.subcategories.map((subcat) => ({tag: subcat.humanStage, url: subcat.href, "aria-label": `Explore ${subcat.humanStage} ${sc.humanSubject}`})),
     };

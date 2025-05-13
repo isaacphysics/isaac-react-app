@@ -63,8 +63,25 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     );
 }
 
+interface IconPlaceholderProps extends React.HTMLAttributes<HTMLDivElement> {
+    width: string;
+    height: string;
+}
+
+export const placeholderIcon = (props: IconPlaceholderProps): TitleIconProps => {
+    const {width, height} = props;
+    return {
+        type: "placeholder",
+        icon: undefined,
+        height,
+        width,
+    };
+};
+
 export interface TitleIconProps extends PhyHexIconProps {
-    type: "img" | "hex";
+    type: "img" | "hex" | "placeholder";
+    height?: string;
+    width?: string;
 }
 
 export interface PageTitleProps {
@@ -120,8 +137,11 @@ export const PageTitle = ({currentPageTitle, subTitle, description, disallowLaTe
         <div className="me-auto">
             <div className={classNames(siteSpecific("d-flex", "d-sm-flex"), "align-items-center")}>
                 {icon && (
-                    icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
-                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject}/> : undefined)}
+                    icon.type === "img" ? <img src={icon.icon} alt="" height={icon.height} width={icon.width} className="me-3"/> 
+                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/> 
+                            : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/>
+                                : undefined
+                )}
                 <div className="me-auto" data-testid={"main-heading"}>
                     {formatPageTitle(currentPageTitle, disallowLaTeX)}
                     {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
