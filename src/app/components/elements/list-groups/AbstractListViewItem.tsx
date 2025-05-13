@@ -102,7 +102,10 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
             <div>
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
-                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/> : undefined)}
+                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/>
+                            : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/> 
+                                : undefined
+                )}
             </div>
             <div className="align-content-center text-overflow-ellipsis pe-2">
                 <div className="d-flex text-wrap">
