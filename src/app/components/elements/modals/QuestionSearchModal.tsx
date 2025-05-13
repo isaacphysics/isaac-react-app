@@ -46,7 +46,7 @@ import { HierarchyFilterTreeList } from "../svg/HierarchyFilter";
 import { ChoiceTree, getChoiceTreeLeaves } from "../panels/QuestionFinderFilterPanel";
 import { CollapsibleList } from "../CollapsibleList";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
-import { updateTopicChoices, initialiseListState, listStateReducer } from "../../../services/questionSearch";
+import { updateTopicChoices, initialiseListState, listStateReducer } from "../../../services";
 
 // Immediately load GameboardBuilderRow, but allow splitting
 const importGameboardBuilderRow = import("../GameboardBuilderRow");

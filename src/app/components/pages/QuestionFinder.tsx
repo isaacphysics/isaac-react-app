@@ -52,7 +52,7 @@ import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { processTagHierarchy, pruneTreeNode } from "../../services/questionHierarchy";
 import { SearchInputWithIcon } from "../elements/SearchInputs";
-import { updateTopicChoices } from "../../services/questionSearch";
+import { updateTopicChoices } from "../../services";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;

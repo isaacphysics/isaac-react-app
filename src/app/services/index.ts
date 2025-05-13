@@ -54,3 +54,4 @@ export * from "./topics";
 export * from "./navigation";
 export * from "./topics";
 export * from "./gameboardBuilder";
+export * from "./questionSearch";

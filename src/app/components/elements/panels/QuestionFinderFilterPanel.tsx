@@ -29,7 +29,7 @@ import { HierarchyFilterTreeList } from "../svg/HierarchyFilter";
 import { openActiveModal, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
-import { initialiseListState, listStateReducer, sublistDelimiter, TopLevelListsState } from "../../../services/questionSearch";
+import { initialiseListState, listStateReducer, sublistDelimiter, TopLevelListsState } from "../../../services";
 
 const listTitles: { [field in keyof TopLevelListsState]: string } = {
     stage: siteSpecific("Learning Stage", "Stage"),
@@ -49,7 +49,7 @@ export function getChoiceTreeLeaves(tree: ChoiceTree[]) {
             leaves.push(...tree[0][TAG_LEVEL.subject] ?? []);
         else {
             const parentIds = Object.values(tree[index]).flat().map(item => tags.getById(item.value).parent);
-            leaves = leaves.filter(l => !parentIds.includes(l.value))
+            leaves = leaves.filter(l => !parentIds.includes(l.value));
             Object.values(tree[index]).forEach(v => leaves.push(...v)); 
         }
     }
