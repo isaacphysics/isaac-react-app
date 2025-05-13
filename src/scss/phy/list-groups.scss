@@ -92,7 +92,7 @@
   }
 }
 
-.list-group-links li a.card-tag {
+.list-group-links li .card-tag {
   @include pill-tag($color-neutral-900, var(--subject-color-50), var(--subject-color-100));
   font-family: $secondary-font;
   padding: 0.15rem 0.8rem;
@@ -102,4 +102,32 @@
 
 .list-results-container {
   background-color: $color-neutral-100;
+}
+
+.list-group-links li.disabled {
+  .card-tag {
+    color: $color-neutral-500;
+    background-color: $color-neutral-50;
+    border-color: $color-neutral-100;
+    pointer-events: none;
+  }
+}
+
+.list-group-links li.coming-soon {
+  .card-tag {
+    color: var(--subject-color-500);
+    background-color: var(--subject-color-50);
+    border-color: var(--subject-color-100);
+    pointer-events: none;
+  }
+
+  .link-title {
+    display: flex;
+    align-items: center;
+    &::after {
+      @include pill-tag($color-neutral-white, var(--subject-color-500));
+      content: "Coming soon!";
+      margin-left: 0.5rem;
+    }
+  }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { AbstractListViewItem, AbstractListViewItemProps, ListViewTagProps } from "./AbstractListViewItem";
+import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewItemState, ListViewTagProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
 import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, PATHS, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
@@ -16,16 +16,18 @@ export interface ListViewCardProps extends Omit<AbstractListViewItemProps, "icon
     icon?: TitleIconProps;
     subject?: Subject;
     linkTags?: ListViewTagProps[];
+    state?: AbstractListViewItemState;
     url?: string;
 }
 
-export const ListViewCard = ({item, icon, subject, linkTags, ...rest}: ListViewCardProps) => {
+export const ListViewCard = ({item, icon, subject, linkTags, state, ...rest}: ListViewCardProps) => {
     return <AbstractListViewItem
         icon={icon}
         title={item.title ?? ""}
         subject={subject}
         subtitle={item.subtitle}
         linkTags={linkTags}
+        state={state}  
         isCard
         {...rest}
     />;

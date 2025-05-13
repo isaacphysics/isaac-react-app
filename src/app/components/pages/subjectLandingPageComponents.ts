@@ -1,6 +1,6 @@
 import { PageContextState } from "../../../IsaacAppTypes";
 import { BookInfo, getHumanContext, interleave, ISAAC_BOOKS, ISAAC_BOOKS_BY_TAG, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS } from "../../services";
-import { ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
+import { AbstractListViewItemState, ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
 import { ListViewCardProps } from "../elements/list-groups/ListView";
 
 export const extendUrl = (context: NonNullable<Required<PageContextState>>, page: string) => {
@@ -55,7 +55,8 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
     },
     icon: {type: "hex", icon: "icon-revision"},
     subject: context.subject,
-    linkTags: [{tag: "List of revision areas", url: extendUrl(context, 'lessons')}]
+    linkTags: [{tag: "List of revision areas", url: extendUrl(context, 'revision')}],
+    state: AbstractListViewItemState.COMING_SOON,
 });
 
 const CoreSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
