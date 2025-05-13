@@ -75,7 +75,7 @@
 
 .icon-initials {
   // background hex
-  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), $color-brand-400, 36px, 36px, 28px);
+  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), $color-brand-400, 28px, 28px, 100%);
   opacity: 0.2;
   // initials text
   + * {
