@@ -426,20 +426,6 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
                 }
             </div>
         </search>
-
-        <div className="section-divider"/>
-
-        <div className="sidebar-help">
-            <p>The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-            <p>If you want to explore broader concepts across multiple subjects or learning stages, you can use the main concept browser:</p>
-            <AffixButton size="md" color="keyline" tag={Link} to="/concepts" affix={{
-                affix: "icon-right",
-                position: "suffix",
-                type: "icon"
-            }}>
-                Browse concepts
-            </AffixButton>
-        </div>
     </ContentSidebar>;
 };
 
@@ -490,23 +476,6 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
             </div>
         </search>
 
-        <div className="section-divider"/>
-
-        {pageContext?.subject && <>
-            <div className="section-divider"/>
-
-            <div className="sidebar-help">
-                <p>The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                <p>If you want to explore broader concepts across multiple subjects or learning stages, you can use the main concept browser:</p>
-                <AffixButton size="md" color="keyline" tag={Link} to="/concepts" affix={{
-                    affix: "icon-right",
-                    position: "suffix",
-                    type: "icon"
-                }}>
-                    Browse concepts
-                </AffixButton>
-            </div>
-        </>}
     </ContentSidebar>;
 };
 
@@ -541,22 +510,6 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
 
             <QuestionFinderFilterPanel {...questionFinderFilterPanelProps} />
         </search>
-
-        {pageContext?.subject && pageContext?.stage && <>
-            <div className="section-divider"/>
-
-            <div className="sidebar-help">
-                <p>The questions shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                <p>If you want to explore our full range of questions across multiple subjects or learning stages, you can use the main question finder:</p>
-                <AffixButton size="md" color="keyline" tag={Link} to="/questions" affix={{
-                    affix: "icon-right",
-                    position: "suffix",
-                    type: "icon"
-                }}>
-                    Browse all questions
-                </AffixButton>
-            </div>
-        </>}
     </ContentSidebar>;
 };
 
@@ -660,20 +613,6 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             </ul>
         </>}
 
-        {isFullyDefinedContext(pageContext) && <>
-            <div className="section-divider"/>
-            <div className="sidebar-help">
-                <p>The practice tests shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                <p>If you want to explore our full range of practice tests, you can view the main practice tests page:</p>
-                <AffixButton size="md" color="keyline" tag={Link} to="/practice_tests" affix={{
-                    affix: "icon-right",
-                    position: "suffix",
-                    type: "icon"
-                }}>
-                    Browse all practice tests
-                </AffixButton>
-            </div>
-        </>}
         <div className="section-divider"/>
         <div className="sidebar-help">
             <p>You can see all of the tests that you have in progress or have completed in your My Isaac:</p>

@@ -1,5 +1,5 @@
 import React, {FormEvent, MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
@@ -10,11 +10,12 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
-import { isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
+import { getHumanContext, isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
 import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { ContentSummaryDTO } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { AffixButton } from "../elements/AffixButton";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
@@ -113,6 +114,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                 currentPageTitle="Concepts" 
                 intermediateCrumbs={crumb ? [crumb] : undefined}
                 icon={{type: "hex", icon: "icon-concept"}}
+                className="mb-4"
             />
             <SidebarLayout>
                 {pageContext?.subject 
@@ -120,6 +122,17 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                     : <GenericConceptsSidebar {...sidebarProps}/>
                 }
                 <MainContent>
+                    {pageContext?.subject && <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap">
+                        <p className="me-3 mt-2">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                        <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className="ms-auto"
+                            affix={{
+                                affix: "icon-right",
+                                position: "suffix",
+                                type: "icon"
+                            }}>
+                            Browse all concepts
+                        </AffixButton>
+                    </div>}
                     {isPhy && <div className="list-results-container p-2 my-4">
                         <ShowLoadingQuery
                             query={listConceptsQuery}
