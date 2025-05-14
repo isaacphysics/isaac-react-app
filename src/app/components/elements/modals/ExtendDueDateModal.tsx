@@ -50,7 +50,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
         }
     };
 
-    return <Modal isOpen={isOpen} toggle={toggle}>
+    return <Modal isOpen={isOpen} toggle={toggle} data-bs-theme="neutral">
         <ModalHeader role={"heading"} className={"text-break d-flex justify-content-between"} close={
             <button className={"text-nowrap close"} onClick={toggle}>
                 Close

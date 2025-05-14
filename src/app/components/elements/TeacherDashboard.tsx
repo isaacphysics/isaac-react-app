@@ -63,8 +63,15 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
 
     return <div className="dashboard-panel">
         <h4>View scheduled work</h4>
-        {soonestDeadlines.length ? soonestDeadlines.map(assignment => <div className="mb-3" key={assignment.id}><AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} /></div>)
-            : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>}
+        {soonestDeadlines.length ? 
+            <div className="overflow-y-auto px-1 pt-1 mx-n1 mt-m1 mb-2">
+                {soonestDeadlines.map((assignment, i) => 
+                    <div className={i+1 < soonestDeadlines.length ? "mb-3" : "mb-1"} key={assignment.id}>
+                        <AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} />
+                    </div>)}
+            </div>
+            : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>
+        }
         <Spacer/>
         <div className="d-flex align-items-center">
             <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
@@ -174,8 +181,8 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
     const nameToDisplay = extractTeacherName(user as UserSummaryDTO);
              
     return <div className="dashboard dashboard-outer w-100">
-        <div className="d-flex flex-wrap">
-            {nameToDisplay && <h3 className="text-wrap">Welcome back, {nameToDisplay}!</h3>}
+        <div className="d-flex">
+            {nameToDisplay && <h3>Welcome back, {nameToDisplay}!</h3>}
             <span className="ms-auto">
                 <div className="text-center">Dashboard view</div>
                 <StyledToggle

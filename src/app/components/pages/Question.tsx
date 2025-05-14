@@ -92,7 +92,8 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
             return <GameboardContext.Provider value={navigation.currentGameboard}>
                 <Container className={classNames("no-shadow")} data-bs-theme={pageContext?.subject ?? doc.subjectId}>
                     <TitleAndBreadcrumb
-                        currentPageTitle={siteSpecific("Question", generateQuestionTitle(doc))}
+                        currentPageTitle={generateQuestionTitle(doc)}
+                        displayTitleOverride={siteSpecific("Question", undefined)}
                         subTitle={siteSpecific(undefined, doc.subtitle)}
                         intermediateCrumbs={navigation.breadcrumbHistory}
                         collectionType={navigation.collectionType}
@@ -131,7 +132,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                 </>}
                             </div>
                             
-                            {isPhy && <Row className="question-metadata d-flex">
+                            {isPhy && <Row className="content-metadata-container d-flex">
                                 <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
                                     <span>Subject & topics</span>
                                     <div className="d-flex align-items-center">
@@ -142,11 +143,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                         </>)}
                                     </div>
                                 </Col>
-                                <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0 pb-sm-0">
-                                    <span>Stage & difficulty</span>
-                                    <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/> 
-                                </Col>
-                                <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0">
+                                <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0">
                                     <span>Status</span>
                                     {allQuestionsCorrect 
                                         ? <div className="d-flex align-items-center"><span className="icon-correct me-2"/> Correct</div>
@@ -155,12 +152,16 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                             : <div className="d-flex align-items-center"><span className="icon-not-started me-2"/> Not Started</div>
                                     }
                                 </Col>
+                                <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0 pb-sm-0">
+                                    <span>Stage & difficulty</span>
+                                    <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/> 
+                                </Col>
                             </Row>}
 
                             {isPhy && <EditContentButton doc={doc} />}
 
                             <Row className="question-content-container">
-                                <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
+                                <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
 
                                     <SupersededDeprecatedWarningBanner doc={doc} />
 

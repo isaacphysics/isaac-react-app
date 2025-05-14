@@ -101,7 +101,7 @@ export const Contact = () => {
     const isValidEmail = validateEmail(email);
 
     const metaDescription = siteSpecific(
-        "Contact the Isaac Physics team with questions, comments or feedback about our resources.",
+        "Contact the Isaac team with questions, comments or feedback about our resources.",
         "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!");
 
     return <Container id="contact-page" className="pb-5">

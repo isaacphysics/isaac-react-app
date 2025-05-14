@@ -290,7 +290,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
     const profileTabContents = <>
         {user?.loggedIn
             ? <div>
-                <div className="d-flex flex-column flex-sm-row gap-sm-5 gap-md-0">
+                <div className="d-flex flex-column flex-sm-row">
                     <div>
                         {isTutorOrAbove(user) && <h5>STUDENT</h5>}
                         <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>

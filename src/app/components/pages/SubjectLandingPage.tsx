@@ -15,6 +15,7 @@ import debounce from "lodash/debounce";
 import { Loading } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
+import { Stage } from "../../../IsaacApiTypes";
 
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
@@ -88,6 +89,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     }, []);
 
     const books = getBooksForContext(context);
+    const deviceSize = useDeviceSize();
     // TODO: are we going to make subject-specific news?
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
 
@@ -146,8 +148,8 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                     return <Row className="h-100">
                         {relevantEvents.length
                             ? relevantEvents.map((event, i) =>
-                                <Col xs={12} key={i}>
-                                    {event && <EventCard event={event} className="force-horizontal p-2" />}
+                                <Col xs={12} md={6} lg={12} key={i}>
+                                    {event && <EventCard event={event} className={classNames("p-2", {"force-horizontal": !["md", "xs"].includes(deviceSize)})} />}
                                 </Col>
                             )
                             : <Col className="pt-3 pb-5">No events found for {getHumanContext(context)}. Check back soon!</Col>

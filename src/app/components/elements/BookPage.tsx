@@ -2,11 +2,14 @@ import React from "react";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 import { ListView } from "./list-groups/ListView";
 import { IsaacBookDetailPageDTO } from "../../../IsaacApiTypes";
+import { TeacherNotes } from "./TeacherNotes";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
     
     return <div className="book-page">
         <>
+            <TeacherNotes notes={page.teacherNotes} />
+
             <h3 className="mb-3">{page.title}</h3>
 
             {!!page.gameboards?.length && <>

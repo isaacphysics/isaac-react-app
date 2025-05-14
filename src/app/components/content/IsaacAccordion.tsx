@@ -169,12 +169,6 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         return invertedStageIndices;
     }, [stageIndices]);
 
-    const firstSectionToOpen = useMemo(() => {
-        if (sections?.some(section => section.startOpen)) return undefined;
-        if (!userContext.stage || userContext.stage === STAGE.ALL) return undefined;
-        return stageIndices[userContext.stage];
-    }, [sections, stageIndices, userContext.stage]);
-
     return <div className="isaac-accordion">
         {sections?.map((section, index) => {
             const intendedAudience = isIntendedAudience(section.audience, userContext, user);
@@ -183,7 +177,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
                 {isPhy && stageInserts?.[index] && <StageInsert stage={stageInserts[index]} />}
                 <Accordion
                     key={`${section.sectionIndex} ${index}`} id={section.id} index={index}
-                    startOpen={section.startOpen ?? !isDefined(firstSectionToOpen) ? undefined : index === firstSectionToOpen} /* use default <Accordion/> startOpen behaviour if behaviour undefined */
+                    startOpen={section.startOpen}
                     deEmphasised={section.deEmphasised}
                     trustedTitle={section?.title || ""}
                     audienceString={audienceString}

@@ -210,15 +210,15 @@ export function ResultsTable<Q extends QuestionType>({
         {header}
         {progress && progress.length > 0 && <>
             <div className="progress-questions">
-                <Button color="tertiary" disabled={selectedQuestionNumber == 0}
+                <button color="tertiary" disabled={selectedQuestionNumber == 0}
                     // on OSX chrome, the left- and right- pointing triangles are different, so construct these by flipping the same one
                     className="flip-x"
-                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber - 1)}>►</Button>
+                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber - 1)}>►</button>
                 <div>
                     {getQuestionTitle(selectedQuestion)}
                 </div>
-                <Button color="tertiary" disabled={selectedQuestionNumber === questions.length - 1}
-                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber + 1)}>►</Button>
+                <button color="tertiary" disabled={selectedQuestionNumber === questions.length - 1}
+                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber + 1)}>►</button>
             </div>
             <div className="assignment-progress-table-wrapper">
                 <table ref={tableRef} className="progress-table w-100 border">

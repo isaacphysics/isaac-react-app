@@ -21,7 +21,7 @@ export const TutorFeatures = () => {
         </Row>
         <Row className="mb-3">
             <Col md={isDisabled ? 6 : undefined}>
-                <p className="subtitle">Isaac Physics provides you with a huge range of resources to support your tutoring of Physics, Maths and Chemistry.</p>
+                <p className="subtitle">Isaac Science provides you with a huge range of resources to support your tutoring of Physics, Maths, Chemistry and Biology.</p>
             </Col>
             {isDisabled && <Col md={6} className="text-center text-md-end">
                 <Button tag={Link} size="lg" color="secondary" to={isLoggedIn(user) ? "/tutor_account_request" : "/register"}>

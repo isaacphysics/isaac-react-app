@@ -96,7 +96,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                                 <PhyHexIcon icon="icon-tests" subject={subject as Subject} className="assignment-hex ps-3"/>
                             </div>
                             <div className="d-flex flex-column flex-grow-1">
-                                <h4>{quiz.title || quiz.id}</h4>
+                                <h4>{quiz.title || quiz.id }</h4>
                                 {above['sm'](deviceSize) && isDefined(subject) && <div className="d-flex align-items-center mb-2">
                                     <span className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>
                                 </div>}
@@ -113,8 +113,8 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                             {quiz.assignerSummary && <> by {extractTeacherName(quiz.assignerSummary)}</>}
                         </p>}
                         {quiz.attempt && <p>
-                            {quiz.status === QuizStatus.Complete
-                                ? <>Completed: <strong>{getFriendlyDaysUntil(quiz.attempt.completedDate as Date)}</strong></>
+                            {quiz.status === QuizStatus.Complete ?
+                                <>Completed: <strong>{getFriendlyDaysUntil(quiz.attempt.completedDate as Date)}</strong></>
                                 : <>Started: <strong>{getFriendlyDaysUntil(quiz.attempt.startDate as Date)}</strong></>
                             }
                         </p>}
