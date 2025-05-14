@@ -1,7 +1,7 @@
 import {TAG_ID} from "./";
 
 let id;
-if (["localhost:8000", "localhost:8004"].includes(document.location.host)  || document.location.host.includes("isaacphysics")) {
+if (["localhost:8000", "localhost:8004"].includes(document.location.host) || document.location.host.includes("isaacphysics") || document.location.host.includes("isaacscience")) {
     id = TAG_ID.physics;
 } else if (document.location.host == "localhost:8001" || document.location.host.includes("isaacchemistry")) {
     id = TAG_ID.chemistry;
