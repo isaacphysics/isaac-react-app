@@ -32,8 +32,8 @@ function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabT
 }
 
 // e.g.:   Tab 1 | Tab 2 | Tab 3
-const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
-    return <Nav tabs className={classNames("flex-wrap", {"guaranteed-single-line": singleLine})}>
+const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab, className}: TabsProps & {activeTab: number; changeTab: (i: number) => void;}) => {
+    return <Nav tabs className={classNames(className, "flex-wrap", {"guaranteed-single-line": singleLine})}>
         {Object.keys(children).map((tabTitle, mapIndex) => {
             const tabIndex = mapIndex + 1;
             const linkClasses = callOrString(tabTitleClass, tabTitle, tabIndex);
@@ -135,7 +135,7 @@ export const Tabs = (props: TabsProps) => {
         {expandButton}
         <div className={classNames(className, innerClasses, "position-relative")}>
             {style === "tabs"
-                ? <TabNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</TabNavbar>
+                ? <TabNavbar {...props} className="no-print" activeTab={activeTab} changeTab={changeTab}>{children}</TabNavbar>
                 : style === "buttons"
                     ? <ButtonNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</ButtonNavbar>
                     : <DropdownNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</DropdownNavbar>
@@ -144,9 +144,12 @@ export const Tabs = (props: TabsProps) => {
                 <TabContent activeTab={activeTab} className={tabContentClass}>
                     {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
                         const tabIndex = mapIndex + 1;
-                        return <TabPane key={tabTitle} tabId={tabIndex}>
-                            {tabBody as ReactNode}
-                        </TabPane>;
+                        return <>
+                            {style === "tabs" && <TabNavbar {...props} className="d-none d-print-flex" activeTab={tabIndex} changeTab={changeTab}>{children}</TabNavbar>}
+                            <TabPane key={tabTitle} tabId={tabIndex}>
+                                {tabBody as ReactNode}
+                            </TabPane>
+                        </>;
                     })}
                 </TabContent>
             </ExpandableParentContext.Provider>
