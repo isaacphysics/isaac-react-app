@@ -163,7 +163,15 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
               thenRender={({ events, total }) => (
                 <div className="my-4">
                   <Row>
-                    {events.map((event) => (
+                    {(statusFilter === EventStatusFilter["My booked events"]
+                      ? events.sort((bookedEvent1, bookedEvent2) => {
+                          const oldEventDate = bookedEvent1.date ? new Date(bookedEvent1.date).getTime() : 0;
+                          const newEventDate = bookedEvent2.date ? new Date(bookedEvent2.date).getTime() : 0;
+                          // The return value of the subtraction below will always be positive as the timestamp for bookedEvent2 will be bigger than of bookedEvent1. This will sort the events in descending order i.e newest first
+                          return newEventDate - oldEventDate;
+                        })
+                      : events
+                    ).map((event) => (
                       <div key={event.id} className="col-xs-12 col-sm-6 col-md-4 d-flex">
                         <EventCard event={event} />
                       </div>
