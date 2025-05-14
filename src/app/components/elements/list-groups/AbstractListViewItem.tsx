@@ -118,7 +118,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {subtitle && <div className="small text-muted text-wrap">
                     {subtitle}
                 </div>}
-                {breadcrumb && <span className="hierarchy-tags">
+                {breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
                     <Breadcrumb breadcrumb={breadcrumb}/>
                 </span>}
                 {audienceViews && fullWidth && <div className="d-flex mt-1"> 

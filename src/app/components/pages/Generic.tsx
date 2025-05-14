@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
 import {SeguePageDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
-import {isAda, isPhy, useUrlHashValue} from "../../services";
+import {above, isAda, isPhy, useDeviceSize, useUrlHashValue} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -36,10 +36,10 @@ const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
 // Overrides for physics pages which shouldn't use the default GenericPageSidebar
 // TODO this should also consider page tags (for events/news etc)
 const PHY_SIDEBAR = new Map<string, () => React.JSX.Element>([
-    ["privacy_policy", PolicyPageSidebar],
-    ["terms_of_use", PolicyPageSidebar],
-    ["cookie_policy", PolicyPageSidebar],
-    ["accessibility_statement", PolicyPageSidebar]
+    ["privacy_policy", () => <PolicyPageSidebar />],
+    ["terms_of_use", () => <PolicyPageSidebar />],
+    ["cookie_policy", () => <PolicyPageSidebar />],
+    ["accessibility_statement", () => <PolicyPageSidebar />]
 ]);
 
 export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
@@ -48,6 +48,8 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
     const pageQuery = useGetGenericPageQuery(pageId);
 
     const hash = useUntilFound(pageQuery.currentData, useUrlHashValue());
+
+    const deviceSize = useDeviceSize();
 
     useEffect(() => {
         if (hash) {
@@ -65,27 +67,30 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
         ifNotFound={<NotFound />}
         thenRender={supertypedDoc => {
             const doc = supertypedDoc as SeguePageDTO & DocumentSubject;
+
+            const optionBar = <div className={classNames("no-print d-flex align-items-center", {"gap-2": isPhy})} >
+                <EditContentButton doc={doc} />
+                <div className="question-actions question-actions-leftmost mt-2">
+                    <ShareLink linkUrl={`/pages/${doc.id}`}/>
+                </div>
+                <div className="question-actions mt-2 not-mobile">
+                    <PrintButton/>
+                </div>
+            </div>;
+
+            const sidebar = React.cloneElement(PHY_SIDEBAR.has(pageId) ? PHY_SIDEBAR.get(pageId)!() : <GenericPageSidebar/>, { optionBar });
             
             return <Container data-bs-theme={doc.subjectId}>
                 <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} /> {/* TODO add page icon, replace main title with "General"?? */}
                 <MetaDescription description={doc.summary} />
                 <SidebarLayout>
-                    {PHY_SIDEBAR.has(pageId) ? PHY_SIDEBAR.get(pageId)!() : <GenericPageSidebar/>}
+                    {sidebar}
                     <MainContent>
-                        <div className={classNames("no-print d-flex align-items-center", {"gap-2": isPhy})} >
-                            <EditContentButton doc={doc} />
-                            <div className="question-actions question-actions-leftmost mt-3">
-                                <ShareLink linkUrl={`/pages/${doc.id}`}/>
-                            </div>
-                            <div className="question-actions mt-3 not-mobile">
-                                <PrintButton/>
-                            </div>
-                        </div>
-                        
+                        {(above['lg'](deviceSize) || isAda) && <> <div className="mt-1"/> {optionBar} </>}
                         <TeacherNotes notes={doc.teacherNotes} />
 
                         <Row className="generic-content-container">
-                            <Col className={classNames("py-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
+                            <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>
                                 <WithFigureNumbering doc={doc}>
                                     <IsaacContent doc={doc} />
                                 </WithFigureNumbering>

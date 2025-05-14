@@ -25,6 +25,8 @@ import {
     isFullyDefinedContext,
     isSingleStageContext,
     getHumanContext,
+    above,
+    useDeviceSize,
 } from "../../services";
 import {NOT_FOUND_TYPE, PageContextState, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
@@ -113,6 +115,8 @@ export const Glossary = () => {
     const location = useLocation();
     const history = useHistory();
     const pageContext = useUrlPageTheme();
+    const deviceSize = useDeviceSize();
+    
     // query stages not used recently
     const {queryStages, querySubjects} = processQueryString(location.search, pageContext);
 
@@ -284,6 +288,15 @@ export const Glossary = () => {
         "A glossary of important words and phrases used in maths, physics, chemistry and biology.",
         "Confused about a computer science term? Look it up in our glossary. Get GCSE and A level support today!");
 
+    const optionBar = <div className={classNames("no-print d-flex align-items-center", {"gap-2": isPhy})}>
+        <div className="question-actions question-actions-leftmost mt-2">
+            <ShareLink linkUrl={`/glossary`} clickAwayClose/>
+        </div>
+        <div className="question-actions mt-2 not-mobile">
+            <PrintButton/>
+        </div>
+    </div>;
+
     const thenRender = <div className="glossary-page">
         <Container data-bs-theme={pageContext?.subject}>
             <TitleAndBreadcrumb 
@@ -297,17 +310,10 @@ export const Glossary = () => {
                     searchText={searchText} setSearchText={setSearchText} 
                     filterSubject={filterSubject} setFilterSubject={setFilterSubject}
                     filterStage={filterStage} setFilterStage={setFilterStage}
-                    subjects={subjects} stages={stages}
+                    subjects={subjects} stages={stages} optionBar={optionBar}
                 />
                 <MainContent>
-                    <div className={classNames("no-print d-flex align-items-center", {"gap-2": isPhy})}>
-                        <div className="question-actions question-actions-leftmost mt-3">
-                            <ShareLink linkUrl={`/glossary`} clickAwayClose/>
-                        </div>
-                        <div className="question-actions mt-3 not-mobile">
-                            <PrintButton/>
-                        </div>
-                    </div>
+                    {(above['lg'](deviceSize) || isAda) && <> <div className="mt-1"/> {optionBar} </>}  
                     <Row>
                         <Col md={{size: 9}} className="py-4">
                             <Row className="no-print">
