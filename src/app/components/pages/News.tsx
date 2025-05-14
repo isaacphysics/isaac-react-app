@@ -29,7 +29,7 @@ export const News = () => {
     }, [page]);
 
     const metaDescription = siteSpecific(
-        "Get all the latest news about Isaac Physics.",
+        "Get all the latest news about Isaac Science.",
         "Get all the latest news about Ada Computer Science, and read the stories of recent graduates who now have exciting careers in computer science.");
 
     return <Container>

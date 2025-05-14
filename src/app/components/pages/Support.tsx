@@ -122,8 +122,8 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
 
     const metaDescriptionMap = siteSpecific(
         {
-            "student": "Find answers to your questions about Isaac Physics in our FAQ for students.",
-            "teacher": "Find answers to your questions about Isaac Physics in our FAQ for teachers.",
+            "student": "Find answers to your questions about Isaac Science in our FAQ for students.",
+            "teacher": "Find answers to your questions about Isaac Science in our FAQ for teachers.",
         },
         {
             "student": "Got a question about Ada Computer Science? Read our student FAQs. Get GCSE and A level support today!",
