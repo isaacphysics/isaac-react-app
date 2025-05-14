@@ -31,16 +31,17 @@
   }
 
   .question-component {
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
     padding: 1rem 1.5rem 0;
     background-color: var(--subject-color-50);
     border: 1px solid var(--subject-color-100);
     border-radius: 4px;
   }
 
-  // Make sure that reorder questions have a background when they expand on Phy
   .question-component:not(.expansion-layout) {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+
+    // Make sure that reorder questions have a background when they expand on Phy
     box-shadow: none;
     margin-bottom: 1.5rem;
   }
@@ -146,7 +147,7 @@
   border-radius: unset;
 }
 
-.question-metadata {
+.content-metadata-container {
   background-color: $color-neutral-100;
   border: 1px solid $color-neutral-200;
   border-radius: 4px;

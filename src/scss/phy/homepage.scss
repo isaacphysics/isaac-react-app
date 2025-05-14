@@ -45,11 +45,11 @@
         aspect-ratio: unset;
         background-size: cover;
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-        margin: 0 -80px -150px;
+        margin-bottom: -20vh;
       }
 
       @include media-breakpoint-only(xs) {
-        margin-bottom: -200px;
+        margin-bottom: -25vh;
       }
 
       @include media-breakpoint-between(md, lg) {

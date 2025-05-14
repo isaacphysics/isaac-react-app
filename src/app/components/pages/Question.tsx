@@ -92,7 +92,8 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
             return <GameboardContext.Provider value={navigation.currentGameboard}>
                 <Container className={classNames("no-shadow")} data-bs-theme={pageContext?.subject ?? doc.subjectId}>
                     <TitleAndBreadcrumb
-                        currentPageTitle={siteSpecific("Question", generateQuestionTitle(doc))}
+                        currentPageTitle={generateQuestionTitle(doc)}
+                        displayTitleOverride={siteSpecific("Question", undefined)}
                         subTitle={siteSpecific(undefined, doc.subtitle)}
                         intermediateCrumbs={navigation.breadcrumbHistory}
                         collectionType={navigation.collectionType}
@@ -131,7 +132,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                 </>}
                             </div>
                             
-                            {isPhy && <Row className="question-metadata d-flex">
+                            {isPhy && <Row className="content-metadata-container d-flex">
                                 <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
                                     <span>Subject & topics</span>
                                     <div className="d-flex align-items-center">
