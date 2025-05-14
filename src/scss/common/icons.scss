@@ -108,7 +108,7 @@ img[aria-disabled="true"] {
   }
 }
 
-i.icon {
+i.icon:not(.icon-raw) {
   &, &[color="primary"] {
     background-color: var(--icon-primary);
     

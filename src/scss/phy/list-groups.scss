@@ -63,6 +63,11 @@
 
   .question-link-title {
     font-family: $secondary-font-medium;
+    margin-top: -5px;
+  }
+
+  li.list-group-item.correct {
+    background-color: $color-misc-correct;
   }
 }
 
@@ -105,4 +110,13 @@
 
 .list-results-container {
   background-color: $color-neutral-100;
+}
+
+.list-view-status-indicator {
+  position: absolute;
+  top: 2px;
+  right: 16px;
+  > i {
+    display: inline-block;
+  }
 }

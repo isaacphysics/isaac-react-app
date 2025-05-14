@@ -185,7 +185,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
     const description = "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. " +
         "Assignments are due by the end of the day indicated.";
 
-    return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle}>
+    return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle} data-bs-theme="neutral">
         <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break d-flex justify-content-between"} close={
             <button className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy})} onClick={toggle}>
                 Close

@@ -69,6 +69,7 @@ export interface TitleIconProps extends PhyHexIconProps {
 
 export interface PageTitleProps {
     currentPageTitle: string;
+    displayTitleOverride?: string;
     subTitle?: string;
     description?: string;
     disallowLaTeX?: boolean;
@@ -79,7 +80,7 @@ export interface PageTitleProps {
     preview?: boolean;
     icon?: TitleIconProps;
 }
-export const PageTitle = ({currentPageTitle, subTitle, description, disallowLaTeX, help, className, audienceViews, modalId, preview, icon}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, description, disallowLaTeX, help, className, audienceViews, modalId, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
     const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
@@ -123,7 +124,7 @@ export const PageTitle = ({currentPageTitle, subTitle, description, disallowLaTe
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
                         : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject}/> : undefined)}
                 <div className="me-auto" data-testid={"main-heading"}>
-                    {formatPageTitle(currentPageTitle, disallowLaTeX)}
+                    {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX)}
                     {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
                 </div>
             </div>

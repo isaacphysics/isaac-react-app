@@ -240,10 +240,8 @@ $inline-feedback-padding: 2px;
     }
   }
 
-  .equality-page {
-    .eqn-editor-preview {
-      background: $white !important;
-    }
+  .eqn-editor-preview {
+    background: $white;
   }
 
   .eqn-editor-input input {
