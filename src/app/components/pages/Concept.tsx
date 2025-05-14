@@ -63,7 +63,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
         <div className="question-actions">
             <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
         </div>
-        <div className={classNames("question-actions", {"not-mobile": isAda})}>
+        <div className="question-actions">
             <PrintButton />
         </div>
         <div className="question-actions">
