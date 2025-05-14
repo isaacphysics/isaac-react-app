@@ -6,7 +6,7 @@ import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, PATH
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { TitleIconProps } from "../PageTitle";
 import { AffixButton } from "../AffixButton";
-import { QuizSummaryDTO } from "../../../../IsaacApiTypes";
+import { GameboardDTO, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
 import { selectors, showQuizSettingModal, useAppDispatch, useAppSelector } from "../../../state";
 import classNames from "classnames";
@@ -125,19 +125,27 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
 };
 
 interface QuestionDeckListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "breadcrumb" | "url"> {
-    item: ShortcutResponse;
+    item: GameboardDTO;
 }
 
 export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewItemProps) => {
-    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
-    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+    const questionTagsCountMap = item.contents?.filter(c => c.contentType === "isaacQuestionPage").map(q => q.tags as TAG_ID[]).reduce((acc, tags) => {
+        tags?.forEach(tag => {
+            acc[tag] = (acc[tag] || 0) + 1;
+        });
+        return acc;
+    }, {} as Record<TAG_ID, number>);
+
+    const questionSubjects = tags.allSubjectTags.filter(s => Object.keys(questionTagsCountMap || {}).includes(s.id));
+    const questionTags = Object.entries(questionTagsCountMap || {}).filter(([tagId]) => tags.allTopicTags.includes(tags.getById(tagId as TAG_ID))).sort((a, b) => b[1] - a[1]).map(([tagId]) => tagId);
+
+    const breadcrumb = questionTags.map(tagId => tags.getById(tagId as TAG_ID)?.title).slice(0, 3);
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
         icon={{type: "hex", icon: "icon-question-deck", size: "lg"}}
         title={item.title ?? ""}
-        subject={itemSubject}
-        subtitle={item.subtitle}
+        subject={questionSubjects.length === 1 ? questionSubjects[0].id as Subject : undefined}
         breadcrumb={breadcrumb}
         url={url}
         {...rest}
