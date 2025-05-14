@@ -187,7 +187,7 @@ export function QuizRubricButton({attempt}: {attempt: QuizAttemptDTO}) {
     };
 
     if (rubric && renderRubric) {
-        return <Button color={siteSpecific("secondary", "tertiary")} outline={isAda} className={siteSpecific("btn-btn-keyline", "mb-4 bg-light")}
+        return <Button color={siteSpecific("secondary", "tertiary")} outline={isAda} className={siteSpecific("btn-btn-keyline btn-lg text-nowrap", "mb-4 bg-light")}
             alt="Show instructions" title="Show instructions in a modal" onClick={() => {openQuestionModal(attempt);}}> Show instructions
         </Button>;
     }

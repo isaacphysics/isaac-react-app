@@ -156,6 +156,7 @@ $color-misc-orange-dark: #bd5a00;
 $color-misc-orange-light: #fea102;
 $color-misc-red: #b40c0c;
 $color-misc-pale-yellow: #f9fdd5;
+$color-misc-correct: #ecf7e9;
 
 $isaac-color-palettes: (
   // brand is excluded as there are no pages with the "brand" colour scheme;
@@ -297,6 +298,9 @@ $theme-colour-overrides: (
     biology: $color-biology-500,
     neutral: $color-neutral-500,
 
+    correct: $color-misc-correct,
+
+    // these are intended for "action states", e.g. event status, not question feedback
     success: #208838,
     in-progress: #fe8e15,
     failed: #dc3545,

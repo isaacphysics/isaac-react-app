@@ -63,17 +63,17 @@ export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
                 className="mb-4"
                 icon={{type: "hex", icon: "icon-revision"}}
             />
+            <ShowLoadingQuery
+                query={combineQueries(assignmentQuery, assignmentProgressQuery, augmentAssignmentWithProgress)}
+                defaultErrorTitle={"Error fetching assignment progress"}
+                thenRender={(assignmentWithProgress) =>
+                    <div className="assignment-progress-container mb-5">
+                        <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
+                            <SingleProgressDetails assignment={assignmentWithProgress} />
+                        </AssignmentProgressPageSettingsContext.Provider>
+                    </div>
+                }
+            />
         </Container>
-        <ShowLoadingQuery
-            query={combineQueries(assignmentQuery, assignmentProgressQuery, augmentAssignmentWithProgress)}
-            defaultErrorTitle={"Error fetching assignment progress"}
-            thenRender={(assignmentWithProgress) =>
-                <div className="assignment-progress-container mb-5">
-                    <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-                        <SingleProgressDetails assignment={assignmentWithProgress} />
-                    </AssignmentProgressPageSettingsContext.Provider>
-                </div>
-            }
-        />
     </>;
 };

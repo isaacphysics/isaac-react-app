@@ -73,9 +73,6 @@
 .single-assignment {
   background: none !important;
   margin-top: 0 !important;
-  .progress-header {
-    border-top: 1px solid $gray-118;
-  }
 }
 
 .assignment-progress-legend {
@@ -315,6 +312,11 @@ $failed-bg-size: 25%;
 .group-progress-summary {
   background: $gray-103;
   border: 1px solid $gray-118;
+}
+
+.gameboard-header + .assignment-progress-progress, // assignment progress assignment view
+.gameboard-header + .assignment-progress-details > .assignment-progress-progress, // assignment progress test view
+.group-progress-summary {
   border-top: none;
 }
 

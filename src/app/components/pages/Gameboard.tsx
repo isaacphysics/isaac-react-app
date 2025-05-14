@@ -40,13 +40,14 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { GameboardSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 export const getProgressIcon = (question: GameboardItem) => {
-    let itemClasses = classNames("content-summary-link text-info bg-white", {"p-3": isPhy, "p-0": isAda});
+    const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
+    let backgroundColor = "white";
     let icon = siteSpecific("icon-not-started", "/assets/cs/icons/question-not-started.svg");
     let message = siteSpecific("", "Not started");
     switch (question.state) {
         case "PERFECT":
             if (isPhy) {
-                itemClasses += " bg-success";
+                backgroundColor = "correct";
             }
             message = "Correct";
             icon = siteSpecific("icon-correct", "/assets/cs/icons/question-correct.svg");
@@ -61,7 +62,7 @@ export const getProgressIcon = (question: GameboardItem) => {
             icon = siteSpecific("icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
             break;
     }
-    return {itemClasses, icon, message};
+    return {itemClasses: classNames(itemClasses, `bg-${backgroundColor}`), icon, message};
 };
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
@@ -110,13 +111,11 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
 };
 
 export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
-    const itemClasses = classNames("content-summary-link text-info bg-white", {"p-3": isPhy, "p-0": isAda});
-    const icon = <img src="/assets/common/wildcard.svg" alt="Optional extra information icon"/>;
-    return <ListGroupItem key={wildcard.id} className={itemClasses}>
+    return <ListGroupItem key={wildcard.id} className={"content-summary-link text-info bg-wildcard p-3"}>
         <a href={wildcard.url} className="align-items-center">
-            <span className="gameboard-item-icon">{icon}</span>
+            <i className="icon icon-concept me-3" />
             <div className={"flex-grow-1"}>
-                <span>{wildcard.title}</span>
+                <span className="link-title question-link-title me-2">{wildcard.title}</span>
                 {wildcard.description && <div className="hierarchy-tags">
                     <span className="hierarchy-tag">{wildcard.description}</span>
                 </div>}

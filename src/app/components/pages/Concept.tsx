@@ -81,7 +81,8 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                 <Container data-bs-theme={doc.subjectId ?? pageContext?.subject}>
                     <TitleAndBreadcrumb
                         intermediateCrumbs={navigation.breadcrumbHistory}
-                        currentPageTitle={siteSpecific("Concept", doc.title as string)}
+                        currentPageTitle={doc.title as string}
+                        displayTitleOverride={siteSpecific("Concept", undefined)}
                         collectionType={navigation.collectionType}
                         subTitle={siteSpecific(undefined, doc.subtitle as string)}
                         preview={preview}

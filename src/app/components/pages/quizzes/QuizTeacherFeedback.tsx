@@ -18,23 +18,21 @@ import {
     useAssignmentProgressAccessibilitySettings,
     isQuestion,
     PATHS,
-    isAuthorisedFullAccess
+    isAuthorisedFullAccess,
+    isAda
 } from "../../../services";
 import {AuthorisedAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {formatDate} from "../../elements/DateString";
-import {Spacer} from "../../elements/Spacer";
 import {ResultsTable, passMark} from "../../elements/quiz/QuizProgressCommon";
 import {
     Alert,
     Button,
-    Col,
     Container,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
     Label,
-    Row,
     UncontrolledButtonDropdown
 } from "reactstrap";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
@@ -72,7 +70,6 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const quizTitle = (quizAssignment?.quiz?.title || quizAssignment?.quiz?.id || "Test") + (assignmentNotYetStarted ? ` (starts ${formatDate(assignmentStartDate)})` : " results");
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
-        <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "hex", icon: "icon-error"}}/>
         <Alert color="danger">
             <h4 className="alert-heading">Error loading test feedback</h4>
             <p>{getRTKQueryErrorMessage(error)?.message}</p>
@@ -80,26 +77,27 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     </>;
 
     return <Container>
+        <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "hex", icon: quizAssignmentQuery?.isError ? "icon-error" : "icon-tests"}}/>
         <ShowLoadingQuery
             query={quizAssignmentQuery}
             ifError={buildErrorComponent}
             thenRender={quizAssignment => <>
-                <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "hex", icon: "icon-tests"}}/>
-                <div className="d-flex mb-4">
-                    <span>
-                        Set by: {extractTeacherName(quizAssignment.assignerSummary)} on {formatDate(quizAssignment.creationDate)}
-                    </span>
-                    {isDefined(quizAssignment.dueDate) && <><Spacer/>Due: {formatDate(quizAssignment.dueDate)}</>}
-                </div>
-                {assignmentNotYetStarted && <div className="mb-4">
-                    <h4 className="alert-heading">This test has not yet started</h4>
-                    <p>It will be released to your group on {formatDate(assignmentStartDate)}.</p>
+                {assignmentNotYetStarted && <div className="mb-4 alert alert-info px-3 py-2 mt-4">
+                    <span className="alert-heading fw-bold">This test has not yet started. </span>
+                    <span>It will be released to your group on {formatDate(assignmentStartDate)}.</span>
                 </div>}
-                <Row>
-                    {quizAssignment.dueDate && <Col xs={12} sm={6} md={4}>
-                        <p>Due date: {formatDate(quizAssignment.dueDate)}</p>
-                    </Col>}
-                    <Col>
+
+                <div className="content-metadata-container d-flex flex-column flex-md-row">
+                    <div className="d-flex flex-column pb-3 pb-md-0 px-3 flex-grow-1 justify-content-center">
+                        <span>
+                            Set by: {extractTeacherName(quizAssignment.assignerSummary)} on {formatDate(quizAssignment.creationDate)}
+                        </span>
+                        {quizAssignment.dueDate && <span>
+                            Due date: {formatDate(quizAssignment.dueDate)}
+                        </span>}
+                    </div>
+
+                    <div className="px-3 py-3 py-md-0 text-md-center justify-content-center">
                         <Label for="feedbackMode" className="pe-1">Student feedback mode:</Label><br/>
                         <UncontrolledButtonDropdown size="sm">
                             <DropdownToggle color={siteSpecific("tertiary", "secondary")} className={siteSpecific("border", "")} caret size={siteSpecific("lg", "sm")} disabled={isUpdatingQuiz}>
@@ -116,21 +114,25 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                                 )}
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
-                    </Col>
-                    <Col sm={12} md={"auto"} className={"text-end mt-2 mt-md-0"}>
+                    </div>
+
+                    <div className="px-3 pt-3 pt-md-0 align-content-center">
                         <Button
-                            color="primary" outline className="btn-md mt-1 text-nowrap"
+                            color="primary" outline={isAda} className="btn-md mt-1 text-nowrap"
                             href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
                             target="_blank"
                         >
                             Export as CSV
                         </Button>
-                    </Col>
-                </Row>
+                    </div>
+                </div>
+
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                         <AssignmentProgressLegend showQuestionKey />
-                        <QuizProgressDetails assignment={quizAssignment} />
+                        <div className="p-4">
+                            <QuizProgressDetails assignment={quizAssignment} />
+                        </div>
                     </AssignmentProgressPageSettingsContext.Provider>
                 </div>
             </>}
