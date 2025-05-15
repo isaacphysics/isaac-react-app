@@ -429,11 +429,23 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
     </ContentSidebar>;
 };
 
-export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
-    const { searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts, ...rest } = props;
+interface GenericConceptsSidebarProps extends ConceptListSidebarProps {
+    searchStages: STAGE[];
+    setSearchStages: React.Dispatch<React.SetStateAction<STAGE[]>>;
+    stageCounts: Record<string, number>;
+}
 
-    const pageContext = useAppSelector(selectors.pageContext.context);
+export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
+    const { searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts, searchStages, setSearchStages, stageCounts, ...rest } = props;
 
+    const updateSearchStages = (stage: STAGE) => {
+        if (searchStages.includes(stage)) {
+            setSearchStages(searchStages.filter(s => s !== stage));
+        } else {
+            setSearchStages([...(searchStages ?? []), stage]);
+        }
+    };
+    
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
@@ -473,6 +485,17 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
                         </div>}
                     </div>;
                 })}
+                <div className="section-divider"/>
+                <h5>Filter by stage</h5>
+                <ul className="ps-2">
+                    {getFilteredStageOptions().map((stage, i) =>
+                        <li key={i}>
+                            <StyledCheckbox checked={searchStages.includes(stage.value)}
+                                label={<>{stage.label} <span className="text-muted">({stageCounts[stage.value]})</span></>}
+                                data-bs-theme={conceptFilters.length === 1 ? conceptFilters[0].id : undefined}
+                                color="theme" onChange={() => {updateSearchStages(stage.value);}}/>
+                        </li>)}
+                </ul>
             </div>
         </search>
 

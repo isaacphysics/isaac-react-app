@@ -3,7 +3,7 @@ import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
-import {isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
+import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, STAGE, STAGE_TO_LEARNING_STAGE, TAG_ID, tags} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -49,6 +49,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const [conceptFilters, setConceptFilters] = useState<Tag[]>(
         applicableTags.filter(f => filters.includes(f.id))
     );
+    const [searchStages, setSearchStages] = useState<STAGE[]>([]);
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
     const listConceptsQuery = useListConceptsQuery(pageContext 
@@ -58,8 +59,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
 
     const shortcutAndFilter = (concepts?: ContentSummaryDTO[], excludeTopicFiltering?: boolean) => {
         const searchResults = concepts?.filter(c =>
-            matchesAllWordsInAnyOrder(c.title, searchText || "") ||
-            matchesAllWordsInAnyOrder(c.summary, searchText || "")
+            (matchesAllWordsInAnyOrder(c.title, searchText || "") || matchesAllWordsInAnyOrder(c.summary, searchText || ""))
+            && (searchStages.length === 0 || searchStages.some(s => c.audience?.some(a => a.stage?.includes(s))))
         );
         
         const filteredSearchResults = searchResults
@@ -79,6 +80,11 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         ...acc, 
         // we exclude topics when filtering here to avoid selecting a filter changing the tag counts
         [t.id]: shortcutAndFilter(listConceptsQuery?.data?.results, true)?.filter(c => c.tags?.includes(t.id)).length || 0
+    }), {});
+
+    const stageCounts = getFilteredStageOptions().reduce((acc, s) => ({
+        ...acc, 
+        [s.value]: shortcutAndFilter(listConceptsQuery?.data?.results, true)?.filter(c => c.audience?.some(a => a.stage?.includes(s.value))).length || 0
     }), {});
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
@@ -119,7 +125,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             <SidebarLayout>
                 {pageContext?.subject 
                     ? <SubjectSpecificConceptListSidebar {...sidebarProps}/> 
-                    : <GenericConceptsSidebar {...sidebarProps}/>
+                    : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts}/>
                 }
                 <MainContent>
                     {pageContext?.subject && <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap">
