@@ -1,7 +1,8 @@
-import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTitledSection, expectUrl } from "../testUtils";
+import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectUrl } from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
-import { editButton, expectActionMessage, expectBreadcrumbs, expectErrorMessage, previewButton, renderQuizPage, setTestButton, testSectionsHeader } from "../helpers/quiz";
+import { editButton, expectBreadcrumbs, expectErrorMessage, expectRubric, previewButton, renderQuizPage, setTestButton, testSectionsHeader } from "../helpers/quiz";
 import { siteSpecific } from "../../app/services";
+import {screen } from "@testing-library/react";
 
 describe("QuizView", () => {
     const quizId = Object.keys(mockRubrics)[0];
@@ -20,9 +21,9 @@ describe("QuizView", () => {
         expectH1(rubric.title);
     });
 
-    it('shows message about this page', async () => {
+    it('does not show message about this page', async () => {
         await studentViewsQuiz();
-        expectActionMessage('You are viewing the rubric for this test.');
+        expect(screen.queryByTestId("quiz-action")).not.toBeInTheDocument();
     });
 
     it('does not show Set Test button', async () => {
@@ -32,7 +33,7 @@ describe("QuizView", () => {
 
     it('shows quiz rubric', async () => {
         await studentViewsQuiz();
-        expectTitledSection("Instructions", rubric.rubric?.children?.[0].value);
+        expectRubric(rubric.rubric?.children?.[0].value);
     });
 
     it("does not show Test sections", async () => {
