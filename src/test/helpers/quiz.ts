@@ -24,6 +24,8 @@ export const expectErrorMessage = expectTextInElementWithId('error-message');
 
 export const expectActionMessage = expectTextInElementWithId('quiz-action');
 
+export const expectRubric = expectTextInElementWithId('quiz-rubric');
+
 export const setTestButton = () => screen.queryByRole('button', {name: "Set Test"});
 
 export const editButton = () => screen.queryByRole('heading', {name: "Published ✎"});
