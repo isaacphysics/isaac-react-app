@@ -181,8 +181,7 @@ export const MyGameboards = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
-        <PageFragment fragmentId={`${siteSpecific("gameboards", "quizzes")}_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} className={siteSpecific("mb-4", "")} />
         <SidebarLayout>
             <MyGameboardsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
@@ -192,6 +191,7 @@ export const MyGameboards = () => {
                 boardCompletionFilter={boardCompletion} setBoardCompletionFilter={setBoardCompletion}
             />
             <MainContent>
+                <PageFragment fragmentId={`${siteSpecific("gameboards", "quizzes")}_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
                 {boards && boards.totalResults == 0 ?
                     <>
                         <h3 className="text-center mt-4">You have no {siteSpecific("question decks", "quizzes")} to view.</h3>

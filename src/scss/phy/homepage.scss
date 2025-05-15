@@ -281,6 +281,11 @@ a:has(.assignment-card) {
 
 .random-question-panel {
   background-color: $color-neutral-100;
+
+  .content-summary-item {
+    min-height: 100px;
+    padding-top: 1.15rem;
+  }
 }
 
 .dashboard-scroll-shadow {
