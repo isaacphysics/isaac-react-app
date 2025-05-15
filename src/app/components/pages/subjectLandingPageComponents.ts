@@ -40,7 +40,9 @@ const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): Li
 const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
         title: "Question decks by topic",
-        subtitle: "Practise specific topics by using our ready-made question decks."
+        subtitle: context.subject === "chemistry" && context.stage.includes("university")
+            ? "Consolidate your chemistry understanding with these questions by topic."
+            : "Practise specific topics by using our ready-made question decks."
     },
     icon: {type: "hex", icon: "icon-question-deck"},
     subject: context.subject,
