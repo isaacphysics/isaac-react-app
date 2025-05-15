@@ -40,7 +40,9 @@ const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): Li
 const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
         title: "Question decks by topic",
-        subtitle: "Practise specific topics by using our ready-made question decks."
+        subtitle: context.subject === "chemistry" && context.stage.includes("university")
+            ? "Consolidate your chemistry understanding with these questions by topic."
+            : "Practise specific topics by using our ready-made question decks."
     },
     icon: {type: "hex", icon: "icon-question-deck"},
     subject: context.subject,
@@ -103,7 +105,7 @@ const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListVi
 });
 
 const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Practice apps", `Consolidate your ${context.subject} skills with these apps.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "apps")}])(context);
+    return ArbitraryPageLinkCard("Skills practice", `Consolidate your ${context.subject} skills with these apps.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "apps")}])(context);
 };
 
 /*const SPCCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {

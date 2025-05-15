@@ -57,31 +57,27 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const question = questions?.[0];
 
     return <div className="py-4 container-override random-question-panel">
-        <Row className="my-3">
-            <div className="d-flex justify-content-between align-items-center">
-                <h4 className="m-0">Try a random question!</h4>
-                <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
-                    Get a different question
-                    <i className="icon icon-refresh icon-color-black"/>
-                </button>
-            </div>
-        </Row>
-        <Row style={{margin: "auto"}}>
-            <Card className="px-0 hf-6">
-                {question
-                    ? <ListView items={[{
-                        type: DOCUMENT_TYPE.QUESTION,
-                        title: question.title,
-                        tags: question.tags,
-                        id: question.id,
-                        audience: question.audience,
-                    }]}/>
-                    : <div className="w-100 d-flex justify-content-center">
-                        <IsaacSpinner size="sm" />
-                    </div>
-                }
-            </Card>
-        </Row>
+        <div className="d-flex my-3 justify-content-between align-items-center">
+            <h4 className="m-0">Try a random question!</h4>
+            <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
+                Get a different question
+                <i className="icon icon-refresh icon-color-black"/>
+            </button>
+        </div>
+        <Card className="w-100 px-0 hf-6">
+            {question
+                ? <ListView items={[{
+                    type: DOCUMENT_TYPE.QUESTION,
+                    title: question.title,
+                    tags: question.tags,
+                    id: question.id,
+                    audience: question.audience,
+                }]}/>
+                : <div className="w-100 d-flex justify-content-center">
+                    <IsaacSpinner size="sm" />
+                </div>
+            }
+        </Card>
     </div>;
 };
 
@@ -92,6 +88,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     }, []);
 
     const books = getBooksForContext(context);
+    const deviceSize = useDeviceSize();
     // TODO: are we going to make subject-specific news?
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
 
@@ -150,8 +147,8 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                     return <Row className="h-100">
                         {relevantEvents.length
                             ? relevantEvents.map((event, i) =>
-                                <Col xs={12} key={i}>
-                                    {event && <EventCard event={event} className="force-horizontal p-2" />}
+                                <Col xs={12} md={6} lg={12} key={i}>
+                                    {event && <EventCard event={event} className={classNames("p-2", {"force-horizontal": !["md", "xs"].includes(deviceSize)})} />}
                                 </Col>
                             )
                             : <Col className="pt-3 pb-5">No events found for {getHumanContext(context)}. Check back soon!</Col>

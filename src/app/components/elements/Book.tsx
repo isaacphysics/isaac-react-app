@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Container } from "reactstrap";
+import { Container } from "reactstrap";
 import { BookSidebar, MainContent, SidebarLayout } from "./layout/SidebarLayout";
 import { Markup } from "./markup";
 import { TitleAndBreadcrumb } from "./TitleAndBreadcrumb";
 import { useContextFromContentObjectTags } from "../../services";
 import { useHistory } from "react-router";
 import { useGetBookDetailPageQuery, useGetBookIndexPageQuery } from "../../state/slices/api/booksApi";
-import { ShowLoading } from "../handlers/ShowLoading";
 import { BookPage } from "./BookPage";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { TeacherNotes } from "./TeacherNotes";
     
 interface BookProps {
     match: { params: { bookId: string } };
@@ -19,8 +19,10 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
 
     const [pageId, setPageId] = useState<string | undefined>(undefined);
     
-    const { data: book }  = useGetBookIndexPageQuery({id: `book_${bookId}`});
+    const bookIndexPageQuery = useGetBookIndexPageQuery({id: `book_${bookId}`});
     const bookDetailPageQuery = useGetBookDetailPageQuery(pageId ? { id: pageId } : skipToken);
+
+    const { data: book } = bookIndexPageQuery;
 
     const history = useHistory();
 
@@ -46,10 +48,10 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
             icon={{type: "hex", icon: "icon-book"}}
         />
         <SidebarLayout>
-            <ShowLoading
-                until={book ? {definedBookIndexPage: book} : undefined}
-                ifNotFound={<Alert color="warning">Book contents could not be loaded, please try refreshing the page.</Alert>}
-                thenRender={({definedBookIndexPage}) => {
+            <ShowLoadingQuery
+                query={bookIndexPageQuery}
+                defaultErrorTitle="Unable to load book contents."
+                thenRender={(definedBookIndexPage) => {
                     return <>
                         <BookSidebar book={definedBookIndexPage} urlBookId={bookId} pageId={pageId} />
                         <MainContent className="mt-4">
@@ -59,12 +61,15 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                     defaultErrorTitle="Unable to load book page."
                                     thenRender={(bookDetailPage) => <BookPage page={bookDetailPage} />}
                                 />
-                                : <div>
-                                    <div className="book-image-container mx-3 float-end">
-                                        <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
+                                : <>
+                                    <TeacherNotes notes={definedBookIndexPage.teacherNotes} />
+                                    <div>
+                                        <div className="book-image-container mx-3 float-end">
+                                            <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
+                                        </div>
+                                        <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBookIndexPage.value}</Markup>
                                     </div>
-                                    <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBookIndexPage.value}</Markup>
-                                </div>
+                                </>
                             }
                         </MainContent>
                     </>;

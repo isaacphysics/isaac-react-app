@@ -30,8 +30,8 @@ export const HeaderPhy = () => {
                 <Col className="d-flex justify-content-between py-3">
                     <div className="header-logo align-content-center">
                         <Link to="/">
-                            <img src="/assets/phy/logo.svg" alt="Isaac Physics" className="d-none d-sm-block d-print-block"/>
-                            <img src="/assets/phy/logo-small.svg" alt="Isaac Physics" className="d-block d-sm-none d-print-none"/>
+                            <img src="/assets/phy/logo.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-none d-sm-block d-print-block"/>
+                            <img src="/assets/phy/logo-small.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-block d-sm-none d-print-none"/>
                         </Link>
                     </div>
 
@@ -69,7 +69,7 @@ export const HeaderPhy = () => {
                                         </div>
                                     }>
                                         <Link to="/">
-                                            <img src="/assets/phy/logo-small.svg" alt="Isaac Physics" className="d-block"/>
+                                            <img src="/assets/phy/logo-small.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-block"/>
                                         </Link>
                                     </OffcanvasHeader>
                                     <OffcanvasBody>

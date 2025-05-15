@@ -312,7 +312,7 @@ svg {
   }
 }
 
-.btn.btn-keyline:hover > i.icon, .btn.btn-tint:hover > i.icon {
+.btn.btn-keyline:hover > i.icon:not(.icon-raw), .btn.btn-tint:hover > i.icon:not(.icon-raw) {
   background-color: var(--icon-hover);
 
   &::after {

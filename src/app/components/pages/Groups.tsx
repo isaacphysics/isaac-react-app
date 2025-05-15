@@ -664,14 +664,13 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
     </span>;
 
     const GroupsPhy = <Container>
-        <TitleAndBreadcrumb 
-            currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="help_modal_groups" icon={{type: "hex", icon: "icon-group"}}
-        />
+        <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="help_modal_groups" icon={{type: "hex", icon: "icon-group"}}/>
+        <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <SidebarLayout>
                 <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
                     showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup}/>
-                <MainContent>
+                <MainContent className="mt-3 mt-lg-0">
                     <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
                     <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup}/>
                     {/* On small screens, the groups list should initially be accessible without needing to open the sidebar drawer */}
