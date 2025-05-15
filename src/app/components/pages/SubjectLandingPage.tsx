@@ -15,7 +15,6 @@ import debounce from "lodash/debounce";
 import { Loading } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
-import { Stage } from "../../../IsaacApiTypes";
 
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
@@ -61,28 +60,24 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const question = questions?.[0];
 
     return <div className="py-4 container-override random-question-panel">
-        <Row className="my-3">
-            <div className="d-flex justify-content-between align-items-center">
-                <h4 className="m-0">Try a random question!</h4>
-                <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
-                    Get a different question
-                    <i className="icon icon-refresh icon-color-black"/>
-                </button>
-            </div>
-        </Row>
-        <Row style={{margin: "auto"}}>
-            <Card className="px-0">
-                {question
-                    ? <ListView items={[{
-                        type: DOCUMENT_TYPE.QUESTION,
-                        title: question.title,
-                        tags: question.tags,
-                        id: question.id,
-                        audience: question.audience,
-                    }]}/>
-                    : <Loading />}
-            </Card>
-        </Row>
+        <div className="d-flex my-3 justify-content-between align-items-center">
+            <h4 className="m-0">Try a random question!</h4>
+            <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
+                Get a different question
+                <i className="icon icon-refresh icon-color-black"/>
+            </button>
+        </div>
+        <Card className="w-100 px-0">
+            {question
+                ? <ListView items={[{
+                    type: DOCUMENT_TYPE.QUESTION,
+                    title: question.title,
+                    tags: question.tags,
+                    id: question.id,
+                    audience: question.audience,
+                }]}/>
+                : <Loading />}
+        </Card>
     </div>;
 };
 

@@ -90,21 +90,22 @@ const PracticeQuizzesComponent = () => {
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} 
             icon={{"type": "hex", "icon": "icon-tests"}}
+            className={siteSpecific("mb-4", "")} 
         />
-        <div className="d-flex align-items-center">
-            <span><PageFragment fragmentId="help_toptext_practice_tests"/></span>
-            {isPhy && <div className="no-print d-flex gap-2 ms-auto">
-                <div className="question-actions question-actions-leftmost">
-                    <ShareLink linkUrl={isFullyDefinedContext(pageContext) ? `/${pageSubject}/${pageStage}/practice_tests` : "/practice_tests"}/>
-                </div>
-                <div className="question-actions">
-                    <PrintButton/>
-                </div>
-            </div>}
-        </div>
         <SidebarLayout>
             <PracticeQuizzesSidebar {...sidebarProps}/>
             <MainContent>
+                <div className="d-flex align-items-center">
+                    <span><PageFragment fragmentId="help_toptext_practice_tests"/></span>
+                    {isPhy && <div className="no-print d-flex gap-2 ms-auto">
+                        <div className="question-actions question-actions-leftmost">
+                            <ShareLink linkUrl={isFullyDefinedContext(pageContext) ? `/${pageSubject}/${pageStage}/practice_tests` : "/practice_tests"}/>
+                        </div>
+                        <div className="question-actions not-mobile">
+                            <PrintButton/>
+                        </div>
+                    </div>}
+                </div>
                 {!user 
                     ? <b>You must be logged in to view practice tests.</b> 
                     : <ShowLoading until={quizzes}>

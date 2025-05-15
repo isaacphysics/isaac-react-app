@@ -88,7 +88,7 @@ const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: Tabs
         {!!Object.keys(children).length && <h5 className="text-theme mb-2">Need some help?</h5>}
         <div>
             {Object.keys(children).map((tabTitle, i) =>
-                <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
+                <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2 mb-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
                     affix: "icon-chevron-down",
                     position: "suffix",
                     type: "icon",
