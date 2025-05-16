@@ -23,7 +23,7 @@ def run(site: str, update_baselines: bool, cypress_args):
         "-e", f"CYPRESS_UPDATE_BASELINE={'true' if update_baselines else 'false'}",
         "-e", "CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT=300000",
         "-e", "CYPRESS_CACHE_FOLDER=/tests/.cache/Cypress",
-        "cypress/browsers:latest",
+        "cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1",
         "/tests/docker-entrypoint-vrt.sh",
         *cypress_args
     ])
