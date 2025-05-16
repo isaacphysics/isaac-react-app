@@ -10,7 +10,7 @@ import {Markup} from "./markup";
 import { AffixButton } from "./AffixButton";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
-
+export type TabStyle = "tabs" | "buttons" | "dropdowns";
 interface TabsProps {
     className?: string;
     tabTitleClass?: StringOrTabFunction;
@@ -22,7 +22,7 @@ interface TabsProps {
     refreshHash?: string;
     expandable?: boolean;
     singleLine?: boolean;
-    style?: "tabs" | "buttons" | "dropdowns";
+    style?: TabStyle;
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabTitle: string, tabIndex: number) {
