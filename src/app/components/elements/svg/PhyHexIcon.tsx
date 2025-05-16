@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { isPhy, Subject } from "../../../services";
 
 export interface PhyHexIconProps extends React.HTMLAttributes<HTMLDivElement> {
-    icon: string;
+    icon: string | undefined;
     subject?: Subject;
     size?: "lg" | "xl";
 }

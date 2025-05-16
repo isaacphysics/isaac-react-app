@@ -75,7 +75,7 @@
 
 .icon-initials {
   // background hex
-  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), $color-brand-400, 36px, 36px, 28px);
+  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), $color-brand-400, 28px, 28px, 100%);
   opacity: 0.2;
   // initials text
   + * {
@@ -172,6 +172,14 @@
     '/assets/phy/icons/redesign/page-concept-thick-fg.svg', 
     '/assets/phy/icons/redesign/page-concept-thick-bg.svg',
     var(--icon-size), var(--icon-size), var(--mask-size, 55%), center 55%
+  );
+}
+
+.icon-generic {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-generic-fg.svg', 
+    '/assets/phy/icons/redesign/page-generic-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), 52% center
   );
 }
 

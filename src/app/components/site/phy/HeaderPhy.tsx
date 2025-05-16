@@ -85,7 +85,7 @@ export const HeaderPhy = () => {
         {above["md"](deviceSize) && <Container id="content-nav-container">
             <Row>
                 <Col>
-                    <Nav tag="nav" className="d-flex align-items-end" id="content-nav">
+                    <Nav tag="nav" className="d-flex align-items-stretch" id="content-nav">
                         <NavigationMenuPhy toggleMenu={toggleMenu}/>
                     </Nav>
                 </Col>

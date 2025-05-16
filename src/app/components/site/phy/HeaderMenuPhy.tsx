@@ -25,7 +25,7 @@ export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
         <NavigationSection topLevelLink to="/concepts" title={"Concepts"}/>
         <NavigationSection topLevelLink to="/news" title={"News"}/>
         <NavigationSection topLevelLink to="/events" title={"Events"}/>
-        <NavigationSection topLevelLink to="/publications" title={"Books"}/>
+        <NavigationSection topLevelLink to="/books" title={"Books"}/>
         <NavigationSection title={"Help"} className={classNames({"border-end" : !isOffcanvas})}>
             <LinkItem to="/pages/how_to_videos">How-to videos</LinkItem>
             <LinkItem to="/solving_problems">Problem-solving guide</LinkItem>

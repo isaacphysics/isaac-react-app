@@ -65,7 +65,7 @@ const HomepageHero = () => {
                     <Col className="mb-3">
                         <HomepageHeroCard
                             title="Support students in developing skills and achieving higher results"
-                            content="Assign, track, and manage student progress with ease—ideal for classwork, homework, or revision. Trusted by over 1,000 UK schools."
+                            content="Assign, track, and manage student progress with ease—ideal for classwork, homework, or revision. Trusted by more than 3,500 teachers."
                             isStudent={false}/>
                     </Col>
                 </Row>
@@ -103,7 +103,12 @@ const getListViewSubjectCard = (sc: subjectCategory) => {
 
     const listViewSubjectCard: ListViewCardProps = {
         item: item,
-        icon: {type: "img", icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`},
+        icon: {
+            type: "img", 
+            icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`,
+            width: "70px",
+            height: "81px",
+        },
         subject: sc.subject as Subject,
         linkTags: sc.subcategories.map((subcat) => ({tag: subcat.humanStage, url: subcat.href, "aria-label": `Explore ${subcat.humanStage} ${sc.humanSubject}`})),
     };
