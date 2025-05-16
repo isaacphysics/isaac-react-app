@@ -88,7 +88,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
 
     const stageCounts = getFilteredStageOptions().reduce((acc, s) => ({
         ...acc, 
-        [s.value]: shortcutAndFilter(listConceptsQuery?.data?.results, true)?.filter(c => c.audience?.some(a => a.stage?.includes(s.value))).length || 0
+        [s.value]: listConceptsQuery?.data?.results?.filter(c => c.audience?.some(a => a.stage?.includes(s.value))
+            && (!filters.length || c.tags?.some(t => filters.includes(t))))?.length || 0
     }), {});
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
