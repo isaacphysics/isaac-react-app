@@ -430,15 +430,15 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
 };
 
 interface GenericConceptsSidebarProps extends ConceptListSidebarProps {
-    searchStages: STAGE[];
-    setSearchStages: React.Dispatch<React.SetStateAction<STAGE[]>>;
+    searchStages: Stage[];
+    setSearchStages: React.Dispatch<React.SetStateAction<Stage[]>>;
     stageCounts: Record<string, number>;
 }
 
 export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
     const { searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts, searchStages, setSearchStages, stageCounts, ...rest } = props;
 
-    const updateSearchStages = (stage: STAGE) => {
+    const updateSearchStages = (stage: Stage) => {
         if (searchStages.includes(stage)) {
             setSearchStages(searchStages.filter(s => s !== stage));
         } else {

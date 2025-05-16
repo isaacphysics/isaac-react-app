@@ -3,7 +3,7 @@ import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
-import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, STAGE, STAGE_TO_LEARNING_STAGE, TAG_ID, tags} from "../../services";
+import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -13,7 +13,7 @@ import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericC
 import { getHumanContext, isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
 import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
-import { ContentSummaryDTO } from "../../../IsaacApiTypes";
+import { ContentSummaryDTO, Stage } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { AffixButton } from "../elements/AffixButton";
 
@@ -32,13 +32,17 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
 
     const searchParsed = queryString.parse(location.search, {arrayFormat: "comma"});
 
-    const [query, filters] = useMemo(() => {
+    const [query, filters, stages] = useMemo(() => {
         const queryParsed = searchParsed.query || null;
         const query = Array.isArray(queryParsed) ? queryParsed.join(",") : queryParsed;
     
         const filterParsed = searchParsed.types || null;
         const filters = Array.isArray(filterParsed) ? filterParsed.filter(x => !!x) as string[] : filterParsed?.split(",") ?? [];
-        return [query, filters];
+
+        const stagesParsed = searchParsed.stages || null;
+        const stages = Array.isArray(stagesParsed) ? stagesParsed.filter(x => !!x) as string[] : stagesParsed?.split(",") ?? [];
+
+        return [query, filters, stages];
     }, [searchParsed]);
 
     const applicableTags = pageContext?.subject
@@ -49,7 +53,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const [conceptFilters, setConceptFilters] = useState<Tag[]>(
         applicableTags.filter(f => filters.includes(f.id))
     );
-    const [searchStages, setSearchStages] = useState<STAGE[]>([]);
+    const [searchStages, setSearchStages] = useState<Stage[]>(stages as Stage[]);
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
     const listConceptsQuery = useListConceptsQuery(pageContext 
@@ -91,7 +95,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         if (e) {
             e.preventDefault();
         }
-        pushConceptsToHistory(history, searchText || "", [...conceptFilters.map(f => f.id)]);
+        pushConceptsToHistory(history, searchText || "", [...conceptFilters.map(f => f.id)], searchStages);
 
         if (searchText) {
             setShortcutResponse(shortcuts(searchText));
@@ -108,7 +112,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         };
     }, [searchText]);
 
-    useEffect(() => {doSearch();}, [conceptFilters]);
+    useEffect(() => {doSearch();}, [conceptFilters, searchStages]);
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
