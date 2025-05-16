@@ -123,14 +123,16 @@ function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps)
 
 function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewProps) {
     const dispatch = useAppDispatch();
-    if (preview || view) {
-        const quiz = view ? view.quiz : attempt.quiz;
+    if (view) {
+        return isTeacherOrAbove(user) && <Button className="float-end ms-2 mb-2" onClick={() => dispatch(showQuizSettingModal(view.quiz!))}>Set Test</Button>;
+    }
+    else if (preview) {
         return <>
             {preview && <EditContentButton doc={attempt.quiz} />}
             <div data-testid="quiz-action" className="d-flex">
                 <p>{ preview ? "You are previewing this test." : "You are viewing the rubric for this test."}</p>
                 <Spacer />
-                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(quiz!))}>Set Test</Button>}
+                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz!))}>Set Test</Button>}
             </div>
         </>;
     } else if (isDefined(attempt.quizAssignment)) {
@@ -165,8 +167,8 @@ function QuizRubric({attempt, view}: Pick<QuizAttemptProps | QuizViewProps, "att
     const rubric = attempt ? attempt.quiz?.rubric : view?.quiz?.rubric;
     const renderRubric = (rubric?.children || []).length > 0;
     return <div>
-        {rubric && renderRubric && <div>
-            <h4>Instructions</h4>
+        {rubric && renderRubric && <div data-testid="quiz-rubric">
+            {!view && <h4>Instructions</h4>}
             <IsaacContentValueOrChildren value={rubric.value}>
                 {rubric.children}
             </IsaacContentValueOrChildren>
