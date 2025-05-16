@@ -2,7 +2,7 @@ import os.path
 import subprocess
 import argparse
 
-def run(site: str, update_baselines: bool):
+def run(site: str, update_baselines: bool, cypress_args):
     subprocess.run([
         "docker",
         "run",
@@ -23,8 +23,9 @@ def run(site: str, update_baselines: bool):
         "-e", f"CYPRESS_UPDATE_BASELINE={'true' if update_baselines else 'false'}",
         "-e", "CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT=300000",
         "-e", "CYPRESS_CACHE_FOLDER=/tests/.cache/Cypress",
-        "cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1",
-        "/tests/docker-entrypoint-vrt.sh"
+        "cypress/browsers:latest",
+        "/tests/docker-entrypoint-vrt.sh",
+        *cypress_args
     ])
 
 if __name__ == "__main__":
@@ -36,5 +37,5 @@ if __name__ == "__main__":
         help="If provided, the run's results will become the new baselines for you to include in your commit.",
     )
 
-    args = parser.parse_args()
-    run(site=args.site, update_baselines=args.update_baselines)
+    args, unknown = parser.parse_known_args()
+    run(site=args.site, update_baselines=args.update_baselines, cypress_args=unknown)
