@@ -84,14 +84,14 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
     };
 };
 
-export const submitInlineRegion = (inlineContext: ContextType<typeof InlineContext>, currentGameboard: GameboardDTO | undefined, currentUser: any, pageQuestions: AppQuestionDTO[] | undefined, dispatch: any, hidingAttempts : boolean) => {
+export const submitInlineRegion = async (inlineContext: ContextType<typeof InlineContext>, currentGameboard: GameboardDTO | undefined, currentUser: any, pageQuestions: AppQuestionDTO[] | undefined, dispatch: any, hidingAttempts : boolean) => {
     if (inlineContext && inlineContext.docId && pageQuestions) {
         inlineContext.setSubmitting(true);
         const inlineQuestions = pageQuestions.filter(q => inlineContext.docId && q.id?.startsWith(inlineContext.docId) && q.id.includes("|inline-question:"));
         // we submit all modified answers, and those with undefined values. we must submit this latter group to get a validation response at the same time as the other answers
         const modifiedInlineQuestions = inlineQuestions.filter(q => (q.id && inlineContext.modifiedQuestionIds.includes(q.id)) || (q.currentAttempt?.value === undefined && (q.bestAttempt === undefined || hidingAttempts)));
         for (const inlineQuestion of modifiedInlineQuestions) {
-            submitCurrentAttempt(
+            await submitCurrentAttempt(
                 {currentAttempt: inlineQuestion.currentAttempt},
                 inlineQuestion.id as string, inlineQuestion.type as string, currentGameboard, currentUser, dispatch, inlineContext
             );
