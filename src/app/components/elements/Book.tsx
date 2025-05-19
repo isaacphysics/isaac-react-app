@@ -10,6 +10,7 @@ import { BookPage } from "./BookPage";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { TeacherNotes } from "./TeacherNotes";
+import { EditContentButton } from "./EditContentButton";
     
 interface BookProps {
     match: { params: { bookId: string } };
@@ -62,6 +63,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                     thenRender={(bookDetailPage) => <BookPage page={bookDetailPage} />}
                                 />
                                 : <>
+                                    <EditContentButton doc={definedBookIndexPage}/>
                                     <TeacherNotes notes={definedBookIndexPage.teacherNotes} />
                                     <div>
                                         <div className="book-image-container mx-3 float-end">
