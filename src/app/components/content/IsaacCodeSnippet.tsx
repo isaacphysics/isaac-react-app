@@ -57,7 +57,7 @@ const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
         {doc.url && <Row>
             <Col className="text-center mb-2">
                 <a className="no-print" href={doc.url} onClick={logViewOnGitHub} target="_blank" rel="noopener noreferrer">View on GitHub</a>
-                <a className="only-print mb-2" href={doc.url} target="_blank" rel="noopener noreferrer">{doc.url}</a>
+                <a className="only-print" href={doc.url} target="_blank" rel="noopener noreferrer">{doc.url}</a>
             </Col>
         </Row>}
     </>;

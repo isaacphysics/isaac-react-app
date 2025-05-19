@@ -145,7 +145,8 @@ export const Tabs = (props: TabsProps) => {
                     {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
                         const tabIndex = mapIndex + 1;
                         return <>
-                            {style === "tabs" && <TabNavbar {...props} className="d-none d-print-flex" activeTab={tabIndex} changeTab={changeTab}>{children}</TabNavbar>}
+                            {/* This navbar exists only when printing so each tab has its own heading */}
+                            {style === "tabs" && <TabNavbar {...props} className={classNames("d-none d-print-flex mb-3 mt-2", {"mt-n4": mapIndex === 0 && tabContentClass.includes("pt-4")})} activeTab={tabIndex} changeTab={changeTab}>{children}</TabNavbar>}
                             <TabPane key={tabTitle} tabId={tabIndex}>
                                 {tabBody as ReactNode}
                             </TabPane>
