@@ -43,8 +43,11 @@ describe("AssignmentProgress", () => {
         // Clicking on the group title should suffice to open the accordion
         await userEvent.click(groupTitle);
         // Get the two tabs, making sure that they show the correct numbers of assignments in each one
-        const assignmentsTab = await screen.findByRole("button", {name: `Assignments (${mockAssignments.length})`});
-        const testsTab = await screen.findByRole("button", {name: `Tests (${mockTestAssignments.length})`});
+        // (and check that the user-visible "no-print" version of the tab is used)
+        const assignmentsTabs = await screen.findAllByRole("button", {name: `Assignments (${mockAssignments.length})`});
+        const assignmentsTab = assignmentsTabs.filter(tab => tab.classList.contains("no-print"))[0];
+        const testsTabs = await screen.findAllByRole("button", {name: `Tests (${mockTestAssignments.length})`});
+        const testsTab = testsTabs.filter(tab => tab.classList.contains("no-print"))[0];
         await userEvent.click(assignmentsTab);
         for (const assignmentTitle of mockAssignments.map(a => a.gameboard?.title)) {
             await screen.findByText(assignmentTitle, {exact: false});
