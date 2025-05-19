@@ -284,9 +284,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 }
             </div>
             {/* Physics Hints */}
-            {isPhy && <div>
-                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
-            </div>}
+            {isPhy && <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />}
         </Form>
 
         {/* LLM free-text question validation response */}
