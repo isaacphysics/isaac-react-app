@@ -9,11 +9,11 @@ import { MenuOpenContext } from "../../navigation/NavigationBar";
 import classNames from "classnames";
 import { NavigationMenuPhy } from "./NavigationMenuPhy";
 
-export const LoginLogoutButton = (props : React.HTMLAttributes<HTMLElement>) => {
+export const LoginLogoutButton = (props : React.HTMLAttributes<HTMLButtonElement>) => {
     const user = useAppSelector(selectors.user.orNull);
     
     return user && (user.loggedIn 
-        ? <Link to="/logout" {...props}>Log out</Link>
+        ? <Button tag={Link} to="/logout" color="link" {...props}>Log out</Button>
         : <Button color="solid" size="sm" tag={Link} to="/login" {...props}>Sign up / log in</Button>
     );
 };
@@ -60,7 +60,7 @@ export const HeaderPhy = () => {
                                 <Offcanvas id="header-offcanvas" direction="end" isOpen={menuOpen} toggle={toggleMenu} container="#root">
                                     <OffcanvasHeader toggle={toggleMenu} className="justify-content-between" close={
                                         <div className="d-flex justify-content-end align-items-center flex-wrap gap-3 py-3">
-                                            <LoginLogoutButton/>
+                                            <LoginLogoutButton onClick={toggleMenu}/>
                                             <AffixButton color="tint" size="lg" onClick={toggleMenu} affix={{
                                                 affix: "icon-close", 
                                                 position: "suffix", 
