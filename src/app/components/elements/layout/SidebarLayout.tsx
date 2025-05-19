@@ -30,6 +30,7 @@ import { CollapsibleList } from "../CollapsibleList";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { getProgressIcon } from "../../pages/Gameboard";
 import { tags as tagsService } from "../../../services";
+import { Markup } from "../markup";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -1519,7 +1520,7 @@ export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
                             <StyledTabPicker
                                 checkboxTitle={<div className="d-flex">
                                     <span className="text-theme me-2">{section.label}</span>
-                                    <span className="flex-grow-1">{section.title}</span>
+                                    <span className="flex-grow-1"><Markup encoding="latex">{section.title}</Markup></span>
                                 </div>}
                                 checked={pageId === section.bookPageId}
                                 onClick={() => history.push(`/books/${urlBookId}/${section.bookPageId?.slice((book.id?.length ?? 0) + 1)}`)}
