@@ -8,7 +8,7 @@ import {IsaacFigure} from "./IsaacFigure";
 import {IsaacGlossaryTerm} from "./IsaacGlossaryTerm";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
-import {IsaacTabs} from "./IsaacTabs";
+import {IsaacTabs, isTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
 import {RouteComponentProps, withRouter} from "react-router-dom";
@@ -75,6 +75,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
             default:
                 switch (layout) {
                     case "tabs": selectedComponent = <IsaacTabs {...props} />; break;
+                    case isTabs(layout): selectedComponent = <IsaacTabs {...props} style={layout?.split('/')[1]} />; break;
                     case "callout": selectedComponent = <IsaacCallout {...props} />; break;
                     case "accordion": selectedComponent = <IsaacAccordion {...props} />; break;
                     case "horizontal": selectedComponent = <IsaacHorizontal {...props} />; break;

@@ -10,7 +10,7 @@ import {Markup} from "./markup";
 import { AffixButton } from "./AffixButton";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
-
+export type TabStyle = "tabs" | "buttons" | "dropdowns";
 interface TabsProps {
     className?: string;
     tabTitleClass?: StringOrTabFunction;
@@ -22,7 +22,7 @@ interface TabsProps {
     refreshHash?: string;
     expandable?: boolean;
     singleLine?: boolean;
-    style?: "tabs" | "buttons" | "dropdowns";
+    style?: TabStyle;
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabTitle: string, tabIndex: number) {
@@ -84,22 +84,16 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsPr
 };
 
 const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
-    return <div className="my-3">
-        {!!Object.keys(children).length && <h5 className="text-theme mb-2">Need some help?</h5>}
-        <div>
-            {Object.keys(children).map((tabTitle, i) =>
-                <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2 mb-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
-                    affix: "icon-chevron-down",
-                    position: "suffix",
-                    type: "icon",
-                }}>
-                    {tabTitle}
-                </AffixButton>
-            )}
-        </div>
-        {activeTab > 0 && <div className="mt-3">
-            {children[activeTab]}
-        </div>}
+    return <div className="mt-3 mb-1">
+        {Object.keys(children).map((tabTitle, i) =>
+            <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2 mb-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
+                affix: "icon-chevron-down",
+                position: "suffix",
+                type: "icon",
+            }}>
+                {tabTitle}
+            </AffixButton>
+        )}
     </div>;
 };
 
@@ -133,7 +127,7 @@ export const Tabs = (props: TabsProps) => {
 
     return <div className={classNames({"mt-4": isDefined(expandButton)}, outerClasses)} ref={updateExpandRef}>
         {expandButton}
-        <div className={classNames(className, innerClasses, "position-relative")}>
+        <div className={classNames(className, innerClasses, `tab-style-${style}`, "position-relative")}>
             {style === "tabs"
                 ? <TabNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</TabNavbar>
                 : style === "buttons"
