@@ -10,7 +10,7 @@ export const FooterPhy = () => (
         <Row className="pt-5">
             <Col xl={{size: 3, offset: 0}}>
                 <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="mt-2 mb-1">
-                    <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' width="160px" className='footer-org-logo' />
+                    <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='footer-org-logo' />
                 </a>
                 <div className="logo-text">
                     Funded by {' '} <ExternalLink href="https://www.cam.ac.uk/" className="d-inline">
@@ -19,7 +19,7 @@ export const FooterPhy = () => (
                     <br />
                     Supported by {' '} <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education" className="d-inline">
                         <u>Department for Education</u>
-                    </ExternalLink> and {' '} 
+                    </ExternalLink> and {' '}
                     <ExternalLink href="https://www.ogdentrust.com/" className="d-inline">
                         <u>The&nbsp;Ogden&nbsp;Trust</u>
                     </ExternalLink>.
@@ -44,7 +44,7 @@ export const FooterPhy = () => (
                 <Link to="/privacy">Privacy policy</Link>
                 <Link to="/cookies">Cookie policy</Link>
                 <Link to="/terms">Terms of use</Link>
-            </Col>    
-        </Row>           
+            </Col>
+        </Row>
     </footer>
 );
