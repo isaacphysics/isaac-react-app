@@ -69,7 +69,7 @@ const HomepageHero = () => {
                             isStudent={false}/>
                     </Col>
                 </Row>
-            </Container>           
+            </Container>
         </div>;
     }
 };
@@ -118,7 +118,7 @@ export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
 
     const user = useAppSelector(selectors.user.orNull);
-    
+
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
 
     const [dashboardView, setDashboardView] = useState<"student" | "teacher" | undefined>(undefined);
@@ -158,16 +158,16 @@ export const HomepagePhy = () => {
     useEffect(() => {
         getEventsList({startIndex: 0, limit: 2, typeFilter: EventTypeFilter["All groups"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
     }, []);
-    
+
     return <>
         <div id="homepage" className="homepage pb-5">
             <section id="dashboard">
                 {isLoggedIn(user) && (isTutorOrAbove(user)
                     ? <TeacherDashboard assignmentsSetByMe={assignmentsSetByMe} quizzesSetByMe={isTutor(user) ? [] : quizzesSetByMe} groups={groups} myAssignments={myAssignments}
-                        myQuizAssignments={myQuizAssignments} streakRecord={streakRecord} dashboardView={dashboardView} setDashboardView={setDashboardView} /> 
+                        myQuizAssignments={myQuizAssignments} streakRecord={streakRecord} dashboardView={dashboardView} setDashboardView={setDashboardView} />
                     : <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} />)}
             </section>
-            <section id="homepage-hero">               
+            <section id="homepage-hero">
                 {!isLoggedIn(user) && <HomepageHero />}
             </section>
             <Container>
@@ -177,15 +177,15 @@ export const HomepagePhy = () => {
                             <h3>Explore and learn!</h3>
                             <div className="section-divider ms-2"/>
                         </div>
-                        <ListViewCards cards={cards}/>                                         
-                    </div>                    
+                        <ListViewCards cards={cards}/>
+                    </div>
                 </section>
                 <section id="events-news">
                     <Row className="mt-5 row-cols-1 row-cols-lg-2">
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h3>Upcoming Events</h3>
-                                <Link to="/events" className="news-events-link">More events</Link>                        
+                                <h3>Upcoming events</h3>
+                                <Link to="/events" className="news-events-link">More events</Link>
                                 <div className="section-divider-bold"/>
                             </div>
                             <ShowLoadingQuery
@@ -199,10 +199,10 @@ export const HomepagePhy = () => {
                                     </Row>;
                                 }}/>
                         </div>
-                        <div className="d-flex flex-column mt-3"> 
+                        <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h3>News & Features</h3>
-                                <Link to="/news" className="news-events-link">More news</Link>                     
+                                <h3>News and features</h3>
+                                <Link to="/news" className="news-events-link">More news</Link>
                                 <div className="section-divider-bold"/>
                             </div>
                             {news && <Row className="h-100">
