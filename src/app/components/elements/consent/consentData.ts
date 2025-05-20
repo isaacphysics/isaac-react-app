@@ -9,5 +9,13 @@ export const consentData = {
         afterLink: ".",
       },
     ],
+    VirtualEventConsent: [
+      {
+        beforeLink:
+          "By requesting to book on this event, I agree to grant event organisers access to the information provided in this form so they can set me pre-event work, view my progress, send event materials, and record my attendance. I understand that my data will be processed in accordance with the ",
+        linkText: "Privacy Policy",
+        afterLink: ".",
+      },
+    ],
   },
 };

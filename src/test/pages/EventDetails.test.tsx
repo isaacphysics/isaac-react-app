@@ -375,7 +375,7 @@ describe("EventDetails", () => {
     },
   );
 
-  it("'book now' button should remain disabled for in-person events when consent is not checked", async () => {
+  it("'book now' button should remain disabled for events when consent is not checked", async () => {
     const { consentCheckbox, bookNowButton } = await setupBookingForm(false);
     expect(consentCheckbox).not.toBeChecked();
     expect(bookNowButton).toBeDisabled();

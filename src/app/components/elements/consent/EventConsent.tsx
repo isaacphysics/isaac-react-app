@@ -17,7 +17,7 @@ interface ConsentProps {
   onConsentChange?: (checked: boolean) => void;
 }
 
-const Consent = ({ consentText, required = true, onConsentChange }: ConsentProps) => {
+const EventConsent = ({ consentText, required = true, onConsentChange }: ConsentProps) => {
   const [isChecked, setIsChecked] = useState(false);
   const inputId = "consent-checkbox";
 
@@ -74,4 +74,4 @@ const Consent = ({ consentText, required = true, onConsentChange }: ConsentProps
   );
 };
 
-export default Consent;
+export default EventConsent;
