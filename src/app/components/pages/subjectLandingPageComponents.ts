@@ -94,14 +94,15 @@ const BookCard = (book: BookInfo, description: string) => (context: NonNullable<
 const StepIntoPhyCard = BookCard(ISAAC_BOOKS_BY_TAG["phys_book_step_into"], "Discover secondary physics ideas and interesting experiments. Aimed at students in years 7 and 8.");
 const StepUpPhyCard = BookCard(ISAAC_BOOKS_BY_TAG["phys_book_step_up"], "Build a strong foundation in physics. Aimed at students in year 9.");
 
-const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListViewTagProps[]) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListViewTagProps[], state?: AbstractListViewItemState) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
         title,
         subtitle
     },
     icon: {type: "hex", icon: "icon-revision"},
     subject: context.subject,
-    linkTags
+    linkTags,
+    state,
 });
 
 const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
@@ -133,7 +134,7 @@ const BiologyExtensionQuestionsCard = (context: NonNullable<Required<PageContext
 };
 
 const MathsUniCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard(context.subject === "maths" ? "Revision" : `Maths revision for ${context.subject}`, `Refresh your maths skills in preparation for ${context.subject} at university.`, [{tag: "List of revision areas", url: extendUrl(context, "")}])(context);
+    return ArbitraryPageLinkCard(context.subject === "maths" ? "Revision" : `Maths revision for ${context.subject}`, `Refresh your maths skills in preparation for ${context.subject} at university.`, [{tag: "List of revision areas", url: extendUrl(context, "")}], AbstractListViewItemState.COMING_SOON)(context);
 };
 
 const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
