@@ -45,8 +45,8 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         ? <span>{props.title && props.asSubList ? props.title : <b>{props.title}</b>}</span>
         : props.title;
 
-    return <Col className={props.className} data-targetHeight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
-        <div className="row collapsible-head" ref={headRef}>
+    return <Col className={classNames("collapsible-list-container", props.className)} data-targetHeight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
+        <div className="row m-0 collapsible-head" ref={headRef}>
             <button className={classNames("w-100 d-flex align-items-center p-3 text-start", {"bg-white": isAda, "bg-transparent": isPhy, "ps-4": props.asSubList})} onClick={toggle}>
                 {title && <span>{title}</span>}
                 <Spacer/>
@@ -56,7 +56,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
             </button>
         </div>
         <div
-            className={`collapsible-body overflow-hidden ${expanded ? "open" : "closed"}`} 
+            className={`collapsible-body ${expanded ? "open" : "closed"}`} 
             style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0, marginBottom: expanded ? (props.additionalOffset ?? 0) : 0}}
         >
             <div ref={listRef} className={classNames({"ms-2": props.asSubList})} {...{"inert": expanded ? undefined : "true"}}> 
