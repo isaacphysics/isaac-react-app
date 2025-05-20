@@ -469,7 +469,7 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
                     const descendentTags = tags.getDirectDescendents(subjectTag.id);
                     const isSelected = conceptFilters.includes(subjectTag) || descendentTags.some(tag => conceptFilters.includes(tag));
                     const isPartial = descendentTags.some(tag => conceptFilters.includes(tag)) && descendentTags.some(tag => !conceptFilters.includes(tag));
-                    return <div key={i} className={classNames("ps-2", {"checkbox-region": isSelected})}>
+                    return <div key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
                         <FilterCheckbox 
                             checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
                             setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
@@ -614,7 +614,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                     const descendentTags = tags.getDirectDescendents(subjectTag.id);
                     const isSelected = filterTags?.includes(subjectTag) || descendentTags.some(tag => filterTags?.includes(tag));
                     const isPartial = descendentTags.some(tag => filterTags?.includes(tag)) && descendentTags.some(tag => !filterTags?.includes(tag));
-                    return <li key={i} className={classNames("ps-2", {"checkbox-region": isSelected})}>
+                    return <li key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
                         <FilterCheckbox 
                             checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={filterTags as Tag[]} 
                             setConceptFilters={setFilterTags} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}

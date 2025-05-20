@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {InputProps} from "reactstrap";
 import {v4} from "uuid";
 import {Spacer} from "../Spacer";
-import {ifKeyIsEnter, isAda} from "../../../services";
+import {ifKeyIsEnter, isAda, isPhy} from "../../../services";
 import classNames from "classnames";
 
 // A custom checkbox, dealing with mouse and keyboard input. Pass `onChange((e : ChangeEvent) => void)`, `checked: bool`, and `label: Element` as required as props to use.
@@ -15,7 +15,7 @@ export const StyledCheckbox = (props: InputProps & {partial?: boolean}) => {
     const [checked, setChecked] = useState(props.checked ?? false);
     const id = useMemo(() => {return (props.id ?? "") + "-" + v4();}, [props.id]);
     const onCheckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        props.onChange && props.onChange(e);
+        if (props.onChange) props.onChange(e);
         setChecked(e.target.checked);
     };
 
@@ -37,4 +37,14 @@ export const StyledCheckbox = (props: InputProps & {partial?: boolean}) => {
         {label && <label htmlFor={id} className={classNames({"text-muted" : props.disabled, "hover-override" : ignoreLabelHover})} {...label.props}/>}
         <Spacer/>
     </div>;
+};
+
+interface CheckboxWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
+    active?: boolean;
+}
+
+// in many places, we want a stylised wrapper around the checkbox indicating selection.
+export const CheckboxWrapper = (props: CheckboxWrapperProps) => {
+    const {active, className, ...rest} = props;
+    return <div {...rest} className={classNames("ps-3 checkbox-wrapper", {"ms-2": isPhy, "bg-white": isAda, "checkbox-active": active}, className)}/>;
 };

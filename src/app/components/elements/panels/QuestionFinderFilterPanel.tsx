@@ -22,7 +22,7 @@ import {
 import { Difficulty, ExamBoard } from "../../../../IsaacApiTypes";
 import { pageStageToSearchStage, QuestionStatus } from "../../pages/QuestionFinder";
 import classNames from "classnames";
-import { StyledCheckbox } from "../inputs/StyledCheckbox";
+import { CheckboxWrapper, StyledCheckbox } from "../inputs/StyledCheckbox";
 import { DifficultyIcons } from "../svg/DifficultyIcons";
 import { GroupBase } from "react-select";
 import { HierarchyFilterTreeList } from "../svg/HierarchyFilter";
@@ -159,14 +159,14 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.length}
             >
                 {getFilteredStageOptions().filter(stage => pageStageToSearchStage(pageContext?.stage).includes(stage.value) || !pageContext?.stage?.length).map((stage, index) => (
-                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStages.includes(stage.value)})} key={index}>
+                    <CheckboxWrapper active={searchStages.includes(stage.value)} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchStages.includes(stage.value)}
                             onChange={() => setSearchStages(s => s.includes(stage.value) ? s.filter(v => v !== stage.value) : [...s, stage.value])}
                             label={<span>{stage.label}</span>}
                         />
-                    </div>
+                    </CheckboxWrapper>
                 ))}
             </CollapsibleList>}
             {isAda && <CollapsibleList
@@ -175,14 +175,14 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={searchExamBoards.length}
             >
                 {getFilteredExamBoardOptions({byStages: searchStages}).map((board, index) => (
-                    <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                    <CheckboxWrapper active={searchExamBoards.includes(board.value)} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchExamBoards.includes(board.value)}
                             onChange={() => setSearchExamBoards(s => s.includes(board.value) ? s.filter(v => v !== board.value) : [...s, board.value])}
                             label={<span>{board.label}</span>}
                         />
-                    </div>
+                    </CheckboxWrapper>
                 ))}
             </CollapsibleList>}
             <CollapsibleList
@@ -191,14 +191,12 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={siteSpecific(getChoiceTreeLeaves(selections).filter(l => l.value !== pageContext?.subject).length, searchTopics.length)}
             >
                 {siteSpecific(
-                    <div>
-                        <HierarchyFilterTreeList root {...{
-                            tier: pageContext?.subject ? 1 : 0,
-                            index: pageContext?.subject as TAG_ID ?? TAG_LEVEL.subject,
-                            choices, selections, setSelections,
-                            questionFinderFilter: true
-                        }}/>
-                    </div>,
+                    <HierarchyFilterTreeList root {...{
+                        tier: pageContext?.subject ? 1 : 0,
+                        index: pageContext?.subject as TAG_ID ?? TAG_LEVEL.subject,
+                        choices, selections, setSelections,
+                        questionFinderFilter: true
+                    }}/>,
                     groupBaseTagOptions.map((tag, index) => (
                         <CollapsibleList
                             title={tag.label} key={index} asSubList
@@ -206,7 +204,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
                         >
                             {tag.options.map((topic, index) => (
-                                <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
+                                <div className={classNames("ps-3", {"bg-white": isAda})} key={index}>
                                     <StyledCheckbox
                                         color="primary"
                                         checked={searchTopics.includes(topic.value)}
@@ -238,7 +236,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     <b className="small text-start">{siteSpecific("Learn more about difficulty levels", "What do the difficulty levels mean?")}</b>
                 </button>
                 {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
-                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchDifficulties.includes(difficulty.value)})} key={index}>
+                    <CheckboxWrapper active={searchDifficulties.includes(difficulty.value)} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchDifficulties.includes(difficulty.value)}
@@ -252,7 +250,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 <DifficultyIcons difficulty={difficulty.value} blank className={classNames({"mt-n2": isAda, "mt-2": isPhy})}/>
                             </div>}
                         />
-                    </div>
+                    </CheckboxWrapper>
                 ))}
             </CollapsibleList>
             {isPhy && bookOptions.length > 0 && <CollapsibleList
@@ -261,18 +259,19 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={excludeBooks ? 1 : searchBooks.length}
             >
                 <>
-                    <div className={classNames("w-100 ps-3 py-1 ms-2", {"checkbox-region": excludeBooks})}>
+                    <CheckboxWrapper active={excludeBooks}>
                         <StyledCheckbox
                             color="primary"
                             checked={excludeBooks}
                             onChange={() => setExcludeBooks(p => !p)}
                             label={<span className="me-2">Exclude skills book questions</span>}
                         />
+                    </CheckboxWrapper>
                     <div className="section-divider ms-3 my-2"/>
                     {bookOptions.map((book, index) => (
-                        <div className={classNames("w-100 ps-3 py-1 ms-2", {"checkbox-region": searchBooks.includes(book.tag) && !excludeBooks})} key={index}>
+                        <CheckboxWrapper active={searchBooks.includes(book.tag) && !excludeBooks} key={index}>
                             <StyledCheckbox
-                                color="primary" disabled={excludeBooks}
+                                color="primary"
                                 checked={searchBooks.includes(book.tag) && !excludeBooks}
                                 onChange={() => {
                                     if (excludeBooks) {
@@ -288,7 +287,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 }}
                                 label={<span className="me-2">{book.shortTitle ?? book.title}</span>}
                             />
-                        </div>
+                        </CheckboxWrapper>
                     ))}
                 </>
             </CollapsibleList>}
@@ -297,7 +296,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 toggle={() => listStateDispatch({type: "toggle", id: "questionStatus", focus: below["md"](deviceSize)})}
                 numberSelected={Object.values(searchStatuses).reduce((acc, item) => acc + item, 0)}
             >
-                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStatuses.notAttempted})}>
+                <CheckboxWrapper active={searchStatuses.notAttempted}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.notAttempted}
@@ -313,8 +312,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             </div>
                         )}
                     />
-                </div>
-                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStatuses.complete})}>
+                </CheckboxWrapper>
+                <CheckboxWrapper active={searchStatuses.complete}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.complete}
@@ -330,8 +329,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             </div>
                         )}
                     />
-                </div>
-                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStatuses.tryAgain})}>
+                </CheckboxWrapper>
+                <CheckboxWrapper active={searchStatuses.tryAgain}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.tryAgain}
@@ -347,7 +346,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             </div>
                         )}
                     />
-                </div>
+                </CheckboxWrapper>
             </CollapsibleList>
             {/* TODO: implement once necessary tags are available
             <div className="pb-2">
