@@ -44,7 +44,6 @@ import { Chemistry16 } from "../../pages/books_old/chemistry_16";
 import { LinkingConcepts } from "../../pages/books_old/linking_concepts";
 import { PhysBookYrNine } from "../../pages/books_old/phys_book_yr9";
 import { PreUniMaths } from "../../pages/books_old/pre_uni_maths";
-import { PreUniMaths2e } from "../../pages/books_old/pre_uni_maths_2e";
 import { StepUpPhys } from "../../pages/books_old/step_up_phys";
 import { QuizView } from "../../pages/quizzes/QuizView";
 
@@ -67,7 +66,6 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
 // TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
 const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
     "/books/pre_uni_maths": PreUniMaths,
-    "/books/pre_uni_maths_2e": PreUniMaths2e,
     "/books/chemistry_16": Chemistry16,
     "/books/quantum_mechanics_primer": QuantumMechanicsPrimer,
     "/books/solve_physics_problems": SolvingPhysProblems,
