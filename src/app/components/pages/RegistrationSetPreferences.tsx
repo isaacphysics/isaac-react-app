@@ -116,7 +116,7 @@ export const RegistrationSetPreferences = () => {
                                 {siteSpecific(<div className="section-divider"/>, <hr/>)}
                                 <Row className="justify-content-end">
                                     <Col xs={12} sm={siteSpecific(4,5)} lg={6} className={classNames("d-flex justify-content-end", {"justify-content-lg-end": isAda})}>
-                                        <Button className={`my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`}  color={siteSpecific("solid", "secondary")} outline={siteSpecific(false, true)} onClick={continueToAfterAuthPath}>I&apos;ll do this later</Button>
+                                        <Button className={`my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`}  color={siteSpecific("solid", "secondary")} outline={isAda} onClick={continueToAfterAuthPath}>I&apos;ll do this later</Button>
                                     </Col>
                                     <Col xs={12} sm={5} lg={6} className="d-flex">
                                         <Button type="submit" className={`btn my-2 px-2 w-100 ${siteSpecific("px-lg-0 btn-secondary", "px-lg-3 btn-primary")}`} disabled={!canSavePreferences}>Save preferences</Button>

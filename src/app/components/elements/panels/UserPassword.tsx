@@ -196,7 +196,7 @@ export const UserPassword = (
                         "You might want to do this if you forgot to log out on a shared device like a school computer."}
                     </p>
                     <Col className="text-center mt-2 px-0">
-                        <Button className={classNames("w-100 py-2 mt-3 mb-2", isAda)} color="primary" outline onClick={() => dispatch(logOutUserEverywhere())}>
+                        <Button className={classNames({"w-100 py-2 mt-3 mb-2": isAda})} color={siteSpecific("keyline", "primary")} outline={isAda} onClick={() => dispatch(logOutUserEverywhere())}>
                             Log {above['sm'](deviceSize) ? "me " : ""}out everywhere
                         </Button>
                     </Col>

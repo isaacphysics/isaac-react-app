@@ -319,7 +319,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 </Button>
                                 }
                                 {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
-                                <Button className="mb-3 me-3" outline onClick={() =>
+                                <Button className="mb-3 me-3 btn btn-keyline" onClick={() =>
                                     confirmThen(
                                         "Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.",
                                         () => cancelMyBooking(eventId)

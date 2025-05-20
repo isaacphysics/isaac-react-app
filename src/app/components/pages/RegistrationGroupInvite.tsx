@@ -1,7 +1,7 @@
 import {Button, Card, CardBody, Container, Table} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import React, { useEffect, useState } from "react";
-import { extractTeacherName, history, KEY, persistence } from "../../services";
+import { extractTeacherName, history, isAda, KEY, persistence, siteSpecific } from "../../services";
 import { authorisationsApi, store, useLazyGetTokenOwnerQuery } from "../../state";
 import { UserSummaryWithEmailAddressDTO } from "../../../IsaacApiTypes";
 
@@ -41,7 +41,7 @@ export const RegistrationGroupInvite = ()  => {
             <Card className="my-5">
                 <CardBody>
                     <p>You came here via a group join link, but the group code is invalid.</p>
-                    <Button color="primary" outline onClick={() => {history.push("/account#teacherconnections");}}>
+                    <Button color={siteSpecific("keyline", "primary")} outline={isAda} onClick={() => {history.push("/account#teacherconnections");}}>
                         Go to teacher connections
                     </Button>
                 </CardBody>
@@ -64,11 +64,11 @@ export const RegistrationGroupInvite = ()  => {
                         </tr>))}
                     </tbody>
                 </Table>
-                <Button color="primary" outline onClick={() => {history.push("/account");}}>
+                <Button color={siteSpecific("keyline", "primary")} outline={isAda} onClick={() => {history.push("/account");}}>
                     No, skip this
                 </Button>
                 {" "}
-                <Button color="secondary" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
+                <Button color={siteSpecific("solid", "secondary")} onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
                     Yes, join the group
                 </Button>
             </CardBody>  

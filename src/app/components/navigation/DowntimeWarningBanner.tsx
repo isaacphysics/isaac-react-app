@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Alert, Button, Col, Container, Row} from 'reactstrap';
 import Cookies from 'js-cookie';
-import {SITE_TITLE, siteSpecific} from "../../services";
+import {isAda, SITE_TITLE, siteSpecific} from "../../services";
 
 const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 
@@ -27,7 +27,7 @@ export const DowntimeWarningBanner = () => {
                         {SITE_TITLE} will be unavailable on Saturday 10 August from 8pm BST until early Sunday morning for essential server maintenance.
                     </Col>
                     <Col xs={12} md={3} className="text-center">
-                        <Button color="primary" outline className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
+                        <Button color={siteSpecific("keyline", "primary")} outline={isAda} className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
                             Dismiss<span className="visually-hidden"> downtime notification</span>
                         </Button>
                     </Col>

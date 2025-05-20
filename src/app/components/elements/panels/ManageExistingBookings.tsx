@@ -18,7 +18,8 @@ import {
     isEventLeader,
     sortOnPredicateAndReverse,
     stageLabelMap,
-    zeroOrLess, confirmThen, isDefined
+    zeroOrLess, confirmThen, isDefined,
+    siteSpecific
 } from "../../../services";
 import {PotentialUser, UserSchoolLookup} from "../../../../IsaacAppTypes";
 import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
@@ -156,7 +157,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                 return !isDefined(userId) ? RenderNothing : <tr key={booking.bookingId}>
                                     <td className="align-middle">
                                         {(['WAITING_LIST', 'CANCELLED'].includes(booking.bookingStatus as string)) &&
-                                            <Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                            <Button color={siteSpecific("keyline", "primary")} outline={isAda} block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
                                                     "Are you sure you want to convert this to a confirmed booking?",
                                                     () => promoteUserBooking({eventId, userId})
@@ -166,7 +167,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                             </Button>
                                         }
                                         {(['WAITING_LIST', 'CONFIRMED'].includes(booking.bookingStatus as string)) &&
-                                            <Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                            <Button color={siteSpecific("keyline", "primary")} outline={isAda} block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
                                                     "Are you sure you want to cancel this booking?",
                                                     () => cancelUserBooking({eventId, userId})
@@ -176,7 +177,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                             </Button>
                                         }
                                         {isAdmin(user) &&
-                                            <Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                            <Button color={siteSpecific("keyline", "primary")} outline={isAda} block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
                                                     "Are you sure you want to delete this booking permanently?",
                                                     () => deleteUserBooking({eventId, userId})
@@ -185,7 +186,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                                 Delete
                                             </Button>
                                         }
-                                        <Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                        <Button color={siteSpecific("keyline", "primary")} outline={isAda} block className="btn-sm mb-1" onClick={() =>
                                             confirmThen(
                                                 "Are you sure you want to resend the confirmation email for this booking?",
                                                 () => resendUserConfirmationEmail({eventId, userId})
@@ -243,7 +244,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                     </DropdownMenu>
                 </ButtonDropdown>
                 <Button
-                    color="primary" outline className="btn-md mt-1"
+                    color={siteSpecific("keyline", "primary")} outline={isAda} className="btn-md mt-1"
                     href={`${API_PATH}/events/${eventId}/bookings/download`}
                 >
                     Export as CSV

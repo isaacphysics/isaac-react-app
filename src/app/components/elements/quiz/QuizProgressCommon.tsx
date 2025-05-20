@@ -1,7 +1,7 @@
 import React, {useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
-import {isAuthorisedFullAccess, siteSpecific, TODAY} from "../../../services";
+import {isAda, isAuthorisedFullAccess, siteSpecific, TODAY} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
@@ -89,7 +89,7 @@ export function ResultsTable<Q extends QuestionType>({
             title: "Allow another attempt?",
             body: "This will allow the student to attempt the test again.",
             buttons: [
-                <Button key={1} color="primary" outline target="_blank" onClick={() => dispatch(closeActiveModal())}>
+                <Button key={1} color={siteSpecific("keyline", "primary")} outline={isAda} target="_blank" onClick={() => dispatch(closeActiveModal())}>
                     Cancel
                 </Button>,
                 <Button key={0} color="primary" target="_blank" onClick={confirm}>

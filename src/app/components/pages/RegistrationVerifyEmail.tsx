@@ -10,7 +10,7 @@ import {
     useRequestEmailVerificationMutation,
     useVerifyEmailMutation
 } from "../../state";
-import {history, useQueryParams} from "../../services";
+import {history, isAda, siteSpecific, useQueryParams} from "../../services";
 import {Link} from "react-router-dom";
 import {ExigentAlert} from "../elements/ExigentAlert";
 
@@ -113,7 +113,7 @@ export const RegistrationVerifyEmail = () => {
                     emailVerified &&
                         <Row className="justify-content-center">
                             <Col xs={12} sm={6} md={4} lg={3}>
-                                <Button className={"my-2 w-100"} outline color="secondary" onClick={myAccount}>Your account</Button>
+                                <Button className={"my-2 w-100"} outline={isAda} color={siteSpecific("keyline", "secondary")} onClick={myAccount}>Your account</Button>
                             </Col>
                             <Col xs={12} sm={6} md={4} lg={3}>
                                 <Button className={"my-2 w-100"} onClick={continueToPreferences}>Continue</Button>

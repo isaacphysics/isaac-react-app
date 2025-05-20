@@ -16,9 +16,8 @@ import {
 import {AdminSearchEndpointParams, EmailVerificationStatus, UserRole} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ADMIN_CRUMB, isAdmin, isDefined, isPhy} from "../../services";
+import {ADMIN_CRUMB, isAda, isAdmin, isDefined, siteSpecific} from "../../services";
 import {Link} from "react-router-dom";
-import classNames from "classnames";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {produce} from "immer";
 import {skipToken} from "@reduxjs/toolkit/query";
@@ -272,7 +271,7 @@ export const AdminUserManager = () => {
                 <Row className="pb-4">
                     <Col>
                         <UncontrolledButtonDropdown>
-                            <DropdownToggle caret disabled={userBeingModified} color="primary" outline>Modify Role</DropdownToggle>
+                            <DropdownToggle caret disabled={userBeingModified} color={siteSpecific("keyline", "primary")} outline={isAda}>Modify Role</DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem header>Promote or demote selected users to:</DropdownItem>
                                 {(promotableRoles).map(role =>
@@ -286,7 +285,7 @@ export const AdminUserManager = () => {
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
                         {isDefined(currentUser) && currentUser.role === 'ADMIN' && <UncontrolledButtonDropdown>
-                            <DropdownToggle caret disabled={userBeingModified} color="primary" outline className="ms-3">Email Status</DropdownToggle>
+                            <DropdownToggle caret disabled={userBeingModified} color={siteSpecific("keyline", "primary")} outline={isAda} className="ms-3">Email Status</DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem header>Change email verification status for users to:</DropdownItem>
                                 {(verificationStatuses).map(status =>

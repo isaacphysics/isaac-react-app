@@ -36,7 +36,7 @@ const GroupJoinPanel = () => {
                     e.preventDefault();
                 }}}
             />
-            <Button onClick={processToken} outline color="secondary">
+            <Button onClick={processToken} color="primary">
                 Connect
             </Button>
         </InputGroup>

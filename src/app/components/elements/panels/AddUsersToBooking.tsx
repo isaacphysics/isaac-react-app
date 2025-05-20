@@ -7,7 +7,7 @@ import {
     useAdminSearchUsersMutation,
     selectors
 } from "../../../state";
-import {atLeastOne, formatManageBookingActionButtonMessage, zeroOrLess} from "../../../services";
+import {atLeastOne, formatManageBookingActionButtonMessage, isAda, siteSpecific, zeroOrLess} from "../../../services";
 import {DateString} from "../DateString";
 import {userBookingModal} from "../modals/UserBookingModal";
 import {AdminSearchEndpointParams} from "../../../../IsaacApiTypes";
@@ -107,7 +107,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
                     {event && userSearchResults.map(result => <tr key={result.id}>
                         <td className="align-middle">
                             {!eventBookingUserIds.includes(result.id as number) &&
-                            <Button color="primary" outline className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, event, eventBookingUserIds)))}>
+                            <Button color={siteSpecific("keyline", "primary")} outline={isAda} className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, event, eventBookingUserIds)))}>
                                 {formatManageBookingActionButtonMessage(event)}
                             </Button>
                             }

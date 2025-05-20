@@ -28,7 +28,7 @@ import {
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {ActiveModal, AppGroup, AugmentedEvent} from "../../../../IsaacAppTypes";
 import {RegisteredUserDTO, UserSummaryWithGroupMembershipDTO} from "../../../../IsaacApiTypes";
-import {bookingStatusMap, isDefined, isLoggedIn, schoolNameWithPostcode} from "../../../services";
+import {bookingStatusMap, isAda, isDefined, isLoggedIn, schoolNameWithPostcode, siteSpecific} from "../../../services";
 import _orderBy from "lodash/orderBy";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
@@ -304,7 +304,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             </Table>
 
                             <div className="text-center mb-3">
-                                <Button color="primary" outline disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
+                                <Button color={siteSpecific("keyline", "primary")} outline={isAda} disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
                                     Cancel reservations
                                 </Button>
                             </div>

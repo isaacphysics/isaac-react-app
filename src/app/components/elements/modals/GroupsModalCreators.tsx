@@ -37,7 +37,7 @@ export const additionalManagerSelfRemovalModal = (group: AppGroup, user: Registe
     buttons: [
         <Row key={0}>
             <Col>
-                <Button block outline color="primary" onClick={() => {
+                <Button block outline={isAda} color={siteSpecific("keyline", "primary")} onClick={() => {
                     store.dispatch(closeActiveModal());
                 }}>
                     Cancel

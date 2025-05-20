@@ -3,7 +3,7 @@ import {Accordion} from "../Accordion";
 import {
     useRecordUserEventAttendanceMutation
 } from "../../../state";
-import {atLeastOne, isEventLeader, sortOnPredicateAndReverse} from "../../../services";
+import {atLeastOne, isAda, isEventLeader, siteSpecific, sortOnPredicateAndReverse} from "../../../services";
 import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
 import {AugmentedEvent, PotentialUser, UserSchoolLookup} from "../../../../IsaacAppTypes";
@@ -107,12 +107,12 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
 
                                 return <tr key={booking.bookingId}>
                                     <td className="align-middle">
-                                        {booking.bookingStatus != 'ATTENDED' && <Button color="primary" outline className="btn-sm mb-2"
+                                        {booking.bookingStatus != 'ATTENDED' && <Button color={siteSpecific("keyline", "primary")} outline={isAda} className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: true})}
                                         >
                                             Mark&nbsp;as Attended
                                         </Button>}
-                                        {booking.bookingStatus != 'ABSENT' && <Button color="primary" outline className="btn-sm mb-2"
+                                        {booking.bookingStatus != 'ABSENT' && <Button color={siteSpecific("keyline", "primary")} outline={isAda} className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: false})}
                                         >
                                             Mark&nbsp;as Absent
