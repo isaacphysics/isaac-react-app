@@ -268,17 +268,24 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             onChange={() => setExcludeBooks(p => !p)}
                             label={<span className="me-2">Exclude skills book questions</span>}
                         />
-                    </div>
+                    <div className="section-divider ms-3 my-2"/>
                     {bookOptions.map((book, index) => (
                         <div className={classNames("w-100 ps-3 py-1 ms-2", {"checkbox-region": searchBooks.includes(book.tag) && !excludeBooks})} key={index}>
                             <StyledCheckbox
                                 color="primary" disabled={excludeBooks}
                                 checked={searchBooks.includes(book.tag) && !excludeBooks}
-                                onChange={() => setSearchBooks(
-                                    s => s.includes(book.tag)
-                                        ? s.filter(v => v !== book.tag)
-                                        : [...s, book.tag]
-                                )}
+                                onChange={() => {
+                                    if (excludeBooks) {
+                                        setExcludeBooks(false);
+                                        setSearchBooks([book.tag]);
+                                    } else {
+                                        setSearchBooks(
+                                            s => s.includes(book.tag)
+                                                ? s.filter(v => v !== book.tag)
+                                                : [...s, book.tag]
+                                        );
+                                    }
+                                }}
                                 label={<span className="me-2">{book.shortTitle ?? book.title}</span>}
                             />
                         </div>
