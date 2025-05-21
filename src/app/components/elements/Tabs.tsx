@@ -10,7 +10,7 @@ import {Markup} from "./markup";
 import { AffixButton } from "./AffixButton";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
-
+export type TabStyle = "tabs" | "buttons" | "dropdowns";
 interface TabsProps {
     className?: string;
     tabTitleClass?: StringOrTabFunction;
@@ -22,7 +22,7 @@ interface TabsProps {
     refreshHash?: string;
     expandable?: boolean;
     singleLine?: boolean;
-    style?: "tabs" | "buttons" | "dropdowns";
+    style?: TabStyle;
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabTitle: string, tabIndex: number) {
@@ -32,8 +32,8 @@ function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabT
 }
 
 // e.g.:   Tab 1 | Tab 2 | Tab 3
-const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
-    return <Nav tabs className={classNames("flex-wrap", {"guaranteed-single-line": singleLine})}>
+const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab, className}: TabsProps & {activeTab: number; changeTab: (i: number) => void;}) => {
+    return <Nav tabs className={classNames(className, "flex-wrap", {"guaranteed-single-line": singleLine})}>
         {Object.keys(children).map((tabTitle, mapIndex) => {
             const tabIndex = mapIndex + 1;
             const linkClasses = callOrString(tabTitleClass, tabTitle, tabIndex);
@@ -84,22 +84,16 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsPr
 };
 
 const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
-    return <div className="my-3">
-        {!!Object.keys(children).length && <h5 className="text-theme mb-2">Need some help?</h5>}
-        <div>
-            {Object.keys(children).map((tabTitle, i) =>
-                <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2 mb-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
-                    affix: "icon-chevron-down",
-                    position: "suffix",
-                    type: "icon",
-                }}>
-                    {tabTitle}
-                </AffixButton>
-            )}
-        </div>
-        {activeTab > 0 && <div className="mt-3">
-            {children[activeTab]}
-        </div>}
+    return <div className="mt-3 mb-1">
+        {Object.keys(children).map((tabTitle, i) =>
+            <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2 mb-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
+                affix: "icon-chevron-down",
+                position: "suffix",
+                type: "icon",
+            }}>
+                {tabTitle}
+            </AffixButton>
+        )}
     </div>;
 };
 
@@ -133,9 +127,9 @@ export const Tabs = (props: TabsProps) => {
 
     return <div className={classNames({"mt-4": isDefined(expandButton)}, outerClasses)} ref={updateExpandRef}>
         {expandButton}
-        <div className={classNames(className, innerClasses, "position-relative")}>
+        <div className={classNames(className, innerClasses, `tab-style-${style}`, "position-relative")}>
             {style === "tabs"
-                ? <TabNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</TabNavbar>
+                ? <TabNavbar {...props} className="no-print" activeTab={activeTab} changeTab={changeTab}>{children}</TabNavbar>
                 : style === "buttons"
                     ? <ButtonNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</ButtonNavbar>
                     : <DropdownNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</DropdownNavbar>
@@ -144,9 +138,13 @@ export const Tabs = (props: TabsProps) => {
                 <TabContent activeTab={activeTab} className={tabContentClass}>
                     {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
                         const tabIndex = mapIndex + 1;
-                        return <TabPane key={tabTitle} tabId={tabIndex}>
-                            {tabBody as ReactNode}
-                        </TabPane>;
+                        return <>
+                            {/* This navbar exists only when printing so each tab has its own heading */}
+                            {style === "tabs" && <TabNavbar {...props} className={classNames("d-none d-print-flex mb-3 mt-2", {"mt-n4": mapIndex === 0 && tabContentClass.includes("pt-4")})} activeTab={tabIndex} changeTab={changeTab}>{children}</TabNavbar>}
+                            <TabPane key={tabTitle} tabId={tabIndex}>
+                                {tabBody as ReactNode}
+                            </TabPane>
+                        </>;
                     })}
                 </TabContent>
             </ExpandableParentContext.Provider>
