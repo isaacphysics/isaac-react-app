@@ -54,7 +54,7 @@ import * as L from "leaflet";
 import ReactGA from "react-ga4";
 import { UserSummaryWithEmailAddressAndGenderDTO } from "../../../IsaacApiTypes";
 import { Immutable } from "immer";
-import EventConsent from "../elements/consent/EventConsent";
+import Consent from "../elements/consent/Consent";
 import { consentData } from "../elements/consent/consentData";
 
 interface EventDetailsProps {
@@ -350,13 +350,13 @@ const EventDetails = ({
 
                               <div className="mb-3">
                                 {isVirtual ? (
-                                  <EventConsent
+                                  <Consent
                                     consentText={VirtualEventConsent}
                                     required={true}
                                     onConsentChange={handleConsentChange}
                                   />
                                 ) : (
-                                  <EventConsent
+                                  <Consent
                                     consentText={InPersonEventConsent}
                                     required={true}
                                     onConsentChange={handleConsentChange}

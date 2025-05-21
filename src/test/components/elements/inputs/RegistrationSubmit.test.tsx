@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import { RegistrationSubmit } from "../../../../app/components/elements/inputs/RegistrationSubmit";
 import { getFormFields, renderTestEnvironment } from "../../../utils";
+import userEvent from "@testing-library/user-event";
 
 describe("RegistrationSubmit", () => {
   const setupTest = (props = {}) => {
@@ -17,13 +18,15 @@ describe("RegistrationSubmit", () => {
 
   it("renders the component", () => {
     setupTest();
-    expect(screen.getByText(/by clicking 'register my account'/i)).toBeInTheDocument();
+    expect(screen.getByText(/by ticking this box/i)).toBeInTheDocument();
     const { submitButton } = getFormFields();
     expect(submitButton()).toBeInTheDocument();
   });
 
-  it("submit button is enabled when isRecaptchaTicked is true", () => {
+  it("submit button is enabled when isRecaptchaTicked is true", async () => {
     setupTest();
+    const consentCheckbox = screen.getByRole("checkbox", { name: "Consent checkbox" });
+    await userEvent.click(consentCheckbox);
     const { submitButton } = getFormFields();
     expect(submitButton()).toBeEnabled();
   });

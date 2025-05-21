@@ -132,6 +132,8 @@ describe("Teacher Registration", () => {
     expect(newPwErrorMessage).toBeVisible();
     // update PW to meet requirements and try to submit, observe error messages for school, stage and email address
     await fillTextField(password(), registrationUserData.password);
+    const consentCheckbox = screen.getByRole("checkbox", { name: "Consent checkbox" });
+    await userEvent.click(consentCheckbox);
     await clickButton("Register my account");
     const schoolErrorMessage = screen.getByText(/Please specify a school or college/i);
     const stageErrorMessage = getById("user-context-feedback");
@@ -154,6 +156,8 @@ describe("Teacher Registration", () => {
     renderTeacherRegistration();
     await confirmTeacherAndAcceptTerms();
     await fillFormCorrectly(true, "teacher");
+    const consentCheckbox = screen.getByRole("checkbox", { name: "Consent checkbox" });
+    await userEvent.click(consentCheckbox);
     await clickButton("Register my account");
     expect(registerUserSpy).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -191,6 +195,8 @@ describe("Teacher Registration", () => {
     renderTeacherRegistration();
     await confirmTeacherAndAcceptTerms();
     await fillFormCorrectly(true, "teacher");
+    const consentCheckbox = screen.getByRole("checkbox", { name: "Consent checkbox" });
+    await userEvent.click(consentCheckbox);
     await clickButton("Register my account");
     const newPage = location.pathname;
     expect(newPage).toBe("/register/success");

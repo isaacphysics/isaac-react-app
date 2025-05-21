@@ -17,5 +17,21 @@ export const consentData = {
         afterLink: ".",
       },
     ],
+    SignUpConsent: [
+      {
+        beforeLink:
+          "By ticking this box, you are confirming that you have read and agree to the Isaac Computer Science ",
+        linkText: "Terms of Use",
+        linkTo: "/terms",
+        afterLink: " and ",
+      },
+      {
+        beforeLink: "",
+        linkText: "Privacy Policy",
+        linkTo: "/privacy",
+        afterLink: ".",
+        sameLine: true, // Add this property to keep it on the same line
+      },
+    ],
   },
 };

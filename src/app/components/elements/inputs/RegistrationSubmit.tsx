@@ -1,25 +1,26 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import { Col, Input, Row } from "reactstrap";
+import Consent from "../consent/Consent";
+import { consentData } from "../consent/consentData";
 
 interface RegistrationSubmitProps {
   isRecaptchaTicked: boolean;
 }
 
+const { SignUpConsent } = consentData.consent;
+
 export const RegistrationSubmit: React.FC<RegistrationSubmitProps> = ({ isRecaptchaTicked }) => {
+  const [isConsented, setIsConsented] = useState(false);
+
+  const handleConsentChange = (checked: boolean) => {
+    setIsConsented(checked);
+  };
+
   return (
     <>
-      <Row>
-        <Col className="text-center text-muted mt-3">
-          {"By clicking 'Register my account', you accept our "}
-          <Link to="/terms" target="_blank">
-            Terms of Use
-          </Link>
-          . Find out about our{" "}
-          <Link to="/privacy" target="_blank">
-            Privacy Policy
-          </Link>
-          .
+      <Row className="justify-content-center">
+        <Col md={9} className="text-start mt-3">
+          <Consent consentText={SignUpConsent} required={true} onConsentChange={handleConsentChange} />
         </Col>
       </Row>
 
@@ -28,7 +29,8 @@ export const RegistrationSubmit: React.FC<RegistrationSubmitProps> = ({ isRecapt
           <Input
             type="submit"
             value="Register my account"
-            disabled={!isRecaptchaTicked}
+            //Button is disabled if recaptcha is not ticked and consent is not given
+            disabled={!isRecaptchaTicked || !isConsented}
             className="btn btn-block btn-secondary border-0"
           />
         </Col>

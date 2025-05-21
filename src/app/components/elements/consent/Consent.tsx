@@ -1,14 +1,18 @@
+/*
+ * This component has been made to give consent on event registration and account sign up.
+ * All new consent given will be added in the database as given consent.
+ * All past consent will be displayed as false, however it is applied consent.
+ */
 import React, { useState } from "react";
 import { Col, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 
-//Props for the Consent component
-// This component is used to display a consent checkbox with customisable text
-//The text contains beforeLink, linkText, and afterLink properties
 interface ConsentText {
   beforeLink: string;
   linkText: string;
+  linkTo?: string;
   afterLink: string;
+  sameLine?: boolean;
 }
 
 interface ConsentProps {
@@ -17,7 +21,7 @@ interface ConsentProps {
   onConsentChange?: (checked: boolean) => void;
 }
 
-const EventConsent = ({ consentText, required = true, onConsentChange }: ConsentProps) => {
+const Consent = ({ consentText, required = true, onConsentChange }: ConsentProps) => {
   const [isChecked, setIsChecked] = useState(false);
   const inputId = "consent-checkbox";
 
@@ -36,7 +40,7 @@ const EventConsent = ({ consentText, required = true, onConsentChange }: Consent
     return (
       <>
         {text.beforeLink}
-        <Link to="/privacy" target="_blank">
+        <Link to={text.linkTo ? text.linkTo : "/privacy"} target="_blank">
           {text.linkText}
         </Link>
         {text.afterLink}
@@ -50,7 +54,7 @@ const EventConsent = ({ consentText, required = true, onConsentChange }: Consent
         <input
           id={inputId}
           name="consent"
-          aria-label="Consent checkbox for event registration"
+          aria-label="Consent checkbox"
           className="large-checkbox"
           type="checkbox"
           checked={isChecked}
@@ -62,16 +66,22 @@ const EventConsent = ({ consentText, required = true, onConsentChange }: Consent
       </Col>
       <Col>
         <label htmlFor={inputId}>
-          {consentText.map((text, index) => (
-            <React.Fragment key={`consent-${typeof text === "string" ? "text" : "link"}-${index}`}>
-              {renderConsentText(text)}
-              {index < consentText.length - 1 && <div className="mt-2" />}
-            </React.Fragment>
-          ))}
+          {consentText.map((text, index) => {
+            const nextItem = consentText[index + 1];
+            const shouldAddBreak =
+              typeof nextItem === "object" && !nextItem?.sameLine && index < consentText.length - 1;
+
+            return (
+              <React.Fragment key={`consent-${typeof text === "string" ? "text" : "link"}-${index}`}>
+                {renderConsentText(text)}
+                {shouldAddBreak && <div className="mt-2" />}
+              </React.Fragment>
+            );
+          })}
         </label>
       </Col>
     </Row>
   );
 };
 
-export default EventConsent;
+export default Consent;

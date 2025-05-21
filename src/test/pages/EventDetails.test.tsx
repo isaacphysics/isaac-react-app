@@ -73,7 +73,7 @@ describe("EventDetails", () => {
     [firstNameInput, familyNameInput, stageInput, examBoardInput].forEach((each) => expect(each).toBeValid());
 
     return {
-      consentCheckbox: screen.getByRole("checkbox", { name: "Consent checkbox for event registration" }),
+      consentCheckbox: screen.getByRole("checkbox", { name: "Consent checkbox" }),
       bookNowButton: screen.getByRole("button", { name: "Book now" }),
     };
   };
