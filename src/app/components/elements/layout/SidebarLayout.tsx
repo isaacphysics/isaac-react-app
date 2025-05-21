@@ -492,8 +492,8 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
                 <div className="section-divider"/>
                 <h5>Filter by stage</h5>
                 <ul className="ps-2">
-                    {getFilteredStageOptions().map((stage, i) =>
-                        <li key={i}>
+                    {getFilteredStageOptions().map((stage) =>
+                        <li key={stage.value}>
                             <StyledCheckbox checked={searchStages.includes(stage.value)}
                                 label={<>{stage.label} <span className="text-muted">({stageCounts[stage.value]})</span></>}
                                 data-bs-theme={conceptFilters.length === 1 ? conceptFilters[0].id : undefined}
