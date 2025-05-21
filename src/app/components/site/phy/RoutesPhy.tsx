@@ -47,6 +47,7 @@ import { PhysBookYrNine } from "../../pages/books_old/phys_book_yr9";
 import { PreUniMaths } from "../../pages/books_old/pre_uni_maths";
 import { StepUpPhys } from "../../pages/books_old/step_up_phys";
 import { QuizView } from "../../pages/quizzes/QuizView";
+import { BooksOverview } from "../../pages/BooksOverview";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -139,6 +140,7 @@ export const RoutesPhy = [
     // Books (new)
     <TrackedRoute key={key++} exact path={"/books/:bookId"} component={Book} />,
     <TrackedRoute key={key++} exact path={"/books/:bookId/:pageId"} component={Book} />,
+    <TrackedRoute key={key++} exact path={"/books"} component={BooksOverview} />,
 
     // Subject-stage pages -- see subjectSpecificPages, defined above
     ...(Object.entries(subjectStagePairPages).map(([path, component]) => (
