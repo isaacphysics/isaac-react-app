@@ -363,7 +363,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "breadcrumbs";
 @import "../common/media";
 @import "../common/cookies";
-@import "../common/tabs";
+@import "tabs";
 @import "../common/cards";
 @import "../common/graph-sketcher-modal";
 @import "../common/carousel";

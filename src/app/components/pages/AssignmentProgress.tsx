@@ -299,7 +299,7 @@ export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey
                     <div className={classNames("d-flex flex-row h-100", {"align-items-center": isPhy})}>
                         <span>Class average mode</span>
                         {above["md"](deviceSize) && <>
-                            <span id={`attempted-toggle-${id}`} className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help")}/>
+                            <i id={`attempted-toggle-${id}`} className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help")}/>
                             <UncontrolledTooltip className="spaced-tooltip" placement="left" autohide={false} target={`attempted-toggle-${id}`}>
                                 This toggle changes what the percentages at the top and bottom of the table represent.<br/><br/>
                                 <b>Attempted</b> displays the percentage of students who have attempted all parts of that question.<br/><br/>
@@ -508,6 +508,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 help={pageHelp}
                 modalId="help_modal_assignment_progress"
                 icon={{type: "hex", icon: "icon-revision"}}
+                className={siteSpecific("mb-4", "")}
             />
             <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_help")} ifNotFound={RenderNothing} />
             <div className="w-100 text-end">

@@ -73,7 +73,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 <div className="question-actions question-actions-leftmost mt-2">
                     <ShareLink linkUrl={`/pages/${doc.id}`}/>
                 </div>
-                <div className="question-actions mt-2 not-mobile">
+                <div className="question-actions mt-2">
                     <PrintButton/>
                 </div>
             </div>;
@@ -81,7 +81,11 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
             const sidebar = React.cloneElement(PHY_SIDEBAR.has(pageId) ? PHY_SIDEBAR.get(pageId)!() : <GenericPageSidebar/>, { optionBar });
             
             return <Container data-bs-theme={doc.subjectId}>
-                <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} /> {/* TODO add page icon, replace main title with "General"?? */}
+                <TitleAndBreadcrumb 
+                    currentPageTitle={doc.title as string} 
+                    subTitle={doc.subtitle} 
+                    icon={{type: "hex", icon: "icon-generic"}}
+                /> 
                 <MetaDescription description={doc.summary} />
                 <SidebarLayout>
                     {sidebar}

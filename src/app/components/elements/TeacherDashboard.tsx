@@ -160,7 +160,7 @@ const BooksPanel = () => {
                     </Col>)}
         </div>
         <Spacer/>
-        <Link to="/publications" className="d-inline panel-link">See all books</Link>
+        <Link to="/books" className="d-inline panel-link">See all books</Link>
     </div>;
 };
 
@@ -181,8 +181,8 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
     const nameToDisplay = extractTeacherName(user as UserSummaryDTO);
              
     return <div className="dashboard dashboard-outer w-100">
-        <div className="d-flex">
-            {nameToDisplay && <h3>Welcome back, {nameToDisplay}!</h3>}
+        <div className="d-flex flex-wrap">
+            {nameToDisplay && <h3 className="text-wrap">Welcome back, {nameToDisplay}!</h3>}
             <span className="ms-auto">
                 <div className="text-center">Dashboard view</div>
                 <StyledToggle

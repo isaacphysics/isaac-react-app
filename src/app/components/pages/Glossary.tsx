@@ -292,7 +292,7 @@ export const Glossary = () => {
         <div className="question-actions question-actions-leftmost mt-2">
             <ShareLink linkUrl={`/glossary`} clickAwayClose/>
         </div>
-        <div className="question-actions mt-2 not-mobile">
+        <div className="question-actions mt-2">
             <PrintButton/>
         </div>
     </div>;

@@ -12,10 +12,10 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { searchQuestions, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery } from "../../state";
 import { EventCard } from "../elements/cards/EventCard";
 import debounce from "lodash/debounce";
-import { Loading } from "../handlers/IsaacSpinner";
+import { IsaacSpinner } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
-import { Stage } from "../../../IsaacApiTypes";
+import { placeholderIcon } from "../elements/PageTitle";
 
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
@@ -54,35 +54,30 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
         searchDebounce();
     }, [searchDebounce]);
 
-    if (!context || !isFullyDefinedContext(context) || !isSingleStageContext(context)) {
-        return null;
-    }
-
     const question = questions?.[0];
 
     return <div className="py-4 container-override random-question-panel">
-        <Row className="my-3">
-            <div className="d-flex justify-content-between align-items-center">
-                <h4 className="m-0">Try a random question!</h4>
-                <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
-                    Get a different question
-                    <i className="icon icon-refresh icon-color-black"/>
-                </button>
-            </div>
-        </Row>
-        <Row style={{margin: "auto"}}>
-            <Card className="px-0">
-                {question
-                    ? <ListView items={[{
-                        type: DOCUMENT_TYPE.QUESTION,
-                        title: question.title,
-                        tags: question.tags,
-                        id: question.id,
-                        audience: question.audience,
-                    }]}/>
-                    : <Loading />}
-            </Card>
-        </Row>
+        <div className="d-flex my-3 justify-content-between align-items-center">
+            <h4 className="m-0">Try a random question!</h4>
+            <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
+                Get a different question
+                <i className="icon icon-refresh icon-color-black"/>
+            </button>
+        </div>
+        <Card className="w-100 px-0 hf-6">
+            {question
+                ? <ListView items={[{
+                    type: DOCUMENT_TYPE.QUESTION,
+                    title: question.title,
+                    tags: question.tags,
+                    id: question.id,
+                    audience: question.audience,
+                }]}/>
+                : <div className="w-100 d-flex justify-content-center">
+                    <IsaacSpinner size="sm" />
+                </div>
+            }
+        </Card>
     </div>;
 };
 
@@ -119,7 +114,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                                 </span>
                             </div>
                         </Link>)}
-                        {books.length > 2 && <Button tag={Link} color="keyline" to={`/publications`} className="btn mt-4 mx-5">View more books</Button>}
+                        {books.length > 2 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-5">View more books</Button>}
                     </Col>
                 </>
                 : <>
@@ -175,15 +170,19 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
             icon={pageContext?.subject ? {
                 type: "img",
                 subject: pageContext.subject,
-                icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`
-            } : undefined}
+                icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`,
+                width: "70px",
+                height: "81px",
+            } : placeholderIcon({width: "70px", height: "81px"})}
         />
 
-        <RandomQuestionBanner context={pageContext} />
+        {pageContext && isSingleStageContext(pageContext) && <>
+            <RandomQuestionBanner context={pageContext} />
 
-        <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-5" />
-
-        <LandingPageFooter context={pageContext} />
+            <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-5" />
+            
+            <LandingPageFooter context={pageContext} />
+        </>}
 
 
     </Container>;

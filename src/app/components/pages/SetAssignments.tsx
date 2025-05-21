@@ -212,7 +212,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
             <div className="py-2">
                 <Label className={siteSpecific("d-flex align-items-center", "")}>
                     Pending {siteSpecific("assignments", "quiz assignments")}:
-                    <span className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help mx-1")} id={`pending-assignments-help-${board?.id}`}/>
+                    <i className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help mx-1")} id={`pending-assignments-help-${board?.id}`}/>
                 </Label>
                 <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
                     These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the morning of the scheduled date, students
@@ -274,7 +274,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <th colSpan={2} className="text-center align-middle">
             <div className="d-flex align-items-center">
                 Stages and Difficulties
-                <span id="difficulties-help" className="icon icon-info layered icon-color-grey ms-2"></span>
+                <i id="difficulties-help" className="icon icon-info layered icon-color-grey ms-2"/>
             </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
@@ -532,8 +532,8 @@ export const SetAssignments = () => {
             assignees={(isDefined(modalBoard) && isDefined(modalBoard?.id) && groupsByGameboard[modalBoard.id]) || []}
         />
 
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_set_assignments"/>
-        <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
+            modalId="help_modal_set_assignments" className={siteSpecific("mb-4", "")} />
         <SidebarLayout>
             <SetAssignmentsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
@@ -544,7 +544,8 @@ export const SetAssignments = () => {
                 boardCreator={boardCreator} setBoardCreator={setBoardCreator}
                 sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
             />
-            <MainContent>            
+            <MainContent>
+                <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />          
                 {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
                 {groups && groups.length === 0 && <Alert color="warning">
                     You have not created any groups to assign work to.

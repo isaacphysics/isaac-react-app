@@ -5,9 +5,9 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {above, isAda, isPhy, NEWS_PODS_PER_PAGE, siteSpecific, useDeviceSize} from "../../services";
+import {above, isPhy, NEWS_PODS_PER_PAGE, siteSpecific, useDeviceSize} from "../../services";
 import { IsaacPodDTO } from "../../../IsaacApiTypes";
-import classNames from "classnames";
+import { GenericPageSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 export const News = () => {
     const [page, setPage] = React.useState(0);
@@ -35,23 +35,28 @@ export const News = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"News"} icon={{type: "hex", icon: "icon-news"}} />
         <MetaDescription description={metaDescription} />
-        {allNews.length === 0 ? 
-            <ShowLoadingQuery
-                query={newsQuery}
-                thenRender={() => <div className={"w-100 text-start"}><h4>No news to display...</h4></div>}
-                defaultErrorTitle={"Error fetching news stories"}
-            /> : 
-            <>
-                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1", "row-cols-lg-3 mt-4")}`}>
-                    {allNews.map((n, i) => <Col key={i} className={`my-3 ${siteSpecific("px-3", "px-0 justify-content-center")}`}>
-                        <NewsCard key={n.id} newsItem={n} showTitle />
-                        {isPhy && above["md"](deviceSize) && <div className="section-divider"/>}
-                    </Col>)}
-                </Row>
-                <div className="w-100 d-flex justify-content-center mb-5">
-                    <Button className={"mt-3"} color={"primary"} disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load older news</Button>
-                </div>
-            </>
-        }
+        <SidebarLayout>
+            <GenericPageSidebar/>
+            <MainContent>
+                {allNews.length === 0 ? 
+                    <ShowLoadingQuery
+                        query={newsQuery}
+                        thenRender={() => <div className={"w-100 text-start"}><h4>No news to display...</h4></div>}
+                        defaultErrorTitle={"Error fetching news stories"}
+                    /> : 
+                    <>
+                        <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1", "row-cols-lg-3 mt-4")}`}>
+                            {allNews.map((n, i) => <Col key={i} className={`my-3 ${siteSpecific("px-3", "px-0 justify-content-center")}`}>
+                                <NewsCard key={n.id} newsItem={n} showTitle />
+                                {isPhy && above["md"](deviceSize) && <div className="section-divider"/>}
+                            </Col>)}
+                        </Row>
+                        <div className="w-100 d-flex justify-content-center mb-5">
+                            <Button className={"mt-3"} color={"primary"} disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load older news</Button>
+                        </div>
+                    </>
+                }
+            </MainContent>
+        </SidebarLayout>
     </Container>;
 };

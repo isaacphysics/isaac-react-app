@@ -3,7 +3,7 @@
 // Fluent footer theme
 footer {
   --focus-outline-color: #{$color-neutral-white};
-  
+
   background-color: $color-neutral-900;
 
   li {
@@ -21,7 +21,7 @@ footer {
       color: $color-neutral-200;
     }
   }
-  
+
   .logo-text {
     color: $color-neutral-200;
     font-size: 14px;
@@ -38,5 +38,6 @@ footer {
 }
 
 .footer-org-logo {
+  width: 100%;
   max-width: 12rem;
 }

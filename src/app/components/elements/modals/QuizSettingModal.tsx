@@ -150,7 +150,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         <Label className="w-100 mb-4">
             <div className={siteSpecific("d-flex align-items-center", "")}>
                 Set an optional start date:
-                <span id={scheduledQuizHelpTooltipId} className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help")}/>
+                <i id={scheduledQuizHelpTooltipId} className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help")}/>
             </div>
             <DateInput value={scheduledStartDate ?? undefined} invalid={scheduledStartDateInvalid || undefined}
                 yearRange={yearRange}

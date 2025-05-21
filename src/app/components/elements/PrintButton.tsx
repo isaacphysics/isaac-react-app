@@ -2,7 +2,8 @@ import React, {useState} from "react";
 import {printingSettingsSlice, useAppDispatch} from "../../state";
 import {Button} from "reactstrap";
 import { IconButton } from "./AffixButton";
-import { siteSpecific } from "../../services";
+import { isAda, siteSpecific } from "../../services";
+import classNames from "classnames";
 
 interface PrintProps {
     questionPage?: boolean;
@@ -15,7 +16,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
 
     return questionPage ?
         <div className="position-relative">
-            {questionPrintOpen && <div className="action-buttons-popup-container not-mobile">
+            {questionPrintOpen && <div className={classNames("action-buttons-popup-container", {"not-mobile": isAda})}>
                 <div className="question-actions-link text-nowrap">
                     <Button
                         size={"sm"}
@@ -44,7 +45,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
             {siteSpecific(
                 <IconButton
                     icon="icon-print"
-                    className="w-max-content h-max-content not-mobile"
+                    className="w-max-content h-max-content"
                     affixClassName="icon-color-black"
                     aria-label="Print page" 
                     title="Print page"
@@ -63,7 +64,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
         siteSpecific(
             <IconButton
                 icon="icon-print"
-                className="w-max-content h-max-content not-mobile"
+                className="w-max-content h-max-content"
                 affixClassName="icon-color-black"
                 aria-label="Print page" 
                 title="Print page"
