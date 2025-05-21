@@ -2,7 +2,7 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewItemState, ListViewTagProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, PATHS, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, PATHS, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { TitleIconProps } from "../PageTitle";
 import { AffixButton } from "../AffixButton";
@@ -226,6 +226,42 @@ export const ShortcutListViewItem = ({item, ...rest}: ShortcutListViewItemProps)
     />;
 };
 
+interface BookIndexListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "url"> {
+    item: ShortcutResponse;
+}
+
+export const BookIndexListViewItem = ({item, ...rest}: BookIndexListViewItemProps) => {
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+
+    return <AbstractListViewItem
+        {...item}
+        icon={{type: "hex", icon: "icon-book", size: "lg"}}
+        url={`/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${item.id?.slice("book_".length)}`}
+        subject={itemSubject}
+        {...rest}
+    />;
+};
+
+interface BookDetailListViewItemProps extends AbstractListViewItemProps {
+    item: ShortcutResponse;
+}
+
+export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemProps) => {
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+    const itemBook = ISAAC_BOOKS.find((book) => item.tags?.includes(book.tag));
+    const itemLabel = itemBook ? item.id?.slice(`book_${itemBook.tag}_`.length) : undefined;
+
+    return <AbstractListViewItem
+        {...item}
+        icon={{type: "hex", icon: "icon-generic", size: "lg"}}
+        title={`${itemLabel ? (itemLabel?.toUpperCase() + " ") : ""}${item.title}`}
+        subtitle={itemBook?.title}
+        url={itemBook ? `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${itemBook.tag}/${itemLabel}` : undefined}
+        subject={itemSubject}
+        {...rest}
+    />;
+};
+
 export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & {showBlanks?: boolean} & ListGroupProps) => {
     const { cards, showBlanks, ...rest } = props;
     return <ListGroup {...rest} className={classNames("list-view-card-container link-list list-group-links p-0 m-0 flex-row row-cols-1 row-cols-lg-2 row", rest.className)}>
@@ -268,6 +304,10 @@ export const ListView = ({items, className, ...rest}: ListViewProps & ListViewIt
                     return <QuizListViewItem key={index} {...rest} item={item}/>;
                 case SEARCH_RESULT_TYPE.GAMEBOARD:
                     return <QuestionDeckListViewItem key={index} {...rest} item={item}/>;
+                case DOCUMENT_TYPE.BOOK_INDEX_PAGE:
+                    return <BookIndexListViewItem key={index} {...rest} item={item}/>;
+                case SEARCH_RESULT_TYPE.BOOK_DETAIL_PAGE:
+                    return <BookDetailListViewItem key={index} {...rest} item={item}/>;
                 default:
                     // Do not render this item if there is no matching DOCUMENT_TYPE
                     console.error("Not able to display item as a ListViewItem: ", item);
