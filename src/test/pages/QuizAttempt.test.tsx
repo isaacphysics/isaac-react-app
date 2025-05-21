@@ -1,7 +1,7 @@
-import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTitledSection, expectUrl } from "../testUtils";
+import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectUrl } from "../testUtils";
 import {mockAttempts} from "../../mocks/data";
 import { siteSpecific } from "../../app/services";
-import { expectActionMessage, expectBreadcrumbs, expectErrorMessage, renderQuizPage, testSectionsHeader } from "../helpers/quiz";
+import { expectActionMessage, expectBreadcrumbs, expectErrorMessage, expectRubric, renderQuizPage, testSectionsHeader } from "../helpers/quiz";
 
 describe("QuizAttempt", () => {
     const quizId = Object.keys(mockAttempts)[0];
@@ -29,7 +29,7 @@ describe("QuizAttempt", () => {
 
         it('shows quiz rubric', async () => {
             await studentAttemptsQuiz();
-            expectTitledSection("Instructions", attempt.quiz?.rubric?.children?.[0].value);
+            expectRubric(attempt.quiz?.rubric?.children?.[0].value);
         });
 
         it("shows Test sections that load section and allow navigating back", async () => {
