@@ -44,13 +44,18 @@ export interface ListViewTagProps extends HTMLAttributes<HTMLElement> {
     url?: string;
 }
 
-const LinkTags = ({linkTags}: {linkTags: ListViewTagProps[];}) => {
+export interface LinkTagProps {
+    linkTags: ListViewTagProps[];
+    disabled?: boolean;
+}
+
+const LinkTags = ({linkTags, disabled}: LinkTagProps) => {
     return <>
         {linkTags.map(t => {
             const {url, tag, ...rest} = t;
-            return url ?
+            return url && !disabled ?
                 <Link {...rest} to={url} className="card-tag" key={tag}>{tag}</Link> :
-                <div {...rest} className="card-tag" key={tag}>{tag}</div>;
+                <div {...rest} className={classNames("card-tag", {"disabled": disabled})} key={tag}>{tag}</div>;
         })}
     </>;
 };
@@ -64,6 +69,12 @@ const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUr
         {quizButton}
     </span>;
 };
+
+export enum AbstractListViewItemState {
+    COMING_SOON = "coming-soon",
+    DISABLED = "disabled",
+}
+
 export interface AbstractListViewItemProps extends ListGroupItemProps {
     title?: string;
     icon?: TitleIconProps;
@@ -81,11 +92,13 @@ export interface AbstractListViewItemProps extends ListGroupItemProps {
     quizButton?: JSX.Element;
     isCard?: boolean;
     fullWidth?: boolean;
+    state?: AbstractListViewItemState;
 }
 
-export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, supersededBy, linkTags, quizTag, url, audienceViews, previewQuizUrl, quizButton, isCard, fullWidth, ...rest}: AbstractListViewItemProps) => { 
+export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, supersededBy, linkTags, quizTag, url, audienceViews, previewQuizUrl, quizButton, isCard, fullWidth, state, ...rest}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
     const isQuiz: boolean = !!(previewQuizUrl || quizButton);
+    const isDisabled = state && [AbstractListViewItemState.COMING_SOON, AbstractListViewItemState.DISABLED].includes(state);
     
     fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewQuizUrl || quizButton) ? false : true);
     const cardBody =
@@ -94,8 +107,10 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
             <div className="position-relative">
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
-                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/> : undefined)
-                }
+                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/>
+                            : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/> 
+                                : undefined
+                )}
                 {status && status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
                     <StatusDisplay status={status} showText={false} />
                 </div>}
@@ -148,8 +163,12 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
         }
     </div>;
 
-    return <ListGroupItem {...rest} className={classNames("content-summary-item", {"correct": status === CompletionState.ALL_CORRECT}, rest.className)} data-bs-theme={subject}>
-        {url 
+    return <ListGroupItem 
+        {...rest} 
+        className={classNames("content-summary-item", {"correct": status === CompletionState.ALL_CORRECT}, rest.className, state)} 
+        data-bs-theme={subject && !isDisabled ? subject : "neutral"}
+    >
+        {url && !isDisabled
             ? <Link to={url} className="w-100 h-100 align-items-start"> {cardBody} </Link> 
             : cardBody
         }
