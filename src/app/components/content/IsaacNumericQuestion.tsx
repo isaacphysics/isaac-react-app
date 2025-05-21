@@ -14,7 +14,7 @@ import {
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {above, isAda, isPhy, siteSpecific, useCurrentQuestionAttempt, useDeviceSize} from "../../services";
+import {above, below, isAda, isPhy, siteSpecific, useCurrentQuestionAttempt, useDeviceSize} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
@@ -129,7 +129,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                         <Dropdown className="flex-grow-1" disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                             <DropdownToggle
                                 disabled={readonly || !noDisplayUnit}
-                                className={classNames("feedback-zone w-md-auto h-100 px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong && noDisplayUnit, "bg-white my-2": isPhy})}
+                                className={classNames("feedback-zone w-md-auto h-100 px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong && noDisplayUnit, "bg-white": isPhy, "my-2": isPhy && below['sm'](deviceSize)})}
                                 color={noDisplayUnit ? siteSpecific("dropdown", undefined) : "white"}
                                 caret={isPhy && noDisplayUnit}
                             >
