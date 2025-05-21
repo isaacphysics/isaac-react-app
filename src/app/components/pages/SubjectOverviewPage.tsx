@@ -5,7 +5,7 @@ import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { useUrlPageTheme } from "../../services/pageContext";
 import { HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, Subject } from "../../services";
 import { PageContextState } from "../../../IsaacAppTypes";
-import { ListViewCards } from "../elements/list-groups/ListView";
+import { ListViewCardProps, ListViewCards } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
 
 const SubjectCards = ({context}: { context: PageContextState }) => {
@@ -13,7 +13,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
 
     const humanSubject = context?.subject && HUMAN_SUBJECTS[context.subject];
 
-    return <ListViewCards showBlanks cards={[
+    const cards: (ListViewCardProps | null)[] = [
         {
             item: {
                 title: "11-14",
@@ -61,11 +61,26 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             },
             url: `/${context.subject}/university`,
             stage: LEARNING_STAGE.UNIVERSITY,
-        }
-    ]
-        .map(({stage, ...card}) => (PHY_NAV_SUBJECTS[context.subject as Subject] as readonly LearningStage[])?.includes(stage) ? card : null)
-        .filter((x, i, a) => x || (i % 2 === 0 ? a[i + 1] : a[i - 1])) // remove pairs of nulls
+        },
+    ].map(({stage, ...card}) => (PHY_NAV_SUBJECTS[context.subject as Subject] as readonly LearningStage[])?.includes(stage) ? card : null);
+
+    if (context.subject === "biology") {
+        cards.push({
+            item: {
+                title: "GCSE (COMING SOON)",
+                subtitle: `Our GCSE ${humanSubject} resources develop the ${humanSubject} knowledge needed at GCSE through the use of questions, concepts and books.` 
+            },
+            className: "disabled",
+            icon: {
+                type: "img" as const,
+                icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
+            }
+        });
+    } //hrm
+
+    return <ListViewCards showBlanks cards={cards
         .sort((a, b) => a ? (b ? 0 : -1) : 1) // put nulls at the end
+        .filter((x, i, a) => x || (i % 2 === 0 ? a[i + 1] : a[i - 1])) // remove pairs of nulls
     } />;
 };
 
