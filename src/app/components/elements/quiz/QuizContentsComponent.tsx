@@ -168,7 +168,6 @@ function QuizRubric({attempt, view}: Pick<QuizAttemptProps | QuizViewProps, "att
     const renderRubric = (rubric?.children || []).length > 0;
     return <div>
         {rubric && renderRubric && <div data-testid="quiz-rubric">
-            {!view && <h4>Instructions</h4>}
             <IsaacContentValueOrChildren value={rubric.value}>
                 {rubric.children}
             </IsaacContentValueOrChildren>

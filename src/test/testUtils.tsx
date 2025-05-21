@@ -226,15 +226,6 @@ export const expectH4 = expectHeading(4);
 
 export const expectTextInElementWithId = (testId: string) => (msg: string) => expect(screen.getByTestId(testId)).toHaveTextContent(msg);
 
-export const expectTitledSection = (title: string, message: string | undefined) => {
-    const titleE = screen.getByRole('heading', { name: title });
-    if (titleE.parentElement === null) {
-        throw new Error(`Could not find parent for heading: ${title}`);
-    }
-    const [paragraph] = within(titleE.parentElement).getAllByRole('paragraph');
-    return expect(paragraph).toHaveTextContent(`${message}`);
-}
-;
 export const expectLinkWithEnabledBackwardsNavigation = async (text: string | undefined, targetHref: string, originalHref: string) => {
     if (text === undefined) {
         throw new Error("Target text is undefined");
