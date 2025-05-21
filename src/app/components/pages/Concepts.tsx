@@ -61,14 +61,14 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         : skipToken
     );
 
-    const shortcutAndFilter = (concepts?: ContentSummaryDTO[], excludeTopicFiltering?: boolean) => {
+    const shortcutAndFilter = (concepts?: ContentSummaryDTO[], excludeTopicFiltering?: boolean, excludeStageFiltering?: boolean) => {
         const searchResults = concepts?.filter(c =>
             (matchesAllWordsInAnyOrder(c.title, searchText || "") || matchesAllWordsInAnyOrder(c.summary, searchText || ""))
-            && (searchStages.length === 0 || searchStages.some(s => c.audience?.some(a => a.stage?.includes(s))))
         );
         
         const filteredSearchResults = searchResults
             ?.filter((result) => excludeTopicFiltering || !filters.length || result?.tags?.some(t => filters.includes(t)))
+            .filter((result) => excludeStageFiltering || !searchStages.length || searchStages.some(s => result.audience?.some(a => a.stage?.includes(s))))
             .filter((result) => !pageContext?.stage?.length || isRelevantToPageContext(result.audience, pageContext))
             .filter((result) => searchResultIsPublic(result, user));
     
@@ -83,13 +83,13 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     ].reduce((acc, t) => ({
         ...acc, 
         // we exclude topics when filtering here to avoid selecting a filter changing the tag counts
-        [t.id]: shortcutAndFilter(listConceptsQuery?.data?.results, true)?.filter(c => c.tags?.includes(t.id)).length || 0
+        [t.id]: shortcutAndFilter(listConceptsQuery?.data?.results, true, false)?.filter(c => c.tags?.includes(t.id)).length || 0
     }), {});
 
     const stageCounts = getFilteredStageOptions().reduce((acc, s) => ({
-        ...acc, 
-        [s.value]: listConceptsQuery?.data?.results?.filter(c => c.audience?.some(a => a.stage?.includes(s.value))
-            && (!filters.length || c.tags?.some(t => filters.includes(t))))?.length || 0
+        ...acc,
+        // we exclude stages when filtering here to avoid selecting a filter changing the tag counts
+        [s.value]: shortcutAndFilter(listConceptsQuery?.data?.results, false, true)?.filter(c => c.audience?.some(a => a.stage?.includes(s.value)))?.length || 0
     }), {});
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
