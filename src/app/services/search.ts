@@ -23,7 +23,8 @@ export const pushConceptsToHistory = function(history: History, searchText: stri
         "query": encodeURIComponent(searchText),
         "types": subjects.join(","),
     };
-    history.push({
+
+    history.replace({ // concepts (phy-only) has no "apply filters" button to imply a single search; as such we prefer replace
         pathname: history.location.pathname,
         search: queryString.stringify(pickBy(queryOptions), {encode: false}),
     });
