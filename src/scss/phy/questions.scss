@@ -149,6 +149,7 @@ form:has(> .question-component) {
   border: unset;
   // padding is overridden above
   border-radius: unset;
+  box-shadow: none;
 
   > .tabbed-hints {
     padding: 0;
