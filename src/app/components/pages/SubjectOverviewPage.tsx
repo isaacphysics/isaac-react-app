@@ -7,6 +7,7 @@ import { HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJE
 import { PageContextState } from "../../../IsaacAppTypes";
 import { ListViewCardProps, ListViewCards } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
+import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
 
 const SubjectCards = ({context}: { context: PageContextState }) => {
     if (!isDefined(context?.subject)) return null;
@@ -127,7 +128,20 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
 
             <p className="mt-3">
                 All Isaac Science questions are classed as either &quot;Practice&quot; or &quot;Challenge&quot; – indicated by the symbols below. 
+            </p>
+            
+            <div className="d-flex flex-row w-100 justify-content-center">
+                <div className="d-flex flex-column me-3 align-items-center">
+                    <DifficultyIcon difficultyCategory="P"/>
+                    <span>Practice</span>
+                </div>
+                <div className="d-flex flex-column align-items-center">
+                    <DifficultyIcon difficultyCategory="C"/>
+                    <span>Challenge</span>
+                </div>
+            </div>
 
+            <p className="mt-3">
                 In Isaac {humanSubject},
                 <ul>
                     <li>Practice questions are those that require one concept or equation to solve.</li>
