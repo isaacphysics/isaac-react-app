@@ -135,7 +135,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                 <MainContent>
                     {pageContext?.subject && <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap">
                         <p className="me-3 mt-2">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                        <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className="ms-auto"
+                        <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className="ms-auto" style={{minWidth: "136px"}}
                             affix={{
                                 affix: "icon-right",
                                 position: "suffix",

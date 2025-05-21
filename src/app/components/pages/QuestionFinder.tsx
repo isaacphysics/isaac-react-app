@@ -464,7 +464,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         {(pageContext?.subject && pageContext.stage)
                             ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap">
                                 <p className="me-3 mt-2">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                                <AffixButton size="md" color="keyline" tag={Link} to="/questions" className="ms-auto"
+                                <AffixButton size="md" color="keyline" tag={Link} to="/questions" className="ms-auto" style={{minWidth: "136px"}}
                                     affix={{
                                         affix: "icon-right",
                                         position: "suffix",
