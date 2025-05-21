@@ -7,7 +7,7 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
     Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, 
-    isPhy} from "../../../services";
+    isPhy, TAG_LEVEL} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -336,12 +336,12 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
 
     const handleCheckboxChange = (checked: boolean) => {
         // Reselect parent if all children are deselected
-        const siblingTags = tag.type === "field" && incompatibleTags ? tags.getDirectDescendents(incompatibleTags[0].id).filter(t => t !== tag) : [];
-        const reselectParent = siblingTags.length && !siblingTags.some(t => conceptFilters.includes(t));
+        const siblingTags = tag.type === TAG_LEVEL.field && tag.parent ? tags.getDirectDescendents(tag.parent).filter(t => t !== tag) : [];
+        const reselectParent = tag.parent && siblingTags.every(t => !conceptFilters.includes(t));
 
         const newConceptFilters = checked 
             ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), ...(!partiallySelected ? [tag] : [])] 
-            : [...conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c)), ...(reselectParent ? [incompatibleTags![0]] : [])];
+            : [...conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c)), ...(reselectParent ? [tags.getById(tag.parent!)] : [])];
         setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : (baseTag ? [baseTag] : []));
     };
 
