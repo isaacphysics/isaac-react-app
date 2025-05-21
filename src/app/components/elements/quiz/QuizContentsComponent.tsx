@@ -124,13 +124,13 @@ function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps)
 function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewProps) {
     const dispatch = useAppDispatch();
     if (view) {
-        return isTeacherOrAbove(user) && <Button className="float-end ms-2 mb-2" onClick={() => dispatch(showQuizSettingModal(view.quiz!))}>Set Test</Button>;
+        return isTeacherOrAbove(user) && <Button className="float-end ms-3 mb-3" onClick={() => dispatch(showQuizSettingModal(view.quiz!))}>Set Test</Button>;
     }
     else if (preview) {
         return <>
-            {preview && <EditContentButton doc={attempt.quiz} />}
+            <EditContentButton doc={attempt.quiz} />
             <div data-testid="quiz-action" className="d-flex">
-                <p>{ preview ? "You are previewing this test." : "You are viewing the rubric for this test."}</p>
+                <p>You are previewing this test.</p>
                 <Spacer />
                 {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz!))}>Set Test</Button>}
             </div>
