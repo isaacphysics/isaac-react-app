@@ -122,13 +122,13 @@ const MyIsaacPanel = () => {
     </div>;
 };
 
-const BookCard = ({title, image, path}: BookInfo) => {
+export const BookCardSmall = ({title, image, path}: BookInfo) => {
     return <Card className="p-2 h-100 border-0 bg-transparent">  
         <Link to={path} className="d-flex flex-column align-items-center dashboard-book book-container">
             <div className="book-image-container">
                 <img src={image} alt={title}/>
             </div>
-            <div className="mt-2">{title}</div>
+            <div className="mt-2 text-center">{title}</div>
         </Link>
     </Card>;
 };
@@ -156,11 +156,11 @@ const BooksPanel = () => {
             {ISAAC_BOOKS.filter(b => !b.hidden).filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2 me-1 p-0">
-                        <BookCard {...book}/>
+                        <BookCardSmall {...book}/>
                     </Col>)}
         </div>
         <Spacer/>
-        <Link to="/publications" className="d-inline panel-link">See all books</Link>
+        <Link to="/books" className="d-inline panel-link">See all books</Link>
     </div>;
 };
 

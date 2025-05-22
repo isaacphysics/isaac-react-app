@@ -1,7 +1,7 @@
-import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectTitledSection, expectUrl } from "../testUtils";
+import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectUrl } from "../testUtils";
 import { mockPreviews } from "../../mocks/data";
 import { isPhy, siteSpecific } from "../../app/services";
-import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectSidebarToggle, renderQuizPage, sideBarTestCases, testSectionsHeader } from "../helpers/quiz";
+import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectSidebarToggle, expectRubric, renderQuizPage, sideBarTestCases, testSectionsHeader } from "../helpers/quiz";
 import { screen } from "@testing-library/react";
 
 describe("QuizPreview", () => {
@@ -33,7 +33,7 @@ describe("QuizPreview", () => {
 
         it('shows quiz rubric', async () => {
             await teacherPreviewsQuiz();
-            expectTitledSection("Instructions", preview.rubric?.children?.[0].value);
+            expectRubric(preview.rubric?.children?.[0].value);
         });
 
         it("shows Test sections that load section and allow navigating back", async () => {

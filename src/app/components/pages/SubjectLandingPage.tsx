@@ -12,9 +12,11 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { searchQuestions, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery } from "../../state";
 import { EventCard } from "../elements/cards/EventCard";
 import debounce from "lodash/debounce";
-import { Loading } from "../handlers/IsaacSpinner";
+import { IsaacSpinner } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
+import { BookCard } from "./BooksOverview";
+import { placeholderIcon } from "../elements/PageTitle";
 
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
@@ -53,10 +55,6 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
         searchDebounce();
     }, [searchDebounce]);
 
-    if (!context || !isFullyDefinedContext(context) || !isSingleStageContext(context)) {
-        return null;
-    }
-
     const question = questions?.[0];
 
     return <div className="py-4 container-override random-question-panel">
@@ -67,7 +65,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                 <i className="icon icon-refresh icon-color-black"/>
             </button>
         </div>
-        <Card className="w-100 px-0">
+        <Card className="w-100 px-0 hf-6">
             {question
                 ? <ListView items={[{
                     type: DOCUMENT_TYPE.QUESTION,
@@ -76,7 +74,10 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                     id: question.id,
                     audience: question.audience,
                 }]}/>
-                : <Loading />}
+                : <div className="w-100 d-flex justify-content-center">
+                    <IsaacSpinner size="sm" />
+                </div>
+            }
         </Card>
     </div>;
 };
@@ -102,18 +103,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                         <div className="section-divider-bold"/>
                     </div>
                     <Col className="d-flex flex-column">
-                        {books.slice(0, 2).map((book, index) => <Link key={index} to={book.path} className="book-container d-flex p-2 gap-3">
-                            <div className="book-image-container">
-                                <img src={book.image} alt={book.title} className="h-100"/>
-                            </div>
-                            <div className="d-flex flex-column">
-                                <h5 className="pt-2 pt-2 pb-1 m-0">{book.title}</h5>
-                                <div className="section-divider"/>
-                                <span className="text-decoration-none">
-                                    This is some explanatory text about the book. It could be a brief description of the book, or a list of topics covered.
-                                </span>
-                            </div>
-                        </Link>)}
+                        {books.slice(0, 2).map((book, index) => <BookCard key={index} {...book} />)}
                         {books.length > 2 && <Button tag={Link} color="keyline" to={`/publications`} className="btn mt-4 mx-5">View more books</Button>}
                     </Col>
                 </>
@@ -170,15 +160,19 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
             icon={pageContext?.subject ? {
                 type: "img",
                 subject: pageContext.subject,
-                icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`
-            } : undefined}
+                icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`,
+                width: "70px",
+                height: "81px",
+            } : placeholderIcon({width: "70px", height: "81px"})}
         />
 
-        <RandomQuestionBanner context={pageContext} />
+        {pageContext && isSingleStageContext(pageContext) && <>
+            <RandomQuestionBanner context={pageContext} />
 
-        <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-5" />
-
-        <LandingPageFooter context={pageContext} />
+            <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-5" />
+            
+            <LandingPageFooter context={pageContext} />
+        </>}
 
 
     </Container>;
