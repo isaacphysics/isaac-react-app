@@ -15,6 +15,7 @@ import debounce from "lodash/debounce";
 import { IsaacSpinner } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
+import { BookCard } from "./BooksOverview";
 import { placeholderIcon } from "../elements/PageTitle";
 
 
@@ -102,19 +103,8 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                         <div className="section-divider-bold"/>
                     </div>
                     <Col className="d-flex flex-column">
-                        {books.slice(0, 2).map((book, index) => <Link key={index} to={book.path} className="book-container d-flex p-2 gap-3">
-                            <div className="book-image-container">
-                                <img src={book.image} alt={book.title} className="h-100"/>
-                            </div>
-                            <div className="d-flex flex-column">
-                                <h5 className="pt-2 pt-2 pb-1 m-0">{book.title}</h5>
-                                <div className="section-divider"/>
-                                <span className="text-decoration-none">
-                                    This is some explanatory text about the book. It could be a brief description of the book, or a list of topics covered.
-                                </span>
-                            </div>
-                        </Link>)}
-                        {books.length > 2 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-5">View more books</Button>}
+                        {books.slice(0, 2).map((book, index) => <BookCard key={index} {...book} />)}
+                        {books.length > 2 && <Button tag={Link} color="keyline" to={`/publications`} className="btn mt-4 mx-5">View more books</Button>}
                     </Col>
                 </>
                 : <>
