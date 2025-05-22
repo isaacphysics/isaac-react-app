@@ -238,6 +238,7 @@ export const BookIndexListViewItem = ({item, ...rest}: BookIndexListViewItemProp
         icon={{type: "hex", icon: "icon-book", size: "lg"}}
         url={`/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${item.id?.slice("book_".length)}`}
         subject={itemSubject}
+        state={undefined}
         {...rest}
     />;
 };
@@ -258,6 +259,7 @@ export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemPr
         subtitle={itemBook?.title}
         url={itemBook ? `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${itemBook.tag}/${itemLabel}` : undefined}
         subject={itemSubject}
+        state={undefined}
         {...rest}
     />;
 };
