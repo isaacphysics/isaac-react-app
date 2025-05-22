@@ -125,7 +125,6 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                 currentPageTitle="Concepts" 
                 intermediateCrumbs={crumb ? [crumb] : undefined}
                 icon={{type: "hex", icon: "icon-concept"}}
-                className="mb-4"
             />
             <SidebarLayout>
                 {pageContext?.subject 
@@ -133,8 +132,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                     : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts}/>
                 }
                 <MainContent>
-                    {pageContext?.subject && <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap">
-                        <p className="me-3 mt-2">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                    {pageContext?.subject && <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap my-3">
+                        <p className="me-3">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
                         <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className="ms-auto" style={{minWidth: "136px"}}
                             affix={{
                                 affix: "icon-right",
