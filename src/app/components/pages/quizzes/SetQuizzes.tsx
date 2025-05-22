@@ -394,7 +394,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                     manageQuizzesGroupNameFilter={manageQuizzesGroupNameFilter} setManageQuizzesGroupNameFilter={setManageQuizzesGroupNameFilter}/>}
             <MainContent>
                 <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
-                <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
+                <Tabs style="tabs" className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
                     {{
                         [siteSpecific("Set Tests", "Available tests")]:
                         <ShowLoading until={undeprecatedQuizzes}>

@@ -391,7 +391,7 @@ const GroupDetails = ({group, user}: {group: AppGroup, user: RegisteredUserDTO})
         <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} id={`legend-${group.id}`} />
         {/* Only full teachers can see the tests tab */}
         {pageSettings.isTeacher
-            ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
+            ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab} style="tabs">
                 {{
                     [`Assignments (${assignments.length || 0})`]: assignmentTabComponents,
                     [`Tests (${quizAssignments.length || 0})`]: quizTabComponents
