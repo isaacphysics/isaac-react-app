@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row } from "reactstrap";
+import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { PageFragment } from "../elements/PageFragment";
 import { BooksOverviewSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
