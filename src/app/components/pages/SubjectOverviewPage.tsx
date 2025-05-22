@@ -3,9 +3,9 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { useUrlPageTheme } from "../../services/pageContext";
-import { above, HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, SEARCH_RESULT_TYPE, subject, Subject, SUBJECTS, useDeviceSize } from "../../services";
+import { above, HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, SEARCH_RESULT_TYPE, Subject, useDeviceSize } from "../../services";
 import { PageContextState, ShortcutResponse } from "../../../IsaacAppTypes";
-import { ListView, ListViewCardProps, ListViewCards, QuestionDeckListViewItem } from "../elements/list-groups/ListView";
+import { ListView, ListViewCardProps, ListViewCards } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
 import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
 
