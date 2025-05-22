@@ -7,7 +7,9 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
     Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, 
-    isPhy, TAG_LEVEL} from "../../../services";
+    isPhy,
+    ISAAC_BOOKS,
+    BookHiddenState, TAG_LEVEL} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -1527,6 +1529,19 @@ export const PolicyPageSidebar = (props: ContentSidebarProps) => {
             <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"  || path === "/pages/privacy_policy"} onClick={() => history.push("/privacy")}/></li>
             <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies" || path === "/pages/cookie_policy"} onClick={() => history.push("/cookies")}/></li>
             <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms" || path === "/pages/terms_of_use"} onClick={() => history.push("/terms")}/></li>
+        </ul>
+    </ContentSidebar>;
+};
+
+export const BooksOverviewSidebar = (props: ContentSidebarProps) => {
+    const history = useHistory();
+    return <ContentSidebar buttonTitle="View all books" {...props}>
+        <div className="section-divider"/>
+        <h5>Our books</h5>
+        <ul>
+            {ISAAC_BOOKS.filter(book => book.hidden !== BookHiddenState.HIDDEN).map((book, index) => <li key={index}>
+                <StyledTabPicker checkboxTitle={book.title} checked={false} onClick={() => history.push(book.path)}/>
+            </li>)}
         </ul>
     </ContentSidebar>;
 };
