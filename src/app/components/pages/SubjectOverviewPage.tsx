@@ -3,13 +3,15 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { useUrlPageTheme } from "../../services/pageContext";
-import { HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, Subject } from "../../services";
-import { PageContextState } from "../../../IsaacAppTypes";
-import { ListViewCardProps, ListViewCards } from "../elements/list-groups/ListView";
+import { above, HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, SEARCH_RESULT_TYPE, subject, Subject, SUBJECTS, useDeviceSize } from "../../services";
+import { PageContextState, ShortcutResponse } from "../../../IsaacAppTypes";
+import { ListView, ListViewCardProps, ListViewCards, QuestionDeckListViewItem } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
 import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
 
 const SubjectCards = ({context}: { context: PageContextState }) => {
+    const deviceSize = useDeviceSize();
+
     if (!isDefined(context?.subject)) return null;
 
     const humanSubject = context?.subject && HUMAN_SUBJECTS[context.subject];
@@ -77,12 +79,39 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
             }
         });
-    } //hrm
+    }
 
-    return <ListViewCards showBlanks cards={cards
+    return <ListViewCards showBlanks={above["lg"](deviceSize)} cards={cards
         .sort((a, b) => a ? (b ? 0 : -1) : 1) // put nulls at the end
         .filter((x, i, a) => x || (i % 2 === 0 ? a[i + 1] : a[i - 1])) // remove pairs of nulls
     } />;
+};
+
+const ExampleQuestions = ({ subject }: { subject: Subject }) => {
+    const items: { [key in Subject]: ShortcutResponse[] } = {
+        maths: [{
+            title: "Sample Maths Questions",
+            type: SEARCH_RESULT_TYPE.QUESTION_DECK,
+            id: "sample_maths_questions",
+        }],
+        physics: [/*{
+            title: "Sample Physics Questions",
+            type: SEARCH_RESULT_TYPE.QUESTION_DECK,
+            id: "sample_phy_questions",
+        }*/], // Uncomment when physics questions are available
+        chemistry: [{
+            title: "Sample Chemistry Questions",
+            type: SEARCH_RESULT_TYPE.QUESTION_DECK,
+            id: "sample_chem_questions",
+        }],
+        biology: [{
+            title: "Sample Biology Questions",
+            type: SEARCH_RESULT_TYPE.QUESTION_DECK,
+            id: "sample_bio_questions",
+        }],
+    };
+
+    return items[subject].length > 0 ? <ListView items={items[subject]} /> : null;
 };
 
 export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
@@ -149,7 +178,7 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
                 </ul>
             </p>
 
-            {/* <ExampleQuestions/> */}
+            <ExampleQuestions subject={pageContext.subject} />
 
             <LandingPageFooter context={pageContext} />
         </div>}

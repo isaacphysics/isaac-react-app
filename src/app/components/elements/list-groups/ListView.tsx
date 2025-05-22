@@ -256,7 +256,7 @@ export const ListView = ({items, className, ...rest}: ListViewProps & ListViewIt
                     return <EventListViewItem key={index} {...rest} item={item}/>;
                 case (DOCUMENT_TYPE.QUIZ):
                     return <QuizListViewItem key={index} {...rest} item={item}/>;
-                case SEARCH_RESULT_TYPE.GAMEBOARD:
+                case SEARCH_RESULT_TYPE.QUESTION_DECK:
                     return <QuestionDeckListViewItem key={index} {...rest} item={item}/>;
                 default:
                     // Do not render this item if there is no matching DOCUMENT_TYPE
