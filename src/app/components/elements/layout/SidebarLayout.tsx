@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
@@ -440,7 +440,7 @@ interface GenericConceptsSidebarProps extends ConceptListSidebarProps {
 }
 
 export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
-    const { searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts, searchStages, setSearchStages, stageCounts, ...rest } = props;
+    const { searchText, setSearchText, conceptFilters, setConceptFilters, tagCounts, searchStages, setSearchStages, stageCounts, ...rest } = props;
 
     const updateSearchStages = (stage: Stage) => {
         if (searchStages.includes(stage)) {
@@ -450,6 +450,13 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
         }
     };
     
+    // If exactly one subject is selected, infer a colour for the stage checkboxes
+    const singleSubjectColour = useMemo(() => {
+        return conceptFilters.length === 1 && conceptFilters[0].type === TAG_LEVEL.subject ? conceptFilters[0].id
+            : conceptFilters.length && conceptFilters.every(tag => tag.parent === conceptFilters[0].parent) ? conceptFilters[0].parent
+                : undefined;
+    }, [conceptFilters]);
+
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
@@ -496,7 +503,7 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
                         <li key={stage.value}>
                             <StyledCheckbox checked={searchStages.includes(stage.value)}
                                 label={<>{stage.label} <span className="text-muted">({stageCounts[stage.value]})</span></>}
-                                data-bs-theme={conceptFilters.length === 1 ? conceptFilters[0].id : undefined}
+                                data-bs-theme={singleSubjectColour}
                                 color="theme" onChange={() => {updateSearchStages(stage.value);}}/>
                         </li>)}
                 </ul>
