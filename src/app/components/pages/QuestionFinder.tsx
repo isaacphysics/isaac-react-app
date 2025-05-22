@@ -462,16 +462,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 {siteSpecific(
                     <div className="my-3">
                         {(pageContext?.subject && pageContext.stage)
-                            ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap">
-                                <p className="me-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                                <AffixButton size="md" color="keyline" tag={Link} to="/questions" className="ms-auto" style={{minWidth: "136px"}}
-                                    affix={{
-                                        affix: "icon-right",
-                                        position: "suffix",
-                                        type: "icon"
-                                    }}>
+                            ? <div className="d-flex align-items-center flex-wrap flex-md-nowrap">
+                                <p className="me-3 mb-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                                <div className="ms-auto mb-3">
+                                    <AffixButton size="md" color="keyline" tag={Link} to="/questions" className="text-nowrap" style={{minWidth: "136px"}}
+                                        affix={{
+                                            affix: "icon-right",
+                                            position: "suffix",
+                                            type: "icon"
+                                        }}>
                                     Browse all questions
-                                </AffixButton>
+                                    </AffixButton>
+                                </div>
                             </div>
                             : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
                               Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
