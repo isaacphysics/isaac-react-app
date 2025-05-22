@@ -548,7 +548,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
         {
             title: "Using Essential GCSE Mathematics", tag: "maths_book_gcse",
             shortTitle: "GCSE Maths", image: "/assets/phy/books/2025_maths_book_gcse.png",
-            path: "/books/maths_book_gcse", subject: "maths", stages: ["gcse"],
+            path: "/books/gcse_maths", subject: "maths", stages: ["gcse"],
             description: "Develops the maths skills needed to succeed in science at GCSE level and beyond. Also useful for teaching GCSE maths.",
         },
         {
@@ -928,6 +928,7 @@ export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
     FAST_TRACK_QUESTION = "isaacFastTrackQuestionPage",
+    BOOK_INDEX_PAGE = "isaacBookIndexPage",
     EVENT = "isaacEventPage",
     TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
@@ -940,12 +941,14 @@ export function isAQuestionLikeDoc(doc: ContentDTO): doc is IsaacQuestionPageDTO
 export enum SEARCH_RESULT_TYPE {
     SHORTCUT = "shortcut",
     GAMEBOARD = "gameboard",
+    BOOK_DETAIL_PAGE = "isaacBookDetailPage",
 }
 
 export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.CONCEPT]: "Concepts",
     [DOCUMENT_TYPE.QUESTION]: "Questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
+    [DOCUMENT_TYPE.BOOK_INDEX_PAGE]: "Books",
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
     [DOCUMENT_TYPE.GENERIC]: "Other pages",
@@ -957,6 +960,7 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.CONCEPT]: "concepts",
     [DOCUMENT_TYPE.QUESTION]: "questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "questions",
+    [DOCUMENT_TYPE.BOOK_INDEX_PAGE]: "books",
     [DOCUMENT_TYPE.EVENT]: "events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics",
     [DOCUMENT_TYPE.QUIZ]: "quiz",
