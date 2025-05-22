@@ -53,7 +53,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const [conceptFilters, setConceptFilters] = useState<Tag[]>(
         applicableTags.filter(f => filters.includes(f.id))
     );
-    const [searchStages, setSearchStages] = useState<Stage[]>(stages as Stage[]);
+    const [searchStages, setSearchStages] = useState<Stage[]>(getFilteredStageOptions().filter(s => stages.includes(s.value)).map(s => s.value));
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
     const listConceptsQuery = useListConceptsQuery(pageContext 
