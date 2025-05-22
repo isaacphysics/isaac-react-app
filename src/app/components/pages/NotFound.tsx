@@ -12,10 +12,10 @@ const buildContactUrl = (state: {overridePathname?: string}, pathname: string) =
 export const NotFound = () => {
     const {pathname, state} = useLocation<{overridePathname?: string}>();
     return <Container>
-        <div>
+        <div className="pb-1">
             <TitleAndBreadcrumb
                 breadcrumbTitleOverride={siteSpecific("Unknown page", "404")}
-                currentPageTitle="Page not found"
+                currentPageTitle={window.navigator.onLine ? "Page not found" : "No internet"}
                 icon={{type: "hex", icon: "icon-error"}}
             />
             <p className="my-4">
@@ -24,12 +24,18 @@ export const NotFound = () => {
                     {(state && state.overridePathname) || pathname}
                 </code>
             </p>
-            <p>
-                Expecting to find something here?
-                <a className="ps-1" href={buildContactUrl(state, pathname)} >
-                    Let us know<span className="visually-hidden"> about this missing page</span>
-                </a>.
-            </p>
+            
+            {window.navigator.onLine ? 
+                <p>
+                    Expecting to find something here?
+                    <a className="ps-1" href={buildContactUrl(state, pathname)} >
+                        Let us know<span className="visually-hidden"> about this missing page</span>
+                    </a>.
+                </p> : 
+                <p>
+                    It looks like you&apos;re offline. Please check your internet connection.
+                </p>
+            }
         </div>
     </Container>;
 };
