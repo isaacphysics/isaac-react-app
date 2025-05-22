@@ -68,7 +68,8 @@ const CoreSkillsCard = (context: NonNullable<Required<PageContextState>>): ListV
     },
     icon: {type: "hex", icon: "icon-quiz"},
     subject: context.subject,
-    linkTags: [{tag: "Practise a core skill", url: extendUrl(context, 'quick_quizzes')}]
+    linkTags: [{tag: "Practise a core skill", url: extendUrl(context, 'quick_quizzes')}],
+    state: AbstractListViewItemState.COMING_SOON,
 });
 
 const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
