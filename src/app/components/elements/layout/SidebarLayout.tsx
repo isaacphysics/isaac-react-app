@@ -531,7 +531,7 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Search Questions</h5>
+            <h5>Search questions</h5>
             <Input
                 className='search--filter-input my-4'
                 type="search" value={internalSearchText || ""}
