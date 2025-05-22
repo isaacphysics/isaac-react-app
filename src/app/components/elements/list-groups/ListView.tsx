@@ -304,7 +304,7 @@ export const ListView = ({items, className, ...rest}: ListViewProps & ListViewIt
                     return <EventListViewItem key={index} {...rest} item={item}/>;
                 case (DOCUMENT_TYPE.QUIZ):
                     return <QuizListViewItem key={index} {...rest} item={item}/>;
-                case SEARCH_RESULT_TYPE.QUESTION_DECK:
+                case SEARCH_RESULT_TYPE.GAMEBOARD:
                     return <QuestionDeckListViewItem key={index} {...rest} item={item}/>;
                 case DOCUMENT_TYPE.BOOK_INDEX_PAGE:
                     return <BookIndexListViewItem key={index} {...rest} item={item}/>;

@@ -91,22 +91,22 @@ const ExampleQuestions = ({ subject }: { subject: Subject }) => {
     const items: { [key in Subject]: ShortcutResponse[] } = {
         maths: [{
             title: "Sample Maths Questions",
-            type: SEARCH_RESULT_TYPE.QUESTION_DECK,
+            type: SEARCH_RESULT_TYPE.GAMEBOARD,
             id: "sample_maths_questions",
         }],
         physics: [/*{
             title: "Sample Physics Questions",
-            type: SEARCH_RESULT_TYPE.QUESTION_DECK,
+            type: SEARCH_RESULT_TYPE.GAMEBOARD,
             id: "sample_phy_questions",
         }*/], // Uncomment when physics questions are available
         chemistry: [{
             title: "Sample Chemistry Questions",
-            type: SEARCH_RESULT_TYPE.QUESTION_DECK,
+            type: SEARCH_RESULT_TYPE.GAMEBOARD,
             id: "sample_chem_questions",
         }],
         biology: [{
             title: "Sample Biology Questions",
-            type: SEARCH_RESULT_TYPE.QUESTION_DECK,
+            type: SEARCH_RESULT_TYPE.GAMEBOARD,
             id: "sample_bio_questions",
         }],
     };
