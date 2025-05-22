@@ -6,7 +6,6 @@ import classnames from "classnames";
 import {Rectangle} from "./Rectangle";
 import {Circle} from "./Circle";
 import classNames from "classnames";
-import { icon } from "leaflet";
 
 // Difficulty icon proportions
 const difficultyIconWidth = siteSpecific(15, 25);
