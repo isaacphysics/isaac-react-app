@@ -10,6 +10,8 @@ import { BookPage } from "./BookPage";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { TeacherNotes } from "./TeacherNotes";
+import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
+import { ContentDTO } from "../../../IsaacApiTypes";
     
 interface BookProps {
     match: { params: { bookId: string } };
@@ -63,12 +65,25 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                 />
                                 : <>
                                     <TeacherNotes notes={definedBookIndexPage.teacherNotes} />
-                                    <div>
-                                        <div className="book-image-container mx-3 float-end">
+                                    {definedBookIndexPage.value && <div>
+                                        <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
                                             <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
                                         </div>
                                         <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBookIndexPage.value}</Markup>
-                                    </div>
+                                    </div>}
+                                    {definedBookIndexPage.children?.length && <>
+                                        <div className="d-flex">
+                                            <div className="flex-grow-1">
+                                                <IsaacContentValueOrChildren {...definedBookIndexPage.children[0] as ContentDTO} />
+                                            </div>
+                                            <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
+                                                <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
+                                            </div>
+                                        </div>
+                                        <IsaacContentValueOrChildren>
+                                            {definedBookIndexPage.children.slice(1)}
+                                        </IsaacContentValueOrChildren>
+                                    </>}
                                 </>
                             }
                         </MainContent>
