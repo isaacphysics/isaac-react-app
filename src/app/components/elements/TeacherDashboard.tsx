@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState } from 'react';
 import { selectors, useAppSelector } from '../../state';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, isOverdue, isTutor, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
+import { BookInfo, extractTeacherName, ISAAC_BOOKS, isOverdue, isTutor, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
 import { AssignmentDTO, QuizAssignmentDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
 import StyledToggle from './inputs/StyledToggle';
 import { AssignmentCard, StudentDashboard } from './StudentDashboard';
@@ -11,6 +11,7 @@ import { Spacer } from './Spacer';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 import { useStatefulElementRef } from './markup/portals/utils';
 import { ScrollShadows } from './ScrollShadows';
+import { ShowLoading } from '../handlers/ShowLoading';
 
 interface GroupsPanelProps {
     groups: AppGroup[] | undefined;
@@ -44,10 +45,6 @@ interface AssignmentsPanelProps {
 
 const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProps) => {
     const user = useAppSelector(selectors.user.orNull);
-
-    if (!isDefined(assignments) || !isDefined(quizzes)) {
-        return <div className="dashboard-panel"/>;
-    }
     
     const upcomingAssignments = assignments?.filter(a => !isOverdue(a)); // Filter out past assignments
     const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
@@ -63,15 +60,19 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
 
     return <div className="dashboard-panel">
         <h4>View scheduled work</h4>
-        {soonestDeadlines.length ? 
-            <div className="overflow-y-auto px-1 pt-1 mx-n1 mt-m1 mb-2">
-                {soonestDeadlines.map((assignment, i) => 
-                    <div className={i+1 < soonestDeadlines.length ? "mb-3" : "mb-1"} key={assignment.id}>
-                        <AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} />
-                    </div>)}
-            </div>
-            : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>
-        }
+        <ShowLoading
+            until={assignments && quizzes}
+            thenRender={() => {
+                return soonestDeadlines.length 
+                    ? <div className="overflow-y-auto px-1 pt-1 mx-n1 mt-m1 mb-2">
+                        {soonestDeadlines.map((assignment, i) => 
+                            <div className={i+1 < soonestDeadlines.length ? "mb-3" : "mb-1"} key={assignment.id}>
+                                <AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} />
+                            </div>)}
+                    </div>
+                    : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>;
+            }}
+        />
         <Spacer/>
         <div className="d-flex align-items-center">
             <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
