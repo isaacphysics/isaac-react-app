@@ -548,7 +548,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
         {
             title: "Using Essential GCSE Mathematics", tag: "maths_book_gcse",
             shortTitle: "GCSE Maths", image: "/assets/phy/books/2025_maths_book_gcse.png",
-            path: "/books/gcse_maths", subject: "maths", stages: ["gcse"],
+            path: "/books/maths_book_gcse", subject: "maths", stages: ["gcse"],
             description: "Develops the maths skills needed to succeed in science at GCSE level and beyond. Also useful for teaching GCSE maths.",
         },
         {
