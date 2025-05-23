@@ -488,7 +488,7 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
                         />
                         {isSelected && <div className="ms-3 ps-2">
                             {descendentTags
-                                .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
+                                .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0 || conceptFilters.includes(tag))
                                 // .sort((a, b) => tagCounts ? tagCounts[b.id] - tagCounts[a.id] : 0)
                                 .map((tag, j) => <FilterCheckbox key={j} 
                                     checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters} 
