@@ -104,7 +104,7 @@
 
   // Secondary buttons (for light background)
   // Secondary Button components are expected to use the 'outline' prop!
-  &.btn-outline-secondary, &.btn-outline-primary {
+  &.btn-outline-secondary, &.btn-outline-primary, &.btn-keyline {
     @include ada-button-outline($dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
   }
 

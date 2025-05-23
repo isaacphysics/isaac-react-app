@@ -41,7 +41,7 @@ export const RegistrationGroupInvite = ()  => {
             <Card className="my-5">
                 <CardBody>
                     <p>You came here via a group join link, but the group code is invalid.</p>
-                    <Button color={siteSpecific("keyline", "primary")} outline={isAda} onClick={() => {history.push("/account#teacherconnections");}}>
+                    <Button color="keyline" onClick={() => {history.push("/account#teacherconnections");}}>
                         Go to teacher connections
                     </Button>
                 </CardBody>
@@ -64,7 +64,7 @@ export const RegistrationGroupInvite = ()  => {
                         </tr>))}
                     </tbody>
                 </Table>
-                <Button color={siteSpecific("keyline", "primary")} outline={isAda} onClick={() => {history.push("/account");}}>
+                <Button color="keyline" onClick={() => {history.push("/account");}}>
                     No, skip this
                 </Button>
                 {" "}

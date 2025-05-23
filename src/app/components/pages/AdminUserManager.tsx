@@ -271,7 +271,7 @@ export const AdminUserManager = () => {
                 <Row className="pb-4">
                     <Col>
                         <UncontrolledButtonDropdown>
-                            <DropdownToggle caret disabled={userBeingModified} color={siteSpecific("keyline", "primary")} outline={isAda}>Modify Role</DropdownToggle>
+                            <DropdownToggle caret disabled={userBeingModified} color="keyline">Modify Role</DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem header>Promote or demote selected users to:</DropdownItem>
                                 {(promotableRoles).map(role =>
@@ -285,7 +285,7 @@ export const AdminUserManager = () => {
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
                         {isDefined(currentUser) && currentUser.role === 'ADMIN' && <UncontrolledButtonDropdown>
-                            <DropdownToggle caret disabled={userBeingModified} color={siteSpecific("keyline", "primary")} outline={isAda} className="ms-3">Email Status</DropdownToggle>
+                            <DropdownToggle caret disabled={userBeingModified} color="keyline" className="ms-3">Email Status</DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem header>Change email verification status for users to:</DropdownItem>
                                 {(verificationStatuses).map(status =>

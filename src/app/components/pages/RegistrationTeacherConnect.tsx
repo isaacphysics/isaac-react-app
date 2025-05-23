@@ -90,7 +90,7 @@ export const RegistrationTeacherConnect = () => {
                                     value={authenticationToken}
                                 />
                                 <div className="input-group-append">
-                                    <Button disabled={!codeIsValid} onClick={submit} color={siteSpecific("keyline", "secondary")} outline={isAda}>
+                                    <Button disabled={!codeIsValid} onClick={submit} color="keyline">
                                         Connect
                                     </Button>
                                 </div>

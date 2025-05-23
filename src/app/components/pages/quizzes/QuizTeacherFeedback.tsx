@@ -118,7 +118,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
                     <div className="px-3 pt-3 pt-md-0 align-content-center">
                         <Button
-                            color="primary" outline={isAda} className="btn-md mt-1 text-nowrap"
+                            color={siteSpecific("primary", "keyline")} className="btn-md mt-1 text-nowrap"
                             href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
                             target="_blank"
                         >

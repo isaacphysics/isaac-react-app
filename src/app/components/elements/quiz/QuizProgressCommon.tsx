@@ -89,7 +89,7 @@ export function ResultsTable<Q extends QuestionType>({
             title: "Allow another attempt?",
             body: "This will allow the student to attempt the test again.",
             buttons: [
-                <Button key={1} color={siteSpecific("keyline", "primary")} outline={isAda} target="_blank" onClick={() => dispatch(closeActiveModal())}>
+                <Button key={1} color="keyline" target="_blank" onClick={() => dispatch(closeActiveModal())}>
                     Cancel
                 </Button>,
                 <Button key={0} color="primary" target="_blank" onClick={confirm}>

@@ -61,12 +61,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
 
         if (allCompleted) {
             controls = <>
-                {
-                    siteSpecific(
-                        <Button className="btn btn-keyline" tag={Link} to={pageLink(1)}>Review answers</Button>,
-                        <Button outline color="secondary" tag={Link} to={pageLink(1)}>Review answers</Button>
-                    )
-                }
+                <Button color="keyline" tag={Link} to={pageLink(1)}>Review answers</Button>
                 <Spacer/>
                 All sections complete
                 <Spacer/>

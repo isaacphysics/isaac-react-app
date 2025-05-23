@@ -298,7 +298,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                     </Form>
                 </Col>
                 {canArchive && <Col xs={12} sm={4} className={"mt-2 mt-sm-0"}>
-                    <Button title={group?.archived ? "Unarchive this group" : "Archive this group"} block size="sm" outline={isAda} color={siteSpecific("primary", "secondary")} onClick={toggleArchived}>
+                    <Button title={group?.archived ? "Unarchive this group" : "Archive this group"} block size="sm" color={siteSpecific("primary", "keyline")} onClick={toggleArchived}>
                         {group?.archived ? "Unarchive" : "Archive"}
                     </Button>
                 </Col>}
@@ -315,7 +315,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                     </Col>
                     {isTeacherOrAbove(user) && <Col xs={12} sm={"auto"} className={"mt-1 mt-sm-0 ms-auto"}>
                         {/* Only teachers and above can add group managers */}
-                        <Button outline={isAda} className="w-100 w-sm-auto d-inline-block text-nowrap" size="sm" color="secondary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
+                        <Button className="w-100 w-sm-auto d-inline-block text-nowrap" size="sm" color="keyline" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
                             {isUserGroupOwner
                                 ? <>Add {additionalManagers.length > 1 ? <>/ remove</> : <></>}<span className="d-none d-xl-inline">{" "}group managers</span></>
                                 : <>More info<span className="d-none d-sm-inline">rmation</span></>
@@ -537,7 +537,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
             {showCreateGroup && isDefined(createNewGroup) && <>
                 <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
                 <div className="d-none d-lg-block mb-3">
-                    <Button block color={siteSpecific("secondary", "primary")} outline={isAda} onClick={() => {
+                    <Button block color="keyline" onClick={() => {
                         setSelectedGroupId(undefined);
                         if (groupNameInputRef.current) {
                             groupNameInputRef.current.focus();

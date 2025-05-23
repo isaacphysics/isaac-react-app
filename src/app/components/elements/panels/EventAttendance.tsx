@@ -107,12 +107,12 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
 
                                 return <tr key={booking.bookingId}>
                                     <td className="align-middle">
-                                        {booking.bookingStatus != 'ATTENDED' && <Button color={siteSpecific("keyline", "primary")} outline={isAda} className="btn-sm mb-2"
+                                        {booking.bookingStatus != 'ATTENDED' && <Button color="keyline" className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: true})}
                                         >
                                             Mark&nbsp;as Attended
                                         </Button>}
-                                        {booking.bookingStatus != 'ABSENT' && <Button color={siteSpecific("keyline", "primary")} outline={isAda} className="btn-sm mb-2"
+                                        {booking.bookingStatus != 'ABSENT' && <Button color="keyline" className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: false})}
                                         >
                                             Mark&nbsp;as Absent

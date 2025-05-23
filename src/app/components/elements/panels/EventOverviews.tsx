@@ -116,7 +116,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                             <tbody>
                                 {orderBy(eventOverviews, [sortPredicate], [reverse ? "desc" : "asc"])
                                     .map((event) => <tr key={event.id} data-testid="event-manager-row">
-                                        <td className="align-middle"><Button color={siteSpecific("keyline", "primary")} outline={isAda} className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
+                                        <td className="align-middle"><Button color="keyline" className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
                                             Manage
                                         </Button></td>
                                         <td className="align-middle"><Link to={`/events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>

@@ -234,7 +234,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </div>
                 </td>}
                 {isAda && <td className={basicCellClasses}>
-                    <Button outline color={"secondary"} className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                    <Button color="keyline" className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
                 </td>}
             </> 
                 : 
@@ -348,7 +348,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </Row>
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
-                        <Button outline color={"secondary"} className={"me-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                        <Button color="keyline" className={"me-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="secondary" onClick={toggleAssignModal}>
                             Assign{hasAssignedGroups && " / Unassign"}
                         </Button>}

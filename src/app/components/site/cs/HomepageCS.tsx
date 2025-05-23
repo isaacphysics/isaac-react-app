@@ -199,7 +199,7 @@ export const HomepageCS = () => {
                                     </ul>
                                 </CardBody>
                                 <CardFooter className="border-top-0 p-4">
-                                    <Button outline to="/exam_specifications_ada#core/ada" color='secondary' tag={Link}>See more</Button>
+                                    <Button to="/exam_specifications_ada#core/ada" color="keyline" tag={Link}>See more</Button>
                                 </CardFooter>
                             </Card>
                         </Container>
@@ -217,7 +217,7 @@ export const HomepageCS = () => {
                                     </ul>
                                 </CardBody>
                                 <CardFooter className="border-top-0 p-4">
-                                    <Button outline to="/exam_specifications_ada#advanced/ada" color='secondary' tag={Link}>See more</Button>
+                                    <Button to="/exam_specifications_ada#advanced/ada" color="keyline" tag={Link}>See more</Button>
                                 </CardFooter>
                             </Card>
                         </Container>

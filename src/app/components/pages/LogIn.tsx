@@ -272,7 +272,7 @@ export const LogIn = () => {
                                             />
                                         </Col>
                                         <Col sm={6}>
-                                            <Button id="sign-up" color={siteSpecific("keyline", "primary")} className="mb-2" onClick={signUp} outline={isAda} block>
+                                            <Button id="sign-up" color="keyline" className="mb-2" onClick={signUp} block>
                                                 Sign up
                                             </Button>
                                         </Col>

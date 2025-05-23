@@ -49,7 +49,7 @@ const LoginOrSignUpBody = () => {
                 <p>You need to be logged in to your account to <b>save your answers and progress</b>. If you don&apos;t have an account, you can <b>sign up today for free</b>.</p>
                 <br/>
                 <p>Alternatively, you can</p>
-                <Button size={"sm"} color={siteSpecific("keyline", "primary")} outline={isAda} onClick={closeModal} block>
+                <Button size={"sm"} color="keyline" onClick={closeModal} block>
                     Continue without an account
                 </Button>
             </div>

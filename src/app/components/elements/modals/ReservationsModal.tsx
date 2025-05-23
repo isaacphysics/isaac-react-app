@@ -304,7 +304,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             </Table>
 
                             <div className="text-center mb-3">
-                                <Button color={siteSpecific("keyline", "primary")} outline={isAda} disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
+                                <Button color="keyline" disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
                                     Cancel reservations
                                 </Button>
                             </div>

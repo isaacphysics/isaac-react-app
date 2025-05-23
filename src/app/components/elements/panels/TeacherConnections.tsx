@@ -198,7 +198,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                             e.preventDefault();
                         }}}
                     />
-                    <Button onClick={processToken} className={classNames("py-2", {"px-3 btn btn-solid": isPhy})} color="secondary" outline disabled={editingOtherUser}>
+                    <Button onClick={processToken} className={classNames("py-2", {"px-3 btn btn-solid": isPhy})} color="keyline" disabled={editingOtherUser}>
                         Connect
                     </Button>
                 </InputGroup>

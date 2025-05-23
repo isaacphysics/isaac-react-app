@@ -37,7 +37,7 @@ export const additionalManagerSelfRemovalModal = (group: AppGroup, user: Registe
     buttons: [
         <Row key={0}>
             <Col>
-                <Button block outline={isAda} color={siteSpecific("keyline", "primary")} onClick={() => {
+                <Button block color="keyline" onClick={() => {
                     store.dispatch(closeActiveModal());
                 }}>
                     Cancel
@@ -251,7 +251,7 @@ Are you sure you want to promote this manager to group owner?\n
                             <span className="icon-group-table-person" />{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})
                         </td>
                         {userIsOwner && <td className={"text-center"}>
-                            <Button outline={isAda} className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "secondary")} onClick={() => promoteManager(manager)}>
+                            <Button className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
                                 Make owner
                             </Button>
                         </td>}
