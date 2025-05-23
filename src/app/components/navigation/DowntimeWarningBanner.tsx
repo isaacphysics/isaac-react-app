@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Alert, Button, Col, Container, Row} from 'reactstrap';
 import Cookies from 'js-cookie';
-import {isAda, SITE_TITLE, siteSpecific} from "../../services";
+import {SITE_TITLE, siteSpecific} from "../../services";
 
 const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 

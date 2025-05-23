@@ -1,7 +1,7 @@
 import React, {useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
-import {isAda, isAuthorisedFullAccess, siteSpecific, TODAY} from "../../../services";
+import {isAuthorisedFullAccess, siteSpecific, TODAY} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";

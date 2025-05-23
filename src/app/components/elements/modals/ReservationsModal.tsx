@@ -28,7 +28,7 @@ import {
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {ActiveModal, AppGroup, AugmentedEvent} from "../../../../IsaacAppTypes";
 import {RegisteredUserDTO, UserSummaryWithGroupMembershipDTO} from "../../../../IsaacApiTypes";
-import {bookingStatusMap, isAda, isDefined, isLoggedIn, schoolNameWithPostcode, siteSpecific} from "../../../services";
+import {bookingStatusMap, isDefined, isLoggedIn, schoolNameWithPostcode} from "../../../services";
 import _orderBy from "lodash/orderBy";
 import {Link} from "react-router-dom";
 import classNames from "classnames";

@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import {Accordion} from "../Accordion";
 import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
-import {atLeastOne, isAda, isEventLeader, siteSpecific, zeroOrLess} from "../../../services";
+import {atLeastOne, isAda, isEventLeader, zeroOrLess} from "../../../services";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import orderBy from "lodash/orderBy";

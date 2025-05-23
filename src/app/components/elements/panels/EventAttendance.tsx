@@ -3,7 +3,7 @@ import {Accordion} from "../Accordion";
 import {
     useRecordUserEventAttendanceMutation
 } from "../../../state";
-import {atLeastOne, isAda, isEventLeader, siteSpecific, sortOnPredicateAndReverse} from "../../../services";
+import {atLeastOne, isEventLeader, sortOnPredicateAndReverse} from "../../../services";
 import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
 import {AugmentedEvent, PotentialUser, UserSchoolLookup} from "../../../../IsaacAppTypes";
