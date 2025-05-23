@@ -48,7 +48,7 @@ export const TeacherFeatures = () => {
                         Isaac provides you with a huge range of resources to support your teaching of Science subjects – all for free.                 </p>
                 </Col>}
             {isDisabled && <Col md={6} className="text-center text-md-end">
-                <Button tag={Link} size="lg" color="secondary" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
+                <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
                     {isLoggedIn(user) ? "Upgrade my Account" : "Get a Teacher Account"}
                 </Button>
             </Col>}

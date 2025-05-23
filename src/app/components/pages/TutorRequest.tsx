@@ -200,7 +200,7 @@ export const TutorRequest = () => {
                                             </span>
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
-                                            <Button type="submit" color="secondary" disabled={!emailVerified} className='w-100'>Submit</Button>
+                                            <Button type="submit" color="keyline" disabled={!emailVerified} className='w-100'>Submit</Button>
                                         </Col>
                                     </Row>
                                 </CardFooter>

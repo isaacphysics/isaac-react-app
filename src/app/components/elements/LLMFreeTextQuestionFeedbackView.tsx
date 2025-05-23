@@ -84,7 +84,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                         </li>
                     </ul>
                     <Button
-                        color="primary" outline disabled={Object.values(feedback).every(a => !a)}
+                        color="keyline" disabled={Object.values(feedback).every(a => !a)}
                         onClick={() => {
                             dispatch(logAction({type: "LLM_FREE_TEXT_QUESTION_FEEDBACK", events: {...validationResponse, pageId, userFeedback: feedback}}));
                             setSentFeedback(true);

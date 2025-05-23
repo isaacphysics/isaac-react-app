@@ -136,7 +136,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
 
                                 {/* Load More Button */}
                                 {numberOfLoadedEvents < total && <div className="text-center mt-4 mb-5">
-                                    <Button color="primary"
+                                    <Button color="solid"
                                         onClick={() => {getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});}}>
                                         Load more events
                                     </Button>

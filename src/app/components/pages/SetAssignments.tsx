@@ -149,7 +149,7 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
         </Label>}
         <Button
             className="mt-2 mb-2"
-            block color={siteSpecific("secondary", "primary")}
+            block color={siteSpecific("keyline", "solid")}
             onClick={assign}
             role={"button"}
             disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !dueDate || dueDateInvalid || startDateInvalid}
@@ -556,7 +556,7 @@ export const SetAssignments = () => {
                         You have no {siteSpecific("question decks", "quizzes")} to assign
                         {siteSpecific(
                             "; use one of the options above to find one.",
-                            <><br /><Button className={"mt-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="secondary">
+                            <><br /><Button className={"mt-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="solid">
                                 Create a quiz
                             </Button></>
                         )}

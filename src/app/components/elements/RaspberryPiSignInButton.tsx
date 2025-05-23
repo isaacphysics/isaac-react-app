@@ -9,7 +9,7 @@ export const RaspberryPiSignInButton = ({isSignup, concise}: {isSignup?: boolean
         dispatch(handleProviderLoginRedirect("RASPBERRYPI", isSignup));
     };
 
-    return <Button className={"position-relative"} block outline color="primary" onClick={logInWithRaspberryPi}>
+    return <Button className={"position-relative"} block color="keyline" onClick={logInWithRaspberryPi}>
         <img className="rpf-button-logo" src={"/assets/common/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>
         {
             concise ?

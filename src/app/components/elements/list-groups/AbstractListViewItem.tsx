@@ -63,7 +63,7 @@ const LinkTags = ({linkTags, disabled}: LinkTagProps) => {
 const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUrl?: string, quizButton?: ReactNode}) => {
     const { previewQuizUrl, quizButton, ...rest } = props;
     return <span {...rest} className={classNames(rest.className, "d-flex justify-content-end gap-3")}>
-        {previewQuizUrl && <Button to={previewQuizUrl} color={siteSpecific("keyline", "secondary")} tag={Link} className="set-quiz-button-md">
+        {previewQuizUrl && <Button to={previewQuizUrl} color={siteSpecific("keyline", "solid")} tag={Link} className="set-quiz-button-md">
             {previewQuizUrl.includes("/preview/") ? "Preview" : "View test"}
         </Button>}
         {quizButton}

@@ -32,7 +32,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
         </Col>
         <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
             <Button
-                className="w-100" color={siteSpecific("secondary", "primary")} outline={isAda}
+                className="w-100" color="keyline"
                 onClick={() => {resetBuilder(); closeModal();}}
             >
                 Create another {siteSpecific("question deck", "quiz")}
@@ -40,7 +40,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
         </Col>
         <Col sm={12} lg={siteSpecific("auto", 4)} className="mb-1">
             <Button
-                className="w-100" tag={Link} to={PATHS.SET_ASSIGNMENTS} color={siteSpecific("secondary", "primary")} outline={isAda}
+                className="w-100" tag={Link} to={PATHS.SET_ASSIGNMENTS} color="keyline"
                 onClick={closeModal}
             >
                 View all of your {siteSpecific("question decks", "quizzes")}

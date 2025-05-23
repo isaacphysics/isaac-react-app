@@ -304,7 +304,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             </Table>
 
                             <div className="text-center mb-3">
-                                <Button color="primary" outline disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
+                                <Button color="keyline" disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
                                     Cancel reservations
                                 </Button>
                             </div>
@@ -400,7 +400,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                         You can only reserve a maximum of {event.groupReservationLimit} group members onto this event.
                                     </p>}
                                     <div className="text-center">
-                                        <Button color="primary" disabled={!allowedToReserve} onClick={requestReservations}>
+                                        <Button color="solid" disabled={!allowedToReserve} onClick={requestReservations}>
                                             Reserve places
                                         </Button>
                                     </div>

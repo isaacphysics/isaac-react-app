@@ -78,7 +78,7 @@ export const TeacherResources = () => {
                     <p>An Ada account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.</p>
                     {!isLoggedIn(user) && <div className="pb-2 mb-3">
                         <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
-                        <Button outline to={"/login"} tag={Link}>Log in</Button>
+                        <Button color="keyline" to={"/login"} tag={Link}>Log in</Button>
                     </div>}
                 </TextBlock>
                 <ColumnSlice>
@@ -219,7 +219,7 @@ export const TeacherResources = () => {
                     <TextBlock className="py-3 text-center text-white">
                         <h3>Need help?</h3>
                         <p>Our teacher support page has lots of information for common questions and issues.</p>
-                        <Button outline className="bg-white" to="/support/teacher/general" tag={Link}>Teacher support</Button>
+                        <Button color="keyline" className="bg-white" to="/support/teacher/general" tag={Link}>Teacher support</Button>
                     </TextBlock>
                 </div>
             </Container>

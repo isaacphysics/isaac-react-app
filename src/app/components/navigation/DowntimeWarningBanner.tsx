@@ -27,7 +27,7 @@ export const DowntimeWarningBanner = () => {
                         {SITE_TITLE} will be unavailable on Saturday 10 August from 8pm BST until early Sunday morning for essential server maintenance.
                     </Col>
                     <Col xs={12} md={3} className="text-center">
-                        <Button color="primary" outline className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
+                        <Button color="keyline" className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
                             Dismiss<span className="visually-hidden"> downtime notification</span>
                         </Button>
                     </Col>

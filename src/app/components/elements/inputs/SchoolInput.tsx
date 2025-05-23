@@ -133,7 +133,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             <StyledCheckbox
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
-                color={siteSpecific("primary", "")}
+                color="solid"
                 invalid={isInvalid}
                 disabled={disableInput || !setUserToUpdate}
                 onChange={(e => {

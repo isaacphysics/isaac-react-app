@@ -196,7 +196,7 @@ export function UserContextAccountInput({
             {isAda && <>
                 {tutorOrAbove &&
                     <Col lg={6} className="p-0 pe-4 pe-lg-0">
-                        <Button color="primary" outline className="mb-3 px-2 w-100"
+                        <Button color="keyline" className="mb-3 px-2 w-100"
                             onClick={() => setUserContexts([...userContexts, {}])}
                             disabled={!validateUserContexts(userContexts)}>
                             Add more content

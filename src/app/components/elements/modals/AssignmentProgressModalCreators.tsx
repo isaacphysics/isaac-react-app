@@ -11,7 +11,7 @@ export const downloadLinkModal = (link: string) => {
         title: "Privacy Notice",
         body: <PageFragment fragmentId="csv_download_notice" />,
         buttons: [
-            <Button key={0} block color="primary" tag="a"  href={link} target="_blank" onClick={() => {store.dispatch(closeActiveModal());}}>
+            <Button key={0} block color="solid" tag="a"  href={link} target="_blank" onClick={() => {store.dispatch(closeActiveModal());}}>
                 Download CSV
             </Button>,
         ]

@@ -266,7 +266,7 @@ export const TeacherRequest = () => {
                                             </span>
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
-                                            <Button type="submit" color="secondary" disabled={invalidDetails} className='w-100'>Submit</Button>
+                                            <Button type="submit" color="keyline" disabled={invalidDetails} className='w-100'>Submit</Button>
                                         </Col>
                                     </Row>
                                 </CardFooter>
