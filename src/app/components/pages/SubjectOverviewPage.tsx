@@ -8,6 +8,7 @@ import { PageContextState, ShortcutResponse } from "../../../IsaacAppTypes";
 import { ListView, ListViewCardProps, ListViewCards } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
 import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
+import { AbstractListViewItemState } from "../elements/list-groups/AbstractListViewItem";
 
 const SubjectCards = ({context}: { context: PageContextState }) => {
     const deviceSize = useDeviceSize();
@@ -28,6 +29,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             },
             url: `/${context.subject}/11_14`,
             stage: LEARNING_STAGE["11_TO_14"],
+            subject: context.subject,
         },
         {
             item: {
@@ -40,6 +42,8 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             },
             url: `/${context.subject}/gcse`,
             stage: LEARNING_STAGE.GCSE,
+            subject: context.subject,
+            state: context.subject === "biology" ? AbstractListViewItemState.COMING_SOON : undefined,
         },
         {
             item: {
@@ -52,6 +56,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             },
             url: `/${context.subject}/a_level`,
             stage: LEARNING_STAGE.A_LEVEL,
+            subject: context.subject,
         },
         {
             item: {
@@ -64,22 +69,9 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             },
             url: `/${context.subject}/university`,
             stage: LEARNING_STAGE.UNIVERSITY,
+            subject: context.subject,
         },
-    ].map(({stage, ...card}) => (PHY_NAV_SUBJECTS[context.subject as Subject] as readonly LearningStage[])?.includes(stage) ? card : null);
-
-    if (context.subject === "biology") {
-        cards.push({
-            item: {
-                title: "GCSE (COMING SOON)",
-                subtitle: `Our GCSE ${humanSubject} resources develop the ${humanSubject} knowledge needed at GCSE through the use of questions, concepts and books.` 
-            },
-            className: "disabled",
-            icon: {
-                type: "img" as const,
-                icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
-            }
-        });
-    }
+    ].map(({stage, ...card}) => (PHY_NAV_SUBJECTS[context.subject as Subject] as readonly LearningStage[])?.includes(stage) || card.state === AbstractListViewItemState.COMING_SOON ? card : null);
 
     return <ListViewCards showBlanks={above["lg"](deviceSize)} cards={cards
         .sort((a, b) => a ? (b ? 0 : -1) : 1) // put nulls at the end
