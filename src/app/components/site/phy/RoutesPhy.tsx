@@ -66,7 +66,6 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
 const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
     "/books/pre_uni_maths": PreUniMaths,
     "/books/chemistry_16": Chemistry16,
-    "/books/quantum_mechanics_primer": QuantumMechanicsPrimer,
     "/books/solve_physics_problems": SolvingPhysProblems,
     "/books/phys_book_yr9": PhysBookYrNine,
 };
