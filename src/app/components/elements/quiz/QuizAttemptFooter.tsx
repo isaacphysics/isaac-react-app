@@ -65,7 +65,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
                 <Spacer/>
                 All sections complete
                 <Spacer/>
-                <Button color={siteSpecific("secondary", "solid")} onClick={submitQuiz}>{submitButton}</Button>
+                <Button color={siteSpecific("keyline", "solid")} onClick={submitQuiz}>{submitButton}</Button>
             </>;
         } else {
             if (anyAnswered) {
@@ -76,12 +76,12 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
                     <Spacer/>
                     {totalCompleted} / {sectionCount} sections complete<br/>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "solid")} tag={Link} to={pageLink(firstIncomplete + 1)}>Continue</Button>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(firstIncomplete + 1)}>Continue</Button>
                 </>;
             } else {
                 controls = <>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "solid")} tag={Link} to={pageLink(1)}>Continue</Button>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(1)}>Continue</Button>
                 </>;
             }
         }

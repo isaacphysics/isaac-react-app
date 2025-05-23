@@ -265,7 +265,7 @@ export const LogIn = () => {
                                             <Button
                                                 id="log-in"
                                                 tag="input" value="Log in"
-                                                color={siteSpecific("solid", "secondary")}
+                                                color="solid"
                                                 type="submit" className="mb-2" block
                                                 onClick={attemptLogIn}
                                                 disabled={!!user?.requesting}

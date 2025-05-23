@@ -44,7 +44,7 @@ export const EmailVerificationBanner = () => {
                     </Col>
                     <Col xs={12} md={3} className="text-center">
                         <Button
-                            color={siteSpecific("keyline", "secondary")} className="mt-3 mb-2 d-block d-md-inline-block banner-button"
+                            color={siteSpecific("keyline", "solid")} className="mt-3 mb-2 d-block d-md-inline-block banner-button"
                             onClick={() => setHidden(true)} id="email-verification-snooze"
                         >
                             Snooze

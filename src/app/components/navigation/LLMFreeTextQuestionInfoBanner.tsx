@@ -36,10 +36,10 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
         </p>
         <Row className="align-items-center mt-4">
             <Col div className="col-12 col-sm-auto me-auto">
-                <Link to="/login" onClick={setAfterAuthPath} className="btn btn-primary me-2 w-100 w-sm-auto">
+                <Link to="/login" onClick={setAfterAuthPath} className="btn btn-solid me-2 w-100 w-sm-auto">
                     Log in
                 </Link>
-                <Link to="/register" onClick={setAfterAuthPath} className="btn btn-outline-primary bg-white w-100 w-sm-auto mt-2 mt-sm-0">
+                <Link to="/register" onClick={setAfterAuthPath} className="btn btn-keyline bg-white w-100 w-sm-auto mt-2 mt-sm-0">
                     Sign up
                 </Link>
             </Col>

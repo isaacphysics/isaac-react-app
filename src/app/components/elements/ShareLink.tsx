@@ -62,7 +62,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
                 data-bs-theme="neutral"
                 onClick={(e) => { e.preventDefault(); toggleShareLink(); }}
             />,
-            <button className={siteSpecific("btn-action", classNames("btn btn-primary", {"outline": outline}))} onClick={(e) => {e.preventDefault(); toggleShareLink();}} aria-label={buttonAriaLabel} />
+            <button className={siteSpecific("btn-action", classNames("btn btn-solid", {"outline": outline}))} onClick={(e) => {e.preventDefault(); toggleShareLink();}} aria-label={buttonAriaLabel} />
         )}
     </div>;
 };

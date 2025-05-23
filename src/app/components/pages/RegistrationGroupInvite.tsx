@@ -68,7 +68,7 @@ export const RegistrationGroupInvite = ()  => {
                     No, skip this
                 </Button>
                 {" "}
-                <Button color={siteSpecific("solid", "secondary")} onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
+                <Button color="solid" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
                     Yes, join the group
                 </Button>
             </CardBody>  
