@@ -132,18 +132,16 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                     : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts}/>
                 }
                 <MainContent>
-                    {pageContext?.subject && <div className="d-flex align-items-center flex-wrap flex-md-nowrap my-3">
-                        <p className="me-3 mb-3">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                        <div className="ms-auto mb-3">
-                            <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className="text-nowrap"
-                                affix={{
-                                    affix: "icon-right",
-                                    position: "suffix",
-                                    type: "icon"
-                                }}>
+                    {pageContext?.subject && <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
+                        <p className="me-3">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                        <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className="ms-auto"
+                            affix={{
+                                affix: "icon-right",
+                                position: "suffix",
+                                type: "icon"
+                            }}>
                             Browse all concepts
-                            </AffixButton>
-                        </div>
+                        </AffixButton>
                     </div>}
                     {isPhy && <div className="list-results-container p-2 my-4">
                         <ShowLoadingQuery
