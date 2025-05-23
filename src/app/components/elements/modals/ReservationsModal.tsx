@@ -400,7 +400,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                         You can only reserve a maximum of {event.groupReservationLimit} group members onto this event.
                                     </p>}
                                     <div className="text-center">
-                                        <Button color="primary" disabled={!allowedToReserve} onClick={requestReservations}>
+                                        <Button color="solid" disabled={!allowedToReserve} onClick={requestReservations}>
                                             Reserve places
                                         </Button>
                                     </div>

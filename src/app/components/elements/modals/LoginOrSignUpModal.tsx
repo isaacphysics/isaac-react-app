@@ -88,7 +88,7 @@ const LoginOrSignUpBody = () => {
                         <Button
                             id="log-in"
                             tag="input" value="Log in"
-                            color="primary" type="submit" block
+                            color="solid" type="submit" block
                             className="mb-2"
                             onClick={attemptLogIn}
                             disabled={!!user?.requesting}

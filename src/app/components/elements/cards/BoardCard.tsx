@@ -265,7 +265,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </td>}
                     {siteSpecific(
                         <td className={"text-center align-middle"}>
-                            <Button outline color="primary" className={"bin-icon d-inline-block outline"} style={{
+                            <Button outline color="solid" className={"bin-icon d-inline-block outline"} style={{
                                 width: "20px",
                                 minWidth: "20px",
                             }} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>

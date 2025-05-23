@@ -113,7 +113,7 @@ export const RegistrationTeacherConnect = () => {
                             </>, 
                             <>
                                 <Col xs={6} md={4} lg={3}>
-                                    <Button className="w-100 my-2 px-2" color="primary" onClick={continueToNext}>Continue</Button>
+                                    <Button className="w-100 my-2 px-2" color="solid" onClick={continueToNext}>Continue</Button>
                                 </Col>
                             </>
                         )}

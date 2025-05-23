@@ -236,7 +236,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                             </Col>
                             {isPhy && isLoggedIn(user) && !event.hasExpired && (canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
                                 <Col size={3} sm={2} className="d-flex flex-column justify-content-end" style={{minWidth: "fit-content"}}>
-                                    <Button color="primary" onClick={openAndScrollToBookingForm} className="mt-2 mb-3 me-2 text-nowrap align-self-center">
+                                    <Button color="solid" onClick={openAndScrollToBookingForm} className="mt-2 mb-3 me-2 text-nowrap align-self-center">
                                         {formatMakeBookingButtonMessage(event)}
                                     </Button>
                                 </Col>}
@@ -305,7 +305,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 </Alert>
                                 }
                                 {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
-                                <Button color="primary" className="mb-3 me-3" onClick={() => {
+                                <Button color="solid" className="mb-3 me-3" onClick={() => {
                                     setBookingFormOpen(true);
                                 }}>
                                     {formatMakeBookingButtonMessage(event)}

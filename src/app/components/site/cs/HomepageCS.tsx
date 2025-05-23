@@ -64,7 +64,7 @@ export const HomepageCS = () => {
                             <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read
                                 the latest news and updates from the team.</p>
                             {showNewsletterPrompts && <div className={"d-none d-lg-block"}>
-                                <Button onClick={() => {setLinkedSetting("news-preference");}} color={"primary"}
+                                <Button onClick={() => {setLinkedSetting("news-preference");}} color="solid"
                                     tag={Link} to={"/account#notifications"}>
                                     Join our newsletter
                                 </Button>
@@ -81,7 +81,7 @@ export const HomepageCS = () => {
                         }}/> : <div/>}
                     </ColumnSlice>
                     {showNewsletterPrompts && <div className={"mt-4 mt-lg-5 w-100 text-center d-lg-none"}>
-                        <Button onClick={() => {setLinkedSetting("news-preference");}} color={"primary"}
+                        <Button onClick={() => {setLinkedSetting("news-preference");}} color="solid"
                             tag={Link} to={"/account#notifications"}>
                                 Join our newsletter
                         </Button>
@@ -113,8 +113,8 @@ export const HomepageCS = () => {
                                     {" "}<a href={"/exam_specifications_scotland#scotland_advanced_higher/sqa"}>Advanced&nbsp;Higher</a></li>
                             </ul>
                             <div>
-                                <Button className="mt-3 me-3" tag={Link} to="/students" color="primary">Student Resources</Button>
-                                <Button className="mt-3" tag={Link} to="/teachers" color="primary">Teacher Resources</Button>
+                                <Button className="mt-3 me-3" tag={Link} to="/students" color="solid">Student Resources</Button>
+                                <Button className="mt-3" tag={Link} to="/teachers" color="solid">Teacher Resources</Button>
                             </div>
                         </Col>
                     </Row>
@@ -131,7 +131,7 @@ export const HomepageCS = () => {
                             </p>
                             <p><b>For students</b>: Learn or revise a topic and receive instant feedback.</p>
                             <p><b>For teachers</b>: Save time by creating self-marking quizzes for your class.</p>
-                            <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color='primary'>
+                            <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color="solid">
                                 Find questions
                             </Button>
                         </TextBlock>

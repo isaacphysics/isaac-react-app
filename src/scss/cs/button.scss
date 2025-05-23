@@ -98,7 +98,7 @@
   }
 
   // Primary buttons (light background)
-  &.btn-primary, &.btn-secondary {
+  &.btn-primary, &.btn-secondary, &.btn-solid {
     @include ada-button($cs-white, $dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
   }
 

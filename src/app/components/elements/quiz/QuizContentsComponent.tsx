@@ -284,7 +284,7 @@ export function QuizPagination({page, sections, pageLink, finalLabel}: QuizAttem
     const nextLink = pageLink(!finalSection ? page + 1 : undefined);
 
     return <div className="d-flex w-100 justify-content-between align-items-center">
-        <Button color="primary" outline={isAda} size={below["sm"](deviceSize) ? "sm" : ""} className={classNames({"btn btn-keyline": isPhy})} tag={Link} to={backLink}>Back</Button>
+        <Button color="keyline" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={backLink}>Back</Button>
         <div className="d-none d-md-block">Section {page} / {sectionCount}</div>
         <Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={nextLink}>{finalSection ? finalLabel : "Next"}</Button>
     </div>;

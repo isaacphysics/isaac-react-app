@@ -286,7 +286,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                 valid={isGroupNameValid}
                             />
                             {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <Button
-                                color={siteSpecific("secondary", "primary")}
+                                color={siteSpecific("keyline", "solid")}
                                 className={classNames("py-0", {"px-0 border-dark": isPhy})} disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
                                 onClick={saveUpdatedGroup}
                                 size="sm"
@@ -298,7 +298,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                     </Form>
                 </Col>
                 {canArchive && <Col xs={12} sm={4} className={"mt-2 mt-sm-0"}>
-                    <Button title={group?.archived ? "Unarchive this group" : "Archive this group"} block size="sm" color={siteSpecific("primary", "keyline")} onClick={toggleArchived}>
+                    <Button title={group?.archived ? "Unarchive this group" : "Archive this group"} block size="sm" color={siteSpecific("solid", "keyline")} onClick={toggleArchived}>
                         {group?.archived ? "Unarchive" : "Archive"}
                     </Button>
                 </Col>}
@@ -457,7 +457,7 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
             </Form>
         </Col>
         <Col size={12} className={siteSpecific("", "mt-2")}>
-            <Button block color="primary" outline={isAda} onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
+            <Button block color={siteSpecific("solid", "keyline")} onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
                 Create group
             </Button>
         </Col>

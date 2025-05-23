@@ -75,10 +75,10 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
             You can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`}>account settings</Link>.
         </p>
         <div className="mt-4">
-            <Button color="primary" className="me-2 w-100 w-sm-auto" onClick={provideConsent}>
+            <Button color="solid" className="me-2 w-100 w-sm-auto" onClick={provideConsent}>
                 Consent
             </Button>
-            {navigation.nextItem && <Button tag={Link} color="outline-primary" className="bg-white w-100 w-sm-auto mt-2 mt-sm-0" to={{pathname: navigation.nextItem.to, search: navigation.search}}>
+            {navigation.nextItem && <Button tag={Link} color="keyline" className="bg-white w-100 w-sm-auto mt-2 mt-sm-0" to={{pathname: navigation.nextItem.to, search: navigation.search}}>
                 Skip question
             </Button>}
         </div>

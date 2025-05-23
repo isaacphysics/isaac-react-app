@@ -47,7 +47,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
         </div>}
         <div className="clearfix">
             {isAda && <div className="mb-3 float-start">
-                <Button color="primary" size="sm" tag={Link} to="/events_toolkit">Events toolkit</Button>
+                <Button color="solid" size="sm" tag={Link} to="/events_toolkit">Events toolkit</Button>
             </div>}
             <div className="float-start">
                 {/* Load More Button */}

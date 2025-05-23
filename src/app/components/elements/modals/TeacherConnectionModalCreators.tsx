@@ -46,7 +46,7 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
             </p>
         </React.Fragment>,
         buttons: [
-            <Button key={1} color="primary" outline={isAda} onClick={() => {store.dispatch(closeActiveModal());}}>
+            <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
             <Button key={0} color="secondary" onClick={() => {
@@ -73,7 +73,7 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
             </p>
         </React.Fragment>,
         buttons: [
-            <Button key={1} color="primary" outline={isAda} onClick={() => {store.dispatch(closeActiveModal());}}>
+            <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
             <Button key={0} color="secondary" onClick={() => {
@@ -99,7 +99,7 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
             </p>
         </React.Fragment>,
         buttons: [
-            <Button key={1} color="primary" outline={isAda} onClick={() => {store.dispatch(closeActiveModal());}}>
+            <Button key={1} color={siteSpecific("solid", "keyline")} outline={isAda} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
             <Button key={0} color="secondary" onClick={() => {
@@ -124,7 +124,7 @@ export const releaseAllConfirmationModal = () => {
             </p>
         </React.Fragment>,
         buttons: [
-            <Button key={1} color="primary" outline={isAda} onClick={() => {store.dispatch(closeActiveModal());}}>
+            <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
             <Button key={0} color="secondary" onClick={() => {
@@ -153,7 +153,7 @@ export const confirmSelfRemovalModal = (userId: number, groupId: number) => {
             </p>
         </>,
         buttons: [
-            <Button key={1} color="primary" outline={isAda} onClick={() => store.dispatch(closeActiveModal())}>
+            <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => store.dispatch(closeActiveModal())}>
                 Cancel
             </Button>,
             <Button key={0} color="secondary" onClick={() => {

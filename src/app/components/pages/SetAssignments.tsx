@@ -149,7 +149,7 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
         </Label>}
         <Button
             className="mt-2 mb-2"
-            block color={siteSpecific("secondary", "primary")}
+            block color={siteSpecific("keyline", "solid")}
             onClick={assign}
             role={"button"}
             disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !dueDate || dueDateInvalid || startDateInvalid}

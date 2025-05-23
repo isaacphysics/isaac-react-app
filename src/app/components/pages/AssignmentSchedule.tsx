@@ -159,13 +159,13 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
                     <ButtonGroup className={"w-100 pt-3"}>
                         <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-end-0 px-1 px-lg-3"} id={"start-date-button"}
-                            color={viewBy === "startDate" ? siteSpecific("solid", "primary") : "keyline"}
+                            color={viewBy === "startDate" ? "solid" : "keyline"}
                             onClick={() => setViewBy("startDate")}
                         >
                             By start date
                         </Button>
                         <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-start-0 px-1 px-lg-3"} id={"due-date-button"}
-                            color={viewBy === "dueDate" ? siteSpecific("solid", "primary") : "keyline"}
+                            color={viewBy === "dueDate" ? "solid" : "keyline"}
                             onClick={() => setViewBy("dueDate")}
                         >
                             By due date
@@ -525,7 +525,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             <Col xs={12} sm={6}>
                 <Button
                     className="mb-2 mb-sm-0 w-100"
-                    block color={siteSpecific("secondary", "primary")}
+                    block color={siteSpecific("keyline", "solid")}
                     onClick={assign}
                     disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard) || alreadyAssignedGroupNames.length === selectedGroups.length || !dueDate || dueDateInvalid}
                 >

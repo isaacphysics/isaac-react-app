@@ -38,7 +38,7 @@ export const RegistrationSuccess = () => {
                 <Row className="justify-content-center">
                     <Col xs={12} sm={6} lg={3}>
                         {siteSpecific(
-                            <Button className={"my-2"} color="primary" onClick={returnToHomepage}>Home</Button>,
+                            <Button className={"my-2"} color="solid" onClick={returnToHomepage}>Home</Button>,
                             <Button className={"my-2"} color="keyline" onClick={myAccount}>Your account</Button>
                         )}
                     </Col>
