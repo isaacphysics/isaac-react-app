@@ -281,13 +281,12 @@ iframe.email-html {
 //  }
 //}
 
-.collapsible-head {
-  margin-left: 0;
-  margin-right: 0;
-  border-top-style: solid;
-  border-bottom-style: solid;
-  border-width: 1px;
-  border-color: $gray-107;
+.collapsible-list-container {
+  border-top: 2px solid $gray-107;
+
+  &:last-of-type {
+    border-bottom: 2px solid $gray-107;
+  }
 
   img {
     transition: transform 0.1s ease;
@@ -340,7 +339,7 @@ iframe.email-html {
   overflow: hidden;
   border-top: 1px solid rgba(0, 0, 0, 0.15);
   opacity: 1;
-  width: 100%;
+  flex-grow: 1;
 }
 
 .section-divider-y {

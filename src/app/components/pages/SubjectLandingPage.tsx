@@ -129,7 +129,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
             </div>
             <ShowLoadingQuery
                 query={eventsQuery}
-                defaultErrorTitle={"Error loading events list"}
+                ifError={(() => <p>There was an error loading the events list. Please try again later!</p>)}
                 thenRender={({events}) => {
                     const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s])).flat() ?? [];
                     const relevantEvents = events.filter(event => context?.subject && event.tags?.includes(context.subject)

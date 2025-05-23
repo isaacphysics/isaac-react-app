@@ -7,7 +7,20 @@
     }
   }
 
-.checkbox-region {
+.checkbox-wrapper {
+    // prefer border over outline to prevent cutoff from overflows
+    border: 1px solid transparent;
+
+    &:not(:has(> .checkbox-small)) {
+        padding: 2px 0;
+    }
+}
+
+.checkbox-wrapper + .checkbox-wrapper {
+    margin-top: -1px;
+}
+
+.checkbox-active {
     border-radius: 4px;
 
     .search-field {
@@ -17,9 +30,9 @@
     }
 }
 
-.checkbox-region:not(.hierarchy-true-root) {
+.checkbox-active:not(.hierarchy-true-root) {
     background-color: $color-neutral-100;
-    outline: 1px solid $color-neutral-200;
+    border: 1px solid $color-neutral-200;
 }
 
 .styled-checkbox-wrapper div input[type="checkbox"] { 

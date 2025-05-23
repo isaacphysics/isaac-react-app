@@ -123,8 +123,8 @@ export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
 
     const user = useAppSelector(selectors.user.orNull);
-
-    const {data: news} = useGetNewsPodListQuery({subject: "physics"});
+    
+    const newsQuery = useGetNewsPodListQuery({subject: "physics"});
 
     const [dashboardView, setDashboardView] = useState<"student" | "teacher" | undefined>(undefined);
 
@@ -195,12 +195,15 @@ export const HomepagePhy = () => {
                             </div>
                             <ShowLoadingQuery
                                 query={eventsQuery}
-                                defaultErrorTitle={"Error loading events list"}
+                                ifError={(() => <p>There was an error loading the events list. Please try again later!</p>)}
                                 thenRender={({events}) => {
                                     return <Row className="h-100">
-                                        {events.map(event => <Col key={event.id}>
-                                            <EventCard event={event} />
-                                        </Col>)}
+                                        {events.length
+                                            ? events.map(event => <Col key={event.id}>
+                                                <EventCard event={event} />
+                                            </Col>)
+                                            : <p>No events available. Check back soon!</p>}
+
                                     </Row>;
                                 }}/>
                         </div>
@@ -210,11 +213,20 @@ export const HomepagePhy = () => {
                                 <Link to="/news" className="news-events-link">More news</Link>
                                 <div className="section-divider-bold"/>
                             </div>
-                            {news && <Row className="h-100">
-                                {news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>
-                                    <NewsCard newsItem={newsItem} />
-                                </Col>)}
-                            </Row>}
+                            <ShowLoadingQuery
+                                query={newsQuery}
+                                ifError={(() => <p>There was an error loading the news list. Please try again later!</p>)}
+                                thenRender={(news) => {
+                                    return <Row className="h-100">
+                                        {news.length
+                                            ? news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>
+                                                <NewsCard newsItem={newsItem} />
+                                            </Col>)
+                                            : <p>No news available. Check back soon!</p>
+                                        }
+                                    </Row>;
+                                }}
+                            />
                         </div>
                     </Row>
                 </section>
