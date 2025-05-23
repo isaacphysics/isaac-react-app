@@ -180,7 +180,7 @@ export const HomepagePhy = () => {
                     <div className="mt-5">
                         <div className="d-flex">
                             <h3>Explore and learn!</h3>
-                            <div className="section-divider ms-2"/>
+                            <div className="section-divider flex-grow-1 ms-2"/>
                         </div>
                         <ListViewCards cards={cards}/>
                     </div>
@@ -191,7 +191,7 @@ export const HomepagePhy = () => {
                             <div className="d-flex">
                                 <h3>Upcoming events</h3>
                                 <Link to="/events" className="news-events-link">More events</Link>
-                                <div className="section-divider-bold"/>
+                                <div className="section-divider-bold flex-grow-1"/>
                             </div>
                             <ShowLoadingQuery
                                 query={eventsQuery}
@@ -211,7 +211,7 @@ export const HomepagePhy = () => {
                             <div className="d-flex">
                                 <h3>News and features</h3>
                                 <Link to="/news" className="news-events-link">More news</Link>
-                                <div className="section-divider-bold"/>
+                                <div className="section-divider-bold flex-grow-1"/>
                             </div>
                             <ShowLoadingQuery
                                 query={newsQuery}

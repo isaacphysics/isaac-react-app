@@ -100,7 +100,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                 ? <>
                     <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                         <h4 className="m-0">{getHumanContext(context)} books</h4>
-                        <div className="section-divider-bold"/>
+                        <div className="section-divider-bold flex-grow-1"/>
                     </div>
                     <Col className="d-flex flex-column">
                         {books.slice(0, 2).map((book, index) => <BookCard key={index} {...book} />)}
@@ -111,7 +111,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                     <div className="d-flex flex-column">
                         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                             <h4>News & Features</h4>
-                            <div className="section-divider-bold"/>
+                            <div className="section-divider-bold flex-grow-1"/>
                         </div>
                         {news && <Row className="h-100">
                             {news.slice(0, 2).map(newsItem => <Col xs={12} key={newsItem.id}>
@@ -125,7 +125,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
         <div className="d-flex flex-column mt-3">
             <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                 <h4 className="m-0">Events</h4>
-                <div className="section-divider-bold"/>
+                <div className="section-divider-bold flex-grow-1"/>
             </div>
             <ShowLoadingQuery
                 query={eventsQuery}
