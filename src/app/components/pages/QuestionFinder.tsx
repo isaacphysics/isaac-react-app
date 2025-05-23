@@ -52,6 +52,8 @@ import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { processTagHierarchy, pruneTreeNode } from "../../services/questionHierarchy";
 import { SearchInputWithIcon } from "../elements/SearchInputs";
+import { AffixButton } from "../elements/AffixButton";
+import { Link } from "react-router-dom";
 import { updateTopicChoices } from "../../services";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
@@ -459,10 +461,20 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
                 {siteSpecific(
                     <div className="my-3">
-                        {(pageContext?.subject && pageContext.stage 
-                            ? `Use our question finder to find questions to try on ${getHumanContext(pageContext)} topics.` 
-                            : "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology."
-                        ) + " Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions."}
+                        {(pageContext?.subject && pageContext.stage)
+                            ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
+                                <p className="me-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                                <AffixButton size="md" color="keyline" tag={Link} to="/questions" className="ms-auto"
+                                    affix={{
+                                        affix: "icon-right",
+                                        position: "suffix",
+                                        type: "icon"
+                                    }}>
+                                    Browse all questions
+                                </AffixButton>
+                            </div>
+                            : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
+                              Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
                     </div>,
                     <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
                 )}
