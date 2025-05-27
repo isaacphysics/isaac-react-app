@@ -5,7 +5,7 @@ import {
     closeActiveModal,
     store
 } from "../../../state";
-import {extractTeacherName, isAda, siteSpecific} from "../../../services";
+import {extractTeacherName, siteSpecific} from "../../../services";
 import { Table, Button } from "reactstrap";
 
 export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
