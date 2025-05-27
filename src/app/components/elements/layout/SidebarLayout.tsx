@@ -181,9 +181,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
 
     const [relatedQuestionsForContextStage, relatedQuestionsForOtherStages] = partition(relatedQuestions, q => q.audience && determineAudienceViews(q.audience).some(v => v.stage === pageContextStage));
 
-    const sidebarRef = useRef<HTMLDivElement>(null);
-
-    return <NavigationSidebar ref={sidebarRef}>
+    return <NavigationSidebar>
         <div className="section-divider"/>
         <h5>Related concepts</h5>
         {relatedConcepts && relatedConcepts.length > 0
@@ -443,7 +441,7 @@ interface GenericConceptsSidebarProps extends ConceptListSidebarProps {
 }
 
 export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
-    const { searchText, setSearchText, conceptFilters, setConceptFilters, tagCounts, searchStages, setSearchStages, stageCounts, ...rest } = props;
+    const { searchText, setSearchText, conceptFilters, setConceptFilters, tagCounts, searchStages, setSearchStages, stageCounts, applicableTags: _applicableTags, ...rest } = props;
 
     const updateSearchStages = (stage: Stage) => {
         if (searchStages.includes(stage)) {
