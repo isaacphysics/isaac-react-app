@@ -466,7 +466,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 <p className="me-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
                                 <AffixButton size="md" color="keyline" tag={Link} to="/questions" className="ms-auto"
                                     affix={{
-                                        affix: "icon-right",
+                                        affix: "icon-arrow-right",
                                         position: "suffix",
                                         type: "icon"
                                     }}>

@@ -192,7 +192,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
             </ul>
             : <>
                 There are no related concepts for this {pageType}.
-                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "concepts")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "concepts")} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
                     See all concepts for {getHumanContext(pageContext)}
                 </AffixButton>}
             </>
@@ -226,7 +226,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
             </>
             : <>
                 There are no related questions for this {pageType}.
-                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "questions")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "questions")} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
                     See all questions for {getHumanContext(pageContext)}
                 </AffixButton>}
             </>
@@ -654,7 +654,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
         <div className="sidebar-help">
             <p>You can see all of the tests that you have in progress or have completed in your My Isaac:</p>
             <AffixButton size="md" color="keyline" tag={Link} to="/tests" affix={{
-                affix: "icon-right",
+                affix: "icon-arrow-right",
                 position: "suffix",
                 type: "icon"
             }}>
@@ -1512,7 +1512,7 @@ export const GenericPageSidebar = (props: ContentSidebarProps) => {
     // Default sidebar for general pages that don't have a custom sidebar
     return <ContentSidebar buttonTitle="Options" hideButton optionBar={props.optionBar}>
         <div className="section-divider"/>
-        <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+        <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
             Go to homepage
         </AffixButton>
     </ContentSidebar>;
