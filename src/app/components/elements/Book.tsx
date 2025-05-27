@@ -73,7 +73,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                         </div>
                                         <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBookIndexPage.value}</Markup>
                                     </div>}
-                                    {definedBookIndexPage.children?.length && <>
+                                    {!!definedBookIndexPage.children?.length && <>
                                         <div className="d-flex">
                                             <div className="flex-grow-1">
                                                 <IsaacContentValueOrChildren {...definedBookIndexPage.children[0] as ContentDTO} />
