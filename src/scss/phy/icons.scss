@@ -235,7 +235,7 @@
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-event-fg.svg',
     '/assets/phy/icons/redesign/page-event-bg.svg',
-    var(--icon-size), var(--icon-size), var(--mask-size, 63%)
+    var(--icon-size), var(--icon-size), var(--mask-size, 52%)
   );
 }
 
