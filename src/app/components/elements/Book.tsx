@@ -68,7 +68,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                     <EditContentButton doc={definedBookIndexPage}/>
                                     <TeacherNotes notes={definedBookIndexPage.teacherNotes} />
                                     {definedBookIndexPage.value && <div>
-                                        <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
+                                        <div className="book-image-container book-height-lg d-none d-sm-block mx-3 mb-4 float-end">
                                             <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
                                         </div>
                                         <Markup className="d-contents" trusted-markup-encoding={"markdown"}>{definedBookIndexPage.value}</Markup>
@@ -78,7 +78,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                             <div className="flex-grow-1">
                                                 <IsaacContentValueOrChildren {...definedBookIndexPage.children[0] as ContentDTO} />
                                             </div>
-                                            <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
+                                            <div className="book-image-container book-height-lg d-none d-sm-block mx-3 mb-4 float-end">
                                                 <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />
                                             </div>
                                         </div>
