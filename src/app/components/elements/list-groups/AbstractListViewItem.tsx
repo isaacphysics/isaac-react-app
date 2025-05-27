@@ -131,7 +131,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                     </div>}
                 </div>
                 {subtitle && <div className="small text-muted text-wrap">
-                    {subtitle}
+                    <Markup encoding="latex">{subtitle}</Markup>
                 </div>}
                 {breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
                     <Breadcrumb breadcrumb={breadcrumb}/>

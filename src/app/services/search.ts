@@ -1,6 +1,6 @@
 import {History} from "history";
 import {DOCUMENT_TYPE, isStaff, TAG_ID} from ".";
-import {ContentSummaryDTO} from "../../IsaacApiTypes";
+import {ContentSummaryDTO, Stage} from "../../IsaacApiTypes";
 import {PotentialUser} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {Immutable} from "immer";
@@ -18,10 +18,11 @@ export const pushSearchToHistory = function(history: History, searchQuery: strin
     });
 };
 
-export const pushConceptsToHistory = function(history: History, searchText: string, subjects: TAG_ID[]) {
+export const pushConceptsToHistory = function(history: History, searchText: string, subjects: TAG_ID[], stages: Stage[]) {
     const queryOptions = {
         "query": encodeURIComponent(searchText),
         "types": subjects.join(","),
+        "stages": stages.join(","),
     };
 
     history.replace({ // concepts (phy-only) has no "apply filters" button to imply a single search; as such we prefer replace

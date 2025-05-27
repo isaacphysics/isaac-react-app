@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
@@ -7,7 +7,9 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
     Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, 
-    isPhy} from "../../../services";
+    isPhy,
+    ISAAC_BOOKS,
+    BookHiddenState, TAG_LEVEL} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -30,6 +32,7 @@ import { CollapsibleList } from "../CollapsibleList";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { getProgressIcon } from "../../pages/Gameboard";
 import { tags as tagsService } from "../../../services";
+import { Markup } from "../markup";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -335,9 +338,13 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
     }, [conceptFilters, tag]);
 
     const handleCheckboxChange = (checked: boolean) => {
+        // Reselect parent if all children are deselected
+        const siblingTags = tag.type === TAG_LEVEL.field && tag.parent ? tags.getDirectDescendents(tag.parent).filter(t => t !== tag) : [];
+        const reselectParent = tag.parent && siblingTags.every(t => !conceptFilters.includes(t));
+
         const newConceptFilters = checked 
             ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), ...(!partiallySelected ? [tag] : [])] 
-            : conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c));
+            : [...conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c)), ...(reselectParent ? [tags.getById(tag.parent!)] : [])];
         setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : (baseTag ? [baseTag] : []));
     };
 
@@ -426,27 +433,32 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
                 }
             </div>
         </search>
-
-        <div className="section-divider"/>
-
-        <div className="sidebar-help">
-            <p>The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-            <p>If you want to explore broader concepts across multiple subjects or learning stages, you can use the main concept browser:</p>
-            <AffixButton size="md" color="keyline" tag={Link} to="/concepts" affix={{
-                affix: "icon-right",
-                position: "suffix",
-                type: "icon"
-            }}>
-                Browse concepts
-            </AffixButton>
-        </div>
     </ContentSidebar>;
 };
 
-export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
-    const { searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts, ...rest } = props;
+interface GenericConceptsSidebarProps extends ConceptListSidebarProps {
+    searchStages: Stage[];
+    setSearchStages: React.Dispatch<React.SetStateAction<Stage[]>>;
+    stageCounts: Record<string, number>;
+}
 
-    const pageContext = useAppSelector(selectors.pageContext.context);
+export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
+    const { searchText, setSearchText, conceptFilters, setConceptFilters, tagCounts, searchStages, setSearchStages, stageCounts, ...rest } = props;
+
+    const updateSearchStages = (stage: Stage) => {
+        if (searchStages.includes(stage)) {
+            setSearchStages(searchStages.filter(s => s !== stage));
+        } else {
+            setSearchStages([...(searchStages ?? []), stage]);
+        }
+    };
+    
+    // If exactly one subject is selected, infer a colour for the stage checkboxes
+    const singleSubjectColour = useMemo(() => {
+        return conceptFilters.length === 1 && conceptFilters[0].type === TAG_LEVEL.subject ? conceptFilters[0].id
+            : conceptFilters.length && conceptFilters.every(tag => tag.parent === conceptFilters[0].parent) ? conceptFilters[0].parent
+                : undefined;
+    }, [conceptFilters]);
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
@@ -468,7 +480,7 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
                     const descendentTags = tags.getDirectDescendents(subjectTag.id);
                     const isSelected = conceptFilters.includes(subjectTag) || descendentTags.some(tag => conceptFilters.includes(tag));
                     const isPartial = descendentTags.some(tag => conceptFilters.includes(tag)) && descendentTags.some(tag => !conceptFilters.includes(tag));
-                    return <div key={i} className={classNames("ps-2", {"checkbox-region": isSelected})}>
+                    return <div key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
                         <FilterCheckbox 
                             checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
                             setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
@@ -477,7 +489,7 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
                         />
                         {isSelected && <div className="ms-3 ps-2">
                             {descendentTags
-                                .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
+                                .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0 || conceptFilters.includes(tag))
                                 // .sort((a, b) => tagCounts ? tagCounts[b.id] - tagCounts[a.id] : 0)
                                 .map((tag, j) => <FilterCheckbox key={j} 
                                     checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters} 
@@ -487,26 +499,20 @@ export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
                         </div>}
                     </div>;
                 })}
+                <div className="section-divider"/>
+                <h5>Filter by stage</h5>
+                <ul className="ps-2">
+                    {getFilteredStageOptions().filter(s => stageCounts[s.value] > 0 || searchStages.includes(s.value)).map((stage) =>
+                        <li key={stage.value}>
+                            <StyledCheckbox checked={searchStages.includes(stage.value)}
+                                label={<>{stage.label} <span className="text-muted">({stageCounts[stage.value]})</span></>}
+                                data-bs-theme={singleSubjectColour}
+                                color="theme" onChange={() => {updateSearchStages(stage.value);}}/>
+                        </li>)}
+                </ul>
             </div>
         </search>
 
-        <div className="section-divider"/>
-
-        {pageContext?.subject && <>
-            <div className="section-divider"/>
-
-            <div className="sidebar-help">
-                <p>The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                <p>If you want to explore broader concepts across multiple subjects or learning stages, you can use the main concept browser:</p>
-                <AffixButton size="md" color="keyline" tag={Link} to="/concepts" affix={{
-                    affix: "icon-right",
-                    position: "suffix",
-                    type: "icon"
-                }}>
-                    Browse concepts
-                </AffixButton>
-            </div>
-        </>}
     </ContentSidebar>;
 };
 
@@ -528,7 +534,7 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h5>Search Questions</h5>
+            <h5>Search questions</h5>
             <Input
                 className='search--filter-input my-4'
                 type="search" value={internalSearchText || ""}
@@ -541,22 +547,6 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
 
             <QuestionFinderFilterPanel {...questionFinderFilterPanelProps} />
         </search>
-
-        {pageContext?.subject && pageContext?.stage && <>
-            <div className="section-divider"/>
-
-            <div className="sidebar-help">
-                <p>The questions shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                <p>If you want to explore our full range of questions across multiple subjects or learning stages, you can use the main question finder:</p>
-                <AffixButton size="md" color="keyline" tag={Link} to="/questions" affix={{
-                    affix: "icon-right",
-                    position: "suffix",
-                    type: "icon"
-                }}>
-                    Browse all questions
-                </AffixButton>
-            </div>
-        </>}
     </ContentSidebar>;
 };
 
@@ -613,7 +603,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                     const descendentTags = tags.getDirectDescendents(subjectTag.id);
                     const isSelected = filterTags?.includes(subjectTag) || descendentTags.some(tag => filterTags?.includes(tag));
                     const isPartial = descendentTags.some(tag => filterTags?.includes(tag)) && descendentTags.some(tag => !filterTags?.includes(tag));
-                    return <li key={i} className={classNames("ps-2", {"checkbox-region": isSelected})}>
+                    return <li key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
                         <FilterCheckbox 
                             checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={filterTags as Tag[]} 
                             setConceptFilters={setFilterTags} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
@@ -660,20 +650,6 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             </ul>
         </>}
 
-        {isFullyDefinedContext(pageContext) && <>
-            <div className="section-divider"/>
-            <div className="sidebar-help">
-                <p>The practice tests shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                <p>If you want to explore our full range of practice tests, you can view the main practice tests page:</p>
-                <AffixButton size="md" color="keyline" tag={Link} to="/practice_tests" affix={{
-                    affix: "icon-right",
-                    position: "suffix",
-                    type: "icon"
-                }}>
-                    Browse all practice tests
-                </AffixButton>
-            </div>
-        </>}
         <div className="section-divider"/>
         <div className="sidebar-help">
             <p>You can see all of the tests that you have in progress or have completed in your My Isaac:</p>
@@ -1519,7 +1495,7 @@ export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
                             <StyledTabPicker
                                 checkboxTitle={<div className="d-flex">
                                     <span className="text-theme me-2">{section.label}</span>
-                                    <span className="flex-grow-1">{section.title}</span>
+                                    <span className="flex-grow-1"><Markup encoding="latex">{section.title}</Markup></span>
                                 </div>}
                                 checked={pageId === section.bookPageId}
                                 onClick={() => history.push(`/books/${urlBookId}/${section.bookPageId?.slice((book.id?.length ?? 0) + 1)}`)}
@@ -1554,6 +1530,19 @@ export const PolicyPageSidebar = (props: ContentSidebarProps) => {
             <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"  || path === "/pages/privacy_policy"} onClick={() => history.push("/privacy")}/></li>
             <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies" || path === "/pages/cookie_policy"} onClick={() => history.push("/cookies")}/></li>
             <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms" || path === "/pages/terms_of_use"} onClick={() => history.push("/terms")}/></li>
+        </ul>
+    </ContentSidebar>;
+};
+
+export const BooksOverviewSidebar = (props: ContentSidebarProps) => {
+    const history = useHistory();
+    return <ContentSidebar buttonTitle="View all books" {...props}>
+        <div className="section-divider"/>
+        <h5>Our books</h5>
+        <ul>
+            {ISAAC_BOOKS.filter(book => book.hidden !== BookHiddenState.HIDDEN).map((book, index) => <li key={index}>
+                <StyledTabPicker checkboxTitle={book.title} checked={false} onClick={() => history.push(book.path)}/>
+            </li>)}
         </ul>
     </ContentSidebar>;
 };

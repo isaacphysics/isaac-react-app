@@ -509,15 +509,20 @@ export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) 
 }, {} as {[stage in LEARNING_STAGE]: Exclude<SUBJECTS, SUBJECTS.CS>[]});
 
 type BookTag = "phys_book_step_into" | "phys_book_step_up" | "phys_book_gcse" | "physics_skills_19" | "solving_physics_problems" | "physics_linking_concepts" | "qmp" | "maths_book_gcse" | "maths_book_2e" | "maths_book" | "chemistry_16";
+export enum BookHiddenState {
+    BOOKS_LISTING_ONLY = "books_listing_only",
+    HIDDEN = "hidden"
+}
 export interface BookInfo {
     title: string;
     shortTitle: string;
+    description?: string;
     tag: BookTag;
     image: string;
     path: string;
     subject: Subject;
     stages: LearningStage[];
-    hidden?: boolean;
+    hidden?: BookHiddenState;
 }
 
 export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
@@ -526,59 +531,69 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
             title: "Step into Physics", tag: "phys_book_step_into",
             shortTitle: "Step into Physics", image: "/assets/phy/books/2025_step_into_physics.png",
             path: "/books/step_into_phys", subject: "physics", stages: ["11_14"],
+            description: "Aimed principally at KS3, but also works well with foundation students at GCSE.",
         },
         {
             title: "Step Up to GCSE Physics", tag: "phys_book_step_up",
             shortTitle: "Step Up to GCSE Physics", image: "/assets/phy/books/2025_step_up_phys.png",
             path: "/books/step_up_phys", subject: "physics", stages: ["11_14", "gcse"],
+            description: "Aimed principally at Year 9 students but also works well for the transition to GCSE.",
         },
         {
             title: "Essential GCSE Physics", tag: "phys_book_gcse",
             shortTitle: "GCSE Physics", image: "/assets/phy/books/2025_phys_book_gcse.png",
             path: "/books/phys_book_gcse", subject: "physics", stages: ["gcse"],
+            description: "Helps students to practise applying the GCSE Physics concepts to numerical problems.",
+        },
+        {
+            title: "Using Essential GCSE Mathematics", tag: "maths_book_gcse",
+            shortTitle: "GCSE Maths", image: "/assets/phy/books/2025_maths_book_gcse.png",
+            path: "/books/maths_book_gcse", subject: "maths", stages: ["gcse"],
+            description: "Develops the maths skills needed to succeed in science at GCSE level and beyond. Also useful for teaching GCSE maths.",
         },
         {
             title: "Essential Pre-University Physics", tag: "physics_skills_19",
             shortTitle: "A Level Physics (3rd edition)", image: "/assets/phy/books/2025_physics_skills_19.png",
             path: "/books/physics_skills_19", subject: "physics", stages: ["a_level"],
-        },
-        {
-            title: "How to Solve Physics Problems", tag: "solving_physics_problems",
-            shortTitle: "How to Solve Physics Problems", image: "/assets/phy/books/solving_physics_problems.jpg",
-            path: "/books/solving_physics_problems", subject: "physics", stages: ["a_level", "university"],
-            hidden: true,
-        },
-        {
-            title: "Linking Concepts in Pre-University Physics", tag: "physics_linking_concepts",
-            shortTitle: "Linking Concepts in Pre-Uni Physics", image: "/assets/phy/books/linking_concepts.png",
-            path: "/books/linking_concepts", subject: "physics", stages: ["a_level", "university"],
-        },
-        {
-            title: "A Cavendish Quantum Mechanics Primer", tag: "qmp",
-            shortTitle: "Quantum Mechanics Primer", image: "/assets/phy/books/2025_quantum_mechanics_primer.png",
-            path: "/books/quantum_mechanics_primer", subject: "physics", stages: ["a_level", "university"],
-            hidden: true,
-        },
-        {
-            title: "Using Essential GCSE Mathematics", tag: "maths_book_gcse",
-            shortTitle: "GCSE Maths", image: "/assets/phy/books/2025_maths_book_gcse.png",
-            path: "/books/gcse_maths", subject: "maths", stages: ["gcse"],
+            description: "Covers core topics in A level, IB, and equivalent. Helps students practise applying the concepts of A-level Physics and apply them to solve numerical problems.",
         },
         {
             title: "Pre-University Mathematics for Sciences (2nd edition)", tag: "maths_book_2e",
             shortTitle: "Pre-Uni Maths (2nd edition)", image: "/assets/phy/books/2025_pre_uni_maths_2e.png",
             path: "/books/pre_uni_maths_2e", subject: "maths", stages: ["a_level", "university"],
+            description: "Provides questions on mathematical topics that underpin all the sciences, as well as giving practice and fluency for Maths and Further Maths A-levels themselves.",
         },
         {
             title: "Pre-University Mathematics for Sciences (1st edition)", tag: "maths_book",
             shortTitle: "Pre-Uni Maths (1st edition)", image: "/assets/phy/books/pre_uni_maths.jpg",
             path: "/books/pre_uni_maths", subject: "maths", stages: ["a_level", "university"],
-            hidden: true,
+            hidden: BookHiddenState.HIDDEN,
+        },
+        {
+            title: "Linking Concepts in Pre-University Physics", tag: "physics_linking_concepts",
+            shortTitle: "Linking Concepts in Pre-Uni Physics", image: "/assets/phy/books/linking_concepts.png",
+            path: "/books/linking_concepts", subject: "physics", stages: ["a_level", "university"],
+            description: "Provides practice and guidance in using more than one physics idea to solve problems.",
         },
         {
             title: "Essential Pre-University Physical Chemistry", tag: "chemistry_16",
             shortTitle: "A Level Physical Chemistry", image: "/assets/phy/books/2025_chemistry_16.png",
             path: "/books/chemistry_16", subject: "chemistry", stages: ["a_level"],
+            description: "Helps students to practise applying the concepts of physics and physical chemistry included in typical Sixth Form and GCSE courses.",
+        },
+        {
+            title: "A Cavendish Quantum Mechanics Primer", tag: "qmp",
+            shortTitle: "Quantum Mechanics Primer", image: "/assets/phy/books/2025_quantum_mechanics_primer.png",
+            path: "/books/quantum_mechanics_primer", subject: "physics", stages: ["a_level", "university"],
+            description: "Mathematical introduction to quantum mechanics accessible to sixth form students with support.",
+            hidden: BookHiddenState.BOOKS_LISTING_ONLY,
+        },
+        {
+            title: "How to Solve Physics Problems", tag: "solving_physics_problems",
+            shortTitle: "How to Solve Physics Problems", image: "/assets/phy/books/solving_physics_problems.jpg",
+            path: "/books/solve_physics_problems", subject: "physics", stages: ["a_level", "university"],
+            description: "Only available in print. Examples of worked solutions, similar to problem online but not solutions to any of our online questions.",
+            hidden: BookHiddenState.BOOKS_LISTING_ONLY,
         },
     ] as const,
     [] as const

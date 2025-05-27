@@ -15,6 +15,7 @@ import debounce from "lodash/debounce";
 import { IsaacSpinner } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
+import { BookCard } from "./BooksOverview";
 import { placeholderIcon } from "../elements/PageTitle";
 
 
@@ -99,29 +100,18 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                 ? <>
                     <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                         <h4 className="m-0">{getHumanContext(context)} books</h4>
-                        <div className="section-divider-bold"/>
+                        <div className="section-divider-bold flex-grow-1"/>
                     </div>
                     <Col className="d-flex flex-column">
-                        {books.slice(0, 2).map((book, index) => <Link key={index} to={book.path} className="book-container d-flex p-2 gap-3">
-                            <div className="book-image-container">
-                                <img src={book.image} alt={book.title} className="h-100"/>
-                            </div>
-                            <div className="d-flex flex-column">
-                                <h5 className="pt-2 pt-2 pb-1 m-0">{book.title}</h5>
-                                <div className="section-divider"/>
-                                <span className="text-decoration-none">
-                                    This is some explanatory text about the book. It could be a brief description of the book, or a list of topics covered.
-                                </span>
-                            </div>
-                        </Link>)}
-                        {books.length > 2 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-5">View more books</Button>}
+                        {books.slice(0, 2).map((book, index) => <BookCard key={index} {...book} />)}
+                        {books.length > 2 && <Button tag={Link} color="keyline" to={`/publications`} className="btn mt-4 mx-5">View more books</Button>}
                     </Col>
                 </>
                 : <>
                     <div className="d-flex flex-column">
                         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                             <h4>News & Features</h4>
-                            <div className="section-divider-bold"/>
+                            <div className="section-divider-bold flex-grow-1"/>
                         </div>
                         {news && <Row className="h-100">
                             {news.slice(0, 2).map(newsItem => <Col xs={12} key={newsItem.id}>
@@ -135,11 +125,11 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
         <div className="d-flex flex-column mt-3">
             <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                 <h4 className="m-0">Events</h4>
-                <div className="section-divider-bold"/>
+                <div className="section-divider-bold flex-grow-1"/>
             </div>
             <ShowLoadingQuery
                 query={eventsQuery}
-                defaultErrorTitle={"Error loading events list"}
+                ifError={(() => <p>There was an error loading the events list. Please try again later!</p>)}
                 thenRender={({events}) => {
                     const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s])).flat() ?? [];
                     const relevantEvents = events.filter(event => context?.subject && event.tags?.includes(context.subject)

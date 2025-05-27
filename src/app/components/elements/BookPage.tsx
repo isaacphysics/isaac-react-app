@@ -3,12 +3,15 @@ import {IsaacContentValueOrChildren} from "../content/IsaacContentValueOrChildre
 import {ListView} from "./list-groups/ListView";
 import {IsaacBookDetailPageDTO} from "../../../IsaacApiTypes";
 import {TeacherNotes} from "./TeacherNotes";
+import {EditContentButton} from "./EditContentButton";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
     return <div className="book-page">
         <>
             <h3 className="mb-3">{page.title}</h3>
+
+            <EditContentButton doc={page}/>
 
             <TeacherNotes notes={page.teacherNotes} />
 

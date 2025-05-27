@@ -41,11 +41,10 @@ import { Book } from "../../elements/Book";
 import { QuantumMechanicsPrimer } from "../../pages/books_old/QuantumMechanicsPrimer";
 import { SolvingPhysProblems } from "../../pages/books_old/SolvingPhysProblems";
 import { Chemistry16 } from "../../pages/books_old/chemistry_16";
-import { LinkingConcepts } from "../../pages/books_old/linking_concepts";
 import { PhysBookYrNine } from "../../pages/books_old/phys_book_yr9";
 import { PreUniMaths } from "../../pages/books_old/pre_uni_maths";
-import { StepUpPhys } from "../../pages/books_old/step_up_phys";
 import { QuizView } from "../../pages/quizzes/QuizView";
+import { BooksOverview } from "../../pages/BooksOverview";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -66,12 +65,8 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
 // TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
 const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
     "/books/pre_uni_maths": PreUniMaths,
-    "/books/chemistry_16": Chemistry16,
-    "/books/quantum_mechanics_primer": QuantumMechanicsPrimer,
     "/books/solve_physics_problems": SolvingPhysProblems,
     "/books/phys_book_yr9": PhysBookYrNine,
-    "/books/step_up_phys": StepUpPhys,
-    "/books/linking_concepts": LinkingConcepts,
 };
 
 let key = 0;
@@ -137,6 +132,7 @@ export const RoutesPhy = [
     // Books (new)
     <TrackedRoute key={key++} exact path={"/books/:bookId"} component={Book} />,
     <TrackedRoute key={key++} exact path={"/books/:bookId/:pageId"} component={Book} />,
+    <TrackedRoute key={key++} exact path={"/books"} component={BooksOverview} />,
 
     // Subject-stage pages -- see subjectSpecificPages, defined above
     ...(Object.entries(subjectStagePairPages).map(([path, component]) => (

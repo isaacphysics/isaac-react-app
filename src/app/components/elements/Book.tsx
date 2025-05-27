@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Container } from "reactstrap";
-import { BookSidebar, MainContent, SidebarLayout } from "./layout/SidebarLayout";
-import { Markup } from "./markup";
-import { TitleAndBreadcrumb } from "./TitleAndBreadcrumb";
-import { useContextFromContentObjectTags } from "../../services";
-import { useHistory } from "react-router";
-import { useGetBookDetailPageQuery, useGetBookIndexPageQuery } from "../../state/slices/api/booksApi";
-import { BookPage } from "./BookPage";
-import { skipToken } from "@reduxjs/toolkit/query";
-import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
-import { TeacherNotes } from "./TeacherNotes";
-import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
-import { ContentDTO } from "../../../IsaacApiTypes";
-    
+import React, {useEffect, useState} from "react";
+import {Container} from "reactstrap";
+import {BookSidebar, MainContent, SidebarLayout} from "./layout/SidebarLayout";
+import {Markup} from "./markup";
+import {TitleAndBreadcrumb} from "./TitleAndBreadcrumb";
+import {useContextFromContentObjectTags} from "../../services";
+import {useHistory} from "react-router";
+import {useGetBookDetailPageQuery, useGetBookIndexPageQuery} from "../../state/slices/api/booksApi";
+import {BookPage} from "./BookPage";
+import {skipToken} from "@reduxjs/toolkit/query";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import {TeacherNotes} from "./TeacherNotes";
+import {IsaacContentValueOrChildren} from "../content/IsaacContentValueOrChildren";
+import {ContentDTO} from "../../../IsaacApiTypes";
+import {EditContentButton} from "./EditContentButton";
+
 interface BookProps {
     match: { params: { bookId: string } };
 }
@@ -20,7 +21,7 @@ interface BookProps {
 export const Book = ({match: {params: {bookId}}}: BookProps) => {
 
     const [pageId, setPageId] = useState<string | undefined>(undefined);
-    
+
     const bookIndexPageQuery = useGetBookIndexPageQuery({id: `book_${bookId}`});
     const bookDetailPageQuery = useGetBookDetailPageQuery(pageId ? { id: pageId } : skipToken);
 
@@ -45,7 +46,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
     }, [book?.chapters, history.location]);
 
     return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
-        <TitleAndBreadcrumb 
+        <TitleAndBreadcrumb
             currentPageTitle={book?.title ?? "Book"}
             icon={{type: "hex", icon: "icon-book"}}
         />
@@ -57,13 +58,14 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                     return <>
                         <BookSidebar book={definedBookIndexPage} urlBookId={bookId} pageId={pageId} />
                         <MainContent className="mt-4">
-                            {pageId 
+                            {pageId
                                 ? <ShowLoadingQuery
                                     query={bookDetailPageQuery}
                                     defaultErrorTitle="Unable to load book page."
                                     thenRender={(bookDetailPage) => <BookPage page={bookDetailPage} />}
                                 />
                                 : <>
+                                    <EditContentButton doc={definedBookIndexPage}/>
                                     <TeacherNotes notes={definedBookIndexPage.teacherNotes} />
                                     {definedBookIndexPage.value && <div>
                                         <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
