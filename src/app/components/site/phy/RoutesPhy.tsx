@@ -65,7 +65,6 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
 // TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
 const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
     "/books/pre_uni_maths": PreUniMaths,
-    "/books/chemistry_16": Chemistry16,
     "/books/solve_physics_problems": SolvingPhysProblems,
     "/books/phys_book_yr9": PhysBookYrNine,
 };
