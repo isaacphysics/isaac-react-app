@@ -174,7 +174,7 @@ export const UserPassword = (
                     <h4>Linked {siteSpecific("Accounts", "accounts")}</h4>
                     <Col>
                         {connectedAccounts.map((provider) => {
-                            return authButtonsMap[provider](true);
+                            return <React.Fragment key={provider}>{authButtonsMap[provider](true)}</React.Fragment>;
                         })}
                     </Col>
                 </FormGroup>}
@@ -182,7 +182,7 @@ export const UserPassword = (
                     <h4>Link other accounts</h4>
                     <Col>
                         {unconnectedAccounts.map((provider) => {
-                            return authButtonsMap[provider](false);
+                            return <React.Fragment key={provider}>{authButtonsMap[provider](false)}</React.Fragment>;
                         })}
                     </Col>
                 </FormGroup>}

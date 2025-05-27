@@ -1013,8 +1013,8 @@ interface MyAccountSidebarProps extends SidebarProps {
 }
 
 export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
-    const { editingOtherUser, activeTab, setActiveTab } = props;
-    return <ContentSidebar buttonTitle="Account settings" {...props}>
+    const { editingOtherUser, activeTab, setActiveTab, ...rest } = props;
+    return <ContentSidebar buttonTitle="Account settings" {...rest}>
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
