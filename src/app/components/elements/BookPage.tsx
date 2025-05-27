@@ -9,7 +9,10 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
     return <div className="book-page">
         <>
-            <h3 className="mb-3">{page.title}</h3>
+            <h3 className="mb-3">
+                {page.subtitle && <span className="me-2 text-theme">{page.subtitle} </span>}
+                {page.title}
+            </h3>
 
             <EditContentButton doc={page}/>
 
