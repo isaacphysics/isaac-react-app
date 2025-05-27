@@ -99,7 +99,7 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
             </p>
         </React.Fragment>,
         buttons: [
-            <Button key={1} color={siteSpecific("solid", "keyline")} outline={isAda} onClick={() => {store.dispatch(closeActiveModal());}}>
+            <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
             <Button key={0} color="secondary" onClick={() => {
