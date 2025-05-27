@@ -40,11 +40,12 @@ const PracticeQuizzesComponent = () => {
         contentAudience.stage?.map(s => STAGE_TO_LEARNING_STAGE[s]).includes(selectedStage as LearningStage);
 
     const showQuiz = (quiz: QuizSummaryDTO) => {
-        if (!user || !isLoggedIn(user)) return false;
         if (pageSubject && !quiz.tags?.includes(pageSubject)) return false;
         if (pageStage && !quiz.audience?.some(audienceMatch(pageStage))) return false;
 
-        switch (user.role) {
+        // Anonymous users can list student-visible quizzes
+        const userRole = user && isLoggedIn(user) ? user.role : "STUDENT";
+        switch (userRole) {
             case "STUDENT":
             case "TUTOR":
             case "TEACHER":
