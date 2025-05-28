@@ -79,7 +79,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
     } />;
 };
 
-const ExampleQuestions = ({ subject }: { subject: Subject }) => {
+const ExampleQuestions = ({ subject, className }: { subject: Subject, className: string }) => {
     const items: { [key in Subject]: ShortcutResponse[] } = {
         maths: [{
             title: "Sample Maths Questions",
@@ -103,7 +103,7 @@ const ExampleQuestions = ({ subject }: { subject: Subject }) => {
         }],
     };
 
-    return items[subject].length > 0 ? <ListView items={items[subject]} /> : null;
+    return items[subject].length > 0 ? <ListView className={className} items={items[subject]} /> : null;
 };
 
 export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
@@ -170,7 +170,9 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
                 </ul>
             </p>
 
-            <ExampleQuestions subject={pageContext.subject} />
+            <div className="d-flex justify-content-center mt-4">
+                <ExampleQuestions className="w-100 w-md-75" subject={pageContext.subject} />
+            </div>
 
             <LandingPageFooter context={pageContext} />
         </div>}
