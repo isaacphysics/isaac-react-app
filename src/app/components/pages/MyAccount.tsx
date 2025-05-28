@@ -144,7 +144,7 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
             <p><strong>This information can be found in the <a target="_blank" href="/support/teacher/general#moving_schools">Teacher FAQ</a> for future reference.</strong></p>
         </>,
         buttons: [
-            <Button key={1} color="primary" onClick={() => dispatch(closeActiveModal())}>
+            <Button key={1} color="solid" onClick={() => dispatch(closeActiveModal())}>
                 Continue
             </Button>
         ]
