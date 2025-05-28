@@ -33,7 +33,7 @@ export const NotFound = () => {
                     </a>.
                 </p> : 
                 <p>
-                    It looks like you are offline. You may want to check your internet connection, and then refresh this page to try again.
+                    It looks like you&apos;re offline. You may want to check your internet connection, and then refresh this page to try again.
                     <br />
                     If you are still having issues, please <a href={`mailto:${WEBMASTER_EMAIL}`}>let us know</a>. 
                 </p> // Email link rather than contact form, as the contact form may not work offline
