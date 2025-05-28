@@ -141,6 +141,7 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
         subject={questionSubjects.length === 1 ? questionSubjects[0].id as Subject : undefined}
         breadcrumb={breadcrumb}
         url={url}
+        board={item}
         {...rest}
     />;
 };

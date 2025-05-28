@@ -4,6 +4,12 @@
 .content-summary-item {
   min-height: 88px;
   padding: 1rem;
+
+  &:has(a.alvi-title) {
+    button {
+      z-index: 2;
+    }
+  }
 }
 
 .list-view-border {
@@ -59,6 +65,25 @@
 .list-group-links {
   .link-title {
     color: var(--subject-color-900);
+  }
+
+  .alvi-title {
+    @extend .link-title;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      cursor: pointer;
+    }
+
+    &:focus-visible {
+      box-shadow: none !important;
+      &::before {
+        @include focus-outline;
+      }
+    }
   }
 
   .question-link-title {

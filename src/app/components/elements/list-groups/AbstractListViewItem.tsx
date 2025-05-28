@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
-import React, { HTMLAttributes, ReactNode, useMemo } from "react";
+import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
+import { Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
 import { below, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
-import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
+import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetGroupsQuery, useLazyGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
 import { getAssigneesByBoard, SetAssignmentsModal } from "../../pages/SetAssignments";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
@@ -72,6 +72,32 @@ const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUr
     </span>;
 };
 
+const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
+    const dispatch = useAppDispatch();
+    const [ getGroups ] = useLazyGetGroupsQuery();
+    const [ getAssignments ] = useLazyGetMySetAssignmentsQuery();
+    const [ unassignBoard ] = useUnassignGameboardMutation();
+
+    return <Button color="solid" 
+        onClick={async (e) => {
+            e.stopPropagation();
+            const {data: groups} = await getGroups(false, true);
+            const {data: assignmentsSetByMe} = await getAssignments(undefined, true);
+            const groupsByGameboard = getAssigneesByBoard(assignmentsSetByMe);
+            
+            dispatch(openActiveModal(SetAssignmentsModal({
+                board,
+                groups: groups ?? [],
+                assignees: (isDefined(board) && isDefined(board?.id) && groupsByGameboard[board.id]) || [],
+                toggle: () => dispatch(closeActiveModal()),
+                unassignBoard
+            })));
+        }}
+    >
+        Assign
+    </Button>;
+};
+
 export enum AbstractListViewItemState {
     COMING_SOON = "coming-soon",
     DISABLED = "disabled",
@@ -107,6 +133,7 @@ export type AbstractListViewItemProps = {
     } | {
         // gameboards – have exclusive "assign" buttons
         alviType: "gameboard";
+        board?: GameboardDTO;
     }
 ) & (
     // ALVI layouts
@@ -145,7 +172,14 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             </div>
             <div className="align-content-center text-overflow-ellipsis pe-2">
                 <div className="d-flex text-wrap">
-                    <span className={classNames("link-title", {"question-link-title": isPhy || !isQuiz})}><Markup encoding="latex">{title}</Markup></span>
+                    {url && !isDisabled
+                        ? <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                            <Markup encoding="latex">{title}</Markup>
+                        </Link>
+                        : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                            <Markup encoding="latex">{title}</Markup>
+                        </span>
+                    }
                     {isItem && <>
                         {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
                         {isPhy && <div className="d-flex flex-column justify-self-end">
@@ -172,8 +206,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 {isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
                     <StatusDisplay status={typedProps.status} showText className="py-1" />
                 }
-                {linkTags && <div className="d-flex py-3 flex-wrap">
-                    <LinkTags linkTags={linkTags}/>
+                {isGameboard && fullWidth && isTeacherOrAbove(user) && <div className="d-flex pt-3">
+                    <GameboardAssign board={typedProps.board} />
+                </div>}
                 {isCard && typedProps.linkTags && <div className="d-flex py-3 flex-wrap">
                     <LinkTags linkTags={typedProps.linkTags}/>
                 </div>}
@@ -188,6 +223,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 {isItem && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": typedProps.audienceViews.length > 0})}>
                     <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className="w-100"/> 
                 </div>}
+                {isGameboard && isTeacherOrAbove(user) && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
+                    <GameboardAssign board={typedProps.board} />
+                </Col>}
                 {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                     <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                 </Col>}
@@ -199,9 +237,6 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
         className={classNames("content-summary-item", {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT}, className, state)} 
         data-bs-theme={subject && !isDisabled ? subject : "neutral"}
     >
-        {url && !isDisabled
-            ? <Link to={url} className="w-100 h-100 align-items-start"> {cardBody} </Link> 
-            : cardBody
-        }
+        {cardBody}
     </ListGroupItem>;
 };
