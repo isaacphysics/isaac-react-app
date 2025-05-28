@@ -420,6 +420,6 @@ export const reservationsModal = ({event}: {event: AugmentedEvent}): ActiveModal
         size: 'xl',
         title: "Group reservations",
         body: <ReservationsModal event={event} />,
-        overflowVisible: true
+        bodyContainerClassName: "overflow-visible",
     };
 };
