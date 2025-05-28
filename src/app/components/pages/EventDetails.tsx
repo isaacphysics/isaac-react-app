@@ -274,7 +274,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                             <Input
                                                 type="submit"
                                                 value={formatBookingModalConfirmMessage(event, canMakeABooking)}
-                                                className="w-25 btn btn-solid border-0"
+                                                className="w-fit-content btn btn-solid border-0"
                                             />
                                         </div>
                                     </div>
