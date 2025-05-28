@@ -44,8 +44,8 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
                 <span>Expand your boundaries by having a go at these additional extension questions.</span>
                 <div className="mt-3 mb-5 list-results-container p-2">
                     <ListView
-                        type="item"
-                        items={page.extensionGameboards.map(g => ({...g, type: "gameboard"}))}
+                        type="gameboard"
+                        items={convertToALVIGameboards(page.extensionGameboards)}
                     />
                 </div>
             </>}
