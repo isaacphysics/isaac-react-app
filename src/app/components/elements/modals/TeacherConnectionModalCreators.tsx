@@ -49,7 +49,7 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
             <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {
+            <Button key={0} color={siteSpecific("keyline", "solid")} onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authToken))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
@@ -76,7 +76,7 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
             <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {
+            <Button key={0} color={siteSpecific("keyline", "solid")} onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.revokeAuthorisation.initiate(userToRevoke.id as number))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
@@ -102,7 +102,7 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
             <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {
+            <Button key={0} color={siteSpecific("keyline", "solid")} onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.releaseAuthorisation.initiate(otherUser.id as number))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
@@ -127,7 +127,7 @@ export const releaseAllConfirmationModal = () => {
             <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {
+            <Button key={0} color={siteSpecific("keyline", "solid")} onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.releaseAllAuthorisations.initiate())
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
@@ -156,7 +156,7 @@ export const confirmSelfRemovalModal = (userId: number, groupId: number) => {
             <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => store.dispatch(closeActiveModal())}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {
+            <Button key={0} color={siteSpecific("keyline", "solid")} onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.deleteGroupMember.initiate({groupId, userId})).then(() => {
                     store.dispatch(closeActiveModal());
                 });

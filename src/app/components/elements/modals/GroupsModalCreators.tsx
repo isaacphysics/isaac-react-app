@@ -37,14 +37,14 @@ export const additionalManagerSelfRemovalModal = (group: AppGroup, user: Registe
     buttons: [
         <Row key={0}>
             <Col>
-                <Button block color="keyline" onClick={() => {
+                <Button block color={siteSpecific("solid", "keyline")} onClick={() => {
                     store.dispatch(closeActiveModal());
                 }}>
                     Cancel
                 </Button>
             </Col>
             <Col>
-                <Button block color="secondary" onClick={() => {
+                <Button block color={siteSpecific("keyline", "solid")} onClick={() => {
                     if (group.id && user.id) {
                         store.dispatch(groupsApi.endpoints.deleteGroupManager.initiate({groupId: group.id, managerUserId: user.id}));
                     }

@@ -94,7 +94,7 @@ const LoginOrSignUpBody = () => {
                             disabled={!!user?.requesting}
                         />
 
-                        <Button id="sign-up" color="secondary" onClick={(e) => {
+                        <Button id="sign-up" color="keyline" onClick={(e) => {
                             closeModal(); signUp(e);
                         }} block>
                             Sign up

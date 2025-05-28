@@ -18,8 +18,7 @@ import {
     isEventLeader,
     sortOnPredicateAndReverse,
     stageLabelMap,
-    zeroOrLess, confirmThen, isDefined,
-    siteSpecific
+    zeroOrLess, confirmThen, isDefined
 } from "../../../services";
 import {PotentialUser, UserSchoolLookup} from "../../../../IsaacAppTypes";
 import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
