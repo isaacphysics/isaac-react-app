@@ -104,7 +104,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
                     </div>
                     <Col className="d-flex flex-column">
                         {books.slice(0, 2).map((book, index) => <BookCard key={index} {...book} />)}
-                        {books.length > 2 && <Button tag={Link} color="keyline" to={`/publications`} className="btn mt-4 mx-5">View more books</Button>}
+                        {books.length > 2 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-5">View more books</Button>}
                     </Col>
                 </>
                 : <>
