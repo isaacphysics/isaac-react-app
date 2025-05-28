@@ -103,6 +103,33 @@ export enum AbstractListViewItemState {
     DISABLED = "disabled",
 }
 
+type ALVIType = {
+    // most ALVIs, represents plain lists with optional difficulties; questions, concepts, books, etc.
+    alviType: "item";
+    supersededBy?: string;
+    audienceViews?: ViewingContext[];
+    status?: CompletionState;
+    quizTag?: string; // this is for quick quizzes only, which are currently just gameboards; may change in future
+} | {
+    // quizzes – have exclusive "preview" and "view test" buttons
+    alviType: "quiz";
+    previewQuizUrl?: string;
+    quizButton?: JSX.Element;
+    audienceViews?: ViewingContext[];
+    status?: CompletionState;
+} | {
+    // gameboards – have exclusive "assign" buttons
+    alviType: "gameboard";
+    board?: GameboardDTO;
+};
+
+type ALVILayout = {
+    alviLayout: "card"
+    linkTags?: ListViewTagProps[];
+} | {
+    alviLayout: "list";
+};
+
 export type AbstractListViewItemProps = {
     title?: string;
     icon?: TitleIconProps;
@@ -114,36 +141,7 @@ export type AbstractListViewItemProps = {
     url?: string;
     state?: AbstractListViewItemState;
     className?: string;
-} & (
-    // ALVI types
-    {
-        // most ALVIs, represents plain lists with optional difficulties; questions, concepts, books, etc.
-        alviType: "item";
-        supersededBy?: string;
-        audienceViews?: ViewingContext[];
-        status?: CompletionState;
-        quizTag?: string; // this is for quick quizzes only, which are currently just gameboards; may change in future
-    } | {
-        // quizzes – have exclusive "preview" and "view test" buttons
-        alviType: "quiz";
-        previewQuizUrl?: string;
-        quizButton?: JSX.Element;
-        audienceViews?: ViewingContext[];
-        status?: CompletionState;
-    } | {
-        // gameboards – have exclusive "assign" buttons
-        alviType: "gameboard";
-        board?: GameboardDTO;
-    }
-) & (
-    // ALVI layouts
-    {
-        alviLayout: "card"
-        linkTags?: ListViewTagProps[];
-    } | {
-        alviLayout: "list";
-    }
-);
+} & ALVIType & ALVILayout;
 
 export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, fullWidth, url, state, className, ...typedProps}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
