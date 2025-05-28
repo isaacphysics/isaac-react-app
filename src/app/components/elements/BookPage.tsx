@@ -1,6 +1,6 @@
 import React from "react";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
-import { ListView } from "./list-groups/ListView";
+import { convertToALVIGameboards, ListView } from "./list-groups/ListView";
 import { IsaacBookDetailPageDTO } from "../../../IsaacApiTypes";
 import { TeacherNotes } from "./TeacherNotes";
 import { Markup } from "./markup";
@@ -19,9 +19,9 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             {!!page.gameboards?.length && <>
                 <h4 className="mb-3" id="resources">Questions</h4>
                 <div className="mt-3 mb-5 list-results-container p-2">
-                    <ListView
-                        items={page.gameboards.map(g => ({...g, type: "gameboard"}))}
-                        fullWidth
+                    <ListView 
+                        type="gameboard"
+                        items={convertToALVIGameboards(page.gameboards)}
                     />
                 </div>
             </>}
@@ -30,8 +30,8 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             {!!page.relatedContent?.length && <>
                 <div className="my-3 list-results-container p-2">
                     <ListView
+                        type="item"
                         items={page.relatedContent}
-                        fullWidth
                     />
                 </div>
             </>}
@@ -44,8 +44,8 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
                 <span>Expand your boundaries by having a go at these additional extension questions.</span>
                 <div className="mt-3 mb-5 list-results-container p-2">
                     <ListView
+                        type="item"
                         items={page.extensionGameboards.map(g => ({...g, type: "gameboard"}))}
-                        fullWidth
                     />
                 </div>
             </>}

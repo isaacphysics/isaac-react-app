@@ -20,7 +20,6 @@ import {
     LearningStage,
     ListParams,
     nextSeed,
-    SEARCH_CHAR_LENGTH_LIMIT,
     SEARCH_RESULTS_PER_PAGE,
     simpleDifficultyLabelMap,
     siteSpecific,
@@ -548,7 +547,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                                     {displayQuestions?.length
                                         ? isPhy 
-                                            ? <ListView items={displayQuestions}/> 
+                                            ? <ListView type="item" items={displayQuestions} /> 
                                             : <LinkToContentSummaryList 
                                                 items={displayQuestions} className="m-0" 
                                                 contentTypeVisibility={ContentTypeVisibility.ICON_ONLY} 

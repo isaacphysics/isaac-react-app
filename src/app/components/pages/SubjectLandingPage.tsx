@@ -67,7 +67,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
         </div>
         <Card className="w-100 px-0 hf-6">
             {question
-                ? <ListView items={[{
+                ? <ListView type="item" items={[{
                     type: DOCUMENT_TYPE.QUESTION,
                     title: question.title,
                     tags: question.tags,

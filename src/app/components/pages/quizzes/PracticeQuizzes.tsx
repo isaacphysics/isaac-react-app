@@ -120,7 +120,8 @@ const PracticeQuizzesComponent = () => {
                                     setCopied(true);
                                 }} onMouseLeave={() => setCopied(false)} />
                             </Col>
-                            <ListView 
+                            <ListView
+                                type="quiz"
                                 items={quizzes.filter((quiz) => isRelevant(quiz))} 
                                 className={classNames({"quiz-list border-radius-2 mb-3": isAda})}
                                 useViewQuizLink
