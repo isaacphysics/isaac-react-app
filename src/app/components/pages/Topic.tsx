@@ -79,7 +79,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                 <Col className={"pb-3 mw-760"}>
                     <Row>
                         <Col size={6} className="text-center">
-                            <Button tag={Link} to="/topics" color="primary" outline size="lg" block>
+                            <Button tag={Link} to="/topics" color="keyline" size="lg" block>
                                 <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>

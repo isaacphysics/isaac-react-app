@@ -90,7 +90,7 @@ export const RegistrationTeacherConnect = () => {
                                     value={authenticationToken}
                                 />
                                 <div className="input-group-append">
-                                    <Button disabled={!codeIsValid} onClick={submit} color="secondary" outline>
+                                    <Button disabled={!codeIsValid} onClick={submit} color="keyline">
                                         Connect
                                     </Button>
                                 </div>
@@ -105,15 +105,15 @@ export const RegistrationTeacherConnect = () => {
                         {siteSpecific(
                             <>
                                 <Col xs={6} md={4} lg={3}>
-                                    <Button className="w-100 my-2 px-2" outline color="secondary" onClick={continueToNext}>Skip</Button>
+                                    <Button className="w-100 my-2 px-2" color="keyline" onClick={continueToNext}>Skip</Button>
                                 </Col>
                                 <Col xs={6} md={4} lg={3}>
-                                    <Button className="w-100 my-2 px-2" color="primary" disabled={!activeAuthorisations?.length} onClick={continueToNext}>Continue</Button>
+                                    <Button className="w-100 my-2 px-2" color="solid" disabled={!activeAuthorisations?.length} onClick={continueToNext}>Continue</Button>
                                 </Col>
                             </>, 
                             <>
                                 <Col xs={6} md={4} lg={3}>
-                                    <Button className="w-100 my-2 px-2" color="primary" onClick={continueToNext}>Continue</Button>
+                                    <Button className="w-100 my-2 px-2" color="solid" onClick={continueToNext}>Continue</Button>
                                 </Col>
                             </>
                         )}

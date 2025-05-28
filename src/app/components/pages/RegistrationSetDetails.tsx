@@ -214,7 +214,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 {isAda && <hr className="text-center"/>}
                                 <Row className="justify-content-end">
                                     <Col className="d-flex justify-content-end" xs={12} sm={siteSpecific(3,4)} lg={6}>
-                                        <Button className="mt-2 w-100"  color={siteSpecific("solid", "secondary")} outline={siteSpecific(false, true)} onClick={goBack}>Back</Button>
+                                        <Button className="mt-2 w-100" color={siteSpecific("solid", "keyline")} onClick={goBack}>Back</Button>
                                     </Col>
                                     <Col xs={12} sm={siteSpecific(4,5)} lg={6}>
                                         <Button type="submit" value="Continue" className="mt-2 w-100">Continue</Button>
