@@ -10,8 +10,7 @@ import { Link } from "react-router-dom";
 import { selectors, showQuizSettingModal, useAppDispatch, useAppSelector } from "../../../state";
 import classNames from "classnames";
 
-interface ListViewCardItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}> {
-};
+type ListViewCardItemProps = Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}>;
 
 export const ListViewCardItem = (props: ListViewCardItemProps) => {
     return <AbstractListViewItem 
@@ -117,7 +116,7 @@ export const convertToALVIGameboard = (gameboard: GameboardDTO): ALVIGameboard =
 };
 export const convertToALVIGameboards = (gameboards: GameboardDTO[]): ALVIGameboard[] => {
     return gameboards.map(convertToALVIGameboard);
-}
+};
 interface QuestionDeckListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "gameboard", alviLayout: "list"}> {
     item: ALVIGameboard;
 }
@@ -279,38 +278,18 @@ type ListViewItemProps =
     | BookIndexListViewItemProps
     | BookDetailListViewItemProps;
 
-// type ListViewProps<T extends "item" | "gameboard" | "quiz"> = {
-type ListViewProps = {
+type ListViewProps<T, G extends "item" | "gameboard" | "quiz"> = {
     className?: string;
     fullWidth?: boolean;
-// } & (
-//     {
-//         items: Extract<ListViewItemProps, {alviType: T}>['item'][];
-//         type: T;
-//     } 
-//     & Omit<Extract<ListViewItemProps, {alviType: T}>, "item" | keyof AbstractListViewItemProps>
-// )
 } & (
     {
-        items: Extract<ListViewItemProps, {alviType: "item"}>['item'][];
-        type: "item";
+        items: Required<T> extends Required<Extract<ListViewItemProps, {alviType: G}>['item']> ? T[] : never;
+        type: G;
     } 
-    & Omit<Extract<ListViewItemProps, {alviType: "item"}>, "item" | keyof AbstractListViewItemProps>
-| 
-    {
-        items: Extract<ListViewItemProps, {alviType: "gameboard"}>['item'][];
-        type: "gameboard";
-    }
-    & Omit<Extract<ListViewItemProps, {alviType: "gameboard"}>, "item" | keyof AbstractListViewItemProps>
-| 
-    {
-        items: Extract<ListViewItemProps, {alviType: "quiz"}>['item'][];
-        type: "quiz";
-    }
-    & Omit<Extract<ListViewItemProps, {alviType: "quiz"}>, "item" | keyof AbstractListViewItemProps>
+    & Omit<Extract<ListViewItemProps, {alviType: G}>, "item" | keyof AbstractListViewItemProps>
 );
 
-export const ListView = (props: ListViewProps) => {
+export const ListView = <T extends {type?: string}, G extends "item" | "gameboard" | "quiz">(props: ListViewProps<T, G>) => {
     const {items, className, type, ...rest} = props;
 
     const failedToRender = (item: typeof items[number]) => {
