@@ -107,8 +107,6 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                         <MainContent>
                             {!preview && <CanonicalHrefElement />}
 
-                            <TeacherNotes notes={doc.teacherNotes} />
-
                             <div className={classNames("no-print d-flex align-items-center", siteSpecific("my-3", "mt-3"))}>
                                 {isAda && <>
                                     {pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
@@ -131,7 +129,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                     </div>
                                 </>}
                             </div>
-                            
+
                             {isPhy && <Row className="content-metadata-container d-flex">
                                 <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
                                     <span>Subject & topics</span>
@@ -145,7 +143,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                 </Col>
                                 <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0">
                                     <span>Status</span>
-                                    {allQuestionsCorrect 
+                                    {allQuestionsCorrect
                                         ? <div className="d-flex align-items-center"><span className="icon-correct me-2"/> Correct</div>
                                         : anyQuestionAttempted
                                             ? <div className="d-flex align-items-center"><span className="icon-in-progress me-2"/> In Progress</div>
@@ -154,11 +152,13 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                 </Col>
                                 <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0 pb-sm-0">
                                     <span>Stage & difficulty</span>
-                                    <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/> 
+                                    <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/>
                                 </Col>
                             </Row>}
 
                             {isPhy && <EditContentButton doc={doc} />}
+
+                            <TeacherNotes notes={doc.teacherNotes} />
 
                             <Row className="question-content-container">
                                 <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
@@ -198,6 +198,6 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                     </SidebarLayout>
                 </Container>
             </GameboardContext.Provider>;}
-        } 
+        }
     />;
 });

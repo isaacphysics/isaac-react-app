@@ -120,7 +120,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
                     <Card className="mt-4">
                         <CardBody>
-                            <Tabs tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
+                            <Tabs style="tabs" tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
                                 const flush = tabRefs[tabIndex - 1].current;
                                 if (flush) {
                                     // Don't call the flush in an event handler that causes the render, that's too early.
