@@ -3,17 +3,21 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { useUrlPageTheme } from "../../services/pageContext";
-import { HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, Subject } from "../../services";
-import { PageContextState } from "../../../IsaacAppTypes";
-import { ListViewCards } from "../elements/list-groups/ListView";
+import { above, HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, SEARCH_RESULT_TYPE, Subject, useDeviceSize } from "../../services";
+import { PageContextState, ShortcutResponse } from "../../../IsaacAppTypes";
+import { ListView, ListViewCardProps, ListViewCards } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
+import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
+import { AbstractListViewItemState } from "../elements/list-groups/AbstractListViewItem";
 
 const SubjectCards = ({context}: { context: PageContextState }) => {
+    const deviceSize = useDeviceSize();
+
     if (!isDefined(context?.subject)) return null;
 
     const humanSubject = context?.subject && HUMAN_SUBJECTS[context.subject];
 
-    return <ListViewCards showBlanks cards={[
+    const cards: (ListViewCardProps | null)[] = [
         {
             item: {
                 title: "11-14",
@@ -25,6 +29,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             },
             url: `/${context.subject}/11_14`,
             stage: LEARNING_STAGE["11_TO_14"],
+            subject: context.subject,
         },
         {
             item: {
@@ -37,6 +42,8 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             },
             url: `/${context.subject}/gcse`,
             stage: LEARNING_STAGE.GCSE,
+            subject: context.subject,
+            state: context.subject === "biology" ? AbstractListViewItemState.COMING_SOON : undefined,
         },
         {
             item: {
@@ -49,6 +56,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             },
             url: `/${context.subject}/a_level`,
             stage: LEARNING_STAGE.A_LEVEL,
+            subject: context.subject,
         },
         {
             item: {
@@ -61,12 +69,41 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             },
             url: `/${context.subject}/university`,
             stage: LEARNING_STAGE.UNIVERSITY,
-        }
-    ]
-        .map(({stage, ...card}) => (PHY_NAV_SUBJECTS[context.subject as Subject] as readonly LearningStage[])?.includes(stage) ? card : null)
-        .filter((x, i, a) => x || (i % 2 === 0 ? a[i + 1] : a[i - 1])) // remove pairs of nulls
+            subject: context.subject,
+        },
+    ].map(({stage, ...card}) => (PHY_NAV_SUBJECTS[context.subject as Subject] as readonly LearningStage[])?.includes(stage) || card.state === AbstractListViewItemState.COMING_SOON ? card : null);
+
+    return <ListViewCards showBlanks={above["lg"](deviceSize)} cards={cards
         .sort((a, b) => a ? (b ? 0 : -1) : 1) // put nulls at the end
+        .filter((x, i, a) => x || (i % 2 === 0 ? a[i + 1] : a[i - 1])) // remove pairs of nulls
     } />;
+};
+
+const ExampleQuestions = ({ subject, className }: { subject: Subject, className: string }) => {
+    const items: { [key in Subject]: ShortcutResponse[] } = {
+        maths: [{
+            title: "Sample Maths Questions",
+            type: SEARCH_RESULT_TYPE.GAMEBOARD,
+            id: "sample_maths_questions",
+        }],
+        physics: [/*{
+            title: "Sample Physics Questions",
+            type: SEARCH_RESULT_TYPE.GAMEBOARD,
+            id: "sample_phy_questions",
+        }*/], // Uncomment when physics questions are available
+        chemistry: [{
+            title: "Sample Chemistry Questions",
+            type: SEARCH_RESULT_TYPE.GAMEBOARD,
+            id: "sample_chem_questions",
+        }],
+        biology: [{
+            title: "Sample Biology Questions",
+            type: SEARCH_RESULT_TYPE.GAMEBOARD,
+            id: "sample_bio_questions",
+        }],
+    };
+
+    return items[subject].length > 0 ? <ListView className={className} items={items[subject]} /> : null;
 };
 
 export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
@@ -112,7 +149,20 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
 
             <p className="mt-3">
                 All Isaac Science questions are classed as either &quot;Practice&quot; or &quot;Challenge&quot; – indicated by the symbols below. 
+            </p>
+            
+            <div className="d-flex flex-row w-100 justify-content-center">
+                <div className="d-flex flex-column me-3 align-items-center">
+                    <DifficultyIcon difficultyCategory="P"/>
+                    <span>Practice</span>
+                </div>
+                <div className="d-flex flex-column align-items-center">
+                    <DifficultyIcon difficultyCategory="C"/>
+                    <span>Challenge</span>
+                </div>
+            </div>
 
+            <p className="mt-3">
                 In Isaac {humanSubject},
                 <ul>
                     <li>Practice questions are those that require one concept or equation to solve.</li>
@@ -120,7 +170,9 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
                 </ul>
             </p>
 
-            {/* <ExampleQuestions/> */}
+            <div className="d-flex justify-content-center mt-4">
+                <ExampleQuestions className="w-100 w-md-75" subject={pageContext.subject} />
+            </div>
 
             <LandingPageFooter context={pageContext} />
         </div>}
