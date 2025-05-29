@@ -108,7 +108,7 @@ export const followHeaderNavLink = async (menu: string, linkName: string) => {
 
 export const navigateToGroups = async () => {
     isPhy ?
-        await followHeaderNavLink("Teach", "Manage Groups")
+        await followHeaderNavLink("My Isaac", "Manage groups")
         :
         await followHeaderNavLink("My Ada", "Teaching groups");
 };
