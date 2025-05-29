@@ -6,7 +6,7 @@
   padding: 1rem;
 
   &:has(a.alvi-title) {
-    button {
+    a, button {
       z-index: 2;
     }
   }
@@ -70,7 +70,7 @@
   .alvi-title {
     @extend .link-title;
 
-    &::before {
+    &a::before {
       content: '';
       position: absolute;
       inset: 0;
