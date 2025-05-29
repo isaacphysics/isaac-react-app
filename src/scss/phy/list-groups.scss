@@ -70,7 +70,7 @@
   .alvi-title {
     @extend .link-title;
 
-    &a::before {
+    &:is(a)::before {
       content: '';
       position: absolute;
       inset: 0;
