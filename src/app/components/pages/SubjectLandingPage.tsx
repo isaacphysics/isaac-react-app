@@ -94,7 +94,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     // TODO: are we going to make subject-specific news?
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
 
-    return <Row className={classNames("mt-5 py-4 row-cols-1 row-cols-md-2")}>
+    return <Row className={classNames("mt-2 py-4 row-cols-1 row-cols-md-2")}>
         <div className="d-flex flex-column mt-3">
             {/* if there are books, display books. otherwise, display news */}
             {books.length > 0

@@ -100,7 +100,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     <div className="px-3 py-3 py-md-0 text-md-center justify-content-center">
                         <Label for="feedbackMode" className="pe-1">Student feedback mode:</Label><br/>
                         <UncontrolledButtonDropdown size="sm">
-                            <DropdownToggle color={siteSpecific("tertiary", "secondary")} className={siteSpecific("border", "")} caret size={siteSpecific("lg", "sm")} disabled={isUpdatingQuiz}>
+                            <DropdownToggle color={siteSpecific("tertiary", "solid")} className={siteSpecific("border", "")} caret size={siteSpecific("lg", "sm")} disabled={isUpdatingQuiz}>
                                 {feedbackNames[quizAssignment.quizFeedbackMode as QuizFeedbackMode]}
                             </DropdownToggle>
                             <DropdownMenu>
@@ -118,7 +118,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
                     <div className="px-3 pt-3 pt-md-0 align-content-center">
                         <Button
-                            color="primary" outline={isAda} className="btn-md mt-1 text-nowrap"
+                            color={siteSpecific("solid", "keyline")} className="btn-md mt-1 text-nowrap"
                             href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
                             target="_blank"
                         >

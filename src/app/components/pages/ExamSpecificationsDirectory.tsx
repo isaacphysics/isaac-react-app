@@ -24,7 +24,7 @@ export const ExamSpecificationsDirectory = () => {
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
-                        <Button className="justify-content-end" color='secondary' outline tag={Link} to="/exam_specifications_ada">
+                        <Button className="justify-content-end" color="keyline" tag={Link} to="/exam_specifications_ada">
                             Show me
                         </Button>
                     </CardFooter>
@@ -44,7 +44,7 @@ export const ExamSpecificationsDirectory = () => {
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
-                        <Button className="justify-content-end" color='secondary' outline tag={Link}
+                        <Button className="justify-content-end" color="keyline" tag={Link}
                             to="/exam_specifications_england">
                             Show me
                         </Button>
@@ -66,7 +66,7 @@ export const ExamSpecificationsDirectory = () => {
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
-                        <Button color='secondary' outline tag={Link} to="/exam_specifications_scotland">
+                        <Button color="keyline" tag={Link} to="/exam_specifications_scotland">
                             Show me
                         </Button>
                     </CardFooter>
@@ -86,7 +86,7 @@ export const ExamSpecificationsDirectory = () => {
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
-                        <Button color='secondary' outline tag={Link} to="/exam_specifications_wales">Show me</Button>
+                        <Button color="keyline" tag={Link} to="/exam_specifications_wales">Show me</Button>
                     </CardFooter>
                 </Card>
             </Col>

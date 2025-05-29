@@ -172,4 +172,9 @@
       margin-left: 0.5rem;
     }
   }
+
+  img {
+    // For items that use images rather than icons (e.g. subject logos), to remove the need to include a seperate greyscale image
+    filter: grayscale(100%);
+  }
 }

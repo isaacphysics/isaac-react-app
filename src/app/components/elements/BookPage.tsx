@@ -3,18 +3,20 @@ import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChild
 import { convertToALVIGameboards, ListView } from "./list-groups/ListView";
 import { IsaacBookDetailPageDTO } from "../../../IsaacApiTypes";
 import { TeacherNotes } from "./TeacherNotes";
-import { Markup } from "./markup";
 import { EditContentButton } from "./EditContentButton";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
-    
+
     return <div className="book-page">
         <>
+            <h3 className="mb-3">
+                {page.subtitle && <span className="me-2 text-theme">{page.subtitle} </span>}
+                {page.title}
+            </h3>
+
             <EditContentButton doc={page}/>
 
             <TeacherNotes notes={page.teacherNotes} />
-
-            <h3 className="mb-3"><Markup encoding="latex">{page.title}</Markup></h3>
 
             {!!page.gameboards?.length && <>
                 <h4 className="mb-3" id="resources">Questions</h4>

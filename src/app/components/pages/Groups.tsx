@@ -286,7 +286,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                 valid={isGroupNameValid}
                             />
                             {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <Button
-                                color={siteSpecific("secondary", "primary")}
+                                color={siteSpecific("keyline", "solid")}
                                 className={classNames("py-0", {"px-0 border-dark": isPhy})} disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
                                 onClick={saveUpdatedGroup}
                                 size="sm"
@@ -298,7 +298,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                     </Form>
                 </Col>
                 {canArchive && <Col xs={12} sm={4} className={"mt-2 mt-sm-0"}>
-                    <Button title={group?.archived ? "Unarchive this group" : "Archive this group"} block size="sm" outline={isAda} color={siteSpecific("primary", "secondary")} onClick={toggleArchived}>
+                    <Button title={group?.archived ? "Unarchive this group" : "Archive this group"} block size="sm" color={siteSpecific("solid", "keyline")} onClick={toggleArchived}>
                         {group?.archived ? "Unarchive" : "Archive"}
                     </Button>
                 </Col>}
@@ -315,7 +315,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                     </Col>
                     {isTeacherOrAbove(user) && <Col xs={12} sm={"auto"} className={"mt-1 mt-sm-0 ms-auto"}>
                         {/* Only teachers and above can add group managers */}
-                        <Button outline={isAda} className="w-100 w-sm-auto d-inline-block text-nowrap" size="sm" color="secondary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
+                        <Button className="w-100 w-sm-auto d-inline-block text-nowrap" size="sm" color="keyline" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
                             {isUserGroupOwner
                                 ? <>Add {additionalManagers.length > 1 ? <>/ remove</> : <></>}<span className="d-none d-xl-inline">{" "}group managers</span></>
                                 : <>More info<span className="d-none d-sm-inline">rmation</span></>
@@ -457,7 +457,7 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
             </Form>
         </Col>
         <Col size={12} className={siteSpecific("", "mt-2")}>
-            <Button block color="primary" outline={isAda} onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
+            <Button block color={siteSpecific("solid", "keyline")} onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
                 Create group
             </Button>
         </Col>
@@ -537,7 +537,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
             {showCreateGroup && isDefined(createNewGroup) && <>
                 <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
                 <div className="d-none d-lg-block mb-3">
-                    <Button block color={siteSpecific("secondary", "primary")} outline={isAda} onClick={() => {
+                    <Button block color="keyline" onClick={() => {
                         setSelectedGroupId(undefined);
                         if (groupNameInputRef.current) {
                             groupNameInputRef.current.focus();

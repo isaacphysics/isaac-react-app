@@ -20,7 +20,7 @@ export const MathsBookGcse = () => {
                 <PageFragment fragmentId="maths_book_gcse_intro"/>
             </div>
             <div className="book-levels">
-                <Tabs tabTitleClass="px-3 py-1 hint-tab-title" tabContentClass="pt-2">
+                <Tabs style="tabs" tabTitleClass="px-3 py-1 hint-tab-title" tabContentClass="pt-2">
                     {{
                         'Boards for Class and Homework': <Col>
                             <h4>Chapters:</h4>
