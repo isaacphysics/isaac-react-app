@@ -103,7 +103,7 @@ const ExampleQuestions = ({ subject, className }: { subject: Subject, className:
         }],
     };
 
-    return items[subject].length > 0 ? <ListView className={className} items={items[subject]} /> : null;
+    return items[subject].length > 0 ? <ListView className={className} type="item" items={items[subject]} /> : null;
 };
 
 export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
