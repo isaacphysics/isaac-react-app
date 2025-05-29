@@ -107,13 +107,12 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
     const dispatch = useAppDispatch();
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const quizButton = isQuizSetter ? 
-        <AffixButton size="md" color="solid" onClick={() => (dispatch(showQuizSettingModal(item)))} affix={{ affix: "icon-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color="solid" onClick={() => (dispatch(showQuizSettingModal(item)))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
             Set test
         </AffixButton> :
-        <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
             Take the test
         </AffixButton>;
-
     return <AbstractListViewItem 
         icon={{type: "hex", icon: "icon-tests", size: "lg"}}
         title={item.title ?? ""}

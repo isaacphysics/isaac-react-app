@@ -128,8 +128,13 @@
   @include svg-icon('/assets/phy/icons/redesign/sidebar.svg', 16px, 16px);
 }
 
-.icon-right {
+.icon-arrow-right {
   @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
+}
+
+.icon-arrow-down {
+  @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
+  transform: rotate(90deg);
 }
 
 .icon-chevron-down {
