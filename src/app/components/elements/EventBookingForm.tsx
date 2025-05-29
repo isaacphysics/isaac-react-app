@@ -29,10 +29,12 @@ const SchoolYearGroup = ({
   event,
   additionalInformation,
   updateAdditionalInformation,
+  required,
 }: {
   event: AugmentedEvent;
   additionalInformation: AdditionalInformation;
   updateAdditionalInformation: (update: AdditionalInformation) => void;
+  required?: boolean;
 }) => {
   return (
     <>
@@ -45,6 +47,7 @@ const SchoolYearGroup = ({
         name="year-group"
         value={additionalInformation.yearGroup || ""}
         onChange={(event) => updateAdditionalInformation({ yearGroup: event.target.value })}
+        required={required}
       >
         <option value="" />
         {event.isAStudentEvent && (
@@ -83,9 +86,11 @@ const SchoolYearGroup = ({
 export const AccessibilityAndDietaryRequirements = ({
   additionalInformation,
   updateAdditionalInformation,
+  required,
 }: {
   additionalInformation: AdditionalInformation;
   updateAdditionalInformation: (update: AdditionalInformation) => void;
+  required?: boolean;
 }) => {
   const requirementsList = [
     {
@@ -122,6 +127,7 @@ export const AccessibilityAndDietaryRequirements = ({
               type="text"
               value={String(additionalInformation[type] || "")}
               onChange={(event) => updateAdditionalInformation({ [`${type}`]: event.target.value })}
+              required={required}
             />
           </div>
         );
@@ -134,10 +140,12 @@ const InputWithLabel = ({
   type,
   additionalInformation,
   updateAdditionalInformation,
+  required,
 }: {
   type: "emergencyNumber" | "emergencyName" | "jobTitle";
   additionalInformation: AdditionalInformation;
   updateAdditionalInformation: (update: AdditionalInformation) => void;
+  required?: boolean;
 }) => {
   const fields = {
     emergencyNumber: { label: "Contact telephone number", id: "emergency-number" },
@@ -158,6 +166,7 @@ const InputWithLabel = ({
         type="text"
         value={additionalInformation[type] || ""}
         onChange={(event) => updateAdditionalInformation({ [`${type}`]: event.target.value })}
+        required={required}
       />
     </>
   );
@@ -328,6 +337,7 @@ export const EventBookingForm = ({
                 type="jobTitle"
                 additionalInformation={additionalInformation}
                 updateAdditionalInformation={updateAdditionalInformation}
+                required
               />
             )}
             {targetUser.role == "STUDENT" && (
@@ -335,6 +345,7 @@ export const EventBookingForm = ({
                 event={event}
                 additionalInformation={additionalInformation}
                 updateAdditionalInformation={updateAdditionalInformation}
+                required
               />
             )}
           </div>
@@ -344,6 +355,7 @@ export const EventBookingForm = ({
               <AccessibilityAndDietaryRequirements
                 additionalInformation={additionalInformation}
                 updateAdditionalInformation={updateAdditionalInformation}
+                required
               />
 
               {additionalInformation.yearGroup != "TEACHER" && additionalInformation.yearGroup != "OTHER" && (
@@ -356,6 +368,7 @@ export const EventBookingForm = ({
                       type="emergencyName"
                       additionalInformation={additionalInformation}
                       updateAdditionalInformation={updateAdditionalInformation}
+                      required
                     />
                   </Col>
                   <Col md={6}>
@@ -363,6 +376,7 @@ export const EventBookingForm = ({
                       type="emergencyNumber"
                       additionalInformation={additionalInformation}
                       updateAdditionalInformation={updateAdditionalInformation}
+                      required
                     />
                   </Col>
                 </Row>
