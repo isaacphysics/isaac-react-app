@@ -27,7 +27,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
             <div className="content-metadata-container d-flex flex-column gap-2">
                 {!!page.gameboards?.length && <BookSectionLink id="questions" title="Questions" />}
-                {!!page.relatedContent?.length && <BookSectionLink id="review" title="Review" />}
+                <BookSectionLink id="review" title="Review" />
                 {!!page.extensionGameboards?.length && <BookSectionLink id="extension" title="Extension work" />}
             </div>
 
