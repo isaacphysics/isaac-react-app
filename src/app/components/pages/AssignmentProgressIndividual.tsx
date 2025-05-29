@@ -33,7 +33,7 @@ const GroupAssignmentTab = ({assignment, progress, noStudentsAttemptedAll}: Grou
         } else {
             // for each column, calculate the percentage of students who got all parts of the question correct
             return questions?.reduce(([aAvg, aTQP], q, i) => {
-                const tickCount = progress.reduce((tc, p) => ((p.results || [])[i] === "PERFECT") ? tc + 1 : tc, 0);
+                const tickCount = progress.reduce((tc, p) => ((p.questionResults || [])[i] === "PERFECT") ? tc + 1 : tc, 0);
                 const tickPercent = Math.round(100 * (tickCount / progress.length));
                 return [[...aAvg, tickPercent], aTQP + (q.questionPartsTotal ?? 0)];
             }, [[] as number[], 0]) ?? [[], 0];
@@ -79,7 +79,7 @@ const GroupAssignmentTab = ({assignment, progress, noStudentsAttemptedAll}: Grou
         const totalParts = question.questionPartsTotal;
         const correctParts = (studentProgress.correctPartResults || [])[index];
         const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
-        const status = (studentProgress.results || [])[index];
+        const status = (studentProgress.questionResults || [])[index];
 
         return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }
@@ -134,22 +134,43 @@ const GroupAssignmentTab = ({assignment, progress, noStudentsAttemptedAll}: Grou
 interface QuestionDetailsTabProps {
     assignment: EnhancedAssignmentWithProgress;
     progress: AssignmentProgressDTO[];
+    noStudentsAttemptedAllPartsByQuestion: number[]
 }
 
-const QuestionDetailsTab = ({assignment, progress}: QuestionDetailsTabProps) => {
+const QuestionDetailsTab = ({assignment, progress, noStudentsAttemptedAllPartsByQuestion}: QuestionDetailsTabProps) => {
     const questions = assignment.gameboard.contents;
 
     return <Card>
         <CardBody>
             <h3>Performance on questions</h3>
             <span>See the questions your students answered and which parts they struggled with.</span>
+            <br />
+            {/*  Todo: Temporary, to demo question part results*/}
+            {questions.map((_, questionIndex) => (
+                <>
+                    <h5>{questionIndex + 1}. {questions[questionIndex].title}</h5>
+                    <div>{noStudentsAttemptedAllPartsByQuestion[questionIndex]} of {progress.length} attempted</div>
+                    <table key={questionIndex}>
+                        <tbody>
+                            {progress.map((studentProgress, studentIndex) => (
+                                <tr key={studentIndex}>
+                                    <th>{studentProgress.user?.givenName}</th>
+                                    {studentProgress.questionPartResults && 
+                                        studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
+                                            <td key={questionPartIndex}>{questionPartResult}</td>
+                                        ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </>
+            ))}
 
-            {/* // TODO */}
         </CardBody>
     </Card>;
 };
 
-export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
+export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgress }) => {
 
     const questions = assignment.gameboard.contents;
 
@@ -164,7 +185,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
             notAttemptedPartResults: []
         };
 
-        const ret = (p.results || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
+        const ret = (p.questionResults || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
             const tickCount = ["PASSED", "PERFECT"].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
             const questions = assignment.gameboard.contents;
             return {
@@ -183,8 +204,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     const progress = progressData.map(pd => pd[0]);
     const noStudentsAttemptedAll = progress.reduce((sa, p) => sa + (isAuthorisedFullAccess(p) && p.notAttemptedPartResults.every(v => v === 0) ? 1 : 0), 0);
-
-    
+    const noStudentsAttemptedAllPartsByQuestion = questions.map((_, qi) => progress.map(p => p.questionResults && p.questionResults[qi]).filter(v => v != 'NOT_ATTEMPTED').length);
 
     return <>
         {/* group overview */}
@@ -200,7 +220,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className="icon icon-task-complete icon-md me-2" color="secondary"/>
-                    {progress.filter(p => p.results?.every(r => r === "PERFECT")).length} of {progress.length} got full marks
+                    {progress.filter(p => p.questionResults?.every(r => r === "PERFECT")).length} of {progress.length} got full marks
                 </div>
             </CardBody>
         </Card>
@@ -215,6 +235,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
                 "Question details": <QuestionDetailsTab
                     assignment={assignment}
                     progress={progress}
+                    noStudentsAttemptedAllPartsByQuestion={noStudentsAttemptedAllPartsByQuestion}
                 />
             }}
         </Tabs>
