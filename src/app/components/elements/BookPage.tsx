@@ -1,9 +1,9 @@
 import React from "react";
-import {IsaacContentValueOrChildren} from "../content/IsaacContentValueOrChildren";
-import {ListView} from "./list-groups/ListView";
-import {IsaacBookDetailPageDTO} from "../../../IsaacApiTypes";
-import {TeacherNotes} from "./TeacherNotes";
-import {EditContentButton} from "./EditContentButton";
+import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
+import { convertToALVIGameboards, ListView } from "./list-groups/ListView";
+import { IsaacBookDetailPageDTO } from "../../../IsaacApiTypes";
+import { TeacherNotes } from "./TeacherNotes";
+import { EditContentButton } from "./EditContentButton";
 
 const BookSectionLink = ({id, title}: { id: string; title: string }) => {
     return <a className="d-flex align-items-center ms-1 ps-2 invert-underline" href={`#${id}`}>
@@ -34,9 +34,9 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             {!!page.gameboards?.length && <>
                 <h4 className="mb-3" id="questions">Questions</h4>
                 <div className="mt-3 mb-5 list-results-container p-2">
-                    <ListView
-                        items={page.gameboards.map(g => ({...g, type: "gameboard"}))}
-                        fullWidth
+                    <ListView 
+                        type="gameboard"
+                        items={convertToALVIGameboards(page.gameboards)}
                     />
                 </div>
             </>}
@@ -45,8 +45,8 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             {!!page.relatedContent?.length && <>
                 <div className="my-3 list-results-container p-2">
                     <ListView
+                        type="item"
                         items={page.relatedContent}
-                        fullWidth
                     />
                 </div>
             </>}
@@ -59,8 +59,8 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
                 <span>Expand your boundaries by having a go at these additional extension questions.</span>
                 <div className="mt-3 mb-5 list-results-container p-2">
                     <ListView
-                        items={page.extensionGameboards.map(g => ({...g, type: "gameboard"}))}
-                        fullWidth
+                        type="gameboard"
+                        items={convertToALVIGameboards(page.extensionGameboards)}
                     />
                 </div>
             </>}

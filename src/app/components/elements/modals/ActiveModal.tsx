@@ -10,7 +10,6 @@ interface ActiveModalProps {
 }
 
 export const ActiveModal = ({activeModal}: ActiveModalProps) => {
-    const ActiveModalBody = activeModal && activeModal.body;
     const dispatch = useAppDispatch();
 
     const toggle = () => {
@@ -24,7 +23,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
         };
     });
 
-    return <Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={(activeModal && activeModal.size) || "lg"} centered={activeModal?.centered} data-bs-theme="neutral">
+    return <Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={activeModal?.size ?? "lg"} centered={activeModal?.centered} data-bs-theme="neutral">
         {activeModal && <React.Fragment>
             {<ModalHeader
                 data-testid={"modal-header"}
@@ -46,11 +45,11 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
             >
                 {activeModal.title}
             </ModalHeader>}
-            <ModalBody className={classNames({"pt-0": !activeModal.title, "pb-2 mx-4": !activeModal?.noPadding, "pb-0": activeModal?.noPadding, "overflow-visible": activeModal?.overflowVisible})}>
-                {typeof ActiveModalBody === "function" ? <ActiveModalBody /> : ActiveModalBody}
+            <ModalBody className={classNames(activeModal.bodyContainerClassName, "pb-2", {"mx-4": ["lg", "xl", undefined].includes(activeModal.size), "pt-0": !activeModal.title})}>
+                {typeof activeModal?.body === "function" ? <activeModal.body /> : activeModal?.body}
             </ModalBody>
             {activeModal.buttons &&
-                <ModalFooter className="mb-4 mx-2 align-self-center">
+                <ModalFooter className="mb-4 mx-2">
                     {activeModal.buttons}
                 </ModalFooter>
             }

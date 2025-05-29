@@ -156,7 +156,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                                     </div>}
             
                                     {shortcutAndFilteredSearchResults.length
-                                        ? <ListView items={shortcutAndFilteredSearchResults}/>
+                                        ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
                                         : <em>No results found</em>
                                     }
                                 </>;
