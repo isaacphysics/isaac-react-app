@@ -129,7 +129,7 @@ export const navigateToUserManager = async () => {
 
 export const navigateToAssignmentProgress = async () => {
     isPhy ?
-        await followHeaderNavLink("Teach", "Assignment Progress")
+        await followHeaderNavLink("My Isaac", "Assignment progress")
         :
         await followHeaderNavLink("My Ada", "Markbook");
 };
