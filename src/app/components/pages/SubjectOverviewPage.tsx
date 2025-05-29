@@ -4,7 +4,7 @@ import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { useUrlPageTheme } from "../../services/pageContext";
 import { above, HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, SEARCH_RESULT_TYPE, Subject, useDeviceSize } from "../../services";
-import { PageContextState, ShortcutResponse } from "../../../IsaacAppTypes";
+import { PageContextState } from "../../../IsaacAppTypes";
 import { convertToALVIGameboard, ListView, ListViewCardProps, ListViewCards } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
 import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
@@ -20,10 +20,8 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
 
     const cards: (ListViewCardProps | null)[] = [
         {
-            item: {
-                title: "11-14",
-                subtitle: `Our 11-14 ${humanSubject} resources introduce secondary ${humanSubject} concepts to students and build their numeracy skills through questions and a selection of experiments.`
-            },
+            title: "11-14",
+            subtitle: `Our 11-14 ${humanSubject} resources introduce secondary ${humanSubject} concepts to students and build their numeracy skills through questions and a selection of experiments.`,
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
@@ -33,10 +31,8 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             subject: context.subject,
         },
         {
-            item: {
-                title: "GCSE",
-                subtitle: `Our GCSE ${humanSubject} resources develop the ${humanSubject} knowledge needed at GCSE through the use of questions, concepts and books.`
-            },
+            title: "GCSE",
+            subtitle: `Our GCSE ${humanSubject} resources develop the ${humanSubject} knowledge needed at GCSE through the use of questions, concepts and books.`,
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
@@ -47,10 +43,8 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             state: context.subject === "biology" ? AbstractListViewItemState.COMING_SOON : undefined,
         },
         {
-            item: {
-                title: "A Level",
-                subtitle: `Our A Level ${humanSubject} resources further strengthen the understanding of ${humanSubject}, while developing problem solving skills. Our resources include questions, concepts and books.`
-            },
+            title: "A Level",
+            subtitle: `Our A Level ${humanSubject} resources further strengthen the understanding of ${humanSubject}, while developing problem solving skills. Our resources include questions, concepts and books.`,
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
@@ -60,10 +54,8 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             subject: context.subject,
         },
         {
-            item: {
-                title: "University",
-                subtitle: `Our University ${humanSubject} resources help you prepare for your university STEM degree.`
-            },
+            title: "University",
+            subtitle: `Our University ${humanSubject} resources help you prepare for your university STEM degree.`,
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
