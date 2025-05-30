@@ -5,17 +5,22 @@ import {Button, Col, Container, Nav, Offcanvas, OffcanvasBody, OffcanvasHeader, 
 import {HeaderMenuPhy} from "./HeaderMenuPhy";
 import {above, useDeviceSize} from "../../../services";
 import { AffixButton } from "../../elements/AffixButton";
-import { MenuOpenContext } from "../../navigation/NavigationBar";
+import { MenuOpenContext, NavigationSection } from "../../navigation/NavigationBar";
 import classNames from "classnames";
 import { NavigationMenuPhy } from "./NavigationMenuPhy";
 
 export const LoginLogoutButton = (props : React.HTMLAttributes<HTMLButtonElement>) => {
     const user = useAppSelector(selectors.user.orNull);
+    const deviceSize = useDeviceSize();
     
-    return user && (user.loggedIn 
-        ? <Button tag={Link} to="/logout" color="link" {...props}>Log out</Button>
-        : <Button color="solid" size="sm" tag={Link} to="/login" {...props}>Sign up / log in</Button>
-    );
+    return <Nav navbar className="justify-content-end" id="login-logout-button">
+        {user && user.loggedIn   
+            ? above["lg"](deviceSize) 
+                ? <NavigationSection topLevelLink className="mx-n3" to="/logout" title={"Log out"}/> 
+                : <Button tag={Link} to="/logout" color="link" {...props}>Log out</Button>
+            : <Button color="solid" size="sm" tag={Link} to="/login" {...props}>Sign up / log in</Button>
+        }
+    </Nav>;
 };
 
 export const HeaderPhy = () => {
