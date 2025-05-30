@@ -8,7 +8,7 @@ import {
     TFAInput,
     useLoginLogic
 } from "../../pages/LogIn";
-import {isAda, KEY, persistence, siteSpecific} from "../../../services";
+import {isAda, isPhy, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
 import {RaspberryPiSignInButton} from "../RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../GoogleSignInButton";
@@ -39,10 +39,10 @@ const LoginOrSignUpBody = () => {
 
     return <Row id={"login-page"}>
         <div className="position-absolute w-fit-content end-0">
-            <button className="close mt-3 me-1" onClick={closeModal}>Close</button>
+            <button className="close mt-3 me-1 btn-link" onClick={closeModal}>{siteSpecific("CLOSE", "Close")}</button>
         </div>
         <Col lg={6} className={classNames("content-body", {"pattern-ada-dots": isAda})}>
-            <div className="ps-3 pt-3">
+            <div className={classNames({"ps-3 pt-3": isPhy})}>
                 {siteSpecific(
                     <img src={"/assets/phy/logo.svg"} alt={"Isaac Science Logo"} />,
                     <img src={"/assets/common/logos/ada_logo_3-stack_aqua.svg"} className={"mt-5 mb-4 pb-2 ms-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
@@ -86,8 +86,10 @@ const LoginOrSignUpBody = () => {
                                 <h4 role="alert" className="text-danger text-end mb-0">
                                     {errorMessage}
                                 </h4>
-                                <PasswordResetButton email={email} isValidEmail={isValidEmail}
-                                    setPasswordResetAttempted={setPasswordResetAttempted}/>
+                                <PasswordResetButton 
+                                    email={email} isValidEmail={isValidEmail} 
+                                    setPasswordResetAttempted={setPasswordResetAttempted}
+                                />
                             </Col>
                         </Row>
 

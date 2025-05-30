@@ -6,10 +6,9 @@
 #login-page {
   button.close {
     font-family: "exo_2medium",sans-serif;
-    text-decoration: underline;
-    text-transform: uppercase;
     position: relative;
     z-index: 1;
+    background: transparent;
   }
   #login-modal-form {
     max-height: 800px;
@@ -22,7 +21,9 @@
       padding-top: 20px;
       padding-bottom: 30px;
     }
-    
+    .password-reset-col {
+      max-width: 8em;
+    }
   }
 }
 
