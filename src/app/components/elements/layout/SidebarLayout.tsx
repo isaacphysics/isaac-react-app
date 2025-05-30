@@ -812,6 +812,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
         <search>
             <h5>Search question decks</h5>
             <Input
+                data-testid="title-filter"
                 className='search--filter-input my-3'
                 type="search" value={boardTitleFilter || ""}
                 placeholder="e.g. Forces"
