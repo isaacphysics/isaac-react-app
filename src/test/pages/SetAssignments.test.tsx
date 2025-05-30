@@ -97,7 +97,7 @@ describe("SetAssignments", () => {
         const datePrefix = siteSpecific("Created on ", "Created: ");
         const dateText = within(gameboard).getByTestId("created-date").textContent?.replace(datePrefix, "");
         expect(dateText).toMatch(siteSpecific(TEXTUAL_DATE_REGEX, DDMMYYYY_REGEX));
-        const date =  siteSpecific(Date.parse(dateText!), dayMonthYearStringToDate(dateText));
+        const date = siteSpecific(Date.parse(dateText!), dayMonthYearStringToDate(dateText));
         expect(mockGameboard.creationDate - (date?.valueOf() ?? 0)).toBeLessThanOrEqual(ONE_DAY_IN_MS);
 
         // TODO fix stage and difficulty tests (broken since UI change Jan 2023)

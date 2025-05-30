@@ -68,5 +68,10 @@ describe("MyGameboards", () => {
         await userEvent.type(titleFilter, "test 1"); // Should match "Test Gameboard 1"
         const gameboardRows = await screen.findAllByTestId("gameboard-table-row");
         expect(gameboardRows).toHaveLength(1);
+        if (isPhy) {
+            // Phy persists the change to table view, so switch back to card view for subsequent tests
+            const viewDropdown = await screen.findByLabelText("Set display mode");
+            await userEvent.selectOptions(viewDropdown, "Card View");
+        }
     });
 });
