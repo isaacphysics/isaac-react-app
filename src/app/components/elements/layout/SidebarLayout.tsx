@@ -767,12 +767,14 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                     </Input>
                     <div className="section-divider"/>
                     <h5 className="mb-4">Filter by status</h5>
-                    <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
-                    <div className="section-divider-small"/>
-                    {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <AssignmentStatusCheckbox 
-                        key={state} status={state} count={assignmentCountByStatus?.[state]}
-                        statusFilter={statusFilter} setStatusFilter={setStatusFilter} 
-                    />)}
+                    <div data-testid="assignment-type-filter">
+                        <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
+                        <div className="section-divider-small"/>
+                        {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <AssignmentStatusCheckbox 
+                            key={state} status={state} count={assignmentCountByStatus?.[state]}
+                            statusFilter={statusFilter} setStatusFilter={setStatusFilter} 
+                        />)}
+                    </div>                   
                     <h5 className="mt-4 mb-3">Filter by group</h5>
                     <Input type="select" value={groupFilter} onChange={e => setGroupFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentGroups(assignments)].map(group => <option key={group} value={group}>{group}</option>)}
