@@ -4,8 +4,8 @@
 set -e
 
 # Need at least three args and the first argument to be the site:
-if [ $# -lt 3 ] || ! { [ $1 = "ada" ] || [ $1 = "phy" ]; }; then
-  echo "Usage: compose-live [ada|phy] [APP_VERSION] [DOCKER_ARGS]..."
+if [ $# -lt 3 ] || ! { [ $1 = "ada" ] || [ $1 = "phy" ] || [ $1 = "sci" ]; }; then
+  echo "Usage: compose-live [ada|phy|sci] [APP_VERSION] [DOCKER_ARGS]..."
   exit 1
 fi
 
