@@ -3,16 +3,26 @@
   transform: translate(0, -15%);
 }
 
-#login-modal-form {
-  max-height: 800px;
-  @media (min-height: 800px) {
-    max-height: 90vh;
+#login-page {
+  button.close {
+    font-family: "exo_2medium",sans-serif;
+    text-decoration: underline;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
   }
-  padding: 20vh 30px;
-  @include media-breakpoint-down(lg) {
-    max-height: unset;
-    padding-top: 20px;
-    padding-bottom: 30px;
+  #login-modal-form {
+    max-height: 800px;
+    @media (min-height: 800px) {
+      max-height: 90vh;
+    }
+    padding: 100px 30px 30px;
+    @include media-breakpoint-down(lg) {
+      max-height: unset;
+      padding-top: 20px;
+      padding-bottom: 30px;
+    }
+    
   }
 }
 

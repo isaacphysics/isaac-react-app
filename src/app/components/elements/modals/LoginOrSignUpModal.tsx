@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
-import {Button, Col, Form, Input, Label, Row} from "reactstrap";
-import {closeActiveModal, selectors, store, useAppDispatch, useAppSelector} from "../../../state";
+import {Button, Col, Form, Row} from "reactstrap";
+import {closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import {useLocation} from "react-router-dom";
 import {
     EmailPasswordInputs,
@@ -12,6 +12,7 @@ import {isAda, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
 import {RaspberryPiSignInButton} from "../RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../GoogleSignInButton";
+import { StyledCheckbox } from "../inputs/StyledCheckbox";
 
 const LoginOrSignUpBody = () => {
 
@@ -37,11 +38,16 @@ const LoginOrSignUpBody = () => {
     }
 
     return <Row id={"login-page"}>
+        <div className="position-absolute w-fit-content end-0">
+            <button className="close mt-3 me-1" onClick={closeModal}>Close</button>
+        </div>
         <Col lg={6} className={classNames("content-body", {"pattern-ada-dots": isAda})}>
-            {siteSpecific(
-                <img src={"/assets/phy/logo.svg"} alt={"Isaac Science Logo"} />,
-                <img src={"/assets/common/logos/ada_logo_3-stack_aqua.svg"} className={"mt-5 mb-4 pb-2 ms-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
-            )}
+            <div className="ps-3 pt-3">
+                {siteSpecific(
+                    <img src={"/assets/phy/logo.svg"} alt={"Isaac Science Logo"} />,
+                    <img src={"/assets/common/logos/ada_logo_3-stack_aqua.svg"} className={"mt-5 mb-4 pb-2 ms-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
+                )}
+            </div>
             <div className={"px-3 mb-4"}>
                 <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>
                     Log in or sign up<br/>
@@ -67,23 +73,23 @@ const LoginOrSignUpBody = () => {
                             passwordResetAttempted={passwordResetAttempted} validPassword={isValidPassword}
                             errorMessage={errorMessage} displayLabels={false} />
 
-                        <PasswordResetButton email={email} isValidEmail={isValidEmail} setPasswordResetAttempted={setPasswordResetAttempted} small />
-
-                        <div>
-                            <Input
-                                id="login-remember-me"
-                                className={classNames("mb-2", {"mt-1": isAda})}
-                                type="checkbox"
-                                onChange={e => setRememberMe(e.target.checked)}
-                            />
-                            <Label for="login-remember-me" className="ms-2">Remember me</Label>
-                        </div>
-                        
-                        <div className="text-end">
-                            <h4 role="alert" className="text-danger text-end mb-0">
-                                {errorMessage}
-                            </h4>
-                        </div>
+                        <Row className={classNames("mb-4", {"mt-2": isAda})}>
+                            <Col className={"col-6 mt-1 d-flex"}>
+                                <StyledCheckbox
+                                    id="rememberMe" 
+                                    checked={rememberMe} 
+                                    onChange={e => setRememberMe(e.target.checked)}
+                                    label={<p>Remember me</p>} className='mb-4'
+                                />
+                            </Col>
+                            <Col className="align-content-center">
+                                <h4 role="alert" className="text-danger text-end mb-0">
+                                    {errorMessage}
+                                </h4>
+                                <PasswordResetButton email={email} isValidEmail={isValidEmail}
+                                    setPasswordResetAttempted={setPasswordResetAttempted}/>
+                            </Col>
+                        </Row>
 
                         <Button
                             id="log-in"
@@ -114,6 +120,5 @@ const LoginOrSignUpBody = () => {
 export const loginOrSignUpModal = {
     centered: true,
     noPadding: true,
-    closeAction: () => {store.dispatch(closeActiveModal());},
     body: LoginOrSignUpBody
 };
