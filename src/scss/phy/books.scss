@@ -76,6 +76,13 @@ svg.book-page-icon {
   }
 }
 
+.book-listing-container {
+  max-height: 462px;
+  overflow-y: auto;
+  border-radius: 4px;
+  @include vertical-scroll-shadow($color-neutral-50, rgba(0, 0, 0, 0.2));
+}
+
 .book-container {
   border-radius: 8px;
   text-decoration: none;
