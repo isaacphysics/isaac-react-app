@@ -7,6 +7,7 @@ export const dayMonthYearStringToDate = (d?: string) => {
 export const ONE_DAY_IN_MS = 86400000;
 
 export const DDMMYYYY_REGEX = /\d{2}\/\d{2}\/\d{4}/;
+export const TEXTUAL_DATE_REGEX = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{4})/;
 
 export const NOW = Date.now(); // Use same "now" for all time relative calculations
 

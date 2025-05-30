@@ -372,7 +372,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                 : <i className="icon icon-my-isaac"/>}
         </div>
         My Isaac
-        {taskCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">
+        {taskCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content" data-testid={"my-assignments-badge"}>
             {taskCount > 99 ? "99+" : taskCount}
         </span>}
     </div>;

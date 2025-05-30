@@ -767,12 +767,14 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                     </Input>
                     <div className="section-divider"/>
                     <h5 className="mb-4">Filter by status</h5>
-                    <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
-                    <div className="section-divider-small"/>
-                    {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <AssignmentStatusCheckbox 
-                        key={state} status={state} count={assignmentCountByStatus?.[state]}
-                        statusFilter={statusFilter} setStatusFilter={setStatusFilter} 
-                    />)}
+                    <div data-testid="assignment-type-filter">
+                        <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
+                        <div className="section-divider-small"/>
+                        {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <AssignmentStatusCheckbox 
+                            key={state} status={state} count={assignmentCountByStatus?.[state]}
+                            statusFilter={statusFilter} setStatusFilter={setStatusFilter} 
+                        />)}
+                    </div>                   
                     <h5 className="mt-4 mb-3">Filter by group</h5>
                     <Input type="select" value={groupFilter} onChange={e => setGroupFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentGroups(assignments)].map(group => <option key={group} value={group}>{group}</option>)}
@@ -810,6 +812,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
         <search>
             <h5>Search question decks</h5>
             <Input
+                data-testid="title-filter"
                 className='search--filter-input my-3'
                 type="search" value={boardTitleFilter || ""}
                 placeholder="e.g. Forces"
@@ -1016,7 +1019,7 @@ interface MyAccountSidebarProps extends SidebarProps {
 
 export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
     const { editingOtherUser, activeTab, setActiveTab } = props;
-    return <ContentSidebar buttonTitle="Account settings" {...props}>
+    return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...props}>
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
