@@ -309,7 +309,7 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
             <div className={multipleAssignments ? "section-divider-bold" : "section-divider"}/>
             <h5>Assignment{multipleAssignments && "s"}</h5>
             {multipleAssignments && <div>You have multiple assignments for this question deck.</div>}
-            {assignments.map(a => <AssignmentDetails key={a.id} {...a} />)}
+            <ul>{assignments.map(a => <li key={a.id}><AssignmentDetails {...a} /></li>)}</ul>
         </>}
         <div className="section-divider"/>
         <CompletionKey/>
@@ -417,20 +417,22 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
                     forceEnabled={applicableTags.filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0).length === 0}
                 />
                 <div className="section-divider-small"/>
-                {applicableTags
-                    .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
-                    .map(tag => 
-                        <FilterCheckbox 
-                            key={tag.id} 
-                            tag={tag} 
-                            conceptFilters={conceptFilters} 
-                            setConceptFilters={setConceptFilters} 
-                            tagCounts={tagCounts} 
-                            incompatibleTags={[subjectTag]} 
-                            baseTag={subjectTag}
-                        />
-                    )
-                }
+                <ul>
+                    {applicableTags
+                        .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
+                        .map(tag => <li key={tag.id}>
+                            <FilterCheckbox 
+                                key={tag.id} 
+                                tag={tag} 
+                                conceptFilters={conceptFilters} 
+                                setConceptFilters={setConceptFilters} 
+                                tagCounts={tagCounts} 
+                                incompatibleTags={[subjectTag]} 
+                                baseTag={subjectTag}
+                            /></li>
+                        )
+                    }
+                </ul>
             </div>
         </search>
     </ContentSidebar>;
@@ -475,30 +477,32 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
             
             <div className="d-flex flex-column">
                 <h5>Filter by subject and topic</h5>
-                {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
-                    const subjectTag = tags.getById(subject as TAG_ID);
-                    const descendentTags = tags.getDirectDescendents(subjectTag.id);
-                    const isSelected = conceptFilters.includes(subjectTag) || descendentTags.some(tag => conceptFilters.includes(tag));
-                    const isPartial = descendentTags.some(tag => conceptFilters.includes(tag)) && descendentTags.some(tag => !conceptFilters.includes(tag));
-                    return <div key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
-                        <FilterCheckbox 
-                            checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
-                            setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
-                            partial partiallySelected={descendentTags.some(tag => conceptFilters.includes(tag))} // not quite isPartial; this is also true if all descendents selected
-                            className={classNames("icon", {"icon-checkbox-off": !isSelected, "icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
-                        />
-                        {isSelected && <div className="ms-3 ps-2">
-                            {descendentTags
-                                .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0 || conceptFilters.includes(tag))
-                                // .sort((a, b) => tagCounts ? tagCounts[b.id] - tagCounts[a.id] : 0)
-                                .map((tag, j) => <FilterCheckbox key={j} 
-                                    checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters} 
-                                    setConceptFilters={setConceptFilters} tagCounts={tagCounts} incompatibleTags={[subjectTag]}
-                                />)
-                            }
-                        </div>}
-                    </div>;
-                })}
+                <ul>
+                    {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
+                        const subjectTag = tags.getById(subject as TAG_ID);
+                        const descendentTags = tags.getDirectDescendents(subjectTag.id);
+                        const isSelected = conceptFilters.includes(subjectTag) || descendentTags.some(tag => conceptFilters.includes(tag));
+                        const isPartial = descendentTags.some(tag => conceptFilters.includes(tag)) && descendentTags.some(tag => !conceptFilters.includes(tag));
+                        return <li key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
+                            <FilterCheckbox 
+                                checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
+                                setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
+                                partial partiallySelected={descendentTags.some(tag => conceptFilters.includes(tag))} // not quite isPartial; this is also true if all descendents selected
+                                className={classNames("icon", {"icon-checkbox-off": !isSelected, "icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
+                            />
+                            {isSelected && <ul className="ms-3 ps-2">
+                                {descendentTags
+                                    .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0 || conceptFilters.includes(tag))
+                                    // .sort((a, b) => tagCounts ? tagCounts[b.id] - tagCounts[a.id] : 0)
+                                    .map((tag, j) => <li key={j}>
+                                        <FilterCheckbox checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters} 
+                                            setConceptFilters={setConceptFilters} tagCounts={tagCounts} incompatibleTags={[subjectTag]}/>
+                                    </li>)
+                                }
+                            </ul>}
+                        </li>;
+                    })}
+                </ul>
                 <div className="section-divider"/>
                 <h5>Filter by stage</h5>
                 <ul className="ps-2">
@@ -769,10 +773,11 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                     <h5 className="mb-4">Filter by status</h5>
                     <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
                     <div className="section-divider-small"/>
-                    {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <AssignmentStatusCheckbox 
-                        key={state} status={state} count={assignmentCountByStatus?.[state]}
-                        statusFilter={statusFilter} setStatusFilter={setStatusFilter} 
-                    />)}
+                    <ul>
+                        {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <li key={state}>
+                            <AssignmentStatusCheckbox status={state} count={assignmentCountByStatus?.[state]} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
+                        </li>)}
+                    </ul>
                     <h5 className="mt-4 mb-3">Filter by group</h5>
                     <Input type="select" value={groupFilter} onChange={e => setGroupFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentGroups(assignments)].map(group => <option key={group} value={group}>{group}</option>)}
@@ -1019,16 +1024,18 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
     return <ContentSidebar buttonTitle="Account settings" {...props}>
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
-        {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
-            <ContentSidebarContext.Consumer key={tab}>
-                {(context) => 
-                    <StyledTabPicker
-                        key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
-                        onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}
-                    />
-                }
-            </ContentSidebarContext.Consumer>
-        )}
+        <ul>
+            {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
+                <li key={tab}>
+                    <ContentSidebarContext.Consumer>
+                        {(context) => 
+                            <StyledTabPicker id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
+                                onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}/>                           
+                        }
+                    </ContentSidebarContext.Consumer>
+                </li>
+            )}
+        </ul>
     </ContentSidebar>;
 };
 
@@ -1314,11 +1321,13 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                         placeholder="e.g. Forces" aria-label="Search by title"/>
                     <div className="section-divider"/>
                     <h5 className="mb-3">Filter by status</h5>
-                    <QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/>
-                    <div className="section-divider-small"/>
-                    {statusOptions.map(state => <QuizStatusCheckbox 
-                        key={state} status={state} count={undefined} statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} 
-                    />)}
+                    <ul>
+                        <li><QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/></li>
+                        <div className="section-divider-small"/>
+                        {statusOptions.map(state => <li key={state}>
+                            <QuizStatusCheckbox status={state} count={undefined} statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter}/>
+                        </li>)}
+                    </ul>
                     {activeTab === 1 && <>
                         <h5 className="my-3">Filter by assigner</h5>
                         <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
