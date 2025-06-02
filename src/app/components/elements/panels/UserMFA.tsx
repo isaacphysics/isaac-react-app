@@ -2,7 +2,7 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isAda, isDefined, SITE_TITLE, siteSpecific} from "../../../services";
+import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isDefined, SITE_TITLE, siteSpecific} from "../../../services";
 import {
     useGetSegueEnvironmentQuery,
     useDisableAccountMFAMutation,

@@ -43,7 +43,6 @@ import {FixedSizeList} from "react-window";
 import {Spacer} from "../Spacer";
 import {MyAccountTab} from "./MyAccountTab";
 import {Button, Col, Form, Input, InputGroup, UncontrolledTooltip} from "reactstrap";
-import { isCompositeComponentWithType } from "react-dom/test-utils";
 
 const CONNECTIONS_ROW_HEIGHT = 40;
 const CONNECTIONS_MAX_VISIBLE_ROWS = 10;
@@ -68,7 +67,7 @@ interface ConnectionsHeaderProps {
 const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title, placeholder}: ConnectionsHeaderProps) => {
     const deviceSize = useDeviceSize();
     const searchInputRef = useRef<HTMLInputElement>(null);
-    
+
     useEffect(() => {
         if (enableSearch && searchInputRef.current) {
             searchInputRef.current.focus();
