@@ -1,5 +1,5 @@
 import {Button, Col, FormGroup, Label, Row} from "reactstrap";
-import React, {useState} from "react";
+import React, {Suspense, useState} from "react";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {
@@ -9,6 +9,7 @@ import {
     above,
     isAda,
     isPhy,
+    isStaff,
     loadZxcvbnIfNotPresent,
     passwordDebounce,
     siteSpecific,
@@ -20,6 +21,8 @@ import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppD
 import {TogglablePasswordInput} from "../inputs/TogglablePasswordInput";
 import { MyAccountTab } from "./MyAccountTab";
 import { Spacer } from "../Spacer";
+import UserMFA from "./UserMFA";
+import { Loading } from "../../handlers/IsaacSpinner";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -188,6 +191,18 @@ export const UserPassword = (
                 </FormGroup>}
             </React.Fragment>
             <React.Fragment>
+                {isStaff(myUser) && !editingOtherUser &&
+                    // Currently staff only
+                    <Suspense fallback={<Loading/>}>
+                        <UserMFA
+                            userAuthSettings={userAuthSettings}
+                            userToUpdate={myUser}
+                            editingOtherUser={editingOtherUser}
+                        />
+                    </Suspense>
+                }
+            </React.Fragment>
+            <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 <FormGroup className="form-group">
                     <h4>Log Out</h4>
@@ -196,7 +211,7 @@ export const UserPassword = (
                         "You might want to do this if you forgot to log out on a shared device like a school computer."}
                     </p>
                     <Col className="text-center mt-2 px-0">
-                        <Button className={classNames({"w-100 py-2 mt-3 mb-2": isAda})} color="keyline" onClick={() => dispatch(logOutUserEverywhere())}>
+                        <Button className={classNames("w-100 py-2 mb-2", {"mt-3": isAda})} color="keyline" onClick={() => dispatch(logOutUserEverywhere())}>
                             Log {above['sm'](deviceSize) ? "me " : ""}out everywhere
                         </Button>
                     </Col>

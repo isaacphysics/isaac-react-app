@@ -2,7 +2,7 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isDefined, SITE_TITLE, siteSpecific} from "../../../services";
+import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isAda, isDefined, SITE_TITLE, siteSpecific} from "../../../services";
 import {
     useGetSegueEnvironmentQuery,
     useDisableAccountMFAMutation,
@@ -10,6 +10,7 @@ import {
     useSetupAccountMFAMutation
 } from "../../../state";
 import QRCode from 'qrcode';
+import classNames from "classnames";
 
 interface UserMFAProps {
     userToUpdate: ValidationUser;
@@ -67,101 +68,86 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
 
     return <CardBody className="pt-0 px-0">
         <Row>
-            <Col xs={{size: 8, offset: 2}} lg={siteSpecific({size: 8, offset: 2}, {size: 6, offset: 3})} className="px-4">
-                {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-3"/>)}
-                <h4>Two-factor Authentication (2FA)</h4>
-            </Col>
+            {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-3"/>)}
+            <h4>Two-factor Authentication (2FA)</h4>
         </Row>
         {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
-            <Row>
-                <Col xs={{size: 8, offset: 2}} lg={siteSpecific({size: 8, offset: 2}, {size: 6, offset: 3})} className="px-4">
-                    <Row>
+            <Col>
+                <Row>
+                    <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
+                </Row>
+                {isDefined(totpSharedSecret) && isDefined(totpSharedSecret.sharedSecret) ?
+                    <Form onSubmit={setupMFA}>
                         <Col>
-                            <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
-                        </Col>
-                    </Row>
-                    {isDefined(totpSharedSecret) && isDefined(totpSharedSecret.sharedSecret) ?
-                        <Form onSubmit={setupMFA}>
-                            <Row>
-                                <Col>
-                                    <h5>Configure Two-factor Authentication (2FA)</h5>
-                                    <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
-                                    <div className="qrcode-mfa vertical-center">
-                                        {qrCodeStringBase64SVG && <img
-                                            src={'data:image/svg+xml;base64,' + qrCodeStringBase64SVG}
-                                            alt={"Follow this URL to setup 2FA: " + authenticatorURL}
-                                        />}
-                                    </div>
+                            <h5>Configure Two-factor Authentication (2FA)</h5>
+                            <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
+                            <div className="qrcode-mfa vertical-center">
+                                {qrCodeStringBase64SVG && <img
+                                    src={'data:image/svg+xml;base64,' + qrCodeStringBase64SVG}
+                                    alt={"Follow this URL to setup 2FA: " + authenticatorURL}
+                                />}
+                            </div>
 
-                                    <FormGroup className="form-group">
-                                        <p><strong>Step 2:</strong> Enter the code provided by your app</p>
-                                        <Label htmlFor="setup-verification-code">Verification Code</Label>
-                                        <Input
-                                            id="setup-verification-code" type="text" name="setup-verification-code"
-                                            value={mfaVerificationCode || ""}
-                                            onChange={e => setMFAVerificationCode(e.target.value.replace(/ /g, ""))}
-                                        />
-                                    </FormGroup>
-                                    <FormGroup className="form-group">
-                                        <Button
-                                            type="submit"
-                                            className="btn-secondary w-100"
-                                            disabled={!mfaVerificationCode}
-                                        >
-                                            {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
-                                        </Button>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                        </Form>
-                        :
-                        <Row>
-                            <Col>
-                                <FormGroup className="form-group">
-                                    <Button
-                                        type="button"
-                                        className="btn-secondary w-100"
-                                        onClick={() => newMFASecret()}
-                                    >
-                                        {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
-                                    </Button>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                    }
-                </Col>
-            </Row>
-            : <Row className="pt-4">
-                <Col xs={{size: 6, offset: 3}} className="text-center px-4">
-                    {!editingOtherUser && userAuthSettings && userAuthSettings.linkedAccounts && <p>
-                        You do not currently have a password set for this account; you
-                        sign in using {" "}
-                        {(userAuthSettings.linkedAccounts).map((linked, index) =>
-                            <span key={index}>
-                                {AUTHENTICATOR_FRIENDLY_NAMES_MAP[linked]}
-                            </span>
-                        )}.
-                    </p>}
-                </Col>
+                            <FormGroup className="form-group">
+                                <p><strong>Step 2:</strong> Enter the code provided by your app</p>
+                                <Label htmlFor="setup-verification-code">Verification Code</Label>
+                                <Input
+                                    id="setup-verification-code" type="text" name="setup-verification-code"
+                                    value={mfaVerificationCode || ""}
+                                    onChange={e => setMFAVerificationCode(e.target.value.replace(/ /g, ""))}
+                                />
+                            </FormGroup>
+                            <FormGroup className="form-group">
+                                <Button
+                                    type="submit"
+                                    className="btn-secondary w-100"
+                                    disabled={!mfaVerificationCode}
+                                >
+                                    {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
+                                </Button>
+                            </FormGroup>
+                        </Col>
+                    </Form>
+                    :
+                    <Col>
+                        <FormGroup className="form-group">
+                            <Button
+                                type="button"
+                                className="btn-secondary w-100"
+                                onClick={() => newMFASecret()}
+                            >
+                                {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
+                            </Button>
+                        </FormGroup>
+                    </Col>
+                }
+            </Col>
+            : <Row>
+                {!editingOtherUser && userAuthSettings && userAuthSettings.linkedAccounts && <p>
+                    You do not currently have a password set for this account; you
+                    sign in using {" "}
+                    {(userAuthSettings.linkedAccounts).map((linked, index) =>
+                        <span key={index}>
+                            {AUTHENTICATOR_FRIENDLY_NAMES_MAP[linked]}
+                        </span>
+                    )}.
+                </p>}
             </Row>
         }
         {editingOtherUser &&
-            <Row className="pt-4">
-                <Col xs={{size: 6, offset: 3}} className="text-center px-4">
-                    {userAuthSettings && <p>
-                        <FormGroup className="form-group">
-                            <Button
-                                className="btn-secondary"
-                                onClick={() => userToUpdate.id && disableAccountMFA(userToUpdate.id)}
-                            >
-                                Disable 2FA for user
-                            </Button>
-                        </FormGroup>
-                    </p>}
-                </Col>
+            <Row>
+                {userAuthSettings && <p>
+                    <FormGroup className="form-group">
+                        <Button
+                            className="btn-secondary w-100"
+                            onClick={() => userToUpdate.id && disableAccountMFA(userToUpdate.id)}
+                        >
+                            Disable 2FA for user
+                        </Button>
+                    </FormGroup>
+                </p>}
             </Row>
         }
-
     </CardBody>;
 };
 export default UserMFA;
