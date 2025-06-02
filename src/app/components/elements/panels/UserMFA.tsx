@@ -10,7 +10,6 @@ import {
     useSetupAccountMFAMutation
 } from "../../../state";
 import QRCode from 'qrcode';
-import classNames from "classnames";
 
 interface UserMFAProps {
     userToUpdate: ValidationUser;

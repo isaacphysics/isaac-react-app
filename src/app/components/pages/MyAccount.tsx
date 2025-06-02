@@ -1,4 +1,4 @@
-import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
+import React, {lazy, useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -66,15 +66,11 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {UserBetaFeatures} from "../elements/panels/UserBetaFeatures";
 import hash, {NormalOption} from "object-hash";
 import {skipToken} from "@reduxjs/toolkit/query";
-import {Loading} from "../handlers/IsaacSpinner";
 import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesInput";
 import {UserProfile} from '../elements/panels/UserProfile';
 import {UserContent} from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {MainContent, MyAccountSidebar, SidebarLayout} from '../elements/layout/SidebarLayout';
-import { StyledTabPicker } from '../elements/inputs/StyledTabPicker';
-
-const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
 // TODO: work out which of these `any`s can be specified
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

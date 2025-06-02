@@ -43,6 +43,7 @@ import {FixedSizeList} from "react-window";
 import {Spacer} from "../Spacer";
 import {MyAccountTab} from "./MyAccountTab";
 import {Button, Col, Form, Input, InputGroup, UncontrolledTooltip} from "reactstrap";
+import { isCompositeComponentWithType } from "react-dom/test-utils";
 
 const CONNECTIONS_ROW_HEIGHT = 40;
 const CONNECTIONS_MAX_VISIBLE_ROWS = 10;
@@ -181,7 +182,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         </>}
         rightColumn={<>
             <h3>
-                <span className={isPhy ? "h4" : ""}>Teacher connection code<i id="teacher-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
+                <span className={classNames({"h4": isPhy})}>Teacher connection code<i id="teacher-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
                 <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your {siteSpecific("Isaac", "Ada")} assignment progress.
                 </UncontrolledTooltip>
@@ -250,7 +251,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
                 <h3>
-                    <span className={isPhy ? "h4" : ""}>Your student connections<i id="student-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
+                    <span className={classNames({"h4": isPhy})}>Your student connections<i id="student-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
                     <UncontrolledTooltip placement="bottom" target="student-connections-title">
                         These are the students who have shared their {siteSpecific("Isaac", "Ada")} data with you.
                         These students are also able to view your name and email address on their Teacher connections page.
@@ -310,7 +311,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
             {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
             <h3>
-                <span className={isPhy ? "h4" : ""}>
+                <span className={classNames({"h4": isPhy})}>
                     Your group memberships
                     <i id="group-memberships-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} />
                 </span>
@@ -330,7 +331,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch}
                         setSearchText={setGroupSearchText} placeholder="Search groups"/>
                     <div>
-                        <ul className={classNames("teachers-connected list-unstyled m-0")}>
+                        <ul className="teachers-connected list-unstyled m-0">
                             {sortedGroupMemberships && <FixedSizeList height={MEMBERSHIPS_ROW_HEIGHT * (Math.min(MEMBERSHIPS_MAX_VISIBLE_ROWS, sortedGroupMemberships.length ?? 0))} itemCount={sortedGroupMemberships.length ?? 0} itemSize={MEMBERSHIPS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                                 {({index, style}) => {
                                     const membership = sortedGroupMemberships[index];
@@ -358,9 +359,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     </span>}
                                                 </div>
                                             </Col>
-                                            <Col className={isPhy ? "d-flex flex-col justify-content-end align-items-center flex-grow-0 pe-1" : ""}>
+                                            <Col className={classNames({"d-flex flex-col justify-content-end align-items-center flex-grow-0 pe-1": isPhy})}>
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
-                                                    <Button className={isAda ? "revoke-teacher pe-1 pt-2" : ""} color="link" disabled={editingOtherUser} onClick={() =>
+                                                    <Button className={classNames({"revoke-teacher pe-1 pt-2": isAda})} color="link" disabled={editingOtherUser} onClick={() =>
                                                         membership.group.selfRemoval
                                                             ? dispatch(openActiveModal(confirmSelfRemovalModal((user as LoggedInUser).id as number, membership.group.id as number)))
                                                             : changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.INACTIVE})
@@ -378,7 +379,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                 </React.Fragment>}
 
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE && <React.Fragment>
-                                                    <Button  className={isAda ? "revoke-teacher pe-1 pt-2" : ""} color="link" disabled={editingOtherUser} onClick={() =>
+                                                    <Button className={classNames({"revoke-teacher pe-1 pt-2": isAda})} color="link" disabled={editingOtherUser} onClick={() =>
                                                         changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.ACTIVE})
                                                     }>
                                                         Rejoin
