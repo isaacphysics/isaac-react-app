@@ -435,14 +435,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
-    const BrowseAllButton = <AffixButton color="keyline" tag={Link} to="/questions" className={classNames("ms-auto btn-horizontal", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
-        affix={{
-            affix: "icon-arrow-right",
-            position: "suffix",
-            type: "icon"
-        }}>
-        Browse all questions
-    </AffixButton>;
+    const BrowseAllButton = (pageContext?.subject && pageContext.stage) && 
+        <AffixButton color="keyline" tag={Link} to="/questions" className={classNames("ms-auto btn-horizontal", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
+            affix={{
+                affix: "icon-arrow-right",
+                position: "suffix",
+                type: "icon"
+            }}>
+            Browse all questions
+        </AffixButton>;
 
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
@@ -476,7 +477,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     <div className="my-3">
                         {(pageContext?.subject && pageContext.stage)
                             ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
-                                <p className="me-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                                <p className="me-0 me-lg-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
                                 {above["lg"](deviceSize) && BrowseAllButton}
                             </div>
                             : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
