@@ -7061,9 +7061,9 @@ jsprim@^2.0.2:
     object.values "^1.1.6"
 
 katex@^0.16.11:
-  version "0.16.21"
-  resolved "https://registry.yarnpkg.com/katex/-/katex-0.16.21.tgz#8f63c659e931b210139691f2cc7bb35166b792a3"
-  integrity sha512-XvqR7FgOHtWupfMiigNzmh+MgUVmDGU2kXZm899ZkPfcuoPuFxyHmXsgATDpFZDAXCI8tvinaVcDo8PIIJSo4A==
+  version "0.16.22"
+  resolved "https://registry.yarnpkg.com/katex/-/katex-0.16.22.tgz#d2b3d66464b1e6d69e6463b28a86ced5a02c5ccd"
+  integrity sha512-XCHRdUw4lf3SKBaJe4EvgqIuWwkPSo9XoeO8GjQW94Bp7TWv9hNhzZjZ+OH9yf1UmLygb7DIT5GSFQiyt16zYg==
   dependencies:
     commander "^8.3.0"
 
@@ -7784,9 +7784,9 @@ p-try@^2.0.0:
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
 p5@^1.10.0:
-  version "1.11.3"
-  resolved "https://registry.yarnpkg.com/p5/-/p5-1.11.3.tgz#94478d5ba685cedf9f3f934a3db702155cbb36c6"
-  integrity sha512-5eiyuZ3Pvo6ucr3nr8AzD+qwpoleiIEF2a2HmiO6PJM1tnbD0LmLlckZyYGJATs0tdmRjc37Muh6KPS4d1FHHg==
+  version "1.11.7"
+  resolved "https://registry.yarnpkg.com/p5/-/p5-1.11.7.tgz#45647b3c1973b1115cfeb750c56cb29c690518c0"
+  integrity sha512-NX/+qkKPIvfUW/zHMLMT46FZITqoh9+N4739DwGpc61ZY4SsUo9C7qu4b/e1SWH4/bCGnmSQT+ZgOaueNnDGTA==
 
 param-case@^3.0.4:
   version "3.0.4"
