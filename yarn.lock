@@ -8365,9 +8365,9 @@ react-redux@^7.2.0, react-redux@^7.2.9:
     react-is "^17.0.2"
 
 react-remove-props-loader@^1.2.7:
-  version "1.2.11"
-  resolved "https://registry.yarnpkg.com/react-remove-props-loader/-/react-remove-props-loader-1.2.11.tgz#1354448f5bc966e3745f6d08576534df0599bfac"
-  integrity sha512-0wSbQiRhV3ZPN5cSmqbgqCiGcpxczLuKGjzGyNLfpQv0q+UABghZ+PQ3zH9W8R0SwMPHSPXAquit6bSn8N0u0w==
+  version "1.2.13"
+  resolved "https://registry.yarnpkg.com/react-remove-props-loader/-/react-remove-props-loader-1.2.13.tgz#c8141b7d1040c9cde1f3496e5667eb0e9e3c48dd"
+  integrity sha512-8Ju0boDjBt9aIBINlOcqPAuqCc/mPVXUsUmKpBtKx7mGC0tXm7Y5fKLD9ubjvmao7xUL9VBmnkcVLHqoL7/lNA==
   dependencies:
     ts-morph "^25.0.1"
 
