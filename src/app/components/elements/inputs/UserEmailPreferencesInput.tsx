@@ -26,7 +26,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
             "Be the first to hear about new features, challenges, topics, and improvements on the platform. Plus, get helpful tips on making the most of new tools."
         ),
         events: siteSpecific(
-            "Information about new virtual or real world physics events.",
+            "Information about new online or in-person events.",
             "Find out about upcoming events designed to support your learning and professional development."
         )
     };
