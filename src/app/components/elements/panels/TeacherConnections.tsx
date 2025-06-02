@@ -188,7 +188,6 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 </UncontrolledTooltip>
             </h3>
             <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
-            {/* TODO Need to handle nested form complaint */}
             <Form onSubmit={processToken} data-testid="teacher-connect-form">
                 <InputGroup className={"separate-input-group mb-4 d-flex flex-row justify-content-center"}>
                     <Input
