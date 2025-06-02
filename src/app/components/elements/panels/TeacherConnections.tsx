@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Link} from "react-router-dom";
 import {GroupMembershipDetailDTO, LoggedInUser, PotentialUser} from "../../../../IsaacAppTypes";
 import {
@@ -67,12 +67,19 @@ interface ConnectionsHeaderProps {
 
 const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title, placeholder}: ConnectionsHeaderProps) => {
     const deviceSize = useDeviceSize();
+    const searchInputRef = useRef<HTMLInputElement>(null);
+    
+    useEffect(() => {
+        if (enableSearch && searchInputRef.current) {
+            searchInputRef.current.focus();
+        }
+    }, [enableSearch]);
 
     return <div className="connect-list-header">
-        {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ?
+        {["xl", "lg", "xs"].includes(deviceSize) ?
             <>{enableSearch ?
                 <>
-                    <Input type="text" autoFocus placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
+                    <Input type="text" innerRef={searchInputRef} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
                     <Spacer />
                 </> :
                 <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
@@ -87,7 +94,7 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
                     {title}
                 </h4>
                 <Spacer />
-                {enableSearch && <Input type="text" autoFocus style={{width: "200px"}} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
+                {enableSearch && <Input type="text" innerRef={searchInputRef} style={{width: "200px"}} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
             </>
         }
         {!enableSearch && <Spacer />}
