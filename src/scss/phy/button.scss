@@ -30,6 +30,10 @@
     padding: 0.8125rem 1.625rem;
     min-width: 120px;
   }
+
+  &.btn-horizontal {
+    min-width: max-content;
+  }
 }
 
 // TODO: replace btn-primary with btn-solid

@@ -123,7 +123,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                     }}>
                         {buttonTitle ?? "Search and filter"}
                     </AffixButton>}
-                    <div className="flex-grow-1">{optionBar}</div>
+                    <div className="flex-grow-1 d-inline-grid align-items-end">{optionBar}</div>
                 </div>
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
