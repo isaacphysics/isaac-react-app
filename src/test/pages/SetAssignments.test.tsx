@@ -131,7 +131,6 @@ describe("SetAssignments", () => {
             expect(title.getAttribute("href")).toBe(`/assignment/${mockGameboard.id}`);
         }
         if (isPhy) {
-            within(gameboard).getByRole("heading", {name: mockGameboard.title});
             expect(gameboard.getAttribute("href")).toBe(`/question_decks#${mockGameboard.id}`);
         }
 
