@@ -1,12 +1,12 @@
 import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
-import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacBookIndexPageDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
-    Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, 
+    extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, 
     isPhy,
     ISAAC_BOOKS,
     BookHiddenState, TAG_LEVEL} from "../../../services";
@@ -27,7 +27,6 @@ import { formatISODateOnly, getFriendlyDaysUntil } from "../DateString";
 import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
-import { StyledSelect } from "../inputs/StyledSelect";
 import { CollapsibleList } from "../CollapsibleList";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { getProgressIcon } from "../../pages/Gameboard";
@@ -1415,28 +1414,28 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
 
             {!pageContext?.subject && <>
                 <h5>Select subject</h5>
-                <Label for='subject-select' className='visually-hidden'>Subject</Label>
-                <StyledSelect inputId="subject-select"
-                    options={subjects.map(s => ({ value: s.id, label: s.title}))}
-                    value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title}) : undefined}
-                    name="subject-select"
-                    placeholder="Select a subject"
-                    onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
-                    isClearable
-                />
+                <ul>
+                    {subjects.map(subject => <li key={subject.id}>
+                        <StyledTabPicker checkboxTitle={subject.title} data-bs-theme={subject.id}
+                            checked={filterSubject === subject} onClick={() => setFilterSubject(subject)}/>
+                    </li>)}
+                </ul>
             </>}
+
+            {!pageContext?.subject && !pageContext?.stage?.length && <div className="section-divider"/>}
 
             {!pageContext?.stage?.length && <>
                 <h5 className="mt-4">Select stage</h5>
-                <Label for='stage-select' className='visually-hidden'>Stage</Label>
-                <StyledSelect inputId="stage-select"
-                    options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
-                    value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
-                    name="stage-select"
-                    placeholder="Select a stage"
-                    onChange={e => setFilterStage(stages.find(s => s === e?.value))}
-                    isClearable
-                />
+                <ul>
+                    <li>
+                        <StyledTabPicker checkboxTitle="All" data-bs-theme={filterSubject?.id} checked={!filterStage} onClick={() => setFilterStage(undefined)}/>
+                    </li>
+                    <div className="section-divider-small"/>
+                    {getFilteredStageOptions().map(stage => <li key={stage.value}>
+                        <StyledTabPicker checkboxTitle={stage.label} data-bs-theme={filterSubject?.id}
+                            checked={filterStage === stage.value} onClick={() => setFilterStage(stage.value)}/>
+                    </li>)}
+                </ul>
             </>}
 
             {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
