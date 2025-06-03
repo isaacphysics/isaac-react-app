@@ -18,21 +18,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Cypress run (Ada)
+      - name: Cypress run
+        strategy:
+          fail-fast: false
+          matrix:
+            site: ["ada", "phy"]
         uses: cypress-io/github-action@v6
         with:
           component: true
           browser: chrome
         env:
-          CYPRESS_SITE: ada
-      - name: Cypress run (Physics)
-        if: ${{ success() || failure() }}
-        uses: cypress-io/github-action@v6
-        with:
-          component: true
-          browser: chrome
-        env:
-          CYPRESS_SITE: phy
+          CYPRESS_SITE: ${{ matrices.site }}
       - name: VRT update - create or update branch
         id: cypress-create-branch
         if: ${{ failure() }}
