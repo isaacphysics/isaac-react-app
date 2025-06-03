@@ -628,6 +628,10 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
             <div className="section-divider"/>
             <h5>Filter by topic</h5>
             <ul className="ps-2">
+                <li>
+                    <AllFiltersCheckbox conceptFilters={filterTags ?? []} setConceptFilters={setFilterTags} tagCounts={tagCounts} baseTag={tags.getById(pageContext.subject as TAG_ID)}/>
+                </li>
+                <div className="section-divider-small"/>
                 {fields.filter(tag => tagCounts[tag.id] > 0)
                     .map((tag, j) => <li key={j} >
                         <StyledTabPicker checkboxTitle={tag.title} checked={filterTags?.includes(tag)}
