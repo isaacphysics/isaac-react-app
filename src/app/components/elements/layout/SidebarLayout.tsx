@@ -284,8 +284,8 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
 
         return <>
-            <div className="mb-2">Subject{subjects.length > 1 && "s"}: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
-            <div>Topic{subjects.length > 1 && "s"}: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
+            <ul className="mb-2">Subject{subjects.length > 1 && "s"}: {subjects.map(s => <li className="d-inline" key={s}><Pill title={HUMAN_SUBJECTS[s]} theme={s}/></li>)}</ul>
+            <ul>Topic{subjects.length > 1 && "s"}: {topics.map(t => <li key={t} className="d-inline"><Pill title={t}/></li>)}</ul>
         </>;
     };
 
@@ -771,9 +771,9 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                     </Input>
                     <div className="section-divider"/>
                     <h5 className="mb-4">Filter by status</h5>
-                    <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
-                    <div className="section-divider-small"/>
                     <ul>
+                        <li><AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/></li>
+                        <div className="section-divider-small"/>
                         {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <li key={state}>
                             <AssignmentStatusCheckbox status={state} count={assignmentCountByStatus?.[state]} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
                         </li>)}
@@ -966,8 +966,8 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
         return <ContentSidebar buttonTitle={hasSections ? "Sections" : "Details"}>
             <div className="section-divider"/>
             <h5 className="mb-3">Test</h5>
-            <div className="mb-2">Subject{subjects?.length > 1 && "s"}: {subjects.map(s => <Pill key={s.id} title={s.title} theme={s.id}/>)}</div>
-            <div className="mb-2">Topic{topicsAndFields?.length > 1 && "s"}: {topicsAndFields.map(e => <Pill key={e.id} title={e.title} theme="neutral"/>)}</div>
+            <ul className="mb-2">Subject{subjects?.length > 1 && "s"}: {subjects.map(s => <li className="d-inline" key={s.id}><Pill title={s.title} theme={s.id}/></li>)}</ul>
+            <ul className="mb-2">Topic{topicsAndFields?.length > 1 && "s"}: {topicsAndFields.map(e => <li className="d-inline" key={e.id}><Pill title={e.title} theme="neutral"/></li>)}</ul>
 
             {hasSections && <>
                 <div className="section-divider"/>
