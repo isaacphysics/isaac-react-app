@@ -5,6 +5,7 @@ import {
     ButtonDropdown,
     Card,
     CardBody,
+    CardProps,
     Col,
     Container,
     DropdownItem,
@@ -191,13 +192,13 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
     </div>;
 };
 
-interface GroupEditorProps {
+interface GroupEditorProps extends CardProps {
     user: RegisteredUserDTO;
     group?: AppGroup;
     allGroups?: AppGroup[];
     groupNameInputRef?: MutableRefObject<HTMLInputElement | null>;
 }
-const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}: GroupCreatorProps & GroupEditorProps) => {
+const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef, ...rest}: GroupCreatorProps & GroupEditorProps) => {
     const dispatch = useAppDispatch();
 
     const [updateGroup] = useUpdateGroupMutation();
@@ -271,7 +272,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
     const isGroupNameInvalid = isDefined(newGroupName) && isDefined(existingGroupWithConflictingName);
     const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName) && (isDefined(group) ? newGroupName !== group.groupName : true);
 
-    return <Card className={classNames({"mb-4": isPhy})}>
+    return <Card className={classNames({"mb-4": isPhy})} {...rest}>
         <CardBody>
             <h4 className={"mb-2"}>{group ? "Manage group" : "Create group"}</h4>
             {isAda && <hr/>}
@@ -672,9 +673,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
                     showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup}/>
                 <MainContent className="mt-3 mt-lg-0">
                     <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
-                    <div data-testid="group-editor">
-                        <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup}/>
-                    </div>
+                    <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} data-testid="group-editor"/>
                     {/* On small screens, the groups list should initially be accessible without needing to open the sidebar drawer */}
                     {below["md"](deviceSize) && !isDefined(selectedGroup) && <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
                         showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} sidebarStyle={false}/>}

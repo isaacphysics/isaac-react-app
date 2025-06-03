@@ -31,12 +31,13 @@ describe("MyAssignments", () => {
 
     it('should render with "All" assignment filter selected by default', async () => {
         renderMyAssignments();
-        const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
         if (isAda) {
+            const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
             expect(assignmentTypeFilter).toHaveValue("All");
         }
         else {
-            const allFilter = within(assignmentTypeFilter).getByRole("checkbox", {name: "All"});
+            const sidebar = await screen.findByTestId("my-assignments-sidebar");
+            const allFilter = within(sidebar).getByRole("checkbox", {name: "All"});
             expect(allFilter).toHaveProperty("checked", true);
         }
     });
@@ -55,12 +56,13 @@ describe("MyAssignments", () => {
 
     it('should filter to only display "Older" assignments when that filter type is selected, this should not display any assignments', async () => {
         renderMyAssignments();
-        const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
         if (isAda) {
+            const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
             await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
         }
         else {
-            const olderFilter = within(assignmentTypeFilter).getByRole("checkbox", {name: "To do (older)"});
+            const sidebar = await screen.findByTestId("my-assignments-sidebar");
+            const olderFilter = within(sidebar).getByRole("checkbox", {name: "To do (older)"});
             await userEvent.click(olderFilter);
         }
         expect(screen.queryAllByTestId("my-assignment")).toHaveLength(0);
@@ -85,12 +87,13 @@ describe("MyAssignments", () => {
         // Wait for the default ("All") assignments to show up
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.length);
         // Select the "Older Assignments" filter
-        const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
         if (isAda) {
+            const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
             await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
         }
         else {
-            const olderFilter = within(assignmentTypeFilter).getByRole("checkbox", {name: "To do (older)"});
+            const sidebar = await screen.findByTestId("my-assignments-sidebar");
+            const olderFilter = within(sidebar).getByRole("checkbox", {name: "To do (older)"});
             await userEvent.click(olderFilter);
         }
         // Wait for the one old assignment that we expect
