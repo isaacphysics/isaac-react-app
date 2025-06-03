@@ -380,6 +380,16 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                 />
                             </div>
                         </Form>
+                        {activeTab === ACCOUNT_TAB.passwordreset && isStaff(userToUpdate) && !editingOtherUser &&
+                            // Currently staff only. This is outside the main Form as they cannot be nested.
+                            <Suspense fallback={<Loading/>}>
+                                <UserMFA
+                                    userAuthSettings={userAuthSettings}
+                                    userToUpdate={userToUpdate}
+                                    editingOtherUser={editingOtherUser}
+                                />
+                            </Suspense>
+                        }
                     </MainContent>
                 </SidebarLayout>
             }
@@ -480,6 +490,16 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                             </Row>
                         </CardFooter>
                     </Form>
+                    {activeTab === ACCOUNT_TAB.passwordreset && isStaff(userToUpdate) && !editingOtherUser &&
+                        // Currently staff only. This is outside the main Form as they cannot be nested.
+                        <Suspense fallback={<Loading/>}>
+                            <UserMFA
+                                userAuthSettings={userAuthSettings}
+                                userToUpdate={userToUpdate}
+                                editingOtherUser={editingOtherUser}
+                            />
+                        </Suspense>
+                    }
                 </Card>
             }
         </ShowLoading>
