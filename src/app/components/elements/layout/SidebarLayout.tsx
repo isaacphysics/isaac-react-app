@@ -63,7 +63,7 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
         <Link to={link} className="py-2">
             {isDefined(gameboardId) ? <span className={classNames(getProgressIcon(question).icon, "mt-1 mx-2")} style={{minWidth: "16px"}}/> : <i className="icon icon-question-thick"/>}
             <div className="d-flex flex-column w-100">
-                <span className="hover-underline link-title">{question.title}</span>
+                <span className="hover-underline link-title"><Markup encoding="latex">{question.title}</Markup></span>
                 <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
             </div>
         </Link>
@@ -77,7 +77,7 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Isaa
     return <li key={concept.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, concept.tags ?? [])}>
         <Link to={`/concepts/${concept.id}`} className="py-2">
             <i className="icon icon-concept-thick"/>
-            <span className="hover-underline link-title">{concept.title}</span>
+            <span className="hover-underline link-title"><Markup encoding="latex">{concept.title}</Markup></span>
         </Link>
     </li>;
 };
