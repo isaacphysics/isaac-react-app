@@ -284,8 +284,14 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
 
         return <>
-            <ul className="mb-2">Subject{subjects.length > 1 && "s"}: {subjects.map(s => <li className="d-inline" key={s}><Pill title={HUMAN_SUBJECTS[s]} theme={s}/></li>)}</ul>
-            <ul>Topic{subjects.length > 1 && "s"}: {topics.map(t => <li key={t} className="d-inline"><Pill title={t}/></li>)}</ul>
+            <div className="mb-2">
+                Subject{subjects.length > 1 && "s"}:
+                <ul className="d-inline ms-1">{subjects.map(s => <li className="d-inline" key={s}><Pill title={HUMAN_SUBJECTS[s]} theme={s}/></li>)}</ul>
+            </div>
+            <div className="mb-2">
+                Topic{subjects.length > 1 && "s"}:
+                <ul className="d-inline ms-1">{topics.map(t => <li key={t} className="d-inline"><Pill title={t}/></li>)}</ul>
+            </div>
         </>;
     };
 
@@ -968,8 +974,14 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
         return <ContentSidebar buttonTitle={hasSections ? "Sections" : "Details"}>
             <div className="section-divider"/>
             <h5 className="mb-3">Test</h5>
-            <ul className="mb-2">Subject{subjects?.length > 1 && "s"}: {subjects.map(s => <li className="d-inline" key={s.id}><Pill title={s.title} theme={s.id}/></li>)}</ul>
-            <ul className="mb-2">Topic{topicsAndFields?.length > 1 && "s"}: {topicsAndFields.map(e => <li className="d-inline" key={e.id}><Pill title={e.title} theme="neutral"/></li>)}</ul>
+            <div className="mb-2">
+                Subject{subjects?.length > 1 && "s"}:
+                <ul className="d-inline ms-1">{subjects.map(s => <li className="d-inline" key={s.id}><Pill title={s.title} theme={s.id}/></li>)}</ul>
+            </div>
+            <div className="mb-2">
+                Topic{topicsAndFields?.length > 1 && "s"}:
+                <ul className="d-inline ms-1">{topicsAndFields.map(e => <li className="d-inline" key={e.id}><Pill title={e.title} theme="neutral"/></li>)}</ul>
+            </div>
 
             {hasSections && <>
                 <div className="section-divider"/>
