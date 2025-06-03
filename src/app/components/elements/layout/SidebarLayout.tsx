@@ -276,16 +276,16 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
 
     const GameboardDetails = () => {
         const subjects = determineGameboardSubjects(gameboard);
-        const topics = tags.getTopicTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
+        const topics = tags.getFieldTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
             if (isDefined(c.tags) && c.tags.length > 0) {
                 return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
             }
             return a;
-        }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
+        }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).sort();
 
         return <>
             <div className="mb-2">Subject{subjects.length > 1 && "s"}: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
-            <div>Topic{subjects.length > 1 && "s"}: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
+            {!!topics.length && <div>Topic{topics.length > 1 && "s"}: {topics.map(t => <span key={t.id} className="badge rounded-pill bg-theme me-1" data-bs-theme={t.parent}>{t.title}</span>)}</div>}
         </>;
     };
 
@@ -938,9 +938,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const hasSections = totalSections > 0;
     const tags = attempt ? attempt.quiz?.tags : view.quiz?.tags;
     const subjects = tagsService.getSubjectTags(tags as TAG_ID[]);
-    const topics = tagsService.getTopicTags(tags as TAG_ID[]);
     const fields = tagsService.getFieldTags(tags as TAG_ID[]);
-    const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A"}];
     
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon-correct"
@@ -962,7 +960,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
             <div className="section-divider"/>
             <h5 className="mb-3">Test</h5>
             <div className="mb-2">Subject{subjects?.length > 1 && "s"}: {subjects.map(s => <Pill key={s.id} title={s.title} theme={s.id}/>)}</div>
-            <div className="mb-2">Topic{topicsAndFields?.length > 1 && "s"}: {topicsAndFields.map(e => <Pill key={e.id} title={e.title} theme="neutral"/>)}</div>
+            {!!fields?.length && <div className="mb-2">Topic{fields?.length > 1 && "s"}: {fields.map(f => <Pill key={f.id} title={f.title} theme={f.parent}/>)}</div>}
 
             {hasSections && <>
                 <div className="section-divider"/>
