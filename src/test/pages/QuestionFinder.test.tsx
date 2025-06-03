@@ -101,7 +101,6 @@ describe("QuestionFinder", () => {
                 });
             }
         });
-        });
             
         it('"Load more" should avoid duplicate questions by fetching next page using same seed', () => {
             const resultsResponsePage2 = buildMockQuestionFinderResults(questions, 30);
