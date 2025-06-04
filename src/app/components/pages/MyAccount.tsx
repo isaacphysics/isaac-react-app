@@ -52,6 +52,7 @@ import {
     isPhy,
     isStaff,
     isTeacherOrAbove,
+    siteSpecific,
     validateEmail,
     validateEmailPreferences,
     validatePassword
@@ -209,6 +210,8 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts?.length ? userToUpdate?.registeredContexts : [{}], userContextsToUpdate, {unorderedArrays: true}), [userContextsToUpdate, userToUpdate]);
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
+
+    const formSpecificTabs = [ACCOUNT_TAB.passwordreset, ACCOUNT_TAB.teacherconnections];
 
     useEffect(() => {
         setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
@@ -402,7 +405,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                 </TabContent>
                             </Form>
                             {/* Tabs containing forms (which cannot be nested inside another form) */}
-                            <TabContent activeTab={activeTab}>
+                            {formSpecificTabs.includes(activeTab) && <TabContent activeTab={activeTab}>
                                 {isStaff(userToUpdate) && !editingOtherUser && <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                     <Suspense fallback={<Loading/>}>
                                         <UserMFA
@@ -417,10 +420,10 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                         userToEdit={userToEdit}
                                     />
                                 </TabPane> 
-                            </TabContent>
+                            </TabContent>}
                             <div className={classNames({"py-4 card-footer": isAda})}>
                                 {isPhy && <div className="section-divider-bold"/>}
-                                <Col size={12} md={{size: 6, offset: 3}}>
+                                <Col xs={siteSpecific({size: 6, offset: 3}, 12)} md={{size: 6, offset: 3}}>
                                     <Input
                                         form="my-account" type="submit" value="Save" className="btn btn-solid border-0 w-100"
                                         disabled={!accountInfoChanged}

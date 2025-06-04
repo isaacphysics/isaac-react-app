@@ -67,6 +67,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
     }
 
     return <MyAccountTab
+        className="pt-0"
         leftColumn={null}
         rightColumn={
             <CardBody className="pt-0 px-0">
