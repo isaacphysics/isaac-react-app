@@ -45,7 +45,7 @@ const ContentEmails = (props: ContentEmailsProps) => {
         });
     }, [emailSubject, plaintextTemplate, htmlTemplate, overrideEnvelopeFrom]);
 
-    const mailgunAddress = siteSpecific("no-reply@mail.isaacphysics.org", "no-reply@mail.adacomputerscience.org");
+    const mailgunAddress = siteSpecific("no-reply@mail.isaacscience.org", "no-reply@mail.adacomputerscience.org");
 
     const [sendProvidedEmailWithUserIds] = useSendProvidedEmailWithUserIdsMutation();
 

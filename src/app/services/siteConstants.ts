@@ -14,6 +14,6 @@ export const siteSpecific = <P, C>(phy: P, ada: C): P | C => isPhy ? phy : ada;
 export const SITE_TITLE = siteSpecific("Isaac Science", "Ada Computer Science");
 export const SITE_TITLE_SHORT = siteSpecific("Isaac", "Ada");
 
-export const WEBMASTER_EMAIL = siteSpecific("webmaster@isaacphysics.org", "webmaster@adacomputerscience.org");
+export const WEBMASTER_EMAIL = siteSpecific("webmaster@isaacscience.org", "webmaster@adacomputerscience.org");
 
 export const TEACHER_REQUEST_ROUTE = siteSpecific("/pages/contact_us_teacher", "/teacher_account_request");
