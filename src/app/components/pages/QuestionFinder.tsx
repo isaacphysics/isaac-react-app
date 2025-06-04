@@ -436,7 +436,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
     const BrowseAllButton = (pageContext?.subject && pageContext.stage) && 
-        <AffixButton color="keyline" tag={Link} to="/questions" className={classNames("ms-auto btn-horizontal", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
+        <AffixButton color="keyline" tag={Link} to="/questions" className={classNames("ms-auto mw-max-content", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
             affix={{
                 affix: "icon-arrow-right",
                 position: "suffix",
@@ -476,7 +476,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 {siteSpecific(
                     <div className="my-3">
                         {(pageContext?.subject && pageContext.stage)
-                            ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
+                            ? <div className="d-flex align-items-start flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
                                 <p className="me-0 me-lg-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
                                 {above["lg"](deviceSize) && BrowseAllButton}
                             </div>

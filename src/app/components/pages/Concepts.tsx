@@ -119,7 +119,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
-    const BrowseAllButton = <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className={classNames("ms-auto btn-horizontal", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
+    const BrowseAllButton = <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className={classNames("ms-auto mw-max-content", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
         affix={{
             affix: "icon-arrow-right",
             position: "suffix",
