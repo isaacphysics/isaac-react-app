@@ -3,8 +3,6 @@ import {connect} from "react-redux";
 import classnames from "classnames";
 import {
     Button,
-    Card,
-    CardFooter,
     Col,
     Container,
     Form,
@@ -12,7 +10,6 @@ import {
     Nav,
     NavItem,
     NavLink,
-    Row,
     TabContent,
     TabPane,
 } from "reactstrap";
@@ -55,7 +52,6 @@ import {
     isPhy,
     isStaff,
     isTeacherOrAbove,
-    siteSpecific,
     validateEmail,
     validateEmailPreferences,
     validatePassword
@@ -326,6 +322,12 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
 
     return <Container id="account-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-account"}} className="mb-4"/>
+        {isAda && <h3 className="d-md-none text-center text-muted m-3">
+            <small>
+                {`Update your Ada Computer Science account, or `}
+                <Link to="/logout" className="text-theme">Log out</Link>
+            </small>
+        </h3>}
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <SidebarLayout>
@@ -420,7 +422,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                 {isPhy && <div className="section-divider-bold"/>}
                                 <Col size={12} md={{size: 6, offset: 3}}>
                                     <Input
-                                        form="my-account" type="submit" value="Save" className="btn btn-solid border-100 w-100"
+                                        form="my-account" type="submit" value="Save" className="btn btn-solid border-0 w-100"
                                         disabled={!accountInfoChanged}
                                     />
                                 </Col>
