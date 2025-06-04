@@ -28,7 +28,7 @@ jobs:
           component: true
           browser: chrome
         env:
-          CYPRESS_SITE: ${{ matrices.site }}
+          CYPRESS_SITE: ${{ matrix.site }}
       - name: VRT update - create or update branch
         id: cypress-create-branch
         if: ${{ failure() }}
