@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-12-23 12:45:08.
+// Generated using typescript-generator version 3.2.1263 on 2025-06-03 14:32:32.
 
 export interface AssignmentDTO extends IAssignmentLike {
   gameboardId?: string;
@@ -114,7 +114,7 @@ export interface IsaacEventPageDTO extends ContentDTO {
   publicationDate?: EpochTimeStamp;
   preResources?: ExternalReference[];
   postResources?: ExternalReference[];
-  eventSurvey?: string;
+  eventSurvey?: ExternalReference;
   EventStatus?: EventStatus;
 }
 
