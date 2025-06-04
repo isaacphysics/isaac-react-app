@@ -6,10 +6,7 @@ import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacBoo
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
-    extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, 
-    isPhy,
-    ISAAC_BOOKS,
-    BookHiddenState, TAG_LEVEL} from "../../../services";
+    extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, stageLabelMap} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -1386,19 +1383,41 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
 interface GlossarySidebarProps extends ContentSidebarProps {
     searchText: string;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
-    filterSubject: Tag | undefined;
-    setFilterSubject: React.Dispatch<React.SetStateAction<Tag | undefined>>;
-    filterStage: Stage | undefined;
-    setFilterStage: React.Dispatch<React.SetStateAction<Stage | undefined>>;
+    filterSubjects: Tag[] | undefined;
+    setFilterSubjects: React.Dispatch<React.SetStateAction<Tag[] | undefined>>;
+    filterStages: Stage[] | undefined;
+    setFilterStages: React.Dispatch<React.SetStateAction<Stage[] | undefined>>;
     subjects: Tag[];
     stages: Stage[];
 }
 
 export const GlossarySidebar = (props: GlossarySidebarProps) => {
-    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStage, setFilterStage, subjects, stages, optionBar, ...rest } = props;
+    const { searchText, setSearchText, filterSubjects, setFilterSubjects, filterStages, setFilterStages, subjects, stages, optionBar, ...rest } = props;
     
     const history = useHistory();
     const pageContext = useAppSelector(selectors.pageContext.context);
+
+    // Colour for stage tabs
+    const theme = useMemo(() => {
+        if (filterSubjects && filterSubjects.length === 1) {
+            return filterSubjects[0]!.id;
+        }
+        return "neutral";
+    }, [filterSubjects]);
+
+    function updateFilters<T>(value: T, filters: T[] | undefined, setFilters: React.Dispatch<React.SetStateAction<T[] | undefined>>) {
+        if (filters && filters.includes(value)) {
+            if (filters.length === 1) {
+                setFilters(undefined);
+            }
+            else {
+                setFilters(filters.filter(s => s !== value));
+            }
+        }
+        else {
+            setFilters(filters ? [...filters, value] : [value]);
+        }
+    }
 
     return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
@@ -1417,7 +1436,8 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
                 <ul>
                     {subjects.map(subject => <li key={subject.id}>
                         <StyledTabPicker checkboxTitle={subject.title} data-bs-theme={subject.id}
-                            checked={filterSubject === subject} onClick={() => setFilterSubject(subject)}/>
+                            checked={filterSubjects && filterSubjects.includes(subject)}
+                            onChange={() => updateFilters(subject, filterSubjects, setFilterSubjects)}/>
                     </li>)}
                 </ul>
             </>}
@@ -1428,12 +1448,14 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
                 <h5 className="mt-4">Select stage</h5>
                 <ul>
                     <li>
-                        <StyledTabPicker checkboxTitle="All" data-bs-theme={filterSubject?.id} checked={!filterStage} onClick={() => setFilterStage(undefined)}/>
+                        <StyledTabPicker checkboxTitle="All" data-bs-theme={theme}
+                            checked={!filterStages} onChange={() => setFilterStages(undefined)}/>
                     </li>
                     <div className="section-divider-small"/>
-                    {getFilteredStageOptions().map(stage => <li key={stage.value}>
-                        <StyledTabPicker checkboxTitle={stage.label} data-bs-theme={filterSubject?.id}
-                            checked={filterStage === stage.value} onClick={() => setFilterStage(stage.value)}/>
+                    {stages.map(stage => <li key={stage}>
+                        <StyledTabPicker checkboxTitle={stageLabelMap[stage]} data-bs-theme={theme}
+                            checked={filterStages && filterStages.includes(stage)}
+                            onChange={() => updateFilters(stage, filterStages, setFilterStages)}/>
                     </li>)}
                 </ul>
             </>}
