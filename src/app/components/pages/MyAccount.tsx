@@ -423,12 +423,12 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                             </TabContent>}
                             <div className={classNames({"py-4 card-footer": isAda})}>
                                 {isPhy && <div className="section-divider-bold"/>}
-                                <Col xs={siteSpecific({size: 6, offset: 3}, 12)} md={{size: 6, offset: 3}}>
+                                <div className={classNames("d-flex justify-content-center", {"col-12 col-md-6 offset-md-3": isAda})}>
                                     <Input
-                                        form="my-account" type="submit" value="Save" className="btn btn-solid border-0 w-100"
+                                        form="my-account" type="submit" value="Save" className={classNames("btn btn-solid border-0", {"w-100": isAda})}
                                         disabled={!accountInfoChanged}
                                     />
-                                </Col>
+                                </div>
                             </div>
                         </div>
                     </MainContent>
