@@ -1,13 +1,14 @@
 import React, {useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
-import {isAuthorisedFullAccess, siteSpecific, TODAY} from "../../../services";
+import {isAuthorisedFullAccess, TODAY} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
 import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation } from "../../../state";
 import { SortItemHeader } from "../SortableItemHeader";
-import { AssignmentProgressDTO } from "../../../../IsaacApiTypes";
+import { AssignmentProgressDTO, CompletionState, QuestionPartState } from "../../../../IsaacApiTypes";
+import classNames from "classnames";
 
 export const ICON = {
     correct: <i className="icon-md icon-correct"/>,
@@ -40,6 +41,30 @@ export const generateCorrectnessIcon = (correct: number, incorrect: number, notA
     }
 };
 
+export const getQuizQuestionCorrectnessIcon = (state: CompletionState) => {
+    switch (state) {
+        case CompletionState.ALL_CORRECT:
+            return ICON.correct;
+        case CompletionState.ALL_INCORRECT:
+            return ICON.incorrect;
+        case CompletionState.ALL_ATTEMPTED:
+        case CompletionState.IN_PROGRESS:
+            return ICON.partial;
+        case CompletionState.NOT_ATTEMPTED:
+            return ICON.notAttempted;
+    }
+};
+
+export const getQuizQuestionPartCorrectnessIcon = (state: QuestionPartState) => {
+    switch (state) {
+        case "CORRECT":
+            return ICON.correct;
+        case "INCORRECT":
+            return ICON.incorrect;
+        case "NOT_ATTEMPTED":
+            return ICON.notAttempted;
+    }
+};
 export interface QuestionType {
     id?: string | undefined;
     title?: string | undefined;
@@ -51,7 +76,6 @@ export interface ResultsTableProps<Q extends QuestionType> {
     duedate?: Date | number;
     progress?: AssignmentProgressDTO[];
     questions: Q[];
-    header: JSX.Element;
     getQuestionTitle: (question: Q) => JSX.Element;
     assignmentAverages: number[];
     assignmentTotalQuestionParts: number;
@@ -65,7 +89,6 @@ export function ResultsTable<Q extends QuestionType>({
     duedate,
     progress,
     questions,
-    header,
     getQuestionTitle,
     assignmentAverages,
     assignmentTotalQuestionParts,
@@ -107,10 +130,6 @@ export function ResultsTable<Q extends QuestionType>({
 
     const [sortOrder, setSortOrder] = useState<ProgressSortOrder>("name");
     const [reverseOrder, setReverseOrder] = useState(false);
-
-    function isSelected(q: Q) {
-        return q == selectedQuestion ? "selected" : "";
-    }
 
     function toggleSort(itemOrder: ProgressSortOrder) {
         setSortOrder(itemOrder);
@@ -235,19 +254,7 @@ export function ResultsTable<Q extends QuestionType>({
     }, [selectedQuestionNumber]);
 
     return <div className="assignment-progress-progress">
-        {/* {header} */}
         {progress && progress.length > 0 && <>
-            {/* <div className="progress-questions">
-                <button color="tertiary" disabled={selectedQuestionNumber == 0}
-                    // on OSX chrome, the left- and right- pointing triangles are different, so construct these by flipping the same one
-                    className="flip-x"
-                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber - 1)}>►</button>
-                <div>
-                    {getQuestionTitle(selectedQuestion)}
-                </div>
-                <button color="tertiary" disabled={selectedQuestionNumber === questions.length - 1}
-                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber + 1)}>►</nutton>
-            </div> */}
             <div className="assignment-progress-table-wrapper">
                 <table ref={tableRef} className="progress-table w-100 border">
                     <thead>
@@ -309,12 +316,7 @@ export function ResultsTable<Q extends QuestionType>({
                                                 //     questions[index].questionPartsTotal as number, 
                                                 //     !!pageSettings?.formatAsPercentage
                                                 // ) 
-                                                ? generateCorrectnessIcon(
-                                                    (studentProgress.correctPartResults || [])[index],
-                                                    (studentProgress.incorrectPartResults || [])[index],
-                                                    (studentProgress.notAttemptedPartResults || [])[index],
-                                                    questions[index].questionPartsTotal as number
-                                                )
+                                                ? getQuizQuestionCorrectnessIcon((studentProgress.questionResults || [])[index])
                                                 : ""
                                             )
                                             : (studentProgress.correctPartResults || [])[index] === 1 ? ICON.correct :
@@ -323,20 +325,6 @@ export function ResultsTable<Q extends QuestionType>({
                                         }
                                     </td> 
                                 )}
-                                {/* {isAssignment ? <>
-                                    <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
-                                            assignmentTotalQuestionParts,
-                                            !!pageSettings?.formatAsPercentage) : ""}
-                                    </th>
-                                    
-                                </> : 
-                                    <th className="total-column" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
-                                            assignmentTotalQuestionParts,
-                                            !!pageSettings?.formatAsPercentage) : ""}
-                                    </th>
-                                } */}
                             </tr>;
                         })}
                     </tbody>
@@ -344,4 +332,71 @@ export function ResultsTable<Q extends QuestionType>({
             </div>
         </>}
     </div>;
+}
+
+interface ResultsTablePartBreakdownProps extends React.HTMLAttributes<HTMLTableElement> {
+    progress?: AssignmentProgressDTO[];
+    questionIndex: number;
+}
+
+export function ResultsTablePartBreakdown({
+    progress,
+    questionIndex,
+    ...rest
+}: ResultsTablePartBreakdownProps) {
+
+    // TODO: the sorting is somewhat duplicated from above, could be slightly refactored
+    const [sortOrder, setSortOrder] = useState<ProgressSortOrder>("name");
+    const [reverseOrder, setReverseOrder] = useState(false);
+
+    function toggleSort(itemOrder: ProgressSortOrder) {
+        setSortOrder(itemOrder);
+        if (sortOrder === itemOrder) {
+            setReverseOrder(!reverseOrder);
+        } else {
+            setReverseOrder(false);
+        }
+    }
+
+    const sortedProgress = useMemo(() => orderBy((progress), (item) => {
+        if (!isAuthorisedFullAccess(item)) return -1;
+        return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
+    }), [progress]);
+
+    return !!sortedProgress?.length && <table {...rest} className={classNames("progress-table border assignment-progress-progress w-100", rest.className)}>
+        <thead>
+            <SortItemHeader<ProgressSortOrder> 
+                className="student-name ps-3 py-3" 
+                defaultOrder={"name"} 
+                reverseOrder={"name"} 
+                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+            >
+                Name
+            </SortItemHeader>
+            {sortedProgress[0].questionPartResults?.[questionIndex]?.map((_, i) => 
+                <th key={i} className="text-center">
+                    Part {i + 1}
+                </th>
+            )}
+        </thead>
+        <tbody>
+            {sortedProgress.map((studentProgress, studentIndex) => (
+                <tr key={studentIndex}>
+                    <th className="student-name py-3 fw-bold">
+                        <Link className="d-flex justify-content-center align-items-center gap-2" to={`/progress/${studentProgress.user?.id}`} target="_blank">
+                            <i className="icon icon-person icon-md" color="tertiary"/>
+                            <span className="pe-3">
+                                {studentProgress.user?.givenName}
+                                <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
+                            </span>
+                        </Link>
+                    </th>
+                    {studentProgress.questionPartResults && 
+                        studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
+                            <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>
+                        ))}
+                </tr>
+            ))}
+        </tbody>
+    </table>;
 }

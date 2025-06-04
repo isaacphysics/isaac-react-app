@@ -1,22 +1,23 @@
-import React, {useContext, useMemo} from "react";
+import React, {useContext, useMemo, useState} from "react";
 import { Link } from "react-router-dom";
-import { AssignmentProgressDTO, GameboardItemState, GameboardItem } from "../../../IsaacApiTypes";
+import { AssignmentProgressDTO, GameboardItem, CompletionState } from "../../../IsaacApiTypes";
 import { EnhancedAssignmentWithProgress, AssignmentProgressPageSettingsContext, AuthorisedAssignmentProgress } from "../../../IsaacAppTypes";
-import { isAuthorisedFullAccess, PATHS } from "../../services";
-import { ICON, passMark, ResultsTable } from "../elements/quiz/QuizProgressCommon";
-import { Card, CardBody } from "reactstrap";
+import { getThemeFromTags, isAuthorisedFullAccess, siteSpecific } from "../../services";
+import { ICON, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
+import { Badge, Card, CardBody } from "reactstrap";
 import { formatDate } from "../elements/DateString";
 import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 import { Spacer } from "../elements/Spacer";
 import { Tabs } from "../elements/Tabs";
+import classNames from "classnames";
+import { CollapsibleContainer } from "../elements/CollapsibleContainer";
 
 interface GroupAssignmentTabProps {
     assignment: EnhancedAssignmentWithProgress;
     progress: AssignmentProgressDTO[];
-    noStudentsAttemptedAll: number;
 }
 
-const GroupAssignmentTab = ({assignment, progress, noStudentsAttemptedAll}: GroupAssignmentTabProps) => {
+const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => {
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
     const questions = assignment.gameboard.contents;
 
@@ -33,26 +34,27 @@ const GroupAssignmentTab = ({assignment, progress, noStudentsAttemptedAll}: Grou
         } else {
             // for each column, calculate the percentage of students who got all parts of the question correct
             return questions?.reduce(([aAvg, aTQP], q, i) => {
-                const tickCount = progress.reduce((tc, p) => ((p.questionResults || [])[i] === "PERFECT") ? tc + 1 : tc, 0);
+                const tickCount = progress.reduce((tc, p) => ((p.questionResults || [])[i] === CompletionState.ALL_CORRECT) ? tc + 1 : tc, 0);
                 const tickPercent = Math.round(100 * (tickCount / progress.length));
                 return [[...aAvg, tickPercent], aTQP + (q.questionPartsTotal ?? 0)];
             }, [[] as number[], 0]) ?? [[], 0];
         }
     }, [questions, progress]);
 
-    function markClassesInternal(studentProgress: AssignmentProgressDTO, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
+    function markClassesInternal(studentProgress: AssignmentProgressDTO, status: CompletionState | null, correctParts: number, incorrectParts: number, totalParts: number) {
+        // todo: need a different marking system for when showing grade by % attempted
         if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
-        } else if (correctParts === totalParts) {
+        } else if (status === CompletionState.ALL_CORRECT || correctParts === totalParts) {
             return "completed";
-        } else if (status === "PASSED" || (correctParts / totalParts) >= passMark) {
-            return "passed";
-        } else if (status === "FAILED" || (incorrectParts / totalParts) > (1 - passMark)) {
-            return "failed";
-        } else if (correctParts > 0 || incorrectParts > 0) {
-            return "in-progress";
-        } else {
+        } else if (status === CompletionState.NOT_ATTEMPTED || correctParts + incorrectParts === 0) {
             return "not-attempted";
+        } else if ((correctParts / totalParts) >= passMark) {
+            return "passed";
+        } else if ((incorrectParts / totalParts) > (1 - passMark)) {
+            return "failed";
+        } else {
+            return "in-progress";
         }
     }
 
@@ -83,12 +85,6 @@ const GroupAssignmentTab = ({assignment, progress, noStudentsAttemptedAll}: Grou
 
         return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }
-
-    const tableHeader = <div className="progress-header">
-        <strong>{noStudentsAttemptedAll}</strong> of <strong>{progress.length}</strong>
-        {` students attempted all questions in `}
-        <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link>.
-    </div>;
 
     const getQuestionTitle = (question: GameboardItem) => {
         return <Link to={`/questions/${question.id}?board=${assignment.gameboardId}`}>
@@ -123,7 +119,7 @@ const GroupAssignmentTab = ({assignment, progress, noStudentsAttemptedAll}: Grou
                 </div>
             </div>
 
-            <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} header={tableHeader} getQuestionTitle={getQuestionTitle}
+            <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} getQuestionTitle={getQuestionTitle}
                 assignmentAverages={assignmentAverages} assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
                 isAssignment={true}
             />
@@ -131,44 +127,92 @@ const GroupAssignmentTab = ({assignment, progress, noStudentsAttemptedAll}: Grou
     </Card>;
 };
 
+interface QuestionDetailCardProps extends React.HTMLAttributes<HTMLDivElement> {
+    progress: AssignmentProgressDTO[];
+    questions: GameboardItem[];
+    questionIndex: number;
+}
+
+const QuestionDetailCard = ({progress, questions, questionIndex, ...rest}: QuestionDetailCardProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const difficultParts = useMemo(() => {
+        const totalIncorrectByPart = progress.map(p => p.questionPartResults?.[questionIndex].map(state => state === "INCORRECT" ? 1 : 0) || []).reduce((acc, curr) => {
+            curr.forEach((val, i) => {
+                acc[i] = (acc[i] || 0) + val;
+            });
+            return acc;
+        }, [] as number[]);
+
+        return progress.reduce((acc, p, index) => {
+            const incorrect = totalIncorrectByPart[index] || 0;
+            const total = progress.length;
+            if (total >= 2 && incorrect / total >= 0.5) {
+                return [...acc, index];
+            }
+            return acc;
+        }, [] as number[]);
+    }, [progress, questionIndex]);
+
+    const numAttemptedThisQuestion = useMemo(() => {
+        return progress.filter(p => isQuestionFullyAttempted(p.questionResults?.[questionIndex])).length;
+    }, [progress, questionIndex]);
+
+    return <div {...rest} className={classNames("assignment-progress-card w-100 my-2", {"open": isOpen}, rest.className)}>
+        <button onClick={() => setIsOpen(o => !o)} className="w-100 p-3 d-flex align-items-center text-start bg-transparent">
+            <div className="d-flex flex-column">
+                <h5 className="m-0">{questionIndex + 1}. {questions[questionIndex].title}</h5>
+                {difficultParts.length > 0 && <span className="mt-2 small">
+                    More than <strong>50%</strong> of the group answered incorrectly on parts <strong>{difficultParts.slice(0, 3).map(i => i + 1).join(", ")}{difficultParts.length > 3 ? ", ... " : ""}</strong>.
+                </span>}
+            </div>
+            <Spacer/>
+            <Badge className="d-flex align-items-center me-2 text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
+                {`${numAttemptedThisQuestion} of ${progress.length} attempted`}
+            </Badge>
+            <img className={classNames("icon-dropdown-180", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"/>
+        </button>
+        <CollapsibleContainer expanded={isOpen}>
+            <div className="overflow-auto px-2 pb-2">
+                <ResultsTablePartBreakdown
+                    progress={progress}
+                    questionIndex={questionIndex}
+                />
+            </div>
+        </CollapsibleContainer>
+    </div>;
+};
+
 interface QuestionDetailsTabProps {
     assignment: EnhancedAssignmentWithProgress;
     progress: AssignmentProgressDTO[];
-    noStudentsAttemptedAllPartsByQuestion: number[]
 }
 
-const QuestionDetailsTab = ({assignment, progress, noStudentsAttemptedAllPartsByQuestion}: QuestionDetailsTabProps) => {
+const QuestionDetailsTab = ({assignment, progress}: QuestionDetailsTabProps) => {
     const questions = assignment.gameboard.contents;
 
     return <Card>
         <CardBody>
             <h3>Performance on questions</h3>
             <span>See the questions your students answered and which parts they struggled with.</span>
-            <br />
-            {/*  Todo: Temporary, to demo question part results*/}
+
             {questions.map((_, questionIndex) => (
-                <>
-                    <h5>{questionIndex + 1}. {questions[questionIndex].title}</h5>
-                    <div>{noStudentsAttemptedAllPartsByQuestion[questionIndex]} of {progress.length} attempted</div>
-                    <table key={questionIndex}>
-                        <tbody>
-                            {progress.map((studentProgress, studentIndex) => (
-                                <tr key={studentIndex}>
-                                    <th>{studentProgress.user?.givenName}</th>
-                                    {studentProgress.questionPartResults && 
-                                        studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
-                                            <td key={questionPartIndex}>{questionPartResult}</td>
-                                        ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </>
+                <QuestionDetailCard 
+                    key={questionIndex}
+                    progress={progress}
+                    questions={questions}
+                    questionIndex={questionIndex}
+                    data-bs-theme={getThemeFromTags(questions[questionIndex].tags)}
+                />
             ))}
 
         </CardBody>
     </Card>;
 };
+
+function isQuestionFullyAttempted (state?: CompletionState) {
+    return !!state && [CompletionState.ALL_CORRECT, CompletionState.ALL_ATTEMPTED, CompletionState.ALL_INCORRECT].includes(state);
+}
 
 export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgress }) => {
 
@@ -203,8 +247,9 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
     }), [assignment.gameboard.contents, assignment.progress, questions.length]);
 
     const progress = progressData.map(pd => pd[0]);
-    const noStudentsAttemptedAll = progress.reduce((sa, p) => sa + (isAuthorisedFullAccess(p) && p.notAttemptedPartResults.every(v => v === 0) ? 1 : 0), 0);
-    const noStudentsAttemptedAllPartsByQuestion = questions.map((_, qi) => progress.map(p => p.questionResults && p.questionResults[qi]).filter(v => v != 'NOT_ATTEMPTED').length);
+
+    const numStudentsAttemptedAll = progress.filter(p => p.questionResults?.every(isQuestionFullyAttempted)).length;
+    const numStudentsCompletedAll = progress.filter(p => p.questionResults?.every(r => r === CompletionState.ALL_CORRECT)).length;
 
     return <>
         {/* group overview */}
@@ -216,11 +261,11 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className="icon icon-group icon-md me-2" color="secondary"/>
-                    {noStudentsAttemptedAll} of {progress.length} attempted all questions
+                    {numStudentsAttemptedAll} of {progress.length} attempted all questions
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className="icon icon-task-complete icon-md me-2" color="secondary"/>
-                    {progress.filter(p => p.questionResults?.every(r => r === "PERFECT")).length} of {progress.length} got full marks
+                    {numStudentsCompletedAll} of {progress.length} got full marks
                 </div>
             </CardBody>
         </Card>
@@ -230,12 +275,10 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
                 "Group overview": <GroupAssignmentTab
                     assignment={assignment}
                     progress={progress}
-                    noStudentsAttemptedAll={noStudentsAttemptedAll}
                 />,
                 "Question details": <QuestionDetailsTab
                     assignment={assignment}
                     progress={progress}
-                    noStudentsAttemptedAllPartsByQuestion={noStudentsAttemptedAllPartsByQuestion}
                 />
             }}
         </Tabs>

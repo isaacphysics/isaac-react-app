@@ -38,7 +38,6 @@ polygon.fill-secondary {
   align-self: center;
   right: 5px;
   @extend .icon-dropdown-180;
-  transition: transform 0.15s ease-in-out;
   opacity: 0.3;
 }
 
@@ -52,11 +51,17 @@ polygon.fill-secondary {
   &.active {
     @include icon-dropdown(180deg);
   }
+  @include not-reduced-motion {
+    transition: transform 0.15s ease-in-out;
+  }
 }
 
 .icon-dropdown-90 {
   &.active {
     @include icon-dropdown(90deg);
+  }
+  @include not-reduced-motion {
+    transition: transform 0.15s ease-in-out;
   }
 }
 

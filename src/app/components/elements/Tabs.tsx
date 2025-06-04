@@ -1,5 +1,5 @@
 import React, {ReactNode, useEffect, useRef, useState} from "react";
-import {Button, ButtonGroup, Card, Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
+import {Button, ButtonGroup, Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {isAda, isDefined, siteSpecific} from "../../services";
 import classNames from "classnames";
@@ -144,7 +144,7 @@ export const Tabs = (props: TabsProps) => {
                     ? <ButtonNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</ButtonNavbar>
                     : style === "dropdowns" 
                         ? <DropdownNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</DropdownNavbar>
-                        : <CardsNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</CardsNavbar>;
+                        : <CardsNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</CardsNavbar>
             }
             <ExpandableParentContext.Provider value={true}>
                 <TabContent activeTab={activeTab} className={tabContentClass}>

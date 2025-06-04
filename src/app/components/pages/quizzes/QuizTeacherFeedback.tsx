@@ -253,23 +253,23 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         };
     });
 
-    const header = <div className="progress-header">
-        {assignment.userFeedback
-            ? <>
-                <strong>{assignment.userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{assignment.userFeedback.length}</strong>
-                {` students have completed the test `}
-            </>
-            : 'Preview '
-        }
-        <Link to={`${PATHS.PREVIEW_TEST}/${assignment.quizId}/page/1`}>{assignment.quiz?.title}</Link>.
-    </div>;
+    // const header = <div className="progress-header">
+    //     {assignment.userFeedback
+    //         ? <>
+    //             <strong>{assignment.userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{assignment.userFeedback.length}</strong>
+    //             {` students have completed the test `}
+    //         </>
+    //         : 'Preview '
+    //     }
+    //     <Link to={`${PATHS.PREVIEW_TEST}/${assignment.quizId}/page/1`}>{assignment.quiz?.title}</Link>.
+    // </div>;
 
     const getQuestionTitle = (question: QuizQuestion) => <div key={question.id}>
         {`Question ${questions.indexOf(question) + 1}`}
     </div>;
 
     return <ResultsTable<QuizQuestion> assignmentId={assignment.id} duedate={assignment.dueDate} progress={progress}
-        questions={questions} header={header} getQuestionTitle={getQuestionTitle} assignmentAverages={quizAverages}
+        questions={questions} getQuestionTitle={getQuestionTitle} assignmentAverages={quizAverages}
         assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
         isAssignment={false}/>;
 };

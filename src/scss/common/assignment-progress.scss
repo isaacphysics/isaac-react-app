@@ -7,24 +7,38 @@
   }
 }
 
+.assignment-progress-card {
+  border: 1px solid $gray-118;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  background: white;
+  font-size: 1rem;
+  transition: transform 0.2s ease-out, border-color 0.2s ease-out;
+
+  &:hover, &.open {
+    border-color: $color-neutral-400;
+  }
+}
+
 a:has(> .assignment-progress-group) {
   text-decoration: none !important;
   color: inherit;
 }
 
+
 .assignment-progress-group {
-  border: 1px solid $gray-118;
-  border-radius: 0.5rem;
-  line-height: 2rem;
-  // user-select: none;
-  cursor: pointer;
-  background: white;
-  font-size: 1rem;
+  @extend .assignment-progress-card;
   
   a {
     font-size: inherit;
     width: max-content;
     align-content: center;
+  }
+
+  &:hover {
+    @include not-reduced-motion {
+        transform: scale(1.01);
+    }
   }
 }
 
@@ -492,7 +506,7 @@ $failed-bg-size: 25%;
   }
 
   .student-name {
-    min-width: 130px;
+    min-width: 195px;
 
     @include table-sticky;
     left: 0;
