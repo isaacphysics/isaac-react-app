@@ -313,23 +313,6 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         )}
                     />
                 </CheckboxWrapper>
-                <CheckboxWrapper active={searchStatuses.complete}>
-                    <StyledCheckbox
-                        color="primary"
-                        checked={searchStatuses.complete}
-                        onChange={() => setSearchStatuses(s => {return {...s, complete: !s.complete};})}
-                        label={siteSpecific(
-                            <div className="d-flex">
-                                Fully correct
-                                <img className="ps-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt="Fully correct"/> 
-                            </div>,
-                            <div>
-                                Completed
-                                <img className="ps-2 icon-status" src="/assets/common/icons/completed.svg" alt="Completed" />
-                            </div>
-                        )}
-                    />
-                </CheckboxWrapper>
                 <CheckboxWrapper active={searchStatuses.tryAgain}>
                     <StyledCheckbox
                         color="primary"
@@ -343,6 +326,49 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             <div>
                                 Try again
                                 <img className="ps-2 icon-status" src="/assets/common/icons/incorrect.svg" alt="Try again" />
+                            </div>
+                        )}
+                    />
+                </CheckboxWrapper>
+                {isAda && <CheckboxWrapper active={searchStatuses.allIncorrect}>
+                    <StyledCheckbox
+                        color="primary"
+                        checked={searchStatuses.allIncorrect}
+                        onChange={() => setSearchStatuses(s => {return {...s, allIncorrect: !s.allIncorrect};})}
+                        label={
+                            <div className="d-flex">
+                                All incorrect
+                                <img className="ps-2" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt="All incorrect"/> 
+                            </div>
+                        }
+                    />
+                </CheckboxWrapper>}
+                {isPhy && <CheckboxWrapper active={searchStatuses.allAttempted}>
+                    <StyledCheckbox
+                        color="primary"
+                        checked={searchStatuses.allAttempted}
+                        onChange={() => setSearchStatuses(s => {return {...s, allAttempted: !s.allAttempted};})}
+                        label={
+                            <div className="d-flex">
+                                All attempted
+                                <img className="ps-2" src={`/assets/phy/icons/redesign/status-attempted.svg`} alt="All attempted"/> 
+                            </div>
+                        }
+                    />
+                </CheckboxWrapper>}
+                <CheckboxWrapper active={searchStatuses.complete}>
+                    <StyledCheckbox
+                        color="primary"
+                        checked={searchStatuses.complete}
+                        onChange={() => setSearchStatuses(s => {return {...s, complete: !s.complete};})}
+                        label={siteSpecific(
+                            <div className="d-flex">
+                                All correct
+                                <img className="ps-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt="All correct"/> 
+                            </div>,
+                            <div>
+                                Completed
+                                <img className="ps-2 icon-status" src="/assets/common/icons/completed.svg" alt="Completed" />
                             </div>
                         )}
                     />
