@@ -1390,10 +1390,11 @@ interface GlossarySidebarProps extends ContentSidebarProps {
     setFilterStages: React.Dispatch<React.SetStateAction<Stage[] | undefined>>;
     subjects: Tag[];
     stages: Stage[];
+    setTermsLoaded: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 }
 
 export const GlossarySidebar = (props: GlossarySidebarProps) => {
-    const { searchText, setSearchText, filterSubjects, setFilterSubjects, filterStages, setFilterStages, subjects, stages, optionBar, ...rest } = props;
+    const { searchText, setSearchText, filterSubjects, setFilterSubjects, filterStages, setFilterStages, subjects, stages, optionBar, setTermsLoaded, ...rest } = props;
     
     const history = useHistory();
     const pageContext = useAppSelector(selectors.pageContext.context);
@@ -1407,6 +1408,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
     }, [filterSubjects]);
 
     function updateFilters<T>(value: T, filters: T[] | undefined, setFilters: React.Dispatch<React.SetStateAction<T[] | undefined>>) {
+        setTermsLoaded(undefined);
         if (filters && filters.includes(value)) {
             if (filters.length === 1) {
                 setFilters(undefined);
