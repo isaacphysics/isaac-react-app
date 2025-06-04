@@ -11,7 +11,7 @@ export const passwordStrengthText: {[score: number]: string} = {
 };
 
 const zxcvbnSrc = siteSpecific(
-    'https://cdn.isaacphysics.org',
+    'https://cdn.isaacscience.org',
     'https://cdn.adacomputerscience.org'
 ) + "/vendor/dropbox/zxcvbn-isaac.js";
 
@@ -44,7 +44,7 @@ function calculatePasswordStrength(password: string, additionalTerms?: string[])
         "Ada Computer", "Ada CS", "AdaCS", "ACS",
         "Ada Lovelace", "AdaLovelace", "Charles Babbage",  "CharlesBabbage", "Lovelace", "Babbage",
         "ComputerScience", "Computer Science", "Computer", "Science", "CompSci", "Computing",
-        "Isaac Science", "Isaac Physics", "Isaac Chemistry", "Isaac Maths", "Isaac Biology", 
+        "Isaac Science", "Isaac Physics", "Isaac Chemistry", "Isaac Maths", "Isaac Biology",
         "IsaacScience", "IsaacPhysics", "IsaacChemistry", "IsaacMaths", "IsaacBiology",
         "Science", "Physics", "Chemistry", "Maths", "Biology", "Phy", "Phys", "Math", "Mathematics", "Physical",
         "isaacscience.org", "isaacphysics.org", "isaacchemistry.org", "isaacmaths.org", "isaacbiology.org",
