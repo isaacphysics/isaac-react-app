@@ -34,6 +34,12 @@ const StatusDisplay = (props: StatusDisplayProps) => {
                 <i className="icon icon-raw icon-correct" />
                 {showText && "Correct"}
             </span>;
+        case CompletionState.ALL_INCORRECT:
+        case CompletionState.ALL_ATTEMPTED:
+            return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
+                <i className="icon icon-raw icon-attempted" />
+                {showText && "Attempted"}
+            </span>;
         case CompletionState.NOT_ATTEMPTED:
             return;
     }

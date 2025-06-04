@@ -31,8 +31,8 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     AssignmentProgressDTO,
+    CompletionState,
     GameboardItem,
-    GameboardItemState,
     QuizAssignmentDTO,
     RegisteredUserDTO
 } from "../../../IsaacApiTypes";
@@ -121,26 +121,27 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         } else {
             // for each column, calculate the percentage of students who got all parts of the question correct
             return questions?.reduce(([aAvg, aTQP], q, i) => {
-                const tickCount = progress.reduce((tc, p) => ((p.results || [])[i] === "PERFECT") ? tc + 1 : tc, 0);
+                const tickCount = progress.reduce((tc, p) => ((p.results || [])[i] === CompletionState.ALL_CORRECT) ? tc + 1 : tc, 0);
                 const tickPercent = Math.round(100 * (tickCount / progress.length));
                 return [[...aAvg, tickPercent], aTQP + (q.questionPartsTotal ?? 0)];
             }, [[] as number[], 0]) ?? [[], 0];
         }
     }, [questions, progress]);
 
-    function markClassesInternal(studentProgress: AssignmentProgressDTO, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
+    function markClassesInternal(studentProgress: AssignmentProgressDTO, status: CompletionState | null, correctParts: number, incorrectParts: number, totalParts: number) {
+        // todo: need a different marking system for when showing grade by % attempted
         if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
-        } else if (correctParts === totalParts) {
+        } else if (status === CompletionState.ALL_CORRECT || correctParts === totalParts) {
             return "completed";
-        } else if (status === "PASSED" || (correctParts / totalParts) >= passMark) {
-            return "passed";
-        } else if (status === "FAILED" || (incorrectParts / totalParts) > (1 - passMark)) {
-            return "failed";
-        } else if (correctParts > 0 || incorrectParts > 0) {
-            return "in-progress";
-        } else {
+        } else if (status === CompletionState.NOT_ATTEMPTED || correctParts + incorrectParts === 0) {
             return "not-attempted";
+        } else if ((correctParts / totalParts) >= passMark) {
+            return "passed";
+        } else if ((incorrectParts / totalParts) > (1 - passMark)) {
+            return "failed";
+        } else {
+            return "in-progress";
         }
     }
 
