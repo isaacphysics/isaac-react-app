@@ -20,9 +20,9 @@ jobs:
           fetch-depth: 0
       - name: Cypress run
         strategy:
-          fail-fast: false
           matrix:
             site: ["ada", "phy"]
+            fail-fast: false
         uses: cypress-io/github-action@v6
         with:
           component: true
