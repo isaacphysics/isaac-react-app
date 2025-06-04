@@ -52,6 +52,7 @@ import {
     isDefined,
     isDobOldEnoughForSite,
     isFirstLoginInPersistence,
+    isPhy,
     isStaff,
     isTeacherOrAbove,
     siteSpecific,
@@ -74,6 +75,7 @@ import {ExigentAlert} from "../elements/ExigentAlert";
 import {MainContent, MyAccountSidebar, SidebarLayout} from '../elements/layout/SidebarLayout';
 import { Loading } from '../handlers/IsaacSpinner';
 import UserMFA from '../elements/panels/UserMFA';
+import classNames from 'classnames';
 
 // TODO: work out which of these `any`s can be specified
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -329,82 +331,101 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                 <SidebarLayout>
                     <MyAccountSidebar editingOtherUser={editingOtherUser} activeTab={activeTab} setActiveTab={setActiveTab}/>
                     <MainContent className="w-lg-50">
-                        <Form id="my-account" name="my-account" onSubmit={updateAccount}>
-                            {error?.type == "generalError" &&
-                                    <ExigentAlert color="warning">
-                                        <p className="alert-heading fw-bold">Unable to update your account</p>
-                                        <p>{error.generalError}</p>
-                                    </ExigentAlert>
-                            }
+                        <div className={classNames({"card": isAda})}>
+                            {isAda && <Nav tabs className="my-4 flex-wrap mx-4" data-testid="account-nav">
+                                {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title, titleShort}) =>
+                                    <NavItem key={tab} className={classnames({active: activeTab === tab})}>
+                                        <NavLink
+                                            className="px-2" tabIndex={0}
+                                            onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
+                                        >
+                                            {titleShort ? <>
+                                                <span className="d-none d-lg-block">{title}</span>
+                                                <span className="d-block d-lg-none">{titleShort}</span>
+                                            </> : title}
+                                        </NavLink>
+                                    </NavItem>
+                                )}
+                            </Nav>}
+                            <Form id="my-account" name="my-account" onSubmit={updateAccount}>
+                                {error?.type == "generalError" &&
+                                        <ExigentAlert color="warning">
+                                            <p className="alert-heading fw-bold">Unable to update your account</p>
+                                            <p>{error.generalError}</p>
+                                        </ExigentAlert>
+                                }
+                                <TabContent activeTab={activeTab}>
+                                    <TabPane tabId={ACCOUNT_TAB.account}>
+                                        <UserProfile
+                                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                                            userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                                            booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
+                                            displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
+                                            submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                                            userAuthSettings={userAuthSettings}
+                                        />
+                                    </TabPane>
+                                    {isAda && <TabPane tabId={ACCOUNT_TAB.customise}>
+                                        <UserContent
+                                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                                            userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                                            programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
+                                            booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
+                                            displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
+                                            submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                                            userAuthSettings={userAuthSettings}
+                                        />
+                                    </TabPane>}
+                                    <TabPane tabId={ACCOUNT_TAB.passwordreset}>
+                                        <UserPassword
+                                            currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
+                                            myUser={userToUpdate} setMyUser={setUserToUpdate}
+                                            setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
+                                            newPassword={newPassword} setNewPassword={setNewPassword} editingOtherUser={editingOtherUser}
+                                            isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
+                                        />
+                                    </TabPane>                   
+                                    {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
+                                        <UserEmailPreferencesPanel
+                                            emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
+                                            submissionAttempted={attemptedAccountUpdate}
+                                        />
+                                    </TabPane>}
+                                    {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
+                                        <UserBetaFeatures
+                                            displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
+                                            consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
+                                        />
+                                    </TabPane>}
+                                </TabContent>
+                            </Form>
+                            {/* Tabs containing forms (which cannot be nested inside another form) */}
                             <TabContent activeTab={activeTab}>
-                                <TabPane tabId={ACCOUNT_TAB.account}>
-                                    <UserProfile
-                                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                        userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
-                                        booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
-                                        displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
-                                        submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
-                                        userAuthSettings={userAuthSettings}
-                                    />
-                                </TabPane>
-                                {isAda && <TabPane tabId={ACCOUNT_TAB.customise}>
-                                    <UserContent
-                                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                        userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
-                                        programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
-                                        booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
-                                        displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
-                                        submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
-                                        userAuthSettings={userAuthSettings}
-                                    />
+                                {isStaff(userToUpdate) && !editingOtherUser && <TabPane tabId={ACCOUNT_TAB.passwordreset}>
+                                    <Suspense fallback={<Loading/>}>
+                                        <UserMFA
+                                            userAuthSettings={userAuthSettings}
+                                            userToUpdate={userToUpdate}
+                                            editingOtherUser={editingOtherUser}
+                                        />
+                                    </Suspense>
                                 </TabPane>}
-                                <TabPane tabId={ACCOUNT_TAB.passwordreset}>
-                                    <UserPassword
-                                        currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
-                                        myUser={userToUpdate} setMyUser={setUserToUpdate}
-                                        setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
-                                        newPassword={newPassword} setNewPassword={setNewPassword} editingOtherUser={editingOtherUser}
-                                        isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
+                                <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+                                    <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
+                                        userToEdit={userToEdit}
                                     />
-                                </TabPane>                   
-                                {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
-                                    <UserEmailPreferencesPanel
-                                        emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
-                                        submissionAttempted={attemptedAccountUpdate}
-                                    />
-                                </TabPane>}
-                                {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
-                                    <UserBetaFeatures
-                                        displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
-                                        consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
-                                    />
-                                </TabPane>}
+                                </TabPane> 
                             </TabContent>
-                        </Form>
-                        {/* Tabs containing forms (which cannot be nested inside another form) */}
-                        <TabContent activeTab={activeTab}>
-                            {isStaff(userToUpdate) && !editingOtherUser && <TabPane tabId={ACCOUNT_TAB.passwordreset}>
-                                <Suspense fallback={<Loading/>}>
-                                    <UserMFA
-                                        userAuthSettings={userAuthSettings}
-                                        userToUpdate={userToUpdate}
-                                        editingOtherUser={editingOtherUser}
+                            <div className={classNames({"py-4 card-footer": isAda})}>
+                                {isPhy && <div className="section-divider-bold"/>}
+                                <Col size={12} md={{size: 6, offset: 3}}>
+                                    <Input
+                                        form="my-account" type="submit" value="Save" className="btn btn-solid border-100 w-100"
+                                        disabled={!accountInfoChanged}
                                     />
-                                </Suspense>
-                            </TabPane>}
-                            <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
-                                <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
-                                    userToEdit={userToEdit}
-                                />
-                            </TabPane> 
-                        </TabContent>
-                        <div className="section-divider-bold"/>
-                        <Col size={12} md={{size: 6, offset: 3}}>
-                            <Input
-                                form="my-account" type="submit" value="Save" className="btn btn-primary w-100"
-                                disabled={!accountInfoChanged}
-                            />
-                        </Col>
+                                </Col>
+                            </div>
+                        </div>
                     </MainContent>
                 </SidebarLayout>
             }

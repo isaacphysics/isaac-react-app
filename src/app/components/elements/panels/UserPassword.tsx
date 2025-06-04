@@ -154,7 +154,7 @@ export const UserPassword = (
                         </Row>
                         <Row className="pb-4">
                             <Col className="text-center">
-                                <Button className="btn-secondary" onClick={resetPasswordIfValidEmail}>
+                                <Button className="btn-keyline" onClick={resetPasswordIfValidEmail}>
                                 Click here to add a password
                                 </Button>
                             </Col>
