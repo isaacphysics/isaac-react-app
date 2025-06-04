@@ -1,34 +1,30 @@
 import React, {useCallback, useMemo} from "react";
-import {getRTKQueryErrorMessage, useGetQuizPreviewQuery} from "../../../state";
+import {useGetQuizPreviewQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {getThemeFromTags, isDefined, tags, useQuizQuestions, useQuizSections} from "../../../services";
-import {
-    myQuizzesCrumbs,
-    QuizAttemptComponent,
-    QuizAttemptProps,
-    QuizPagination
-} from "../../elements/quiz/QuizAttemptComponent";
+import {myQuizzesCrumbs, QuizContentsComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizContentsComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
-import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {Alert, Button, Container} from "reactstrap";
+import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
-import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
-import {SerializedError} from "@reduxjs/toolkit";
+import {buildErrorComponent} from "../../elements/quiz/buildErrorComponent";
+import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
 
 const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
-    <div className="d-flex border-top pt-2 my-2 align-items-center">
+    <QuizSidebarLayout>
         {isDefined(page)
             ? <QuizPagination {...rest} page={page} pageLink={pageLink} finalLabel="Back to Contents" />
             : <>
                 <Spacer/>
-                <Button color="secondary" tag={Link} replace to={pageLink(1)}>{"View questions"}</Button>
+                <Button color="secondary" tag={Link} to={pageLink(1)}>{"View questions"}</Button>
             </>}
-    </div>;
+    </QuizSidebarLayout>;
 
 const pageHelp = <span>
     Preview the questions on this test.
 </span>;
+
+const Error = buildErrorComponent("Test Preview", "Error loading test preview", myQuizzesCrumbs);
 
 export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
 
@@ -56,17 +52,9 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user};
 
-    const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
-        <TitleAndBreadcrumb currentPageTitle="Test Preview" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "hex", icon: "icon-error"}}/>
-        <Alert color="danger">
-            <h4 className="alert-heading">Error loading test preview</h4>
-            <p>{getRTKQueryErrorMessage(error).message}</p>
-        </Alert>
-    </>;
-
-    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`} data-bs-theme={getThemeFromTags(quiz?.tags)}>
-        <ShowLoadingQuery query={quizPreviewQuery} ifError={buildErrorComponent}>
-            <QuizAttemptComponent preview {...subProps} />
+    return <Container data-testId="quiz-preview" className="mb-5" data-bs-theme={getThemeFromTags(quiz?.tags)}>
+        <ShowLoadingQuery query={quizPreviewQuery} ifError={Error}>
+            <QuizContentsComponent preview {...subProps} />
             <QuizFooter {...subProps} />
         </ShowLoadingQuery>
     </Container>;

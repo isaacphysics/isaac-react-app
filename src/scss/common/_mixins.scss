@@ -231,6 +231,8 @@ $viewport-sizes: (
   background-color: $color;
   width: $width;
   height: $height;
+  min-width: $width;
+  min-height: $height;
   @if $mask-size != none {
     mask-size: $mask-size;
   }

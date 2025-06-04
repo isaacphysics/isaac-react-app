@@ -15,7 +15,7 @@
 }
 
 .list-view-card-container {
-  border-radius: 10px; 
+  border-radius: 10px;
   border: 1px solid $gray-107;
   background: white;
 
@@ -57,9 +57,17 @@
 }
 
 .list-group-links {
-  .question-link-title {
+  .link-title {
     color: var(--subject-color-900);
+  }
+
+  .question-link-title {
     font-family: $secondary-font-medium;
+    margin-top: -5px;
+  }
+
+  li.list-group-item.correct {
+    background-color: $color-misc-correct;
   }
 }
 
@@ -79,14 +87,21 @@
   @include pill-tag($color-neutral-900, $color-neutral-100, $color-neutral-200);
   border-width: 2px;
 
+  &:focus-within {
+    @include focus-outline;
+  }
+
   .icon {
     background-color: var(--buttons-light-icon);
     margin-left: 0.25rem;
   }
 }
 
-.list-group-links li a.card-tag {
+.list-group-links li .card-tag {
   @include pill-tag($color-neutral-900, var(--subject-color-50), var(--subject-color-100));
+  width: auto;
+  white-space: normal;
+  text-align: center;
   font-family: $secondary-font;
   padding: 0.15rem 0.8rem;
   margin: 0.5rem 0.5rem 0 0;
@@ -95,4 +110,46 @@
 
 .list-results-container {
   background-color: $color-neutral-100;
+}
+
+.list-view-status-indicator {
+  position: absolute;
+  top: 2px;
+  right: 16px;
+  > i {
+    display: inline-block;
+  }
+}
+
+.list-group-links li.disabled {
+  .card-tag {
+    color: $color-neutral-500;
+    background-color: $color-neutral-50;
+    border-color: $color-neutral-100;
+    pointer-events: none;
+  }
+}
+
+.list-group-links li.coming-soon {
+  .card-tag {
+    color: var(--subject-color-500);
+    background-color: var(--subject-color-50);
+    border-color: var(--subject-color-100);
+    pointer-events: none;
+  }
+
+  .link-title {
+    display: flex;
+    align-items: center;
+    &::after {
+      @include pill-tag($color-neutral-white, var(--subject-color-500));
+      content: "Coming soon!";
+      margin-left: 0.5rem;
+    }
+  }
+
+  img {
+    // For items that use images rather than icons (e.g. subject logos), to remove the need to include a seperate greyscale image
+    filter: grayscale(100%);
+  }
 }

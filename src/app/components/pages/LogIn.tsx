@@ -218,7 +218,7 @@ export const LogIn = () => {
     }
 
     const metaDescription = siteSpecific(
-        "Log in to Isaac Physics to learn and track your progress.",
+        "Log in to Isaac to learn and track your progress.",
         "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.");
 
     return <Container id="login-page" className="my-4 mb-5">
@@ -265,15 +265,14 @@ export const LogIn = () => {
                                             <Button
                                                 id="log-in"
                                                 tag="input" value="Log in"
-                                                color={siteSpecific("solid", "secondary")}
+                                                color="solid"
                                                 type="submit" className="mb-2" block
                                                 onClick={attemptLogIn}
                                                 disabled={!!user?.requesting}
                                             />
                                         </Col>
                                         <Col sm={6}>
-                                            <Button id="sign-up" color="primary" className="mb-2" onClick={signUp}
-                                                outline block>
+                                            <Button id="sign-up" color="keyline" className="mb-2" onClick={signUp} block>
                                                 Sign up
                                             </Button>
                                         </Col>

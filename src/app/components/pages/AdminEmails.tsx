@@ -6,10 +6,9 @@ import {
     useSendAdminEmailWithIdsMutation
 } from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import classnames from "classnames";
 import debounce from 'lodash/debounce';
-import {isEventManager} from "../../services";
-import { Container, Card, CardTitle, CardBody, Label, Input, Row, Col } from 'reactstrap';
+import {isEventManager, siteSpecific} from "../../services";
+import { Container, Card, CardTitle, CardBody, Label, Input, Row, Col, Button } from 'reactstrap';
 
 interface AdminEmailsProps {
     location: {
@@ -96,12 +95,10 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                         </Input>
                     </Col>
                     <Col>
-                        <Input
-                            type="submit" value="Load template"
-                            className={"btn w-100 btn-secondary border-0 " + classnames({disabled: contentObjectID.length == 0})}
-                            disabled={contentObjectID.length == 0}
-                            onClick={() => getEmailTemplate(contentObjectID)}
-                        />
+                        <Button type="submit" color="secondary" disabled={contentObjectID.length == 0}
+                            onClick={() => getEmailTemplate(contentObjectID)} className={siteSpecific("w-100", "form-control border-0")}>
+                            Load template
+                        </Button>
                     </Col>
                 </Row>
             </CardBody>
@@ -149,17 +146,15 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                             {numberOfUsers >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
                                 <strong>Warning:</strong> There are currently <strong>{numberOfUsers}</strong> selected recipients.
                             </div>}
-                            <Input
-                                type="button" value="Send emails"
-                                className={"btn btn-xl btn-secondary border-0 " + classnames({disabled: !canSubmit})}
-                                disabled={!canSubmit}
+                            <Button type='button' color="secondary" disabled={!canSubmit} className={siteSpecific("btn-xl", "form-control border-0")}
                                 onClick={() => {
                                     if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${numberOfUsers} user${numberOfUsers > 1 ? "s" : ""}?`)) {
                                         setEmailSent(true);
                                         sendAdminEmailWithIds({contentId: contentObjectID, emailType, ids: csvIDs});
                                     }
-                                }}
-                            />
+                                }}>
+                                Send emails
+                            </Button>
                         </React.Fragment>
                         :
                         <React.Fragment>Request made, to send another refresh.</React.Fragment>

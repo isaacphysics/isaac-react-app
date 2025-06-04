@@ -47,6 +47,10 @@ declare global {
     namespace Cypress {
         interface Chainable {
             mountWithStoreAndRouter(component: ReactNode, routes: string[], mountOptions?: MountOptions): Chainable<Element>;
+
+            openSidebar(): Chainable<JQuery<HTMLElement>>;
+            closeSidebar(): Chainable<JQuery<HTMLElement>>;
+            getComponent(component: keyof typeof components): Chainable<JQuery<HTMLElement>>;
         }
     }
 }
@@ -76,3 +80,19 @@ if (Cypress.config('isInteractive')) {
         cy.log('Skipping snapshot 👀');
     });
 }
+
+Cypress.Commands.add('openSidebar', () => {
+    return cy.get('[data-testid="sidebar-toggle"]').click();
+});
+
+Cypress.Commands.add('closeSidebar', () => {
+    return cy.get('[data-testid="close-sidebar-button"]').click();
+});
+
+const components = {
+    "sidebar": () => cy.get('#content-sidebar-offcanvas'),
+};
+
+Cypress.Commands.add('getComponent', (component) => {
+    return components[component]() || null;
+});

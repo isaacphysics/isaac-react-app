@@ -75,9 +75,10 @@ import { MainContent, SetAssignmentsSidebar, SidebarLayout } from "../elements/l
 interface AssignGroupProps {
     groups: UserGroupDTO[];
     board: GameboardDTO | undefined;
+    closeModal: () => void;
 }
 
-const AssignGroup = ({groups, board}: AssignGroupProps) => {
+const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date | undefined>(UTC_MIDNIGHT_IN_SIX_DAYS);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
@@ -94,6 +95,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
                 setDueDate(UTC_MIDNIGHT_IN_SIX_DAYS);
                 setScheduledStartDate(undefined);
                 setAssignmentNotes('');
+                closeModal();
             }
         });
     }
@@ -147,7 +149,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
         </Label>}
         <Button
             className="mt-2 mb-2"
-            block color={siteSpecific("secondary", "primary")}
+            block color={siteSpecific("keyline", "solid")}
             onClick={assign}
             role={"button"}
             disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !dueDate || dueDateInvalid || startDateInvalid}
@@ -183,7 +185,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
     const description = "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. " +
         "Assignments are due by the end of the day indicated.";
 
-    return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle}>
+    return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle} data-bs-theme="neutral">
         <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break d-flex justify-content-between"} close={
             <button className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy})} onClick={toggle}>
                 Close
@@ -194,10 +196,10 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
         <ModalBody>
             <p className="px-1">{description}</p>
             <hr className="text-center" />
-            <AssignGroup {...props} />
+            <AssignGroup closeModal={toggle} {...props} />
             <hr className="text-center" />
             <div className="py-2 border-bottom" data-testid="currently-assigned-to">
-                <Label>{siteSpecific("Board", "Quiz")} currently assigned to:</Label>
+                <Label>{siteSpecific("Question deck", "Quiz")} currently assigned to:</Label>
                 {startedAssignees.length > 0
                     ? <Container className="mb-4">{startedAssignees.map(assignee =>
                         <div data-testid={"current-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
@@ -208,7 +210,10 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                     : <p>No groups.</p>}
             </div>
             <div className="py-2">
-                <Label>Pending {siteSpecific("assignments", "quiz assignments")}: <span className="icon-help mx-1" id={`pending-assignments-help-${board?.id}`}/></Label>
+                <Label className={siteSpecific("d-flex align-items-center", "")}>
+                    Pending {siteSpecific("assignments", "quiz assignments")}:
+                    <i className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help mx-1")} id={`pending-assignments-help-${board?.id}`}/>
+                </Label>
                 <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
                     These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the morning of the scheduled date, students
                     will be able to see the {siteSpecific("assignment", "quiz")}, and will receive a notification email.
@@ -267,8 +272,10 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
             Board name
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
-            Stages and Difficulties
-            <span id="difficulties-help" className="icon-help mx-1"></span>
+            <div className="d-flex align-items-center">
+                Stages and Difficulties
+                <i id="difficulties-help" className="icon icon-info layered icon-color-grey ms-2"/>
+            </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
@@ -378,7 +385,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </Col>
             <Col xs={{size: 12, order: 3}} md={{size: 4, offset: 1, order: 1}} lg={{size: 4, offset: 3}} xl={{size: 4, offset: 3}}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter {siteSpecific("boards", "quizzes")} by name</span><Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} />
+                    <span className={"text-nowrap"}>Filter {siteSpecific("question decks", "quizzes")} by name</span><Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} />
                 </Label>
             </Col>
             <Col xs={6} md={{size: 3, order: 2}} lg={2} xl={2}>
@@ -525,8 +532,8 @@ export const SetAssignments = () => {
             assignees={(isDefined(modalBoard) && isDefined(modalBoard?.id) && groupsByGameboard[modalBoard.id]) || []}
         />
 
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_set_assignments"/>
-        <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
+            modalId="help_modal_set_assignments" className={siteSpecific("mb-4", "")} />
         <SidebarLayout>
             <SetAssignmentsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
@@ -537,7 +544,8 @@ export const SetAssignments = () => {
                 boardCreator={boardCreator} setBoardCreator={setBoardCreator}
                 sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
             />
-            <MainContent>            
+            <MainContent>
+                <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />          
                 {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
                 {groups && groups.length === 0 && <Alert color="warning">
                     You have not created any groups to assign work to.
@@ -548,7 +556,7 @@ export const SetAssignments = () => {
                         You have no {siteSpecific("question decks", "quizzes")} to assign
                         {siteSpecific(
                             "; use one of the options above to find one.",
-                            <><br /><Button className={"mt-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="secondary">
+                            <><br /><Button className={"mt-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="solid">
                                 Create a quiz
                             </Button></>
                         )}

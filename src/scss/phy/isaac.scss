@@ -156,6 +156,7 @@ $color-misc-orange-dark: #bd5a00;
 $color-misc-orange-light: #fea102;
 $color-misc-red: #b40c0c;
 $color-misc-pale-yellow: #f9fdd5;
+$color-misc-correct: #ecf7e9;
 
 $isaac-color-palettes: (
   // brand is excluded as there are no pages with the "brand" colour scheme;
@@ -234,18 +235,6 @@ $typography-font-weights-text-light: 300;
 $typography-font-weights-text-regular: 400;
 $typography-font-weights-text-semibold: 600;
 
-/* spacing */
-$spacing-container-margins: (
-    // the spacing on either side of the container
-    xs: 24px,
-    sm: 30px,
-    md: 30px,
-    lg: 44px,
-    xl: 85px,
-    xxl: 110px
-
-);
-
 // ISAAC
 // Node module imports
 @import "~bootstrap/scss/functions";
@@ -308,9 +297,11 @@ $theme-colour-overrides: (
     chemistry: $color-chemistry-500,
     biology: $color-biology-500,
     neutral: $color-neutral-500,
-
+    
     neutral-light: $color-neutral-100,
+    correct: $color-misc-correct,
 
+    // these are intended for "action states", e.g. event status, not question feedback
     success: #208838,
     in-progress: #fe8e15,
     failed: #dc3545,
@@ -373,7 +364,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "breadcrumbs";
 @import "../common/media";
 @import "../common/cookies";
-@import "../common/tabs";
+@import "tabs";
 @import "../common/cards";
 @import "../common/graph-sketcher-modal";
 @import "../common/carousel";

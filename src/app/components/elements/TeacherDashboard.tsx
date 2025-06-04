@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState } from 'react';
 import { selectors, useAppSelector } from '../../state';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { BookInfo, extractTeacherName, ISAAC_BOOKS, isDefined, isTutor, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
+import { BookInfo, extractTeacherName, ISAAC_BOOKS, isOverdue, isTutor, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
 import { AssignmentDTO, QuizAssignmentDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
 import StyledToggle from './inputs/StyledToggle';
 import { AssignmentCard, StudentDashboard } from './StudentDashboard';
@@ -11,6 +11,7 @@ import { Spacer } from './Spacer';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 import { useStatefulElementRef } from './markup/portals/utils';
 import { ScrollShadows } from './ScrollShadows';
+import { ShowLoading } from '../handlers/ShowLoading';
 
 interface GroupsPanelProps {
     groups: AppGroup[] | undefined;
@@ -23,7 +24,7 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
         <h4>Manage group progress</h4>
         {sortedGroups.length ?
             <>
-                <div className="overflow-hidden">
+                <div>
                     {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress#${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
                 </div>
                 <Spacer/>
@@ -44,15 +45,11 @@ interface AssignmentsPanelProps {
 
 const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProps) => {
     const user = useAppSelector(selectors.user.orNull);
-
-    if (!isDefined(assignments) || !isDefined(quizzes)) {
-        return <div className="dashboard-panel"/>;
-    }
     
-    const upcomingAssignments = assignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
+    const upcomingAssignments = assignments?.filter(a => !isOverdue(a)); // Filter out past assignments
     const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
 
-    const upcomingQuizAssignments = quizzes?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past quizzes
+    const upcomingQuizAssignments = quizzes?.filter(a => !isOverdue(a)); // Filter out past quizzes
     const sortedQuizAssignments = upcomingQuizAssignments ? sortUpcomingAssignments(upcomingQuizAssignments) : [];
 
     // Get the 3 most urgent due dates from assignments & quizzes combined
@@ -63,8 +60,19 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
 
     return <div className="dashboard-panel">
         <h4>View scheduled work</h4>
-        {soonestDeadlines.length ? soonestDeadlines.map(assignment => <div className="mb-3" key={assignment.id}><AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} /></div>)
-            : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>}
+        <ShowLoading
+            until={assignments && quizzes}
+            thenRender={() => {
+                return soonestDeadlines.length 
+                    ? <div className="overflow-y-auto px-1 pt-1 mx-n1 mt-m1 mb-2">
+                        {soonestDeadlines.map((assignment, i) => 
+                            <div className={i+1 < soonestDeadlines.length ? "mb-3" : "mb-1"} key={assignment.id}>
+                                <AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} />
+                            </div>)}
+                    </div>
+                    : <div className="text-center mt-lg-3">You have no assignments with upcoming due dates.</div>;
+            }}
+        />
         <Spacer/>
         <div className="d-flex align-items-center">
             <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
@@ -115,13 +123,13 @@ const MyIsaacPanel = () => {
     </div>;
 };
 
-const BookCard = ({title, image, path}: BookInfo) => {
+export const BookCardSmall = ({title, image, path}: BookInfo) => {
     return <Card className="p-2 h-100 border-0 bg-transparent">  
         <Link to={path} className="d-flex flex-column align-items-center dashboard-book book-container">
             <div className="book-image-container">
                 <img src={image} alt={title}/>
             </div>
-            <div className="mt-2">{title}</div>
+            <div className="mt-2 text-center">{title}</div>
         </Link>
     </Card>;
 };
@@ -146,14 +154,14 @@ const BooksPanel = () => {
         <div ref={setScrollRef} className="row position-relative mt-sm-3 mt-md-0 mt-xl-3 row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-auto flex-nowrap overflow-x-scroll overflow-y-hidden">
             {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
             {window.ResizeObserver && <ScrollShadows element={scrollRef ?? undefined} shadowType="dashboard-scroll-shadow" />}
-            {ISAAC_BOOKS.filter(book => book.subject === subject || subject === "all")
+            {ISAAC_BOOKS.filter(b => !b.hidden).filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2 me-1 p-0">
-                        <BookCard {...book}/>
+                        <BookCardSmall {...book}/>
                     </Col>)}
         </div>
         <Spacer/>
-        <Link to="/publications" className="d-inline panel-link">See all books</Link>
+        <Link to="/books" className="d-inline panel-link">See all books</Link>
     </div>;
 };
 
@@ -174,8 +182,8 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
     const nameToDisplay = extractTeacherName(user as UserSummaryDTO);
              
     return <div className="dashboard dashboard-outer w-100">
-        <div className="d-flex">
-            {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
+        <div className="d-flex flex-wrap">
+            {nameToDisplay && <h3 className="text-wrap">Welcome back, {nameToDisplay}!</h3>}
             <span className="ms-auto">
                 <div className="text-center">Dashboard view</div>
                 <StyledToggle

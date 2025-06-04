@@ -14,7 +14,7 @@ import {
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {above, isAda, isPhy, siteSpecific, useCurrentQuestionAttempt, useDeviceSize} from "../../services";
+import {above, below, isAda, isPhy, siteSpecific, useCurrentQuestionAttempt, useDeviceSize} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
@@ -107,7 +107,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                 </IsaacContentValueOrChildren>
             </div>
             <Row className="no-print">
-                <Col className="d-flex flex-column flex-md-row">
+                <Col xs={12} className="d-flex flex-column flex-md-row">
                     <div className="d-flex flex-column numeric-value w-100 w-md-50 mb-2">
                         Value
                         <InputGroup className={"feedback-zone nq-feedback separate-input-group flex-grow-1"}>
@@ -129,7 +129,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                         <Dropdown className="flex-grow-1" disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                             <DropdownToggle
                                 disabled={readonly || !noDisplayUnit}
-                                className={classNames("feedback-zone w-md-auto h-100 px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong && noDisplayUnit, "bg-white": isPhy})}
+                                className={classNames("feedback-zone w-md-auto h-100 px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong && noDisplayUnit, "bg-white": isPhy, "my-2": isPhy && below['sm'](deviceSize)})}
                                 color={noDisplayUnit ? siteSpecific("dropdown", undefined) : "white"}
                                 caret={isPhy && noDisplayUnit}
                             >
@@ -140,7 +140,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                     <span className={"feedback incorrect"}>✘</span>
                                 </div>}
                             </DropdownToggle>
-                            <DropdownMenu end className="w-max-content">
+                            <DropdownMenu end className="w-100 w-md-50">
                                 {selectedUnits.map((unit) =>
                                     <DropdownItem key={wrapUnitForSelect(unit)}
                                         data-unit={unit || 'None'}
@@ -155,15 +155,13 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                         </Dropdown>
                     </div>}
                 </Col>
-                {!readonly && isPhy && above['md'](deviceSize) && <>
-                    <div className="pt-2">
-                        <Button className="numeric-help d-flex align-items-center p-0 gap-2" type="button" color="link" size="sm" innerRef={helpTooltip}>
-                            <i className="icon icon-info layered icon-color-grey"/>
-                            Show me some examples
-                        </Button>
-                    </div>
+                {!readonly && isPhy && above['md'](deviceSize) && <Col xs={12}>
+                    <Button className="numeric-help d-flex align-items-center m-0 p-0 gap-2 text-muted small" type="button" color="link" size="sm" innerRef={helpTooltip}>
+                        <i className="icon icon-info layered icon-color-grey"/>
+                        What can I type in this box?
+                    </Button>
                     {tooltip}
-                </>}
+                </Col>}
             </Row>
             <QuestionInputValidation userInput={currentAttemptValue ?? ""} validator={numericInputValidator} />
         </div>

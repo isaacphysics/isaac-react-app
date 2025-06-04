@@ -96,7 +96,7 @@ export const StudentResources = () => {
                             <Button className="mt-3" tag={Link} to="/progress">View my progress</Button>
                         </> : <>
                             <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
-                            <Button outline to={"/login"} tag={Link}>Log in</Button>
+                            <Button color="keyline" to={"/login"} tag={Link}>Log in</Button>
                         </>}
                     </TextBlock>
                 </ColumnSlice>

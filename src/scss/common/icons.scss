@@ -116,13 +116,98 @@ img[aria-disabled="true"] {
   @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-i.icon {
+.icon-file {
+  @include svg-icon('/assets/common/icons/file.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-person {
+  @include svg-icon('/assets/common/icons/person.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-school {
+  @include svg-icon('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-event-upcoming {
+  @include svg-icon('/assets/common/icons/event-upcoming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-event-complete {
+  @include svg-icon('/assets/common/icons/event-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-task-complete {
+  @include svg-icon('/assets/common/icons/task-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-correct {
+  @include svg-icon-raw('/assets/common/icons/correctness-correct.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-incorrect {
+  @include svg-icon-raw('/assets/common/icons/correctness-incorrect.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-partial {
+  @include svg-icon-raw('/assets/common/icons/correctness-partial.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-not-attempted {
+  @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+// Icon sizing
+.icon {
+  --icon-size: 16px;
+  --mask-size: 100%;
+}
+
+.icon-md {
+  --icon-size: 24px;
+  --mask-size: 100%;
+}
+
+.icon-lg {
+  --icon-size: 60px;
+  --mask-size: initial;
+}
+
+.icon-xl {
+  --icon-size: 75px;
+  --mask-size: initial;
+}
+
+@mixin icon-color-override($color) {
+  &.layered {
+    &::before {
+      background-color: $color !important;
+    }
+    &::after {
+      background-color: $color !important;
+    }
+  }
+
+  // .layered is a bit grim; if we could set something in @svg-icon-layered as a flag instead this would be ideal.
+  &:not(.layered) {
+    background-color: $color !important;
+  }
+}
+
+i.icon:not(.icon-raw) {
   &, &[color="primary"] {
     background-color: var(--icon-primary);
+    
+    @include not-reduced-motion {
+      transition: background-color 0.15s ease-in-out; // mirrors BS's $btn-transition
+    }
   
     // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
     &::after {
       background-color: var(--icon-primary);
+      
+      @include not-reduced-motion {
+        transition: background-color 0.15s ease-in-out;
+      }
     }
   }
 

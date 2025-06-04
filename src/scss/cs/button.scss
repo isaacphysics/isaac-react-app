@@ -19,23 +19,11 @@
     background-color: $active-color !important;
     box-shadow: none !important;
   }
-  &:focus:not(.disabled) {
-    box-shadow: none;
-  }
-  &:focus-visible {
-    box-shadow: 0 0 0 3px $focus-blue !important;
-  }
   &.disabled, &:disabled {
     color: $cs-jet;
     background-color: $cs-silver;
     border-color: $cs-silver;
   }
-}
-
-.btn.btn-link:focus {
-  box-shadow: 0 0 0 0.2rem $focus-blue !important;
-  outline: none !important;
-  border-radius: 3px;
 }
 
 @mixin ada-button-outline($color, $hover-color, $active-color) {
@@ -55,12 +43,6 @@
     border-color: $active-color !important;
     background-color: transparent !important;
     box-shadow: none !important;
-  }
-  &:focus:not(.disabled) {
-    box-shadow: none;
-  }
-  &:focus-visible {
-    box-shadow: 0 0 0 3px $focus-blue !important;
   }
   &.disabled, &:disabled {
     color: $cs-jet;
@@ -116,13 +98,13 @@
   }
 
   // Primary buttons (light background)
-  &.btn-primary, &.btn-secondary {
+  &.btn-primary, &.btn-secondary, &.btn-solid {
     @include ada-button($cs-white, $dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
   // Secondary buttons (for light background)
   // Secondary Button components are expected to use the 'outline' prop!
-  &.btn-outline-secondary, &.btn-outline-primary {
+  &.btn-outline-secondary, &.btn-outline-primary, &.btn-keyline {
     @include ada-button-outline($dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
@@ -132,7 +114,6 @@
     background: none !important;
     border: none !important;
     border-radius: 0 !important;
-    box-shadow: none !important;
   }
 }
 
@@ -147,7 +128,6 @@
     color: $light-active-dark-pink;
   }
   &:focus-visible {
-    outline: 2px solid $focus-blue !important;
     border-radius: 0 !important;
     z-index: 10;
   }
@@ -182,7 +162,7 @@
 
 .print-icon {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   &:not(.outline) {
     @include ada-icon-button-base(48px, 48px, false);
   }
@@ -217,6 +197,17 @@
   }
   margin-right: 7.5px;
   margin-left: 7.5px;
+}
+
+.bin-icon-small {
+  &:not(.outline) {
+    @include ada-icon-button-base(30px, 30px, false);
+    background-image: url("/assets/cs/icons/bin.svg");
+  }
+  &.outline {
+    @include ada-icon-button-base(30px, 30px, true);
+    background-image: url("/assets/cs/icons/bin-pink.svg");
+  }
 }
 
 .btn.plus-button {
@@ -303,7 +294,6 @@ a:not(.btn):not(.nav-link) {
     outline: none;
   }
   &:focus-visible {
-    outline: 2px solid $focus-blue;
     border-radius: 0 !important;
     z-index: 10;
   }

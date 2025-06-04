@@ -85,6 +85,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 setDueDate(null);
                 setScheduledStartDate(null);
                 setFeedbackMode(null);
+                dispatch(closeActiveModal());
             }
         });
     }
@@ -146,7 +147,11 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
             />
             {feedbackModeInvalid && <FormFeedback className="d-block" valid={false}>You must select a feedback mode</FormFeedback>}
         </Label>
-        <Label className="w-100 mb-4">Set an optional start date:<span id={scheduledQuizHelpTooltipId} className="icon-help"/><br/>
+        <Label className="w-100 mb-4">
+            <div className={siteSpecific("d-flex align-items-center", "")}>
+                Set an optional start date:
+                <i id={scheduledQuizHelpTooltipId} className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help")}/>
+            </div>
             <DateInput value={scheduledStartDate ?? undefined} invalid={scheduledStartDateInvalid || undefined}
                 yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate)}

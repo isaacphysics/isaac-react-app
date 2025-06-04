@@ -50,7 +50,7 @@ export const CSProjects = () => {
                     {allProjects.map(n => <NewsCard key={n.id} newsItem={n} showTitle />)}
                 </Row>
                 <div className="w-100 d-flex justify-content-center mb-5">
-                    <Button className={"mt-3"} color={"primary"} disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load more projects</Button>
+                    <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load more projects</Button>
                 </div>
             </>
         }

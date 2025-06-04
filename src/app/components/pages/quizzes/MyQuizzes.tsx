@@ -96,7 +96,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                                 <PhyHexIcon icon="icon-tests" subject={subject as Subject} className="assignment-hex ps-3"/>
                             </div>
                             <div className="d-flex flex-column flex-grow-1">
-                                <h4>{quiz.title || quiz.id }</h4>
+                                <h4>{quiz.title || quiz.id}</h4>
                                 {above['sm'](deviceSize) && isDefined(subject) && <div className="d-flex align-items-center mb-2">
                                     <span className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>
                                 </div>}
@@ -113,8 +113,8 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                             {quiz.assignerSummary && <> by {extractTeacherName(quiz.assignerSummary)}</>}
                         </p>}
                         {quiz.attempt && <p>
-                            {quiz.status === QuizStatus.Complete ?
-                                <>Completed: <strong>{getFriendlyDaysUntil(quiz.attempt.completedDate as Date)}</strong></>
+                            {quiz.status === QuizStatus.Complete
+                                ? <>Completed: <strong>{getFriendlyDaysUntil(quiz.attempt.completedDate as Date)}</strong></>
                                 : <>Started: <strong>{getFriendlyDaysUntil(quiz.attempt.startDate as Date)}</strong></>
                             }
                         </p>}
@@ -443,13 +443,13 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     }</span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
-        <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} className={siteSpecific("mb-4", "")} />
         <SidebarLayout>
             <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter} 
                 setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}/>
             <MainContent>
-                <Tabs className="mb-5 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
+                <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
+                <Tabs style="tabs" className="mb-5 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
                     history.replace({...history.location, hash: tabAnchors[index - 1]});
                     setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
                 }}>

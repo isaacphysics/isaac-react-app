@@ -33,8 +33,6 @@ jobs:
           browser: chrome
         env:
           CYPRESS_SITE: phy
-        # Temporary: ignore failures during redesign
-        continue-on-error: true
       - name: VRT update - create or update branch
         id: cypress-create-branch
         if: ${{ failure() }}
@@ -51,7 +49,7 @@ jobs:
           find ./src/test/pages/__image_snapshots__ -type f -name "*.actual.png" -exec bash -c 'exiftool -overwrite_original -FRSOURCE_CPVRD_V="1" "$1"; mv "$1" "${1/.actual./.}"' shell {} \;
           git fetch origin $target_ref
           git checkout -B $update_branch_name origin/$target_ref
-          git commit -am "Update VRT baselines"
+          git add . && git commit -m "Update VRT baselines"
           git push --set-upstream origin $update_branch_name --force
           echo "TARGET_REF=$target_ref" >> "$GITHUB_ENV"
           echo "UPDATE_BRANCH_NAME=$update_branch_name" >> "$GITHUB_ENV"

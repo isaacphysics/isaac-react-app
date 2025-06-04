@@ -40,13 +40,14 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { GameboardSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 export const getProgressIcon = (question: GameboardItem) => {
-    let itemClasses = classNames("content-summary-link text-info bg-white", {"p-3": isPhy, "p-0": isAda});
+    const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
+    let backgroundColor = "white";
     let icon = siteSpecific("icon-not-started", "/assets/cs/icons/question-not-started.svg");
     let message = siteSpecific("", "Not started");
     switch (question.state) {
         case "PERFECT":
             if (isPhy) {
-                itemClasses += " bg-success";
+                backgroundColor = "correct";
             }
             message = "Correct";
             icon = siteSpecific("icon-correct", "/assets/cs/icons/question-correct.svg");
@@ -61,7 +62,7 @@ export const getProgressIcon = (question: GameboardItem) => {
             icon = siteSpecific("icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
             break;
     }
-    return {itemClasses, icon, message};
+    return {itemClasses: classNames(itemClasses, `bg-${backgroundColor}`), icon, message};
 };
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
@@ -88,7 +89,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
             </span>
             <div className={classNames({"d-flex py-3 pe-3 flex-column flex-md-row flex-fill": isAda, "d-flex flex-column flex-sm-row align-items-sm-center w-100": isPhy})}>
                 <div>
-                    <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-theme me-2": isPhy})}>
+                    <Markup encoding={"latex"} className={classNames( "link-title question-link-title", {"text-theme me-2": isPhy})}>
                         {generateQuestionTitle(question)}
                     </Markup>
                     {isPhy && question.subtitle && <div className="small text-muted d-none d-sm-block">
@@ -110,13 +111,11 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
 };
 
 export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
-    const itemClasses = classNames("content-summary-link text-info bg-white", {"p-3": isPhy, "p-0": isAda});
-    const icon = <img src="/assets/common/wildcard.svg" alt="Optional extra information icon"/>;
-    return <ListGroupItem key={wildcard.id} className={itemClasses}>
+    return <ListGroupItem key={wildcard.id} className={"content-summary-link text-info bg-wildcard p-3"}>
         <a href={wildcard.url} className="align-items-center">
-            <span className="gameboard-item-icon">{icon}</span>
+            <i className="icon icon-concept me-3" />
             <div className={"flex-grow-1"}>
-                <span>{wildcard.title}</span>
+                <span className="link-title question-link-title me-2">{wildcard.title}</span>
                 {wildcard.description && <div className="hierarchy-tags">
                     <span className="hierarchy-tag">{wildcard.description}</span>
                 </div>}
@@ -194,12 +193,12 @@ export const Gameboard = withRouter(({ location }) => {
                                 {user && isTutorOrAbove(user)
                                     ? <Row>
                                         <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
-                                            <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="primary" outline block>
+                                            <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="keyline" block>
                                                 {siteSpecific("Set as Assignment", "Set as assignment")}
                                             </Button>
                                         </Col>
                                         <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={4} xl={{size: 3, offset: 2}} className="mt-4">
-                                            <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboardId}`}} color="primary" block outline>
+                                            <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboardId}`}} color="keyline" block>
                                                 {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
                                             </Button>
                                         </Col>
@@ -208,7 +207,7 @@ export const Gameboard = withRouter(({ location }) => {
                                         <Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
                                             <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`}
                                                 onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
-                                                color="primary" outline block
+                                                color="keyline" block
                                             >
                                                 {siteSpecific("Save to My Question Decks", "Save to My quizzes")}
                                             </Button>

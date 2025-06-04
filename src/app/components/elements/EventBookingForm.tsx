@@ -3,7 +3,7 @@ import {AdditionalInformation, AugmentedEvent} from "../../../IsaacAppTypes";
 import {SchoolInput} from "./inputs/SchoolInput";
 import {selectors, useAppSelector, useRequestEmailVerificationMutation} from "../../state";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
-import {examBoardLabelMap, isAda, isTutor, stageLabelMap, studentOnlyEventMessage} from "../../services";
+import {examBoardLabelMap, isAda, isTutor, siteSpecific, stageLabelMap, studentOnlyEventMessage} from "../../services";
 import {Immutable} from "immer";
 import { Card, CardBody, Row, Col, Label, Input, FormFeedback, Button, UncontrolledPopover, PopoverBody } from "reactstrap";
 
@@ -147,8 +147,10 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                 {!event.isVirtual && <div>
                     <div>
                         <Label htmlFor="medical-reqs">
-                            Dietary requirements or relevant medical conditions
-                            <span id="dietary-reqs-help" aria-haspopup="true" className="icon-help has-tip" />
+                            <span className={siteSpecific("d-flex align-items-center", "")}>
+                                Dietary requirements or relevant medical conditions
+                                <i id="dietary-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help has-tip")} />
+                            </span>
                             <UncontrolledPopover trigger="click" placement="bottom" target="dietary-reqs-help">
                                 <PopoverBody>For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...</PopoverBody>
                             </UncontrolledPopover>
@@ -161,8 +163,10 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
 
                     <div>
                         <Label htmlFor="access-reqs">
-                            Accessibility requirements
-                            <span id="access-reqs-help" aria-haspopup="true" className="icon-help has-tip" />
+                            <span className={siteSpecific("d-flex align-items-center", "")}>
+                                Accessibility requirements
+                                <i id="access-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help has-tip")} />
+                            </span>
                             <UncontrolledPopover trigger="click" placement="bottom" target="access-reqs-help">
                                 <PopoverBody>For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.</PopoverBody>
                             </UncontrolledPopover>

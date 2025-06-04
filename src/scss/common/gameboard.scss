@@ -16,13 +16,6 @@
 }
 
 .list-gameboard {
-  .bg-success {
-    background-color: #dfefd7 !important;
-    a > span:first-of-type {
-      border-color: #ddd;
-    }
-  }
-
   .gameboard-item-icon {
     max-width: 2rem;
     max-height: 2rem;
@@ -54,13 +47,17 @@
 
   .hierarchy-tag:not(:first-child) {
     padding-left: 12px;
+    position: relative;
     
     &::before {
-      content: '|';
-      height: 10px;
-      margin-left: -7px;
-      width: 10px;
+      $height: 14px;
+
+      content: "";
       position: absolute;
+      height: $height;
+      border-left: 1px solid $gray-160;
+      top: calc((100% - $height) / 2);
+      left: 6px;
     }
   }
 }

@@ -39,6 +39,7 @@ import {
     difficultyShortLabelMap,
     formatBoardOwner,
     getAssignmentStartDate,
+    isAda,
     isDefined,
     isStaff,
     Item,
@@ -158,15 +159,13 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
                     <ButtonGroup className={"w-100 pt-3"}>
                         <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-end-0 px-1 px-lg-3"} id={"start-date-button"}
-                            color={viewBy === "startDate" ? "secondary" : "primary"}
-                            outline={viewBy !== "startDate"}
+                            color={viewBy === "startDate" ? "solid" : "keyline"}
                             onClick={() => setViewBy("startDate")}
                         >
                             By start date
                         </Button>
                         <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-start-0 px-1 px-lg-3"} id={"due-date-button"}
-                            color={viewBy === "dueDate" ? "secondary" : "primary"}
-                            outline={viewBy !== "dueDate"}
+                            color={viewBy === "dueDate" ? "solid" : "keyline"}
                             onClick={() => setViewBy("dueDate")}
                         >
                             By due date
@@ -331,7 +330,7 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
                 </svg>
                 {<foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
                     <div className={"position-relative w-100"}>
-                        <h3 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h3>
+                        <h4 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%, 4%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h4>
                     </div>
                 </foreignObject>}
             </svg>
@@ -526,7 +525,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             <Col xs={12} sm={6}>
                 <Button
                     className="mb-2 mb-sm-0 w-100"
-                    block color={siteSpecific("secondary", "primary")}
+                    block color={siteSpecific("keyline", "solid")}
                     onClick={assign}
                     disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard) || alreadyAssignedGroupNames.length === selectedGroups.length || !dueDate || dueDateInvalid}
                 >

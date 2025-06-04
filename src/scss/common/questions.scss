@@ -24,7 +24,7 @@ $cloze-scrollbar-height: 4px;
   min-width: auto;
 }
 
-.question-component {
+form:has(> .question-component) {
   margin-bottom: 2rem;
   clear: both;
 
@@ -240,10 +240,8 @@ $inline-feedback-padding: 2px;
     }
   }
 
-  .equality-page {
-    .eqn-editor-preview {
-      background: $white !important;
-    }
+  .eqn-editor-preview {
+    background: $white;
   }
 
   .eqn-editor-input input {
@@ -384,9 +382,6 @@ $inline-feedback-padding: 2px;
 }
 
 .quick-question {
-  button {
-      box-shadow: none !important; // How horrible...
-  }
   .alert {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -398,13 +393,6 @@ $inline-feedback-padding: 2px;
   p {
     margin-bottom: 0;
   }
-}
-
-// NOMENSA question.scss
-.question-component {
-  background-color: white;
-  box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
-  padding: 1rem;
 }
 
 .cloze-question {

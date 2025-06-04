@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
-import React from "react";
+import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Button, Col, ListGroupItem, ListGroupItemProps, Row } from "reactstrap";
-import { Spacer } from "../Spacer";
+import { Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
 import { CompletionState } from "../../../../IsaacApiTypes";
-import { below, isPhy, Subject, useDeviceSize } from "../../../services";
+import { below, isPhy, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
@@ -17,52 +16,67 @@ const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     </>;
 };
 
-const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: CompletionState}) => {
-    const { status, ...rest } = props;
+interface StatusDisplayProps extends React.HTMLAttributes<HTMLSpanElement> {
+    status: CompletionState;
+    showText?: boolean;
+}
+
+const StatusDisplay = (props: StatusDisplayProps) => {
+    const { status, showText, className, ...rest } = props;
     switch (status) {
         case CompletionState.IN_PROGRESS:
-            return <span {...rest} className={classNames(rest.className, "status-tag d-flex align-items-center")}>
-                <img className="pe-2" src={`/assets/phy/icons/redesign/status-in-progress.svg`} alt=""/>
-                In progress
+            return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
+                <i className="icon icon-raw icon-in-progress" />
+                {showText && "In progress"}
             </span>;
         case CompletionState.ALL_CORRECT:
-            return <span {...rest} className={classNames(rest.className, "status-tag d-flex align-items-center")}>
-                <img className="pe-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt=""/>
-                Correct
+            return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
+                <i className="icon icon-raw icon-correct" />
+                {showText && "Correct"}
             </span>;
         case CompletionState.NOT_ATTEMPTED:
             return;
     }
 };
 
-const LinkTags = ({linkTags}: {linkTags: {tag: string, url?: string}[];}) => {
-    return <>
-        {linkTags.map(t => t.url ?
-            <Link to={t.url} className="card-tag" key={t.tag}>{t.tag}</Link> :
-            <div className="card-tag" key={t.tag}>{t.tag}</div>
-        )}
-    </>;
-};
-
-const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUrl: string, quizButton: JSX.Element}) => {
-    const { previewQuizUrl, quizButton, ...rest } = props;
-    return <span {...rest} className={classNames(rest.className, "d-flex")}>
-        <Spacer/>
-        <Button to={previewQuizUrl} color="keyline" tag={Link} className="set-quiz-button-md">
-            Preview
-        </Button>
-        <span style={{minWidth: "20px"}}/>
-        {quizButton}
-    </span>;
-};
-
-export interface ListViewTagProps {
+export interface ListViewTagProps extends HTMLAttributes<HTMLElement> {
     tag: string;
     url?: string;
 }
 
+export interface LinkTagProps {
+    linkTags: ListViewTagProps[];
+    disabled?: boolean;
+}
+
+const LinkTags = ({linkTags, disabled}: LinkTagProps) => {
+    return <>
+        {linkTags.map(t => {
+            const {url, tag, ...rest} = t;
+            return url && !disabled ?
+                <Link {...rest} to={url} className="card-tag" key={tag}>{tag}</Link> :
+                <div {...rest} className={classNames("card-tag", {"disabled": disabled})} key={tag}>{tag}</div>;
+        })}
+    </>;
+};
+
+const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUrl?: string, quizButton?: ReactNode}) => {
+    const { previewQuizUrl, quizButton, ...rest } = props;
+    return <span {...rest} className={classNames(rest.className, "d-flex justify-content-end gap-3")}>
+        {previewQuizUrl && <Button to={previewQuizUrl} color={siteSpecific("keyline", "solid")} tag={Link} className="set-quiz-button-md">
+            {previewQuizUrl.includes("/preview/") ? "Preview" : "View test"}
+        </Button>}
+        {quizButton}
+    </span>;
+};
+
+export enum AbstractListViewItemState {
+    COMING_SOON = "coming-soon",
+    DISABLED = "disabled",
+}
+
 export interface AbstractListViewItemProps extends ListGroupItemProps {
-    title: string;
+    title?: string;
     icon?: TitleIconProps;
     subject?: Subject;
     subtitle?: string;
@@ -78,74 +92,83 @@ export interface AbstractListViewItemProps extends ListGroupItemProps {
     quizButton?: JSX.Element;
     isCard?: boolean;
     fullWidth?: boolean;
+    state?: AbstractListViewItemState;
 }
 
-export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, supersededBy, linkTags, quizTag, url, audienceViews, previewQuizUrl, quizButton, isCard, fullWidth, ...rest}: AbstractListViewItemProps) => { 
+export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, supersededBy, linkTags, quizTag, url, audienceViews, previewQuizUrl, quizButton, isCard, fullWidth, state, ...rest}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
-    const isQuiz: boolean = (previewQuizUrl && quizButton) ? true : false;
+    const isQuiz: boolean = !!(previewQuizUrl || quizButton);
+    const isDisabled = state && [AbstractListViewItemState.COMING_SOON, AbstractListViewItemState.DISABLED].includes(state);
     
     fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewQuizUrl || quizButton) ? false : true);
-    const colWidths = fullWidth ? [12,12,12,12,12] : isQuiz ? [12,6,6,6,6] : [12,8,7,6,7];
     const cardBody =
     <div className="w-100 d-flex flex-row">
-        <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} xxl={colWidths[4]} className={classNames("d-flex", {"mt-3": isCard && linkTags?.length, "mb-3": isCard && !linkTags?.length})}>
-            <div>
+        <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !linkTags?.length})}>
+            <div className="position-relative">
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
-                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/> : undefined)}
+                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/>
+                            : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/> 
+                                : undefined
+                )}
+                {status && status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
+                    <StatusDisplay status={status} showText={false} />
+                </div>}
             </div>
-            <div className="align-content-center">
-                <div className="d-flex">
-                    <span className="question-link-title"><Markup encoding="latex">{title}</Markup></span>
+            <div className="align-content-center text-overflow-ellipsis pe-2">
+                <div className="d-flex text-wrap">
+                    <span className={classNames("link-title", {"question-link-title": isPhy || !isQuiz})}><Markup encoding="latex">{title}</Markup></span>
                     {quizTag && <span className="quiz-level-1-tag ms-sm-2">{quizTag}</span>}
                     {isPhy && <div className="d-flex flex-column justify-self-end">
                         {supersededBy && <a 
-                            className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
+                            className="superseded-tag mx-1 ms-sm-3 align-self-end" 
                             href={`/questions/${supersededBy}`}
                             onClick={(e) => e.stopPropagation()}
                         >SUPERSEDED</a>}
                         {tags?.includes("nofilter") && <span
-                            className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
+                            className="superseded-tag mx-1 ms-sm-3 align-self-end" 
                         >NO-FILTER</span>}
                     </div>}
                 </div>
-                {subtitle && <div className="small text-muted">
-                    {subtitle}
+                {subtitle && <div className="small text-muted text-wrap">
+                    <Markup encoding="latex">{subtitle}</Markup>
                 </div>}
-                {breadcrumb && <div className="hierarchy-tags">
+                {breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
                     <Breadcrumb breadcrumb={breadcrumb}/>
-                </div>}
+                </span>}
                 {audienceViews && fullWidth && <div className="d-flex mt-1"> 
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack/> 
                 </div>}
-                {status && (below["lg"](deviceSize) || fullWidth) && <div className="d-flex mt-1">
-                    <StatusDisplay status={status}/>
-                </div>}
+                {status && status !== CompletionState.ALL_CORRECT && fullWidth &&
+                    <StatusDisplay status={status} showText className="py-1" />
+                }
                 {linkTags && <div className="d-flex py-3 flex-wrap">
                     <LinkTags linkTags={linkTags}/>
                 </div>}
-                {previewQuizUrl && quizButton && fullWidth && <div className="d-flex d-md-none align-items-center">
+                {isQuiz && fullWidth && <div className="d-flex d-md-none align-items-center">
                     <QuizLinks previewQuizUrl={previewQuizUrl} quizButton={quizButton}/>
                 </div>}
             </div>
         </Col>
         {!fullWidth &&
             <>
-                {!isQuiz && (audienceViews || status) && <Col xl={2} className={classNames("d-none d-xl-flex", {"list-view-border": (status && status !== CompletionState.NOT_ATTEMPTED)})}>
-                    <StatusDisplay status={status ?? CompletionState.NOT_ATTEMPTED}/>
-                </Col>}
-                {audienceViews && <Col md={4} lg={5} xl={4} xxl={3} className="d-none d-md-flex justify-content-end">
-                    <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack spacerWidth={5} className={classNames({"list-view-border": audienceViews.length > 0})}/> 
-                </Col>}
-                {previewQuizUrl && quizButton && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
+                {status && status !== CompletionState.ALL_CORRECT && <StatusDisplay status={status} showText className="ms-2 me-3" />}
+                {audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": audienceViews.length > 0})}>
+                    <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack className="w-100"/> 
+                </div>}
+                {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                     <QuizLinks previewQuizUrl={previewQuizUrl} quizButton={quizButton}/> 
                 </Col>}
             </>
         }
     </div>;
 
-    return <ListGroupItem {...rest} className={classNames("content-summary-item", rest.className)} data-bs-theme={subject}>
-        {url 
+    return <ListGroupItem 
+        {...rest} 
+        className={classNames("content-summary-item", {"correct": status === CompletionState.ALL_CORRECT}, rest.className, state)} 
+        data-bs-theme={subject && !isDisabled ? subject : "neutral"}
+    >
+        {url && !isDisabled
             ? <Link to={url} className="w-100 h-100 align-items-start"> {cardBody} </Link> 
             : cardBody
         }

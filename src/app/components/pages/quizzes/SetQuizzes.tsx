@@ -171,7 +171,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                             <span className="manage-quiz-title me-3">{quizTitle}</span>
                         </Col>
                         <Col className="d-flex align-items-center justify-content-end col-5 col-sm-4 col-md-6">
-                            <AffixButton size="sm" affix={{ affix: "icon-right", position: "suffix", type: "icon" }} className="me-3"
+                            <AffixButton size="sm" affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }} className="me-3"
                                 onClick={(e) => {
                                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                                     assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
@@ -383,8 +383,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </div>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} />
-        <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} className={siteSpecific("mb-4", "")} />
         <SidebarLayout>
             {activeTab === MANAGE_QUIZ_TAB.set
                 ? <SetQuizzesSidebar titleFilter={titleFilter} setTitleFilter={setTitleFilter} />
@@ -394,7 +393,8 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                     quizDueDateFilterType={quizDueDateFilterType} setQuizDueDateFilterType={setQuizDueDateFilterType}
                     manageQuizzesGroupNameFilter={manageQuizzesGroupNameFilter} setManageQuizzesGroupNameFilter={setManageQuizzesGroupNameFilter}/>}
             <MainContent>
-                <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
+                <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
+                <Tabs style="tabs" className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
                     {{
                         [siteSpecific("Set Tests", "Available tests")]:
                         <ShowLoading until={undeprecatedQuizzes}>

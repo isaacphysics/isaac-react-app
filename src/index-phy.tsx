@@ -25,9 +25,9 @@ root.render(
                     or else they will be removed on pages that do not override them. But only specifying the
                     values here will stop most sites seeing them at all!
                  */}
-                <meta name="description" content="Isaac Physics is a project designed to offer support and activities in physics problem solving to teachers and students from GCSE level through to university." />
-                <meta property="og:title" content="Isaac Physics" />
-                <meta property="og:description" content="Isaac Physics is a project designed to offer support and activities in physics problem solving to teachers and students from GCSE level through to university." />
+                <meta name="description" content="Isaac Science is a project expanding out of Isaac Physics to provide resources to develop confidence in problem-solving not only physics (year 7 through to university) and maths (GCSE to university) but also in chemistry (GCSE to university) and biology (A level)." />
+                <meta property="og:title" content="Isaac Science" />
+                <meta property="og:description" content="Isaac Science is a project expanding out of Isaac Physics to provide resources to develop confidence in problem-solving not only physics (year 7 through to university) and maths (GCSE to university) but also in chemistry (GCSE to university) and biology (A level)." />
             </Helmet>
             <IsaacApp />
         </Provider>

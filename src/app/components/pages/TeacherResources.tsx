@@ -63,7 +63,7 @@ export const TeacherResources = () => {
                     </ImageBlock>
                     <TextBlock>
                         <h2>A full curriculum of topics</h2>
-                        <p>We have over 65 learning topics that cover everything you need to teach computer science. From computing systems and networks, to AI, machine learning, and much more.</p>
+                        <p>We have over 50 learning topics that cover everything you need to teach computer science. From computing systems and networks, to AI, machine learning, and much more.</p>
                         <p>They&apos;re created by expert educators and are regularly updated. You can even filter content for different age groups and exams.</p>
                         <Button tag={Link} to={"/topics"}>Explore all topics</Button>
                     </TextBlock>
@@ -78,7 +78,7 @@ export const TeacherResources = () => {
                     <p>An Ada account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.</p>
                     {!isLoggedIn(user) && <div className="pb-2 mb-3">
                         <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
-                        <Button outline to={"/login"} tag={Link}>Log in</Button>
+                        <Button color="keyline" to={"/login"} tag={Link}>Log in</Button>
                     </div>}
                 </TextBlock>
                 <ColumnSlice>
@@ -219,7 +219,7 @@ export const TeacherResources = () => {
                     <TextBlock className="py-3 text-center text-white">
                         <h3>Need help?</h3>
                         <p>Our teacher support page has lots of information for common questions and issues.</p>
-                        <Button outline className="bg-white" to="/support/teacher/general" tag={Link}>Teacher support</Button>
+                        <Button color="keyline" className="bg-white" to="/support/teacher/general" tag={Link}>Teacher support</Button>
                     </TextBlock>
                 </div>
             </Container>

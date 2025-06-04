@@ -47,7 +47,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
         </div>}
         <div className="clearfix">
             {isAda && <div className="mb-3 float-start">
-                <Button color="primary" size="sm" tag={Link} to="/events_toolkit">Events toolkit</Button>
+                <Button color="solid" size="sm" tag={Link} to="/events_toolkit">Events toolkit</Button>
             </div>}
             <div className="float-start">
                 {/* Load More Button */}
@@ -116,7 +116,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                             <tbody>
                                 {orderBy(eventOverviews, [sortPredicate], [reverse ? "desc" : "asc"])
                                     .map((event) => <tr key={event.id} data-testid="event-manager-row">
-                                        <td className="align-middle"><Button color="primary" outline className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
+                                        <td className="align-middle"><Button color="keyline" className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
                                             Manage
                                         </Button></td>
                                         <td className="align-middle"><Link to={`/events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>

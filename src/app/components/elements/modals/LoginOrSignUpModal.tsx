@@ -39,7 +39,7 @@ const LoginOrSignUpBody = () => {
     return <Row id={"login-page"}>
         <Col lg={6} className={classNames("content-body", {"pattern-ada-dots": isAda})}>
             {siteSpecific(
-                <img src={"/assets/phy/logo.svg"} alt={"Isaac Physics Logo"} />,
+                <img src={"/assets/phy/logo.svg"} alt={"Isaac Science Logo"} />,
                 <img src={"/assets/common/logos/ada_logo_3-stack_aqua.svg"} className={"mt-5 mb-4 pb-2 ms-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
             )}
             <div className={"px-3 mb-4"}>
@@ -49,7 +49,7 @@ const LoginOrSignUpBody = () => {
                 <p>You need to be logged in to your account to <b>save your answers and progress</b>. If you don&apos;t have an account, you can <b>sign up today for free</b>.</p>
                 <br/>
                 <p>Alternatively, you can</p>
-                <Button size={"sm"} color={"primary"} style={{backgroundColor: siteSpecific("#ffffff66","#ffffff99")}} outline onClick={closeModal} block>
+                <Button size={"sm"} color="keyline" onClick={closeModal} block>
                     Continue without an account
                 </Button>
             </div>
@@ -88,15 +88,15 @@ const LoginOrSignUpBody = () => {
                         <Button
                             id="log-in"
                             tag="input" value="Log in"
-                            color="secondary" type="submit" block
+                            color="solid" type="submit" block
                             className="mb-2"
                             onClick={attemptLogIn}
                             disabled={!!user?.requesting}
                         />
 
-                        <Button id="sign-up" color="primary" onClick={(e) => {
+                        <Button id="sign-up" color="keyline" onClick={(e) => {
                             closeModal(); signUp(e);
-                        }} outline block>
+                        }} block>
                             Sign up
                         </Button>
 

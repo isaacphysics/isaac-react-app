@@ -95,10 +95,10 @@ export function ResultsTable<Q extends QuestionType>({
             title: "Allow another attempt?",
             body: "This will allow the student to attempt the test again.",
             buttons: [
-                <Button key={1} color="primary" outline target="_blank" onClick={() => dispatch(closeActiveModal())}>
+                <Button key={1} color="keyline" target="_blank" onClick={() => dispatch(closeActiveModal())}>
                     Cancel
                 </Button>,
-                <Button key={0} color="primary" target="_blank" onClick={confirm}>
+                <Button key={0} color="solid" target="_blank" onClick={confirm}>
                     Confirm
                 </Button>,
             ]
@@ -238,15 +238,15 @@ export function ResultsTable<Q extends QuestionType>({
         {/* {header} */}
         {progress && progress.length > 0 && <>
             {/* <div className="progress-questions">
-                <Button color="tertiary" disabled={selectedQuestionNumber == 0}
+                <button color="tertiary" disabled={selectedQuestionNumber == 0}
                     // on OSX chrome, the left- and right- pointing triangles are different, so construct these by flipping the same one
                     className="flip-x"
-                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber - 1)}>►</Button>
+                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber - 1)}>►</button>
                 <div>
                     {getQuestionTitle(selectedQuestion)}
                 </div>
-                <Button color="tertiary" disabled={selectedQuestionNumber === questions.length - 1}
-                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber + 1)}>►</Button>
+                <button color="tertiary" disabled={selectedQuestionNumber === questions.length - 1}
+                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber + 1)}>►</nutton>
             </div> */}
             <div className="assignment-progress-table-wrapper">
                 <table ref={tableRef} className="progress-table w-100 border">

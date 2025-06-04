@@ -1,63 +1,102 @@
-import React, {FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
-import {RouteComponentProps, withRouter} from "react-router-dom";
-import {AppState, fetchConcepts, selectors, useAppDispatch, useAppSelector} from "../../state";
+import React, {FormEvent, MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
+import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import {selectors, useAppSelector} from "../../state";
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
-import {ShowLoading} from "../handlers/ShowLoading";
-import {isAda, isPhy, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
+import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
-import { isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
+import { getHumanContext, isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
+import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { ContentSummaryDTO, Stage } from "../../../IsaacApiTypes";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { AffixButton } from "../elements/AffixButton";
+
+const subjectToTagMap = {
+    physics: TAG_ID.physics,
+    chemistry: TAG_ID.chemistry,
+    biology: TAG_ID.biology,
+    maths: TAG_ID.maths,
+};
 
 // This component is Isaac Physics only (currently)
 export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const concepts = useAppSelector((state: AppState) => state?.concepts?.results || null);
     const pageContext = useUrlPageTheme();
 
-    const subjectToTagMap = {
-        physics: TAG_ID.physics,
-        chemistry: TAG_ID.chemistry,
-        biology: TAG_ID.biology,
-        maths: TAG_ID.maths,
-    };
+    const searchParsed = queryString.parse(location.search, {arrayFormat: "comma"});
+
+    const [query, filters, stages] = useMemo(() => {
+        const queryParsed = searchParsed.query || null;
+        const query = Array.isArray(queryParsed) ? queryParsed.join(",") : queryParsed;
     
-    const applicableTags = pageContext?.subject ? tags.getDirectDescendents(subjectToTagMap[pageContext.subject]) : tags.allFieldTags;
-    const tagCounts : Record<string, number> = [...applicableTags, ...(pageContext?.subject ? [tags.getById(pageContext?.subject as TAG_ID)] : [])].reduce((acc, t) => ({...acc, [t.id]: concepts?.filter(c => c.tags?.includes(t.id)).length || 0}), {});
+        const filterParsed = searchParsed.types || null;
+        const filters = Array.isArray(filterParsed) ? filterParsed.filter(x => !!x) as string[] : filterParsed?.split(",") ?? [];
 
-    useEffect(() => {
-        if (pageContext) {
-            dispatch(fetchConcepts(undefined, pageContext?.subject));
-        }
-    }, [dispatch, pageContext]);
+        const stagesParsed = searchParsed.stages || null;
+        const stages = Array.isArray(stagesParsed) ? stagesParsed.filter(x => !!x) as string[] : stagesParsed?.split(",") ?? [];
 
-    const searchParsed = queryString.parse(location.search);
+        return [query, filters, stages];
+    }, [searchParsed]);
 
-    const queryParsed = searchParsed.query || "";
-    const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
-
-    const filterParsed = (searchParsed.types || (TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry + "," + TAG_ID.biology));
-    const filters = (Array.isArray(filterParsed) ? filterParsed[0] || "" : filterParsed || "").split(",");
+    const applicableTags = pageContext?.subject
+        ? tags.getDirectDescendents(subjectToTagMap[pageContext.subject])
+        : [...tags.allSubjectTags, ...tags.allFieldTags];
 
     const [searchText, setSearchText] = useState(query);
-    const [conceptFilters, setConceptFilters] = useState<Tag[]>([
-        ...(pageContext?.subject ? [tags.getById(subjectToTagMap[pageContext.subject])] : []),
-        ...applicableTags.filter(f => filters.includes(f.id))
-    ]);
-
+    const [conceptFilters, setConceptFilters] = useState<Tag[]>(
+        applicableTags.filter(f => filters.includes(f.id))
+    );
+    const [searchStages, setSearchStages] = useState<Stage[]>(getFilteredStageOptions().filter(s => stages.includes(s.value)).map(s => s.value));
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
+
+    const listConceptsQuery = useListConceptsQuery(pageContext 
+        ? {conceptIds: undefined, tagIds: pageContext?.subject ?? tags.allSubjectTags.map(t => t.id).join(",")}
+        : skipToken
+    );
+
+    const shortcutAndFilter = (concepts?: ContentSummaryDTO[], excludeTopicFiltering?: boolean, excludeStageFiltering?: boolean) => {
+        const searchResults = concepts?.filter(c =>
+            (matchesAllWordsInAnyOrder(c.title, searchText || "") || matchesAllWordsInAnyOrder(c.summary, searchText || ""))
+        );
+        
+        const filteredSearchResults = searchResults
+            ?.filter((result) => excludeTopicFiltering || !filters.length || result?.tags?.some(t => filters.includes(t)))
+            .filter((result) => excludeStageFiltering || !searchStages.length || searchStages.some(s => result.audience?.some(a => a.stage?.includes(s))))
+            .filter((result) => !pageContext?.stage?.length || isRelevantToPageContext(result.audience, pageContext))
+            .filter((result) => searchResultIsPublic(result, user));
+    
+        const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
+
+        return shortcutAndFilteredSearchResults;
+    };
+    
+    const tagCounts : Record<string, number> = [
+        ...applicableTags, 
+        ...(pageContext?.subject ? [tags.getById(pageContext?.subject as TAG_ID)] : [])
+    ].reduce((acc, t) => ({
+        ...acc, 
+        // we exclude topics when filtering here to avoid selecting a filter changing the tag counts
+        [t.id]: shortcutAndFilter(listConceptsQuery?.data?.results, true, false)?.filter(c => c.tags?.includes(t.id)).length || 0
+    }), {});
+
+    const stageCounts = getFilteredStageOptions().reduce((acc, s) => ({
+        ...acc,
+        // we exclude stages when filtering here to avoid selecting a filter changing the tag counts
+        [s.value]: shortcutAndFilter(listConceptsQuery?.data?.results, false, true)?.filter(c => c.audience?.some(a => a.stage?.includes(s.value)))?.length || 0
+    }), {});
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {
             e.preventDefault();
         }
-        pushConceptsToHistory(history, searchText || "", [...conceptFilters.map(f => f.id)]);
+        pushConceptsToHistory(history, searchText || "", [...conceptFilters.map(f => f.id)], searchStages);
 
         if (searchText) {
             setShortcutResponse(shortcuts(searchText));
@@ -74,19 +113,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         };
     }, [searchText]);
 
-    useEffect(() => {doSearch();}, [conceptFilters]);
-
-    const searchResults = concepts
-        ?.filter(c =>
-            matchesAllWordsInAnyOrder(c.title, searchText || "") ||
-            matchesAllWordsInAnyOrder(c.summary, searchText || "")
-        );
-
-    const filteredSearchResults = searchResults
-        ?.filter((result) => result?.tags?.some(t => filters.includes(t)))
-        .filter((result) => searchResultIsPublic(result, user));
-
-    const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
+    useEffect(() => {doSearch();}, [conceptFilters, searchStages]);
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
@@ -102,18 +129,40 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             <SidebarLayout>
                 {pageContext?.subject 
                     ? <SubjectSpecificConceptListSidebar {...sidebarProps}/> 
-                    : <GenericConceptsSidebar {...sidebarProps}/>
+                    : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts}/>
                 }
                 <MainContent>
+                    {pageContext?.subject && <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
+                        <p className="me-3">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                        <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className="ms-auto"
+                            affix={{
+                                affix: "icon-arrow-right",
+                                position: "suffix",
+                                type: "icon"
+                            }}>
+                            Browse all concepts
+                        </AffixButton>
+                    </div>}
                     {isPhy && <div className="list-results-container p-2 my-4">
-                        {shortcutAndFilteredSearchResults && <div className="p-2 py-3">
-                            Showing <b>{shortcutAndFilteredSearchResults.length}</b> results
-                        </div>}
+                        <ShowLoadingQuery
+                            query={listConceptsQuery}
+                            thenRender={({results: concepts}) => {
 
-                        {shortcutAndFilteredSearchResults
-                            ? <ListView items={shortcutAndFilteredSearchResults}/>
-                            : <em>No results found</em>
-                        }
+                                const shortcutAndFilteredSearchResults = shortcutAndFilter(concepts);
+
+                                return <>
+                                    {!!shortcutAndFilteredSearchResults.length && <div className="p-2 py-3">
+                                        Showing <b>{shortcutAndFilteredSearchResults.length}</b> results
+                                    </div>}
+            
+                                    {shortcutAndFilteredSearchResults.length
+                                        ? <ListView items={shortcutAndFilteredSearchResults}/>
+                                        : <em>No results found</em>
+                                    }
+                                </>;
+                            }}
+                            defaultErrorTitle="Error fetching concepts"
+                        />
                     </div>
                     }
                     
@@ -122,22 +171,31 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                             <h3>
                                 <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results 
                                 {query !== "" 
-                                    ? shortcutAndFilteredSearchResults 
-                                        ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> 
+                                    ? (listConceptsQuery?.data?.totalResults) 
+                                        ? <Badge color="primary">{listConceptsQuery?.data?.totalResults}</Badge> 
                                         : <IsaacSpinner /> 
                                     : null
                                 }
                             </h3>
                         </CardHeader>
                         <CardBody className="px-2">
-                            <ShowLoading until={shortcutAndFilteredSearchResults}>
-                                {shortcutAndFilteredSearchResults ?
-                                    <LinkToContentSummaryList 
-                                        items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
-                                        contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                    />
-                                    : <em>No results found</em>}
-                            </ShowLoading>
+                            <ShowLoadingQuery
+                                query={listConceptsQuery}
+                                thenRender={({results: concepts}) => {
+
+                                    const shortcutAndFilteredSearchResults = shortcutAndFilter(concepts);
+
+                                    return <>
+                                        {shortcutAndFilteredSearchResults ?
+                                            <LinkToContentSummaryList 
+                                                items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
+                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
+                                            />
+                                            : <em>No results found</em>}
+                                    </>;
+                                }}
+                                defaultErrorTitle="Error fetching concepts"
+                            />
                         </CardBody>
                     </Card>}
                 </MainContent>

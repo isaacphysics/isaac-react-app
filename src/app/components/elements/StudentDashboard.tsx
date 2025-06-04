@@ -10,6 +10,7 @@ import { Spacer } from './Spacer';
 import classNames from 'classnames';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
 import { authenticateWithTokenAfterPrompt } from './panels/TeacherConnections';
+import { getFriendlyDaysUntil } from './DateString';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -35,7 +36,7 @@ const GroupJoinPanel = () => {
                     e.preventDefault();
                 }}}
             />
-            <Button onClick={processToken} outline color="secondary">
+            <Button onClick={processToken} color="solid">
                 Connect
             </Button>
         </InputGroup>
@@ -87,9 +88,7 @@ interface AssignmentCardProps {
 
 export const AssignmentCard = (props: AssignmentCardProps) => {
     const { assignment, isTeacherDashboard, groups } = props;
-    const today = new Date();
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
-    const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
 
     // QuizAssignmentDTOs don't have group names
     const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
@@ -118,7 +117,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
             </h5>
             <Spacer/>
             <div className="d-flex text-nowrap">
-                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
+                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">Overdue</span> : <span className="me-3">Due {getFriendlyDaysUntil(dueDate)}</span>)}
                 <span className="group-name">{groupName}</span>
             </div>
         </Card>
@@ -157,7 +156,7 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
             ? <div className="mt-3 mt-lg-0 mt-xl-3 text-center">You have no active assignments.</div> 
             : <>
                 <span className="mb-2">You have assignments that are active or due soon:</span>
-                <div className="row">
+                <div className="row overflow-y-auto pt-1 mt-n1">
                     {toDo.map((assignment: IAssignmentLike) => <span key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3"><AssignmentCard assignment={assignment} groups={groups}/></span>)}
                 </div>
                 <Spacer/>
@@ -219,7 +218,7 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     const {assignmentsCount, quizzesCount} = getActiveWorkCount(assignments, quizAssignments);
 
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
-        {nameToDisplay && <span className="welcome-text">Welcome back, {nameToDisplay}!</span>}
+        {nameToDisplay && <h3>Welcome back, {nameToDisplay}!</h3>}
         {deviceSize === "lg"
             ? <>
                 <Row>

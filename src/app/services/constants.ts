@@ -23,7 +23,7 @@ export const STAGING_URL = siteSpecific(
     "https://staging.adacomputerscience.org"
 );
 
- 
+
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
 /*
@@ -237,10 +237,6 @@ export enum ACTION_TYPE {
     GROUPS_MEMBERS_RESET_PASSWORD_REQUEST = "GROUPS_MEMBERS_RESET_PASSWORD_REQUEST",
     GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS = "GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS",
     GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE = "GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE",
-
-    CONCEPTS_REQUEST = "CONCEPTS_REQUEST",
-    CONCEPTS_RESPONSE_SUCCESS = "CONCEPTS_RESPONSE_SUCCESS",
-    CONCEPTS_RESPONSE_FAILURE = "CONCEPTS_RESPONSE_FAILURE",
 
     // Different ways of loading attempts, but ultimately either an attempt is loaded or it isn't
     QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST = "QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST",
@@ -486,6 +482,13 @@ export const STAGE_TO_LEARNING_STAGE: {[stage in STAGE]: LearningStage | undefin
     advanced: "a_level",
 };
 
+export const LEARNING_STAGE_TO_STAGES: {[stage in LearningStage]: STAGE[]} = {
+    "11_14": [STAGE.YEAR_7_AND_8, STAGE.YEAR_9],
+    gcse: [STAGE.GCSE, STAGE.SCOTLAND_NATIONAL_5, STAGE.CORE],
+    a_level: [STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.ADVANCED],
+    university: [STAGE.UNIVERSITY],
+};
+
 export const HUMAN_STAGES: {[key: string]: string} = {
     "11_14": "11-14",
     "gcse": "GCSE",
@@ -505,61 +508,101 @@ export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) 
     return acc;
 }, {} as {[stage in LEARNING_STAGE]: Exclude<SUBJECTS, SUBJECTS.CS>[]});
 
+type BookTag = "phys_book_step_into" | "phys_book_step_up" | "phys_book_gcse" | "physics_skills_19" | "solving_physics_problems" | "physics_linking_concepts" | "qmp" | "maths_book_gcse" | "maths_book_2e" | "maths_book" | "chemistry_16";
+export enum BookHiddenState {
+    BOOKS_LISTING_ONLY = "books_listing_only",
+    HIDDEN = "hidden"
+}
 export interface BookInfo {
     title: string;
-    value: string;
-    label: string;
+    shortTitle: string;
+    description?: string;
+    tag: BookTag;
     image: string;
     path: string;
     subject: Subject;
     stages: LearningStage[];
+    hidden?: BookHiddenState;
 }
 
 export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
     [
         {
-            title: "Step up to GCSE Physics", value: "phys_book_step_up",
-            label: "Step up to GCSE Physics", image: "/assets/phy/books/step_up_phys.jpg",
-            path: "/books/step_up_phys", subject: "physics", stages: ["11_14"]
+            title: "Step into Physics", tag: "phys_book_step_into",
+            shortTitle: "Step into Physics", image: "/assets/phy/books/2025_step_into_physics.png",
+            path: "/books/step_into_phys", subject: "physics", stages: ["11_14"],
+            description: "Aimed principally at KS3, but also works well with foundation students at GCSE.",
         },
         {
-            title: "GCSE Physics", value: "phys_book_gcse",
-            label: "GCSE Physics", image: "/assets/phy/books/phys_book_gcse.jpg",
-            path: "/books/phys_book_gcse", subject: "physics", stages: ["gcse"]
+            title: "Step Up to GCSE Physics", tag: "phys_book_step_up",
+            shortTitle: "Step Up to GCSE Physics", image: "/assets/phy/books/2025_step_up_phys.png",
+            path: "/books/step_up_phys", subject: "physics", stages: ["11_14", "gcse"],
+            description: "Aimed principally at Year 9 students but also works well for the transition to GCSE.",
         },
         {
-            title: "Pre-University Physics", value: "physics_skills_19",
-            label: "A Level Physics (3rd Edition)", image: "/assets/phy/books/physics_skills_19.jpg",
-            path: "/books/physics_skills_19", subject: "physics", stages: ["a_level"]
+            title: "Essential GCSE Physics", tag: "phys_book_gcse",
+            shortTitle: "GCSE Physics", image: "/assets/phy/books/2025_phys_book_gcse.png",
+            path: "/books/phys_book_gcse", subject: "physics", stages: ["gcse"],
+            description: "Helps students to practise applying the GCSE Physics concepts to numerical problems.",
         },
         {
-            title: "Linking Concepts in Pre-University Physics", value: "physics_linking_concepts",
-            label: "Linking Concepts in Pre-Uni Physics", image: "/assets/phy/books/linking_concepts.png",
-            path: "/books/linking_concepts", subject: "physics", stages: ["a_level"]
+            title: "Using Essential GCSE Mathematics", tag: "maths_book_gcse",
+            shortTitle: "GCSE Maths", image: "/assets/phy/books/2025_maths_book_gcse.png",
+            path: "/books/maths_book_gcse", subject: "maths", stages: ["gcse"],
+            description: "Develops the maths skills needed to succeed in science at GCSE level and beyond. Also useful for teaching GCSE maths.",
         },
         {
-            title: "Using Essential GCSE Mathematics", value: "maths_book_gcse",
-            label: "GCSE Maths", image: "/assets/phy/books/2021_maths_book_gcse.jpg",
-            path: "/books/maths_book_gcse", subject: "maths", stages: ["gcse"]
+            title: "Essential Pre-University Physics", tag: "physics_skills_19",
+            shortTitle: "A Level Physics (3rd edition)", image: "/assets/phy/books/2025_physics_skills_19.png",
+            path: "/books/physics_skills_19", subject: "physics", stages: ["a_level"],
+            description: "Covers core topics in A level, IB, and equivalent. Helps students practise applying the concepts of A-level Physics and apply them to solve numerical problems.",
         },
         {
-            title: "Mathematics for Sciences (2nd edition)", value: "maths_book_2e",
-            label: "Pre-Uni Maths (2nd edition)", image: "/assets/phy/books/pre_uni_maths_2e.jpg",
-            path: "/books/pre_uni_maths_2e", subject: "maths", stages: ["a_level"]
+            title: "Pre-University Mathematics for Sciences (2nd edition)", tag: "maths_book_2e",
+            shortTitle: "Pre-Uni Maths (2nd edition)", image: "/assets/phy/books/2025_pre_uni_maths_2e.png",
+            path: "/books/pre_uni_maths_2e", subject: "maths", stages: ["a_level", "university"],
+            description: "Provides questions on mathematical topics that underpin all the sciences, as well as giving practice and fluency for Maths and Further Maths A-levels themselves.",
         },
         {
-            title: "Mathematics for Sciences (1st edition)", value: "maths_book",
-            label: "Pre-Uni Maths (1st edition)", image: "/assets/phy/books/pre_uni_maths.jpg",
-            path: "/books/pre_uni_maths", subject: "maths", stages: ["a_level"]
+            title: "Pre-University Mathematics for Sciences (1st edition)", tag: "maths_book",
+            shortTitle: "Pre-Uni Maths (1st edition)", image: "/assets/phy/books/pre_uni_maths.jpg",
+            path: "/books/pre_uni_maths", subject: "maths", stages: ["a_level", "university"],
+            hidden: BookHiddenState.HIDDEN,
         },
         {
-            title: "Pre-University Physical Chemistry", value: "chemistry_16",
-            label: "A-Level Physical Chemistry", image: "/assets/phy/books/chemistry_16.jpg",
-            path: "/books/chemistry_16", subject: "chemistry", stages: ["a_level"]
-        }
-    ],
-    []
+            title: "Linking Concepts in Pre-University Physics", tag: "physics_linking_concepts",
+            shortTitle: "Linking Concepts in Pre-Uni Physics", image: "/assets/phy/books/linking_concepts.png",
+            path: "/books/linking_concepts", subject: "physics", stages: ["a_level", "university"],
+            description: "Provides practice and guidance in using more than one physics idea to solve problems.",
+        },
+        {
+            title: "Essential Pre-University Physical Chemistry", tag: "chemistry_16",
+            shortTitle: "A Level Physical Chemistry", image: "/assets/phy/books/2025_chemistry_16.png",
+            path: "/books/chemistry_16", subject: "chemistry", stages: ["a_level"],
+            description: "Helps students to practise applying the concepts of physics and physical chemistry included in typical Sixth Form and GCSE courses.",
+        },
+        {
+            title: "A Cavendish Quantum Mechanics Primer", tag: "qmp",
+            shortTitle: "Quantum Mechanics Primer", image: "/assets/phy/books/2025_quantum_mechanics_primer.png",
+            path: "/books/quantum_mechanics_primer", subject: "physics", stages: ["a_level", "university"],
+            description: "Mathematical introduction to quantum mechanics accessible to sixth form students with support.",
+            hidden: BookHiddenState.BOOKS_LISTING_ONLY,
+        },
+        {
+            title: "How to Solve Physics Problems", tag: "solving_physics_problems",
+            shortTitle: "How to Solve Physics Problems", image: "/assets/phy/books/solving_physics_problems.jpg",
+            path: "/books/solve_physics_problems", subject: "physics", stages: ["a_level", "university"],
+            description: "Only available in print. Examples of worked solutions, similar to problem online but not solutions to any of our online questions.",
+            hidden: BookHiddenState.BOOKS_LISTING_ONLY,
+        },
+    ] as const,
+    [] as const
 );
+
+export const ISAAC_BOOKS_BY_TAG: {[tag in BookTag]: BookInfo} = ISAAC_BOOKS.reduce((acc, book) => {
+    acc[book.tag] = book;
+    return acc;
+}, {} as {[tag in BookTag]: BookInfo});
 
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
@@ -724,6 +767,7 @@ export enum TAG_ID {
     evolution = "evolution",
     genetics = "genetics",
     physiology = "physiology",
+    bioMathsSkills = "bio_maths_skills",
 
     // Physics Topics ---
 
@@ -868,6 +912,8 @@ export enum TAG_ID {
     variation = "variation",
     theory = "theory",
     phylogenetics = "phylogenetics",
+    // Biology Maths Skills
+    bioStatisticalTests = "bio_statistical_tests",
 }
 
 export enum TAG_LEVEL {
@@ -882,6 +928,7 @@ export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
     FAST_TRACK_QUESTION = "isaacFastTrackQuestionPage",
+    BOOK_INDEX_PAGE = "isaacBookIndexPage",
     EVENT = "isaacEventPage",
     TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
@@ -894,12 +941,14 @@ export function isAQuestionLikeDoc(doc: ContentDTO): doc is IsaacQuestionPageDTO
 export enum SEARCH_RESULT_TYPE {
     SHORTCUT = "shortcut",
     GAMEBOARD = "gameboard",
+    BOOK_DETAIL_PAGE = "isaacBookDetailPage",
 }
 
 export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.CONCEPT]: "Concepts",
     [DOCUMENT_TYPE.QUESTION]: "Questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
+    [DOCUMENT_TYPE.BOOK_INDEX_PAGE]: "Books",
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
     [DOCUMENT_TYPE.GENERIC]: "Other pages",
@@ -911,6 +960,7 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.CONCEPT]: "concepts",
     [DOCUMENT_TYPE.QUESTION]: "questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "questions",
+    [DOCUMENT_TYPE.BOOK_INDEX_PAGE]: "books",
     [DOCUMENT_TYPE.EVENT]: "events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics",
     [DOCUMENT_TYPE.QUIZ]: "quiz",
@@ -1165,7 +1215,7 @@ export const NULL_CLOZE_ITEM: ItemDTO = {
 // Matches: all legacy, [inline-question:questionId class="{classes}"]
 export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+)(?<params> *\| *(?<width>w-\d+)?(?<height>h-\d+)?| +class=(?:["']|&apos;|&[rl]?quot;)(?<classes>[a-zA-Z0-9 _-]+?)(?:["']|&apos;|&[rl]?quot;))?\]/g;
 
-export type InlineQuestionType = "isaacStringMatchQuestion" | "isaacNumericQuestion" | "isaacMultiChoiceQuestion";
+export type InlineQuestionType = "isaacStringMatchQuestion" | "isaacNumericQuestion" | "isaacMultiChoiceQuestion" | "isaacRegexMatchQuestion";
 
 export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "RASPBERRYPI": "Raspberry Pi Foundation",

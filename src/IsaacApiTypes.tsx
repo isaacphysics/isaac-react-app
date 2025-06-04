@@ -446,6 +446,10 @@ export interface QuizSummaryDTO extends ContentSummaryDTO {
     hiddenFromRoles?: UserRole[];
 }
 
+export interface DetailedQuizSummaryDTO extends QuizSummaryDTO {
+    rubric?: ContentDTO;
+}
+
 export interface EmailTemplateDTO extends ContentDTO {
     subject?: string;
     plainTextContent?: string;

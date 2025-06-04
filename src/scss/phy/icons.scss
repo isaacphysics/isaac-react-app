@@ -66,7 +66,7 @@
 
 .icon-initials {
   // background hex
-  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), $color-brand-400, 36px, 36px, 28px);
+  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), $color-brand-400, 28px, 28px, 100%);
   opacity: 0.2;
   // initials text
   + * {
@@ -119,8 +119,13 @@
   @include svg-icon('/assets/phy/icons/redesign/sidebar.svg', 16px, 16px);
 }
 
-.icon-right {
+.icon-arrow-right {
   @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
+}
+
+.icon-arrow-down {
+  @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
+  transform: rotate(90deg);
 }
 
 .icon-chevron-down {
@@ -163,6 +168,14 @@
     '/assets/phy/icons/redesign/page-concept-thick-fg.svg', 
     '/assets/phy/icons/redesign/page-concept-thick-bg.svg',
     var(--icon-size), var(--icon-size), var(--mask-size, 55%), center 55%
+  );
+}
+
+.icon-generic {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-generic-fg.svg', 
+    '/assets/phy/icons/redesign/page-generic-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), 52% center
   );
 }
 
@@ -295,31 +308,18 @@ svg {
   }
 }
 
+.btn.btn-keyline:hover > i.icon:not(.icon-raw), .btn.btn-tint:hover > i.icon:not(.icon-raw) {
+  background-color: var(--icon-hover);
+
+  &::after {
+    background-color: var(--icon-hover);
+  }
+}
+
 .phy-hex-icon {
   // this is essentially an .icon, but needs different colouring; override size as needed with icon-lg, icon-xl, etc.
   @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), var(--icon-size, 75px), var(--icon-size, 75px), 100%);
   position: absolute;
-}
-
-// Icon sizing
-.icon, .icon-sm {
-  --icon-size: 16px;
-  --mask-size: 100%;
-}
-
-.icon-md {
-  --icon-size: 24px;
-  --mask-size: 100%;
-}
-
-.icon-lg {
-  --icon-size: 60px;
-  --mask-size: initial;
-}
-
-.icon-xl {
-  --icon-size: 75px;
-  --mask-size: initial;
 }
 
 // Overrides -- ONLY use these on an individual basis to override an active theme.
@@ -328,21 +328,6 @@ svg {
 // These are !important by the same logic as Bootstrap classes; if you have specified this as an explicit classname, you want it to take precedence.
 
 // the default icon colour for `neutral` is $color-theme-500 (green), but we use black icons in a few places across e.g. navigation
-@mixin icon-color-override($color) {
-  &.layered {
-    &::before {
-      background-color: $color !important;
-    }
-    &::after {
-      background-color: $color !important;
-    }
-  }
-
-  // .layered is a bit grim; if we could set something in @svg-icon-layered as a flag instead this would be ideal.
-  &:not(.layered) {
-    background-color: $color !important;
-  }
-}
 
 i.icon.icon-color-black {
   @include icon-color-override($color-neutral-900);

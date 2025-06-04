@@ -46,6 +46,7 @@
 
     // ICONS
     --icon-primary: #{map.get($subject-colors, 500)};
+    --icon-hover: #{$color-neutral-white};
 
     --subject-color-50: #{map.get($subject-colors, 50)};
     --subject-color-100: #{map.get($subject-colors, 100)};

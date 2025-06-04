@@ -161,10 +161,6 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
 
-    | {type: ACTION_TYPE.CONCEPTS_REQUEST}
-    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
-
     | {type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST; quizAssignmentId: number}
     | {type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
@@ -489,6 +485,7 @@ export const AssignmentScheduleContext = React.createContext<{
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
     }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+export const ContentSidebarContext = React.createContext<{ toggle: () => void; close: () => void; } | undefined>(undefined);
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
     completed?: boolean;

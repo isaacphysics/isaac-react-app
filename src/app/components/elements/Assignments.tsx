@@ -5,17 +5,12 @@ import {Link} from "react-router-dom";
 import {
     extractTeacherName,
     isDefined,
+    isOverdue,
     PATHS,
     siteSpecific} from "../../services";
 import {formatDate, getFriendlyDaysUntil} from "./DateString";
 import {Circle} from "./svg/Circle";
 import { GameboardCard, GameboardLinkLocation } from "./cards/GameboardCard";
-
-const midnightOf = (date: Date | number) => {
-    const d = new Date(date);
-    d.setHours(23, 59, 59, 999);
-    return d;
-};
 
 const CSCircle = ({label, percentage}: {percentage: number | unknown, label: string}) => {
     return <Label>
@@ -30,7 +25,6 @@ const CSCircle = ({label, percentage}: {percentage: number | unknown, label: str
 };
 
 const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
-    const now = new Date();
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
 
     return <GameboardCard gameboard={assignment.gameboard} linkLocation={GameboardLinkLocation.Card}>
@@ -41,7 +35,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                         Assigned <strong>{getFriendlyDaysUntil(assignmentStartDate)}</strong>
                     </p>
                 }
-                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageAttempted !== 100
+                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && isOverdue(assignment) && assignment.gameboard.percentageAttempted !== 100
                     ? <p className="mb-0"><strong className="overdue">Overdue</strong> <span className="small text-muted">(due {formatDate(assignment.dueDate)})</span></p>
                     : <>{assignment.dueDate && <p className="mb-0">Due <strong>{getFriendlyDaysUntil(assignment.dueDate)}</strong></p>}</>
                 }
@@ -61,15 +55,14 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
 };
 
 const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
-    const now = new Date();
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
     return <Row data-testid={"my-assignment"} className={"pt-3 mb-3 border-top"}>
         <Col xs={8} sm={9} md={7} lg={8}>
-            <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
-                <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
-            </Link>
+            <h4><Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
+                {isDefined(assignment.gameboard) && assignment.gameboard.title}
+            </Link></h4>
             {isDefined(assignmentStartDate) && <p className="mb-0" data-testid={"gameboard-assigned"}><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>}
-            {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageAttempted !== 100
+            {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && isOverdue(assignment) && assignment.gameboard.percentageAttempted !== 100
                 ? <p className="mb-0"><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>
                 : <>{assignment.dueDate && <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>}</>
             }

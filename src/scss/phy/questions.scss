@@ -31,16 +31,17 @@
   }
 
   .question-component {
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
     padding: 1rem 1.5rem 0;
     background-color: var(--subject-color-50);
     border: 1px solid var(--subject-color-100);
     border-radius: 4px;
   }
 
-  // Make sure that reorder questions have a background when they expand on Phy
   .question-component:not(.expansion-layout) {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+
+    // Make sure that reorder questions have a background when they expand on Phy
     box-shadow: none;
     margin-bottom: 1.5rem;
   }
@@ -59,21 +60,6 @@
     .question-component {
       margin-top: 4rem;
     }
-  }
-}
-
-.quick-question {
-  button {
-    border-radius: 0 !important;
-
-    &.active {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-  }
-  .alert {
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
   }
 }
 
@@ -120,6 +106,7 @@
 .numeric-question {
   .numeric-help.numeric-help {
     color: $color-neutral-900;
+    font-size: 0.875rem;
   }
 
   .unit-selection {
@@ -139,29 +126,41 @@
 }
 
 // styling for question components outside an accordion
-.question-component {
-  border: 2px solid var(--nav-primary);
+form:has(> .question-component) {
+  background-color: white;
+  box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
   padding: 0;
+  border: 2px solid var(--nav-primary);
   border-radius: 8px;
   margin-bottom: 1rem;
 
-  > div:first-child {
+  > .question-component > div:first-child {
     padding: 2rem 2rem 0.5rem;
 
     &:last-child {
       padding-bottom: 3rem;
     }
   }
+
+  > .tabbed-hints {
+    padding: 0 2rem;
+  }
 }
 
 // any such styling that should not be present in an accordion
-.isaac-accordion .question-component {
+.isaac-accordion form:has(> .question-component) {
   border: unset;
   // padding is overridden above
   border-radius: unset;
+  box-shadow: none;
+
+  > .tabbed-hints {
+    padding: 0;
+  }
+  
 }
 
-.question-metadata {
+.content-metadata-container {
   background-color: $color-neutral-100;
   border: 1px solid $color-neutral-200;
   border-radius: 4px;

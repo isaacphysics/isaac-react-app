@@ -22,81 +22,14 @@ import {
 import { Difficulty, ExamBoard } from "../../../../IsaacApiTypes";
 import { pageStageToSearchStage, QuestionStatus } from "../../pages/QuestionFinder";
 import classNames from "classnames";
-import { StyledCheckbox } from "../inputs/StyledCheckbox";
+import { CheckboxWrapper, StyledCheckbox } from "../inputs/StyledCheckbox";
 import { DifficultyIcons } from "../svg/DifficultyIcons";
 import { GroupBase } from "react-select";
-import { HierarchyFilterTreeList, Tier } from "../svg/HierarchyFilter";
+import { HierarchyFilterTreeList } from "../svg/HierarchyFilter";
 import { openActiveModal, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
-
-const sublistDelimiter = " >>> ";
-type TopLevelListsState = {
-    stage: {state: boolean, subList: boolean},
-    examBoard: {state: boolean, subList: boolean},
-    topics: {state: boolean, subList: boolean},
-    difficulty: {state: boolean, subList: boolean},
-    books: {state: boolean, subList: boolean},
-    questionStatus: {state: boolean, subList: boolean},
-};
-type OpenListsState = TopLevelListsState & {
-    [sublistId: string]: {state: boolean, subList: boolean}
-};
-type ListStateActions = {type: "toggle", id: string, focus: boolean}
-    | {type: "expandAll", expand: boolean};
-function listStateReducer(state: OpenListsState, action: ListStateActions): OpenListsState {
-    switch (action.type) {
-        case "toggle":
-            return action.focus
-                ? Object.fromEntries(Object.keys(state).map(
-                    (title) => [
-                        title,
-                        {
-                            // Close all lists except this one
-                            state: action.id === title && !(state[action.id]?.state)
-                            // But if this is a sublist don't change top-level lists
-                            || (state[action.id]?.subList
-                                && !(state[title]?.subList)
-                                && state[title]?.state),
-                            subList: state[title]?.subList
-                        }
-                    ])
-                ) as OpenListsState
-                : {...state, [action.id]: {
-                    state: !(state[action.id]?.state),
-                    subList: state[action.id]?.subList
-                }};
-        case "expandAll":
-            return Object.fromEntries(Object.keys(state).map(
-                (title) => [
-                    title,
-                    {
-                        state: action.expand && !(state[title]?.subList),
-                        subList: state[title]?.subList
-                    }
-                ])) as OpenListsState;
-        default:
-            return state;
-    }
-}
-function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsState {
-    const subListState = Object.fromEntries(
-        tags.filter(tag => tag.label)
-            .map(tag => [
-                `topics ${sublistDelimiter} ${tag.label}`,
-                {state: false, subList: true}
-            ])
-    );
-    return {
-        ...subListState,
-        stage: {state: true, subList: false},
-        examBoard: {state: false, subList: false},
-        topics: {state: false, subList: false},
-        difficulty: {state: false, subList: false},
-        books: {state: false, subList: false},
-        questionStatus: {state: false, subList: false}
-    };
-}
+import { initialiseListState, listStateReducer, sublistDelimiter, TopLevelListsState } from "../../../services";
 
 const listTitles: { [field in keyof TopLevelListsState]: string } = {
     stage: siteSpecific("Learning Stage", "Stage"),
@@ -116,7 +49,7 @@ export function getChoiceTreeLeaves(tree: ChoiceTree[]) {
             leaves.push(...tree[0][TAG_LEVEL.subject] ?? []);
         else {
             const parentIds = Object.values(tree[index]).flat().map(item => tags.getById(item.value).parent);
-            leaves = leaves.filter(l => !parentIds.includes(l.value))
+            leaves = leaves.filter(l => !parentIds.includes(l.value));
             Object.values(tree[index]).forEach(v => leaves.push(...v)); 
         }
     }
@@ -158,24 +91,30 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
     const pageContext = useAppSelector(selectors.pageContext.context);
-    const bookOptions = ISAAC_BOOKS.filter(book => !pageContext?.subject || book.subject === pageContext?.subject);
+    const bookOptions = ISAAC_BOOKS.filter(b => !b.hidden).filter(book => 
+        (!pageContext?.subject || book.subject === pageContext?.subject)
+        && (!pageContext?.stage?.length || book.stages.some(x => pageContext?.stage?.includes(x)))
+    );
 
     const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));
 
     const handleFilterPanelExpansion = (e? : React.MouseEvent<HTMLElement>) => {
         e?.stopPropagation();
         if (below["md"](deviceSize)) {
-            listStateDispatch({type: "expandAll", expand: false});
+            listStateDispatch({
+                type: "expandAll", 
+                expand: false
+            });
             setFiltersVisible(p => !p);
         } else {
             listStateDispatch({
                 type: "expandAll",
-                expand: !Object.values(listState).some(v => v.state && !v.subList
-                )});
+                expand: !Object.values(listState).some(v => v.state && !v.subList)
+            });
         }
     };
 
-    return <div data-bs-theme="neutral" className={classNames({"card": isAda})}>
+    return <div data-bs-theme="neutral" className={classNames({"card": isAda})} data-testid="question-finder-filters">
         <CardHeader className="finder-header pl-3" onClick={(e) => {
             // the filters panel can only be collapsed when it is not a sidebar
             // (changing screen size after collapsing does not re-expand it but the options become visible)
@@ -220,14 +159,14 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.length}
             >
                 {getFilteredStageOptions().filter(stage => pageStageToSearchStage(pageContext?.stage).includes(stage.value) || !pageContext?.stage?.length).map((stage, index) => (
-                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStages.includes(stage.value)})} key={index}>
+                    <CheckboxWrapper active={searchStages.includes(stage.value)} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchStages.includes(stage.value)}
                             onChange={() => setSearchStages(s => s.includes(stage.value) ? s.filter(v => v !== stage.value) : [...s, stage.value])}
                             label={<span>{stage.label}</span>}
                         />
-                    </div>
+                    </CheckboxWrapper>
                 ))}
             </CollapsibleList>}
             {isAda && <CollapsibleList
@@ -236,14 +175,14 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={searchExamBoards.length}
             >
                 {getFilteredExamBoardOptions({byStages: searchStages}).map((board, index) => (
-                    <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                    <CheckboxWrapper active={searchExamBoards.includes(board.value)} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchExamBoards.includes(board.value)}
                             onChange={() => setSearchExamBoards(s => s.includes(board.value) ? s.filter(v => v !== board.value) : [...s, board.value])}
                             label={<span>{board.label}</span>}
                         />
-                    </div>
+                    </CheckboxWrapper>
                 ))}
             </CollapsibleList>}
             <CollapsibleList
@@ -252,14 +191,12 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={siteSpecific(getChoiceTreeLeaves(selections).filter(l => l.value !== pageContext?.subject).length, searchTopics.length)}
             >
                 {siteSpecific(
-                    <div>
-                        <HierarchyFilterTreeList root {...{
-                            tier: pageContext?.subject ? 1 : 0,
-                            index: pageContext?.subject as TAG_ID ?? TAG_LEVEL.subject,
-                            choices, selections, setSelections,
-                            questionFinderFilter: true
-                        }}/>
-                    </div>,
+                    <HierarchyFilterTreeList root {...{
+                        tier: pageContext?.subject ? 1 : 0,
+                        index: pageContext?.subject as TAG_ID ?? TAG_LEVEL.subject,
+                        choices, selections, setSelections,
+                        questionFinderFilter: true
+                    }}/>,
                     groupBaseTagOptions.map((tag, index) => (
                         <CollapsibleList
                             title={tag.label} key={index} asSubList
@@ -267,7 +204,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
                         >
                             {tag.options.map((topic, index) => (
-                                <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
+                                <div className={classNames("ps-3", {"bg-white": isAda})} key={index}>
                                     <StyledCheckbox
                                         color="primary"
                                         checked={searchTopics.includes(topic.value)}
@@ -299,7 +236,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     <b className="small text-start">{siteSpecific("Learn more about difficulty levels", "What do the difficulty levels mean?")}</b>
                 </button>
                 {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
-                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchDifficulties.includes(difficulty.value)})} key={index}>
+                    <CheckboxWrapper active={searchDifficulties.includes(difficulty.value)} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchDifficulties.includes(difficulty.value)}
@@ -313,7 +250,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 <DifficultyIcons difficulty={difficulty.value} blank className={classNames({"mt-n2": isAda, "mt-2": isPhy})}/>
                             </div>}
                         />
-                    </div>
+                    </CheckboxWrapper>
                 ))}
             </CollapsibleList>
             {isPhy && bookOptions.length > 0 && <CollapsibleList
@@ -322,27 +259,35 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={excludeBooks ? 1 : searchBooks.length}
             >
                 <>
-                    <div className={classNames("w-100 ps-3 py-1 ms-2", {"checkbox-region": excludeBooks})}>
+                    <CheckboxWrapper active={excludeBooks}>
                         <StyledCheckbox
                             color="primary"
                             checked={excludeBooks}
                             onChange={() => setExcludeBooks(p => !p)}
                             label={<span className="me-2">Exclude skills book questions</span>}
                         />
-                    </div>
+                    </CheckboxWrapper>
+                    <div className="section-divider ms-3 my-2"/>
                     {bookOptions.map((book, index) => (
-                        <div className={classNames("w-100 ps-3 py-1 ms-2", {"checkbox-region": searchBooks.includes(book.value) && !excludeBooks})} key={index}>
+                        <CheckboxWrapper active={searchBooks.includes(book.tag) && !excludeBooks} key={index}>
                             <StyledCheckbox
-                                color="primary" disabled={excludeBooks}
-                                checked={searchBooks.includes(book.value) && !excludeBooks}
-                                onChange={() => setSearchBooks(
-                                    s => s.includes(book.value)
-                                        ? s.filter(v => v !== book.value)
-                                        : [...s, book.value]
-                                )}
-                                label={<span className="me-2">{book.label ?? book.title}</span>}
+                                color="primary"
+                                checked={searchBooks.includes(book.tag) && !excludeBooks}
+                                onChange={() => {
+                                    if (excludeBooks) {
+                                        setExcludeBooks(false);
+                                        setSearchBooks([book.tag]);
+                                    } else {
+                                        setSearchBooks(
+                                            s => s.includes(book.tag)
+                                                ? s.filter(v => v !== book.tag)
+                                                : [...s, book.tag]
+                                        );
+                                    }
+                                }}
+                                label={<span className="me-2">{book.shortTitle ?? book.title}</span>}
                             />
-                        </div>
+                        </CheckboxWrapper>
                     ))}
                 </>
             </CollapsibleList>}
@@ -351,7 +296,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 toggle={() => listStateDispatch({type: "toggle", id: "questionStatus", focus: below["md"](deviceSize)})}
                 numberSelected={Object.values(searchStatuses).reduce((acc, item) => acc + item, 0)}
             >
-                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStatuses.notAttempted})}>
+                <CheckboxWrapper active={searchStatuses.notAttempted}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.notAttempted}
@@ -367,8 +312,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             </div>
                         )}
                     />
-                </div>
-                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStatuses.complete})}>
+                </CheckboxWrapper>
+                <CheckboxWrapper active={searchStatuses.complete}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.complete}
@@ -384,8 +329,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             </div>
                         )}
                     />
-                </div>
-                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStatuses.tryAgain})}>
+                </CheckboxWrapper>
+                <CheckboxWrapper active={searchStatuses.tryAgain}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.tryAgain}
@@ -401,7 +346,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             </div>
                         )}
                     />
-                </div>
+                </CheckboxWrapper>
             </CollapsibleList>
             {/* TODO: implement once necessary tags are available
             <div className="pb-2">

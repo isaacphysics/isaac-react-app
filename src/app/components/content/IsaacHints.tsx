@@ -79,13 +79,16 @@ export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
     }, [hints]);
 
     return <div className="tabbed-hints">
-        {hints && <Tabs onActiveTabChange={logHintView} className="no-print" style="dropdowns" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
-            {Object.assign({}, ...hints.map((hint, index) => ({
-                [titles[index]]: <div className="mt-3 mt-lg-4 pt-2">
-                    <IsaacContent doc={hint} />
-                </div>
-            })))}
-        </Tabs>}
+        {hints && !!hints.length && <>
+            <h5 className="text-theme mb-2">Need some help?</h5>
+            <Tabs onActiveTabChange={logHintView} className="no-print" style="dropdowns" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
+                {Object.assign({}, ...hints.map((hint, index) => ({
+                    [titles[index]]: <div className="mt-3 mt-lg-4 pt-2">
+                        <IsaacContent doc={hint} />
+                    </div>
+                })))}
+            </Tabs>
+        </>}
         <PrintOnlyHints hints={hints} />
     </div>;
 };

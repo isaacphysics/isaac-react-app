@@ -1,13 +1,19 @@
-import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacBookIndexPageDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
-import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap, EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES, ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext, Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder } from "../../../services";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
+    EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
+    ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
+    Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, 
+    isPhy,
+    ISAAC_BOOKS,
+    BookHiddenState, TAG_LEVEL} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
-import { selectors, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
+import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag } from "../../../../IsaacAppTypes";
+import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag, ContentSidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
 import { AssignmentState } from "../../pages/MyAssignments";
@@ -15,7 +21,7 @@ import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { GroupSelector } from "../../pages/Groups";
-import { QuizRubricButton, SectionProgress } from "../quiz/QuizAttemptComponent";
+import { QuizRubricButton, QuizView, SectionProgress } from "../quiz/QuizContentsComponent";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { formatISODateOnly, getFriendlyDaysUntil } from "../DateString";
 import queryString from "query-string";
@@ -25,6 +31,8 @@ import { StyledSelect } from "../inputs/StyledSelect";
 import { CollapsibleList } from "../CollapsibleList";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { getProgressIcon } from "../../pages/Gameboard";
+import { tags as tagsService } from "../../../services";
+import { Markup } from "../markup";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -33,7 +41,11 @@ export const SidebarLayout = (props: RowProps) => {
 
 export const MainContent = (props: ColProps) => {
     const { className, ...rest } = props;
-    return siteSpecific(<Col xs={12} lg={8} xl={9} {...rest} className={classNames(className, "order-0 order-lg-1")} />, props.children);
+    
+    const dispatch = useAppDispatch();
+    dispatch(mainContentIdSlice.actions.set("page-content"));
+
+    return siteSpecific(<Col id="page-content" xs={12} lg={8} xl={9} {...rest} className={classNames(className, "order-0 order-lg-1")} />, props.children);
 };
 
 interface QuestionLinkProps {
@@ -70,9 +82,7 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Isaa
     </li>;
 };
 
-interface SidebarProps extends ColProps {
-
-}
+type SidebarProps = ColProps
 
 const NavigationSidebar = (props: SidebarProps) => {
     // A navigation sidebar is used for external links that are supplementary to the main content (e.g. related content);
@@ -80,11 +90,13 @@ const NavigationSidebar = (props: SidebarProps) => {
     if (isAda) return <></>;
 
     const { className, ...rest } = props;
-    return <Col lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", className)} />;
+    return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", className)} />;
 };
 
 interface ContentSidebarProps extends SidebarProps {
     buttonTitle?: string;
+    hideButton?: boolean; // if true, the sidebar will not be collapsible on small screens
+    optionBar?: React.JSX.Element;
 }
 
 const ContentSidebar = (props: ContentSidebarProps) => {
@@ -98,24 +110,25 @@ const ContentSidebar = (props: ContentSidebarProps) => {
 
     if (isAda) return <></>;
 
-    const { className, buttonTitle, ...rest } = props;
+    const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
     return <>
         {above['lg'](deviceSize) 
-            ? <Col lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
+            ? <Col tag="aside" data-testId="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
                 <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
-                    <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
+                    {!hideButton && <AffixButton data-testId="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
                         affix: "icon-sidebar", 
                         position: "prefix", 
                         type: "icon"
                     }}>
                         {buttonTitle ?? "Search and filter"}
-                    </AffixButton>
+                    </AffixButton>}
+                    <div className="flex-grow-1">{optionBar}</div>
                 </div>
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
-                            <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
+                            <AffixButton color="keyline" size="lg" onClick={toggleMenu} data-testid="close-sidebar-button" affix={{
                                 affix: "icon-close", 
                                 position: "prefix", 
                                 type: "icon"
@@ -125,10 +138,12 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                         </div>
                     }/>
                     <OffcanvasBody>
-                        <Col {...rest} className={classNames("sidebar p-4 pt-0", className)} />
+                        <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: () => setMenuOpen(false)}}>
+                            <Col {...rest} className={classNames("sidebar p-4 pt-0", className)} />
+                        </ContentSidebarContext.Provider>
                     </OffcanvasBody>
                 </Offcanvas>
-            </>
+            </> 
         }
     </>;
 };
@@ -177,7 +192,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
             </ul>
             : <>
                 There are no related concepts for this {pageType}.
-                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "concepts")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "concepts")} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
                     See all concepts for {getHumanContext(pageContext)}
                 </AffixButton>}
             </>
@@ -211,7 +226,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
             </>
             : <>
                 There are no related questions for this {pageType}.
-                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "questions")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "questions")} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
                     See all questions for {getHumanContext(pageContext)}
                 </AffixButton>}
             </>
@@ -308,13 +323,14 @@ interface FilterCheckboxProps extends React.HTMLAttributes<HTMLElement> {
     incompatibleTags?: Tag[]; // tags that are removed when this tag is added
     dependentTags?: Tag[]; // tags that are removed when this tag is removed
     baseTag?: Tag; // tag to add when all tags are removed
+    partial?: boolean; // if true, the checkbox can be partially selected
     partiallySelected?: boolean;
     checkboxStyle?: "tab" | "button";
     bsSize?: "sm" | "lg";
 }
 
 const FilterCheckbox = (props : FilterCheckboxProps) => {
-    const {tag, conceptFilters, setConceptFilters, tagCounts, checkboxStyle, incompatibleTags, dependentTags, baseTag, partiallySelected, ...rest} = props;
+    const {tag, conceptFilters, setConceptFilters, tagCounts, checkboxStyle, incompatibleTags, dependentTags, baseTag, partial, partiallySelected, ...rest} = props;
     const [checked, setChecked] = useState(conceptFilters.includes(tag));
 
     useEffect(() => {
@@ -322,9 +338,13 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
     }, [conceptFilters, tag]);
 
     const handleCheckboxChange = (checked: boolean) => {
+        // Reselect parent if all children are deselected
+        const siblingTags = tag.type === TAG_LEVEL.field && tag.parent ? tags.getDirectDescendents(tag.parent).filter(t => t !== tag) : [];
+        const reselectParent = tag.parent && siblingTags.every(t => !conceptFilters.includes(t));
+
         const newConceptFilters = checked 
             ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), ...(!partiallySelected ? [tag] : [])] 
-            : conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c));
+            : [...conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c)), ...(reselectParent ? [tags.getById(tag.parent!)] : [])];
         setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : (baseTag ? [baseTag] : []));
     };
 
@@ -332,6 +352,7 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
         ? <StyledCheckbox {...rest} id={tag.id} checked={checked}
             onChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
             label={<span>{tag.title} {tagCounts && isDefined(tagCounts[tag.id]) && <span className="text-muted">({tagCounts[tag.id]})</span>}</span>}
+            partial={partial}
         />
         : <StyledTabPicker {...rest} id={tag.id} checked={checked} 
             onInputChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
@@ -378,117 +399,120 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
-        <h5>Search concepts</h5>
-        <Input
-            className='search--filter-input my-4'
-            type="search" value={searchText || ""}
-            placeholder="e.g. Forces"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
-        />
-
-        <div className="section-divider"/>
-
-        <div className="d-flex flex-column">
-            <h5>Filter by topic</h5>
-            <AllFiltersCheckbox 
-                conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag} 
-                forceEnabled={applicableTags.filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0).length === 0}
+        <search>
+            <h5>Search concepts</h5>
+            <Input
+                className='search--filter-input my-4'
+                type="search" value={searchText || ""}
+                placeholder="e.g. Forces"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
             />
-            <div className="section-divider-small"/>
-            {applicableTags
-                .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
-                .map(tag => 
-                    <FilterCheckbox 
-                        key={tag.id} 
-                        tag={tag} 
-                        conceptFilters={conceptFilters} 
-                        setConceptFilters={setConceptFilters} 
-                        tagCounts={tagCounts} 
-                        incompatibleTags={[subjectTag]} 
-                        baseTag={subjectTag}
-                    />
-                )
-            }
-        </div>
 
-        <div className="section-divider"/>
+            <div className="section-divider"/>
 
-        <div className="sidebar-help">
-            <p>The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-            <p>If you want to explore broader concepts across multiple subjects or learning stages, you can use the main concept browser:</p>
-            <AffixButton size="md" color="keyline" tag={Link} to="/concepts" affix={{
-                affix: "icon-right",
-                position: "suffix",
-                type: "icon"
-            }}>
-                Browse concepts
-            </AffixButton>
-        </div>
+            <div className="d-flex flex-column">
+                <h5>Filter by topic</h5>
+                <AllFiltersCheckbox 
+                    conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag} 
+                    forceEnabled={applicableTags.filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0).length === 0}
+                />
+                <div className="section-divider-small"/>
+                {applicableTags
+                    .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
+                    .map(tag => 
+                        <FilterCheckbox 
+                            key={tag.id} 
+                            tag={tag} 
+                            conceptFilters={conceptFilters} 
+                            setConceptFilters={setConceptFilters} 
+                            tagCounts={tagCounts} 
+                            incompatibleTags={[subjectTag]} 
+                            baseTag={subjectTag}
+                        />
+                    )
+                }
+            </div>
+        </search>
     </ContentSidebar>;
 };
 
-export const GenericConceptsSidebar = (props: ConceptListSidebarProps) => {
-    const { searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts, ...rest } = props;
+interface GenericConceptsSidebarProps extends ConceptListSidebarProps {
+    searchStages: Stage[];
+    setSearchStages: React.Dispatch<React.SetStateAction<Stage[]>>;
+    stageCounts: Record<string, number>;
+}
 
-    const pageContext = useAppSelector(selectors.pageContext.context);
+export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
+    const { searchText, setSearchText, conceptFilters, setConceptFilters, tagCounts, searchStages, setSearchStages, stageCounts, ...rest } = props;
+
+    const updateSearchStages = (stage: Stage) => {
+        if (searchStages.includes(stage)) {
+            setSearchStages(searchStages.filter(s => s !== stage));
+        } else {
+            setSearchStages([...(searchStages ?? []), stage]);
+        }
+    };
+    
+    // If exactly one subject is selected, infer a colour for the stage checkboxes
+    const singleSubjectColour = useMemo(() => {
+        return conceptFilters.length === 1 && conceptFilters[0].type === TAG_LEVEL.subject ? conceptFilters[0].id
+            : conceptFilters.length && conceptFilters.every(tag => tag.parent === conceptFilters[0].parent) ? conceptFilters[0].parent
+                : undefined;
+    }, [conceptFilters]);
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
-        <h5>Search concepts</h5>
-        <Input
-            className='search--filter-input my-4'
-            type="search" value={searchText || ""}
-            placeholder="e.g. Forces"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
-        />
+        <search>
+            <h5>Search concepts</h5>
+            <Input
+                className='search--filter-input my-4'
+                type="search" value={searchText || ""}
+                placeholder="e.g. Forces"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+            />
 
-        <div className="section-divider"/>
-        
-        <div className="d-flex flex-column">
-            <h5>Filter by subject</h5>
-            {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
-                const subjectTag = tags.getById(subject as TAG_ID);
-                const descendentTags = tags.getDirectDescendents(subjectTag.id);
-                const isSelected = conceptFilters.includes(subjectTag) || descendentTags.some(tag => conceptFilters.includes(tag));
-                const isPartial = descendentTags.some(tag => conceptFilters.includes(tag)) && descendentTags.some(tag => !conceptFilters.includes(tag));
-                return <div key={i} className={classNames("ps-2", {"checkbox-region": isSelected})}>
-                    <FilterCheckbox 
-                        checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
-                        setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
-                        partiallySelected={descendentTags.some(tag => conceptFilters.includes(tag))} // not quite isPartial; this is also true if all descendents selected
-                        className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
-                    />
-                    {isSelected && <div className="ms-3 ps-2">
-                        {descendentTags
-                            .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
-                            // .sort((a, b) => tagCounts ? tagCounts[b.id] - tagCounts[a.id] : 0)
-                            .map((tag, j) => <FilterCheckbox key={j} 
-                                checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters} 
-                                setConceptFilters={setConceptFilters} tagCounts={tagCounts} incompatibleTags={[subjectTag]}
-                            />)
-                        }
-                    </div>}
-                </div>;
-            })}
-        </div>
-
-        <div className="section-divider"/>
-
-        {pageContext?.subject && <>
             <div className="section-divider"/>
-
-            <div className="sidebar-help">
-                <p>The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                <p>If you want to explore broader concepts across multiple subjects or learning stages, you can use the main concept browser:</p>
-                <AffixButton size="md" color="keyline" tag={Link} to="/concepts" affix={{
-                    affix: "icon-right",
-                    position: "suffix",
-                    type: "icon"
-                }}>
-                    Browse concepts
-                </AffixButton>
+            
+            <div className="d-flex flex-column">
+                <h5>Filter by subject and topic</h5>
+                {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
+                    const subjectTag = tags.getById(subject as TAG_ID);
+                    const descendentTags = tags.getDirectDescendents(subjectTag.id);
+                    const isSelected = conceptFilters.includes(subjectTag) || descendentTags.some(tag => conceptFilters.includes(tag));
+                    const isPartial = descendentTags.some(tag => conceptFilters.includes(tag)) && descendentTags.some(tag => !conceptFilters.includes(tag));
+                    return <div key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
+                        <FilterCheckbox 
+                            checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
+                            setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
+                            partial partiallySelected={descendentTags.some(tag => conceptFilters.includes(tag))} // not quite isPartial; this is also true if all descendents selected
+                            className={classNames("icon", {"icon-checkbox-off": !isSelected, "icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
+                        />
+                        {isSelected && <div className="ms-3 ps-2">
+                            {descendentTags
+                                .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0 || conceptFilters.includes(tag))
+                                // .sort((a, b) => tagCounts ? tagCounts[b.id] - tagCounts[a.id] : 0)
+                                .map((tag, j) => <FilterCheckbox key={j} 
+                                    checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters} 
+                                    setConceptFilters={setConceptFilters} tagCounts={tagCounts} incompatibleTags={[subjectTag]}
+                                />)
+                            }
+                        </div>}
+                    </div>;
+                })}
+                <div className="section-divider"/>
+                <h5>Filter by stage</h5>
+                <ul className="ps-2">
+                    {getFilteredStageOptions().filter(s => stageCounts[s.value] > 0 || searchStages.includes(s.value)).map((stage) =>
+                        <li key={stage.value}>
+                            <StyledCheckbox checked={searchStages.includes(stage.value)}
+                                label={<>{stage.label} <span className="text-muted">({stageCounts[stage.value]})</span></>}
+                                data-bs-theme={singleSubjectColour}
+                                color="theme" onChange={() => {updateSearchStages(stage.value);}}/>
+                        </li>)}
+                </ul>
             </div>
-        </>}
+        </search>
+
     </ContentSidebar>;
 };
 
@@ -509,40 +533,135 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
-        <h5>Search Questions</h5>
-        <Input
-            className='search--filter-input my-4'
-            type="search" value={internalSearchText || ""}
-            placeholder={`e.g. ${getQuestionPlaceholder(pageContext)}`}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                setInternalSearchText(e.target.value);
-                setSearchText(e.target.value);
-            }}
-        />
+        <search>
+            <h5>Search questions</h5>
+            <Input
+                className='search--filter-input my-4'
+                type="search" value={internalSearchText || ""}
+                placeholder={`e.g. ${getQuestionPlaceholder(pageContext)}`}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setInternalSearchText(e.target.value);
+                    setSearchText(e.target.value);
+                }}
+            />
 
-        <QuestionFinderFilterPanel {...questionFinderFilterPanelProps} />
-
-        {pageContext?.subject && pageContext?.stage && <>
-            <div className="section-divider"/>
-
-            <div className="sidebar-help">
-                <p>The questions shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                <p>If you want to explore our full range of questions across multiple subjects or learning stages, you can use the main question finder:</p>
-                <AffixButton size="md" color="keyline" tag={Link} to="/questions" affix={{
-                    affix: "icon-right",
-                    position: "suffix",
-                    type: "icon"
-                }}>
-                    Browse all questions
-                </AffixButton>
-            </div>
-        </>}
+            <QuestionFinderFilterPanel {...questionFinderFilterPanelProps} />
+        </search>
     </ContentSidebar>;
 };
 
-export const PracticeQuizzesSidebar = (props: SidebarProps) => {
-    // TODO
-    return <ContentSidebar {...props}/>;
+interface PracticeQuizzesSidebarProps extends SidebarProps {
+    filterText: string;
+    setFilterText: Dispatch<SetStateAction<string>>;
+    filterTags?: Tag[];
+    setFilterTags: Dispatch<SetStateAction<Tag[]>>;
+    tagCounts: Record<string, number>;
+    filterStages?: Stage[];
+    setFilterStages: Dispatch<SetStateAction<Stage[] | undefined>>;
+    stageCounts: Record<string, number>;
+}
+
+export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
+    const { filterText, setFilterText, filterTags, setFilterTags, tagCounts, filterStages, setFilterStages, stageCounts, ...rest } = props;
+    const pageContext = useAppSelector(selectors.pageContext.context);
+    const fields = pageContext?.subject ? tags.getDirectDescendents(pageContext.subject as TAG_ID) : [];
+
+    const updateFilterTags = (tag: Tag) => {
+        if (filterTags?.includes(tag)) {
+            setFilterTags(filterTags.filter(t => t !== tag));
+        }
+        else {
+            setFilterTags([...(filterTags ?? []), tag]);
+        }
+    };
+
+    const updateFilterStages = (stage: Stage) => {
+        if (filterStages?.includes(stage)) {
+            setFilterStages(filterStages.filter(s => s !== stage));
+        } else {
+            setFilterStages([...(filterStages ?? []), stage]);
+        }
+    };
+
+    // Clear stage filters on subject change, since previous stages may not be visible to deselect
+    useEffect(() => {
+        setFilterStages(undefined);
+    }, [filterTags]);
+
+    return <ContentSidebar {...rest}>
+        <div className="section-divider"/>
+        <h5>Search practice tests</h5>
+        <Input type="search" placeholder="e.g. Challenge" value={filterText} className="search--filter-input my-3"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)} />
+
+        {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
+            <div className="section-divider"/>
+            <h5>Filter by subject and topic</h5>
+            <ul>
+                {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
+                    const subjectTag = tags.getById(subject as TAG_ID);
+                    const descendentTags = tags.getDirectDescendents(subjectTag.id);
+                    const isSelected = filterTags?.includes(subjectTag) || descendentTags.some(tag => filterTags?.includes(tag));
+                    const isPartial = descendentTags.some(tag => filterTags?.includes(tag)) && descendentTags.some(tag => !filterTags?.includes(tag));
+                    return <li key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
+                        <FilterCheckbox 
+                            checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={filterTags as Tag[]} 
+                            setConceptFilters={setFilterTags} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
+                            partiallySelected={descendentTags.some(tag => filterTags?.includes(tag))}
+                            className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
+                        />
+                        {isSelected && <ul className="ms-3 ps-2">
+                            {descendentTags.filter(tag => tagCounts[tag.id] > 0)
+                                .map((tag, j) => <li key={j}>
+                                    <FilterCheckbox
+                                        checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={filterTags as Tag[]} 
+                                        setConceptFilters={setFilterTags} tagCounts={tagCounts} incompatibleTags={[subjectTag]}
+                                    />
+                                </li>)}
+                        </ul>}
+                    </li>;
+                })}
+            </ul>
+        </>}
+
+        {pageContext?.subject && fields.filter(tag => tagCounts[tag.id] > 0).length > 0 && <>
+            <div className="section-divider"/>
+            <h5>Filter by topic</h5>
+            <ul className="ps-2">
+                {fields.filter(tag => tagCounts[tag.id] > 0)
+                    .map((tag, j) => <li key={j} >
+                        <StyledTabPicker checkboxTitle={tag.title} checked={filterTags?.includes(tag)}
+                            count={tagCounts[tag.id]} onInputChange={() => updateFilterTags(tag)}/>
+                    </li>)}
+            </ul>
+        </>}
+
+        {!isSingleStageContext(pageContext) && getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).length > 0 && <>
+            <div className="section-divider"/>
+            <h5>Filter by stage</h5>
+            <ul className="ps-2">
+                {getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).map((stage, i) =>
+                    <li key={i}>
+                        <StyledCheckbox checked={filterStages?.includes(stage.value)}
+                            label={<>{stage.label} {tagCounts && <span className="text-muted">({stageCounts[stage.label]})</span>}</>}
+                            color="theme" data-bs-theme={filterTags?.length === 1 ? filterTags[0].id : undefined}
+                            onChange={() => {updateFilterStages(stage.value);}}/>
+                    </li>)}
+            </ul>
+        </>}
+
+        <div className="section-divider"/>
+        <div className="sidebar-help">
+            <p>You can see all of the tests that you have in progress or have completed in your My Isaac:</p>
+            <AffixButton size="md" color="keyline" tag={Link} to="/tests" affix={{
+                affix: "icon-arrow-right",
+                position: "suffix",
+                type: "icon"
+            }}>
+                My tests
+            </AffixButton>
+        </div>
+    </ContentSidebar>;
 };
 
 export const LessonsAndRevisionSidebar = (props: SidebarProps) => {
@@ -633,34 +752,36 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
             const assignmentCountByStatus = myAssignments && Object.fromEntries(Object.entries(myAssignments).map(([key, value]) => [key, value.length]));
             return <>
                 <div className="section-divider"/>
-                <h5>Search assignments</h5>
-                <Input
-                    className='search--filter-input my-3'
-                    type="search" value={titleFilter || ""}
-                    placeholder="e.g. Forces"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setTitleFilter(e.target.value)}
-                />
-                <div className="section-divider"/>
-                <h5>Sort</h5>
-                <Input type="select" className="ps-3 my-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as MyAssignmentsOrder)}>
-                    {Object.values(MyAssignmentsOrder).map(order => <option key={order} value={order}>{ORDER_NAMES[order]}</option>)}
-                </Input>
-                <div className="section-divider"/>
-                <h5 className="mb-4">Filter by status</h5>
-                <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
-                <div className="section-divider-small"/>
-                {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <AssignmentStatusCheckbox 
-                    key={state} status={state} count={assignmentCountByStatus?.[state]}
-                    statusFilter={statusFilter} setStatusFilter={setStatusFilter} 
-                />)}
-                <h5 className="mt-4 mb-3">Filter by group</h5>
-                <Input type="select" value={groupFilter} onChange={e => setGroupFilter(e.target.value)}>
-                    {["All", ...getDistinctAssignmentGroups(assignments)].map(group => <option key={group} value={group}>{group}</option>)}
-                </Input>
-                <h5 className="mt-4 mb-3">Filter by assigner</h5>
-                <Input type="select" value={setByFilter} onChange={e => setSetByFilter(e.target.value)}>
-                    {["All", ...getDistinctAssignmentSetters(assignments)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
-                </Input>
+                <search>
+                    <h5>Search assignments</h5>
+                    <Input
+                        className='search--filter-input my-3'
+                        type="search" value={titleFilter || ""}
+                        placeholder="e.g. Forces"
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setTitleFilter(e.target.value)}
+                    />
+                    <div className="section-divider"/>
+                    <h5>Sort</h5>
+                    <Input type="select" className="ps-3 my-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as MyAssignmentsOrder)}>
+                        {Object.values(MyAssignmentsOrder).map(order => <option key={order} value={order}>{ORDER_NAMES[order]}</option>)}
+                    </Input>
+                    <div className="section-divider"/>
+                    <h5 className="mb-4">Filter by status</h5>
+                    <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
+                    <div className="section-divider-small"/>
+                    {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <AssignmentStatusCheckbox 
+                        key={state} status={state} count={assignmentCountByStatus?.[state]}
+                        statusFilter={statusFilter} setStatusFilter={setStatusFilter} 
+                    />)}
+                    <h5 className="mt-4 mb-3">Filter by group</h5>
+                    <Input type="select" value={groupFilter} onChange={e => setGroupFilter(e.target.value)}>
+                        {["All", ...getDistinctAssignmentGroups(assignments)].map(group => <option key={group} value={group}>{group}</option>)}
+                    </Input>
+                    <h5 className="mt-4 mb-3">Filter by assigner</h5>
+                    <Input type="select" value={setByFilter} onChange={e => setSetByFilter(e.target.value)}>
+                        {["All", ...getDistinctAssignmentSetters(assignments)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
+                    </Input>
+                </search>
             </>;
         }}/>
     </ContentSidebar>;
@@ -686,34 +807,36 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
-        <h5>Search question decks</h5>
-        <Input
-            className='search--filter-input my-3'
-            type="search" value={boardTitleFilter || ""}
-            placeholder="e.g. Forces"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
-        />
-        <div className="section-divider"/>
-        <h5 className="mb-3">Filter by creator</h5>
-        <Input type="select" value={boardCreatorFilter} onChange={e => setBoardCreatorFilter(e.target.value as BoardCreators)}>
-            {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-        </Input>
-        <h5 className="mt-4 mb-3">Filter by completion</h5>
-        <Input type="select" value={boardCompletionFilter} onChange={e => setBoardCompletionFilter(e.target.value as BoardCompletions)}>
-            {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
-        </Input>
-        <div className="section-divider"/>
-        <h5 className="mb-4">Display</h5>
-        <div className="d-flex flex-xl-column flex-xxl-row">
-            <Input className="w-auto" type="select" aria-label="Set display mode" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
-                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+        <search>
+            <h5>Search question decks</h5>
+            <Input
+                className='search--filter-input my-3'
+                type="search" value={boardTitleFilter || ""}
+                placeholder="e.g. Forces"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
+            />
+            <div className="section-divider"/>
+            <h5 className="mb-3">Filter by creator</h5>
+            <Input type="select" value={boardCreatorFilter} onChange={e => setBoardCreatorFilter(e.target.value as BoardCreators)}>
+                {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
             </Input>
-            {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
-            <div className="select-pretext me-2">Limit:</div>
-            <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
-                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+            <h5 className="mt-4 mb-3">Filter by completion</h5>
+            <Input type="select" value={boardCompletionFilter} onChange={e => setBoardCompletionFilter(e.target.value as BoardCompletions)}>
+                {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
             </Input>
-        </div>
+            <div className="section-divider"/>
+            <h5 className="mb-4">Display</h5>
+            <div className="d-flex flex-xl-column flex-xxl-row">
+                <Input className="w-auto" type="select" aria-label="Set display mode" data-testid="display-select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                    {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                </Input>
+                {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
+                <div className="select-pretext me-2">Limit:</div>
+                <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                    {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+                </Input>
+            </div>
+        </search>
     </ContentSidebar>;
 };
 interface SetAssignmentsSidebarProps extends SidebarProps {
@@ -738,48 +861,49 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
-        <h5>Search question decks</h5>
-        <Input
-            className='search--filter-input my-3'
-            type="search" value={boardTitleFilter || ""}
-            placeholder="e.g. Forces"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
-        />
-        <div className="section-divider"/>
-        <h5 className="mb-3">Filter by subject</h5>
-        <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
-            {Object.values(BoardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
-        </Input>
-        <h5 className="my-3">Filter by creator</h5>
-        <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-            {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-        </Input>
-        <div className="section-divider"/>
-        <h5 className="mb-3">Display</h5>
-        <div className="d-flex">
-            <Input className="w-auto" type="select" aria-label="Set display mode" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
-                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+        <search>
+            <h5>Search question decks</h5>
+            <Input
+                className='search--filter-input my-3'
+                type="search" value={boardTitleFilter || ""}
+                placeholder="e.g. Forces"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
+            />
+            <div className="section-divider"/>
+            <h5 className="mb-3">Filter by subject</h5>
+            <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
+                {Object.values(BoardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
             </Input>
-            <Spacer/>
-            <div className="select-pretext me-2">Limit:</div>
-            <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
-                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+            <h5 className="my-3">Filter by creator</h5>
+            <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
+                {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
             </Input>
-        </div>
-        <h5 className="my-3">Sort by</h5>
-        <Input type="select" className="mb-3" aria-label="Set sort order" value={sortOrder} onChange={e => setSortOrder(e.target.value as AssignmentBoardOrder)} disabled={sortDisabled}>
-            {Object.values(AssignmentBoardOrder).filter(
-                order => !['attempted', '-attempted', 'correct', '-correct'].includes(order)
-            ).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
-        </Input>
-        {sortDisabled && <div className="small text-muted mt-2">
-            Sorting is disabled if some question decks are hidden. Increase the display limit to show all question decks.
-        </div>}
+            <div className="section-divider"/>
+            <h5 className="mb-3">Display</h5>
+            <div className="d-flex">
+                <Input className="w-auto" type="select" aria-label="Set display mode" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                    {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                </Input>
+                <Spacer/>
+                <div className="select-pretext me-2">Limit:</div>
+                <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                    {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+                </Input>
+            </div>
+            <h5 className="my-3">Sort by</h5>
+            <Input type="select" className="mb-3" aria-label="Set sort order" value={sortOrder} onChange={e => setSortOrder(e.target.value as AssignmentBoardOrder)} disabled={sortDisabled}>
+                {Object.values(AssignmentBoardOrder).filter(
+                    order => !['attempted', '-attempted', 'correct', '-correct'].includes(order)
+                ).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+            </Input>
+            {sortDisabled && <div className="small text-muted mt-2">
+                Sorting is disabled if some question decks are hidden. Increase the display limit to show all question decks.
+            </div>}
+        </search>
     </ContentSidebar>;
 };
 
 interface QuizSidebarProps extends SidebarProps {
-    attempt: QuizAttemptDTO;
     viewingAsSomeoneElse: boolean;
     totalSections: number;
     currentSection?: number;
@@ -787,16 +911,37 @@ interface QuizSidebarProps extends SidebarProps {
     sectionTitles: string[];
 }
 
-export const QuizSidebar = (props: QuizSidebarProps) => {
-    const { attempt, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles } = props;
+export interface QuizSidebarAttemptProps extends QuizSidebarProps {
+    attempt: QuizAttemptDTO;
+    view?: undefined;
+}
+
+export interface QuizSidebarViewProps extends QuizSidebarProps {
+    attempt?: undefined;
+    view: QuizView;
+}
+
+export const Pill = ({ title, theme }: {title: string, theme?: string}) =>
+    <span className="badge rounded-pill bg-theme me-1" data-bs-theme={theme}> 
+        {title}
+    </span>;
+
+export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProps) => {
+    const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
     const deviceSize = useDeviceSize();
     const history = useHistory();
     const location = history.location.pathname;
     const rubricPath = 
         viewingAsSomeoneElse ? location.split("/").slice(0, 6).join("/") :
-            attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
+            attempt && attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
                 location.split("/page")[0];
-
+    const hasSections = totalSections > 0;
+    const tags = attempt ? attempt.quiz?.tags : view.quiz?.tags;
+    const subjects = tagsService.getSubjectTags(tags as TAG_ID[]);
+    const topics = tagsService.getTopicTags(tags as TAG_ID[]);
+    const fields = tagsService.getFieldTags(tags as TAG_ID[]);
+    const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A"}];
+    
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon-correct"
             : sectionStates[section] === SectionProgress.STARTED ? "icon-in-progress"
@@ -804,7 +949,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     };
 
     const switchToPage = (page: string) => {
-        if (viewingAsSomeoneElse || attempt.feedbackMode) {
+        if (viewingAsSomeoneElse || attempt && attempt.feedbackMode) {
             history.push(rubricPath.concat("/", page));
         }
         else {
@@ -813,34 +958,43 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     };
 
     const SidebarContents = () => {
-        return <ContentSidebar buttonTitle="Sections">
+        return <ContentSidebar buttonTitle={hasSections ? "Sections" : "Details"}>
             <div className="section-divider"/>
-            <h5 className="mb-3">Sections</h5>
-            <ul>
-                <li>
-                    <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
-                </li>
-                {Array.from({length: totalSections}, (_, i) => i).map(section => 
-                    <li key={section}>
-                        <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section+1} onClick={() => switchToPage(String(section+1))}
-                            suffix={{icon: progressIcon(section), info: sectionStates[section]}}/>
-                    </li>)}
-            </ul>
+            <h5 className="mb-3">Test</h5>
+            <div className="mb-2">Subject{subjects?.length > 1 && "s"}: {subjects.map(s => <Pill key={s.id} title={s.title} theme={s.id}/>)}</div>
+            <div className="mb-2">Topic{topicsAndFields?.length > 1 && "s"}: {topicsAndFields.map(e => <Pill key={e.id} title={e.title} theme="neutral"/>)}</div>
 
-            <div className="section-divider"/>
-
-            <div className="d-flex flex-column sidebar-key">
-                Key
+            {hasSections && <>
+                <div className="section-divider"/>
+                <h5 className="mb-3">Sections</h5>
                 <ul>
-                    <KeyItem icon="status-in-progress" text="Section in progress"/>
-                    <KeyItem icon="status-correct" text="Section completed"/>
+                    <li>
+                        <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
+                    </li>
+                    {Array.from({length: totalSections}, (_, i) => i).map(section => 
+                        <li key={section}>
+                            <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section+1} onClick={() => switchToPage(String(section+1))}
+                                suffix={{icon: progressIcon(section), info: sectionStates[section]}}/>
+                        </li>)}
                 </ul>
-            </div>
+
+                <div className="section-divider"/>
+
+                <div className="d-flex flex-column sidebar-key">
+                Key
+                    <ul>
+                        <KeyItem icon="status-not-started" text="Section not started"/>
+                        <KeyItem icon="status-in-progress" text="Section in progress"/>
+                        <KeyItem icon="status-correct" text="Section completed"/>
+                    </ul>
+                </div>
+            </>}
+
         </ContentSidebar>;
     };
 
     return <>
-        {below["md"](deviceSize) ?
+        {below["md"](deviceSize) && attempt && isPhy && currentSection ?
             <Row className="d-flex align-items-center">
                 <Col>
                     <SidebarContents/>
@@ -866,10 +1020,14 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
-            <StyledTabPicker
-                key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
-                onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
-            />
+            <ContentSidebarContext.Consumer key={tab}>
+                {(context) => 
+                    <StyledTabPicker
+                        key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
+                        onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}
+                    />
+                }
+            </ContentSidebarContext.Consumer>
         )}
     </ContentSidebar>;
 };
@@ -976,81 +1134,77 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
 
     return <ContentSidebar buttonTitle="Search & Filter">
         {above["lg"](deviceSize) && <div className="section-divider"/>}
-        <h5>Search tests</h5>
-        <Input
-            id="manage-quizzes-title-filter" type="search"
-            value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
-            className="search--filter-input mt-3 mb-4"
-            placeholder="e.g. Forces" aria-label="Search by title"
-        /> 
-        <h5>Search by group</h5>
-        <Input
-            id="manage-quizzes-group-name-filter" type="search"
-            value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
-            className="search--filter-input my-3"
-            placeholder="Group name"  aria-label="Search by group"
-        />
-        <div className="section-divider"/>
-        <h5>Filter by date</h5>
-        <div className="d-flex align-items-center">
-            <span className="quiz-filter-date-span">Starting</span>
-            {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
-        </div>
-        <Input
-            id="manage-quizzes-set-date-filter" type="date" className="quiz-filter-date-input"
-            value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
-            placeholder="Filter by set date" aria-label="Filter by set date"
-        />
-        <div className="d-flex align-items-center mt-2">
-            <span className="quiz-filter-date-span">Due</span>
-            {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
-        </div>
-        <Input
-            id="manage-quizzes-due-date-filter" type="date" className="quiz-filter-date-input"
-            value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
-            placeholder="Filter by due date" aria-label="Filter by due date"
-        />
+        <search>
+            <h5>Search tests</h5>
+            <Input
+                id="manage-quizzes-title-filter" type="search"
+                value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
+                className="search--filter-input mt-3 mb-4"
+                placeholder="e.g. Forces" aria-label="Search by title"
+            /> 
+            <h5>Search by group</h5>
+            <Input
+                id="manage-quizzes-group-name-filter" type="search"
+                value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
+                className="search--filter-input my-3"
+                placeholder="Group name"  aria-label="Search by group"
+            />
+            <div className="section-divider"/>
+            <h5>Filter by date</h5>
+            <div className="d-flex align-items-center">
+                <span className="quiz-filter-date-span">Starting</span>
+                {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
+            </div>
+            <Input
+                id="manage-quizzes-set-date-filter" type="date" className="quiz-filter-date-input"
+                value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
+                placeholder="Filter by set date" aria-label="Filter by set date"
+            />
+            <div className="d-flex align-items-center mt-2">
+                <span className="quiz-filter-date-span">Due</span>
+                {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
+            </div>
+            <Input
+                id="manage-quizzes-due-date-filter" type="date" className="quiz-filter-date-input"
+                value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
+                placeholder="Filter by due date" aria-label="Filter by due date"
+            />
+        </search>
     </ContentSidebar>;
 };
 
 export const EventsSidebar = (props: SidebarProps) => {
+    const deviceSize = useDeviceSize();
     const history = useHistory();
     const query: EventsPageQueryParams = queryString.parse(history.location.search);
     const user = useAppSelector(selectors.user.orNull);
 
-    return <ContentSidebar style={{marginTop: "65px"}} buttonTitle="Filter events" {...props}>
-        <Form>
+    return <ContentSidebar buttonTitle="Filter events" {...props}>
+        <Form tag={"search"}>
+            {above["lg"](deviceSize) && <div className="section-divider mt-5"/>}
             <h5 className="mb-3">Event type</h5>
             <ul>               
                 {Object.entries(EventStatusFilter)
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])
                     .map(([statusLabel, statusValue]) =>
-                        <li className="list-unstyled" key={statusValue}>
-                            <Label className="py-1 label-radio d-flex">
-                                <Input                                   
-                                    id={statusValue}
-                                    name="event-status"
-                                    color="primary"
-                                    type="radio"
-                                    defaultChecked={
-                                        (!isDefined(query.event_status) && statusValue === EventStatusFilter["Upcoming events"]) ||
-                                        (query.show_booked_only && statusValue === EventStatusFilter["My booked events"]) ||
-                                        (query.show_reservations_only && statusValue === EventStatusFilter["My event reservations"]) ||
-                                        (query.event_status === "all" && statusValue === EventStatusFilter["All events"])
-                                    }
-                                    onChange={() => {
-                                        const selectedFilter = statusValue;
-                                        query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
-                                        query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
-                                        query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
-                                        history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
-                                    }}
-                                />
-                                <div className="flex-fill overflow-x-auto">
-                                    <span>{statusLabel}</span>
-                                </div>
-                            </Label>
+                        <li key={statusValue}>
+                            <StyledTabPicker                                   
+                                id={statusValue}
+                                checkboxTitle={statusLabel}
+                                checked={
+                                    (!isDefined(query.event_status) && !query.show_booked_only && !query.show_reservations_only && statusValue === EventStatusFilter["Upcoming events"]) ||
+                                    (query.show_booked_only && statusValue === EventStatusFilter["My booked events"]) ||
+                                    (query.show_reservations_only && statusValue === EventStatusFilter["My event reservations"]) ||
+                                    (query.event_status === "all" && statusValue === EventStatusFilter["All events"])
+                                }
+                                onChange={() => {
+                                    query.show_booked_only = statusValue === EventStatusFilter["My booked events"] ? true : undefined;
+                                    query.show_reservations_only = statusValue === EventStatusFilter["My event reservations"] ? true : undefined;
+                                    query.event_status = statusValue === EventStatusFilter["All events"] ? "all" : undefined;
+                                    history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                                }}
+                            />
                         </li>
                     )
                 }
@@ -1060,23 +1214,15 @@ export const EventsSidebar = (props: SidebarProps) => {
             <h5 className="mb-3">Groups</h5>
             <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
-                    <li className="list-unstyled" key={typeValue}>
-                        <Label className="py-1 label-radio d-flex">
-                            <Input                                   
-                                id={typeValue}
-                                name="event-type"
-                                color="primary"
-                                type="radio"
-                                defaultChecked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All groups"]}
-                                onChange={() => {
-                                    const selectedType = typeValue;
-                                    query.types = selectedType !== EventTypeFilter["All groups"] ? selectedType : undefined;
-                                    history.push({pathname: location.pathname, search: queryString.stringify(query as any)});}}
-                            />
-                            <div className="flex-fill overflow-x-auto">
-                                <span>{typeLabel}</span>
-                            </div>
-                        </Label>
+                    <li key={typeValue}>
+                        <StyledTabPicker                                   
+                            id={typeValue}
+                            checkboxTitle={typeLabel}
+                            checked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All groups"]}
+                            onChange={() => {
+                                query.types = typeValue !== EventTypeFilter["All groups"] ? typeValue : undefined;
+                                history.push({pathname: location.pathname, search: queryString.stringify(query as any)});}}
+                        />
                     </li>
                 )
                 }
@@ -1086,23 +1232,16 @@ export const EventsSidebar = (props: SidebarProps) => {
             <h5 className="mb-3">Stages</h5>
             <ul>               
                 {Object.entries(EventStageMap).map(([label, value]) =>
-                    <li className="list-unstyled" key={value}>
-                        <Label className="py-1 label-radio d-flex">
-                            <Input                                   
-                                id={value}
-                                name="event-stage"
-                                color="primary"
-                                type="radio"
-                                defaultChecked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
-                                onChange={() => {
-                                    query.show_stage_only = value !== STAGE.ALL ? value : undefined;
-                                    history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
-                                }}
-                            />
-                            <div className="flex-fill overflow-x-auto">
-                                <span>{label}</span>
-                            </div>
-                        </Label>
+                    <li key={value}>
+                        <StyledTabPicker                                                           
+                            id={value}
+                            checkboxTitle={label}
+                            checked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
+                            onChange={() => {
+                                query.show_stage_only = value !== STAGE.ALL ? value : undefined;
+                                history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                            }}
+                        />
                     </li>
                 )
                 }
@@ -1169,26 +1308,30 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
         <ShowLoadingQuery query={quizQuery} defaultErrorTitle="" thenRender={(quizzes: QuizAssignmentDTO[]) => {
             return <>
                 {above["lg"](deviceSize) && <div className="section-divider"/>}
-                <h5>Search tests</h5>
-                <Input type="search" className="search--filter-input my-3" onChange={(e) => setQuizTitleFilter(e.target.value)} 
-                    placeholder="e.g. Forces" aria-label="Search by title"/>
-                <div className="section-divider"/>
-                <h5 className="mb-3">Filter by status</h5>
-                <QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/>
-                <div className="section-divider-small"/>
-                {statusOptions.map(state => <QuizStatusCheckbox 
-                    key={state} status={state} count={undefined} statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} 
-                />)}
-                <h5 className="my-3">Filter by assigner</h5>
-                <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
-                    {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
-                </Input>
-                <div className="section-divider mt-4"/>
-                <h5 className="mb-3">Display</h5>
-                <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
-                    <option value="table">Table View</option>
-                    <option value="cards">Card View</option>
-                </StyledDropdown>
+                <search>
+                    <h5>Search tests</h5>
+                    <Input type="search" className="search--filter-input my-3" onChange={(e) => setQuizTitleFilter(e.target.value)} 
+                        placeholder="e.g. Forces" aria-label="Search by title"/>
+                    <div className="section-divider"/>
+                    <h5 className="mb-3">Filter by status</h5>
+                    <QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/>
+                    <div className="section-divider-small"/>
+                    {statusOptions.map(state => <QuizStatusCheckbox 
+                        key={state} status={state} count={undefined} statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} 
+                    />)}
+                    {activeTab === 1 && <>
+                        <h5 className="my-3">Filter by assigner</h5>
+                        <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
+                            {["All", ...getDistinctAssignmentSetters(quizzes)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
+                        </Input>
+                    </>}
+                    <div className="section-divider mt-4"/>
+                    <h5 className="mb-3">Display</h5>
+                    <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
+                        <option value="table">Table View</option>
+                        <option value="cards">Card View</option>
+                    </StyledDropdown>
+                </search>
             </>;
         }}/>
     </ContentSidebar>;
@@ -1206,39 +1349,41 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
 
     return <ContentSidebar buttonTitle="Switch stage/subject" {...props}>
         <div className="section-divider"/>
-        <h5>Decks by stage</h5>
-        <ul>
-            {validStageSubjectPairs[context.subject].map((stage, index) => 
-                <li key={index}>
-                    <StyledTabPicker 
-                        checkboxTitle={HUMAN_STAGES[stage]} 
-                        checked={context.stage.includes(stage)}
-                        onClick={() => history.push(`/${context.subject}/${stage}/question_decks`)}
-                    />
-                </li>
-            )}
-        </ul>
-        <div className="section-divider"/>
-        <h5>Decks by subject</h5>
-        <ul>
-            {Object.entries(validStageSubjectPairs)
-                .filter(([_subject, stages]) => (stages as LearningStage[]).includes(context.stage[0]))
-                .map(([subject, _stages], index) => 
+        <search>
+            <h5>Decks by stage</h5>
+            <ul>
+                {validStageSubjectPairs[context.subject].map((stage, index) => 
                     <li key={index}>
                         <StyledTabPicker 
-                            checkboxTitle={HUMAN_SUBJECTS[subject]} 
-                            checked={context.subject === subject}
-                            onClick={() => history.push(`/${subject}/${context.stage}/question_decks`)}
+                            checkboxTitle={HUMAN_STAGES[stage]} 
+                            checked={context.stage.includes(stage)}
+                            onClick={() => history.push(`/${context.subject}/${stage}/question_decks`)}
                         />
                     </li>
-                )
-            }
-        </ul>
+                )}
+            </ul>
+            <div className="section-divider"/>
+            <h5>Decks by subject</h5>
+            <ul>
+                {Object.entries(validStageSubjectPairs)
+                    .filter(([_subject, stages]) => (stages as LearningStage[]).includes(context.stage[0]))
+                    .map(([subject, _stages], index) => 
+                        <li key={index}>
+                            <StyledTabPicker 
+                                checkboxTitle={HUMAN_SUBJECTS[subject]} 
+                                checked={context.subject === subject}
+                                onClick={() => history.push(`/${subject}/${context.stage}/question_decks`)}
+                            />
+                        </li>
+                    )
+                }
+            </ul>
+        </search>
     </ContentSidebar>;
 };
 
 
-interface GlossarySidebarProps extends SidebarProps {
+interface GlossarySidebarProps extends ContentSidebarProps {
     searchText: string;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
     filterSubject: Tag | undefined;
@@ -1250,61 +1395,63 @@ interface GlossarySidebarProps extends SidebarProps {
 }
 
 export const GlossarySidebar = (props: GlossarySidebarProps) => {
-    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStage, setFilterStage, subjects, stages, ...rest } = props;
+    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStage, setFilterStage, subjects, stages, optionBar, ...rest } = props;
     
     const history = useHistory();
     const pageContext = useAppSelector(selectors.pageContext.context);
 
-    return <ContentSidebar buttonTitle="Search glossary" {...rest}>
+    return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
-        <h5>Search glossary</h5>
-        <Input
-            className='search--filter-input my-4'
-            type="search" value={searchText || ""}
-            placeholder="e.g. Forces"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
-        />
-        <div className="section-divider"/>
-
-        {!pageContext?.subject && <>
-            <h5>Select subject</h5>
-            <Label for='subject-select' className='visually-hidden'>Subject</Label>
-            <StyledSelect inputId="subject-select"
-                options={subjects.map(s => ({ value: s.id, label: s.title}))}
-                value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title}) : undefined}
-                name="subject-select"
-                placeholder="Select a subject"
-                onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
-                isClearable
+        <search>
+            <h5>Search glossary</h5>
+            <Input
+                className='search--filter-input my-4'
+                type="search" value={searchText || ""}
+                placeholder="e.g. Forces"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
             />
-        </>}
+            <div className="section-divider"/>
 
-        {!pageContext?.stage?.length && <>
-            <h5 className="mt-4">Select stage</h5>
-            <Label for='stage-select' className='visually-hidden'>Stage</Label>
-            <StyledSelect inputId="stage-select"
-                options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
-                value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
-                name="stage-select"
-                placeholder="Select a stage"
-                onChange={e => setFilterStage(stages.find(s => s === e?.value))}
-                isClearable
-            />
-        </>}
+            {!pageContext?.subject && <>
+                <h5>Select subject</h5>
+                <Label for='subject-select' className='visually-hidden'>Subject</Label>
+                <StyledSelect inputId="subject-select"
+                    options={subjects.map(s => ({ value: s.id, label: s.title}))}
+                    value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title}) : undefined}
+                    name="subject-select"
+                    placeholder="Select a subject"
+                    onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
+                    isClearable
+                />
+            </>}
 
-        {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
-            <h5>Switch learning stage</h5>
-            <ul>
-                {PHY_NAV_SUBJECTS[pageContext.subject].map((stage, index) => 
-                    <li key={index}>
-                        <StyledTabPicker
-                            checkboxTitle={HUMAN_STAGES[stage]} checked={pageContext.stage[0] === stage} 
-                            onClick={() => history.replace(`/${pageContext.subject}/${stage}/glossary`)}
-                        />
-                    </li>
-                )}
-            </ul>
-        </>}
+            {!pageContext?.stage?.length && <>
+                <h5 className="mt-4">Select stage</h5>
+                <Label for='stage-select' className='visually-hidden'>Stage</Label>
+                <StyledSelect inputId="stage-select"
+                    options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
+                    value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
+                    name="stage-select"
+                    placeholder="Select a stage"
+                    onChange={e => setFilterStage(stages.find(s => s === e?.value))}
+                    isClearable
+                />
+            </>}
+
+            {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
+                <h5>Switch learning stage</h5>
+                <ul>
+                    {PHY_NAV_SUBJECTS[pageContext.subject].map((stage, index) => 
+                        <li key={index}>
+                            <StyledTabPicker
+                                checkboxTitle={HUMAN_STAGES[stage]} checked={pageContext.stage[0] === stage} 
+                                onClick={() => history.replace(`/${pageContext.subject}/${stage}/glossary`)}
+                            />
+                        </li>
+                    )}
+                </ul>
+            </>}
+        </search>
     </ContentSidebar>;
 };
 
@@ -1348,7 +1495,7 @@ export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
                             <StyledTabPicker
                                 checkboxTitle={<div className="d-flex">
                                     <span className="text-theme me-2">{section.label}</span>
-                                    <span className="flex-grow-1">{section.title}</span>
+                                    <span className="flex-grow-1"><Markup encoding="latex">{section.title}</Markup></span>
                                 </div>}
                                 checked={pageId === section.bookPageId}
                                 onClick={() => history.push(`/books/${urlBookId}/${section.bookPageId?.slice((book.id?.length ?? 0) + 1)}`)}
@@ -1361,28 +1508,41 @@ export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
     </ContentSidebar>;
 };
 
-export const GenericPageSidebar = () => {
+export const GenericPageSidebar = (props: ContentSidebarProps) => {
     // Default sidebar for general pages that don't have a custom sidebar
-    return <ContentSidebar buttonTitle="Options">
+    return <ContentSidebar buttonTitle="Options" hideButton optionBar={props.optionBar}>
         <div className="section-divider"/>
-        <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+        <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
             Go to homepage
         </AffixButton>
     </ContentSidebar>;
 };
 
-export const PolicyPageSidebar = () => {
+export const PolicyPageSidebar = (props: ContentSidebarProps) => {
     const history = useHistory();
     const path = useLocation().pathname;
 
-    return <ContentSidebar buttontitle="Select a page">
+    return <ContentSidebar buttonTitle="Select a page" optionBar={props.optionBar}>
         <div className="section-divider"/>
         <h5>Select a page</h5>
         <ul>
-            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={path === "/accessibility"} onClick={() => history.push("/accessibility")}/></li>
-            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"} onClick={() => history.push("/privacy")}/></li>
-            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies"} onClick={() => history.push("/cookies")}/></li>
-            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms"} onClick={() => history.push("/terms")}/></li>
+            <li><StyledTabPicker checkboxTitle="Accessibility Statement" checked={path === "/accessibility" || path === "/pages/accessibility_statement"} onClick={() => history.push("/accessibility")}/></li>
+            <li><StyledTabPicker checkboxTitle="Privacy Policy" checked={path === "/privacy"  || path === "/pages/privacy_policy"} onClick={() => history.push("/privacy")}/></li>
+            <li><StyledTabPicker checkboxTitle="Cookie Policy" checked={path === "/cookies" || path === "/pages/cookie_policy"} onClick={() => history.push("/cookies")}/></li>
+            <li><StyledTabPicker checkboxTitle="Terms of Use" checked={path === "/terms" || path === "/pages/terms_of_use"} onClick={() => history.push("/terms")}/></li>
+        </ul>
+    </ContentSidebar>;
+};
+
+export const BooksOverviewSidebar = (props: ContentSidebarProps) => {
+    const history = useHistory();
+    return <ContentSidebar buttonTitle="View all books" {...props}>
+        <div className="section-divider"/>
+        <h5>Our books</h5>
+        <ul>
+            {ISAAC_BOOKS.filter(book => book.hidden !== BookHiddenState.HIDDEN).map((book, index) => <li key={index}>
+                <StyledTabPicker checkboxTitle={book.title} checked={false} onClick={() => history.push(book.path)}/>
+            </li>)}
         </ul>
     </ContentSidebar>;
 };

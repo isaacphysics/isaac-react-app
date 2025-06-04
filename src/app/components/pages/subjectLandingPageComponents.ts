@@ -1,6 +1,6 @@
 import { PageContextState } from "../../../IsaacAppTypes";
-import { BookInfo, getHumanContext, interleave, ISAAC_BOOKS, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS, Writeable } from "../../services";
-import { ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
+import { BookInfo, getHumanContext, interleave, ISAAC_BOOKS, ISAAC_BOOKS_BY_TAG, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS } from "../../services";
+import { AbstractListViewItemState, ListViewTagProps } from "../elements/list-groups/AbstractListViewItem";
 import { ListViewCardProps } from "../elements/list-groups/ListView";
 
 export const extendUrl = (context: NonNullable<Required<PageContextState>>, page: string) => {
@@ -10,7 +10,7 @@ export const extendUrl = (context: NonNullable<Required<PageContextState>>, page
 const QuestionFinderCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
         title: "Question finder",
-        subtitle: `Find ${getHumanContext(context)} questions you need by topic and difficulty level.`
+        subtitle: `Find ${getHumanContext(context)} questions to try by topic and difficulty level.`
     },
     icon: {type: "hex", icon: "icon-finder"},
     subject: context.subject,
@@ -29,8 +29,8 @@ const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): List
 
 const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
-        title: "Tests",
-        subtitle: "Use tests to practise a range of topics. These tests are available for you to freely attempt."
+        title: context.stage.includes("university") ? "Practice admissions tests" : "Tests",
+        subtitle: `Use tests to ${context.stage.includes("university") ? "prepare for university admissions tests" : "practise a range of topics"}. These tests are available for you to freely attempt.`
     },
     icon: {type: "hex", icon: "icon-tests"},
     subject: context.subject,
@@ -39,12 +39,14 @@ const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): Li
 
 const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
-        title: "Questions by topic",
-        subtitle: "Practise specific topics by using our ready-made question decks on specific topics."
+        title: "Question decks by topic",
+        subtitle: context.subject === "chemistry" && context.stage.includes("university")
+            ? "Consolidate your chemistry understanding with these questions by topic."
+            : "Practise specific topics by using our ready-made question decks."
     },
     icon: {type: "hex", icon: "icon-question-deck"},
     subject: context.subject,
-    linkTags: [{tag: "Explore topic question decks", url: extendUrl(context, 'question_decks')}]
+    linkTags: [{tag: "View topic question decks", url: extendUrl(context, 'question_decks')}]
 });
 
 // TODO: replace the link tags with links to lessons by *field* (see designs)
@@ -55,88 +57,131 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
     },
     icon: {type: "hex", icon: "icon-revision"},
     subject: context.subject,
-    linkTags: [{tag: "List of revision areas", url: extendUrl(context, 'lessons')}]
+    linkTags: [{tag: "List of revision areas", url: extendUrl(context, 'revision')}],
+    state: AbstractListViewItemState.COMING_SOON,
 });
 
-const QuickQuizzesCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+const CoreSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
         title: "Core skills practice",
-        subtitle: `Practice core skills required for ${getHumanContext(context)}.`
+        subtitle: `Practise core skills required in ${getHumanContext(context)}.`
     },
     icon: {type: "hex", icon: "icon-quiz"},
     subject: context.subject,
-    linkTags: [{tag: "Find a quiz", url: extendUrl(context, 'quick_quizzes')}]
+    linkTags: [{tag: "Practise a core skill", url: extendUrl(context, 'quick_quizzes')}],
+    state: AbstractListViewItemState.COMING_SOON,
 });
 
 const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
         title: "Glossary",
-        subtitle: "Explore our glossary of terms and definitions."
+        subtitle: `Use the glossary to understand the vocabulary you need for ${getHumanContext(context)}.`
     },
     icon: {type: "hex", icon: "icon-tests"},
     subject: context.subject,
-    linkTags: [{tag: "View glossary", url: extendUrl(context, 'glossary')}]
+    linkTags: [{tag: "Browse the glossary", url: extendUrl(context, 'glossary')}]
 });
 
-const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListViewTagProps[]) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+const BookCard = (book: BookInfo, description: string) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
+    item: {
+        title: book.title,
+        subtitle: description
+    },
+    icon: {type: "hex", icon: "icon-book"},
+    subject: context.subject,
+    linkTags: [{tag: book.title, url: book.path}]
+});
+
+const StepIntoPhyCard = BookCard(ISAAC_BOOKS_BY_TAG["phys_book_step_into"], "Discover secondary physics ideas and interesting experiments. Aimed at students in years 7 and 8.");
+const StepUpPhyCard = BookCard(ISAAC_BOOKS_BY_TAG["phys_book_step_up"], "Build a strong foundation in physics. Aimed at students in year 9.");
+
+const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListViewTagProps[], state?: AbstractListViewItemState) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     item: {
         title,
         subtitle
     },
     icon: {type: "hex", icon: "icon-revision"},
     subject: context.subject,
-    linkTags
+    linkTags,
+    state,
 });
 
 const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Practice apps", "Explore dynamically-generated and interactive questions with our practice apps.", [{tag: "View practice apps", url: extendUrl(context, 'apps')}])(context);
+    return ArbitraryPageLinkCard("Skills practice", `Consolidate your ${context.subject} skills with these apps.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "apps")}])(context);
 };
 
-const SPCCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Senior Physics Challenge", "Take your problem solving skills to the next level in the Senior Physics Challenge, a competition open to all UK resident A Level students.", [{tag: "Find out more", url: extendUrl(context, '/pages/spc')}])(context);
+/*const SPCCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard("Senior Physics Challenge", "Take your problem solving skills to the next level in the Senior Physics Challenge, a competition open to all UK resident A Level students.", [{tag: "Find out more", url: '/pages/spc'}])(context);
+};*/
+
+const MentoringSchemeCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard("Mentoring scheme", "Take your problem solving skills to the next level by joining the mentoring scheme.", [{tag: "Find out more", url: "/pages/isaac_mentor"}])(context);
 };
 
-const MathsSkillsQuestionsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Maths skills questions", "Explore our maths skills questions.", [{tag: "View maths skills questions", url: extendUrl(context, 'skills_questions')}])(context);
+const AlgebraSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard("Core skills", "Keep training those maths skills with our algebra app.", [{tag: "Practise core skills", url: extendUrl(context, "skills_questions")}])(context);
+};
+
+const MathsSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard("Core skills practice", `Practise those core skills, such as rearranging equations, vital for ${getHumanContext(context)}.`, [{tag: "Practise core skills", url: extendUrl(context, "skills_questions")}])(context);
+};
+
+const MathsRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard("Revision", "Revise with our tailored revision decks on core pure, further pure, and mechanics.", [{tag: "List of revision decks", url: "/pages/maths_practice#master_maths"}])(context);
 };
 
 const BiologyExtensionQuestionsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
     return ArbitraryPageLinkCard("Biology extension", "Stretch your understanding of biology with our extension questions that make you think outside the box.", [{tag: "View extension questions", url: "/pages/biology_extension_questions"}])(context);
 };
 
+const MathsUniCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard(context.subject === "maths" ? "Revision" : `Maths revision for ${context.subject}`, `Refresh your maths skills in preparation for ${context.subject} at university.`, [{tag: "List of revision areas", url: extendUrl(context, "")}], AbstractListViewItemState.COMING_SOON)(context);
+};
+
 const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
     "physics": {
-        "11_14": [BoardsByTopicCard, null, null],
-        "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, QuickQuizzesCard],
-        "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, SPCCard],
-        "university": [BoardsByTopicCard, null, null],
+        "11_14": [StepUpPhyCard, AlgebraSkillsCard, null],
+        "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, CoreSkillsCard],
+        "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, MentoringSchemeCard],
+        "university": [BoardsByTopicCard, MathsUniCard, null],
     },
     "chemistry": {
-        "gcse": [AnvilAppsCard, GlossaryCard, null],
-        "a_level": [BoardsByTopicCard, GlossaryCard, AnvilAppsCard],
-        "university": [BoardsByTopicCard, null, null],
+        "gcse": [CoreSkillsCard, GlossaryCard],
+        "a_level": [BoardsByTopicCard, GlossaryCard, CoreSkillsCard],
+        "university": [BoardsByTopicCard, AnvilAppsCard, MathsUniCard],
     },
     "maths": {
-        "gcse": [AnvilAppsCard, BoardsByTopicCard, null],
+        "gcse": [BoardsByTopicCard, MathsSkillsCard],
         // "practice maths" is boards by topic for maths – needs renaming
-        "a_level": [BoardsByTopicCard, MathsSkillsQuestionsCard, null],
-        "university": [BoardsByTopicCard, null, null],
+        "a_level": [BoardsByTopicCard, MathsRevisionCard, MathsSkillsCard],
+        "university": [BoardsByTopicCard, MathsUniCard, null],
     },
     "biology": {
         "a_level": [BoardsByTopicCard, GlossaryCard, BiologyExtensionQuestionsCard],
     }
 };
 
-// constructs a map similar to above for relevant books (pulled from isaacBooks).
-const subjectSpecificBooksMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: BookInfo[]}} = (
-    Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
-        acc[subject as keyof typeof PHY_NAV_SUBJECTS] = stages.reduce((stageAcc, stage) => {
-            stageAcc[stage] = ISAAC_BOOKS.filter(book => book.subject === subject && book.stages.includes(stage));
-            return stageAcc;
-        }, {} as {[stage in typeof stages[number]]: BookInfo[]});
-        return acc;
-    }, {} as Writeable<{[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: BookInfo[]}}>)
-);
+const subjectSpecificBooksMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (keyof typeof ISAAC_BOOKS_BY_TAG)[]}} = {
+    "physics": {
+        "11_14": ["phys_book_step_into", "phys_book_step_up"],
+        "gcse": ["phys_book_gcse", "maths_book_gcse", "phys_book_step_up"],
+        "a_level": ["physics_skills_19", "maths_book_2e", "physics_linking_concepts", "solving_physics_problems"],
+        "university": ["qmp", "physics_linking_concepts", "maths_book_2e", "solving_physics_problems"],
+    },
+    "maths": {
+        "gcse": ["maths_book_gcse"],
+        "a_level": ["maths_book_gcse"],
+        "university": ["maths_book_2e", "qmp"],
+    },
+    "chemistry": {
+        "gcse": ["maths_book_gcse"],
+        "a_level": ["chemistry_16", "maths_book_2e", "maths_book_gcse"],
+        "university": ["maths_book_2e"],
+    },
+    "biology": {
+        "a_level": ["maths_book_2e", "maths_book_gcse"]
+    }
+};
 
 type LandingPageCard =  ((context: NonNullable<Required<PageContextState>>) => ListViewCardProps);
 
@@ -148,11 +193,12 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
     if (!isFullyDefinedContext(context)) return [];
     if (!isSingleStageContext(context)) return [];
 
-    const baseCards: LandingPageCard[] = [
-        QuestionFinderCard,
-        ConceptPageCard,
-        PracticeTestsCard
-    ];
+    const baseCards: LandingPageCard[] =
+        context.stage.includes("11_14") && context.subject === "physics"
+            ? [StepIntoPhyCard, ConceptPageCard, QuestionFinderCard]
+            : context.stage.includes("gcse") && (context.subject === "chemistry" || context.subject === "maths")
+                ? [QuestionFinderCard, ConceptPageCard]
+                : [QuestionFinderCard, ConceptPageCard, PracticeTestsCard];
 
     const subjectSpecificCards = subjectSpecificCardsMap[context.subject]?.[context.stage[0] as keyof typeof subjectSpecificCardsMap[typeof context.subject]] || [];
 
@@ -161,12 +207,12 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
 
 export const getBooksForContext = (context: PageContextState): BookInfo[] => {
     if (!isFullyDefinedContext(context)) return [];
+    
     if (!context?.stage?.length) {
-        return ISAAC_BOOKS.filter(book => book.subject === context.subject);
+        return ISAAC_BOOKS.filter(b => !b.hidden).filter(book => book.subject === context.subject);
     }
     
-    if (!isFullyDefinedContext(context)) return []; // this is implied by the above, but this has a type guard
     if (!isSingleStageContext(context)) return [];
     
-    return subjectSpecificBooksMap[context.subject][context.stage[0] as keyof typeof subjectSpecificBooksMap[typeof context.subject]] || [];
+    return (subjectSpecificBooksMap[context.subject][context.stage[0] as keyof typeof subjectSpecificBooksMap[typeof context.subject]] || []).map(tag => ISAAC_BOOKS_BY_TAG[tag]);
 };

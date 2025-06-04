@@ -58,18 +58,18 @@ const HomepageHero = () => {
                 <Row className="row-cols-1 row-cols-md-2">
                     <Col className="mb-3">
                         <HomepageHeroCard
-                            title="Build Confidence in Physics through Practice"
+                            title="Build confidence in science through practice"
                             content="Tackle interactive questions, explore varying difficulty levels, and strengthen problem-solving skills with concept guides, video lessons, and events."
                             isStudent={true}/>
                     </Col>
                     <Col className="mb-3">
                         <HomepageHeroCard
                             title="Support students in developing skills and achieving higher results"
-                            content="Assign, track, and manage student progress with ease—ideal for classwork, homework, or revision. Trusted by over 1,000 UK schools."
+                            content="Assign, track, and manage student progress with ease—ideal for classwork, homework, or revision. Trusted by more than 3,500 teachers."
                             isStudent={false}/>
                     </Col>
                 </Row>
-            </Container>           
+            </Container>
         </div>;
     }
 };
@@ -88,17 +88,29 @@ const subjectCategories = Object.entries(PHY_NAV_SUBJECTS).map(([subject, stages
     };
 });
 
+const subjectDescriptions: Record<Subject, string> = {
+    "physics": "Discover how the universe works using our question decks, quizzes, lessons and revision, and much more.  Click on a learning stage below to explore!",
+    "maths": "Unlock the language of science using our question decks, apps, and much more.  Click on a learning stage below to explore!",
+    "chemistry": "Grasp the fundamentals of matter using our question decks, glossary, apps, and much more. Click on a learning stage below to explore!",
+    "biology": "Uncover the the science of life using our question decks, glossary, extension materials, and much more. Click on the learning stage below to explore!",
+};
+
 const getListViewSubjectCard = (sc: subjectCategory) => {
     const item: ShortcutResponse = {
         title: sc.humanSubject,
-        subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris faucibus est vulputate augue tristique, sed vehicula turpis pellentesque.",
+        subtitle: subjectDescriptions[sc.subject as Subject],
     };
 
     const listViewSubjectCard: ListViewCardProps = {
         item: item,
-        icon: {type: "img", icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`},
+        icon: {
+            type: "img", 
+            icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`,
+            width: "70px",
+            height: "81px",
+        },
         subject: sc.subject as Subject,
-        linkTags: sc.subcategories.map((subcat) => ({tag: subcat.humanStage, url: subcat.href})),
+        linkTags: sc.subcategories.map((subcat) => ({tag: subcat.humanStage, url: subcat.href, "aria-label": `Explore ${subcat.humanStage} ${sc.humanSubject}`})),
     };
 
     return listViewSubjectCard;
@@ -112,7 +124,7 @@ export const HomepagePhy = () => {
 
     const user = useAppSelector(selectors.user.orNull);
     
-    const {data: news} = useGetNewsPodListQuery({subject: "physics"});
+    const newsQuery = useGetNewsPodListQuery({subject: "physics"});
 
     const [dashboardView, setDashboardView] = useState<"student" | "teacher" | undefined>(undefined);
 
@@ -151,16 +163,16 @@ export const HomepagePhy = () => {
     useEffect(() => {
         getEventsList({startIndex: 0, limit: 2, typeFilter: EventTypeFilter["All groups"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
     }, []);
-    
+
     return <>
         <div id="homepage" className="homepage pb-5">
             <section id="dashboard">
                 {isLoggedIn(user) && (isTutorOrAbove(user)
                     ? <TeacherDashboard assignmentsSetByMe={assignmentsSetByMe} quizzesSetByMe={isTutor(user) ? [] : quizzesSetByMe} groups={groups} myAssignments={myAssignments}
-                        myQuizAssignments={myQuizAssignments} streakRecord={streakRecord} dashboardView={dashboardView} setDashboardView={setDashboardView} /> 
+                        myQuizAssignments={myQuizAssignments} streakRecord={streakRecord} dashboardView={dashboardView} setDashboardView={setDashboardView} />
                     : <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} />)}
             </section>
-            <section id="homepage-hero">               
+            <section id="homepage-hero">
                 {!isLoggedIn(user) && <HomepageHero />}
             </section>
             <Container>
@@ -168,41 +180,53 @@ export const HomepagePhy = () => {
                     <div className="mt-5">
                         <div className="d-flex">
                             <h3>Explore and learn!</h3>
-                            <div className="section-divider ms-2"/>
+                            <div className="section-divider flex-grow-1 ms-2"/>
                         </div>
-                        <ListViewCards cards={cards}/>                                         
-                    </div>                    
+                        <ListViewCards cards={cards}/>
+                    </div>
                 </section>
                 <section id="events-news">
                     <Row className="mt-5 row-cols-1 row-cols-lg-2">
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h3>Upcoming Events</h3>
-                                <Link to="/events" className="news-events-link">More events</Link>                        
-                                <div className="section-divider-bold"/>
+                                <h3>Upcoming events</h3>
+                                <Link to="/events" className="news-events-link">More events</Link>
+                                <div className="section-divider-bold flex-grow-1"/>
                             </div>
                             <ShowLoadingQuery
                                 query={eventsQuery}
-                                defaultErrorTitle={"Error loading events list"}
+                                ifError={(() => <p>There was an error loading the events list. Please try again later!</p>)}
                                 thenRender={({events}) => {
                                     return <Row className="h-100">
-                                        {events.map(event => <Col key={event.id}>
-                                            <EventCard event={event} />
-                                        </Col>)}
+                                        {events.length
+                                            ? events.map(event => <Col key={event.id}>
+                                                <EventCard event={event} />
+                                            </Col>)
+                                            : <p>No events available. Check back soon!</p>}
+
                                     </Row>;
                                 }}/>
                         </div>
-                        <div className="d-flex flex-column mt-3"> 
+                        <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h3>News & Features</h3>
-                                <Link to="/news" className="news-events-link">More news</Link>                     
-                                <div className="section-divider-bold"/>
+                                <h3>News and features</h3>
+                                <Link to="/news" className="news-events-link">More news</Link>
+                                <div className="section-divider-bold flex-grow-1"/>
                             </div>
-                            {news && <Row className="h-100">
-                                {news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>
-                                    <NewsCard newsItem={newsItem} />
-                                </Col>)}
-                            </Row>}
+                            <ShowLoadingQuery
+                                query={newsQuery}
+                                ifError={(() => <p>There was an error loading the news list. Please try again later!</p>)}
+                                thenRender={(news) => {
+                                    return <Row className="h-100">
+                                        {news.length
+                                            ? news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>
+                                                <NewsCard newsItem={newsItem} />
+                                            </Col>)
+                                            : <p>No news available. Check back soon!</p>
+                                        }
+                                    </Row>;
+                                }}
+                            />
                         </div>
                     </Row>
                 </section>
