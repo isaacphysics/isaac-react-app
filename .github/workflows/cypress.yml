@@ -44,11 +44,15 @@ jobs:
       options: --user 0
     if: ${{ failure() }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+         fetch-depth: 0
       - name: Download VRT actuals - Ada CS
         uses: actions/download-artifact@v4
         with:
-            name: ada
-            path: src/test/pages/__image_snapshots__/ada
+          name: ada
+          path: src/test/pages/__image_snapshots__/ada
       - name: Download VRT actuals - Isaac Physics
         uses: actions/download-artifact@v4
         with:
