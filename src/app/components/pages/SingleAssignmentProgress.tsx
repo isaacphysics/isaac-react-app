@@ -36,17 +36,15 @@ const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWith
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
-    return <Container>
-        <div className={"assignment-progress-details single-assignment" + (pageSettings?.colourBlind ? " colour-blind" : "")}>
-            {/* <AssignmentProgressLegend /> */}
-            {/* <div className="single-download mb-2 mx-4">
-                <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
-            </div> */}
-            {/* <div className="mx-md-4 mx-sm-2"> */}
-            <ProgressDetails assignment={assignment}/>
-            {/* </div> */}
-        </div>
-    </Container>;
+    return <div className={"assignment-progress-details single-assignment" + (pageSettings?.colourBlind ? " colour-blind" : "")}>
+        {/* <AssignmentProgressLegend /> */}
+        {/* <div className="single-download mb-2 mx-4">
+            <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+        </div> */}
+        {/* <div className="mx-md-4 mx-sm-2"> */}
+        <ProgressDetails assignment={assignment}/>
+        {/* </div> */}
+    </div>;
 };
 
 export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {

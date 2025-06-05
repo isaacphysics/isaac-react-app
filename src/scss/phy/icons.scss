@@ -125,6 +125,11 @@
   @include svg-icon('/assets/phy/icons/redesign/sidebar.svg', 16px, 16px);
 }
 
+.icon-arrow-left {
+  @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  transform: rotate(180deg);
+}
+
 .icon-arrow-right {
   @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
 }

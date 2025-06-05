@@ -2,7 +2,7 @@ import React, {useContext, useMemo, useState} from "react";
 import { Link } from "react-router-dom";
 import { AssignmentProgressDTO, GameboardItem, CompletionState } from "../../../IsaacApiTypes";
 import { EnhancedAssignmentWithProgress, AssignmentProgressPageSettingsContext, AuthorisedAssignmentProgress } from "../../../IsaacAppTypes";
-import { getThemeFromTags, isAuthorisedFullAccess, siteSpecific } from "../../services";
+import { getThemeFromTags, isAuthorisedFullAccess, PATHS, siteSpecific } from "../../services";
 import { ICON, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
 import { Badge, Card, CardBody } from "reactstrap";
 import { formatDate } from "../elements/DateString";
@@ -144,9 +144,8 @@ const QuestionDetailCard = ({progress, questions, questionIndex, ...rest}: Quest
             return acc;
         }, [] as number[]);
 
-        return progress.reduce((acc, p, index) => {
-            const incorrect = totalIncorrectByPart[index] || 0;
-            const total = progress.length;
+        const total = progress.length;
+        return totalIncorrectByPart.reduce((acc, incorrect, index) => {
             if (total >= 2 && incorrect / total >= 0.5) {
                 return [...acc, index];
             }
@@ -163,7 +162,7 @@ const QuestionDetailCard = ({progress, questions, questionIndex, ...rest}: Quest
             <div className="d-flex flex-column">
                 <h5 className="m-0">{questionIndex + 1}. {questions[questionIndex].title}</h5>
                 {difficultParts.length > 0 && <span className="mt-2 small">
-                    More than <strong>50%</strong> of the group answered incorrectly on parts <strong>{difficultParts.slice(0, 3).map(i => i + 1).join(", ")}{difficultParts.length > 3 ? ", ... " : ""}</strong>.
+                    More than <strong>50%</strong> of the group answered incorrectly on parts <strong>{difficultParts.slice(0, 3).map(i => i + 1).join(", ")}{difficultParts.length > 3 ? `, and ${difficultParts.length - 3} more` : ""}</strong>.
                 </span>}
             </div>
             <Spacer/>
@@ -173,7 +172,7 @@ const QuestionDetailCard = ({progress, questions, questionIndex, ...rest}: Quest
             <img className={classNames("icon-dropdown-180", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"/>
         </button>
         <CollapsibleContainer expanded={isOpen}>
-            <div className="overflow-auto px-2 pb-2">
+            <div className="overflow-auto ms-2 pe-2 pb-2">
                 <ResultsTablePartBreakdown
                     progress={progress}
                     questionIndex={questionIndex}
@@ -252,7 +251,10 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
     const numStudentsCompletedAll = progress.filter(p => p.questionResults?.every(r => r === CompletionState.ALL_CORRECT)).length;
 
     return <>
-        {/* group overview */}
+        <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${assignment.groupId}`} className="d-flex align-items-center">
+            <i className="icon icon-arrow-left me-2"/>
+            Back to group overview
+        </Link>
         <Card className="my-4">
             <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">

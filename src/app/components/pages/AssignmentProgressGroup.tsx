@@ -120,16 +120,23 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             icon={{type: "hex", icon: "icon-group"}}
         />
 
-        {isDefined(group?.id) && <div className="d-flex flex-wrap my-4 gap-3">
-            <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupProgressCSVDownloadLink(group.id as number))))}>
-                Download assignments CSV
-                <i className="icon icon-download ms-2" color="white"/>
-            </Button>
-            {isTeacherOrAbove(user) && <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupQuizProgressCSVDownloadLink(group.id as number))))}>
-                Download quizzes CSV
-                <i className="icon icon-download ms-2" color="white"/>
-            </Button>}
-        </div>}
+        <div className="d-flex flex-wrap my-4 gap-3">
+            <Link to={PATHS.ASSIGNMENT_PROGRESS} className="d-flex align-items-center">
+                <i className="icon icon-arrow-left me-2"/>
+                Back to assignment progress
+            </Link>
+            <Spacer/>
+            {isDefined(group?.id) && <>
+                <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupProgressCSVDownloadLink(group.id as number))))}>
+                    Download assignments CSV
+                    <i className="icon icon-download ms-2" color="white"/>
+                </Button>
+                {isTeacherOrAbove(user) && <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupQuizProgressCSVDownloadLink(group.id as number))))}>
+                    Download quizzes CSV
+                    <i className="icon icon-download ms-2" color="white"/>
+                </Button>}
+            </>}
+        </div>
 
         {/* group overview */}
         <Card className="my-4">
