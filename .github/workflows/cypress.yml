@@ -14,9 +14,9 @@ jobs:
       image: cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1
       options: --user 0
     strategy:
+      fail-fast: false
       matrix:
         site: [ "ada", "phy" ]
-        fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
