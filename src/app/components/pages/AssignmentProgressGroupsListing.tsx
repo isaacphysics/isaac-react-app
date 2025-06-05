@@ -177,7 +177,7 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
     //     {isExpanded && <GroupDetails group={group} user={user} />}
     // </>;
 
-    return <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${group.id}`} className="w-100 no-underline my-2">
+    return <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${group.id}`} className="w-100 no-underline mt-2">
         <div className="d-flex assignment-progress-group w-100 p-3 align-items-center">
             <div className="d-flex flex-grow-1 flex-column flex-lg-row">
                 <b data-testid="group-name">{group.groupName}</b>
@@ -213,7 +213,7 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
     </span>;
 
     return <>
-        <Container>
+        <Container className="mb-5">
             <TitleAndBreadcrumb
                 currentPageTitle={siteSpecific("Assignment Progress", "Markbook")}
                 help={pageHelp}
@@ -249,7 +249,7 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                                 ? sortBy(groups, g => g.groupName && g.groupName.toLowerCase())
                                 : sortBy(groups, g => g.created).reverse()
                             ).filter(g => !groupSearch || g.groupName?.toLowerCase().includes(groupSearch.toLowerCase()));
-                            return <div className="assignment-progress-container mb-5">
+                            return <div className="assignment-progress-container my-3">
                                 {/* <AssignmentProgressPageSettingsContext.Provider value={pageSettings}> */}
                                 {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} user={user} />)}
                                 {/* </AssignmentProgressPageSettingsContext.Provider> */}

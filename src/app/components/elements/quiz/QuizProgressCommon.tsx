@@ -1,7 +1,7 @@
 import React, {useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
-import {isAuthorisedFullAccess, TODAY} from "../../../services";
+import {isAuthorisedFullAccess, isPhy, TODAY} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
@@ -311,12 +311,15 @@ export function ResultsTable<Q extends QuestionType>({
                                     <td key={q.id}>
                                         {isAssignment 
                                             ? (fullAccess 
-                                                // ? formatMark(
-                                                //     (studentProgress.correctPartResults || [])[index], 
-                                                //     questions[index].questionPartsTotal as number, 
-                                                //     !!pageSettings?.formatAsPercentage
-                                                // ) 
-                                                ? getQuizQuestionCorrectnessIcon((studentProgress.questionResults || [])[index])
+                                                ? isPhy
+                                                    ? formatMark(
+                                                        pageSettings?.attemptedOrCorrect === "CORRECT" 
+                                                            ? (studentProgress.correctPartResults || [])[index] 
+                                                            : (studentProgress.correctPartResults || [])[index] + (studentProgress.incorrectPartResults || [])[index],
+                                                        questions[index].questionPartsTotal as number, 
+                                                        !!pageSettings?.formatAsPercentage
+                                                    ) 
+                                                    : getQuizQuestionCorrectnessIcon((studentProgress.questionResults || [])[index])
                                                 : ""
                                             )
                                             : (studentProgress.correctPartResults || [])[index] === 1 ? ICON.correct :
@@ -364,7 +367,7 @@ export function ResultsTablePartBreakdown({
     }), [progress]);
 
     return !!sortedProgress?.length && <table {...rest} className={classNames("progress-table border assignment-progress-progress w-100", rest.className)}>
-        <thead>
+        <thead className="progress-table-header-footer">
             <SortItemHeader<ProgressSortOrder> 
                 className="student-name ps-3 py-3" 
                 defaultOrder={"name"} 

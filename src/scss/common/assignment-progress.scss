@@ -16,7 +16,7 @@
   transition: transform 0.2s ease-out, border-color 0.2s ease-out;
 
   &:hover, &.open {
-    border-color: $color-neutral-400;
+    border-color: $gray-136;
   }
 }
 

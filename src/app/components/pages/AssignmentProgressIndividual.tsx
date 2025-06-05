@@ -2,7 +2,7 @@ import React, {useContext, useMemo, useState} from "react";
 import { Link } from "react-router-dom";
 import { AssignmentProgressDTO, GameboardItem, CompletionState } from "../../../IsaacApiTypes";
 import { EnhancedAssignmentWithProgress, AssignmentProgressPageSettingsContext, AuthorisedAssignmentProgress } from "../../../IsaacAppTypes";
-import { getThemeFromTags, isAuthorisedFullAccess, PATHS, siteSpecific } from "../../services";
+import { getThemeFromTags, isAda, isAuthorisedFullAccess, PATHS, siteSpecific } from "../../services";
 import { ICON, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
 import { Badge, Card, CardBody } from "reactstrap";
 import { formatDate } from "../elements/DateString";
@@ -11,6 +11,7 @@ import { Spacer } from "../elements/Spacer";
 import { Tabs } from "../elements/Tabs";
 import classNames from "classnames";
 import { CollapsibleContainer } from "../elements/CollapsibleContainer";
+import StyledToggle from "../elements/inputs/StyledToggle";
 
 interface GroupAssignmentTabProps {
     assignment: EnhancedAssignmentWithProgress;
@@ -98,25 +99,29 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
             <span>See who attempted the assignment and which questions they struggled with.</span>
 
             <div className="d-flex flex-column flex-lg-row mt-3 mb-2 row-gap-2">
-                {/* <StyledCheckbox 
-                    checked={assignmentProgressContext.attemptedOrCorrect === "CORRECT"} 
-                    onChange={(e) => assignmentProgressContext.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} 
-                    label={""}
-                /> */}
-                <StyledCheckbox
-                    checked={assignmentProgressContext?.formatAsPercentage}
-                    onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
-                    label={<span className="text-muted small">Show mark as percentages</span>}
-                />
+                <div className="d-flex w-100 align-items-center">
+                    <StyledCheckbox
+                        checked={assignmentProgressContext?.formatAsPercentage}
+                        onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
+                        label={<span className="text-muted small">Show mark as percentages</span>}
+                    />
+                    <Spacer/>
+                    <StyledToggle 
+                        trueLabel="Correct"
+                        falseLabel="Attempted"
+                        checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"} 
+                        onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} 
+                    />
+                </div>
                 <Spacer/>
                 {/* // TODO: align with Fluent design's key? */}
-                <div className="d-flex flex-column flex-md-row align-items-md-center gap-3 fw-bold">
+                {isAda && <div className="d-flex flex-column flex-md-row align-items-md-center gap-3 fw-bold">
                     <span className="font-size-1">Key</span>
                     <span className="d-flex align-items-center gap-2">{ICON.correct} Correct</span>
                     <span className="d-flex align-items-center gap-2">{ICON.partial} Partially correct</span>
                     <span className="d-flex align-items-center gap-2">{ICON.incorrect} Incorrect</span>
                     <span className="d-flex align-items-center gap-2">{ICON.notAttempted} Not attempted</span>
-                </div>
+                </div>}
             </div>
 
             <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} getQuestionTitle={getQuestionTitle}
@@ -127,13 +132,13 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
     </Card>;
 };
 
-interface QuestionDetailCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface DetailedMarksProps extends React.HTMLAttributes<HTMLDivElement> {
     progress: AssignmentProgressDTO[];
     questions: GameboardItem[];
     questionIndex: number;
 }
 
-const QuestionDetailCard = ({progress, questions, questionIndex, ...rest}: QuestionDetailCardProps) => {
+const DetailedMarksCard = ({progress, questions, questionIndex, ...rest}: DetailedMarksProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const difficultParts = useMemo(() => {
@@ -182,12 +187,12 @@ const QuestionDetailCard = ({progress, questions, questionIndex, ...rest}: Quest
     </div>;
 };
 
-interface QuestionDetailsTabProps {
+interface DetailedMarksTabProps {
     assignment: EnhancedAssignmentWithProgress;
     progress: AssignmentProgressDTO[];
 }
 
-const QuestionDetailsTab = ({assignment, progress}: QuestionDetailsTabProps) => {
+const DetailedMarksTab = ({assignment, progress}: DetailedMarksTabProps) => {
     const questions = assignment.gameboard.contents;
 
     return <Card>
@@ -196,7 +201,7 @@ const QuestionDetailsTab = ({assignment, progress}: QuestionDetailsTabProps) => 
             <span>See the questions your students answered and which parts they struggled with.</span>
 
             {questions.map((_, questionIndex) => (
-                <QuestionDetailCard 
+                <DetailedMarksCard 
                     key={questionIndex}
                     progress={progress}
                     questions={questions}
@@ -278,28 +283,12 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
                     assignment={assignment}
                     progress={progress}
                 />,
-                "Question details": <QuestionDetailsTab
+                "Detailed marks": <DetailedMarksTab
                     assignment={assignment}
                     progress={progress}
                 />
             }}
         </Tabs>
-
-        
     </>;
 
 };
-
-// const QuizProgressLoader = ({quizAssignmentId}: { quizAssignmentId: number }) => {
-//     const quizAssignmentFeedbackQuery = useGetQuizAssignmentWithFeedbackQuery(quizAssignmentId);
-//     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
-//     return <ShowLoadingQuery
-//         query={quizAssignmentFeedbackQuery}
-//         defaultErrorTitle={"Error loading test assignment feedback"}
-//         thenRender={quizAssignmentWithFeedback =>
-//             <div className={`assignment-progress-details bg-transparent ${pageSettings?.colourBlind ? " colour-blind" : ""}`}>
-//                 <QuizProgressDetails assignment={quizAssignmentWithFeedback} />
-//             </div>
-//         }
-//     />;
-// };
