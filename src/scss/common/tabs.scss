@@ -161,7 +161,7 @@
     &.active {
       background-color: var(--bs-body-bg);
       > span {
-        border-bottom: 3px solid var(--subject-color-500);
+        border-bottom: 3px solid var(--icon-primary);
       }
     }
     &:not(.active) {

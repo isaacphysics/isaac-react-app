@@ -2,7 +2,7 @@ import React, {useContext, useMemo, useState} from "react";
 import { Link } from "react-router-dom";
 import { AssignmentProgressDTO, GameboardItem, CompletionState } from "../../../IsaacApiTypes";
 import { EnhancedAssignmentWithProgress, AssignmentProgressPageSettingsContext, AuthorisedAssignmentProgress } from "../../../IsaacAppTypes";
-import { getThemeFromTags, isAda, isAuthorisedFullAccess, PATHS, siteSpecific } from "../../services";
+import { getThemeFromTags, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
 import { ICON, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
 import { Badge, Card, CardBody } from "reactstrap";
 import { formatDate } from "../elements/DateString";
@@ -110,10 +110,21 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
     
     return <Card>
         <CardBody>
-            <h3>Group assignment overview</h3>
-            <span>See who attempted the assignment and which questions they struggled with.</span>
+            <div className="d-flex w-100 flex-column flex-md-row align-items-start align-items-md-center">
+                <div className="me-3 mb-2">
+                    <h3>Group assignment overview</h3>
+                    <span>See who attempted the assignment and which questions they struggled with.</span>
+                </div>
+                <Spacer/>
+                {isAda && <StyledToggle 
+                    trueLabel="Correct"
+                    falseLabel="Attempted"
+                    checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"} 
+                    onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} 
+                />}
+            </div>
 
-            <div className="d-flex flex-column flex-lg-row mt-3 mb-2 row-gap-2">
+            <div className="d-flex flex-column flex-lg-row mt-2 mb-2 row-gap-2">
                 <div className="d-flex w-100 align-items-center">
                     <StyledCheckbox
                         checked={assignmentProgressContext?.formatAsPercentage}
@@ -121,22 +132,15 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                         label={<span className="text-muted small">Show mark as percentages</span>}
                     />
                     <Spacer/>
-                    <StyledToggle 
+                    {isPhy && <StyledToggle 
                         trueLabel="Correct"
                         falseLabel="Attempted"
                         checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"} 
                         onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} 
-                    />
+                    />}
                 </div>
                 <Spacer/>
-                {/* // TODO: align with Fluent design's key? */}
-                {isAda && <div className="d-flex flex-column flex-md-row align-items-md-center gap-3 fw-bold">
-                    <span className="font-size-1">Key</span>
-                    <span className="d-flex align-items-center gap-2">{ICON.correct} Correct</span>
-                    <span className="d-flex align-items-center gap-2">{ICON.partial} Partially correct</span>
-                    <span className="d-flex align-items-center gap-2">{ICON.incorrect} Incorrect</span>
-                    <span className="d-flex align-items-center gap-2">{ICON.notAttempted} Not attempted</span>
-                </div>}
+                {isAda && <AdaKey/>}
             </div>
 
             <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} getQuestionTitle={getQuestionTitle}
@@ -147,6 +151,25 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
     </Card>;
 };
 
+const AdaKey = () => {
+    const KeyItem = ({icon, label}: {icon: React.ReactNode, label: string}) => (
+        <span className="d-flex align-items-center w-max-content gap-2">
+            {icon} {label}
+        </span>
+    );
+
+    return <div className="d-flex flex-column flex-md-row align-items-md-center gap-2 gap-md-3">
+        <span className="font-size-1 fw-bold">Key</span>
+        <div className="d-flex flex-column flex-sm-row flex-md-col gap-2">
+            <KeyItem icon={ICON.correct} label="Correct" />
+            <KeyItem icon={ICON.partial} label="Partially correct" />
+        </div>
+        <div className="d-flex flex-column flex-sm-row flex-md-col gap-2">
+            <KeyItem icon={ICON.incorrect} label="Incorrect" />
+            <KeyItem icon={ICON.notAttempted} label="Not attempted" />
+        </div>
+    </div>;
+};
 interface DetailedMarksProps extends React.HTMLAttributes<HTMLDivElement> {
     progress: AssignmentProgressDTO[];
     questions: GameboardItem[];
