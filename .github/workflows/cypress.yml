@@ -38,8 +38,10 @@ jobs:
            retention-days: 1
   cypress-on-vrt-failure:
     needs: cypress-run
-    options: --user 0
     runs-on: ubuntu-22.04
+    container:
+      image: cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1
+      options: --user 0
     if: ${{ failure() }}
     steps:
       - name: Download VRT actuals - Ada CS
