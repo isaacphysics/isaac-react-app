@@ -943,7 +943,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon-correct"
             : sectionStates[section] === SectionProgress.STARTED ? "icon-in-progress"
-                : "";
+                : "icon-not-started";
     };
 
     const switchToPage = (page: string) => {
