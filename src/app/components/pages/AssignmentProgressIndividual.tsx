@@ -44,19 +44,34 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
 
     function markClassesInternal(studentProgress: AssignmentProgressDTO, status: CompletionState | null, correctParts: number, incorrectParts: number, totalParts: number) {
         // todo: need a different marking system for when showing grade by % attempted
-        if (!isAuthorisedFullAccess(studentProgress)) {
-            return "revoked";
-        } else if (status === CompletionState.ALL_CORRECT || correctParts === totalParts) {
-            return "completed";
-        } else if (status === CompletionState.NOT_ATTEMPTED || correctParts + incorrectParts === 0) {
-            return "not-attempted";
-        } else if ((correctParts / totalParts) >= passMark) {
-            return "passed";
-        } else if ((incorrectParts / totalParts) > (1 - passMark)) {
-            return "failed";
+
+        if (assignmentProgressContext?.attemptedOrCorrect === "CORRECT") {
+            if (!isAuthorisedFullAccess(studentProgress)) {
+                return "revoked";
+            } else if (status === CompletionState.ALL_CORRECT || correctParts === totalParts) {
+                return "completed";
+            } else if (status === CompletionState.NOT_ATTEMPTED || correctParts + incorrectParts === 0) {
+                return "not-attempted";
+            } else if ((correctParts / totalParts) >= passMark) {
+                return "passed";
+            } else if ((incorrectParts / totalParts) > (1 - passMark)) {
+                return "failed";
+            } else {
+                return "in-progress";
+            }
         } else {
-            return "in-progress";
+            if (!isAuthorisedFullAccess(studentProgress)) {
+                return "revoked";
+            } else if (status && isQuestionFullyAttempted(status) || correctParts + incorrectParts === totalParts) {
+                return "completed";
+            } else if (status === CompletionState.NOT_ATTEMPTED || correctParts + incorrectParts === 0) {
+                return "not-attempted";
+            } else {
+                return "in-progress";
+            }
+
         }
+
     }
 
     function markClasses(studentProgress: AssignmentProgressDTO, totalParts: number) {
@@ -234,7 +249,7 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
         };
 
         const ret = (p.questionResults || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
-            const tickCount = ["PASSED", "PERFECT"].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
+            const tickCount = [CompletionState.ALL_CORRECT].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
             const questions = assignment.gameboard.contents;
             return {
                 ...oldP,

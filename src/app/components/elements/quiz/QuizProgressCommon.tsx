@@ -180,14 +180,25 @@ export function ResultsTable<Q extends QuestionType>({
                 {assignmentAverages[index]}%
             </SortItemHeader>
         )} */}
-        <SortItemHeader<ProgressSortOrder>
-            className="ps-3"
-            defaultOrder={"totalQuestionPercentage"}
-            reverseOrder={"totalQuestionPercentage"}
-            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-        >
-            Correct
-        </SortItemHeader>
+        {pageSettings?.attemptedOrCorrect === "CORRECT"
+            ? <SortItemHeader<ProgressSortOrder>
+                className="ps-3 wf-10"
+                defaultOrder={"totalQuestionPercentage"}
+                reverseOrder={"totalQuestionPercentage"}
+                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+            >
+                Correct
+            </SortItemHeader>
+            // TODO: actually sort by attempted
+            : <SortItemHeader<ProgressSortOrder>
+                className="ps-3 wf-10"
+                defaultOrder={"totalQuestionPercentage"}
+                reverseOrder={"totalQuestionPercentage"}
+                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+            >
+                Attempted
+            </SortItemHeader>
+        }
         {questions.map((q, index) =>
             <th key={index}>
                 <a className="d-block" href={`/questions/${q.id}`}>
@@ -303,12 +314,19 @@ export function ResultsTable<Q extends QuestionType>({
                                     }
                                 </th>
                                 <th title={fullAccess ? undefined : "Not Sharing"}>
-                                    {fullAccess ? formatMark(studentProgress.tickCount,
-                                        questions.length,
-                                        !!pageSettings?.formatAsPercentage) : ""}
+                                    {fullAccess 
+                                        ? formatMark(
+                                            pageSettings?.attemptedOrCorrect === "CORRECT"
+                                                ? studentProgress.tickCount
+                                                : studentProgress.questionResults?.filter(r => r !== CompletionState.NOT_ATTEMPTED).length ?? 0,
+                                            questions.length,
+                                            !!pageSettings?.formatAsPercentage
+                                        ) 
+                                        : ""
+                                    }
                                 </th>
                                 {questions.map((q, index) =>
-                                    <td key={q.id}>
+                                    <td key={q.id} className={classNames({[markQuestionClasses(studentProgress, index)]: isPhy})}>
                                         {isAssignment 
                                             ? (fullAccess 
                                                 ? isPhy
