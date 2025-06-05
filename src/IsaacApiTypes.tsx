@@ -257,6 +257,20 @@ export interface IsaacWildcardDTO extends ContentDTO {
     url?: string;
 }
 
+export interface SidebarEntryDTO extends ContentDTO {
+    label?: string;
+    pageId?: string;
+    pageType?: string;
+}
+
+export interface SidebarGroupDTO extends SidebarEntryDTO {
+    sidebarEntries?: SidebarEntryDTO[];
+}
+
+export interface SidebarDTO extends ContentDTO {
+    sidebarEntries?: SidebarEntryDTO[];
+}
+
 export interface QuestionPartConceptDTO {
     title?: string;
     bestLevel?: FastTrackConceptState;
@@ -568,6 +582,7 @@ export interface SeguePageDTO extends ContentDTO {
     summary?: string;
     deprecated?: boolean;
     teacherNotes?: string;
+    sidebar?: SidebarDTO;
 }
 
 export interface StringChoiceDTO extends ChoiceDTO {

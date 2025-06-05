@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Container} from "reactstrap";
-import {BookSidebar, MainContent, SidebarLayout} from "./layout/SidebarLayout";
+import {BookSidebar, ContentControlledSidebar, MainContent, SidebarLayout} from "./layout/SidebarLayout";
 import {Markup} from "./markup";
 import {TitleAndBreadcrumb} from "./TitleAndBreadcrumb";
 import {useContextFromContentObjectTags} from "../../services";
@@ -56,7 +56,10 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                 defaultErrorTitle="Unable to load book contents."
                 thenRender={(definedBookIndexPage) => {
                     return <>
-                        <BookSidebar book={definedBookIndexPage} urlBookId={bookId} pageId={pageId} />
+                        {book?.sidebar
+                            ? <ContentControlledSidebar sidebar={book?.sidebar}/>
+                            : <BookSidebar book={definedBookIndexPage} urlBookId={bookId} pageId={pageId} />
+                        }
                         <MainContent className="my-4">
                             {pageId
                                 ? <ShowLoadingQuery

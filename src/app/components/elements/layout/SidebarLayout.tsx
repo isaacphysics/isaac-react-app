@@ -2,7 +2,7 @@ import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, use
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacBookIndexPageDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacBookIndexPageDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, SidebarGroupDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
@@ -33,6 +33,7 @@ import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { getProgressIcon } from "../../pages/Gameboard";
 import { tags as tagsService } from "../../../services";
 import { Markup } from "../markup";
+import { History } from "history";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -1505,6 +1506,75 @@ export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
                     )}
                 </CollapsibleList>;
             })}
+        </ul>
+    </ContentSidebar>;
+};
+
+const calculateSidebarLink = (entry: SidebarEntryDTO, currentPathname: string): string | undefined => {
+    switch (entry.pageType) {
+        case "isaacBookDetailPage": {
+            const bookId = currentPathname.split("/").find((_, i, a) => i > 0 && a[i-1] === "books");
+            return `/books/${bookId}/${entry.pageId?.slice(`book_${bookId}_`.length)}`;
+            // TODO this is so grim
+            // - only works on book pages
+            // - assumes the book structure will forever remain /books/{id}/{pageId}
+        }
+        case "isaacBookIndexPage": {
+            return `/books/${entry.pageId?.slice(`book_`.length)}`;
+        }
+        case "page": {
+            return `/pages/${entry.pageId}`;
+        }
+    }
+    return "";
+};
+
+const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: History }) => {
+
+    const isSidebarGroup = (entry: SidebarEntryDTO): entry is SidebarGroupDTO => {
+        return entry.type === "sidebarGroup";
+    };
+
+    const [isActive, setIsActive] = useState(false);
+
+    return isSidebarGroup(entry) 
+        ? <CollapsibleList
+            title={<div className="d-flex flex-column gap-2 chapter-title">
+                <span className="text-theme">{entry.label}</span>
+                <h6 className={classNames("m-0", {"text-theme fw-semibold": isActive})}>{entry.title}</h6>
+            </div>}
+            tag={"li"}
+            className="ms-2"
+            expanded={isActive}
+            toggle={() => setIsActive(!isActive)}
+        >
+            <ul>
+                {entry.sidebarEntries?.map((subEntry, subIndex) => 
+                    <SidebarEntries key={subIndex} entry={subEntry} history={history} />
+                )}
+            </ul>
+        </CollapsibleList>
+        : <li className="ms-2">
+            <StyledTabPicker
+                checkboxTitle={<div className="d-flex">
+                    {entry.label && <span className="text-theme me-2">{entry.label}</span>}
+                    <span className="flex-grow-1"><Markup encoding="latex">{entry.title}</Markup></span>
+                </div>}
+                checked={isActive}
+                onClick={(() => history.push(calculateSidebarLink(entry, history.location.pathname) ?? ""))}
+            />
+        </li>;
+};
+
+export const ContentControlledSidebar = ({sidebar}: {sidebar?: SidebarDTO}) => {
+
+    const history = useHistory();
+
+    return <ContentSidebar buttonTitle={sidebar?.title}>
+        <ul>
+            {sidebar?.sidebarEntries?.map((entry, index) => (
+                <SidebarEntries key={index} entry={entry} history={history}/>
+            ))}
         </ul>
     </ContentSidebar>;
 };
