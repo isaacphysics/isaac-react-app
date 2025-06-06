@@ -22,25 +22,9 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
     const questions = assignment.gameboard.contents;
 
-    // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
-    const [assignmentAverages, assignmentTotalQuestionParts] = useMemo<[number[], number]>(() => {
-        if (assignmentProgressContext?.attemptedOrCorrect === "ATTEMPTED") {
-            // for each column, calculate the percentage of students who attempted at all parts of the question
-            return questions?.reduce(([aAvg, aTQP], q, i) => {
-                const attemptedAllPartsCount = progress.reduce((tc, p) => ((p as AuthorisedAssignmentProgress)?.notAttemptedPartResults?.[i] === 0) ? tc + 1 : tc, 0);
-                const attemptedAllPartsPercent = Math.round(100 * (attemptedAllPartsCount / progress.length));
-                return [[...aAvg, attemptedAllPartsPercent], aTQP + (q.questionPartsTotal ?? 0)];
-            }, [[] as number[], 0]) ?? [[], 0];
-
-        } else {
-            // for each column, calculate the percentage of students who got all parts of the question correct
-            return questions?.reduce(([aAvg, aTQP], q, i) => {
-                const tickCount = progress.reduce((tc, p) => ((p.questionResults || [])[i] === CompletionState.ALL_CORRECT) ? tc + 1 : tc, 0);
-                const tickPercent = Math.round(100 * (tickCount / progress.length));
-                return [[...aAvg, tickPercent], aTQP + (q.questionPartsTotal ?? 0)];
-            }, [[] as number[], 0]) ?? [[], 0];
-        }
-    }, [questions, progress]);
+    const assignmentTotalQuestionParts = questions.reduce((acc, q) => {
+        return acc + (q?.questionPartsTotal ?? 0);
+    }, 0);
 
     function markClassesInternal(studentProgress: AssignmentProgressDTO, status: CompletionState | null, correctParts: number, incorrectParts: number, totalParts: number) {
         if (assignmentProgressContext?.attemptedOrCorrect === "CORRECT") {
