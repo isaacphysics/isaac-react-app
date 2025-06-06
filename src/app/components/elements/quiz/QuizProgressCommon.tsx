@@ -183,9 +183,12 @@ export function ResultsTable<Q extends QuestionType>({
         }
         {questions.map((q, index) =>
             <th key={index}>
-                <a className="d-block" href={`/questions/${q.id}`}>
-                    {index + 1}
-                </a>
+                {isAssignment 
+                    ? <a className="d-block" href={`/questions/${q.id}`}>
+                        {index + 1}
+                    </a> 
+                    : <span>{index + 1}</span>
+                }
             </th>
         )}
     </tr>;
