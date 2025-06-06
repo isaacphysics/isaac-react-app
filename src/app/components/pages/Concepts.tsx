@@ -3,7 +3,7 @@ import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
-import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
+import {above, below, getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags, useDeviceSize} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -16,6 +16,7 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { ContentSummaryDTO, Stage } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { AffixButton } from "../elements/AffixButton";
+import classNames from "classnames";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
@@ -29,6 +30,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
     const user = useAppSelector(selectors.user.orNull);
     const pageContext = useUrlPageTheme();
+    const deviceSize = useDeviceSize();
 
     const searchParsed = queryString.parse(location.search, {arrayFormat: "comma"});
 
@@ -117,6 +119,15 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
+    const BrowseAllButton = <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className={classNames("ms-auto mw-max-content", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
+        affix={{
+            affix: "icon-arrow-right",
+            position: "suffix",
+            type: "icon"
+        }}>
+        Browse all concepts
+    </AffixButton>;
+
     const sidebarProps = {searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts};
 
     return (
@@ -128,20 +139,13 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             />
             <SidebarLayout>
                 {pageContext?.subject 
-                    ? <SubjectSpecificConceptListSidebar {...sidebarProps}/> 
+                    ? <SubjectSpecificConceptListSidebar {...sidebarProps} optionBar={BrowseAllButton}/> 
                     : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts}/>
                 }
                 <MainContent>
                     {pageContext?.subject && <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
-                        <p className="me-3">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                        <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className="ms-auto"
-                            affix={{
-                                affix: "icon-arrow-right",
-                                position: "suffix",
-                                type: "icon"
-                            }}>
-                            Browse all concepts
-                        </AffixButton>
+                        <p className="me-0 me-lg-3">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                        {above["lg"](deviceSize) && BrowseAllButton}
                     </div>}
                     {isPhy && <div className="list-results-container p-2 my-4">
                         <ShowLoadingQuery

@@ -123,7 +123,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                     }}>
                         {buttonTitle ?? "Search and filter"}
                     </AffixButton>}
-                    <div className="flex-grow-1">{optionBar}</div>
+                    <div className="flex-grow-1 d-inline-grid align-items-end">{optionBar}</div>
                 </div>
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
@@ -755,7 +755,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
             const assignmentCountByStatus = myAssignments && Object.fromEntries(Object.entries(myAssignments).map(([key, value]) => [key, value.length]));
             return <>
                 <div className="section-divider"/>
-                <search>
+                <search data-testid="my-assignments-sidebar">
                     <h5>Search assignments</h5>
                     <Input
                         className='search--filter-input my-3'
@@ -813,6 +813,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
         <search>
             <h5>Search question decks</h5>
             <Input
+                data-testid="title-filter"
                 className='search--filter-input my-3'
                 type="search" value={boardTitleFilter || ""}
                 placeholder="e.g. Forces"
@@ -1019,7 +1020,7 @@ interface MyAccountSidebarProps extends SidebarProps {
 
 export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
     const { editingOtherUser, activeTab, setActiveTab } = props;
-    return <ContentSidebar buttonTitle="Account settings" {...props}>
+    return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...props}>
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 

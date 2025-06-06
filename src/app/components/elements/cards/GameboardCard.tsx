@@ -95,7 +95,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                             </Label> 
                         </>
                         : <>
-                            <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1">
+                            <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title="Number of groups assigned">
                                 Assigned to
                                 <div className="board-bubble-info">{setAssignmentsDetails?.groupCount ?? 0}</div>
                                 group{setAssignmentsDetails?.groupCount !== 1 && "s"}

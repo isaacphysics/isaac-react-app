@@ -286,7 +286,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         </tr>)
         :
         siteSpecific(
-            <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} 
+            <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} data-testid="gameboard-card"
                 {...(isSetAssignments ? {'setAssignmentsDetails': {toggleAssignModal, groupCount: assignees.length}} : {})}>
                 <Row className="w-100">
                     <Col>

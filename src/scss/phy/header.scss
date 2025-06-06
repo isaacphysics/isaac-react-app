@@ -24,7 +24,7 @@
 }
 
 .navbar-nav.navbar-nav {
-  a {
+  a:not(.btn), a.btn.btn-link {
     text-decoration: none;
     &:hover {
       background-color: unset;
