@@ -6,7 +6,7 @@ import { RegisteredUserDTO } from '../../../IsaacApiTypes';
 import { Link } from 'react-router-dom';
 import { Spacer } from '../elements/Spacer';
 import { formatDate } from '../elements/DateString';
-import { Badge, Button, Card, CardBody, Col, Container, Label, Row } from 'reactstrap';
+import { Badge, Button, Card, CardBody, Col, Container, Input, Label, Row } from 'reactstrap';
 import { TitleAndBreadcrumb } from '../elements/TitleAndBreadcrumb';
 import { downloadLinkModal } from '../elements/modals/AssignmentProgressModalCreators';
 import { InlineTabs } from '../elements/InlineTabs';
@@ -108,7 +108,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
     const {data: groupMembers} = useGetGroupMembersQuery(isDefined(group?.id) ? group.id : skipToken);
     const dispatch = useAppDispatch();
 
-
+    const [searchText, setSearchText] = useState("");
     const [activeTab, setActiveTab] = useState<"assignments" | "tests">("assignments");
 
     const assignmentLikeListing = activeTab === "assignments" ? groupBoardAssignments : groupQuizAssignments;
@@ -159,12 +159,12 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         {/* assignments and tests */}
         <Card>
             <CardBody>
-                <Row className="mb-4">
+                <Row className="mb-3">
                     <Col xs={12} lg={8}>
                         <h3>Assignments and tests</h3>
                         <span>View this group&apos;s progress on assignment and tests.</span>
                     </Col>
-                    <Col xs={12} sm={8} md={6} lg={4} className="d-flex flex-column">
+                    <Col xs={12} sm={6} lg={4} className="d-flex flex-column">
                         <Label className="m-0 fw-bold mt-2 mt-lg-0">Sort by:</Label>
                         <StyledDropdown
                             value={Object.values(AssignmentOrder).findIndex(item => item.type === assignmentOrder.type && item.order === assignmentOrder.order)}
@@ -174,6 +174,13 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                                 <option key={item.type + item.order} value={index}>{item.type} ({item.order === SortOrder.ASC ? "ascending" : "descending"})</option>
                             )}
                         </StyledDropdown>
+                    </Col>
+                    <Col xs={12} sm={6} lg={4}>
+                        <Label className="m-0 fw-bold mt-2 mt-lg-3">Search:</Label>
+                        <Input
+                            onChange={(e) => setSearchText(e.target.value)}
+                            placeholder={`Search for ${activeTab === "assignments" ? "assignments" : "tests"}...`}
+                        />
                     </Col>
                 </Row>
 
@@ -188,7 +195,9 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                     {isFetching
                         ? <Loading/>
                         : assignmentLikeListing?.length
-                            ? assignmentLikeListing.map(assignment => <AssignmentLikeLink key={assignment.id} assignment={assignment} />)
+                            ? assignmentLikeListing
+                                .filter(al => (isQuiz(al) ? al.quizSummary?.title : al.gameboard?.title)?.toLowerCase().includes(searchText.toLowerCase()))
+                                .map(assignment => <AssignmentLikeLink key={assignment.id} assignment={assignment} />)
                             : <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
                                 <span>You haven&apos;t {activeTab === "assignments" ? "set any assignments" : "assigned any tests"} yet.</span>
                                 <strong><Link to={activeTab === "assignments" ? PATHS.SET_ASSIGNMENTS : "/set_tests"} className={classNames("btn btn-link", {"fw-bold": isPhy})}>
