@@ -146,7 +146,9 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
 
                 {/* Only teachers can view tests */}
                 <InlineTabs
-                    tabs={[{label: "Assignments", value: "assignments"}, ...(isTeacherOrAbove(user) ? [{label: "Tests", value: "tests" as const}] : [])]}
+                    tabs={[
+                        {label: "Assignments" + (groupBoardAssignments?.length ? ` (${groupBoardAssignments.length})` : ""), value: "assignments"},
+                        ...(isTeacherOrAbove(user) ? [{label: "Tests" + (groupQuizAssignments?.length ? ` (${groupQuizAssignments.length})` : ""), value: "tests" as const}] : [])]}
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                 />
