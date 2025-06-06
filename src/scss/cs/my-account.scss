@@ -28,8 +28,13 @@
 .my-account-tab {
   select.form-select, input.form-control, div.form-control {
     height: 45px;
-    border-radius: 10px;
+    border-radius: 10px !important;
     border: solid 2px #666;
+
+    &:has(+ .inline-form-input-btn) {
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }  
   }
 
   select.form-select:not(.date-input-day) {
