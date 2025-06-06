@@ -161,6 +161,22 @@ $viewport-sizes: (
   aspect-ratio: calc($width / $height);
 }
 
+@mixin svg-icon-raw($path, $width, $height, $background-size: none, $background-position: none) {
+  // use this only for SVG icons that should not be recoloured; prefer @svg-icon in general
+  display: inline-block;
+  background: url($path) center center no-repeat;
+  width: $width;
+  height: $height;
+  min-width: $width;
+  min-height: $height;
+  @if $background-size != none {
+    background-size: $background-size;
+  }
+  @if $background-position != none {
+    background-position: $background-position;
+  }
+}
+
 @mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
   display: inline-block;
   mask: url($path) center center no-repeat;

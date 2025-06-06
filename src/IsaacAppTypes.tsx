@@ -22,6 +22,7 @@ import {
     ACTION_TYPE,
     DOCUMENT_TYPE,
     EXAM_BOARD,
+    GroupSortOrder,
     LearningStage,
     MEMBERSHIP_STATUS,
     PROGRAMMING_LANGUAGE,
@@ -324,7 +325,7 @@ export interface ActiveModal {
     overflowVisible?: boolean;
 }
 
-export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
+export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
 
 export enum QuizzesBoardOrder {
     "title" = "title",
@@ -369,15 +370,6 @@ export enum AssignmentOrderType {
     DueDate = "Due date"
 }
 export type AssignmentOrderSpec = {type: AssignmentOrderType; order: SortOrder};
-
-export const AssignmentOrder = {
-    titleAscending: {type: AssignmentOrderType.Title, order: SortOrder.ASC},
-    titleDescending: {type: AssignmentOrderType.Title, order: SortOrder.DESC},
-    startDateAscending: {type: AssignmentOrderType.StartDate, order: SortOrder.ASC},
-    startDateDescending: {type: AssignmentOrderType.StartDate, order: SortOrder.DESC},
-    dueDateAscending: {type: AssignmentOrderType.DueDate, order: SortOrder.ASC},
-    dueDateDescending: {type: AssignmentOrderType.DueDate, order: SortOrder.DESC},
-};
 
 export type NumberOfBoards = number | "ALL";
 
@@ -426,6 +418,21 @@ export interface ValidAssignmentWithListingDate extends AssignmentDTO {
     listingDate: Date;
 }
 
+export interface AssignmentProgressPageSettings {
+    colourBlind: boolean;
+    setColourBlind: (colourBlind: boolean) => void;
+    formatAsPercentage: boolean;
+    setFormatAsPercentage: (formatAsPercentage: boolean) => void;
+    attemptedOrCorrect: "ATTEMPTED" | "CORRECT";
+    setAttemptedOrCorrect: (attemptedOrCorrect: "ATTEMPTED" | "CORRECT") => void;
+    assignmentOrder: AssignmentOrderSpec;
+    setAssignmentOrder: (assignmentOrder: AssignmentOrderSpec) => void;
+    groupSortOrder: GroupSortOrder;
+    setGroupSortOrder: (groupSortOrder: GroupSortOrder) => void;
+
+    isTeacher: boolean;
+}
+
 export interface FigureNumbersById {[figureId: string]: number}
 export const HoverableNavigationContext = React.createContext<{openId: React.MutableRefObject<number | undefined>} | undefined>(undefined);
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
@@ -464,7 +471,7 @@ export const InlineContext = React.createContext<{
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
-export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}, isTeacher: false, assignmentOrder: AssignmentOrder.startDateDescending});
+export const AssignmentProgressPageSettingsContext = React.createContext<AssignmentProgressPageSettings | undefined>(undefined);
 export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
 export const AssignmentScheduleContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO | undefined};
