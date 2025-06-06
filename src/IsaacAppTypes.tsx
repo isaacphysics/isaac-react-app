@@ -325,7 +325,7 @@ export interface ActiveModal {
     overflowVisible?: boolean;
 }
 
-export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
+export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
 
 export enum QuizzesBoardOrder {
     "title" = "title",

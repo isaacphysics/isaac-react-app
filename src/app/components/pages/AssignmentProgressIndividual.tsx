@@ -43,8 +43,6 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
     }, [questions, progress]);
 
     function markClassesInternal(studentProgress: AssignmentProgressDTO, status: CompletionState | null, correctParts: number, incorrectParts: number, totalParts: number) {
-        // todo: need a different marking system for when showing grade by % attempted
-
         if (assignmentProgressContext?.attemptedOrCorrect === "CORRECT") {
             if (!isAuthorisedFullAccess(studentProgress)) {
                 return "revoked";
@@ -299,7 +297,7 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
     return <>
         <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${assignment.groupId}`} className="d-flex align-items-center">
             <i className="icon icon-arrow-left me-2"/>
-            Back to group overview
+            Back to group assignments and tests
         </Link>
         <Card className="my-4">
             <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">

@@ -153,6 +153,8 @@ export function ResultsTable<Q extends QuestionType>({
                 return -item.correctQuestionPartsCount;
             case "totalQuestionPercentage":
                 return -item.tickCount;
+            case "totalAttemptedQuestionPercentage":
+                return -(item.questionResults || []).filter(r => r !== CompletionState.NOT_ATTEMPTED).length;
             default:
                 return -(item.correctPartResults || [])[sortOrder];
         }
@@ -189,11 +191,10 @@ export function ResultsTable<Q extends QuestionType>({
             >
                 Correct
             </SortItemHeader>
-            // TODO: actually sort by attempted
             : <SortItemHeader<ProgressSortOrder>
                 className="ps-3 wf-10"
-                defaultOrder={"totalQuestionPercentage"}
-                reverseOrder={"totalQuestionPercentage"}
+                defaultOrder={"totalAttemptedQuestionPercentage"}
+                reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
             >
                 Attempted
