@@ -171,7 +171,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                             <span className="manage-quiz-title me-3">{quizTitle}</span>
                         </Col>
                         <Col className="d-flex align-items-center justify-content-end col-5 col-sm-4 col-md-6">
-                            <AffixButton size="sm" affix={{ affix: "icon-right", position: "suffix", type: "icon" }} className="me-3"
+                            <AffixButton size="sm" affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }} className="me-3"
                                 onClick={(e) => {
                                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                                     assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));

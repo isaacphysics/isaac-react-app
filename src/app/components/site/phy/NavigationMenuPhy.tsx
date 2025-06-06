@@ -351,7 +351,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
             : <div className="px-4">
                 <span>You&apos;re not currently logged in. Log in or sign up for free below!</span>
                 <br/>
-                <LoginLogoutButton className="my-2"/>
+                <LoginLogoutButton className="my-2 w-max-content"/>
             </div>
         }
     </>;
@@ -372,7 +372,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                 : <i className="icon icon-my-isaac"/>}
         </div>
         My Isaac
-        {taskCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">
+        {taskCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content" data-testid={"my-assignments-badge"}>
             {taskCount > 99 ? "99+" : taskCount}
         </span>}
     </div>;

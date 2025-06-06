@@ -123,7 +123,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                     }}>
                         {buttonTitle ?? "Search and filter"}
                     </AffixButton>}
-                    <div className="flex-grow-1">{optionBar}</div>
+                    <div className="flex-grow-1 d-inline-grid align-items-end">{optionBar}</div>
                 </div>
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
@@ -192,7 +192,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
             </ul>
             : <>
                 There are no related concepts for this {pageType}.
-                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "concepts")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "concepts")} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
                     See all concepts for {getHumanContext(pageContext)}
                 </AffixButton>}
             </>
@@ -226,7 +226,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
             </>
             : <>
                 There are no related questions for this {pageType}.
-                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "questions")} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+                {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "questions")} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
                     See all questions for {getHumanContext(pageContext)}
                 </AffixButton>}
             </>
@@ -654,7 +654,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
         <div className="sidebar-help">
             <p>You can see all of the tests that you have in progress or have completed in your My Isaac:</p>
             <AffixButton size="md" color="keyline" tag={Link} to="/tests" affix={{
-                affix: "icon-right",
+                affix: "icon-arrow-right",
                 position: "suffix",
                 type: "icon"
             }}>
@@ -752,7 +752,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
             const assignmentCountByStatus = myAssignments && Object.fromEntries(Object.entries(myAssignments).map(([key, value]) => [key, value.length]));
             return <>
                 <div className="section-divider"/>
-                <search>
+                <search data-testid="my-assignments-sidebar">
                     <h5>Search assignments</h5>
                     <Input
                         className='search--filter-input my-3'
@@ -810,6 +810,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
         <search>
             <h5>Search question decks</h5>
             <Input
+                data-testid="title-filter"
                 className='search--filter-input my-3'
                 type="search" value={boardTitleFilter || ""}
                 placeholder="e.g. Forces"
@@ -1016,7 +1017,7 @@ interface MyAccountSidebarProps extends SidebarProps {
 
 export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
     const { editingOtherUser, activeTab, setActiveTab } = props;
-    return <ContentSidebar buttonTitle="Account settings" {...props}>
+    return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...props}>
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
@@ -1512,7 +1513,7 @@ export const GenericPageSidebar = (props: ContentSidebarProps) => {
     // Default sidebar for general pages that don't have a custom sidebar
     return <ContentSidebar buttonTitle="Options" hideButton optionBar={props.optionBar}>
         <div className="section-divider"/>
-        <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-right", position: "suffix", type: "icon"}}>
+        <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
             Go to homepage
         </AffixButton>
     </ContentSidebar>;

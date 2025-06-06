@@ -2,7 +2,7 @@ import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
-import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, SOME_FIXED_FUTURE_DATE} from "../dateUtils";
+import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, SOME_FIXED_FUTURE_DATE, TEXTUAL_DATE_REGEX} from "../dateUtils";
 import {clickOn, renderTestEnvironment, withMockedDate} from "../testUtils";
 
 import {API_PATH, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
@@ -13,7 +13,7 @@ import { buildPostHandler } from "../../mocks/handlers";
 const expectedPhysicsTopLinks = {
     "our books": null,
     "our Boards by Topic": "/pages/pre_made_gameboards",
-    "create a gameboard": PATHS.GAMEBOARD_BUILDER
+    "create a question deck": PATHS.GAMEBOARD_BUILDER
 };
 
 describe("SetAssignments", () => {
@@ -32,7 +32,7 @@ describe("SetAssignments", () => {
             await waitFor(() => {
                 expect(screen.queryAllByText("Loading...")).toHaveLength(0);
             });
-            const viewDropdown: HTMLInputElement = await screen.findByLabelText("Display in");
+            const viewDropdown: HTMLInputElement = await screen.findByLabelText("Set display mode");
             expect(viewDropdown.value).toEqual("Card View");
         } else {
             // Change view to "Card View"
@@ -55,12 +55,17 @@ describe("SetAssignments", () => {
             expect(viewDropdown.value).toEqual("Table View");
         } else {
             // Change view to "Table View"
-            const viewDropdown = await screen.findByLabelText("Display in");
+            const viewDropdown = await screen.findByLabelText("Set display mode");
             await userEvent.selectOptions(viewDropdown, "Table View");
         }
         // Make sure that all gameboards are listed
         const gameboardRows = await screen.findAllByTestId("gameboard-table-row");
         expect(gameboardRows).toHaveLength(mockGameboards.totalResults);
+        if (isPhy) {
+            // Phy persists the change to table view, so switch back to card view for subsequent tests
+            const viewDropdown = await screen.findByLabelText("Set display mode");
+            await userEvent.selectOptions(viewDropdown, "Card View");
+        }
     });
 
     isPhy && it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
@@ -86,12 +91,14 @@ describe("SetAssignments", () => {
         // Check that group count is correct
         const assignmentsToGameboard = mockSetAssignments.filter(a => a.gameboardId === mockGameboard.id);
         const groupsAssignedHexagon = await within(gameboard).findByTitle("Number of groups assigned");
-        expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual(`${assignmentsToGameboard.length}group${assignmentsToGameboard.length === 1 ? "" : "s"}`);
+        expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual(`${isPhy ? "Assignedto" : ""}${assignmentsToGameboard.length}group${assignmentsToGameboard.length === 1 ? "" : "s"}`);
 
         // Check that created date is present and in the expected format
-        const dateText = within(gameboard).getByTestId("created-date").textContent?.replace(/Created:\s?/, "");
-        expect(dateText).toMatch(DDMMYYYY_REGEX);
-        expect(mockGameboard.creationDate - (dayMonthYearStringToDate(dateText)?.valueOf() ?? 0)).toBeLessThanOrEqual(ONE_DAY_IN_MS);
+        const datePrefix = siteSpecific("Created on ", "Created: ");
+        const dateText = within(gameboard).getByTestId("created-date").textContent?.replace(datePrefix, "");
+        expect(dateText).toMatch(siteSpecific(TEXTUAL_DATE_REGEX, DDMMYYYY_REGEX));
+        const date = siteSpecific(Date.parse(dateText!), dayMonthYearStringToDate(dateText));
+        expect(mockGameboard.creationDate - (date?.valueOf() ?? 0)).toBeLessThanOrEqual(ONE_DAY_IN_MS);
 
         // TODO fix stage and difficulty tests (broken since UI change Jan 2023)
         // Check that stages are displayed
@@ -118,9 +125,14 @@ describe("SetAssignments", () => {
         // // Check for difficulty title TODO check for SVG using something like screen.getByTitle("Practice 2 (P2)...")
         // within(gameboard).getByText("Difficulty:");
 
-        // Ensure we have a title with a link to the gameboard
-        const title = within(gameboard).getByRole("link", {name: mockGameboard.title});
-        expect(title.getAttribute("href")).toBe(`/assignment/${mockGameboard.id}`);
+        // Ensure gameboard has correct title and link
+        if (isAda) {
+            const title = within(gameboard).getByRole("link", {name: mockGameboard.title});
+            expect(title.getAttribute("href")).toBe(`/assignment/${mockGameboard.id}`);
+        }
+        if (isPhy) {
+            expect(gameboard.getAttribute("href")).toBe(`/question_decks#${mockGameboard.id}`);
+        }
 
         // Ensure the assign/unassign button exists
         within(gameboard).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
@@ -210,7 +222,7 @@ describe("SetAssignments", () => {
 
         // Make sure the gameboard number of groups assigned is updated
         const groupsAssignedHexagon = await within(gameboards[0]).findByTitle("Number of groups assigned");
-        expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual("2groups");
+        expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual(siteSpecific("Assignedto2groups", "2groups"));
     });
 
     describe('modal', () => {
@@ -404,7 +416,7 @@ describe("SetAssignments", () => {
             });
 
             const groupsAssignedHexagon = await within(gameboards[0]).findByTitle("Number of groups assigned");
-            expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual("1group");
+            expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual(siteSpecific("Assignedto1group", "1group"));
         });
     });
 });
