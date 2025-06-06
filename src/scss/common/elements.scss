@@ -283,13 +283,14 @@ iframe.email-html {
 
 .collapsible-list-container {
   border-top: 2px solid $gray-107;
-
-  &:last-of-type {
-    border-bottom: 2px solid $gray-107;
-  }
-
   img {
     transition: transform 0.1s ease;
+  }
+}
+
+:has(> .collapsible-list-container) {
+  &:last-of-type {
+    border-bottom: 2px solid $gray-107;
   }
 }
 

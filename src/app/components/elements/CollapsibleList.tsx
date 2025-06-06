@@ -1,5 +1,5 @@
 import React, { ReactNode, useLayoutEffect, useRef, useState } from "react";
-import { Col, Row } from "reactstrap";
+import { Col } from "reactstrap";
 import { Spacer } from "./Spacer";
 import { FilterCount } from "./svg/FilterCount";
 import classNames from "classnames";
@@ -61,7 +61,9 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         >
             <div ref={listRef} className={classNames({"ms-2": props.asSubList})} {...{"inert": expanded ? undefined : "true"}}> 
                 {/* when react is updated to v19, switch inert definition to regular prop */}
-                {props.children}
+                <ul>
+                    {props.children}
+                </ul>
             </div>
         </div>
     </Col>;
