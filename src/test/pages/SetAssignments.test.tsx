@@ -1,11 +1,11 @@
-import {screen, waitFor, within} from "@testing-library/react";
+import {act, screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, SOME_FIXED_FUTURE_DATE, TEXTUAL_DATE_REGEX} from "../dateUtils";
-import {clickOn, renderTestEnvironment, withMockedDate} from "../testUtils";
+import {clickOn, navigateToSetAssignments, renderTestEnvironment, setUrl, withMockedDate} from "../testUtils";
 
-import {API_PATH, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
+import {API_PATH, history, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
 import { http, HttpHandler, HttpResponse } from "msw";
 import { AssignmentDTO } from "../../IsaacApiTypes";
 import { buildPostHandler } from "../../mocks/handlers";
@@ -18,16 +18,15 @@ const expectedPhysicsTopLinks = {
 
 describe("SetAssignments", () => {
 
-    const renderSetAssignments = ({path = PATHS.SET_ASSIGNMENTS, endpoints = []}: { endpoints?: HttpHandler[], path?: string } = {}) => {
+    const renderSetAssignments = async ({endpoints = []}: { endpoints?: HttpHandler[], path?: string } = {}) => {
         renderTestEnvironment({
-            PageComponent: SetAssignments,
-            initalRouteEntries: [path],
             extraEndpoints: endpoints
         });
+        await navigateToSetAssignments();
     };
 
     it('should show 6 gameboards in card view (and start in this view on Phy)', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         if (isPhy) {
             await waitFor(() => {
                 expect(screen.queryAllByText("Loading...")).toHaveLength(0);
@@ -46,7 +45,7 @@ describe("SetAssignments", () => {
     });
 
     it('should show all gameboards in table view (and start in this view on CS)', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         if (isAda) {
             await waitFor(() => {
                 expect(screen.queryAllByText("Loading...")).toHaveLength(0);
@@ -69,7 +68,7 @@ describe("SetAssignments", () => {
     });
 
     isPhy && it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
             const button = await screen.findByRole("link", {name: title});
             expect(button.getAttribute("href")).toBe(href);
@@ -77,7 +76,7 @@ describe("SetAssignments", () => {
     });
 
     it('should show all the correct information for a gameboard in card view', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         if (!isPhy) {
             // Change view to "Card View"
             const viewDropdown = await screen.findByLabelText("Display in");
@@ -143,12 +142,12 @@ describe("SetAssignments", () => {
         const requestAssignment = (body: AssignmentDTO[]) => body[0];
         const observer = parameterObserver<AssignmentDTO[]>();
 
-        renderSetAssignments({
+        await renderSetAssignments({
             endpoints: [
                 buildPostHandler(
                     "/assignments/assign_bulk",
                     observer.attach(body => body.map(x => ({ groupId: x.groupId, assignmentId: x.groupId! * 2 })))
-                ), 
+                ),
             ]
         });
         if (!isPhy) {
@@ -164,7 +163,7 @@ describe("SetAssignments", () => {
         await userEvent.click(modalOpenButton);
 
         // Wait for modal to appear, for the gameboard we expect
-        const modal = await screen.findByTestId("set-assignment-modal");
+        const modal = await screen.findByTestId("active-modal");
         expect(modal).toHaveModalTitle(mockGameboard.title);
         // Ensure all active groups are selectable in the drop-down
         const groupSelector = await toggleGroupSelect();
@@ -206,16 +205,17 @@ describe("SetAssignments", () => {
             expect(requestAssignment(observer.observedParams!).scheduledStartDate).not.toBeDefined();
         });
 
-        // Check that new assignment is displayed in the modal
-        await waitFor(() => {
-            const newCurrentAssignments = within(modal).queryAllByTestId("current-assignment");
-            expect(newCurrentAssignments.map(a => a.textContent).join(",")).toContain(mockActiveGroups[1].groupName);
-        });
-
-        // Close modal
-        const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
-        expect(closeButtons).toHaveLength(siteSpecific(2, 1)); // One at the top (and one at the bottom on Phy)
-        await userEvent.click(closeButtons[0]);
+        // TODO: the modal now closes automatically.
+        // // Check that new assignment is displayed in the modal
+        // await waitFor(() => {
+        //     const newCurrentAssignments = within(modal).queryAllByTestId("current-assignment");
+        //     expect(newCurrentAssignments.map(a => a.textContent).join(",")).toContain(mockActiveGroups[1].groupName);
+        // });
+        //
+        // // Close modal
+        // const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
+        // expect(closeButtons).toHaveLength(siteSpecific(2, 1)); // One at the top (and one at the bottom on Phy)
+        // await userEvent.click(closeButtons[0]);
         await waitFor(() => {
             expect(modal).not.toBeInTheDocument();
         });
@@ -227,21 +227,27 @@ describe("SetAssignments", () => {
 
     describe('modal', () => {
         const mockGameboard = mockGameboards.results[0];
-        const renderModal = (endpoints: HttpHandler[] = []) => renderSetAssignments({ path: `${PATHS.SET_ASSIGNMENTS}#${mockGameboard.id}`, endpoints}); 
+        const renderModal = async (endpoints: HttpHandler[] = []) => {
+            renderTestEnvironment({
+                initalRouteEntries: [`${PATHS.SET_ASSIGNMENTS}#${mockGameboard.id}`],
+                extraEndpoints: endpoints
+            });
+            await waitFor(() => modal());
+        };
 
         it('groups are empty by default', async () => {
-            renderModal();
+            await renderModal();
             expect(await groupSelector()).toHaveTextContent('Group(s):None');
         });
-    
+
         it('start date is empty by default', async () => {
-            renderModal();
+            await renderModal();
             expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
         });
-            
+
         it('due date is a week from now by default', async() => {
             await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
-                renderModal();
+                await renderModal();
                 expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
             });
         });
@@ -249,7 +255,7 @@ describe("SetAssignments", () => {
         // local time zone is Europe/London, as set in globalSetup.ts
         it('due date is displayed in UTC', async () => {
             await withMockedDate(Date.parse("2025-04-28T23:30:00.000Z"), async () => { // Monday in UTC, already Tuesday in UTC+1.
-                renderModal();
+                await renderModal();
                 expect(await dateInput("Due date reminder")).toHaveValue('2025-05-04'); // Sunday in UTC (would be Monday if we showed UTC+1)
             });
         });
@@ -257,7 +263,7 @@ describe("SetAssignments", () => {
         const testPostedDueDate = ({ currentTime, expectedDueDatePosted } : { currentTime: string, expectedDueDatePosted: string}) => async () => {
             await withMockedDate(Date.parse(currentTime), async () => { // Monday
                 const observer = parameterObserver<AssignmentDTO[]>();
-                renderModal([
+                await renderModal([
                     buildPostHandler(
                         "/assignments/assign_bulk",
                         observer.attach(body => body.map(x => ({ groupId: x.groupId, assignmentId: x.groupId! * 2 })))
@@ -283,7 +289,7 @@ describe("SetAssignments", () => {
 
         it('resets to defaults after a failed post', async () => {
             await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
-                renderModal([
+                await renderModal([
                     buildPostHandler(
                         "/assignments/assign_bulk",
                         (body: AssignmentDTO[]) => body.map(x => ({ groupId: x.groupId, errorMessage: "Boo, something went wrong" }))
@@ -302,13 +308,13 @@ describe("SetAssignments", () => {
 
         describe('validation', () => {
             it('shows an error message when the due date is missing', async () => {
-                renderModal();
+                await renderModal();
                 await clearDateInput("Due date reminder");
                 expect(await findByText("Due date reminder")).toHaveTextContent(`Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments`);
             });
 
             it('does not show an error when the due date is present', async () => {
-                renderModal();
+                await renderModal();
                 expect(await findByText("Due date reminder")).not.toHaveTextContent(`due dates are required for assignments`);
             });
         });
@@ -339,7 +345,7 @@ describe("SetAssignments", () => {
         await userEvent.click(modalOpenButton);
 
         // Wait for modal to appear
-        const modal = await screen.findByTestId("set-assignment-modal");
+        const modal = await screen.findByTestId("active-modal");
 
         // prepare response to window.confirm dialog
         const confirmSpy = jest.spyOn(window, 'confirm');
@@ -388,7 +394,7 @@ describe("SetAssignments", () => {
             await userEvent.click(modalOpenButton);
 
             // wait for modal to appear, for the gameboard we expect
-            const modal = await screen.findByTestId("set-assignment-modal");
+            const modal = await screen.findByTestId("active-modal");
 
             // select the group with that gameboard already assigned
             const selectContainer = within(modal).getByText(/Group(\(s\))?:/);
@@ -421,7 +427,7 @@ describe("SetAssignments", () => {
     });
 });
 
-const modal = () => screen.findByTestId("set-assignment-modal");
+const modal = () => screen.findByTestId("active-modal");
 
 const findByText = async (labelText: string | RegExp) => await within(await modal()).findByText(labelText);
 
@@ -452,6 +458,6 @@ const parameterObserver = <T,>() => ({
         return (p: T) => {
             this.observedParams = p;
             return fn(p);
-        }; 
+        };
     }
 });
