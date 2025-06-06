@@ -42,7 +42,7 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }, [dispatch]);
 
-    return <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${group.id}`} className="w-100 no-underline mt-2">
+    return <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${group.id}`} className="w-100 d-block no-underline mt-2">
         <div className="d-flex assignment-progress-group w-100 p-3 align-items-center">
             <div className="d-flex flex-grow-1 flex-column flex-lg-row">
                 <b data-testid="group-name">{group.groupName}</b>

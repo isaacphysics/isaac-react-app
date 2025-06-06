@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments } from '../../state';
 import { AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment } from '../../../IsaacAppTypes';
-import { AssignmentOrder, getAssignmentCSVDownloadLink, getGroupProgressCSVDownloadLink, getGroupQuizProgressCSVDownloadLink, isDefined, isPhy, isQuiz, isTeacherOrAbove, PATHS, siteSpecific, SortOrder } from '../../services';
+import { above, AssignmentOrder, getAssignmentCSVDownloadLink, getGroupProgressCSVDownloadLink, getGroupQuizProgressCSVDownloadLink, isDefined, isPhy, isQuiz, isTeacherOrAbove, PATHS, siteSpecific, SortOrder, useDeviceSize } from '../../services';
 import { RegisteredUserDTO } from '../../../IsaacApiTypes';
 import { Link } from 'react-router-dom';
 import { Spacer } from '../elements/Spacer';
@@ -15,53 +15,6 @@ import { Loading } from '../handlers/IsaacSpinner';
 import { skipToken } from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
 
-// const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
-//     const dispatch = useAppDispatch();
-//     const [isExpanded, setIsExpanded] = useState(false);
-
-//     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLButtonElement & HTMLAnchorElement>) {
-//         event.stopPropagation();
-//         event.preventDefault();
-//         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
-//     }
-
-//     function openSingleAssignment(event: React.MouseEvent<HTMLButtonElement & HTMLAnchorElement>) {
-//         event.stopPropagation();
-//         event.preventDefault();
-//         window.open(event.currentTarget.href, '_blank');
-//     }
-
-//     const assignmentHasNotStarted = !hasAssignmentStarted(assignment);
-
-//     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
-//         <div className={classNames("gameboard-header", {"text-muted": assignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)}>
-//             <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)} alt={`Expand assignment ${assignment.gameboard?.title}`}>
-//                 <span className={classNames({"text-muted": assignmentHasNotStarted})}>
-//                     {assignment.gameboard?.title}
-//                     {assignmentHasNotStarted && <span className="gameboard-due-date">
-//                         (Scheduled:&nbsp;{formatDate(getAssignmentStartDate(assignment))})
-//                     </span>}
-//                     {assignmentHasNotStarted && assignment.dueDate && " "}
-//                     {assignment.dueDate && <span className="gameboard-due-date">
-//                         (Due:&nbsp;{formatDate(assignment.dueDate)})
-//                     </span>}
-//                 </span>
-//             </Button>
-//             <div className="gameboard-links align-items-center">
-//                 <Button className="d-none d-md-inline me-0" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id as number)} onClick={openAssignmentDownloadLink}>
-//                     Download CSV
-//                 </Button>
-//                 <span className="d-none d-md-inline mx-1">&middot;</span>
-//                 <Button className="d-none d-md-inline" color="link" tag="a" href={`${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} onClick={openSingleAssignment}>
-//                     View individual assignment
-//                 </Button>
-//                 <img src={"/assets/common/icons/chevron-up.svg"} alt="" className={classNames("accordion-arrow", {"active" : isExpanded})}/>
-//             </div>
-//         </div>
-//         {isExpanded && <ProgressLoader assignment={assignment} />}
-//     </div>;
-// };]
-
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const dispatch = useAppDispatch();
     const quiz = isQuiz(assignment);
@@ -72,7 +25,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
-    return <Link to={quiz ? `/test/assignment/${assignment.id}/feedback` : `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} className="w-100 no-underline mt-2">
+    return <Link to={quiz ? `/test/assignment/${assignment.id}/feedback` : `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} className="w-100 d-block no-underline mt-2">
         <div className="d-flex align-items-center assignment-progress-group w-100 p-3">
             <div className="d-flex flex-column">
                 <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
@@ -111,6 +64,8 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
     const [searchText, setSearchText] = useState("");
     const [activeTab, setActiveTab] = useState<"assignments" | "tests">("assignments");
 
+    const deviceSize = useDeviceSize();
+
     const assignmentLikeListing = activeTab === "assignments" ? groupBoardAssignments : groupQuizAssignments;
 
     return <Container className="mb-5">
@@ -120,13 +75,18 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             icon={{type: "hex", icon: "icon-group"}}
         />
 
-        <div className="d-flex flex-wrap my-4 gap-3">
-            <Link to={PATHS.ASSIGNMENT_PROGRESS} className="d-flex align-items-center">
+        <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-flex align-items-center mb-2 mt-4", siteSpecific("d-md-none", "d-xl-none"))}>
+            <i className="icon icon-arrow-left me-2"/>
+            Back to assignment progress
+        </Link>
+
+        <div className={classNames("d-flex flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
+            <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-none align-items-center", siteSpecific("d-md-flex", "d-xl-flex"))}>
                 <i className="icon icon-arrow-left me-2"/>
                 Back to assignment progress
             </Link>
-            <Spacer/>
             {isDefined(group?.id) && <>
+                {above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
                 <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupProgressCSVDownloadLink(group.id as number))))}>
                     Download assignments CSV
                     <i className="icon icon-download ms-2" color="white"/>
