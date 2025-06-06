@@ -514,6 +514,20 @@ $failed-bg-size: 25%;
     width: 195px;
   }
 
+  @include respond-below(md) {
+    .student-name {
+      min-width: 150px;
+      width: 150px;
+    }
+  }
+
+  @include respond-below(sm) {
+    .student-name {
+      min-width: 100px;
+      width: 100px;
+    }
+  }
+
   .total-column {
     @include table-sticky;
     right: 0;
@@ -527,3 +541,9 @@ $failed-bg-size: 25%;
   }
 }
 
+.results-table-container {
+  border-left: $border-width solid $border-color-translucent;
+  table {
+    border-left: none !important;
+  }
+}

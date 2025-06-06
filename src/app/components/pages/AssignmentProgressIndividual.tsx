@@ -203,7 +203,7 @@ const DetailedMarksCard = ({progress, questions, questionIndex, ...rest}: Detail
     return <div {...rest} className={classNames("assignment-progress-card w-100 my-2", {"open": isOpen}, rest.className)}>
         <button onClick={() => setIsOpen(o => !o)} className="w-100 p-3 d-flex align-items-center text-start bg-transparent">
             <div className="d-flex flex-column">
-                <h5 className="m-0">{questionIndex + 1}. {questions[questionIndex].title}</h5>
+                <h5 className="m-0">{questionIndex + 1}. <Link to={`/questions/${questions[questionIndex].id}`}>{questions[questionIndex].title}</Link></h5>
                 {difficultParts.length > 0 && <span className="mt-2 small">
                     More than <strong>50%</strong> of the group answered incorrectly on parts <strong>{difficultParts.slice(0, 3).map(i => i + 1).join(", ")}{difficultParts.length > 3 ? `, and ${difficultParts.length - 3} more` : ""}</strong>.
                 </span>}
@@ -215,11 +215,14 @@ const DetailedMarksCard = ({progress, questions, questionIndex, ...rest}: Detail
             <img className={classNames("icon-dropdown-180", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"/>
         </button>
         <CollapsibleContainer expanded={isOpen}>
-            <div className="overflow-auto ms-2 pe-2 pb-2">
-                <ResultsTablePartBreakdown
-                    progress={progress}
-                    questionIndex={questionIndex}
-                />
+            <div className="pb-2">
+                {/* nested divs required for clean table border when scrolling :/ */}
+                <div className="overflow-auto ms-2 pe-2 results-table-container">
+                    <ResultsTablePartBreakdown
+                        progress={progress}
+                        questionIndex={questionIndex}
+                    />
+                </div>
             </div>
         </CollapsibleContainer>
     </div>;
