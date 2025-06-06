@@ -137,11 +137,9 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
     }, {} as Record<TAG_ID, number>);
 
     const questionSubjects = tags.allSubjectTags.filter(s => Object.keys(questionTagsCountMap || {}).includes(s.id));
-    const questionTags = Object.entries(questionTagsCountMap || {})
-        .filter(([tagId]) => tags.allTopicTags.includes(tags.getById(tagId as TAG_ID))) // get all topic tags on all questions
-        .sort((a, b) => b[1] - a[1]); // sort by count
-
-    const breadcrumb = questionTags.map(tag => `${tags.getById(tag[0] as TAG_ID)?.title} (${tag[1]})`).slice(0, 3);
+    const questionTags = Object.entries(questionTagsCountMap || {}).filter(([tagId]) => tags.allTopicTags.includes(tags.getById(tagId as TAG_ID))).sort((a, b) => b[1] - a[1]).map(([tagId]) => tagId);
+    const breadcrumb = questionTags.map(tagId => tags.getById(tagId as TAG_ID)?.title).slice(0, 3);
+    
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
