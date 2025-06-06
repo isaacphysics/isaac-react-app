@@ -109,7 +109,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: VRT update - write job summary
-        if: ${{ failure() && steps.cypress-create-pr.outcome == 'success' }}
+        if: ${{ steps.cypress-create-pr.outcome == 'success' }}
         run: |
           echo '## 👀 Visual Regression Test updates' >> $GITHUB_STEP_SUMMARY
           echo 'This run failed due to visual differences compared to our baseline images. A PR with new baseline images has been generated. Please review it [here](${{ steps.cypress-create-pr.outputs.result }}) and merge it if the differences are expected.' >> $GITHUB_STEP_SUMMARY
