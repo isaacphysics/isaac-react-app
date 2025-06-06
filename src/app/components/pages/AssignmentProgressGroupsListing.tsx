@@ -85,7 +85,9 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                 modalId="help_modal_assignment_progress"
                 icon={{type: "hex", icon: "icon-revision"}}
             />
-            <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_help")} ifNotFound={RenderNothing} />
+            <div className="mt-3">
+                <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_help")} ifNotFound={RenderNothing} />
+            </div>
             <Card>
                 <CardBody>
                     <Row className="row-gap-2">
