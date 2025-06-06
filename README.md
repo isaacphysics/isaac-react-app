@@ -14,4 +14,4 @@
 
 The web interface is a [React app](https://github.com/facebook/create-react-app), served by [nginx](https://nginx.org/en/) in [Docker](https://www.docker.com/).
 The front-end application was initially generated from [create-react-app](https://github.com/facebook/create-react-app).
-Dummy modificationDummy modificationDummy modificationDummy modificationDummy modificationDummy modificationDummy modificationDummy modificationDummy modificationDummy modification
+Dummy modificationDummy modificationDummy modificationDummy modificationDummy modificationDummy modificationDummy modificationDummy modificationDummy modificationDummy modificationDummy modification
