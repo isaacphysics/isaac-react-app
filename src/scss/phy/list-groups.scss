@@ -98,7 +98,7 @@
 }
 
 .list-group-links li .card-tag {
-  @include pill-tag($color-neutral-900, var(--subject-color-50), var(--subject-color-100));
+  @include pill-tag($color-neutral-900, var(--subject-color-100), var(--subject-color-700));
   width: auto;
   white-space: normal;
   text-align: center;
