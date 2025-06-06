@@ -39,11 +39,9 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
             return;
         }
 
-        const fragmentId = book?.id + "_" + section;
-        if (fragmentId) {
-            setPageId(fragmentId);
-        }
-    }, [book?.chapters, history.location]);
+        const fragmentId = book?.id + "|" + section;
+        setPageId(fragmentId);
+    }, [book?.id, history.location.pathname]);
 
     return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
         <TitleAndBreadcrumb

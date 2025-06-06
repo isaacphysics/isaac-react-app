@@ -1510,14 +1510,14 @@ export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
     </ContentSidebar>;
 };
 
-const calculateSidebarLink = (entry: SidebarEntryDTO, currentPathname: string): string | undefined => {
+const calculateSidebarLink = (entry: SidebarEntryDTO): string | undefined => {
     switch (entry.pageType) {
         case "isaacBookDetailPage": {
-            const bookId = currentPathname.split("/").find((_, i, a) => i > 0 && a[i-1] === "books");
-            return `/books/${bookId}/${entry.pageId?.slice(`book_${bookId}_`.length)}`;
-            // TODO this is so grim
-            // - only works on book pages
-            // - assumes the book structure will forever remain /books/{id}/{pageId}
+            const detailPageSplit = entry.pageId?.split("|");
+            if (!detailPageSplit || detailPageSplit.length !== 2) {
+                return undefined;
+            }
+            return `/books/${detailPageSplit[0].slice("book_".length)}/${detailPageSplit[1]}`;
         }
         case "isaacBookIndexPage": {
             return `/books/${entry.pageId?.slice(`book_`.length)}`;
@@ -1561,7 +1561,7 @@ const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: H
                     <span className="flex-grow-1"><Markup encoding="latex">{entry.title}</Markup></span>
                 </div>}
                 checked={isActive}
-                onClick={(() => history.push(calculateSidebarLink(entry, history.location.pathname) ?? ""))}
+                onClick={(() => history.push(calculateSidebarLink(entry) ?? ""))}
             />
         </li>;
 };
