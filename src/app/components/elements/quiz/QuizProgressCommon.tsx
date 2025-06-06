@@ -76,8 +76,6 @@ export interface ResultsTableProps<Q extends QuestionType> {
     duedate?: Date | number;
     progress?: AssignmentProgressDTO[];
     questions: Q[];
-    getQuestionTitle: (question: Q) => JSX.Element;
-    assignmentAverages: number[];
     assignmentTotalQuestionParts: number;
     markClasses: (row: AssignmentProgressDTO, assignmentTotalQuestionParts: number) => string;
     markQuestionClasses: (row: AssignmentProgressDTO, questionIndex: number) => string;
@@ -89,16 +87,11 @@ export function ResultsTable<Q extends QuestionType>({
     duedate,
     progress,
     questions,
-    getQuestionTitle,
-    assignmentAverages,
     assignmentTotalQuestionParts,
     markClasses,
     markQuestionClasses,
     isAssignment
 } : ResultsTableProps<Q>) {
-
-    const [selectedQuestionNumber, setSelectedQuestionNumber] = useState(0);
-    const selectedQuestion: Q = questions[selectedQuestionNumber];
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
@@ -170,18 +163,6 @@ export function ResultsTable<Q extends QuestionType>({
         >
             Name
         </SortItemHeader>
-        {/* {questions.map((q, index) =>
-            <SortItemHeader<ProgressSortOrder>
-                key={q.id} className={`${isSelected(q)}`}
-                defaultOrder={index} reverseOrder={index} currentOrder={sortOrder}
-                setOrder={toggleSort}
-                clickToSelect={() => setSelectedQuestionNumber(index)}
-                hideIcons={index !== selectedQuestionNumber} reversed={reverseOrder}
-                alignment="center"
-            >
-                {assignmentAverages[index]}%
-            </SortItemHeader>
-        )} */}
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
                 className="ps-3 wf-10"
@@ -207,63 +188,9 @@ export function ResultsTable<Q extends QuestionType>({
                 </a>
             </th>
         )}
-        {/* {isAssignment ? <>
-            <SortItemHeader<ProgressSortOrder>
-                className="total-column left"
-                defaultOrder={"totalQuestionPartPercentage"}
-                reverseOrder={"totalQuestionPartPercentage"}
-                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}>
-                Total Parts
-            </SortItemHeader>
-            <SortItemHeader<ProgressSortOrder>
-                className="total-column right"
-                defaultOrder={"totalQuestionPercentage"}
-                reverseOrder={"totalQuestionPercentage"}
-                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}>
-                Total Qs
-            </SortItemHeader>
-        </> :
-            <SortItemHeader<ProgressSortOrder>
-                defaultOrder={"totalQuestionPartPercentage"}
-                reverseOrder={"totalQuestionPartPercentage"}
-                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-                className="total-column"
-            >
-                Overall
-            </SortItemHeader>
-        } */}
     </tr>;
 
     const tableRef = useRef<HTMLTableElement>(null);
-
-    useLayoutEffect(() => {
-        const table = tableRef.current;
-        if (table) {
-            const parentElement = table.parentElement as HTMLElement;
-            const firstRow = (table.firstChild as HTMLTableSectionElement).firstChild as HTMLTableRowElement;
-            const questionTH = firstRow.children[selectedQuestionNumber + 1] as HTMLTableHeaderCellElement;
-
-            const offsetLeft = questionTH.offsetLeft;
-            const parentScrollLeft = parentElement.scrollLeft;
-            const parentLeft = parentScrollLeft + parentElement.offsetLeft + 130;
-            const width = questionTH.offsetWidth;
-
-            let newScrollLeft;
-
-            if (offsetLeft < parentLeft) {
-                newScrollLeft = parentScrollLeft + offsetLeft - parentLeft - width / 2;
-            } else {
-                const offsetRight = offsetLeft + width;
-                const parentRight = parentLeft + parentElement.offsetWidth - 260;
-                if (offsetRight > parentRight) {
-                    newScrollLeft = parentScrollLeft + offsetRight - parentRight + width / 2;
-                }
-            }
-            if (newScrollLeft != undefined) {
-                parentElement.scrollLeft = newScrollLeft;
-            }
-        }
-    }, [selectedQuestionNumber]);
 
     return <div className="assignment-progress-progress">
         {progress && progress.length > 0 && <>

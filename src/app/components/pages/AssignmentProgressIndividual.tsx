@@ -99,12 +99,6 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
 
         return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }
-
-    const getQuestionTitle = (question: GameboardItem) => {
-        return <Link to={`/questions/${question.id}?board=${assignment.gameboardId}`}>
-            <strong>Q<span className="d-none d-md-inline">uestion</span>: </strong>{question.title}
-        </Link>;
-    };
     
     return <Card>
         <CardBody>
@@ -141,8 +135,8 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                 {isAda && <AdaKey/>}
             </div>
 
-            <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} getQuestionTitle={getQuestionTitle}
-                assignmentAverages={assignmentAverages} assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
+            <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions}
+                assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
                 isAssignment={true}
             />
         </CardBody>
@@ -172,9 +166,10 @@ interface DetailedMarksProps extends React.HTMLAttributes<HTMLDivElement> {
     progress: AssignmentProgressDTO[];
     questions: GameboardItem[];
     questionIndex: number;
+    gameboardId?: string;
 }
 
-const DetailedMarksCard = ({progress, questions, questionIndex, ...rest}: DetailedMarksProps) => {
+const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...rest}: DetailedMarksProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const difficultParts = useMemo(() => {
@@ -201,7 +196,7 @@ const DetailedMarksCard = ({progress, questions, questionIndex, ...rest}: Detail
     return <div {...rest} className={classNames("assignment-progress-card w-100 my-2", {"open": isOpen}, rest.className)}>
         <button onClick={() => setIsOpen(o => !o)} className="w-100 p-3 d-flex align-items-center text-start bg-transparent">
             <div className="d-flex flex-column">
-                <h5 className="m-0">{questionIndex + 1}. <Link to={`/questions/${questions[questionIndex].id}`}>{questions[questionIndex].title}</Link></h5>
+                <h5 className="m-0">{questionIndex + 1}. <Link to={`/questions/${questions[questionIndex].id}` + (gameboardId ? `?board=${gameboardId}` : "")}>{questions[questionIndex].title}</Link></h5>
                 {difficultParts.length > 0 && <span className="mt-2 small">
                     More than <strong>50%</strong> of the group answered incorrectly on parts <strong>{difficultParts.slice(0, 3).map(i => i + 1).join(", ")}{difficultParts.length > 3 ? `, and ${difficultParts.length - 3} more` : ""}</strong>.
                 </span>}
@@ -245,6 +240,7 @@ const DetailedMarksTab = ({assignment, progress}: DetailedMarksTabProps) => {
                     progress={progress}
                     questions={questions}
                     questionIndex={questionIndex}
+                    gameboardId={assignment.gameboardId}
                     data-bs-theme={getThemeFromTags(questions[questionIndex].tags)}
                 />
             ))}
