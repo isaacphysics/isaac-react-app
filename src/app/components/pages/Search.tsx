@@ -167,7 +167,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {gotResults ?
                                     isPhy ? 
-                                        <ListView items={shortcutAndFilteredSearchResults}/> :
+                                        <ListView type="item" items={shortcutAndFilteredSearchResults}/> :
                                         <LinkToContentSummaryList 
                                             items={shortcutAndFilteredSearchResults} showBreadcrumb={true}
                                             contentTypeVisibility={ContentTypeVisibility.SHOWN}   

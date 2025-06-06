@@ -404,7 +404,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                 {undeprecatedQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
                                 
                                 {siteSpecific(
-                                    <ListView items={undeprecatedQuizzes} isQuizSetter/>, 
+                                    <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>, 
                                     <ListGroup className="mb-2 quiz-list">
                                         {undeprecatedQuizzes.map(quiz => <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                             <Row className="w-100">

@@ -50,6 +50,7 @@ interface RenderTestEnvironmentOptions {
 export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
+    store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
     store.dispatch(isaacApi.util.resetApiState());
     server.resetHandlers();
     if (role || modifyUser) {
@@ -134,6 +135,13 @@ export const navigateToAssignmentProgress = async () => {
         await followHeaderNavLink("My Ada", "Markbook");
 };
 
+export const navigateToSetAssignments = async () => {
+    isPhy ?
+        await followHeaderNavLink("My Isaac", "Set assignments")
+        :
+        await followHeaderNavLink("My Ada", "Manage assignments");
+};
+
 // Open a given tab in the account page.
 export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     // Switch to the correct tab
@@ -177,14 +185,14 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
     try {
         await act(async () => {
             window.innerWidth = width;
-            window.innerHeight = height;    
+            window.innerHeight = height;
         });
         fireEvent(window, new Event('resize'));
         cb();
     } finally {
         await act(async () => {
             window.innerWidth = originalWindow.width;
-            window.innerHeight = originalWindow.height;    
+            window.innerHeight = originalWindow.height;
         });
         fireEvent(window, new Event('resize'));
     }
@@ -203,7 +211,7 @@ export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => voi
 
     try {
         jest.spyOn(miscUtils, 'nextRandom').mockImplementation(() => nextRandom.get());
-        await fn(nextRandom.set.bind(nextRandom));         
+        await fn(nextRandom.set.bind(nextRandom));
     } finally {
         jest.spyOn(miscUtils, 'nextRandom').mockRestore();
     }
