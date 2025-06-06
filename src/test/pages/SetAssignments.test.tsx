@@ -234,6 +234,11 @@ describe("SetAssignments", () => {
     describe('modal', () => {
         const renderModal = async (endpoints: HttpHandler[] = []) => {
             await renderSetAssignments({endpoints});
+            if (!isPhy) {
+                // Change view to "Card View"
+                const viewDropdown = await screen.findByLabelText("Display in");
+                await userEvent.selectOptions(viewDropdown, "Card View");
+            }
             const gameboards = await screen.findAllByTestId("gameboard-card");
             // Find and click assign gameboard button for the first gameboard
             const modalOpenButton = within(gameboards[0]).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
