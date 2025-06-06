@@ -249,12 +249,14 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                         {categories?.map((category, i) => {
                             return <div key={i}>
                                 <h5 className="px-4 m-0 py-2">{category.title}</h5>
-                                {category.subcategories.map((subcategory, j) => {
-                                    return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject}>
-                                        <i className="icon icon-hexagon me-1" />
-                                        <span>{subcategory.fullTitle}</span>
-                                    </NavigationItem>;
-                                })}
+                                <ul className="plain-list">
+                                    {category.subcategories.map((subcategory, j) => {
+                                        return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject}>
+                                            <i className="icon icon-hexagon me-1" />
+                                            <span>{subcategory.fullTitle}</span>
+                                        </NavigationItem>;
+                                    })}
+                                </ul>
                                 {i < categories.length - 1 && <div className="section-divider"/>}
                             </div>;
                         })}
@@ -266,12 +268,14 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                 {categories?.map((category, i) => {
                     return <div key={i}>
                         <h5 className="px-4 m-0 py-2">{category.title}</h5>
-                        {category.subcategories.map((subcategory, j) => {
-                            return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject} onClick={toggleMenu}>
-                                <i className="icon icon-hexagon me-1"/>
-                                <span>{subcategory.fullTitle}</span>
-                            </NavigationItem>;
-                        })}
+                        <ul className="plain-list">
+                            {category.subcategories.map((subcategory, j) => {
+                                return <NavigationItem key={j} className="align-items-center" href={subcategory.href} data-bs-theme={subcategory.subject} onClick={toggleMenu}>
+                                    <i className="icon icon-hexagon me-1"/>
+                                    <span>{subcategory.fullTitle}</span>
+                                </NavigationItem>;
+                            })}
+                        </ul>
                         {i < categories.length - 1 && <div className="section-divider"/>}
                     </div>;
                 })}
@@ -293,60 +297,66 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                 <div className="d-flex flex-column flex-sm-row gap-sm-5 gap-md-0">
                     <div>
                         {isTutorOrAbove(user) && <h5>STUDENT</h5>}
-                        <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
-                            My question decks
-                        </NavigationItemClose>
-                        <NavigationItemClose href="/assignments" className="d-flex align-items-center">
-                            My assignments
-                            {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
-                        </NavigationItemClose>
-                        <NavigationItemClose href="/tests" className="d-flex align-items-center">
-                            My tests
-                            {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
-                        </NavigationItemClose>
-                        <NavigationItemClose href="/progress">
-                            My progress
-                        </NavigationItemClose>
+                        <ul className="plain-list">
+                            <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
+                                My question decks
+                            </NavigationItemClose>
+                            <NavigationItemClose href="/assignments" className="d-flex align-items-center">
+                                My assignments
+                                {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
+                            </NavigationItemClose>
+                            <NavigationItemClose href="/tests" className="d-flex align-items-center">
+                                My tests
+                                {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
+                            </NavigationItemClose>
+                            <NavigationItemClose href="/progress">
+                                My progress
+                            </NavigationItemClose>
+                        </ul>
                     </div>
 
                     {isTutorOrAbove(user) && <>
                         <div className={above["sm"](deviceSize) ? "section-divider-y" : "section-divider"}/>
                         <div>
                             <h5 className="pt-2 pt-sm-0">{isTutor(user) ? "TUTOR" : "TEACHER"}</h5>
-                            {isTutor(user)
-                                ? <NavigationItemClose href="/tutor_features">
-                                    Tutor features
+                            <ul className="plain-list">
+                                {isTutor(user)
+                                    ? <NavigationItemClose href="/tutor_features">
+                                        Tutor features
+                                    </NavigationItemClose>
+                                    : <NavigationItemClose href="/teacher_features">
+                                        Teacher features
+                                    </NavigationItemClose>}
+                                <NavigationItemClose href="/groups">
+                                    Manage groups
                                 </NavigationItemClose>
-                                : <NavigationItemClose href="/teacher_features">
-                                    Teacher features
-                                </NavigationItemClose>}
-                            <NavigationItemClose href="/groups">
-                                Manage groups
-                            </NavigationItemClose>
-                            <NavigationItemClose href="/set_assignments">
-                                Set assignments
-                            </NavigationItemClose>
-                            <NavigationItemClose href="/assignment_schedule">
-                                Assignment schedule
-                            </NavigationItemClose>
-                            <NavigationItemClose href="/assignment_progress">
-                                Assignment progress
-                            </NavigationItemClose>
-                            {!isTutor(user) &&
-                                <NavigationItemClose href="/set_tests">
-                                    Set / manage tests
-                                </NavigationItemClose>}
+                                <NavigationItemClose href="/set_assignments">
+                                    Set assignments
+                                </NavigationItemClose>
+                                <NavigationItemClose href="/assignment_schedule">
+                                    Assignment schedule
+                                </NavigationItemClose>
+                                <NavigationItemClose href="/assignment_progress">
+                                    Assignment progress
+                                </NavigationItemClose>
+                                {!isTutor(user) &&
+                                    <NavigationItemClose href="/set_tests">
+                                        Set / manage tests
+                                    </NavigationItemClose>}
+                            </ul>
                         </div>
                     </>}
                 </div>
 
                 <div className="section-divider" />
-                <NavigationItemClose href="/account">
-                    My account
-                </NavigationItemClose>
-                <NavigationItemClose href="/logout">
-                    Log out
-                </NavigationItemClose>
+                <ul className="plain-list">
+                    <NavigationItemClose href="/account">
+                        My account
+                    </NavigationItemClose>
+                    <NavigationItemClose href="/logout">
+                        Log out
+                    </NavigationItemClose>
+                </ul>
             </div>
             : <div className="px-4">
                 <span>You&apos;re not currently logged in. Log in or sign up for free below!</span>
@@ -401,9 +411,11 @@ interface NavigationItemProps extends React.HTMLAttributes<HTMLAnchorElement> {
 
 const NavigationItem = (props: NavigationItemProps) => {
     const { children, href, ...rest } = props;
-    return <NavLink {...rest} to={href} tag={Link} tabIndex={0} role="menuitem" className={classNames("d-flex px-4 py-2", rest.className)}>
-        {children}
-    </NavLink>;
+    return <li>
+        <NavLink {...rest} to={href} tag={Link} tabIndex={0} role="menuitem" className={classNames("d-flex px-4 py-2", rest.className)}>
+            {children}
+        </NavLink>
+    </li>;
 };
 
 export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {

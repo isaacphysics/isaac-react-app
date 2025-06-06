@@ -33,10 +33,12 @@ export const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOp
 
 export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWithChildren<DropdownItemProps & {muted?: boolean, badgeTitle?: string}>) => {
     const className = classNames(siteSpecific("p-3", "ps-2 py-2 p-nav-3 font-h4 link-light"), {"text-muted": muted});
-    return <DropdownItem tag={Link} className={className} {...props}>
-        {children}
-        {badgeTitle && <Badge color="light" className="border-theme border bg-white ms-2 me-1">{badgeTitle}</Badge>}
-    </DropdownItem>;
+    return <li>
+        <DropdownItem tag={Link} className={className} {...props}>
+            {children}
+            {badgeTitle && <Badge color="light" className="border-theme border bg-white ms-2 me-1">{badgeTitle}</Badge>}
+        </DropdownItem>
+    </li>;
 };
 
 export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
