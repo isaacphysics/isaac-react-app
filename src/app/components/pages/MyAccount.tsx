@@ -211,7 +211,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     }, [userToUpdate?.registeredContexts]);
     const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts?.length ? userToUpdate?.registeredContexts : [{}], userContextsToUpdate, {unorderedArrays: true}), [userContextsToUpdate, userToUpdate]);
 
-    const pageTitle = editingOtherUser ? "Edit user" : "A Terrible Mistake";
+    const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
     useEffect(() => {
         setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);

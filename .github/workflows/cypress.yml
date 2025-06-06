@@ -36,7 +36,7 @@ jobs:
            name: ${{ matrix.site }}
            path: src/test/pages/__image_snapshots__/${{ matrix.site }}
            retention-days: 1
-  cypress-on-vrt-failure:
+  cypress-post-run:
     needs: cypress-run
     runs-on: ubuntu-22.04
     container:
