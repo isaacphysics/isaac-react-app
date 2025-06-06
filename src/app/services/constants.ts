@@ -64,7 +64,7 @@ export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/compare";
 
 export const { trackPageview, trackEvent } = Plausible(
     {
-        apiHost: siteSpecific("https://plausible.isaacphysics.org", "https://plausible.adacomputerscience.org"),
+        apiHost: siteSpecific("https://plausible.isaacscience.org", "https://plausible.adacomputerscience.org"),
     }
 );
 

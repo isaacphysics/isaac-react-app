@@ -25,6 +25,7 @@ import { ConfirmAccountDeletionRequestModal } from '../modals/AccountDeletionMod
 import { openActiveModal, store, useConfirmAccountDeletionRequestMutation } from '../../../state';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import classNames from 'classnames';
 
 interface UserProfileProps {
     userToUpdate: ValidationUser;
@@ -55,7 +56,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 <AccountTypeMessage role={userToUpdate?.role} />
             </p>
             {!isTutorOrAbove(userToUpdate) ? <p>
-                If you would like to delete your account, please <span className="text-nowrap"><Button className={isPhy ? "btn-link" : ""} color="inline-link" onClick={() => {
+                If you would like to delete your account, please <span className="text-nowrap"><Button className={classNames({"btn-link": isPhy})} color="inline-link" onClick={() => {
                     store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
                 }}>{siteSpecific("click here", <strong>click here</strong>)}</Button>.</span>
             </p> : <p>

@@ -2,7 +2,9 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {AppState, clearQuestionSearch, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
 import debounce from "lodash/debounce";
 import {
+    above,
     arrayFromPossibleCsv,
+    below,
     BookInfo,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
@@ -30,6 +32,7 @@ import {
     TAG_ID,
     tags,
     toSimpleCSV,
+    useDeviceSize,
     useQueryParams,
     useUrlPageTheme,
 } from "../../services";
@@ -116,6 +119,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
     const pageContext = useUrlPageTheme();
+    const deviceSize = useDeviceSize();
     const isSolitaryStage = pageStageToSearchStage(pageContext?.stage).length === 1;
     const [selections, setSelections] = useState<ChoiceTree[]>([]); // we can't populate this until we have the page context
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
@@ -431,6 +435,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
+    const BrowseAllButton = (pageContext?.subject && pageContext.stage) && 
+        <AffixButton color="keyline" tag={Link} to="/questions" className={classNames("ms-auto mw-max-content", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
+            affix={{
+                affix: "icon-arrow-right",
+                position: "suffix",
+                type: "icon"
+            }}>
+            Browse all questions
+        </AffixButton>;
+
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question Finder", "Questions")} 
@@ -454,7 +468,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     selections, setSelections,
                     applyFilters: searchAndUpdateURL, clearFilters,
                     validFiltersSelected, searchDisabled, setSearchDisabled
-                }} />
+                }} optionBar={BrowseAllButton}/>
             <MainContent>
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
@@ -462,16 +476,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 {siteSpecific(
                     <div className="my-3">
                         {(pageContext?.subject && pageContext.stage)
-                            ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
-                                <p className="me-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                                <AffixButton size="md" color="keyline" tag={Link} to="/questions" className="ms-auto"
-                                    affix={{
-                                        affix: "icon-arrow-right",
-                                        position: "suffix",
-                                        type: "icon"
-                                    }}>
-                                    Browse all questions
-                                </AffixButton>
+                            ? <div className="d-flex align-items-start flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
+                                <p className="me-0 me-lg-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                                {above["lg"](deviceSize) && BrowseAllButton}
                             </div>
                             : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
                               Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
