@@ -17,7 +17,7 @@ import classNames from "classnames";
 import { NewsCard } from "../elements/cards/NewsCard";
 import { BookCard } from "./BooksOverview";
 import { placeholderIcon } from "../elements/PageTitle";
-import { IsaacPodDTO } from "../../../IsaacApiTypes";
+import { ContentSummaryDTO, IsaacPodDTO } from "../../../IsaacApiTypes";
 
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
@@ -68,13 +68,13 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
         </div>
         <Card className="w-100 px-0 hf-6">
             {question
-                ? <ListView items={[{
+                ? <ListView type="item" items={[{
                     type: DOCUMENT_TYPE.QUESTION,
                     title: question.title,
                     tags: question.tags,
                     id: question.id,
                     audience: question.audience,
-                }]}/>
+                } as ContentSummaryDTO]}/>
                 : <div className="w-100 d-flex justify-content-center">
                     <IsaacSpinner size="sm" />
                 </div>
