@@ -123,7 +123,7 @@ export const Glossary = () => {
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const subjects = tags.allSubjectTags.sort((a,b) => a.title.localeCompare(b.title));
     const stages: Stage[] = stagesOrdered.slice(0,-1);
-    const [filterSubjects, setFilterSubjects] = useState<Tag[] | undefined>(querySubjects ? [querySubjects] : undefined);
+    const [filterSubject, setFilterSubject] = useState<Tag | undefined>(querySubjects);
     const [filterStages, setFilterStages] = useState<Stage[] | undefined>(queryStages ? [queryStages] : undefined);
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useAppSelector(
@@ -144,7 +144,7 @@ export const Glossary = () => {
 
     useEffect(() => {
         if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
-            setFilterSubjects([tags.getById(pageContext.subject as TAG_ID)]);
+            setFilterSubject(tags.getById(pageContext.subject as TAG_ID));
             const potentialStage = stageByValue([pageContext.stage.map(x => x === "11_14" ? "year_9" : x)[0]], stagesOrdered.slice(0,-1));
             setFilterStages(potentialStage ? [potentialStage] : undefined);
         }
@@ -154,10 +154,10 @@ export const Glossary = () => {
     useEffect(() => {
         if (pageContext?.subject && pageContext?.stage?.length) return;
         const params: {[key: string]: string} = {};
-        if (filterSubjects) params.subjects = filterSubjects.map(s => s?.id).join(',');
+        if (filterSubject) params.subjects = filterSubject?.id;
         if (filterStages) params.stages = filterStages.join(',');
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state, hash: location.hash});
-    }, [filterSubjects, filterStages, pageContext]);
+    }, [filterSubject, filterStages, pageContext]);
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } | undefined {
@@ -165,9 +165,9 @@ export const Glossary = () => {
                 const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
                 for (const term of sortedTerms) {
                     // Only show physics glossary terms when a subject has been selected
-                    if (isPhy && !isDefined(filterSubjects)) continue;
+                    if (isPhy && !isDefined(filterSubject)) continue;
                     if (isAda && isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
-                    if (isPhy && isDefined(filterSubjects) && !(filterSubjects.some(s => term.tags?.includes(s.id)))) continue;
+                    if (isPhy && isDefined(filterSubject) && !term.tags?.includes(filterSubject.id)) continue;
                     if (isPhy && isDefined(filterStages) && !(filterStages.some(s => term.stages?.includes(s)))) continue;
 
                     const value = term?.value?.[0] ?? '#';
@@ -186,7 +186,7 @@ export const Glossary = () => {
                 : rawGlossaryTerms?.filter(e => searchTerms.some(t => e.value?.toLowerCase().includes(t)))
             )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
         return groupTerms(sortedAndFilteredTerms);
-    }, [rawGlossaryTerms, filterTopic, filterSubjects, filterStages, searchText]);
+    }, [rawGlossaryTerms, filterTopic, filterSubject, filterStages, searchText]);
 
     /* Stores a reference to each glossary term component (specifically their inner paragraph tags) */
     const glossaryTermRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());
@@ -306,7 +306,7 @@ export const Glossary = () => {
 
             <SidebarLayout>
                 <GlossarySidebar 
-                    searchText={searchText} setSearchText={setSearchText} filterSubjects={filterSubjects} setFilterSubjects={setFilterSubjects}
+                    searchText={searchText} setSearchText={setSearchText} filterSubject={filterSubject} setFilterSubject={setFilterSubject}
                     filterStages={filterStages} setFilterStages={setFilterStages} subjects={subjects} stages={stages} optionBar={optionBar}
                 />
                 <MainContent>
@@ -345,8 +345,8 @@ export const Glossary = () => {
                     {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
                         <div className={siteSpecific("text-center", "col-md-8 offset-md-2 py-4")}>
                             {/* Let users know that they need to select a subject */}
-                            {isPhy && !isDefined(filterSubjects) && <p>Please select a subject.</p>}
-                            {(isAda || isDefined(filterSubjects)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
+                            {isPhy && !isDefined(filterSubject) && <p>Please select a subject.</p>}
+                            {(isAda || isDefined(filterSubject)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
                             {searchText !== "" && <p>We could not find glossary terms to match your search criteria.</p>}
                         </div>
                     </Row>}

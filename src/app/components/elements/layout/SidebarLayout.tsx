@@ -1383,8 +1383,8 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
 interface GlossarySidebarProps extends ContentSidebarProps {
     searchText: string;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
-    filterSubjects: Tag[] | undefined;
-    setFilterSubjects: React.Dispatch<React.SetStateAction<Tag[] | undefined>>;
+    filterSubject: Tag | undefined;
+    setFilterSubject: React.Dispatch<React.SetStateAction<Tag | undefined>>;
     filterStages: Stage[] | undefined;
     setFilterStages: React.Dispatch<React.SetStateAction<Stage[] | undefined>>;
     subjects: Tag[];
@@ -1392,32 +1392,24 @@ interface GlossarySidebarProps extends ContentSidebarProps {
 }
 
 export const GlossarySidebar = (props: GlossarySidebarProps) => {
-    const { searchText, setSearchText, filterSubjects, setFilterSubjects, filterStages, setFilterStages, subjects, stages, optionBar, ...rest } = props;
+    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStages, setFilterStages, subjects, stages, optionBar, ...rest } = props;
     
     const history = useHistory();
     const pageContext = useAppSelector(selectors.pageContext.context);
 
-    // Colour for stage tabs
-    const theme = useMemo(() => {
-        if (filterSubjects && filterSubjects.length === 1) {
-            return filterSubjects[0]!.id;
-        }
-        return "neutral";
-    }, [filterSubjects]);
-
-    function updateFilters<T>(value: T, filters: T[] | undefined, setFilters: React.Dispatch<React.SetStateAction<T[] | undefined>>) {
-        if (filters && filters.includes(value)) {
-            if (filters.length === 1) {
-                setFilters(undefined);
+    const updateFilterStages = (stage: Stage) =>{
+        if (filterStages && filterStages.includes(stage)) {
+            if (filterStages.length === 1) {
+                setFilterStages(undefined);
             }
             else {
-                setFilters(filters.filter(s => s !== value));
+                setFilterStages(filterStages.filter(s => s !== stage));
             }
         }
         else {
-            setFilters(filters ? [...filters, value] : [value]);
+            setFilterStages(filterStages ? [...filterStages, stage] : [stage]);
         }
-    }
+    };
 
     return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
@@ -1436,8 +1428,8 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
                 <ul>
                     {subjects.map(subject => <li key={subject.id}>
                         <StyledTabPicker checkboxTitle={subject.title} data-bs-theme={subject.id}
-                            checked={filterSubjects && filterSubjects.includes(subject)}
-                            onChange={() => updateFilters(subject, filterSubjects, setFilterSubjects)}/>
+                            checked={filterSubject && filterSubject === subject}
+                            onChange={() => setFilterSubject(subject)}/>
                     </li>)}
                 </ul>
             </>}
@@ -1448,14 +1440,14 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
                 <h5 className="mt-4">Select stage</h5>
                 <ul>
                     <li>
-                        <StyledTabPicker checkboxTitle="All" data-bs-theme={theme}
+                        <StyledTabPicker checkboxTitle="All" data-bs-theme={filterSubject?.id}
                             checked={!filterStages} onChange={() => setFilterStages(undefined)}/>
                     </li>
                     <div className="section-divider-small"/>
                     {stages.map(stage => <li key={stage}>
-                        <StyledTabPicker checkboxTitle={stageLabelMap[stage]} data-bs-theme={theme}
+                        <StyledTabPicker checkboxTitle={stageLabelMap[stage]} data-bs-theme={filterSubject?.id}
                             checked={filterStages && filterStages.includes(stage)}
-                            onChange={() => updateFilters(stage, filterStages, setFilterStages)}/>
+                            onChange={() => updateFilterStages(stage)}/>
                     </li>)}
                 </ul>
             </>}
