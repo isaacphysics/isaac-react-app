@@ -23,7 +23,7 @@ interface HierarchyFilterProps {
 }
 
 export function HierarchyFilterTreeList({tier, index, choices, selections, questionFinderFilter, className, root, setSelections}: HierarchyFilterProps) {  
-    return <ul className={className}>
+    return <ul className={classNames("plain-list", className)}>
         {choices[tier] && choices[tier][index] && choices[tier][index].map((choice) => {
             const isSelected = selections[tier] && selections[tier][index]?.map(s => s.value).includes(choice.value);
             const isLeaf = getChoiceTreeLeaves(selections).map(l => l.value).includes(choice.value);

@@ -198,7 +198,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
 
                 <li>
                     <CollapsibleList
-                        title={listTitles.topics} expanded={listState.topics.state}
+                        title={listTitles.topics} expanded={listState.topics.state} hasUlTag={isPhy}
                         toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
                         numberSelected={siteSpecific(getChoiceTreeLeaves(selections).filter(l => l.value !== pageContext?.subject).length, searchTopics.length)}
                     >
@@ -209,33 +209,31 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 choices, selections, setSelections,
                                 questionFinderFilter: true
                             }}/>,
-                            <ul>
-                                {groupBaseTagOptions.map((tag, index) => (
-                                    <li key={index}>
-                                        <CollapsibleList
-                                            title={tag.label} asSubList
-                                            expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
-                                            toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
-                                        >
-                                            {tag.options.map((topic, index) => (
-                                                <li className={classNames("ps-3", {"bg-white": isAda})} key={index}>
-                                                    <StyledCheckbox
-                                                        color="primary"
-                                                        checked={searchTopics.includes(topic.value)}
-                                                        onChange={() => setSearchTopics(
-                                                            s => s.includes(topic.value)
-                                                                ? s.filter(v => v !== topic.value)
-                                                                : [...s, topic.value]
-                                                        )}
-                                                        label={<span>{topic.label}</span>}
-                                                        className="ps-3"
-                                                    />
-                                                </li>
-                                            ))}
-                                        </CollapsibleList>
-                                    </li>
-                                ))}
-                            </ul>
+                            <>{groupBaseTagOptions.map((tag, index) => (
+                                <li key={index}>
+                                    <CollapsibleList
+                                        title={tag.label} asSubList
+                                        expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
+                                        toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
+                                    >
+                                        {tag.options.map((topic, index) => (
+                                            <li className={classNames("ps-3", {"bg-white": isAda})} key={index}>
+                                                <StyledCheckbox
+                                                    color="primary"
+                                                    checked={searchTopics.includes(topic.value)}
+                                                    onChange={() => setSearchTopics(
+                                                        s => s.includes(topic.value)
+                                                            ? s.filter(v => v !== topic.value)
+                                                            : [...s, topic.value]
+                                                    )}
+                                                    label={<span>{topic.label}</span>}
+                                                    className="ps-3"
+                                                />
+                                            </li>
+                                        ))}
+                                    </CollapsibleList>
+                                </li>
+                            ))}</>
                         )}
                     </CollapsibleList>
                 </li>

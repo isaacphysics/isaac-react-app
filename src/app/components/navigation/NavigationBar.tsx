@@ -66,7 +66,7 @@ export const NavigationSection = ({className, children, title, topLevelLink, to}
                     {isAda && <span onClick={toggle} className={classNames("cs-caret float-end d-nav-none d-inline-block", {"open": isOpen})}/>}
                 </DropdownToggle>}
             {children && <DropdownMenu className={dropdownClasses} onClick={() => setMenuOpen(false)}>
-                {children}
+                <ul className="plain-list ps-0">{children}</ul>
             </DropdownMenu>}
         </Dropdown>}
     </MenuOpenContext.Consumer>;

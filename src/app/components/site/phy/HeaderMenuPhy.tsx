@@ -27,29 +27,25 @@ export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
         <NavigationSection topLevelLink to="/events" title={"Events"}/>
         <NavigationSection topLevelLink to="/books" title={"Books"}/>
         <NavigationSection title={"Help"} className={classNames({"border-end" : !isOffcanvas})}>
-            <ul className="plain-list">
-                <LinkItem to="/pages/how_to_videos">How-to videos</LinkItem>
-                <LinkItem to="/solving_problems">Problem-solving guide</LinkItem>
-                <LinkItem to="/support/student">Student FAQ</LinkItem>
-                {isTutor(user)
-                    ? <LinkItem to="/support/tutor">Tutor FAQ</LinkItem>
-                    : <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>}
-                <LinkItem to="/glossary">Glossary</LinkItem>
-                <LinkItem to="/contact">Contact Us</LinkItem>
-            </ul>
+            <LinkItem to="/pages/how_to_videos">How-to videos</LinkItem>
+            <LinkItem to="/solving_problems">Problem-solving guide</LinkItem>
+            <LinkItem to="/support/student">Student FAQ</LinkItem>
+            {isTutor(user)
+                ? <LinkItem to="/support/tutor">Tutor FAQ</LinkItem>
+                : <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>}
+            <LinkItem to="/glossary">Glossary</LinkItem>
+            <LinkItem to="/contact">Contact Us</LinkItem>
         </NavigationSection>
 
         {isAdminTabVisible && <NavigationSection 
             title={isOffcanvas ? "Admin" : <i className="icon icon-cog icon-color-black no-print align-text-bottom" aria-label="Admin"/>} 
             className={classNames({"align-content-center" : !isOffcanvas})}
         >
-            <ul className="plain-list">
-                {isStaff(user) && <LinkItem to="/admin">Admin Tools</LinkItem>}
-                {isAdmin(user) && <LinkItem to="/admin/usermanager">User Manager</LinkItem>}
-                {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event Admin</LinkItem>}
-                {isStaff(user) && <LinkItem to="/admin/stats">Site Statistics</LinkItem>}
-                {isStaff(user) && <LinkItem to="/admin/content_errors">Content Errors</LinkItem>}
-            </ul>
+            {isStaff(user) && <LinkItem to="/admin">Admin Tools</LinkItem>}
+            {isAdmin(user) && <LinkItem to="/admin/usermanager">User Manager</LinkItem>}
+            {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event Admin</LinkItem>}
+            {isStaff(user) && <LinkItem to="/admin/stats">Site Statistics</LinkItem>}
+            {isStaff(user) && <LinkItem to="/admin/content_errors">Content Errors</LinkItem>}
         </NavigationSection>}
     </Nav>;
 };
