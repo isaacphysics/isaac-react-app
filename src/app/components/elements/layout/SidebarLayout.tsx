@@ -1511,7 +1511,7 @@ export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
 const calculateSidebarLink = (entry: SidebarEntryDTO): string | undefined => {
     switch (entry.pageType) {
         case "isaacBookDetailPage": {
-            const detailPageSplit = entry.pageId?.split("|");
+            const detailPageSplit = entry.pageId?.split("__");
             if (!detailPageSplit || detailPageSplit.length !== 2) {
                 return undefined;
             }
@@ -1527,7 +1527,7 @@ const calculateSidebarLink = (entry: SidebarEntryDTO): string | undefined => {
             return `/pages/${entry.pageId}`;
         }
     }
-    return "";
+    return undefined;
 };
 
 const isSidebarGroup = (entry: SidebarEntryDTO): entry is SidebarGroupDTO => {
