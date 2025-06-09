@@ -2,7 +2,7 @@ name: Cypress visual regression tests
 
 on:
   push:
-    branches: [ "master", "redesign-2024", "vrt-fixes" ]
+    branches: [ "master", "redesign-2024" ]
   pull_request:
     branches: [ "master", "redesign-2024" ]
 
