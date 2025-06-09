@@ -194,7 +194,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 </UncontrolledTooltip>
             </h3>
             <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
-            <Form onSubmit={processToken} data-testid="teacher-connect-form">
+            <div data-testid="teacher-connect-form">
                 <InputGroup className={"separate-input-group mb-4 d-flex flex-row justify-content-center"}>
                     <Input
                         type="text" placeholder="Enter your code in here" value={authToken || undefined} className="py-4"
@@ -208,7 +208,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         Connect
                     </Button>
                 </InputGroup>
-            </Form>
+            </div>
 
             <div className="connect-list" data-testid="teacher-connections">
                 <ConnectionsHeader

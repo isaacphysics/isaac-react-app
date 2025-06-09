@@ -63,7 +63,7 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
         <Link to={link} className="py-2">
             {isDefined(gameboardId) ? <span className={classNames(getProgressIcon(question).icon, "mt-1 mx-2")} style={{minWidth: "16px"}}/> : <i className="icon icon-question-thick"/>}
             <div className="d-flex flex-column w-100">
-                <span className="hover-underline link-title">{question.title}</span>
+                <span className="hover-underline link-title"><Markup encoding="latex">{question.title}</Markup></span>
                 <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
             </div>
         </Link>
@@ -77,7 +77,7 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Isaa
     return <li key={concept.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, concept.tags ?? [])}>
         <Link to={`/concepts/${concept.id}`} className="py-2">
             <i className="icon icon-concept-thick"/>
-            <span className="hover-underline link-title">{concept.title}</span>
+            <span className="hover-underline link-title"><Markup encoding="latex">{concept.title}</Markup></span>
         </Link>
     </li>;
 };
@@ -113,10 +113,10 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
     return <>
         {above['lg'](deviceSize) 
-            ? <Col tag="aside" data-testId="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
+            ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
                 <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
-                    {!hideButton && <AffixButton data-testId="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
+                    {!hideButton && <AffixButton data-testid="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
                         affix: "icon-sidebar", 
                         position: "prefix", 
                         type: "icon"
@@ -181,9 +181,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
 
     const [relatedQuestionsForContextStage, relatedQuestionsForOtherStages] = partition(relatedQuestions, q => q.audience && determineAudienceViews(q.audience).some(v => v.stage === pageContextStage));
 
-    const sidebarRef = useRef<HTMLDivElement>(null);
-
-    return <NavigationSidebar ref={sidebarRef}>
+    return <NavigationSidebar>
         <div className="section-divider"/>
         <h5>Related concepts</h5>
         {relatedConcepts && relatedConcepts.length > 0
@@ -443,7 +441,7 @@ interface GenericConceptsSidebarProps extends ConceptListSidebarProps {
 }
 
 export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
-    const { searchText, setSearchText, conceptFilters, setConceptFilters, tagCounts, searchStages, setSearchStages, stageCounts, ...rest } = props;
+    const { searchText, setSearchText, conceptFilters, setConceptFilters, tagCounts, searchStages, setSearchStages, stageCounts, applicableTags: _applicableTags, ...rest } = props;
 
     const updateSearchStages = (stage: Stage) => {
         if (searchStages.includes(stage)) {
@@ -946,7 +944,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon-correct"
             : sectionStates[section] === SectionProgress.STARTED ? "icon-in-progress"
-                : "";
+                : "icon-not-started";
     };
 
     const switchToPage = (page: string) => {
@@ -1016,8 +1014,8 @@ interface MyAccountSidebarProps extends SidebarProps {
 }
 
 export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
-    const { editingOtherUser, activeTab, setActiveTab } = props;
-    return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...props}>
+    const { editingOtherUser, activeTab, setActiveTab, ...rest } = props;
+    return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...rest}>
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 

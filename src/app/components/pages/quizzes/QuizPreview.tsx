@@ -52,7 +52,7 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user};
 
-    return <Container data-testId="quiz-preview" className="mb-5" data-bs-theme={getThemeFromTags(quiz?.tags)}>
+    return <Container data-testid="quiz-preview" className="mb-5" data-bs-theme={getThemeFromTags(quiz?.tags)}>
         <ShowLoadingQuery query={quizPreviewQuery} ifError={Error}>
             <QuizContentsComponent preview {...subProps} />
             <QuizFooter {...subProps} />

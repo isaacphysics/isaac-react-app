@@ -454,7 +454,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
         <SidebarLayout>
             <QuestionFinderSidebar 
-                searchText={searchQuery} setSearchText={debouncedSearchHandler} topLevelFilters={[]} 
+                searchText={searchQuery} setSearchText={debouncedSearchHandler}
                 questionFinderFilterPanelProps={{
                     searchDifficulties, setSearchDifficulties,
                     searchTopics, setSearchTopics,

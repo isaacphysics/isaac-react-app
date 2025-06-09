@@ -152,7 +152,7 @@ const subjectSpecificBooksMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
     },
     "maths": {
         "gcse": ["maths_book_gcse"],
-        "a_level": ["maths_book_gcse"],
+        "a_level": ["maths_book_2e", "maths_book_gcse"],
         "university": ["maths_book_2e", "qmp"],
     },
     "chemistry": {
