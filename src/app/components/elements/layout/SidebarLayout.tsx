@@ -947,8 +947,8 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A"}];
     
     const progressIcon = (section: number) => {
-        return sectionStates[section] === SectionProgress.COMPLETED ? "icon-correct"
-            : sectionStates[section] === SectionProgress.STARTED ? "icon-in-progress"
+        return sectionStates[section] === SectionProgress.COMPLETED ? "icon icon-raw icon-correct"
+            : sectionStates[section] === SectionProgress.STARTED ? "icon icon-raw icon-in-progress"
                 : "";
     };
 

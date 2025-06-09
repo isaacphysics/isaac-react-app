@@ -214,19 +214,16 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             {accordionState && isPhy && <span className={"accordion-icon d-flex align-items-center gap-2 w-max-content h-100 pb-1 pe-3 align-self-center"}>
                 {accordionState === "correct"
                     ? <>
-                        <span>Correct</span>
-                        <div className="icon-correct"/>
+                        <span className="d-flex gap-2 align-items-center">Correct <i className="icon icon-raw icon-correct"/></span>
                         <span className="visually-hidden">All questions in this part are answered correctly.</span>
                     </>
                     : accordionState === "incorrect" 
                         ? <>
-                            <span>Incorrect</span>
-                            <div className="icon-incorrect"/>
+                            <span className="d-flex gap-2 align-items-center">Incorrect <i className="icon icon-raw icon-incorrect"/></span>
                             <span className="visually-hidden">All questions in this part are answered incorrectly.</span>
                         </>
                         : <>
-                            <span>In progress</span>
-                            <div className="icon-in-progress"/>
+                            <span className="d-flex gap-2 align-items-center">In progress <i className="icon icon-raw icon-in-progress"/></span>
                             <span className="visually-hidden">Some questions in this part are answered incorrectly.</span>
                         </>
                 }

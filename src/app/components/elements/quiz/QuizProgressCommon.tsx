@@ -1,7 +1,7 @@
-import React, {useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {useContext, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
-import {isAuthorisedFullAccess, isPhy, TODAY} from "../../../services";
+import {isAuthorisedFullAccess, isPhy, siteSpecific, TODAY} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
@@ -14,7 +14,7 @@ export const ICON = {
     correct: <i className="icon-md icon-correct"/>,
     incorrect: <i className="icon-md icon-incorrect"/>,
     notAttempted: <i className="icon-md icon-not-attempted"/>,
-    partial: <i className="icon-md icon-partial"/>,
+    partial: <i className={classNames("icon-md", siteSpecific("icon-in-progress", "icon-partial"))}/>,
 };
 
 export const passMark = 0.75;

@@ -41,33 +41,28 @@
 }
 
 .icon-correct {
-  background-image: url('/assets/phy/icons/redesign/status-correct.svg');
-  width: 16px;
-  height: 16px;
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-correct.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-attempted {
-  background-image: url('/assets/phy/icons/redesign/status-attempted.svg');
-  width: 16px;
-  height: 16px;
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-incorrect {
-  background-image: url('/assets/phy/icons/redesign/status-incorrect.svg');
-  width: 16px;
-  height: 16px;
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-incorrect.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-in-progress {
-  background-image: url('/assets/phy/icons/redesign/status-in-progress.svg');
-  width: 16px;
-  height: 16px;
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-in-progress.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-not-started {
-  background-image: url('/assets/phy/icons/redesign/status-not-started.svg');
-  width: 16px;
-  height: 16px;
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-not-started.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-not-attempted {
+  // only for assignment progress – prefer icon-not-started for questions
+  @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-initials {
