@@ -418,12 +418,14 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
 
             <div className="d-flex flex-column">
                 <h5>Filter by topic</h5>
-                <AllFiltersCheckbox 
-                    conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag} 
-                    forceEnabled={applicableTags.filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0).length === 0}
-                />
-                <div className="section-divider-small"/>
                 <ul>
+                    <li>
+                        <AllFiltersCheckbox 
+                            conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag} 
+                            forceEnabled={applicableTags.filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0).length === 0}
+                        />
+                    </li>
+                    <div className="section-divider-small"/>
                     {applicableTags
                         .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
                         .map(tag => <li key={tag.id}>
