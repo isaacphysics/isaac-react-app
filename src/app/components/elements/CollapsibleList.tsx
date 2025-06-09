@@ -33,8 +33,8 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
             setExpandedHeight(listRef?.current 
                 // clientHeight cannot determine margin (nor can any reasonable alternative, since margins can overlap)! this will be smaller than the true height
                 // if margin exists. if this is the case, use additionalOffset to add additional space to the bottom of the list
-                ? Math.max([...listRef.current.children].map(c => c.getAttribute("data-targetHeight") 
-                    ? parseInt(c.getAttribute("data-targetHeight") as string) 
+                ? Math.max([...listRef.current.children].map(c => c.getAttribute("data-targetheight") 
+                    ? parseInt(c.getAttribute("data-targetheight") as string) 
                     : c.clientHeight
                 ).reduce((a, b) => a + b, 0), listRef.current.clientHeight) 
                 : 0
@@ -46,7 +46,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         ? <span>{props.title && props.asSubList ? props.title : <b>{props.title}</b>}</span>
         : props.title;
 
-    return <Col tag={props.tag} className={classNames("collapsible-list-container", props.className)} data-targetHeight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
+    return <Col tag={props.tag} className={classNames("collapsible-list-container", props.className)} data-targetheight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
         <div className="row m-0 collapsible-head" ref={headRef}>
             <button className={classNames("w-100 d-flex align-items-center p-3 text-start", {"bg-white": isAda, "bg-transparent": isPhy, "ps-4": props.asSubList})} onClick={toggle}>
                 {title && <span>{title}</span>}

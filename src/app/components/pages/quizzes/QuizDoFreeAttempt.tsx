@@ -41,7 +41,7 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
     // Importantly, these are only used if attempt is defined
     const subProps: QuizAttemptProps & {feedbackLink: string} = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user, feedbackLink};
 
-    return <Container data-testId="quiz-attempt" className="mb-5" data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
+    return <Container data-testid="quiz-attempt" className="mb-5" data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
         <ShowLoading until={attempt || error}>
             {attempt && <>
                 <QuizContentsComponent {...subProps} />
@@ -51,7 +51,7 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
                 <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "hex", icon: "icon-error"}} />
                 <Alert color={assignedQuizError ? "warning" : "danger"} className="mt-4">
                     <h4 className="alert-heading">{assignedQuizError ? "You have been set this test" : "Error loading test!"}</h4>
-                    {!assignedQuizError && <p data-testId="error-message">{error}</p>}
+                    {!assignedQuizError && <p data-testid="error-message">{error}</p>}
                     {assignedQuizError && <>
                         <p>Your teacher has set this test to you.  You may not practise it in advance.<br/>
                             If you are ready to take the test, click on it in your <a href={"/tests"} target="_self" rel="noopener noreferrer">assigned tests</a> page.

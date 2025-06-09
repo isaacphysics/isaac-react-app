@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Link} from "react-router-dom";
 import {GroupMembershipDetailDTO, LoggedInUser, PotentialUser} from "../../../../IsaacAppTypes";
 import {
@@ -66,12 +66,19 @@ interface ConnectionsHeaderProps {
 
 const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title, placeholder}: ConnectionsHeaderProps) => {
     const deviceSize = useDeviceSize();
+    const searchInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (enableSearch && searchInputRef.current) {
+            searchInputRef.current.focus();
+        }
+    }, [enableSearch]);
 
     return <div className="connect-list-header">
-        {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ?
+        {["xl", "lg", "xs"].includes(deviceSize) ?
             <>{enableSearch ?
                 <>
-                    <Input type="text" autoFocus placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
+                    <Input type="text" innerRef={searchInputRef} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
                     <Spacer />
                 </> :
                 <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
@@ -86,7 +93,7 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
                     {title}
                 </h4>
                 <Spacer />
-                {enableSearch && <Input type="text" autoFocus style={{width: "200px"}} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
+                {enableSearch && <Input type="text" innerRef={searchInputRef} style={{width: "200px"}} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
             </>
         }
         {!enableSearch && <Spacer />}
@@ -181,14 +188,13 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         </>}
         rightColumn={<>
             <h3>
-                <span className={isPhy ? "h4" : ""}>Teacher connection code<i id="teacher-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
+                <span className={classNames({"h4": isPhy})}>Teacher connection code<i id="teacher-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
                 <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your {siteSpecific("Isaac", "Ada")} assignment progress.
                 </UncontrolledTooltip>
             </h3>
             <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
-            {/* TODO Need to handle nested form complaint */}
-            <Form onSubmit={processToken} data-testid="teacher-connect-form">
+            <div data-testid="teacher-connect-form">
                 <InputGroup className={"separate-input-group mb-4 d-flex flex-row justify-content-center"}>
                     <Input
                         type="text" placeholder="Enter your code in here" value={authToken || undefined} className="py-4"
@@ -202,7 +208,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         Connect
                     </Button>
                 </InputGroup>
-            </Form>
+            </div>
 
             <div className="connect-list" data-testid="teacher-connections">
                 <ConnectionsHeader
@@ -250,7 +256,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
                 <h3>
-                    <span className={isPhy ? "h4" : ""}>Your student connections<i id="student-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
+                    <span className={classNames({"h4": isPhy})}>Your student connections<i id="student-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
                     <UncontrolledTooltip placement="bottom" target="student-connections-title">
                         These are the students who have shared their {siteSpecific("Isaac", "Ada")} data with you.
                         These students are also able to view your name and email address on their Teacher connections page.
@@ -310,7 +316,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
             {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
             <h3>
-                <span className={isPhy ? "h4" : ""}>
+                <span className={classNames({"h4": isPhy})}>
                     Your group memberships
                     <i id="group-memberships-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} />
                 </span>
@@ -330,7 +336,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch}
                         setSearchText={setGroupSearchText} placeholder="Search groups"/>
                     <div>
-                        <ul className={classNames("teachers-connected list-unstyled m-0")}>
+                        <ul className="teachers-connected list-unstyled m-0">
                             {sortedGroupMemberships && <FixedSizeList height={MEMBERSHIPS_ROW_HEIGHT * (Math.min(MEMBERSHIPS_MAX_VISIBLE_ROWS, sortedGroupMemberships.length ?? 0))} itemCount={sortedGroupMemberships.length ?? 0} itemSize={MEMBERSHIPS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                                 {({index, style}) => {
                                     const membership = sortedGroupMemberships[index];
@@ -358,9 +364,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     </span>}
                                                 </div>
                                             </Col>
-                                            <Col className={isPhy ? "d-flex flex-col justify-content-end align-items-center flex-grow-0 pe-1" : ""}>
+                                            <Col className={classNames({"d-flex flex-col justify-content-end align-items-center flex-grow-0 pe-1": isPhy})}>
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
-                                                    <Button className={isAda ? "revoke-teacher pe-1 pt-2" : ""} color="link" disabled={editingOtherUser} onClick={() =>
+                                                    <Button className={classNames({"revoke-teacher pe-1 pt-2": isAda})} color="link" disabled={editingOtherUser} onClick={() =>
                                                         membership.group.selfRemoval
                                                             ? dispatch(openActiveModal(confirmSelfRemovalModal((user as LoggedInUser).id as number, membership.group.id as number)))
                                                             : changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.INACTIVE})
@@ -378,7 +384,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                 </React.Fragment>}
 
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE && <React.Fragment>
-                                                    <Button  className={isAda ? "revoke-teacher pe-1 pt-2" : ""} color="link" disabled={editingOtherUser} onClick={() =>
+                                                    <Button className={classNames({"revoke-teacher pe-1 pt-2": isAda})} color="link" disabled={editingOtherUser} onClick={() =>
                                                         changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.ACTIVE})
                                                     }>
                                                         Rejoin

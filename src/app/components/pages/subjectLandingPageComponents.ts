@@ -8,42 +8,34 @@ export const extendUrl = (context: NonNullable<Required<PageContextState>>, page
 };
 
 const QuestionFinderCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
-    item: {
-        title: "Question finder",
-        subtitle: `Find ${getHumanContext(context)} questions to try by topic and difficulty level.`
-    },
+    title: "Question finder",
+    subtitle: `Find ${getHumanContext(context)} questions to try by topic and difficulty level.`,
     icon: {type: "hex", icon: "icon-finder"},
     subject: context.subject,
     linkTags: [{tag: "Find questions", url: extendUrl(context, 'questions')}]
 });
 
 const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
-    item: {
-        title: "Concepts",
-        subtitle: `Review the key concepts for ${getHumanContext(context)}.`
-    },
+    title: "Concepts",
+    subtitle: `Review the key concepts for ${getHumanContext(context)}.`,
     icon: {type: "hex", icon: "icon-concept"},
     subject: context.subject,
     linkTags: [{tag: "Explore concepts", url: extendUrl(context, 'concepts')}]
 });
 
 const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
-    item: {
-        title: context.stage.includes("university") ? "Practice admissions tests" : "Tests",
-        subtitle: `Use tests to ${context.stage.includes("university") ? "prepare for university admissions tests" : "practise a range of topics"}. These tests are available for you to freely attempt.`
-    },
+    title: context.stage.includes("university") ? "Practice admissions tests" : "Tests",
+    subtitle: `Use tests to ${context.stage.includes("university") ? "prepare for university admissions tests" : "practise a range of topics"}. These tests are available for you to freely attempt.`,
     icon: {type: "hex", icon: "icon-tests"},
     subject: context.subject,
     linkTags: [{tag: "Find a test", url: extendUrl(context, 'practice_tests')}]
 });
 
 const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
-    item: {
-        title: "Question decks by topic",
-        subtitle: context.subject === "chemistry" && context.stage.includes("university")
-            ? "Consolidate your chemistry understanding with these questions by topic."
-            : "Practise specific topics by using our ready-made question decks."
-    },
+    title: "Question decks by topic",
+    subtitle: context.subject === "chemistry" && context.stage.includes("university")
+        ? "Consolidate your chemistry understanding with these questions by topic."
+        : "Practise specific topics by using our ready-made question decks.",
     icon: {type: "hex", icon: "icon-question-deck"},
     subject: context.subject,
     linkTags: [{tag: "View topic question decks", url: extendUrl(context, 'question_decks')}]
@@ -51,10 +43,8 @@ const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): Li
 
 // TODO: replace the link tags with links to lessons by *field* (see designs)
 const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
-    item: {
-        title: "Revision",
-        subtitle: "Revise with our summary videos, topic tests and question decks."
-    },
+    title: "Revision",
+    subtitle: "Revise with our summary videos, topic tests and question decks.",
     icon: {type: "hex", icon: "icon-revision"},
     subject: context.subject,
     linkTags: [{tag: "List of revision areas", url: extendUrl(context, 'revision')}],
@@ -62,10 +52,8 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
 });
 
 const CoreSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
-    item: {
-        title: "Core skills practice",
-        subtitle: `Practise core skills required in ${getHumanContext(context)}.`
-    },
+    title: "Core skills practice",
+    subtitle: `Practise core skills required in ${getHumanContext(context)}.`,
     icon: {type: "hex", icon: "icon-quiz"},
     subject: context.subject,
     linkTags: [{tag: "Practise a core skill", url: extendUrl(context, 'quick_quizzes')}],
@@ -73,20 +61,16 @@ const CoreSkillsCard = (context: NonNullable<Required<PageContextState>>): ListV
 });
 
 const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
-    item: {
-        title: "Glossary",
-        subtitle: `Use the glossary to understand the vocabulary you need for ${getHumanContext(context)}.`
-    },
+    title: "Glossary",
+    subtitle: `Use the glossary to understand the vocabulary you need for ${getHumanContext(context)}.`,
     icon: {type: "hex", icon: "icon-tests"},
     subject: context.subject,
     linkTags: [{tag: "Browse the glossary", url: extendUrl(context, 'glossary')}]
 });
 
 const BookCard = (book: BookInfo, description: string) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
-    item: {
-        title: book.title,
-        subtitle: description
-    },
+    title: book.title,
+    subtitle: description,
     icon: {type: "hex", icon: "icon-book"},
     subject: context.subject,
     linkTags: [{tag: book.title, url: book.path}]
@@ -96,10 +80,8 @@ const StepIntoPhyCard = BookCard(ISAAC_BOOKS_BY_TAG["phys_book_step_into"], "Dis
 const StepUpPhyCard = BookCard(ISAAC_BOOKS_BY_TAG["phys_book_step_up"], "Build a strong foundation in physics. Aimed at students in year 9.");
 
 const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListViewTagProps[], state?: AbstractListViewItemState) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
-    item: {
-        title,
-        subtitle
-    },
+    title,
+    subtitle,
     icon: {type: "hex", icon: "icon-revision"},
     subject: context.subject,
     linkTags,
@@ -170,7 +152,7 @@ const subjectSpecificBooksMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
     },
     "maths": {
         "gcse": ["maths_book_gcse"],
-        "a_level": ["maths_book_gcse"],
+        "a_level": ["maths_book_2e", "maths_book_gcse"],
         "university": ["maths_book_2e", "qmp"],
     },
     "chemistry": {
