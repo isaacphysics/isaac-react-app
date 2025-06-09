@@ -5,7 +5,7 @@ import { IsaacBookDetailPageDTO } from "../../../IsaacApiTypes";
 import { TeacherNotes } from "./TeacherNotes";
 import { EditContentButton } from "./EditContentButton";
 
-const BookSectionLink = ({id, title}: { id: string; title: string }) => {
+export const MetadataContainerLink = ({id, title}: { id: string; title: string }) => {
     return <a className="d-flex align-items-center ms-1 ps-2 invert-underline" href={`#${id}`}>
         <i className="icon icon-arrow-down me-2"/>
         {title}
@@ -26,9 +26,9 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             <TeacherNotes notes={page.teacherNotes} />
 
             <div className="content-metadata-container d-flex flex-column gap-2">
-                {!!page.gameboards?.length && <BookSectionLink id="questions" title="Questions" />}
-                <BookSectionLink id="review" title="Review" />
-                {!!page.extensionGameboards?.length && <BookSectionLink id="extension" title="Extension work" />}
+                {!!page.gameboards?.length && <MetadataContainerLink id="questions" title="Questions" />}
+                <MetadataContainerLink id="review" title="Review" />
+                {!!page.extensionGameboards?.length && <MetadataContainerLink id="extension" title="Extension work" />}
             </div>
 
             {!!page.gameboards?.length && <>

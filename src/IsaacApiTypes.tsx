@@ -116,6 +116,10 @@ export interface IsaacBookDetailPageDTO extends SeguePageDTO {
     extensionGameboards?: GameboardDTO[];
 }
 
+export interface IsaacRevisionDetailPageDTO extends SeguePageDTO {
+    gameboards?: GameboardDTO[];
+};
+
 export interface IsaacPageFragmentDTO extends ContentDTO {
     summary?: string;
     teacherNotes?: string;

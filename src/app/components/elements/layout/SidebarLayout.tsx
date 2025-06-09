@@ -1520,6 +1520,9 @@ const calculateSidebarLink = (entry: SidebarEntryDTO): string | undefined => {
         case "isaacBookIndexPage": {
             return `/books/${entry.pageId?.slice(`book_`.length)}`;
         }
+        case "isaacRevisionDetailPage": {
+            return `/revision/${entry.pageId}`;
+        }
         case "page": {
             return `/pages/${entry.pageId}`;
         }
