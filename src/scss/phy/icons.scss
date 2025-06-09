@@ -18,14 +18,6 @@
   background: url(/assets/phy/ru.png) -296px -302px no-repeat;
   margin: 3px 10px 0 0;
 }
-.icon-person {
-  float: left;
-  width: 9px;
-  min-width: 9px;
-  height: 14px;
-  background: url(/assets/phy/ru.png) -296px -316px no-repeat;
-  margin: 0 10px 0 0;
-}
 .icon-group-table-person {
   float: left;
   width: 11px;
@@ -41,7 +33,6 @@
 }
 
 .icon-person-active,
-.icon-person,
 .icon-warning,
 .icon-help,
 .icon-group-table-person
@@ -51,6 +42,12 @@
 
 .icon-correct {
   background-image: url('/assets/phy/icons/redesign/status-correct.svg');
+  width: 16px;
+  height: 16px;
+}
+
+.icon-attempted {
+  background-image: url('/assets/phy/icons/redesign/status-attempted.svg');
   width: 16px;
   height: 16px;
 }
@@ -126,6 +123,11 @@
 
 .icon-sidebar {
   @include svg-icon('/assets/phy/icons/redesign/sidebar.svg', 16px, 16px);
+}
+
+.icon-arrow-left {
+  @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  transform: rotate(180deg);
 }
 
 .icon-arrow-right {

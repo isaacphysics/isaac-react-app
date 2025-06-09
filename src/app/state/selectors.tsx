@@ -29,6 +29,9 @@ export const selectors = {
         allQuestionsCorrect: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.every(q => !!q.bestAttempt?.correct);
         },
+        anyQuestionCorrect: (state: AppState) => {
+            return !!state && !!state.questions && state.questions.questions.some(q => !!q.bestAttempt?.correct);
+        },
         allQuestionsAttempted: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
         },

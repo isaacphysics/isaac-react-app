@@ -10,7 +10,7 @@ import {
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
 import {Button, Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap";
-import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
+import {CompletionState, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     AUDIENCE_DISPLAY_FIELDS,
@@ -45,21 +45,31 @@ export const getProgressIcon = (question: GameboardItem) => {
     let icon = siteSpecific("icon-not-started", "/assets/cs/icons/question-not-started.svg");
     let message = siteSpecific("", "Not started");
     switch (question.state) {
-        case "PERFECT":
+        case CompletionState.ALL_CORRECT:
             if (isPhy) {
                 backgroundColor = "correct";
             }
             message = "Correct";
             icon = siteSpecific("icon-correct", "/assets/cs/icons/question-correct.svg");
             break;
-        case "PASSED":
-        case "IN_PROGRESS":
+        case CompletionState.ALL_INCORRECT:
+            if (isAda) {
+                backgroundColor = "incorrect";
+                message = "Incorrect";
+                icon = siteSpecific("icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
+                break;
+            }
+            // fallthrough if isPhy
+        case CompletionState.ALL_ATTEMPTED:
+            if (isPhy) {
+                message = "All attempted (some errors)";
+                icon = siteSpecific("icon-attempted", "/assets/cs/icons/question-attempted.svg");
+                break;
+            }
+            // fallthrough if isAda
+        case CompletionState.IN_PROGRESS:
             message = "In progress";
             icon = siteSpecific("icon-in-progress", "/assets/cs/icons/question-in-progress.svg");
-            break;
-        case "FAILED":
-            message = "Try again";
-            icon = siteSpecific("icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
             break;
     }
     return {itemClasses: classNames(itemClasses, `bg-${backgroundColor}`), icon, message};

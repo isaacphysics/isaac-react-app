@@ -1,26 +1,21 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
     getRTKQueryErrorMessage,
     useGetQuizAssignmentWithFeedbackQuery,
     useUpdateQuizAssignmentMutation
 } from "../../../state";
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {AssignmentProgressDTO, ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
-import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
     siteSpecific,
-    isDefined,
     nthHourOf,
     TODAY,
     useAssignmentProgressAccessibilitySettings,
     isQuestion,
-    PATHS,
-    isAuthorisedFullAccess,
-    isAda
-} from "../../../services";
+    isAuthorisedFullAccess} from "../../../services";
 import {AuthorisedAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {formatDate} from "../../elements/DateString";
@@ -38,6 +33,7 @@ import {
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
+import { AssignmentProgressLegend } from "../SingleAssignmentProgress";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.
@@ -202,40 +198,6 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         return markClassesInternal(studentProgress, correctParts, incorrectParts, totalParts);
     }
 
-    const fractionCorrect = (questionId: string) => {
-        if (!assignment.userFeedback) return [0, 0];
-        const marks = assignment.userFeedback.map(row => row.feedback?.questionMarks?.[questionId]);
-        const definedMarks = marks?.filter(isDefined);
-        if (!definedMarks || definedMarks.length === 0) return [0, 0];
-        const correct = definedMarks.reduce((p, c) => p + (c.correct ?? 0), 0);
-        // the multiple is always 1 for now, but if different parts have different marks in future this should still work
-        const total = assignment.userFeedback.length * ((definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) + (definedMarks[0].notAttempted ?? 0));
-        return [correct, total];
-    };
-
-    const fractionAttempted = (questionId: string) => {
-        if (!assignment.userFeedback) return [0, 0];
-        const marks = assignment.userFeedback.map(row => row.feedback?.questionMarks?.[questionId]);
-        const definedMarks = marks?.filter(isDefined);
-        if (!definedMarks || definedMarks.length === 0) return [0, 0];
-        const attempted = definedMarks.reduce((p, c) => p + (c.notAttempted === 0 ? (definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) : 0), 0);
-        const total = assignment.userFeedback.length * ((definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) + (definedMarks[0].notAttempted ?? 0));
-        return [attempted, total];
-    };
-
-    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
-
-    const quizAverages = questions.map(q => {
-        if (!q.id) return 0;
-        if (assignmentProgressContext?.attemptedOrCorrect === "ATTEMPTED") {
-            const [attempted, total] = fractionAttempted(q.id);
-            return total ? Math.round(100 * attempted / total) : 0;
-        } else {
-            const [correct, total] = fractionCorrect(q.id);
-            return total ? Math.round(100 * correct / total) : 0;
-        }
-    });
-
     const totalParts = questions.length;
 
     const progress : AuthorisedAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
@@ -246,30 +208,14 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
             correctPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.correct ?? 0),
             incorrectPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0),
             notAttemptedPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.notAttempted ?? 0),
-            results: [],
+            questionResults: [],
             tickCount: user.feedback?.questionMarks?.[0]?.correct ?? 0,
             correctQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? 0]?.correct ?? 0), 0),
             incorrectQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0), 0),
         };
     });
 
-    const header = <div className="progress-header">
-        {assignment.userFeedback
-            ? <>
-                <strong>{assignment.userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{assignment.userFeedback.length}</strong>
-                {` students have completed the test `}
-            </>
-            : 'Preview '
-        }
-        <Link to={`${PATHS.PREVIEW_TEST}/${assignment.quizId}/page/1`}>{assignment.quiz?.title}</Link>.
-    </div>;
-
-    const getQuestionTitle = (question: QuizQuestion) => <div key={question.id}>
-        {`Question ${questions.indexOf(question) + 1}`}
-    </div>;
-
     return <ResultsTable<QuizQuestion> assignmentId={assignment.id} duedate={assignment.dueDate} progress={progress}
-        questions={questions} header={header} getQuestionTitle={getQuestionTitle} assignmentAverages={quizAverages}
-        assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
+        questions={questions} assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
         isAssignment={false}/>;
 };

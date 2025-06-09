@@ -1,59 +1,56 @@
 @use "sass:math";
 
-.assignment-progress-container {
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
 @include respond-below(sm) {
-  .assignment-progress-container {
-    margin: 0 -1px;
-    padding: 0;
-  }
-
   .assignment-progress-gameboard {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
 }
 
-.assignment-progress-group {
+.assignment-progress-card {
   border: 1px solid $gray-118;
-  margin-top: 1rem !important;
-  user-select: none;
+  border-radius: 0.5rem;
   cursor: pointer;
-  display: flex;
-  align-items: stretch;
   background: white;
-}
+  font-size: 1rem;
+  transition: transform 0.2s ease-out, border-color 0.2s ease-out;
 
-.assignment-progress-group > div {
-  display: inline-block;
-  flex: 0 0 auto;
-  align-self: baseline;
-  padding-right: 0.5rem;
-}
-
-.assignment-progress-group .group-name {
-  align-self: stretch;
-  display: flex;
-  font-weight: bold;
-  flex-shrink: 1;
-  width: 300px;
-  @include respond-above(sm) {
-    font-size: 1.1rem;
-  }
-
-  @include respond-below(xs) {
-    width: unset;
+  &:hover, &.open {
+    border-color: $gray-136;
   }
 }
-.assignment-progress-group .group-name span {
-  margin: auto 0;
-  & + span {
-    padding-left: 1rem;
+
+a:has(> .assignment-progress-group) {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+
+.assignment-progress-group {
+  @extend .assignment-progress-card;
+  
+  a {
+    font-size: inherit;
+    width: max-content;
+    align-content: center;
+  }
+
+  &:hover {
+    @include not-reduced-motion {
+        transform: scale(1.01);
+    }
+  }
+}
+
+.assignment-progress-group-overview {
+  @include media-breakpoint-up(lg) {
+    > :not(:first-child)::before {
+      content: '';
+      display: inline-block;
+      padding-right: 0.8rem;
+      height: 100%;
+      border-left: 1px solid $gray-118;
+    }
   }
 }
 
@@ -149,7 +146,7 @@ $failed-bg-size: 25%;
   }
 
   .completed th {
-    &:first-child, .icon-person { color: rgba($perfect-fill, 1); }
+    &:first-child { color: rgba($perfect-fill, 1); }
     &.total-column {
       background-image: $completed-total-bg-img;
       background-size: $completed-bg-size;
@@ -157,7 +154,7 @@ $failed-bg-size: 25%;
   }
 
   .passed th {
-    &:first-child, .icon-person { color: rgba($passed-fill, 1); }
+    &:first-child { color: rgba($passed-fill, 1); }
     &.total-column {
       background-image: $passed-total-bg-img;
       background-size: $passed-bg-size;
@@ -165,7 +162,7 @@ $failed-bg-size: 25%;
   }
 
   .in-progress th {
-    &:first-child, .icon-person  { color: rgba($default-name-fill, 1); }
+    &:first-child  { color: rgba($default-name-fill, 1); }
     &.total-column {
       background-image: $in-progress-total-bg-img;
       background-size: $in-progress-bg-size;
@@ -173,7 +170,7 @@ $failed-bg-size: 25%;
   }
 
   .failed th {
-    &:first-child, .icon-person { color: rgba($failed-fill, 1); }
+    &:first-child { color: rgba($failed-fill, 1); }
     &.total-column {
       background-image: $failed-total-bg-img;
       background-size: $failed-bg-size;
@@ -182,12 +179,12 @@ $failed-bg-size: 25%;
 
   .not-attempted {
     th {
-      &:first-child, .icon-person  { color: rgba($default-name-fill, 1); }
+      &:first-child { color: rgba($default-name-fill, 1); }
     }
   }
   .revoked {
     th {
-      &:first-child, .icon-person {
+      &:first-child {
         color: gray;
       }
     }
@@ -308,7 +305,10 @@ $failed-bg-size: 25%;
   overflow: auto hidden;
 }
 
-.assignment-progress-progress,
+.assignment-progress-progress {
+  background: $gray-103;
+}
+
 .group-progress-summary {
   background: $gray-103;
   border: 1px solid $gray-118;
@@ -446,10 +446,6 @@ $failed-bg-size: 25%;
       border-top-color: #fff;
       background: #fff;
     }
-    &:not(.selected):after {
-      @include after-border;
-      border-top: 2px solid $gray-160;
-    }
   }
 
   tfoot th {
@@ -467,27 +463,22 @@ $failed-bg-size: 25%;
     background: none;
     border: none;
     padding: 0;
-
-    position: absolute;
-    right: 2px;
-    font-size: 8px;
-    top: 1px;
+    margin-left: 0.5rem;
+    font-size: 10px;
     z-index: 1;
-
     line-height: initial;
+
     span {
       opacity: 0.5;
       display: block;
     }
-    .up {
-      padding-top: 4px;
-    }
-    .down {
-      padding-bottom: 10px;
-    }
   }
 
-  .progress-table-header-footer .sorted.forward .up, .progress-table-header-footer .sorted.reverse .down {
+  .progress-table-header-footer .reverse .arrow {
+    transform: rotate(180deg);
+  }
+
+  .progress-table-header-footer .sorted .arrow {
     opacity: 1;
   }
 
@@ -515,21 +506,25 @@ $failed-bg-size: 25%;
   }
 
   .student-name {
-    font-weight: bold;
-    color: $text-muted;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    min-width: 130px;
+    min-width: 195px;
 
     @include table-sticky;
     left: 0;
     top: 0;
     width: 195px;
-    &:after {
-      @include after-border;
-      border-right: 1px solid $gray-118;
-      border-left: 1px solid $gray-118;
-      pointer-events: none; // don't intercept clicks as we want links in the th element
+  }
+
+  @include respond-below(md) {
+    .student-name {
+      min-width: 150px;
+      width: 150px;
+    }
+  }
+
+  @include respond-below(sm) {
+    .student-name {
+      min-width: 100px;
+      width: 100px;
     }
   }
 
@@ -546,3 +541,9 @@ $failed-bg-size: 25%;
   }
 }
 
+.results-table-container {
+  border-left: $border-width solid $border-color-translucent;
+  table {
+    border-left: none !important;
+  }
+}

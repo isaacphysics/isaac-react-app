@@ -1,6 +1,6 @@
 import React from "react";
 import {mockUser} from "../../mocks/data";
-import { AssignmentProgress } from "../../app/components/pages/AssignmentProgress";
+import { AssignmentProgress } from "../../app/components/pages/AssignmentProgressWrapper";
 
 
 it.skip('Assignment Progress should have no visual regressions', () => {

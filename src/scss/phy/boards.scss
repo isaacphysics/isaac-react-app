@@ -62,18 +62,7 @@
 .board-percent-completed {
   @extend .board-bubble-info;
 
-  &.subject-complete {
-    height: 32px;
-    margin-bottom: 7px;
-
-    &::after {
-      content: "";
-      display: block;
-      @include svg-color(url("/assets/common/icons/tick.svg"), $color-neutral-900, 100%, 100%, 48px 48px);
-    }
-  }
-
-  &:not(.subject-complete)::after {
+  &::after {
     font-size: 0.5em;
     content: '%';
     position: relative;
@@ -108,12 +97,5 @@ label:has(> .board-percent-completed) {
   }
   &.subject-biology {
     background-color: $color-biology-500;
-  }
-  &.subject-complete {
-    background-color: $color-neutral-900;
-    &::after {
-      @include pseudo-element;
-      @include svg-color(url("/assets/common/icons/tick.svg"), white, 100%, 100%, 48px 48px);
-    }
   }
 }
