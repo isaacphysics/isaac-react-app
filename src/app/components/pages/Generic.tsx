@@ -1,4 +1,4 @@
-import React, {ReactNode, useEffect} from "react";
+import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
 import {SeguePageDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";

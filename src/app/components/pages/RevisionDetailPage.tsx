@@ -1,8 +1,7 @@
 import React from "react";
-import { RouteComponentProps, withRouter } from "react-router";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { getHumanContext, getThemeFromTags, useUrlPageTheme } from "../../services/pageContext";
+import { getThemeFromTags } from "../../services/pageContext";
 import { useGetRevisionPageQuery } from "../../state/slices/api/revisionApi";
 import { ContentControlledSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
