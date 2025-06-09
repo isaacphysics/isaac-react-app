@@ -1582,6 +1582,7 @@ export const ContentControlledSidebar = ({sidebar}: {sidebar?: SidebarDTO}) => {
     const history = useHistory();
 
     return <ContentSidebar buttonTitle={sidebar?.title}>
+        <div className="section-divider"/>
         <ul>
             {sidebar?.sidebarEntries?.map((entry, index) => (
                 <SidebarEntries key={index} entry={entry} history={history}/>
