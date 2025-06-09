@@ -183,7 +183,7 @@ const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...
             <div className="d-flex flex-column">
                 <h5 className="m-0">{questionIndex + 1}. <Link to={`/questions/${questions[questionIndex].id}` + (gameboardId ? `?board=${gameboardId}` : "")}><Markup encoding="latex">{questions[questionIndex].title}</Markup></Link></h5>
                 {difficultParts.length > 0 && <span className="mt-2 small">
-                    More than <strong>50%</strong> of the group answered incorrectly on parts <strong>{difficultParts.slice(0, 3).map(i => i + 1).join(", ")}{difficultParts.length > 3 ? `, and ${difficultParts.length - 3} more` : ""}</strong>.
+                    <strong>50%</strong> or more of the group answered incorrectly on part{difficultParts.length > 1 && <>s</>} <strong>{difficultParts.slice(0, 3).map(i => i + 1).join(", ")}{difficultParts.length > 3 ? `, and ${difficultParts.length - 3} more` : ""}</strong>.
                 </span>}
             </div>
             <Spacer/>
