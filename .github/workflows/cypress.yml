@@ -27,6 +27,8 @@ jobs:
         with:
           node-version: 20
           cache: 'yarn'
+      - name: Test yarn cache restore
+        run: yarn install --prefer-offline
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
