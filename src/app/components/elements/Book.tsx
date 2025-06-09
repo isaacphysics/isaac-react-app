@@ -39,7 +39,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
             return;
         }
 
-        const fragmentId = book?.id + "|" + section;
+        const fragmentId = book?.id + "__" + section;
         setPageId(fragmentId);
     }, [book?.id, history.location.pathname]);
 
