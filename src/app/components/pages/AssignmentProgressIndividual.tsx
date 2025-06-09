@@ -12,6 +12,7 @@ import { Tabs } from "../elements/Tabs";
 import classNames from "classnames";
 import { CollapsibleContainer } from "../elements/CollapsibleContainer";
 import StyledToggle from "../elements/inputs/StyledToggle";
+import { Markup } from "../elements/markup";
 
 interface GroupAssignmentTabProps {
     assignment: EnhancedAssignmentWithProgress;
@@ -180,7 +181,7 @@ const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...
     return <div {...rest} className={classNames("assignment-progress-card w-100 my-2", {"open": isOpen}, rest.className)}>
         <button onClick={() => setIsOpen(o => !o)} className="w-100 p-3 d-flex align-items-center text-start bg-transparent">
             <div className="d-flex flex-column">
-                <h5 className="m-0">{questionIndex + 1}. <Link to={`/questions/${questions[questionIndex].id}` + (gameboardId ? `?board=${gameboardId}` : "")}>{questions[questionIndex].title}</Link></h5>
+                <h5 className="m-0">{questionIndex + 1}. <Link to={`/questions/${questions[questionIndex].id}` + (gameboardId ? `?board=${gameboardId}` : "")}><Markup encoding="latex">{questions[questionIndex].title}</Markup></Link></h5>
                 {difficultParts.length > 0 && <span className="mt-2 small">
                     More than <strong>50%</strong> of the group answered incorrectly on parts <strong>{difficultParts.slice(0, 3).map(i => i + 1).join(", ")}{difficultParts.length > 3 ? `, and ${difficultParts.length - 3} more` : ""}</strong>.
                 </span>}
