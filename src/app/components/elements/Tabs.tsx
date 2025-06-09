@@ -100,7 +100,7 @@ const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: Tabs
 export const Tabs = (props: TabsProps) => {
     const {
         className="", tabContentClass="", children, activeTabOverride, onActiveTabChange,
-        deselectable=false, refreshHash, expandable, style="tabs"
+        deselectable=false, refreshHash, expandable, style=(siteSpecific("dropdowns", "tabs")),
     } = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 

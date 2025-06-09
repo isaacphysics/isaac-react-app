@@ -106,6 +106,7 @@
 .numeric-question {
   .numeric-help.numeric-help {
     color: $color-neutral-900;
+    font-size: 0.875rem;
   }
 
   .unit-selection {
@@ -126,8 +127,10 @@
 
 // styling for question components outside an accordion
 form:has(> .question-component) {
-  border: 2px solid var(--nav-primary);
+  background-color: white;
+  box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
   padding: 0;
+  border: 2px solid var(--nav-primary);
   border-radius: 8px;
   margin-bottom: 1rem;
 

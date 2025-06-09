@@ -224,7 +224,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
                 <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
                 <td className={"align-middle text-center"}>
-                    <Button className="set-assignments-button" color={siteSpecific("tertiary", "secondary")} size="sm" onClick={toggleAssignModal}>
+                    <Button className="set-assignments-button" color={siteSpecific("tertiary", "solid")} size="sm" onClick={toggleAssignModal}>
                         Assign{hasAssignedGroups && "\u00a0/ Unassign"}
                     </Button>
                 </td>
@@ -234,7 +234,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </div>
                 </td>}
                 {isAda && <td className={basicCellClasses}>
-                    <Button outline color={"secondary"} className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                    <Button color="keyline" className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
                 </td>}
             </> 
                 : 
@@ -265,7 +265,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </td>}
                     {siteSpecific(
                         <td className={"text-center align-middle"}>
-                            <Button outline color="primary" className={"bin-icon d-inline-block outline"} style={{
+                            <Button outline color="solid" className={"bin-icon d-inline-block outline"} style={{
                                 width: "20px",
                                 minWidth: "20px",
                             }} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
@@ -287,7 +287,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         </tr>)
         :
         siteSpecific(
-            <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} 
+            <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} data-testid="gameboard-card"
                 {...(isSetAssignments ? {'setAssignmentsDetails': {toggleAssignModal, groupCount: assignees.length}} : {})}>
                 <Row className="w-100">
                     <Col>
@@ -348,8 +348,8 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </Row>
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
-                        <Button outline color={"secondary"} className={"me-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
-                        {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="secondary" onClick={toggleAssignModal}>
+                        <Button color="keyline" className={"me-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                        {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={toggleAssignModal}>
                             Assign{hasAssignedGroups && " / Unassign"}
                         </Button>}
                     </CardFooter>

@@ -102,7 +102,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                 <p className="mt-4">
                                     Showing <strong>{limit}</strong> of <strong>{orderedAssignments.length}</strong> filtered {siteSpecific("assignments", "quizzes")}.
                                 </p>
-                                <Button color="primary" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
+                                <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
                                     Show more
                                 </Button>
                             </div>}
@@ -198,7 +198,7 @@ const AdaMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                 <p className="mt-4">
                                     Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered {siteSpecific("assignments", "quizzes")}.
                                 </p>
-                                <Button color="primary" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
+                                <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
                                     Show more
                                 </Button>
                             </div>}

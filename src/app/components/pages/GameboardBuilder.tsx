@@ -447,8 +447,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     <Row className="justify-content-center mt-4">
                         <Col className="col-auto col-md-2 order-1 d-flex justify-content-center">
                             {undoStack.length > 0 && <Button
-                                className={classNames("my-2", siteSpecific("btn btn-keyline", "btn-sm"))}
-                                color="primary" outline={isAda}
+                                className={classNames("my-2", {"btn-sm": isAda})}
+                                color="keyline"
                                 onClick={() => {
                                     const newQuestion = undoStack.pop();
                                     redoStack.push(currentQuestions);
@@ -461,8 +461,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         </Col>
                         <Col className="col-auto col-md-2 order-2 order-md-4 d-flex justify-content-center">
                             {redoStack.length > 0 && <Button
-                                className={classNames("my-2", siteSpecific("btn btn-keyline", "btn-sm"))}
-                                color="primary" outline={isAda}
+                                className={classNames("my-2", {"btn-sm": isAda})}
+                                color="keyline"
                                 onClick={() => {
                                     const newQuestion = redoStack.pop();
                                     undoStack.push(currentQuestions);
@@ -482,8 +482,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 until={!baseGameboardId || baseGameboard}
                             >
                                 <Button
-                                    className={siteSpecific("btn btn-keyline d-flex align-items-center", "plus-button")}
-                                    color="primary" outline={isAda}
+                                    className={siteSpecific("d-flex align-items-center", "plus-button")}
+                                    color="keyline"
                                     onClick={() => {
                                         logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
                                         dispatch(openActiveModal({

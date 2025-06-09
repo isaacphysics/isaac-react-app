@@ -391,7 +391,7 @@ const GroupDetails = ({group, user}: {group: AppGroup, user: RegisteredUserDTO})
         <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} id={`legend-${group.id}`} />
         {/* Only full teachers can see the tests tab */}
         {pageSettings.isTeacher
-            ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
+            ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab} style="tabs">
                 {{
                     [`Assignments (${assignments.length || 0})`]: assignmentTabComponents,
                     [`Tests (${quizAssignments.length || 0})`]: quizTabComponents
@@ -515,7 +515,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 <div className="d-lg-inline text-nowrap">
                     <Label className="pe-2 mt-1">Sort assignments and tests:</Label>
                     <UncontrolledButtonDropdown size="sm">
-                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={siteSpecific("lg", "sm")}>
+                        <DropdownToggle color={siteSpecific("tertiary", "solid")} caret size={siteSpecific("lg", "sm")}>
                             {assignmentOrder.type} ({assignmentOrder.order === SortOrder.ASC ? "ascending" : "descending"})
                         </DropdownToggle>
                         <DropdownMenu>
@@ -528,7 +528,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 <div className="d-lg-inline text-nowrap ms-4">
                     <Label className="pe-2 mt-1">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">
-                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={siteSpecific("lg", "sm")}>
+                        <DropdownToggle color={siteSpecific("tertiary", "solid")} caret size={siteSpecific("lg", "sm")}>
                             {groupSortOrder}
                         </DropdownToggle>
                         <DropdownMenu>

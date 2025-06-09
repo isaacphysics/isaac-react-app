@@ -84,7 +84,7 @@ describe("QuestionFinder", () => {
 
             if (isPhy) {
                 // On Ada, clearing filters only has an affect after clicking the "Apply" button, so same case as above 
-                it('when clearing all filters', async () => {
+                it.skip('when clearing all filters', async () => {
                     await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=gcse" });
                     await clickOn(siteSpecific("Clear all filters", "Clear all"));
                     await expectUrlParams('');

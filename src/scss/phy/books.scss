@@ -112,6 +112,10 @@ svg.book-page-icon {
     max-height: 215px;
     border-radius: 3px;
   }
+
+  &.book-height-lg > img {
+    max-height: 315px;
+  }
 }
 
 .chapter-title {

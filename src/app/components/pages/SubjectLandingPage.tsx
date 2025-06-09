@@ -104,7 +104,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
 
     const fullWidthBooks = !relevantEvents?.length;
 
-    return <Row className={classNames("mt-5 py-4 row-cols-1", {"row-cols-md-2": !fullWidthBooks})}>
+    return <Row className={classNames("mt-2 py-4 row-cols-1", {"row-cols-md-2": !fullWidthBooks})}>
         <div className="d-flex flex-column mt-3">
             {/* if there are books, display books. otherwise, display news */}
             {books?.length

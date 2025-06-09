@@ -61,16 +61,11 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
 
         if (allCompleted) {
             controls = <>
-                {
-                    siteSpecific(
-                        <Button className="btn btn-keyline" tag={Link} to={pageLink(1)}>Review answers</Button>,
-                        <Button outline color="secondary" tag={Link} to={pageLink(1)}>Review answers</Button>
-                    )
-                }
+                <Button color="keyline" tag={Link} to={pageLink(1)}>Review answers</Button>
                 <Spacer/>
                 All sections complete
                 <Spacer/>
-                <Button color={siteSpecific("secondary", "primary")} onClick={submitQuiz}>{submitButton}</Button>
+                <Button color={siteSpecific("keyline", "solid")} onClick={submitQuiz}>{submitButton}</Button>
             </>;
         } else {
             if (anyAnswered) {
@@ -81,12 +76,12 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
                     <Spacer/>
                     {totalCompleted} / {sectionCount} sections complete<br/>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "primary")} tag={Link} to={pageLink(firstIncomplete + 1)}>Continue</Button>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(firstIncomplete + 1)}>Continue</Button>
                 </>;
             } else {
                 controls = <>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "primary")} tag={Link} to={pageLink(1)}>Continue</Button>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(1)}>Continue</Button>
                 </>;
             }
         }

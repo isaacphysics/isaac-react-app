@@ -25,7 +25,7 @@
   .connect-list-header {
     border-radius: 7px 7px 0 0; // avoids clashing with 8px on border
     background-color: $color-brand-500;
-    min-height: 3rem;
+    height: 3rem;
 
     h4 {
       padding: 0rem 1rem;
@@ -44,7 +44,7 @@
   }
 }
 
-.btn-link {
+p .btn-link {
   font-size: 1rem;
   margin-top: 3px;
 }
