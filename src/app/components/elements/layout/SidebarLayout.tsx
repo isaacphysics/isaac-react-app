@@ -1530,15 +1530,25 @@ const calculateSidebarLink = (entry: SidebarEntryDTO): string | undefined => {
     return "";
 };
 
+const isSidebarGroup = (entry: SidebarEntryDTO): entry is SidebarGroupDTO => {
+    return entry.type === "sidebarGroup";
+};
+
+const containsActiveTab = (group: SidebarGroupDTO, currentPathname: string): boolean => {
+    return !!group.sidebarEntries?.some(subEntry => {
+        if (isSidebarGroup(subEntry)) {
+            return containsActiveTab(subEntry, currentPathname);
+        }
+        return currentPathname === calculateSidebarLink(subEntry);
+    });
+};
+
 const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: History }) => {
 
-    const isSidebarGroup = (entry: SidebarEntryDTO): entry is SidebarGroupDTO => {
-        return entry.type === "sidebarGroup";
-    };
+    const isActive = history.location.pathname === calculateSidebarLink(entry);
+    const [isOpen, setIsOpen] = useState(isSidebarGroup(entry) && containsActiveTab(entry, history.location.pathname));
 
-    const [isActive, setIsActive] = useState(false);
-
-    return isSidebarGroup(entry) 
+    return isSidebarGroup(entry)
         ? <CollapsibleList
             title={<div className="d-flex flex-column gap-2 chapter-title">
                 <span className="text-theme">{entry.label}</span>
@@ -1546,8 +1556,8 @@ const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: H
             </div>}
             tag={"li"}
             className="ms-2"
-            expanded={isActive}
-            toggle={() => setIsActive(!isActive)}
+            expanded={isOpen}
+            toggle={() => setIsOpen(o => !o)}
         >
             <ul>
                 {entry.sidebarEntries?.map((subEntry, subIndex) => 
