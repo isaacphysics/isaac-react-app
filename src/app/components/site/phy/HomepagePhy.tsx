@@ -7,7 +7,6 @@ import { NewsCard } from "../../elements/cards/NewsCard";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { EventCard } from "../../elements/cards/EventCard";
 import { StudentDashboard } from "../../elements/StudentDashboard";
-import { ShortcutResponse } from "../../../../IsaacAppTypes";
 import { ListViewCardProps, ListViewCards } from "../../elements/list-groups/ListView";
 import { Spacer } from "../../elements/Spacer";
 import { TeacherDashboard } from "../../elements/TeacherDashboard";
@@ -96,13 +95,10 @@ const subjectDescriptions: Record<Subject, string> = {
 };
 
 const getListViewSubjectCard = (sc: subjectCategory) => {
-    const item: ShortcutResponse = {
-        title: sc.humanSubject,
-        subtitle: subjectDescriptions[sc.subject as Subject],
-    };
 
     const listViewSubjectCard: ListViewCardProps = {
-        item: item,
+        title: sc.humanSubject,
+        subtitle: subjectDescriptions[sc.subject as Subject],
         icon: {
             type: "img", 
             icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`,
