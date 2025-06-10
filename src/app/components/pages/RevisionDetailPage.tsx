@@ -8,9 +8,9 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { IsaacRevisionDetailPageDTO, QuizSummaryDTO } from "../../../IsaacApiTypes";
 import { EditContentButton } from "../elements/EditContentButton";
 import { TeacherNotes } from "../elements/TeacherNotes";
-import { MetadataContainerLink } from "../elements/BookPage";
 import { convertToALVIGameboards, ListView } from "../elements/list-groups/ListView";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
+import { MetadataContainer, MetadataContainerLink } from "../elements/panels/MetadataContainer";
 
 interface RevisionProps {
     match: { params: { pageId: string } };
@@ -56,11 +56,11 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
 
         <TeacherNotes notes={page.teacherNotes} />
 
-        <div className="content-metadata-container d-flex flex-column gap-2">
+        <MetadataContainer>
             {!!page.gameboards?.length && <MetadataContainerLink id="introduction" title="Introduction" />}
             <MetadataContainerLink id="revision" title="Revision" />
             {!!tests.length && <MetadataContainerLink id="tests" title="Practice tests" />}
-        </div>
+        </MetadataContainer>
 
         {!!page.gameboards?.length && <>
             <h4 className="mb-3" id="introduction">Introduction</h4>
