@@ -23,7 +23,7 @@ interface HierarchyFilterProps {
 }
 
 export function HierarchyFilterTreeList({tier, index, choices, selections, questionFinderFilter, className, root, setSelections}: HierarchyFilterProps) {  
-    return <div className={className}>
+    return <ul className={classNames("plain-list", className)}>
         {choices[tier] && choices[tier][index] && choices[tier][index].map((choice) => {
             const isSelected = selections[tier] && selections[tier][index]?.map(s => s.value).includes(choice.value);
             const isLeaf = getChoiceTreeLeaves(selections).map(l => l.value).includes(choice.value);
@@ -42,21 +42,23 @@ export function HierarchyFilterTreeList({tier, index, choices, selections, quest
                 setSelections(newSelections);
             };
 
-            return <CheckboxWrapper key={choice.value} active={isSelected && tier !== 2} className={classNames({"search-field": tier===2, "hierarchy-true-root": root && tier === 0})}>
-                <StyledCheckbox
-                    partial
-                    color="white"
-                    bsSize={root ? "lg" : "sm"}
-                    checked={isSelected}
-                    onChange={selectValue}
-                    label={<span>{choice.label}</span>}
-                    className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && !isLeaf, "icon-checkbox-selected": isLeaf})}
-                />
-                {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
-                    <HierarchyFilterTreeList {...{tier: tier+1, index: choice.value, choices, selections, questionFinderFilter, setSelections}}/>
-                }
-            </CheckboxWrapper>;
+            return <li key={choice.value}>
+                <CheckboxWrapper active={isSelected && tier !== 2} className={classNames({"search-field": tier===2, "hierarchy-true-root": root && tier === 0})}>
+                    <StyledCheckbox
+                        partial
+                        color="white"
+                        bsSize={root ? "lg" : "sm"}
+                        checked={isSelected}
+                        onChange={selectValue}
+                        label={<span>{choice.label}</span>}
+                        className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && !isLeaf, "icon-checkbox-selected": isLeaf})}
+                    />
+                    {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
+                        <HierarchyFilterTreeList {...{tier: tier+1, index: choice.value, choices, selections, questionFinderFilter, setSelections}}/>
+                    }
+                </CheckboxWrapper>
+            </li>;
         }
         )}
-    </div>;
+    </ul>;
 }
