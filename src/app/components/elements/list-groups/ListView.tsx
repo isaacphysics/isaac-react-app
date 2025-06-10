@@ -2,7 +2,7 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, PATHS, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { ContentSummaryDTO, GameboardDTO, QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -243,14 +243,13 @@ interface BookDetailListViewItemProps extends Extract<AbstractListViewItemProps,
 export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemProps) => {
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const itemBook = ISAAC_BOOKS.find((book) => item.tags?.includes(book.tag));
-    const itemLabel = itemBook ? item.id?.slice(`book_${itemBook.tag}_`.length) : undefined;
 
     return <AbstractListViewItem
         {...item}
         icon={{type: "hex", icon: "icon-generic", size: "lg"}}
-        title={`${itemLabel ? (itemLabel?.toUpperCase() + " ") : ""}${item.title}`}
+        title={`${item.subtitle ? (item.subtitle + " ") : ""}${item.title}`}
         subtitle={itemBook?.title}
-        url={itemBook ? `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${itemBook.tag}/${itemLabel}` : undefined}
+        url={itemBook ? `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${item.id?.replace(BOOK_DETAIL_ID_SEPARATOR, "/").slice("book_".length)}` : undefined}
         subject={itemSubject}
         state={undefined}
         {...rest}

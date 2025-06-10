@@ -96,18 +96,7 @@ export interface IsaacAnvilQuestionDTO extends QuestionDTO {
 export interface IsaacConceptPageDTO extends SeguePageDTO {
 }
 
-export interface BookSectionDTO extends ContentDTO {
-    label?: string;
-    bookPageId?: string;
-}
-
-export interface BookChapterDTO extends ContentDTO {
-    label?: string;
-    sections?: BookSectionDTO[];
-}
-
 export interface IsaacBookIndexPageDTO extends SeguePageDTO {
-    chapters?: BookChapterDTO[];
     coverImage?: ImageDTO;
 }
 
@@ -115,6 +104,10 @@ export interface IsaacBookDetailPageDTO extends SeguePageDTO {
     gameboards?: GameboardDTO[];
     extensionGameboards?: GameboardDTO[];
 }
+
+export interface IsaacRevisionDetailPageDTO extends SeguePageDTO {
+    gameboards?: GameboardDTO[];
+};
 
 export interface IsaacPageFragmentDTO extends ContentDTO {
     summary?: string;
@@ -255,6 +248,20 @@ export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
 export interface IsaacWildcardDTO extends ContentDTO {
     description?: string;
     url?: string;
+}
+
+export interface SidebarEntryDTO extends ContentDTO {
+    label?: string;
+    pageId?: string;
+    pageType?: string;
+}
+
+export interface SidebarGroupDTO extends SidebarEntryDTO {
+    sidebarEntries?: SidebarEntryDTO[];
+}
+
+export interface SidebarDTO extends ContentDTO {
+    sidebarEntries?: SidebarEntryDTO[];
 }
 
 export interface QuestionPartConceptDTO {
@@ -568,6 +575,7 @@ export interface SeguePageDTO extends ContentDTO {
     summary?: string;
     deprecated?: boolean;
     teacherNotes?: string;
+    sidebar?: SidebarDTO;
 }
 
 export interface StringChoiceDTO extends ChoiceDTO {

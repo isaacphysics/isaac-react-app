@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Container} from "reactstrap";
-import {BookSidebar, MainContent, SidebarLayout} from "./layout/SidebarLayout";
+import {ContentControlledSidebar, MainContent, SidebarLayout} from "./layout/SidebarLayout";
 import {Markup} from "./markup";
 import {TitleAndBreadcrumb} from "./TitleAndBreadcrumb";
-import {useContextFromContentObjectTags} from "../../services";
+import {BOOK_DETAIL_ID_SEPARATOR, useContextFromContentObjectTags} from "../../services";
 import {useHistory} from "react-router";
 import {useGetBookDetailPageQuery, useGetBookIndexPageQuery} from "../../state/slices/api/booksApi";
 import {BookPage} from "./BookPage";
@@ -39,11 +39,9 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
             return;
         }
 
-        const fragmentId = book?.id + "_" + section;
-        if (fragmentId) {
-            setPageId(fragmentId);
-        }
-    }, [book?.chapters, history.location]);
+        const fragmentId = book?.id + BOOK_DETAIL_ID_SEPARATOR + section;
+        setPageId(fragmentId);
+    }, [book?.id, history.location.pathname]);
 
     return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
         <TitleAndBreadcrumb
@@ -56,7 +54,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                 defaultErrorTitle="Unable to load book contents."
                 thenRender={(definedBookIndexPage) => {
                     return <>
-                        <BookSidebar book={definedBookIndexPage} urlBookId={bookId} pageId={pageId} />
+                        <ContentControlledSidebar sidebar={book?.sidebar}/>
                         <MainContent className="my-4">
                             {pageId
                                 ? <ShowLoadingQuery

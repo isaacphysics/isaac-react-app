@@ -1,5 +1,5 @@
 import React, { ReactNode, useLayoutEffect, useRef, useState } from "react";
-import { Col } from "reactstrap";
+import { Col, ColProps } from "reactstrap";
 import { Spacer } from "./Spacer";
 import { FilterCount } from "./svg/FilterCount";
 import classNames from "classnames";
@@ -15,6 +15,7 @@ export interface CollapsibleListProps {
     additionalOffset?: string | number; // css value for additional space to add to the bottom of the list when expanded; e.g. 4px, 1rem
     hasUlTag?: boolean; // if true, don't wrap the result in another <ul> tag
     className?: string;
+    tag?: ColProps['tag'];
 }
 
 export const CollapsibleList = (props: CollapsibleListProps) => {
@@ -46,7 +47,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         ? <span>{props.title && props.asSubList ? props.title : <b>{props.title}</b>}</span>
         : props.title;
 
-    return <Col className={classNames("collapsible-list-container", props.className)} data-targetheight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
+    return <Col tag={props.tag} className={classNames("collapsible-list-container", props.className)} data-targetheight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
         <div className="row m-0 collapsible-head" ref={headRef}>
             <button className={classNames("w-100 d-flex align-items-center p-3 text-start", {"bg-white": isAda, "bg-transparent": isPhy, "ps-4": props.asSubList})} onClick={toggle}>
                 {title && <span>{title}</span>}
