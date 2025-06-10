@@ -1455,59 +1455,6 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
     </ContentSidebar>;
 };
 
-export interface BookSidebarProps extends SidebarProps {
-    book: IsaacBookIndexPageDTO;
-    urlBookId: string;
-    pageId: string | undefined;
-};
-
-export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
-
-    const [expandedTab, setExpandedTab] = useState<number | undefined>(undefined);
-    useEffect(() => {
-        const activeChapter = book.chapters?.map(chapter => chapter.sections?.some(section => section.bookPageId === pageId)).indexOf(true);
-        setExpandedTab(activeChapter === -1 ? undefined : activeChapter);
-    }, [book.chapters, pageId]);
-
-    const history = useHistory();
-
-    return <ContentSidebar buttonTitle="Contents">
-        <ul className="m-0 p-0">
-            <button className="w-100 d-flex align-items-center p-3 text-start bg-transparent" onClick={() => history.push(`/books/${urlBookId}`)}>
-                <h5 className={classNames("m-0", {"text-theme": pageId === undefined})}>Overview</h5>
-                <Spacer/>
-            </button>
-            {book.chapters?.map((chapter, index) => {
-                const chapterActive = chapter.sections?.some(section => section.bookPageId === pageId);
-
-                return <CollapsibleList
-                    title={<div className="d-flex flex-column gap-2 chapter-title">
-                        <span className="text-theme">Chapter {chapter.label}</span>
-                        <h6 className={classNames("m-0", {"text-theme fw-semibold": chapterActive})}>{chapter.title}</h6>
-                    </div>}
-                    key={index}
-                    expanded={expandedTab === index}
-                    toggle={() => setExpandedTab(expandedTab === index ? undefined : index)}
-                    additionalOffset={"4px"}
-                >
-                    {chapter.sections?.map((section, sectionIndex) =>
-                        <li key={sectionIndex}>
-                            <StyledTabPicker
-                                checkboxTitle={<div className="d-flex">
-                                    <span className="text-theme me-2">{section.label}</span>
-                                    <span className="flex-grow-1"><Markup encoding="latex">{section.title}</Markup></span>
-                                </div>}
-                                checked={pageId === section.bookPageId}
-                                onClick={() => history.push(`/books/${urlBookId}/${section.bookPageId?.slice((book.id?.length ?? 0) + 1)}`)}
-                            />
-                        </li>
-                    )}
-                </CollapsibleList>;
-            })}
-        </ul>
-    </ContentSidebar>;
-};
-
 const calculateSidebarLink = (entry: SidebarEntryDTO): string | undefined => {
     switch (entry.pageType) {
         case "isaacBookDetailPage": {

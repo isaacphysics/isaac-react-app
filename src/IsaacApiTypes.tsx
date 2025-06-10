@@ -96,18 +96,7 @@ export interface IsaacAnvilQuestionDTO extends QuestionDTO {
 export interface IsaacConceptPageDTO extends SeguePageDTO {
 }
 
-export interface BookSectionDTO extends ContentDTO {
-    label?: string;
-    bookPageId?: string;
-}
-
-export interface BookChapterDTO extends ContentDTO {
-    label?: string;
-    sections?: BookSectionDTO[];
-}
-
 export interface IsaacBookIndexPageDTO extends SeguePageDTO {
-    chapters?: BookChapterDTO[];
     coverImage?: ImageDTO;
 }
 
