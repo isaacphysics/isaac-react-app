@@ -20,21 +20,21 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
         <MetadataContainer>
             {!!page.gameboards?.length && <MetadataContainerLink id="questions" title="Questions" />}
-            <MetadataContainerLink id="review" title="Review" />
+            <MetadataContainerLink id="resources" title="Resources" />
             {!!page.extensionGameboards?.length && <MetadataContainerLink id="extension" title="Extension work" />}
         </MetadataContainer>
 
         {!!page.gameboards?.length && <>
             <h4 className="mb-3" id="questions">Questions</h4>
             <div className="mt-3 mb-5 list-results-container p-2">
-                <ListView 
+                <ListView
                     type="gameboard"
                     items={convertToALVIGameboards(page.gameboards)}
                 />
             </div>
         </>}
 
-        <h4 className="mb-3" id="review">Review</h4>
+        <h4 className="mb-3" id="resources">Resources</h4>
         {!!page.relatedContent?.length && <>
             <div className="my-3 list-results-container p-2">
                 <ListView
