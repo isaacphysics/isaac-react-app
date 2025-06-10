@@ -3,7 +3,7 @@ import {Container} from "reactstrap";
 import {ContentControlledSidebar, MainContent, SidebarLayout} from "./layout/SidebarLayout";
 import {Markup} from "./markup";
 import {TitleAndBreadcrumb} from "./TitleAndBreadcrumb";
-import {useContextFromContentObjectTags} from "../../services";
+import {BOOK_DETAIL_ID_SEPARATOR, useContextFromContentObjectTags} from "../../services";
 import {useHistory} from "react-router";
 import {useGetBookDetailPageQuery, useGetBookIndexPageQuery} from "../../state/slices/api/booksApi";
 import {BookPage} from "./BookPage";
@@ -39,7 +39,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
             return;
         }
 
-        const fragmentId = book?.id + "__" + section;
+        const fragmentId = book?.id + BOOK_DETAIL_ID_SEPARATOR + section;
         setPageId(fragmentId);
     }, [book?.id, history.location.pathname]);
 

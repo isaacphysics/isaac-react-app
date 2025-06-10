@@ -9,7 +9,9 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, 
     isPhy,
     ISAAC_BOOKS,
-    BookHiddenState, TAG_LEVEL} from "../../../services";
+    BookHiddenState, TAG_LEVEL,
+    BOOK_DETAIL_ID_SEPARATOR,
+} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -1458,7 +1460,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
 const calculateSidebarLink = (entry: SidebarEntryDTO): string | undefined => {
     switch (entry.pageType) {
         case "isaacBookDetailPage": {
-            const detailPageSplit = entry.pageId?.split("__");
+            const detailPageSplit = entry.pageId?.split(BOOK_DETAIL_ID_SEPARATOR);
             if (!detailPageSplit || detailPageSplit.length !== 2) {
                 return undefined;
             }

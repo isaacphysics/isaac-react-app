@@ -604,6 +604,8 @@ export const ISAAC_BOOKS_BY_TAG: {[tag in BookTag]: BookInfo} = ISAAC_BOOKS.redu
     return acc;
 }, {} as {[tag in BookTag]: BookInfo});
 
+export const BOOK_DETAIL_ID_SEPARATOR = "__";
+
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
