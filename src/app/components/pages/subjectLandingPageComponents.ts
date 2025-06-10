@@ -38,7 +38,8 @@ const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): Li
         : "Practise specific topics by using our ready-made question decks.",
     icon: {type: "hex", icon: "icon-question-deck"},
     subject: context.subject,
-    linkTags: [{tag: "View topic question decks", url: extendUrl(context, 'question_decks')}]
+    linkTags: [{tag: "View topic question decks", url: extendUrl(context, 'question_decks')}],
+    state: context.stage.includes("gcse") && context.subject === "maths" ? AbstractListViewItemState.COMING_SOON : undefined,
 });
 
 // TODO: replace the link tags with links to lessons by *field* (see designs)
@@ -105,7 +106,7 @@ const AlgebraSkillsCard = (context: NonNullable<Required<PageContextState>>): Li
 };
 
 const MathsSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Core skills practice", `Practise those core skills, such as rearranging equations, vital for ${getHumanContext(context)}.`, [{tag: "Practise core skills", url: extendUrl(context, "skills_questions")}])(context);
+    return ArbitraryPageLinkCard("Core skills practice", `Practise those core skills, such as rearranging equations, vital for ${getHumanContext(context)}.`, [{tag: "Practise core skills", url: extendUrl(context, "skills_questions")}], AbstractListViewItemState.COMING_SOON)(context);
 };
 
 const MathsRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {

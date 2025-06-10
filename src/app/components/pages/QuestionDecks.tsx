@@ -15,7 +15,7 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
     const validQuestionDeckStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]} = {
         "physics": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
         "chemistry": [LEARNING_STAGE.A_LEVEL],
-        "maths": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
+        "maths": [LEARNING_STAGE.A_LEVEL],
         "biology": [LEARNING_STAGE.A_LEVEL],
     };
 
