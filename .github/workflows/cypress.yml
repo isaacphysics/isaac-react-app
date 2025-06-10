@@ -13,29 +13,61 @@ jobs:
       # This must stay in sync with the image used by the test-{site}-visual scripts in package.json.
       image: cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1
       options: --user 0
+    strategy:
+      fail-fast: false
+      matrix:
+        site: [ "ada", "phy" ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Cypress run (Ada)
+      - uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           component: true
           browser: chrome
         env:
-          CYPRESS_SITE: ada
-      - name: Cypress run (Physics)
-        if: ${{ success() || failure() }}
-        uses: cypress-io/github-action@v6
+          CYPRESS_SITE: ${{ matrix.site }}
+      - name: Upload VRT actuals
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
         with:
-          component: true
-          browser: chrome
-        env:
-          CYPRESS_SITE: phy
+           name: ${{ matrix.site }}
+           path: src/test/pages/__image_snapshots__/${{ matrix.site }}
+           retention-days: 7
+  cypress-post-run:
+    needs: cypress-run
+    runs-on: ubuntu-22.04
+    container:
+      image: cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1
+      options: --user 0
+    if: ${{ failure() }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+         fetch-depth: 0
+      - name: Download VRT actuals - Ada CS
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: ada
+          path: src/test/pages/__image_snapshots__/ada
+      - name: Download VRT actuals - Isaac Physics
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+            name: phy
+            path: src/test/pages/__image_snapshots__/phy
       - name: VRT update - create or update branch
         id: cypress-create-branch
-        if: ${{ failure() }}
         run: |
           # Temporary hack to mitigate https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/322
           apt update && apt install exiftool -y
@@ -55,7 +87,7 @@ jobs:
           echo "UPDATE_BRANCH_NAME=$update_branch_name" >> "$GITHUB_ENV"
       - name: VRT update - create PR if required
         id: cypress-create-pr
-        if: ${{ failure() && steps.cypress-create-branch.outcome == 'success' }}
+        if: ${{ steps.cypress-create-branch.outcome == 'success' }}
         uses: actions/github-script@v7
         with:
           result-encoding: string
@@ -68,7 +100,7 @@ jobs:
               base: "${{ env.TARGET_REF }}",
               state: 'open',
             });
-            
+
             if (pulls.data.length == 0) {
               const pr = await github.rest.pulls.create({
                 title: '[VRT] Update baselines for ${{ env.TARGET_REF }}',
@@ -85,9 +117,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: VRT update - write job summary
-        if: ${{ failure() && steps.cypress-create-pr.outcome == 'success' }}
+        if: ${{ steps.cypress-create-pr.outcome == 'success' }}
         run: |
-          echo '## 👀 Visual Regression Test updates' >> $GITHUB_STEP_SUMMARY
-          echo 'This run failed due to visual differences compared to our baseline images. A PR with new baseline images has been generated. Please review it [here](${{ steps.cypress-create-pr.outputs.result }}) and merge it if the differences are expected.' >> $GITHUB_STEP_SUMMARY
+          echo '## ⚠️ Action required' >> $GITHUB_STEP_SUMMARY
+          echo 'This run failed due to visual differences compared to our baseline images. A PR with new baseline images has been generated. Please review and merge it if the differences are expected.' >> $GITHUB_STEP_SUMMARY
           echo 'See [this wiki page](https://github.com/isaacphysics/isaac-wiki/wiki/Visual-regression-tests) for more information and troubleshooting steps.' >> $GITHUB_STEP_SUMMARY
 
