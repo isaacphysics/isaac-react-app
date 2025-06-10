@@ -1,5 +1,5 @@
 import React, { ReactNode, useLayoutEffect, useRef, useState } from "react";
-import { Col, Row } from "reactstrap";
+import { Col } from "reactstrap";
 import { Spacer } from "./Spacer";
 import { FilterCount } from "./svg/FilterCount";
 import classNames from "classnames";
@@ -13,6 +13,7 @@ export interface CollapsibleListProps {
     numberSelected?: number;
     children?: React.ReactNode;
     additionalOffset?: string | number; // css value for additional space to add to the bottom of the list when expanded; e.g. 4px, 1rem
+    hasUlTag?: boolean; // if true, don't wrap the result in another <ul> tag
     className?: string;
 }
 
@@ -61,7 +62,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         >
             <div ref={listRef} className={classNames({"ms-2": props.asSubList})} {...{"inert": expanded ? undefined : "true"}}> 
                 {/* when react is updated to v19, switch inert definition to regular prop */}
-                {props.children}
+                {props.hasUlTag ? props.children : <ul className="ps-0">{props.children}</ul>}
             </div>
         </div>
     </Col>;
