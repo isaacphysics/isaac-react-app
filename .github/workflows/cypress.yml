@@ -41,7 +41,7 @@ jobs:
         with:
            name: ${{ matrix.site }}
            path: src/test/pages/__image_snapshots__/${{ matrix.site }}
-           retention-days: 1
+           retention-days: 7
   cypress-post-run:
     needs: cypress-run
     runs-on: ubuntu-22.04
