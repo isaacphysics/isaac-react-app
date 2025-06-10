@@ -80,6 +80,7 @@ export interface ResultsTableProps<Q extends QuestionType> {
     markClasses: (row: AssignmentProgressDTO, assignmentTotalQuestionParts: number) => string;
     markQuestionClasses: (row: AssignmentProgressDTO, questionIndex: number) => string;
     isAssignment?: boolean;
+    boardId?: string;
 }
 
 export function ResultsTable<Q extends QuestionType>({
@@ -90,7 +91,8 @@ export function ResultsTable<Q extends QuestionType>({
     assignmentTotalQuestionParts,
     markClasses,
     markQuestionClasses,
-    isAssignment
+    isAssignment,
+    boardId,
 } : ResultsTableProps<Q>) {
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
@@ -183,8 +185,8 @@ export function ResultsTable<Q extends QuestionType>({
         }
         {questions.map((q, index) =>
             <th key={index}>
-                {isAssignment 
-                    ? <a className="d-block" href={`/questions/${q.id}`}>
+                {isAssignment
+                    ? <a className="d-block" href={`/questions/${q.id}` + (boardId ? `?board=${boardId}` : "")}>
                         {index + 1}
                     </a> 
                     : <span>{index + 1}</span>

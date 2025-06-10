@@ -122,7 +122,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
 
             <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions}
                 assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
-                isAssignment={true}
+                isAssignment={true} boardId={assignment.gameboardId}
             />
         </CardBody>
     </Card>;
