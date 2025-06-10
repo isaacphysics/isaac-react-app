@@ -1017,6 +1017,7 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "Assignment Progress", to: "/assignment_progress"},
     {title: "Markbook", to: "/my_markbook"}
 );
+export const BOOKS_CRUMB = {title: "Books", to: "/books"};
 
 export const UserFacingRole: {[role in UserRole]: string} = {
     ADMIN: "admin",

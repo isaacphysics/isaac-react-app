@@ -3,7 +3,7 @@ import {Col, Container, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {AppState, logAction, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
@@ -297,11 +297,14 @@ export const Glossary = () => {
         </div>
     </div>;
 
+    const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
+
     const thenRender = <div className="glossary-page">
         <Container data-bs-theme={pageContext?.subject}>
             <TitleAndBreadcrumb 
                 currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? `${getHumanContext(pageContext)} Glossary` : "Glossary"}
                 icon={{type: "hex", subject: pageContext?.subject, icon: "icon-tests"}}
+                intermediateCrumbs={crumb ? [crumb] : []}
             />
             <MetaDescription description={metaDescription} />
 
