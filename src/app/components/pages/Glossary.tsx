@@ -86,18 +86,19 @@ export function formatGlossaryTermId(rawTermId: string) {
 function tagByValue(values: string[], tags: Tag[]): Tag | undefined {
     return tags.filter(option => values.includes(option.id)).at(0);
 }
-function stageByValue(values: string[], tags: Stage[]): Stage | undefined {
-    return tags.filter(option => values.includes(option)).at(0);
+function stagesByValue(values: string[], tags: Stage[]): Stage[] | undefined {
+    const stages = tags.filter(option => values.includes(option));
+    return stages.length === 0 ? undefined : stages;
 }
 
 interface QueryStringResponse {
-    queryStages: Stage | undefined;
+    queryStages: Stage[] | undefined;
     querySubjects: Tag | undefined;
 }
 function processQueryString(query: ListParams<FilterParams>, pageContext?: PageContextState): QueryStringResponse {
     if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
         return {
-            queryStages: stageByValue([pageContext.stage.map(x => x === "11_14" ? "year_9" : x)[0]], stagesOrdered.slice(0,-1)), 
+            queryStages: stagesByValue([pageContext.stage.map(x => x === "11_14" ? "year_9" : x)[0]], stagesOrdered.slice(0,-1)), 
             querySubjects: tags.getById(pageContext.subject as TAG_ID)};
     }
 
@@ -126,7 +127,7 @@ export const Glossary = () => {
     const subjects = tags.allSubjectTags.sort((a,b) => a.title.localeCompare(b.title));
     const stages: Stage[] = stagesOrdered.slice(0,-1);
     const [filterSubject, setFilterSubject] = useState<Tag | undefined>(querySubjects);
-    const [filterStages, setFilterStages] = useState<Stage[] | undefined>(queryStages ? [queryStages] : undefined);
+    const [filterStages, setFilterStages] = useState<Stage[] | undefined>(queryStages);
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useAppSelector(
         (state: AppState) => state && state.glossaryTerms?.map(
@@ -153,8 +154,8 @@ export const Glossary = () => {
     useEffect(() => {
         if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
             setFilterSubject(tags.getById(pageContext.subject as TAG_ID));
-            const potentialStage = stageByValue([pageContext.stage.map(x => x === "11_14" ? "year_9" : x)[0]], stagesOrdered.slice(0,-1));
-            setFilterStages(potentialStage ? [potentialStage] : undefined);
+            const potentialStage = stagesByValue([pageContext.stage.map(x => x === "11_14" ? "year_9" : x)[0]], stagesOrdered.slice(0,-1));
+            setFilterStages(potentialStage);
         }
     }, [pageContext]);
 
