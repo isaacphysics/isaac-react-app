@@ -5,13 +5,14 @@ import { IsaacBookDetailPageDTO } from "../../../IsaacApiTypes";
 import { TeacherNotes } from "./TeacherNotes";
 import { EditContentButton } from "./EditContentButton";
 import { MetadataContainer, MetadataContainerLink } from "./panels/MetadataContainer";
+import { Markup } from "./markup";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
     return <div className="book-page">
         <h3 className="mb-3">
             {page.subtitle && <span className="me-3 text-theme">{page.subtitle} </span>}
-            {page.title}
+            <Markup encoding="latex">{page.title}</Markup>
         </h3>
 
         <EditContentButton doc={page}/>

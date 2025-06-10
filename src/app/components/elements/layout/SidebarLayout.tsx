@@ -1523,7 +1523,7 @@ const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: H
         ? <CollapsibleList
             title={<div className="d-flex flex-column gap-2 chapter-title">
                 <span className="text-theme">{entry.label}</span>
-                <h6 className={classNames("m-0", {"text-theme fw-semibold": isActive})}>{entry.title}</h6>
+                <h6 className={classNames("m-0", {"text-theme fw-semibold": isActive})}><Markup encoding="latex">{entry.title}</Markup></h6>
             </div>}
             tag={"li"}
             className="ms-2"

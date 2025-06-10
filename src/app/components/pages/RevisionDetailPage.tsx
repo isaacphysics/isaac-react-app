@@ -11,6 +11,7 @@ import { TeacherNotes } from "../elements/TeacherNotes";
 import { convertToALVIGameboards, ListView } from "../elements/list-groups/ListView";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 import { MetadataContainer, MetadataContainerLink } from "../elements/panels/MetadataContainer";
+import { Markup } from "../elements/markup";
 
 interface RevisionProps {
     match: { params: { pageId: string } };
@@ -49,7 +50,7 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
     return <div>
         <h3 className="mb-3">
             {page.subtitle && <span className="me-3 text-theme">{page.subtitle} </span>}
-            {page.title}
+            <Markup encoding="latex">{page.title}</Markup>
         </h3>
 
         <EditContentButton doc={page}/>
