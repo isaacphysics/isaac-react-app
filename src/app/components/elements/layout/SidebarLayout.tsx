@@ -1382,7 +1382,7 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
 
 interface GlossarySidebarProps extends ContentSidebarProps {
     searchText: string;
-    setSearchText: React.Dispatch<React.SetStateAction<string>>;
+    setSearchText: (searchText: string) => void;
     filterSubject: Tag | undefined;
     setFilterSubject: React.Dispatch<React.SetStateAction<Tag | undefined>>;
     filterStages: Stage[] | undefined;
@@ -1411,15 +1411,21 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
         }
     };
 
+    // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
+    const [internalSearchText, setInternalSearchText] = useState(searchText);
+
     return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
         <search>
             <h5>Search glossary</h5>
             <Input
                 className='search--filter-input my-4'
-                type="search" value={searchText || ""}
+                type="search" value={internalSearchText || ""}
                 placeholder="e.g. Forces"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
+                    setSearchText(e.target.value); 
+                    setInternalSearchText(e.target.value);
+                }}
             />
             <div className="section-divider"/>
 
