@@ -1,17 +1,13 @@
-import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
+import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useState } from "react";
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacBookIndexPageDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, SidebarGroupDTO, Stage } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, SidebarGroupDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
-    Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, 
-    isPhy,
-    ISAAC_BOOKS,
-    BookHiddenState, TAG_LEVEL,
-    BOOK_DETAIL_ID_SEPARATOR,
-} from "../../../services";
+    Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, BOOK_DETAIL_ID_SEPARATOR, documentTypePathPrefix, 
+    DOCUMENT_TYPE} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -1457,23 +1453,23 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
     </ContentSidebar>;
 };
 
-const calculateSidebarLink = (entry: SidebarEntryDTO): string | undefined => {
+export const calculateSidebarLink = (entry: SidebarEntryDTO): string | undefined => {
     switch (entry.pageType) {
         case "isaacBookDetailPage": {
             const detailPageSplit = entry.pageId?.split(BOOK_DETAIL_ID_SEPARATOR);
             if (!detailPageSplit || detailPageSplit.length !== 2) {
                 return undefined;
             }
-            return `/books/${detailPageSplit[0].slice("book_".length)}/${detailPageSplit[1]}`;
+            return `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${detailPageSplit[0].slice("book_".length)}/${detailPageSplit[1]}`;
         }
         case "isaacBookIndexPage": {
-            return `/books/${entry.pageId?.slice(`book_`.length)}`;
+            return `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${entry.pageId?.slice(`book_`.length)}`;
         }
         case "isaacRevisionDetailPage": {
-            return `/revision/${entry.pageId}`;
+            return `/${documentTypePathPrefix[DOCUMENT_TYPE.REVISION]}/${entry.pageId}`;
         }
         case "page": {
-            return `/pages/${entry.pageId}`;
+            return `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${entry.pageId}`;
         }
     }
     return undefined;
