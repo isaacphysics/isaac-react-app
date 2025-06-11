@@ -24,7 +24,7 @@ $cloze-scrollbar-height: 4px;
   min-width: auto;
 }
 
-form:has(> .question-component) {
+form:has(> .question-component), div.quiz-question-container:has(> .question-component) {
   margin-bottom: 2rem;
   clear: both;
 
