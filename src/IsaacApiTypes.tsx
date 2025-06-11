@@ -245,6 +245,8 @@ export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
     linkedGameboards?: GameboardDTO[];
 }
 
+export type SidebarEntryType = "isaacBookDetailPage" | "isaacBookIndexPage" | "isaacRevisionDetailPage" | "page";
+
 export interface IsaacWildcardDTO extends ContentDTO {
     description?: string;
     url?: string;
@@ -253,7 +255,7 @@ export interface IsaacWildcardDTO extends ContentDTO {
 export interface SidebarEntryDTO extends ContentDTO {
     label?: string;
     pageId?: string;
-    pageType?: string;
+    pageType?: SidebarEntryType;
 }
 
 export interface SidebarGroupDTO extends SidebarEntryDTO {
