@@ -121,7 +121,7 @@ button {
     min-width: auto;
     position: absolute;
     right: 4px;
-    top: 2px;
+    top: calc((100% - 36px) / 2);
     width: 36px;
 
     &:hover {
