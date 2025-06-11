@@ -27,13 +27,19 @@ import {
     getHumanContext,
     above,
     useDeviceSize,
+    useQueryParams,
+    ListParams,
+    LEARNING_STAGE_TO_STAGES,
 } from "../../services";
 import {NOT_FOUND_TYPE, PageContextState, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
-import {useHistory, useLocation} from "react-router";
+import {useHistory} from "react-router";
 import { GlossarySidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
+import debounce from "lodash/debounce";
+
+type FilterParams = "subjects" | "stages" | "query";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -81,26 +87,24 @@ export function formatGlossaryTermId(rawTermId: string) {
 function tagByValue(values: string[], tags: Tag[]): Tag | undefined {
     return tags.filter(option => values.includes(option.id)).at(0);
 }
-function stageByValue(values: string[], tags: Stage[]): Stage | undefined {
-    return tags.filter(option => values.includes(option)).at(0);
+function stagesByValue(values: string[], tags: Stage[]): Stage[] | undefined {
+    const stages = tags.filter(option => values.includes(option));
+    return stages.length === 0 ? undefined : stages;
 }
 
 interface QueryStringResponse {
-    queryStages: Stage | undefined;
+    queryStages: Stage[] | undefined;
     querySubjects: Tag | undefined;
 }
-function processQueryString(query: string, pageContext?: PageContextState): QueryStringResponse {
+function processQueryString(query: ListParams<FilterParams>, pageContext?: PageContextState): QueryStringResponse {
     if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
         return {
-            queryStages: stageByValue([pageContext.stage.map(x => x === "11_14" ? "year_9" : x)[0]], stagesOrdered.slice(0,-1)), 
+            queryStages: stagesByValue(pageContext.stage.flatMap(x => LEARNING_STAGE_TO_STAGES[x]), stagesOrdered.slice(0,-1)), 
             querySubjects: tags.getById(pageContext.subject as TAG_ID)};
     }
 
-
-    const {subjects, stages} = queryString.parse(query);
-
-    const subjectItems = tagByValue(arrayFromPossibleCsv((subjects ?? []) as string[] | string), tags.allSubjectTags);
-    const stageItems = stageByValue(arrayFromPossibleCsv((stages ?? []) as string[] | string), stagesOrdered.slice(0,-1));
+    const subjectItems = tagByValue(arrayFromPossibleCsv((query.subjects ?? []) as string[] | string), tags.allSubjectTags);
+    const stageItems = stagesByValue(arrayFromPossibleCsv((query.stages ?? []) as string[] | string), stagesOrdered.slice(0,-1));
 
     return {
         queryStages: stageItems, querySubjects: subjectItems
@@ -112,19 +116,19 @@ const ALPHABET_HEADER_OFFSET = -65;
 
 export const Glossary = () => {
     const dispatch = useAppDispatch();
-    const location = useLocation();
     const history = useHistory();
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
+    const params = useQueryParams<FilterParams, false>(false);
     
-    const {queryStages, querySubjects} = processQueryString(location.search, pageContext);
+    const {queryStages, querySubjects} = processQueryString(params, pageContext);
 
-    const [searchText, setSearchText] = useState("");
+    const [searchText, setSearchText] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const subjects = tags.allSubjectTags.sort((a,b) => a.title.localeCompare(b.title));
     const stages: Stage[] = stagesOrdered.slice(0,-1);
     const [filterSubject, setFilterSubject] = useState<Tag | undefined>(querySubjects);
-    const [filterStages, setFilterStages] = useState<Stage[] | undefined>(queryStages ? [queryStages] : undefined);
+    const [filterStages, setFilterStages] = useState<Stage[] | undefined>(queryStages);
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useAppSelector(
         (state: AppState) => state && state.glossaryTerms?.map(
@@ -137,6 +141,12 @@ export const Glossary = () => {
         )
     );
 
+    const debouncedSearchHandler = useMemo(() =>
+        debounce((searchTerm: string) => {
+            setSearchText(searchTerm);
+        }, 500),
+    [setSearchText]);
+
     // Log on initial page load
     useEffect(() => {
         dispatch(logAction({type: "VIEW_GLOSSARY_PAGE"}));
@@ -145,19 +155,21 @@ export const Glossary = () => {
     useEffect(() => {
         if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
             setFilterSubject(tags.getById(pageContext.subject as TAG_ID));
-            const potentialStage = stageByValue([pageContext.stage.map(x => x === "11_14" ? "year_9" : x)[0]], stagesOrdered.slice(0,-1));
-            setFilterStages(potentialStage ? [potentialStage] : undefined);
+            const potentialStage = stagesByValue(pageContext.stage.flatMap(x => LEARNING_STAGE_TO_STAGES[x]), stagesOrdered.slice(0,-1));
+            setFilterStages(potentialStage);
         }
     }, [pageContext]);
 
     // Update url
     useEffect(() => {
-        if (pageContext?.subject && pageContext?.stage?.length) return;
         const params: {[key: string]: string} = {};
-        if (filterSubject) params.subjects = filterSubject?.id;
-        if (filterStages) params.stages = filterStages.join(',');
-        history.replace({search: queryString.stringify(params, {encode: false}), state: location.state, hash: location.hash});
-    }, [filterSubject, filterStages, pageContext]);
+        if (!pageContext?.subject || !pageContext?.stage?.length) {
+            if (filterSubject) params.subjects = filterSubject?.id;
+            if (filterStages) params.stages = filterStages.join(',');
+        }
+        if (searchText) params.query = searchText;
+        history.replace({search: queryString.stringify(params, {encode: false}), state: history.location.state, hash: history.location.hash});
+    }, [filterSubject, filterStages, searchText, pageContext]);
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } | undefined {
@@ -306,7 +318,7 @@ export const Glossary = () => {
 
             <SidebarLayout>
                 <GlossarySidebar 
-                    searchText={searchText} setSearchText={setSearchText} filterSubject={filterSubject} setFilterSubject={setFilterSubject}
+                    searchText={searchText} setSearchText={debouncedSearchHandler} filterSubject={filterSubject} setFilterSubject={setFilterSubject}
                     filterStages={filterStages} setFilterStages={setFilterStages} subjects={subjects} stages={stages} optionBar={optionBar}
                 />
                 <MainContent>
@@ -319,7 +331,7 @@ export const Glossary = () => {
                                         <Label for='terms-search' className='visually-hidden'>Search by term</Label>
                                         <Input
                                             id="terms-search" type="search" name="query" placeholder="Search by term" aria-label="Search by term"
-                                            value={searchText} onChange={e => setSearchText(e.target.value)}
+                                            value={searchText} onChange={e => debouncedSearchHandler(e.target.value)}
                                         />
                                     </Col>
                                     <Col className="mt-3 mt-md-0">
