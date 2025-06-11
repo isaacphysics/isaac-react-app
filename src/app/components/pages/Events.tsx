@@ -107,9 +107,9 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
 
     return <div>
         <Container>
-            <TitleAndBreadcrumb 
-                currentPageTitle={"Events"} 
-                help={pageHelp} 
+            <TitleAndBreadcrumb
+                currentPageTitle={"Events"}
+                help={pageHelp}
                 icon={{type: "hex", icon: "icon-events"}}
             />
             <SidebarLayout>
@@ -145,10 +145,6 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                                 {/* No Results */}
                                 {total === 0 && <div className="text-center">
                                     <p>Sorry, we cannot find any events that match your filter settings.</p>
-                                    {statusFilter === EventStatusFilter["My booked events"] && <p>
-                                        N.B. Events booked via Eventbrite may not appear here; for these if you have received email
-                                        confirmation you are booked.
-                                    </p>}
                                 </div>}
                             </div>;
                         }} />
