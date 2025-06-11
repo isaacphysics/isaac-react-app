@@ -200,6 +200,28 @@ export const Glossary = () => {
         return groupTerms(sortedAndFilteredTerms);
     }, [rawGlossaryTerms, filterTopic, filterSubject, filterStages, searchText]);
 
+    const subjectCounts = useMemo(() => {
+        const counts: { [key: string]: number } = {};
+        subjects.forEach(subject => {
+            counts[subject.id] = rawGlossaryTerms?.filter(term => term.tags?.includes(subject.id)).length ?? 0;
+        });
+        return counts;
+    }, [rawGlossaryTerms]);
+
+    const stageCounts = useMemo(() => {
+        const counts: {[key: string]: number} = {};
+        if (filterSubject) {
+            const subjectFilteredTerms = rawGlossaryTerms?.filter(term => term.tags?.includes(filterSubject.id));
+            subjectFilteredTerms?.forEach(term => {
+                term.stages?.forEach(stage => {
+                    counts[stage] = (counts[stage] ?? 0) + 1;
+                });
+            });
+            counts["all"] = subjectFilteredTerms?.length ?? 0;
+        }
+        return counts;
+    }, [rawGlossaryTerms, filterSubject]);
+
     /* Stores a reference to each glossary term component (specifically their inner paragraph tags) */
     const glossaryTermRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());
 
@@ -319,7 +341,8 @@ export const Glossary = () => {
             <SidebarLayout>
                 <GlossarySidebar 
                     searchText={searchText} setSearchText={debouncedSearchHandler} filterSubject={filterSubject} setFilterSubject={setFilterSubject}
-                    filterStages={filterStages} setFilterStages={setFilterStages} subjects={subjects} stages={stages} optionBar={optionBar}
+                    filterStages={filterStages} setFilterStages={setFilterStages} subjects={subjects} stages={stages} stageCounts={stageCounts}
+                    subjectCounts={subjectCounts} optionBar={optionBar}
                 />
                 <MainContent>
                     {(above['lg'](deviceSize) || isAda) && <> <div className="mt-1"/> {optionBar} </>}  

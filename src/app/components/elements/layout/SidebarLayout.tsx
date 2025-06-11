@@ -1389,11 +1389,14 @@ interface GlossarySidebarProps extends ContentSidebarProps {
     setFilterStages: React.Dispatch<React.SetStateAction<Stage[] | undefined>>;
     subjects: Tag[];
     stages: Stage[];
+    subjectCounts: { [key: string]: number; }
+    stageCounts: { [key: string]: number; }
 }
 
 export const GlossarySidebar = (props: GlossarySidebarProps) => {
-    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStages, setFilterStages, subjects, stages, optionBar, ...rest } = props;
-    
+    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStages, setFilterStages,
+        subjects, stages, subjectCounts, stageCounts, optionBar, ...rest } = props;
+
     const history = useHistory();
     const pageContext = useAppSelector(selectors.pageContext.context);
 
@@ -1413,6 +1416,12 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
 
     // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
     const [internalSearchText, setInternalSearchText] = useState(searchText);
+
+    // Deselect stage filters that no longer have results following a subject change
+    useEffect(() => {
+        const remainingStages = filterStages?.filter(stage => stageCounts[stage]);
+        setFilterStages(remainingStages?.length ? remainingStages : undefined);
+    }, [filterSubject]);
 
     return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
@@ -1434,7 +1443,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
                 <ul>
                     {subjects.map(subject => <li key={subject.id}>
                         <StyledTabPicker checkboxTitle={subject.title} data-bs-theme={subject.id}
-                            checked={filterSubject && filterSubject === subject}
+                            checked={filterSubject && filterSubject === subject} count={subjectCounts[subject.id]}
                             onChange={() => setFilterSubject(subject)}/>
                     </li>)}
                 </ul>
@@ -1447,12 +1456,12 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
                 <ul>
                     <li>
                         <StyledTabPicker checkboxTitle="All" data-bs-theme={filterSubject?.id}
-                            checked={!filterStages} onChange={() => setFilterStages(undefined)}/>
+                            checked={!filterStages} count={stageCounts["all"]} onChange={() => setFilterStages(undefined)}/>
                     </li>
                     <div className="section-divider-small"/>
-                    {stages.map(stage => <li key={stage}>
+                    {stages.filter(stage => stageCounts[stage]).map(stage => <li key={stage}>
                         <StyledTabPicker checkboxTitle={stageLabelMap[stage]} data-bs-theme={filterSubject?.id}
-                            checked={filterStages && filterStages.includes(stage)}
+                            checked={filterStages && filterStages.includes(stage)} count={stageCounts[stage]}
                             onChange={() => updateFilterStages(stage)}/>
                     </li>)}
                 </ul>
