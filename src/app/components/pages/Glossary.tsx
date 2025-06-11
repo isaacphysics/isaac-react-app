@@ -29,6 +29,7 @@ import {
     useDeviceSize,
     useQueryParams,
     ListParams,
+    LEARNING_STAGE_TO_STAGES,
 } from "../../services";
 import {NOT_FOUND_TYPE, PageContextState, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
@@ -98,7 +99,7 @@ interface QueryStringResponse {
 function processQueryString(query: ListParams<FilterParams>, pageContext?: PageContextState): QueryStringResponse {
     if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
         return {
-            queryStages: stagesByValue([pageContext.stage.map(x => x === "11_14" ? "year_9" : x)[0]], stagesOrdered.slice(0,-1)), 
+            queryStages: stagesByValue(pageContext.stage.flatMap(x => LEARNING_STAGE_TO_STAGES[x]), stagesOrdered.slice(0,-1)), 
             querySubjects: tags.getById(pageContext.subject as TAG_ID)};
     }
 
@@ -154,7 +155,7 @@ export const Glossary = () => {
     useEffect(() => {
         if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
             setFilterSubject(tags.getById(pageContext.subject as TAG_ID));
-            const potentialStage = stagesByValue([pageContext.stage.map(x => x === "11_14" ? "year_9" : x)[0]], stagesOrdered.slice(0,-1));
+            const potentialStage = stagesByValue(pageContext.stage.flatMap(x => LEARNING_STAGE_TO_STAGES[x]), stagesOrdered.slice(0,-1));
             setFilterStages(potentialStage);
         }
     }, [pageContext]);
