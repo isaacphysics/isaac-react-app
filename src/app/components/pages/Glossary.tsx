@@ -36,7 +36,7 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {useHistory} from "react-router";
 import { GlossarySidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 
 type FilterParams = "subjects" | "stages" | "query";
 
