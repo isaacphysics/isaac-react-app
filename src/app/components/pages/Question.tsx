@@ -107,11 +107,11 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                         <MainContent>
                             {!preview && <CanonicalHrefElement />}
 
-                            <div className={classNames("no-print d-flex align-items-center", siteSpecific("my-3", "mt-3"))}>
+                            <div className={classNames("d-flex align-items-center", siteSpecific("my-3", "mt-3"))}>
                                 {isAda && <>
                                     {pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
                                     <EditContentButton doc={doc} />
-                                    <div className="d-flex ms-auto">
+                                    <div className="no-print d-flex ms-auto">
                                         <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
                                         <PrintButton questionPage />
                                         <ReportButton pageId={questionId}/>
@@ -122,7 +122,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                         <h2 className="text-theme-dark"><Markup encoding="latex">{generateQuestionTitle(doc)}</Markup></h2>
                                         {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
                                     </div>
-                                    <div className="d-flex gap-2 ms-auto">
+                                    <div className="no-print d-flex gap-2 ms-auto">
                                         <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
                                         <PrintButton questionPage />
                                         <ReportButton pageId={questionId}/>
