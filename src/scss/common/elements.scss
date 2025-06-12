@@ -283,13 +283,14 @@ iframe.email-html {
 
 .collapsible-list-container {
   border-top: 2px solid $gray-107;
-
-  &:last-of-type {
-    border-bottom: 2px solid $gray-107;
-  }
-
   img {
     transition: transform 0.1s ease;
+  }
+}
+
+:has(> .collapsible-list-container) {
+  &:last-of-type {
+    border-bottom: 2px solid $gray-107;
   }
 }
 
@@ -323,7 +324,7 @@ iframe.email-html {
 
   &:is(a):hover {
     color: color-mix(in srgb, var(--pill-text-color, black), black 20%);
-    background-color: color-mix(in hsl, var(--pill-bg-color, var(--subject-color-50)), black 5%);
+    background-color: color-mix(in hsl, var(--pill-bg-color, $bg-color), black 5%);
   }
 }
 

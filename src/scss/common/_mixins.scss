@@ -5,6 +5,7 @@
 // $position: when playing with pseudo element, you mainly use `position: absolute` (default value).
 // $display: when playing with pseudo element, you mainly use `display: block` (default value).
 @use "sass:math";
+@use "sass:color";
 
 @mixin pseudo-element($content: '', $position: absolute, $display: block) {
   content: $content;
@@ -220,4 +221,65 @@ $viewport-sizes: (
   @if $mask-size != none {
     mask-size: $mask-size;
   }
+}
+
+// modified from https://css-tricks.com/books/greatest-css-tricks/scroll-shadows/
+@mixin vertical-scroll-shadow($background-color: white, $shadow-color: rgba(0, 0, 0, 0.2)) {
+  background:
+    linear-gradient(
+      $background-color 30%,
+      color.change($background-color, $alpha: 0)
+    ) center top,
+    
+    linear-gradient(
+      color.change($background-color, $alpha: 0),
+      $background-color 70%
+    ) center bottom,
+
+    radial-gradient(
+      farthest-side at 50% 0,
+      $shadow-color,
+      color.change($shadow-color, $alpha: 0)
+    ) center top,
+
+    radial-gradient(
+      farthest-side at 50% 100%,
+      $shadow-color,
+      color.change($shadow-color, $alpha: 0)
+    ) center bottom;
+
+  background-repeat: no-repeat;
+  background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@mixin horizontal-scroll-shadow($background-color: white, $shadow-color: rgba(0, 0, 0, 0.2)) {
+  background:
+    linear-gradient(
+      to right,
+      $background-color 30%,
+      color.change($background-color, $alpha: 0)
+    ) left center,
+    
+    linear-gradient(
+      to right,
+      color.change($background-color, $alpha: 0),
+      $background-color 70%
+    ) right center,
+
+    radial-gradient(
+      farthest-side at 0 50%,
+      $shadow-color,
+      color.change($shadow-color, $alpha: 0)
+    ) left center,
+
+    radial-gradient(
+      farthest-side at 100% 50%,
+      $shadow-color,
+      color.change($shadow-color, $alpha: 0)
+    ) right center;
+
+  background-repeat: no-repeat;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
 }

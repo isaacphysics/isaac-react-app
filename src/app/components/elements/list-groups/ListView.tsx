@@ -1,40 +1,25 @@
 import React from "react";
-import { AbstractListViewItem, AbstractListViewItemProps, AbstractListViewItemState, ListViewTagProps } from "./AbstractListViewItem";
+import { AbstractListViewItem, AbstractListViewItemProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, PATHS, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
-import { TitleIconProps } from "../PageTitle";
 import { AffixButton } from "../AffixButton";
-import { GameboardDTO, QuizSummaryDTO } from "../../../../IsaacApiTypes";
+import { ContentSummaryDTO, GameboardDTO, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
 import { selectors, showQuizSettingModal, useAppDispatch, useAppSelector } from "../../../state";
 import classNames from "classnames";
 
-export interface ListViewCardProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "linkTags" | "isCard"> {
-    item: ShortcutResponse;
-    icon?: TitleIconProps;
-    subject?: Subject;
-    linkTags?: ListViewTagProps[];
-    state?: AbstractListViewItemState;
-    url?: string;
-}
+type ListViewCardItemProps = Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}>;
 
-export const ListViewCard = ({item, icon, subject, linkTags, state, ...rest}: ListViewCardProps) => {
-    return <AbstractListViewItem
-        icon={icon}
-        title={item.title ?? ""}
-        subject={subject}
-        subtitle={item.subtitle}
-        linkTags={linkTags}
-        state={state}  
-        isCard
-        {...rest}
+export const ListViewCardItem = (props: ListViewCardItemProps) => {
+    return <AbstractListViewItem 
+        {...props}
     />;
 };
 
-interface QuestionListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "tags" | "supersededBy" | "subtitle" | "breadcrumb" | "status" | "url" | "audienceViews"> {
-    item: ShortcutResponse;
+interface QuestionListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
+    item: ContentSummaryDTO;
 }
 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
@@ -60,8 +45,8 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     />;
 };
 
-interface ConceptListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "url"> {
-    item: ShortcutResponse;
+interface ConceptListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
+    item: ContentSummaryDTO;
 }
 
 export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) => {
@@ -79,7 +64,7 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
     />;
 };
 
-interface EventListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "url"> {
+interface EventListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
     item: ShortcutResponse;
 }
 
@@ -97,7 +82,7 @@ export const EventListViewItem = ({item, ...rest}: EventListViewItemProps) => {
     />;
 };
 
-interface QuizListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "previewQuizIrl" | "quizButton"> {
+interface QuizListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "quiz", alviLayout: "list"}> {
     item: QuizSummaryDTO;
     isQuizSetter?: boolean;
     useViewQuizLink?: boolean;
@@ -123,8 +108,16 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
     />;
 };
 
-interface QuestionDeckListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "breadcrumb" | "url"> {
-    item: GameboardDTO;
+type ALVIGameboard = GameboardDTO & {type?: string};
+
+export const convertToALVIGameboard = (gameboard: GameboardDTO): ALVIGameboard => {
+    return {...gameboard, type: SEARCH_RESULT_TYPE.GAMEBOARD};
+};
+export const convertToALVIGameboards = (gameboards: GameboardDTO[]): ALVIGameboard[] => {
+    return gameboards.map(convertToALVIGameboard);
+};
+interface QuestionDeckListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "gameboard", alviLayout: "list"}> {
+    item: ALVIGameboard;
 }
 
 export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewItemProps) => {
@@ -137,21 +130,22 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
 
     const questionSubjects = tags.allSubjectTags.filter(s => Object.keys(questionTagsCountMap || {}).includes(s.id));
     const questionTags = Object.entries(questionTagsCountMap || {}).filter(([tagId]) => tags.allTopicTags.includes(tags.getById(tagId as TAG_ID))).sort((a, b) => b[1] - a[1]).map(([tagId]) => tagId);
-
     const breadcrumb = questionTags.map(tagId => tags.getById(tagId as TAG_ID)?.title).slice(0, 3);
+    
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
         icon={{type: "hex", icon: "icon-question-deck", size: "lg"}}
-        title={item.title ?? ""}
+        title={item.title ?? "no title"}
         subject={questionSubjects.length === 1 ? questionSubjects[0].id as Subject : undefined}
         breadcrumb={breadcrumb}
         url={url}
+        board={item}
         {...rest}
     />;
 };
 
-interface QuickQuizListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "breadcrumb" | "status" | "quizTag" | "url" | "audienceViews"> {
+interface QuickQuizListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
     item: ShortcutResponse;
 }
 
@@ -175,7 +169,7 @@ export const QuickQuizListViewItem = ({item, ...rest}: QuickQuizListViewItemProp
     />;
 };
 
-interface GenericListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "tags" | "supersededBy" | "breadcrumb" | "status" | "url" | "audienceViews"> {
+interface GenericListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
     item: ShortcutResponse;
 }
 
@@ -200,7 +194,7 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
     />;
 };
 
-interface ShortcutListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "title" | "subject" | "subtitle" | "tags" | "supersededBy" | "breadcrumb" | "status" | "url" | "audienceViews"> {
+interface ShortcutListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
     item: ShortcutResponse;
 }
 
@@ -225,7 +219,7 @@ export const ShortcutListViewItem = ({item, ...rest}: ShortcutListViewItemProps)
     />;
 };
 
-interface BookIndexListViewItemProps extends Omit<AbstractListViewItemProps, "icon" | "url"> {
+interface BookIndexListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
     item: ShortcutResponse;
 }
 
@@ -242,78 +236,113 @@ export const BookIndexListViewItem = ({item, ...rest}: BookIndexListViewItemProp
     />;
 };
 
-interface BookDetailListViewItemProps extends AbstractListViewItemProps {
+interface BookDetailListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
     item: ShortcutResponse;
 }
 
 export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemProps) => {
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const itemBook = ISAAC_BOOKS.find((book) => item.tags?.includes(book.tag));
-    const itemLabel = itemBook ? item.id?.slice(`book_${itemBook.tag}_`.length) : undefined;
 
     return <AbstractListViewItem
         {...item}
         icon={{type: "hex", icon: "icon-generic", size: "lg"}}
-        title={`${itemLabel ? (itemLabel?.toUpperCase() + " ") : ""}${item.title}`}
+        title={`${item.subtitle ? (item.subtitle + " ") : ""}${item.title}`}
         subtitle={itemBook?.title}
-        url={itemBook ? `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${itemBook.tag}/${itemLabel}` : undefined}
+        url={itemBook ? `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${item.id?.replace(BOOK_DETAIL_ID_SEPARATOR, "/").slice("book_".length)}` : undefined}
         subject={itemSubject}
         state={undefined}
         {...rest}
     />;
 };
 
+export type ListViewCardProps = Omit<Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}>, "alviType" | "alviLayout">;
+
 export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & {showBlanks?: boolean} & ListGroupProps) => {
     const { cards, showBlanks, ...rest } = props;
     return <ListGroup {...rest} className={classNames("list-view-card-container link-list list-group-links p-0 m-0 flex-row row-cols-1 row-cols-lg-2 row", rest.className)}>
-        {cards.map((card, index) => card ? <ListViewCard key={index} {...card}/> : (showBlanks ? <ListGroupItem key={index}/> : null))}
+        {cards.map((card, index) => card ? <ListViewCardItem {...card} key={index} alviType="item" alviLayout="card"/> : (showBlanks ? <ListGroupItem key={index}/> : null))}
     </ListGroup>;
 };
 
 type ListViewItemProps = 
-    | Omit<ListViewCardProps, "item"> 
-    | Omit<QuestionListViewItemProps, "item"> 
-    | Omit<ConceptListViewItemProps, "item"> 
-    | Omit<EventListViewItemProps, "item"> 
-    | Omit<QuizListViewItemProps, "item"> 
-    | Omit<QuestionDeckListViewItemProps, "item"> 
-    | Omit<QuickQuizListViewItemProps, "item">
-    | Omit<GenericListViewItemProps, "item"> 
-    | Omit<ShortcutListViewItemProps, "item">;
+    | QuestionListViewItemProps
+    | ConceptListViewItemProps
+    | EventListViewItemProps
+    | QuizListViewItemProps
+    | QuestionDeckListViewItemProps
+    | QuickQuizListViewItemProps
+    | GenericListViewItemProps
+    | ShortcutListViewItemProps
+    | BookIndexListViewItemProps
+    | BookDetailListViewItemProps;
 
-interface ListViewProps {
-    items: ShortcutResponse[];
+type ListViewProps<T, G extends "item" | "gameboard" | "quiz"> = {
     className?: string;
-}
+    fullWidth?: boolean;
+} & (
+    {
+        items: Required<T> extends Required<Extract<ListViewItemProps, {alviType: G}>['item']> ? T[] : never;
+        type: G;
+    } 
+    & Omit<Extract<ListViewItemProps, {alviType: G}>, "item" | keyof AbstractListViewItemProps>
+);
 
-export const ListView = ({items, className, ...rest}: ListViewProps & ListViewItemProps) => {
+export const ListView = <T extends {type?: string}, G extends "item" | "gameboard" | "quiz">(props: ListViewProps<T, G>) => {
+    const {items, className, type, ...rest} = props;
+
+    const failedToRender = (item: typeof items[number]) => {
+        // Do not render an item if there is no matching DOCUMENT_TYPE
+        console.error("Not able to display item as a ListViewItem: ", item);
+        return null;
+    };
+
     return <ListGroup className={`link-list list-group-links ${className}`}>
-        {items.map((item, index) => {
-            switch (item.type) {
-                case (DOCUMENT_TYPE.GENERIC):
-                    return <GenericListViewItem key={index} {...rest} item={item}/>;
-                case (SEARCH_RESULT_TYPE.SHORTCUT):
-                    return <ShortcutListViewItem key={index} {...rest} item={item}/>;
-                case (DOCUMENT_TYPE.QUESTION):
-                case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
-                    return <QuestionListViewItem key={index} {...rest} item={item}/>;
-                case (DOCUMENT_TYPE.CONCEPT):
-                    return <ConceptListViewItem key={index} {...rest} item={item}/>;
-                case (DOCUMENT_TYPE.EVENT):
-                    return <EventListViewItem key={index} {...rest} item={item}/>;
-                case (DOCUMENT_TYPE.QUIZ):
-                    return <QuizListViewItem key={index} {...rest} item={item}/>;
-                case SEARCH_RESULT_TYPE.GAMEBOARD:
-                    return <QuestionDeckListViewItem key={index} {...rest} item={item}/>;
-                case DOCUMENT_TYPE.BOOK_INDEX_PAGE:
-                    return <BookIndexListViewItem key={index} {...rest} item={item}/>;
-                case SEARCH_RESULT_TYPE.BOOK_DETAIL_PAGE:
-                    return <BookDetailListViewItem key={index} {...rest} item={item}/>;
+        {(() => {
+            switch (type) {
+                case "item":
+                    return items.map((item, index) => {
+                        switch (item.type) {
+                            case (DOCUMENT_TYPE.GENERIC):
+                                return <GenericListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                            case (SEARCH_RESULT_TYPE.SHORTCUT):
+                                return <ShortcutListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                            case (DOCUMENT_TYPE.QUESTION):
+                            case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
+                                return <QuestionListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                            case (DOCUMENT_TYPE.CONCEPT):
+                                return <ConceptListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                            case (DOCUMENT_TYPE.EVENT):
+                                return <EventListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                            case DOCUMENT_TYPE.BOOK_INDEX_PAGE:
+                                return <BookIndexListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                            case SEARCH_RESULT_TYPE.BOOK_DETAIL_PAGE:
+                                return <BookDetailListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                            default:
+                                return failedToRender(item);
+                        }
+                    });
+                case "gameboard":
+                    return items.map((item, index) => {
+                        switch (item.type) {
+                            case SEARCH_RESULT_TYPE.GAMEBOARD:
+                                return <QuestionDeckListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                            default:
+                                return failedToRender(item);
+                        }
+                    });
+                case "quiz":
+                    return items.map((item, index) => {
+                        switch (item.type) {
+                            case (DOCUMENT_TYPE.QUIZ):
+                                return <QuizListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                            default:
+                                return failedToRender(item);
+                        }
+                    });
                 default:
-                    // Do not render this item if there is no matching DOCUMENT_TYPE
-                    console.error("Not able to display item as a ListViewItem: ", item);
                     return null;
             }
-        })}
+        })()}
     </ListGroup>;
 };

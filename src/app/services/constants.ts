@@ -604,6 +604,8 @@ export const ISAAC_BOOKS_BY_TAG: {[tag in BookTag]: BookInfo} = ISAAC_BOOKS.redu
     return acc;
 }, {} as {[tag in BookTag]: BookInfo});
 
+export const BOOK_DETAIL_ID_SEPARATOR = "__";
+
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
@@ -929,6 +931,7 @@ export enum DOCUMENT_TYPE {
     QUESTION = "isaacQuestionPage",
     FAST_TRACK_QUESTION = "isaacFastTrackQuestionPage",
     BOOK_INDEX_PAGE = "isaacBookIndexPage",
+    REVISION = "isaacRevisionDetailPage",
     EVENT = "isaacEventPage",
     TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
@@ -949,6 +952,7 @@ export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.QUESTION]: "Questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
     [DOCUMENT_TYPE.BOOK_INDEX_PAGE]: "Books",
+    [DOCUMENT_TYPE.REVISION]: "Revision",
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
     [DOCUMENT_TYPE.GENERIC]: "Other pages",
@@ -961,6 +965,7 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.QUESTION]: "questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "questions",
     [DOCUMENT_TYPE.BOOK_INDEX_PAGE]: "books",
+    [DOCUMENT_TYPE.REVISION]: "revision",
     [DOCUMENT_TYPE.EVENT]: "events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics",
     [DOCUMENT_TYPE.QUIZ]: "quiz",
@@ -1012,6 +1017,7 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "Assignment Progress", to: "/assignment_progress"},
     {title: "Markbook", to: "/my_markbook"}
 );
+export const BOOKS_CRUMB = {title: "Books", to: "/books"};
 
 export const UserFacingRole: {[role in UserRole]: string} = {
     ADMIN: "admin",

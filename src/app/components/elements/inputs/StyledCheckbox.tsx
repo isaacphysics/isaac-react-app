@@ -10,7 +10,7 @@ import classNames from "classnames";
 
 export const StyledCheckbox = (props: InputProps & {partial?: boolean}) => {
 
-    const {label, ignoreLabelHover, className, bsSize, partial, ...rest} = props;
+    const {label, ignoreLabelHover, className, bsSize, partial, invalid, ...rest} = props;
 
     const [checked, setChecked] = useState(props.checked ?? false);
     const id = useMemo(() => {return (props.id ?? "") + "-" + v4();}, [props.id]);
@@ -24,7 +24,7 @@ export const StyledCheckbox = (props: InputProps & {partial?: boolean}) => {
         setChecked(props.checked ?? false);
     }, [props.checked]);
 
-    return <div className={classNames("styled-checkbox-wrapper", {"is-invalid": props.invalid, "checkbox-small": bsSize === "sm"})}>
+    return <div className={classNames("styled-checkbox-wrapper", {"is-invalid": invalid, "checkbox-small": bsSize === "sm"})}>
         <div className={classNames({"me-2 my-2": label})}>
             {isAda && checked && <div className="tick"/>}
             <input {...rest} id={id} type="checkbox" className={classNames(className ?? "", "d-block", {"checked": checked, "icon-checkbox-off": !partial && !checked, "icon-checkbox-selected": !partial && checked})}

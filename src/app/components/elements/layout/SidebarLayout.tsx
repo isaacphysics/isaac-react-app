@@ -1,12 +1,13 @@
-import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
+import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useState } from "react";
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacBookIndexPageDTO, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, Stage } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, SidebarGroupDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
-    extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, stageLabelMap} from "../../../services";
+    stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, 
+    isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, DOCUMENT_TYPE, documentTypePathPrefix, BOOK_DETAIL_ID_SEPARATOR} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -29,6 +30,7 @@ import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { getProgressIcon } from "../../pages/Gameboard";
 import { tags as tagsService } from "../../../services";
 import { Markup } from "../markup";
+import { History } from "history";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -59,7 +61,7 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
         <Link to={link} className="py-2">
             {isDefined(gameboardId) ? <span className={classNames(getProgressIcon(question).icon, "mt-1 mx-2")} style={{minWidth: "16px"}}/> : <i className="icon icon-question-thick"/>}
             <div className="d-flex flex-column w-100">
-                <span className="hover-underline link-title">{question.title}</span>
+                <span className="hover-underline link-title"><Markup encoding="latex">{question.title}</Markup></span>
                 <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
             </div>
         </Link>
@@ -73,7 +75,7 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Isaa
     return <li key={concept.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, concept.tags ?? [])}>
         <Link to={`/concepts/${concept.id}`} className="py-2">
             <i className="icon icon-concept-thick"/>
-            <span className="hover-underline link-title">{concept.title}</span>
+            <span className="hover-underline link-title"><Markup encoding="latex">{concept.title}</Markup></span>
         </Link>
     </li>;
 };
@@ -109,10 +111,10 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
     return <>
         {above['lg'](deviceSize) 
-            ? <Col tag="aside" data-testId="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
+            ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
                 <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
-                    {!hideButton && <AffixButton data-testId="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
+                    {!hideButton && <AffixButton data-testid="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
                         affix: "icon-sidebar", 
                         position: "prefix", 
                         type: "icon"
@@ -177,9 +179,7 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps) => {
 
     const [relatedQuestionsForContextStage, relatedQuestionsForOtherStages] = partition(relatedQuestions, q => q.audience && determineAudienceViews(q.audience).some(v => v.stage === pageContextStage));
 
-    const sidebarRef = useRef<HTMLDivElement>(null);
-
-    return <NavigationSidebar ref={sidebarRef}>
+    return <NavigationSidebar>
         <div className="section-divider"/>
         <h5>Related concepts</h5>
         {relatedConcepts && relatedConcepts.length > 0
@@ -280,8 +280,14 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
 
         return <>
-            <div className="mb-2">Subject{subjects.length > 1 && "s"}: {subjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}</div>
-            <div>Topic{subjects.length > 1 && "s"}: {topics.map(t => <span key={t} className="badge rounded-pill bg-theme me-1">{t}</span>)}</div>
+            <div className="mb-2">
+                Subject{subjects.length > 1 && "s"}:
+                <ul className="d-inline ms-1">{subjects.map(s => <li className="d-inline" key={s}><Pill title={HUMAN_SUBJECTS[s]} theme={s}/></li>)}</ul>
+            </div>
+            <div className="mb-2">
+                Topic{subjects.length > 1 && "s"}:
+                <ul className="d-inline ms-1">{topics.map(t => <li key={t} className="d-inline"><Pill title={t}/></li>)}</ul>
+            </div>
         </>;
     };
 
@@ -305,7 +311,7 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
             <div className={multipleAssignments ? "section-divider-bold" : "section-divider"}/>
             <h5>Assignment{multipleAssignments && "s"}</h5>
             {multipleAssignments && <div>You have multiple assignments for this question deck.</div>}
-            {assignments.map(a => <AssignmentDetails key={a.id} {...a} />)}
+            <ul>{assignments.map(a => <li key={a.id}><AssignmentDetails {...a} /></li>)}</ul>
         </>}
         <div className="section-divider"/>
         <CompletionKey/>
@@ -408,25 +414,29 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
 
             <div className="d-flex flex-column">
                 <h5>Filter by topic</h5>
-                <AllFiltersCheckbox 
-                    conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag} 
-                    forceEnabled={applicableTags.filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0).length === 0}
-                />
-                <div className="section-divider-small"/>
-                {applicableTags
-                    .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
-                    .map(tag => 
-                        <FilterCheckbox 
-                            key={tag.id} 
-                            tag={tag} 
-                            conceptFilters={conceptFilters} 
-                            setConceptFilters={setConceptFilters} 
-                            tagCounts={tagCounts} 
-                            incompatibleTags={[subjectTag]} 
-                            baseTag={subjectTag}
+                <ul>
+                    <li>
+                        <AllFiltersCheckbox 
+                            conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag} 
+                            forceEnabled={applicableTags.filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0).length === 0}
                         />
-                    )
-                }
+                    </li>
+                    <div className="section-divider-small"/>
+                    {applicableTags
+                        .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
+                        .map(tag => <li key={tag.id}>
+                            <FilterCheckbox 
+                                key={tag.id} 
+                                tag={tag} 
+                                conceptFilters={conceptFilters} 
+                                setConceptFilters={setConceptFilters} 
+                                tagCounts={tagCounts} 
+                                incompatibleTags={[subjectTag]} 
+                                baseTag={subjectTag}
+                            /></li>
+                        )
+                    }
+                </ul>
             </div>
         </search>
     </ContentSidebar>;
@@ -439,7 +449,7 @@ interface GenericConceptsSidebarProps extends ConceptListSidebarProps {
 }
 
 export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
-    const { searchText, setSearchText, conceptFilters, setConceptFilters, tagCounts, searchStages, setSearchStages, stageCounts, ...rest } = props;
+    const { searchText, setSearchText, conceptFilters, setConceptFilters, tagCounts, searchStages, setSearchStages, stageCounts, applicableTags: _applicableTags, ...rest } = props;
 
     const updateSearchStages = (stage: Stage) => {
         if (searchStages.includes(stage)) {
@@ -471,30 +481,32 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
             
             <div className="d-flex flex-column">
                 <h5>Filter by subject and topic</h5>
-                {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
-                    const subjectTag = tags.getById(subject as TAG_ID);
-                    const descendentTags = tags.getDirectDescendents(subjectTag.id);
-                    const isSelected = conceptFilters.includes(subjectTag) || descendentTags.some(tag => conceptFilters.includes(tag));
-                    const isPartial = descendentTags.some(tag => conceptFilters.includes(tag)) && descendentTags.some(tag => !conceptFilters.includes(tag));
-                    return <div key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
-                        <FilterCheckbox 
-                            checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
-                            setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
-                            partial partiallySelected={descendentTags.some(tag => conceptFilters.includes(tag))} // not quite isPartial; this is also true if all descendents selected
-                            className={classNames("icon", {"icon-checkbox-off": !isSelected, "icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
-                        />
-                        {isSelected && <div className="ms-3 ps-2">
-                            {descendentTags
-                                .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0 || conceptFilters.includes(tag))
-                                // .sort((a, b) => tagCounts ? tagCounts[b.id] - tagCounts[a.id] : 0)
-                                .map((tag, j) => <FilterCheckbox key={j} 
-                                    checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters} 
-                                    setConceptFilters={setConceptFilters} tagCounts={tagCounts} incompatibleTags={[subjectTag]}
-                                />)
-                            }
-                        </div>}
-                    </div>;
-                })}
+                <ul>
+                    {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
+                        const subjectTag = tags.getById(subject as TAG_ID);
+                        const descendentTags = tags.getDirectDescendents(subjectTag.id);
+                        const isSelected = conceptFilters.includes(subjectTag) || descendentTags.some(tag => conceptFilters.includes(tag));
+                        const isPartial = descendentTags.some(tag => conceptFilters.includes(tag)) && descendentTags.some(tag => !conceptFilters.includes(tag));
+                        return <li key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
+                            <FilterCheckbox 
+                                checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
+                                setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
+                                partial partiallySelected={descendentTags.some(tag => conceptFilters.includes(tag))} // not quite isPartial; this is also true if all descendents selected
+                                className={classNames("icon", {"icon-checkbox-off": !isSelected, "icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
+                            />
+                            {isSelected && <ul className="ms-3 ps-2">
+                                {descendentTags
+                                    .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0 || conceptFilters.includes(tag))
+                                    // .sort((a, b) => tagCounts ? tagCounts[b.id] - tagCounts[a.id] : 0)
+                                    .map((tag, j) => <li key={j}>
+                                        <FilterCheckbox checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters} 
+                                            setConceptFilters={setConceptFilters} tagCounts={tagCounts} incompatibleTags={[subjectTag]}/>
+                                    </li>)
+                                }
+                            </ul>}
+                        </li>;
+                    })}
+                </ul>
                 <div className="section-divider"/>
                 <h5>Filter by stage</h5>
                 <ul className="ps-2">
@@ -586,65 +598,67 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
-        <h5>Search practice tests</h5>
-        <Input type="search" placeholder="e.g. Challenge" value={filterText} className="search--filter-input my-3"
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)} />
+        <search>
+            <h5>Search practice tests</h5>
+            <Input type="search" placeholder="e.g. Challenge" value={filterText} className="search--filter-input my-3"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)} />
 
-        {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
-            <div className="section-divider"/>
-            <h5>Filter by subject and topic</h5>
-            <ul>
-                {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
-                    const subjectTag = tags.getById(subject as TAG_ID);
-                    const descendentTags = tags.getDirectDescendents(subjectTag.id);
-                    const isSelected = filterTags?.includes(subjectTag) || descendentTags.some(tag => filterTags?.includes(tag));
-                    const isPartial = descendentTags.some(tag => filterTags?.includes(tag)) && descendentTags.some(tag => !filterTags?.includes(tag));
-                    return <li key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
-                        <FilterCheckbox 
-                            checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={filterTags as Tag[]} 
-                            setConceptFilters={setFilterTags} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
-                            partiallySelected={descendentTags.some(tag => filterTags?.includes(tag))}
-                            className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
-                        />
-                        {isSelected && <ul className="ms-3 ps-2">
-                            {descendentTags.filter(tag => tagCounts[tag.id] > 0)
-                                .map((tag, j) => <li key={j}>
-                                    <FilterCheckbox
-                                        checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={filterTags as Tag[]} 
-                                        setConceptFilters={setFilterTags} tagCounts={tagCounts} incompatibleTags={[subjectTag]}
-                                    />
-                                </li>)}
-                        </ul>}
-                    </li>;
-                })}
-            </ul>
-        </>}
+            {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
+                <div className="section-divider"/>
+                <h5>Filter by subject and topic</h5>
+                <ul>
+                    {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
+                        const subjectTag = tags.getById(subject as TAG_ID);
+                        const descendentTags = tags.getDirectDescendents(subjectTag.id);
+                        const isSelected = filterTags?.includes(subjectTag) || descendentTags.some(tag => filterTags?.includes(tag));
+                        const isPartial = descendentTags.some(tag => filterTags?.includes(tag)) && descendentTags.some(tag => !filterTags?.includes(tag));
+                        return <li key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
+                            <FilterCheckbox 
+                                checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={filterTags as Tag[]} 
+                                setConceptFilters={setFilterTags} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
+                                partiallySelected={descendentTags.some(tag => filterTags?.includes(tag))}
+                                className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
+                            />
+                            {isSelected && <ul className="ms-3 ps-2">
+                                {descendentTags.filter(tag => tagCounts[tag.id] > 0)
+                                    .map((tag, j) => <li key={j}>
+                                        <FilterCheckbox
+                                            checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={filterTags as Tag[]} 
+                                            setConceptFilters={setFilterTags} tagCounts={tagCounts} incompatibleTags={[subjectTag]}
+                                        />
+                                    </li>)}
+                            </ul>}
+                        </li>;
+                    })}
+                </ul>
+            </>}
 
-        {pageContext?.subject && fields.filter(tag => tagCounts[tag.id] > 0).length > 0 && <>
-            <div className="section-divider"/>
-            <h5>Filter by topic</h5>
-            <ul className="ps-2">
-                {fields.filter(tag => tagCounts[tag.id] > 0)
-                    .map((tag, j) => <li key={j} >
-                        <StyledTabPicker checkboxTitle={tag.title} checked={filterTags?.includes(tag)}
-                            count={tagCounts[tag.id]} onInputChange={() => updateFilterTags(tag)}/>
-                    </li>)}
-            </ul>
-        </>}
+            {pageContext?.subject && fields.filter(tag => tagCounts[tag.id] > 0).length > 0 && <>
+                <div className="section-divider"/>
+                <h5>Filter by topic</h5>
+                <ul className="ps-2">
+                    {fields.filter(tag => tagCounts[tag.id] > 0)
+                        .map((tag, j) => <li key={j} >
+                            <StyledTabPicker checkboxTitle={tag.title} checked={filterTags?.includes(tag)}
+                                count={tagCounts[tag.id]} onInputChange={() => updateFilterTags(tag)}/>
+                        </li>)}
+                </ul>
+            </>}
 
-        {!isSingleStageContext(pageContext) && getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).length > 0 && <>
-            <div className="section-divider"/>
-            <h5>Filter by stage</h5>
-            <ul className="ps-2">
-                {getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).map((stage, i) =>
-                    <li key={i}>
-                        <StyledCheckbox checked={filterStages?.includes(stage.value)}
-                            label={<>{stage.label} {tagCounts && <span className="text-muted">({stageCounts[stage.label]})</span>}</>}
-                            color="theme" data-bs-theme={filterTags?.length === 1 ? filterTags[0].id : undefined}
-                            onChange={() => {updateFilterStages(stage.value);}}/>
-                    </li>)}
-            </ul>
-        </>}
+            {!isSingleStageContext(pageContext) && getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).length > 0 && <>
+                <div className="section-divider"/>
+                <h5>Filter by stage</h5>
+                <ul className="ps-2">
+                    {getFilteredStageOptions().filter(s => stageCounts[s.label] > 0).map((stage, i) =>
+                        <li key={i}>
+                            <StyledCheckbox checked={filterStages?.includes(stage.value)}
+                                label={<>{stage.label} {tagCounts && <span className="text-muted">({stageCounts[stage.label]})</span>}</>}
+                                color="theme" data-bs-theme={filterTags?.length === 1 ? filterTags[0].id : undefined}
+                                onChange={() => {updateFilterStages(stage.value);}}/>
+                        </li>)}
+                </ul>
+            </>}
+        </search>
 
         <div className="section-divider"/>
         <div className="sidebar-help">
@@ -763,12 +777,13 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                     </Input>
                     <div className="section-divider"/>
                     <h5 className="mb-4">Filter by status</h5>
-                    <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
-                    <div className="section-divider-small"/>
-                    {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <AssignmentStatusCheckbox 
-                        key={state} status={state} count={assignmentCountByStatus?.[state]}
-                        statusFilter={statusFilter} setStatusFilter={setStatusFilter} 
-                    />)}
+                    <ul>
+                        <li><AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/></li>
+                        <div className="section-divider-small"/>
+                        {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <li key={state}>
+                            <AssignmentStatusCheckbox status={state} count={assignmentCountByStatus?.[state]} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
+                        </li>)}
+                    </ul>
                     <h5 className="mt-4 mb-3">Filter by group</h5>
                     <Input type="select" value={groupFilter} onChange={e => setGroupFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentGroups(assignments)].map(group => <option key={group} value={group}>{group}</option>)}
@@ -942,7 +957,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon-correct"
             : sectionStates[section] === SectionProgress.STARTED ? "icon-in-progress"
-                : "";
+                : "icon-not-started";
     };
 
     const switchToPage = (page: string) => {
@@ -958,8 +973,14 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
         return <ContentSidebar buttonTitle={hasSections ? "Sections" : "Details"}>
             <div className="section-divider"/>
             <h5 className="mb-3">Test</h5>
-            <div className="mb-2">Subject{subjects?.length > 1 && "s"}: {subjects.map(s => <Pill key={s.id} title={s.title} theme={s.id}/>)}</div>
-            <div className="mb-2">Topic{topicsAndFields?.length > 1 && "s"}: {topicsAndFields.map(e => <Pill key={e.id} title={e.title} theme="neutral"/>)}</div>
+            <div className="mb-2">
+                Subject{subjects?.length > 1 && "s"}:
+                <ul className="d-inline ms-1">{subjects.map(s => <li className="d-inline" key={s.id}><Pill title={s.title} theme={s.id}/></li>)}</ul>
+            </div>
+            <div className="mb-2">
+                Topic{topicsAndFields?.length > 1 && "s"}:
+                <ul className="d-inline ms-1">{topicsAndFields.map(e => <li className="d-inline" key={e.id}><Pill title={e.title} theme="neutral"/></li>)}</ul>
+            </div>
 
             {hasSections && <>
                 <div className="section-divider"/>
@@ -1012,20 +1033,22 @@ interface MyAccountSidebarProps extends SidebarProps {
 }
 
 export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
-    const { editingOtherUser, activeTab, setActiveTab } = props;
-    return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...props}>
+    const { editingOtherUser, activeTab, setActiveTab, ...rest } = props;
+    return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...rest}>
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
-        {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
-            <ContentSidebarContext.Consumer key={tab}>
-                {(context) => 
-                    <StyledTabPicker
-                        key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
-                        onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}
-                    />
-                }
-            </ContentSidebarContext.Consumer>
-        )}
+        <ul>
+            {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
+                <li key={tab}>
+                    <ContentSidebarContext.Consumer>
+                        {(context) => 
+                            <StyledTabPicker id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
+                                onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}/>                           
+                        }
+                    </ContentSidebarContext.Consumer>
+                </li>
+            )}
+        </ul>
     </ContentSidebar>;
 };
 
@@ -1082,13 +1105,15 @@ export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
 
     return <ContentSidebar buttonTitle="Search tests">
         {above["lg"](deviceSize) && <div className="section-divider"/>}
-        <h5>Search tests</h5>
-        <Input
-            id="available-quizzes-title-filter" type="search"
-            className="search--filter-input my-3"
-            value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
-            placeholder="e.g. Forces"
-        />
+        <search>
+            <h5>Search tests</h5>
+            <Input
+                id="available-quizzes-title-filter" type="search"
+                className="search--filter-input my-3"
+                value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
+                placeholder="e.g. Forces"
+            />
+        </search>
     </ContentSidebar>;
 };
 
@@ -1282,7 +1307,6 @@ const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status">) =
     />;
 };
 
-
 interface MyQuizzesSidebarProps extends SidebarProps {
     setQuizTitleFilter: (title: string) => void;
     setQuizCreatorFilter: (creator: string) => void;
@@ -1311,11 +1335,13 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                         placeholder="e.g. Forces" aria-label="Search by title"/>
                     <div className="section-divider"/>
                     <h5 className="mb-3">Filter by status</h5>
-                    <QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/>
-                    <div className="section-divider-small"/>
-                    {statusOptions.map(state => <QuizStatusCheckbox 
-                        key={state} status={state} count={undefined} statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} 
-                    />)}
+                    <ul>
+                        <li><QuizStatusAllCheckbox statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter} count={undefined}/></li>
+                        <div className="section-divider-small"/>
+                        {statusOptions.map(state => <li key={state}>
+                            <QuizStatusCheckbox status={state} count={undefined} statusFilter={quizStatusFilter} setStatusFilter={setQuizStatusFilter}/>
+                        </li>)}
+                    </ul>
                     {activeTab === 1 && <>
                         <h5 className="my-3">Filter by assigner</h5>
                         <Input type="select" onChange={e => setQuizCreatorFilter(e.target.value)}>
@@ -1484,55 +1510,85 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
     </ContentSidebar>;
 };
 
-export interface BookSidebarProps extends SidebarProps {
-    book: IsaacBookIndexPageDTO;
-    urlBookId: string;
-    pageId: string | undefined;
+export const calculateSidebarLink = (entry: SidebarEntryDTO): string | undefined => {
+    switch (entry.pageType) {
+        case "isaacBookDetailPage": {
+            const detailPageSplit = entry.pageId?.split(BOOK_DETAIL_ID_SEPARATOR);
+            if (!detailPageSplit || detailPageSplit.length !== 2) {
+                return undefined;
+            }
+            return `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${detailPageSplit[0].slice("book_".length)}/${detailPageSplit[1]}`;
+        }
+        case "isaacBookIndexPage": {
+            return `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${entry.pageId?.slice(`book_`.length)}`;
+        }
+        case "isaacRevisionDetailPage": {
+            return `/${documentTypePathPrefix[DOCUMENT_TYPE.REVISION]}/${entry.pageId}`;
+        }
+        case "page": {
+            return `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${entry.pageId}`;
+        }
+    }
+    return undefined;
 };
 
-export const BookSidebar = ({ book, urlBookId, pageId }: BookSidebarProps) => {
+const isSidebarGroup = (entry: SidebarEntryDTO): entry is SidebarGroupDTO => {
+    return entry.type === "sidebarGroup";
+};
 
-    const [expandedTab, setExpandedTab] = useState<number | undefined>(undefined);
-    useEffect(() => {
-        const activeChapter = book.chapters?.map(chapter => chapter.sections?.some(section => section.bookPageId === pageId)).indexOf(true);
-        setExpandedTab(activeChapter === -1 ? undefined : activeChapter);
-    }, [book.chapters, pageId]);
+const containsActiveTab = (group: SidebarGroupDTO, currentPathname: string): boolean => {
+    return !!group.sidebarEntries?.some(subEntry => {
+        if (isSidebarGroup(subEntry)) {
+            return containsActiveTab(subEntry, currentPathname);
+        }
+        return currentPathname === calculateSidebarLink(subEntry);
+    });
+};
+
+const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: History }) => {
+
+    const isActive = history.location.pathname === calculateSidebarLink(entry);
+    const [isOpen, setIsOpen] = useState(isSidebarGroup(entry) && containsActiveTab(entry, history.location.pathname));
+
+    return isSidebarGroup(entry)
+        ? <CollapsibleList
+            title={<div className="d-flex flex-column gap-2 chapter-title">
+                <span className="text-theme">{entry.label}</span>
+                <h6 className={classNames("m-0", {"text-theme fw-semibold": isActive})}><Markup encoding="latex">{entry.title}</Markup></h6>
+            </div>}
+            tag={"li"}
+            className="ms-2"
+            expanded={isOpen}
+            toggle={() => setIsOpen(o => !o)}
+        >
+            <ul>
+                {entry.sidebarEntries?.map((subEntry, subIndex) => 
+                    <SidebarEntries key={subIndex} entry={subEntry} history={history} />
+                )}
+            </ul>
+        </CollapsibleList>
+        : <li className="ms-2">
+            <StyledTabPicker
+                checkboxTitle={<div className="d-flex">
+                    {entry.label && <span className="text-theme me-2">{entry.label}</span>}
+                    <span className="flex-grow-1"><Markup encoding="latex">{entry.title}</Markup></span>
+                </div>}
+                checked={isActive}
+                onClick={(() => history.push(calculateSidebarLink(entry) ?? ""))}
+            />
+        </li>;
+};
+
+export const ContentControlledSidebar = ({sidebar}: {sidebar?: SidebarDTO}) => {
 
     const history = useHistory();
 
-    return <ContentSidebar buttonTitle="Contents">
-        <ul className="m-0 p-0">
-            <button className="w-100 d-flex align-items-center p-3 text-start bg-transparent" onClick={() => history.push(`/books/${urlBookId}`)}>
-                <h5 className={classNames("m-0", {"text-theme": pageId === undefined})}>Overview</h5>
-                <Spacer/>
-            </button>
-            {book.chapters?.map((chapter, index) => {
-                const chapterActive = chapter.sections?.some(section => section.bookPageId === pageId);
-
-                return <CollapsibleList
-                    title={<div className="d-flex flex-column gap-2 chapter-title">
-                        <span className="text-theme">Chapter {chapter.label}</span>
-                        <h6 className={classNames("m-0", {"text-theme fw-semibold": chapterActive})}>{chapter.title}</h6>
-                    </div>}
-                    key={index}
-                    expanded={expandedTab === index}
-                    toggle={() => setExpandedTab(expandedTab === index ? undefined : index)}
-                    additionalOffset={"4px"}
-                >
-                    {chapter.sections?.map((section, sectionIndex) =>
-                        <li key={sectionIndex}>
-                            <StyledTabPicker
-                                checkboxTitle={<div className="d-flex">
-                                    <span className="text-theme me-2">{section.label}</span>
-                                    <span className="flex-grow-1"><Markup encoding="latex">{section.title}</Markup></span>
-                                </div>}
-                                checked={pageId === section.bookPageId}
-                                onClick={() => history.push(`/books/${urlBookId}/${section.bookPageId?.slice((book.id?.length ?? 0) + 1)}`)}
-                            />
-                        </li>
-                    )}
-                </CollapsibleList>;
-            })}
+    return <ContentSidebar buttonTitle={sidebar?.title}>
+        <div className="section-divider"/>
+        <ul>
+            {sidebar?.sidebarEntries?.map((entry, index) => (
+                <SidebarEntries key={index} entry={entry} history={history}/>
+            ))}
         </ul>
     </ContentSidebar>;
 };

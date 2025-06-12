@@ -9,7 +9,7 @@
     @content;
   }
 
-  @container pod-parent (min-width: 700px) {
+  @container pod-parent (min-width: 576px) {
     .pod:not(.no-horizontal) {
       @content;
     }

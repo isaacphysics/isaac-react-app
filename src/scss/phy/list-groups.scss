@@ -4,6 +4,12 @@
 .content-summary-item {
   min-height: 88px;
   padding: 1rem;
+
+  &:has(a.alvi-title) {
+    a, button {
+      z-index: 2;
+    }
+  }
 }
 
 .list-view-border {
@@ -61,6 +67,25 @@
     color: var(--subject-color-900);
   }
 
+  .alvi-title {
+    @extend .link-title;
+
+    &:is(a)::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      cursor: pointer;
+    }
+
+    &:focus-visible {
+      box-shadow: none !important;
+      &::before {
+        @include focus-outline;
+      }
+    }
+  }
+
   .question-link-title {
     font-family: $secondary-font-medium;
     margin-top: -5px;
@@ -98,7 +123,7 @@
 }
 
 .list-group-links li .card-tag {
-  @include pill-tag($color-neutral-900, var(--subject-color-50), var(--subject-color-100));
+  @include pill-tag($color-neutral-900, var(--subject-color-100), var(--subject-color-700));
   width: auto;
   white-space: normal;
   text-align: center;
