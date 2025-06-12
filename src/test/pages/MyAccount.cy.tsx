@@ -17,8 +17,7 @@ describe("My Account", () => {
                     cy.getComponent("sidebar").contains(tab.title).click();
                     // sidebar closes automatically on click
                 }
-                cy.wait(500);
-                
+
                 cy.matchImage();
             });
         }

@@ -11,7 +11,6 @@ describe("My Gameboards", () => {
         cy.get('[data-testid="display-select"]').select("Table View");
         if (isPhy) cy.closeSidebar();
         cy.get('[data-testid="loading"]').should('not.exist');
-        cy.wait(1000); // todo: work out why the loading spinner still shows up and remove this
         cy.matchImage();
     });
     it('should have no visual regressions in card view', () => {
@@ -21,7 +20,6 @@ describe("My Gameboards", () => {
         cy.get('[data-testid="display-select"]').select("Card View");
         if (isPhy) cy.closeSidebar();
         cy.get('[data-testid="loading"]').should('not.exist');
-        cy.wait(1000);
         cy.matchImage();
     });
 });

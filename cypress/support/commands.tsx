@@ -73,9 +73,9 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, mountOptions
 
 import "@frsource/cypress-plugin-visual-regression-diff/dist/support";
 
-// Add a delay to all matchImage calls - this is required when scrolling is needed
+// Add a delay to all matchImage calls. Shouldn't be required, but is.
 Cypress.Commands.overwrite('matchImage', (matchImage) => {
-    cy.wait(1000);
+    cy.wait(2000);
     matchImage();
 });
 

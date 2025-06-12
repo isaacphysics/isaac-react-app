@@ -7,6 +7,5 @@ it('Groups should have no visual regressions', () => {
     // @ts-ignore
     cy.mountWithStoreAndRouter(<Groups user={mockUser}/>);
     cy.get('[data-testid="loading"]').should('not.exist');
-    cy.wait(500);
     cy.matchImage();
 });
