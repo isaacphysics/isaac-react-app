@@ -4,6 +4,7 @@ import {WithFigureNumbering} from "./WithFigureNumbering";
 import {EditContentButton} from "./EditContentButton";
 import {useGetPageFragmentQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import { WEBMASTER_EMAIL } from "../../services";
 
 interface PageFragmentComponentProps {
     fragmentId: string;
@@ -16,8 +17,17 @@ export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProp
         <h2>Content not found</h2>
         <h3 className="my-4">
             <small>
-                {"We're sorry, page fragment not found: "}
-                <code>{fragmentId}</code>
+                {window.navigator.onLine ? 
+                    <>
+                        We&apos;re sorry, page fragment not found: 
+                        <code>{fragmentId}</code>
+                    </> :
+                    <p>
+                        <br />
+                        It looks like you&apos;re offline. You may want to check your internet connection, and then refresh this page to try again.
+                        <br />
+                        If you are still having issues, please <a href={`mailto:${WEBMASTER_EMAIL}`}>let us know</a>. 
+                    </p>}
             </small>
         </h3>
     </div>;
