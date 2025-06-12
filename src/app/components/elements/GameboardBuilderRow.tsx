@@ -114,10 +114,12 @@ const GameboardBuilderRow = (
                             <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
                                 <Markup encoding="latex">{generateQuestionTitle(question)}</Markup>
                             </a>
-                            <input
-                                type="image" src="/assets/common/icons/new-tab.svg" alt="Preview question" title="Preview question in modal"
-                                className="pointer-cursor align-middle new-tab" onClick={() => question.id && openQuestionModal(question.id)}
-                            />
+                            <button
+                                type="button" title="Preview question in modal" className="pointer-cursor align-middle new-tab p-0" 
+                                onClick={() => question.id && openQuestionModal(question.id)}
+                            >
+                                <img src="/assets/common/icons/new-tab.svg" alt="Preview question" />
+                            </button>
                             <Spacer />
                             {isPhy && <div className="d-flex flex-column justify-self-end">
                                 {question.supersededBy && <a 

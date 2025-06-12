@@ -52,7 +52,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
         <SidebarLayout>
             <ShowLoadingQuery
                 query={bookIndexPageQuery}
-                defaultErrorTitle="Unable to load book contents."
+                defaultErrorTitle="Unable to load book contents"
                 thenRender={(definedBookIndexPage) => {
                     return <>
                         <ContentControlledSidebar sidebar={book?.sidebar}/>
@@ -60,7 +60,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                             {pageId
                                 ? <ShowLoadingQuery
                                     query={bookDetailPageQuery}
-                                    defaultErrorTitle="Unable to load book page."
+                                    defaultErrorTitle="Unable to load book page"
                                     thenRender={(bookDetailPage) => <BookPage page={bookDetailPage} />}
                                 />
                                 : <>

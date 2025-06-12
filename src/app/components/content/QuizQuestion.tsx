@@ -31,10 +31,10 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
 
     const QuestionComponent = QUESTION_TYPES[doc?.type ?? "default"];
 
-    return <React.Fragment>
+    return <div className="quiz-question-container">
         <div className={
             classnames(
-                "question-component p-md-5",
+                "question-component p-md-2",
                 {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)}
             )}>
             {isAda && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
@@ -64,5 +64,5 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
                 <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
             </div>}
         </div>
-    </React.Fragment>;
+    </div>;
 };

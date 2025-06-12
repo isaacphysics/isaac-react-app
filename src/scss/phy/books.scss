@@ -80,6 +80,7 @@ svg.book-page-icon {
   max-height: 462px;
   overflow-y: auto;
   border-radius: 4px;
+  flex: 1 0 content;
   @include vertical-scroll-shadow($color-neutral-50, rgba(0, 0, 0, 0.2));
 }
 
