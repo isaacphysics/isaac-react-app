@@ -226,6 +226,13 @@ const isaacApi = createApi({
       keepUnusedDataFor: 60,
     }),
 
+    getPage: build.query<IsaacConceptPageDTO, string>({
+      query: (pageID) => ({
+        url: `/pages/${pageID}`,
+      }),
+      keepUnusedDataFor: 60,
+    }),
+
     // === Gameboards ===
 
     getGameboards: build.query<Boards, { startIndex: number; limit: NumberOfBoards; sort: BoardOrder }>({

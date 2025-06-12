@@ -1,6 +1,7 @@
 import React from "react";
 import { TrackedRoute } from "../navigation/TrackedRoute";
 import { AllTopics, AllTopicsWithoutAStage } from "../pages/AllTopics";
+import { GCSETeachingOrder } from "../pages/GCSETeachingOrder";
 import StaticPageRoute from "../navigation/StaticPageRoute";
 import { ComingSoon } from "../pages/ComingSoon";
 import { Topic } from "../pages/Topic";
@@ -77,20 +78,16 @@ export const Routes = [
   // Static pages:
   <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
   <StaticPageRoute key={key++} exact path="/safeguarding" pageId="events_safeguarding" />,
-  <StaticPageRoute
+  <TrackedRoute
     key={key++}
     exact
     ifUser={isTutorOrAbove}
-    path="/teaching_order_g_ocr"
-    pageId="teaching_order_g_ocr"
+    path="/gcse_teaching_order"
+    component={GCSETeachingOrder}
+    componentProps={{ stage: STAGE.GCSE }}
+    userAgent={window.navigator.userAgent}
   />,
-  <StaticPageRoute
-    key={key++}
-    exact
-    ifUser={isTutorOrAbove}
-    path="/teaching_order_g_aqa"
-    pageId="teaching_order_g_aqa"
-  />,
+
   <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teaching_order" pageId="teaching_order" />,
   <StaticPageRoute key={key++} exact path="/teachcomputing" pageId="teach_computing" />,
   <StaticPageRoute key={key++} exact path="/gcse_programming_challenges" pageId="gcse_programming_challenges" />,
