@@ -73,6 +73,12 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, mountOptions
 
 import "@frsource/cypress-plugin-visual-regression-diff/dist/support";
 
+// Add a delay to all matchImage calls. Shouldn't be required, but is.
+Cypress.Commands.overwrite('matchImage', (matchImage) => {
+    cy.wait(2000);
+    matchImage();
+});
+
 // Skip visual regression tests in interactive mode - the results are not consistent with headless.
 // It may be useful to comment this out when debugging tests locally, but don't commit the snapshots.
 if (Cypress.config('isInteractive')) {
