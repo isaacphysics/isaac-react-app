@@ -1,13 +1,12 @@
 import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useState } from "react";
-import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, SidebarGroupDTO, Stage } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
-    Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, BOOK_DETAIL_ID_SEPARATOR, documentTypePathPrefix, 
-    DOCUMENT_TYPE} from "../../../services";
+    stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
