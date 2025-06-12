@@ -98,7 +98,7 @@ export const HeaderCS = () => {
                                     {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
                                     {isStaff(user) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
                                 </NavigationSection>}
-                                <NavigationSection title={<>My Ada CS {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" />}</>}>
+                                <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" />}</>}>
                                     {isTutorOrAbove(user) ?
                                         <>
                                             <LinkItem to="/groups">Teaching groups</LinkItem>
