@@ -25,7 +25,7 @@ export const TeacherResources = () => {
                     <TextBlock className="text-white">
                         <h1 className="font-size-1-75 font-size-md-2-5">
                             <span className="text-pink">/</span><br/>
-                            Ada for teachers
+                            Ada CS for teachers
                         </h1>
                         <p>Classwork, homework, and exam prep to help you teach computer science. All available for free.</p>
                     </TextBlock>
@@ -75,7 +75,7 @@ export const TeacherResources = () => {
                 <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <TextBlock md={8} className={classNames({"mb-3": !isLoggedIn(user)})}>
                     <h2>Tools to help you teach</h2>
-                    <p>An Ada account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.</p>
+                    <p>An Ada CS account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.</p>
                     {!isLoggedIn(user) && <div className="pb-2 mb-3">
                         <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
                         <Button color="keyline" to={"/login"} tag={Link}>Log in</Button>
