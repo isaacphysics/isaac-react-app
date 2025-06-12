@@ -3,7 +3,7 @@ import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Button, Col, ListGroupItem } from "reactstrap";
+import { Badge, Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
 import { below, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
@@ -39,6 +39,16 @@ const StatusDisplay = (props: StatusDisplayProps) => {
         case CompletionState.NOT_ATTEMPTED:
             return;
     }
+};
+
+interface ItemCountProps extends React.HTMLAttributes<HTMLSpanElement> {
+    count: number;
+}
+
+const ItemCount = ({count, ...rest}: ItemCountProps) => {
+    return <Badge color="theme" {...rest} className={classNames("list-view-status-indicator count-tag", rest.className)}>
+        {count < 100 ? count : "99+"}
+    </Badge>;
 };
 
 export interface ListViewTagProps extends HTMLAttributes<HTMLElement> {
@@ -167,6 +177,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 {isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
                     <StatusDisplay status={typedProps.status} showText={false} />
                 </div>}
+                {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
             </div>
             <div className="align-content-center text-overflow-ellipsis pe-2">
                 <div className="d-flex text-wrap">
