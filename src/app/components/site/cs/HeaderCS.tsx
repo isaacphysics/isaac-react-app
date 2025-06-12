@@ -64,14 +64,14 @@ export const HeaderCS = () => {
                         </NavigationSection>
 
                         <NavigationSection title="Students">
-                            <LinkItem to="/students">Ada for students</LinkItem>
+                            <LinkItem to="/students">Ada CS for students</LinkItem>
                             <LinkItem to="/pages/stem_smart_programme">STEM SMART</LinkItem>
                             <LinkItem to="/pages/student_challenges">Challenges</LinkItem>
                             <LinkItem to="/support/student">Support</LinkItem>
                         </NavigationSection>
 
                         <NavigationSection title="Teachers">
-                            <LinkItem to="/teachers">Ada for teachers</LinkItem>
+                            <LinkItem to="/teachers">Ada CS for teachers</LinkItem>
                             <LinkItem to="/pages/revision_quizzes">Revision quizzes</LinkItem>
                             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             <LinkItem to="/pages/online_courses">Online courses</LinkItem>
@@ -98,7 +98,7 @@ export const HeaderCS = () => {
                                     {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
                                     {isStaff(user) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
                                 </NavigationSection>}
-                                <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" />}</>}>
+                                <NavigationSection title={<>My Ada CS {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" />}</>}>
                                     {isTutorOrAbove(user) ?
                                         <>
                                             <LinkItem to="/groups">Teaching groups</LinkItem>

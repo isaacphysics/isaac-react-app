@@ -1,5 +1,5 @@
 export enum SITE {PHY = "physics", ADA = "ada"}
-// eslint-disable-next-line no-undef
+ 
 export const SITE_SUBJECT = ISAAC_SITE as SITE;
 
 // Boolean representing if the current site is Isaac Physics
@@ -12,7 +12,7 @@ export const isAda = SITE_SUBJECT === SITE.ADA;
 export const siteSpecific = <P, C>(phy: P, ada: C): P | C => isPhy ? phy : ada;
 
 export const SITE_TITLE = siteSpecific("Isaac Science", "Ada Computer Science");
-export const SITE_TITLE_SHORT = siteSpecific("Isaac", "Ada");
+export const SITE_TITLE_SHORT = siteSpecific("Isaac", "Ada CS");
 
 export const WEBMASTER_EMAIL = siteSpecific("webmaster@isaacscience.org", "webmaster@adacomputerscience.org");
 
