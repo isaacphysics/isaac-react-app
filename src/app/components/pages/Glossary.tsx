@@ -385,7 +385,7 @@ export const Glossary = () => {
                             {/* Let users know that they need to select a subject */}
                             {isPhy && !isDefined(filterSubject) && <p>Please select a subject.</p>}
                             {(isAda || isDefined(filterSubject)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
-                            {searchText !== "" && <p>We could not find glossary terms to match your search criteria.</p>}
+                            {(isAda || isDefined(filterSubject)) && searchText !== "" &&  <p>We could not find glossary terms to match your search criteria.</p>}
                         </div>
                     </Row>}
                     {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className={classNames("p-2 pb-4", {"list-results-container border-radius-2 mb-4": isPhy})}>
