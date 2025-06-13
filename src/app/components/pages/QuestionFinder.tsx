@@ -57,6 +57,7 @@ import { SearchInputWithIcon } from "../elements/SearchInputs";
 import { AffixButton } from "../elements/AffixButton";
 import { Link } from "react-router-dom";
 import { updateTopicChoices } from "../../services";
+import { PageMetadata } from "../elements/PageMetadata";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -472,18 +473,21 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
 
-                {siteSpecific(
-                    <div className="my-3">
-                        {(pageContext?.subject && pageContext.stage)
-                            ? <div className="d-flex align-items-start flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
-                                <p className="me-0 me-lg-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                                {above["lg"](deviceSize) && BrowseAllButton}
-                            </div>
-                            : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
-                              Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
-                    </div>,
-                    <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
-                )}
+                <PageMetadata noTitle>
+                    {siteSpecific(
+                        <div>
+                            {(pageContext?.subject && pageContext.stage)
+                                ? <div className="d-flex align-items-start flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
+                                    <p className="me-0 me-lg-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                                    {above["lg"](deviceSize) && BrowseAllButton}
+                                </div>
+                                : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
+                                Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
+                        </div>,
+                        <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
+                    )}
+                </PageMetadata>
+
 
                 {isAda && <Row>
                     <Col lg={6} md={12} xs={12} className="finder-search">
