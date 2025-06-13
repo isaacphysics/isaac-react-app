@@ -18,7 +18,9 @@
 }
 
 .question-panel .isaac-accordion {
-  background: $gray-103;
+  @include no-print {
+    background: $gray-103;
+  }
   .card-body > .content-chunk > .content-value {
     @extend .px-md-5;
     font-size: $question-font-size;

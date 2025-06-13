@@ -28,7 +28,7 @@ const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionT
         ...intermediateCrumbs
     ]);
 
-    return !!breadcrumbHistory.length && <Breadcrumb className={classNames("bread", siteSpecific("container-override py-2", "mb-3 mb-md-0 px-md-0 py-md-2"))}>
+    return !!breadcrumbHistory.length && <Breadcrumb className={classNames("bread", siteSpecific("no-print container-override py-2", "mb-3 mb-md-0 px-md-0 py-md-2"))}>
         {breadcrumbHistory.map((breadcrumb) => formatBreadcrumbHistoryItem(breadcrumb, disallowLaTeX))}
         {isAda && formatBreadcrumbItem(currentPageTitle, disallowLaTeX)}
     </Breadcrumb>;

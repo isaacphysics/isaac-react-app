@@ -14,8 +14,10 @@
     padding: 0 0 1.5rem;
     margin-top: 0;
     .tab-content .tab-pane {
-      background-color: #fff;
-      padding: 0.5rem;
+      @include no-print {
+        background-color: #fff;
+        padding: 0.5rem;
+      }
 
       .content-video-container {
         margin-bottom: 0;

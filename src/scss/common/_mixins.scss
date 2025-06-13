@@ -283,3 +283,9 @@ $viewport-sizes: (
   background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
   background-attachment: local, local, scroll, scroll;
 }
+
+@mixin no-print {
+  @media not print {
+    @content;
+  }
+}

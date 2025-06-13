@@ -105,6 +105,13 @@
       display: block !important;
   }
 
+  .accordion-body {
+    .card {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+
   .difficulty-title {
     // force colour when printing hierarchy tags to ensure text is visible
     print-color-adjust: exact;

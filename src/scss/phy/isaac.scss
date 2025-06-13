@@ -451,10 +451,14 @@ body {
 }
 
 .content-body {
+  @include no-print {
     background-color: $color-neutral-50;
+  }
 }
 
 .content-body > .container {
+  @include no-print {
     background-color: $color-neutral-50;
     box-shadow: 0 0 200px 35px $color-neutral-100;
+  }
 }
