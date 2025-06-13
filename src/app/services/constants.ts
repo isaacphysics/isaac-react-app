@@ -15,7 +15,7 @@ import {
     Stage,
     UserRole
 } from "../../IsaacApiTypes";
-import {isPhy, siteSpecific} from "./";
+import {isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 
 export const STAGING_URL = siteSpecific(
@@ -85,7 +85,7 @@ export const SOCIAL_LINKS = siteSpecific(
 // Change to "http://localhost:3000" if you want to run a local version of the code editor
 export const CODE_EDITOR_BASE_URL = "https://code-editor.ada-cs.org";
 
-export const API_REQUEST_FAILURE_MESSAGE = `There may be an error connecting to the ${siteSpecific("Isaac", "Ada")} platform.`;
+export const API_REQUEST_FAILURE_MESSAGE = `There may be an error connecting to the ${SITE_TITLE_SHORT} platform.`;
 export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attempts at this question. Please try again later!";
 
 export const NOT_FOUND: NOT_FOUND_TYPE = 404;
@@ -328,7 +328,7 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
     [EXAM_BOARD.SQA]: "SQA",
-    [EXAM_BOARD.ADA]: "Ada",
+    [EXAM_BOARD.ADA]: "Ada CS",
     [EXAM_BOARD.ALL]: "All exam boards",
 };
 

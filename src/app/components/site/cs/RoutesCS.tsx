@@ -97,7 +97,7 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/exam_specifications_wales" component={ExamSpecifications}
         componentProps={{'examBoardFilter': [EXAM_BOARD.WJEC], title: "Welsh qualifications"}} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_ada" component={ExamSpecifications}
-        componentProps={{'examBoardFilter': [EXAM_BOARD.ADA], 'stageFilter': [STAGE.CORE, STAGE.ADVANCED], title: "Ada Curriculum"}} />,
+        componentProps={{'examBoardFilter': [EXAM_BOARD.ADA], 'stageFilter': [STAGE.CORE, STAGE.ADVANCED], title: "Ada CS Curriculum"}} />,
     <Redirect key={key++} from="/concepts/sqa_computing_science" to="/exam_specifications_scotland" />,
     <TrackedRoute key={key++} exact path="/exam_specifications_scotland" component={ExamSpecifications}
         componentProps={{'examBoardFilter': [EXAM_BOARD.SQA], 'stageFilter': [STAGE.SCOTLAND_NATIONAL_5,

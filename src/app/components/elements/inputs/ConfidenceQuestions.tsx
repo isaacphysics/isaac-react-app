@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {closeActiveModal, logAction, openActiveModal, store, useAppDispatch} from "../../../state";
 import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import {isAda, isPhy, siteSpecific} from "../../../services";
+import {isAda, isPhy, SITE_TITLE_SHORT} from "../../../services";
 import {ChoiceDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
 import {Immutable} from "immer";
 
@@ -86,7 +86,7 @@ const confidenceInformationModal = () => openActiveModal({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: "Information",
     body: <div className="mb-4">
-        We regularly review and update the {siteSpecific("Isaac", "Ada")} platform’s content and would like your input in order to
+        We regularly review and update the {SITE_TITLE_SHORT} platform’s content and would like your input in order to
         prioritise content and assess the impact of updates. Data captured with these buttons will help us
         identify priority areas.
     </div>

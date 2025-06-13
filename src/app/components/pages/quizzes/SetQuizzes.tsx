@@ -22,7 +22,7 @@ import {
     isEventLeaderOrStaff,
     isPhy, KEY,
     MANAGE_QUIZ_TAB,
-    nthHourOf, persistence,
+    nthHourOf, persistence, SITE_TITLE_SHORT,
     siteSpecific,
     Subject,
     tags,
@@ -317,7 +317,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
 
     const pageTitle= siteSpecific("Set / Manage Tests", "Manage tests");
     const pageHelp = <span>
-        Use this page to manage and set tests to your groups. You can assign any test the {siteSpecific("Isaac", "Ada")} team have built.
+        Use this page to manage and set tests to your groups. You can assign any test the {SITE_TITLE_SHORT} team have built.
         <br />
         Students in the group will be emailed when you set a new test.
     </span>;
