@@ -23,6 +23,7 @@ import {
     isTutorOrAbove,
     matchesNameSubstring,
     MEMBERSHIP_STATUS,
+    SITE_TITLE_SHORT,
     siteSpecific,
     useDeviceSize
 } from "../../../services";
@@ -190,7 +191,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             <h3>
                 <span className={classNames({"h4": isPhy})}>Teacher connection code<i id="teacher-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
                 <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
-                    The teachers that you are connected to can view your {siteSpecific("Isaac", "Ada")} assignment progress.
+                    The teachers that you are connected to can view your {SITE_TITLE_SHORT} assignment progress.
                 </UncontrolledTooltip>
             </h3>
             <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
@@ -258,12 +259,12 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 <h3>
                     <span className={classNames({"h4": isPhy})}>Your student connections<i id="student-connections-title" className={siteSpecific("ms-2 icon icon-info layered icon-color-grey", "icon-help")} /></span>
                     <UncontrolledTooltip placement="bottom" target="student-connections-title">
-                        These are the students who have shared their {siteSpecific("Isaac", "Ada")} data with you.
+                        These are the students who have shared their {SITE_TITLE_SHORT} data with you.
                         These students are also able to view your name and email address on their Teacher connections page.
                     </UncontrolledTooltip>
                 </h3>
                 <p>
-                    You can invite students to share their {siteSpecific("Isaac", "Ada")} data with you through the {" "}
+                    You can invite students to share their {SITE_TITLE_SHORT} data with you through the {" "}
                     <Link to="/groups">{siteSpecific("group management page", "Manage groups")}</Link>{siteSpecific(".", " page.")}
                 </p>
                 <div className="connect-list">
@@ -322,7 +323,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 </span>
                 <UncontrolledTooltip placement="bottom" target="group-memberships-title">
                     These are the groups you are currently a member of.
-                    Groups on {siteSpecific("Isaac", "Ada")} let teachers set assignments to multiple students in one go.
+                    Groups on {SITE_TITLE_SHORT} let teachers set assignments to multiple students in one go.
                 </UncontrolledTooltip>
             </h3>
             <ul>

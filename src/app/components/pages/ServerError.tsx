@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import {Link} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {siteSpecific, trackEvent, WEBMASTER_EMAIL} from "../../services";
+import {SITE_TITLE_SHORT, trackEvent, WEBMASTER_EMAIL} from "../../services";
 
 export const ServerError = () => {
     useEffect(() => {
@@ -13,7 +13,7 @@ export const ServerError = () => {
         <div>
             <TitleAndBreadcrumb currentPageTitle="Error" icon={{type: "hex", icon: "icon-error"}} />
 
-            <h3 className="my-4"><small>{`We're sorry, but an error has occurred on the ${siteSpecific("Isaac", "Ada")} server!`}</small></h3>
+            <h3 className="my-4"><small>{`We're sorry, but an error has occurred on the ${SITE_TITLE_SHORT} server!`}</small></h3>
 
             <h3>
                 <small>

@@ -2,7 +2,7 @@ import React from 'react';
 import {useGetSiteStatisticsQuery} from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {isDefined, siteSpecific} from "../../services";
+import {isDefined, SITE_TITLE_SHORT} from "../../services";
 import {produce} from "immer";
 import { Container, Card, CardBody, Row, Col } from 'reactstrap';
 
@@ -38,7 +38,7 @@ export const AdminStats = () => {
 
     return <Container id="admin-stats-page">
         <TitleAndBreadcrumb 
-            currentPageTitle={`${siteSpecific("Isaac", "Ada")} statistics`} 
+            currentPageTitle={`${SITE_TITLE_SHORT} statistics`} 
             breadcrumbTitleOverride="Admin statistics" 
             icon={{type: "hex", icon: "icon-progress"}} 
         />
