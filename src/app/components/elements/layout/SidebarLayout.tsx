@@ -389,7 +389,7 @@ interface ConceptListSidebarProps extends SidebarProps {
     conceptFilters: Tag[];
     setConceptFilters: React.Dispatch<React.SetStateAction<Tag[]>>;
     applicableTags: Tag[];
-    tagCounts?: Record<string, number>;
+    tagCounts: Record<string, number>;
 }
 
 export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps) => {
@@ -398,6 +398,14 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
     const pageContext = useAppSelector(selectors.pageContext.context);
 
     const subjectTag = tags.getById(pageContext?.subject as TAG_ID);
+
+    // Deselect topic filter if search term change causes no results
+    useEffect(() => {
+        if (searchText && searchText.length > 0) {
+            const remainingFilters = conceptFilters.filter(tag => tagCounts[tag.id] > 0);
+            setConceptFilters(remainingFilters.length ? remainingFilters : [subjectTag]);
+        }
+    }, [searchText]);
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
