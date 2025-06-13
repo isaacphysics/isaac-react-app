@@ -9,6 +9,5 @@ it('Assignment Progress should have no visual regressions', () => {
     cy.get('[data-testid="loading"]').should('not.exist');
     cy.contains("Test Group 1").click();
     cy.get('div.assignment-progress-details').should('be.visible');
-    cy.wait(2000);
     cy.matchImage();
 });

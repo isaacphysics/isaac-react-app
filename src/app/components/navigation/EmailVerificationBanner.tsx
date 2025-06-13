@@ -6,7 +6,7 @@ import {
 } from "../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from 'reactstrap';
-import {isPhy, siteSpecific, WEBMASTER_EMAIL} from "../../services";
+import {SITE_TITLE_SHORT, siteSpecific, WEBMASTER_EMAIL} from "../../services";
 
 export const EmailVerificationBanner = () => {
     const [hidden, setHidden] = useState(false);
@@ -54,7 +54,7 @@ export const EmailVerificationBanner = () => {
                 {(status == "DELIVERY_FAILED") &&
                     <Col xs={12} sm={10} md={11}>
                         <small>One or more email(s) sent to your email
-                            address failed. This means you won&apos;t receive emails from {siteSpecific("Isaac", "Ada")}, and may prevent you
+                            address failed. This means you won&apos;t receive emails from {SITE_TITLE_SHORT}, and may prevent you
                             regaining access to your account. <br/>To start receiving emails again, update your email
                             address on your <Link to="/account">My account</Link> page. If you believe this is in
                             error, please <a href={`mailto:${WEBMASTER_EMAIL}`}>email us</a>.

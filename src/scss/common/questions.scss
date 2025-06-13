@@ -24,12 +24,12 @@ $cloze-scrollbar-height: 4px;
   min-width: auto;
 }
 
-form:has(> .question-component) {
+form:has(> .question-component), div.quiz-question-container:has(> .question-component) {
   margin-bottom: 2rem;
   clear: both;
 
   .question-content {
-    font-family: $secondary-font;
+    font-family: $primary-font;
     font-size:  $question-font-size;
     font-weight: 400;
     line-height: $question-line-height;

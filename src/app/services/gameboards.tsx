@@ -10,7 +10,7 @@ import {
     isFound,
     isPhy,
     PATHS,
-    siteSpecific,
+    SITE_TITLE_SHORT,
     stagesOrdered
 } from "./";
 import {AssignmentBoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards} from "../../IsaacAppTypes";
@@ -31,7 +31,7 @@ export enum BoardCompletions {
 
 export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
     if (board.tags && board.tags.includes("ISAAC_BOARD")) {
-        return siteSpecific("Isaac", "Ada");
+        return SITE_TITLE_SHORT;
     }
     if (user && (user.id == board.ownerUserId)) {
         return "Me";
@@ -183,7 +183,7 @@ export enum BoardViews {
 // Reusable pattern for site-specific "enums"
 export const BoardCreators = {
     "all": "All",
-    "isaac": siteSpecific("Isaac", "Ada"),
+    "isaac": SITE_TITLE_SHORT,
     "me": "Me",
     "someoneElse": "Someone else"
 } as const;

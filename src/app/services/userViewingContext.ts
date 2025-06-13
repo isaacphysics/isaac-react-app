@@ -168,7 +168,7 @@ export const determineUserContext = (transientUserContext: TransientUserContextS
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "All Exam Boards", value: EXAM_BOARD.ALL},
-    {label: "Ada (Default)", value: EXAM_BOARD.ADA},
+    {label: "Ada CS (Default)", value: EXAM_BOARD.ADA},
     {label: "AQA", value: EXAM_BOARD.AQA},
     {label: "CIE", value: EXAM_BOARD.CIE},
     {label: "Edexcel", value: EXAM_BOARD.EDEXCEL},

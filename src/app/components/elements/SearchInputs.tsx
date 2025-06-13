@@ -56,12 +56,12 @@ function withSearch(Component: React.FC<SearchInputProps>) {
     return SearchComponent;
 }
 
-const PhysicsSearchButton = () => (
-    <Button color='link' aria-label='search' className='search-button'>
-        <i className="icon icon-search icon-color-black me-1 align-self-center"/>
+const PhysicsSearchButton = () => {
+    return <button aria-label='search' className='d-flex bg-transparent search-button justify-content-center align-items-center'>
+        <i className="icon icon-search icon-color-black"/>
         <span className='visually-hidden'>Search</span>
-    </Button>
-);
+    </button>;
+};
 
 const AdaSearchButton = () => (
     <Button color="link" aria-label="search" className="search-button">

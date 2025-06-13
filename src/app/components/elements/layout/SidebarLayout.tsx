@@ -1,13 +1,12 @@
 import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useState } from "react";
-import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Label } from "reactstrap";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, SidebarGroupDTO, Stage } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
-    Item, stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, BOOK_DETAIL_ID_SEPARATOR, documentTypePathPrefix, 
-    DOCUMENT_TYPE} from "../../../services";
+    stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -25,13 +24,13 @@ import { formatISODateOnly, getFriendlyDaysUntil } from "../DateString";
 import queryString from "query-string";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
-import { StyledSelect } from "../inputs/StyledSelect";
 import { CollapsibleList } from "../CollapsibleList";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { getProgressIcon } from "../../pages/Gameboard";
 import { tags as tagsService } from "../../../services";
 import { Markup } from "../markup";
 import { History } from "history";
+import { calculateSidebarLink, containsActiveTab, isSidebarGroup } from "../../../services/sidebar";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -390,7 +389,7 @@ interface ConceptListSidebarProps extends SidebarProps {
     conceptFilters: Tag[];
     setConceptFilters: React.Dispatch<React.SetStateAction<Tag[]>>;
     applicableTags: Tag[];
-    tagCounts?: Record<string, number>;
+    tagCounts: Record<string, number>;
 }
 
 export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps) => {
@@ -399,6 +398,14 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
     const pageContext = useAppSelector(selectors.pageContext.context);
 
     const subjectTag = tags.getById(pageContext?.subject as TAG_ID);
+
+    // Deselect topic filter if search term change causes no results
+    useEffect(() => {
+        if (searchText && searchText.length > 0) {
+            const remainingFilters = conceptFilters.filter(tag => tagCounts[tag.id] > 0);
+            setConceptFilters(remainingFilters.length ? remainingFilters : [subjectTag]);
+        }
+    }, [searchText]);
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
@@ -1409,20 +1416,48 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
 
 interface GlossarySidebarProps extends ContentSidebarProps {
     searchText: string;
-    setSearchText: React.Dispatch<React.SetStateAction<string>>;
+    setSearchText: (searchText: string) => void;
     filterSubject: Tag | undefined;
     setFilterSubject: React.Dispatch<React.SetStateAction<Tag | undefined>>;
-    filterStage: Stage | undefined;
-    setFilterStage: React.Dispatch<React.SetStateAction<Stage | undefined>>;
+    filterStages: Stage[] | undefined;
+    setFilterStages: React.Dispatch<React.SetStateAction<Stage[] | undefined>>;
     subjects: Tag[];
     stages: Stage[];
+    subjectCounts: { [key: string]: number; }
+    stageCounts: { [key: string]: number; }
 }
 
 export const GlossarySidebar = (props: GlossarySidebarProps) => {
-    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStage, setFilterStage, subjects, stages, optionBar, ...rest } = props;
-    
+    const { searchText, setSearchText, filterSubject, setFilterSubject, filterStages, setFilterStages,
+        subjects, stages, subjectCounts, stageCounts, optionBar, ...rest } = props;
+
     const history = useHistory();
     const pageContext = useAppSelector(selectors.pageContext.context);
+
+    const updateFilterStages = (stage: Stage) =>{
+        if (filterStages && filterStages.includes(stage)) {
+            if (filterStages.length === 1) {
+                setFilterStages(undefined);
+            }
+            else {
+                setFilterStages(filterStages.filter(s => s !== stage));
+            }
+        }
+        else {
+            setFilterStages(filterStages ? [...filterStages, stage] : [stage]);
+        }
+    };
+
+    // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
+    const [internalSearchText, setInternalSearchText] = useState(searchText);
+
+    // Deselect stage filters that no longer have results following a subject/search term change
+    useEffect(() => {
+        if (stageCounts["all"] > 0) {
+            const remainingStages = filterStages?.filter(stage => stageCounts[stage]);
+            setFilterStages(remainingStages?.length ? remainingStages : undefined);
+        }
+    }, [filterSubject, searchText]);
 
     return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
@@ -1430,36 +1465,42 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             <h5>Search glossary</h5>
             <Input
                 className='search--filter-input my-4'
-                type="search" value={searchText || ""}
+                type="search" value={internalSearchText || ""}
                 placeholder="e.g. Forces"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
+                    setSearchText(e.target.value); 
+                    setInternalSearchText(e.target.value);
+                }}
             />
             <div className="section-divider"/>
 
             {!pageContext?.subject && <>
                 <h5>Select subject</h5>
-                <Label for='subject-select' className='visually-hidden'>Subject</Label>
-                <StyledSelect inputId="subject-select"
-                    options={subjects.map(s => ({ value: s.id, label: s.title}))}
-                    value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title}) : undefined}
-                    name="subject-select"
-                    placeholder="Select a subject"
-                    onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
-                    isClearable
-                />
+                <ul>
+                    {subjects.map(subject => <li key={subject.id}>
+                        <StyledTabPicker checkboxTitle={subject.title} data-bs-theme={subject.id}
+                            checked={filterSubject && filterSubject === subject} count={subjectCounts[subject.id]}
+                            onChange={() => setFilterSubject(subject)}/>
+                    </li>)}
+                </ul>
             </>}
+
+            {!pageContext?.subject && !pageContext?.stage?.length && <div className="section-divider"/>}
 
             {!pageContext?.stage?.length && <>
                 <h5 className="mt-4">Select stage</h5>
-                <Label for='stage-select' className='visually-hidden'>Stage</Label>
-                <StyledSelect inputId="stage-select"
-                    options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
-                    value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
-                    name="stage-select"
-                    placeholder="Select a stage"
-                    onChange={e => setFilterStage(stages.find(s => s === e?.value))}
-                    isClearable
-                />
+                <ul>
+                    <li>
+                        <StyledTabPicker checkboxTitle="All" data-bs-theme={filterSubject?.id}
+                            checked={!filterStages} count={stageCounts["all"]} onChange={() => setFilterStages(undefined)}/>
+                    </li>
+                    <div className="section-divider-small"/>
+                    {stages.filter(stage => stageCounts[stage]).map(stage => <li key={stage}>
+                        <StyledTabPicker checkboxTitle={stageLabelMap[stage]} data-bs-theme={filterSubject?.id}
+                            checked={filterStages && filterStages.includes(stage)} count={stageCounts[stage]}
+                            onChange={() => updateFilterStages(stage)}/>
+                    </li>)}
+                </ul>
             </>}
 
             {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
@@ -1477,41 +1518,6 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             </>}
         </search>
     </ContentSidebar>;
-};
-
-export const calculateSidebarLink = (entry: SidebarEntryDTO): string | undefined => {
-    switch (entry.pageType) {
-        case "isaacBookDetailPage": {
-            const detailPageSplit = entry.pageId?.split(BOOK_DETAIL_ID_SEPARATOR);
-            if (!detailPageSplit || detailPageSplit.length !== 2) {
-                return undefined;
-            }
-            return `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${detailPageSplit[0].slice("book_".length)}/${detailPageSplit[1]}`;
-        }
-        case "isaacBookIndexPage": {
-            return `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${entry.pageId?.slice(`book_`.length)}`;
-        }
-        case "isaacRevisionDetailPage": {
-            return `/${documentTypePathPrefix[DOCUMENT_TYPE.REVISION]}/${entry.pageId}`;
-        }
-        case "page": {
-            return `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${entry.pageId}`;
-        }
-    }
-    return undefined;
-};
-
-const isSidebarGroup = (entry: SidebarEntryDTO): entry is SidebarGroupDTO => {
-    return entry.type === "sidebarGroup";
-};
-
-const containsActiveTab = (group: SidebarGroupDTO, currentPathname: string): boolean => {
-    return !!group.sidebarEntries?.some(subEntry => {
-        if (isSidebarGroup(subEntry)) {
-            return containsActiveTab(subEntry, currentPathname);
-        }
-        return currentPathname === calculateSidebarLink(subEntry);
-    });
 };
 
 const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: History }) => {
@@ -1552,7 +1558,7 @@ export const ContentControlledSidebar = ({sidebar}: {sidebar?: SidebarDTO}) => {
 
     const history = useHistory();
 
-    return <ContentSidebar buttonTitle={sidebar?.title}>
+    return <ContentSidebar buttonTitle={sidebar?.subtitle}>
         <div className="section-divider"/>
         <ul>
             {sidebar?.sidebarEntries?.map((entry, index) => (

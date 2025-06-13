@@ -8,7 +8,12 @@ import {
     useAppDispatch,
     useBookUserOnEventMutation
 } from "../../../state";
-import {atLeastOne, formatBookingModalConfirmMessage, siteSpecific, zeroOrLess} from "../../../services";
+import {
+    atLeastOne,
+    formatBookingModalConfirmMessage,
+    SITE_TITLE_SHORT,
+    zeroOrLess
+} from "../../../services";
 import {EventBookingForm} from "../EventBookingForm";
 import { Form, Label, Input } from "reactstrap";
 
@@ -54,7 +59,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
                         <small>
                             Warning, by booking a user on this event, it may eventually lead to their personal {" "}
                             information being shared with a third party. You must therefore confirm how this booking {" "}
-                            has been authorised. The data owner is always the {siteSpecific("Isaac", "Ada")} user being booked on to the event.
+                            has been authorised. The data owner is always the {SITE_TITLE_SHORT} user being booked on to the event.
                         </small>
                     </p>
 
