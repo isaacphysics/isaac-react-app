@@ -171,6 +171,10 @@ export const Glossary = () => {
         history.replace({search: queryString.stringify(params, {encode: false}), state: history.location.state, hash: history.location.hash});
     }, [filterSubject, filterStages, searchText, pageContext]);
 
+    const filterBySearchText = (terms: GlossaryTermDTO[]) => {
+        return searchText === '' ? terms : terms?.filter(e => searchText.split(' ').some(t => e.value?.toLowerCase().includes(t.toLowerCase())));
+    };
+
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } | undefined {
             if (sortedTerms) {
@@ -190,37 +194,33 @@ export const Glossary = () => {
             }
             return undefined;
         }
-
-        const searchTerms = searchText.split(' ').map(t => t.toLowerCase());
-        const sortedAndFilteredTerms =
-            (searchText === ''
-                ? [...rawGlossaryTerms ?? []]
-                : rawGlossaryTerms?.filter(e => searchTerms.some(t => e.value?.toLowerCase().includes(t)))
-            )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
+        const sortedAndFilteredTerms = filterBySearchText(rawGlossaryTerms ?? [])
+            ?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
         return groupTerms(sortedAndFilteredTerms);
     }, [rawGlossaryTerms, filterTopic, filterSubject, filterStages, searchText]);
 
     const subjectCounts = useMemo(() => {
         const counts: { [key: string]: number } = {};
+        const filteredTerms = filterBySearchText(rawGlossaryTerms ?? []);
         subjects.forEach(subject => {
-            counts[subject.id] = rawGlossaryTerms?.filter(term => term.tags?.includes(subject.id)).length ?? 0;
+            counts[subject.id] = filteredTerms?.filter(term => term.tags?.includes(subject.id)).length ?? 0;
         });
         return counts;
-    }, [rawGlossaryTerms]);
+    }, [rawGlossaryTerms, searchText]);
 
     const stageCounts = useMemo(() => {
         const counts: {[key: string]: number} = {};
         if (filterSubject) {
-            const subjectFilteredTerms = rawGlossaryTerms?.filter(term => term.tags?.includes(filterSubject.id));
-            subjectFilteredTerms?.forEach(term => {
+            const filteredTerms = filterBySearchText(rawGlossaryTerms?.filter(term => term.tags?.includes(filterSubject.id)) ?? []);
+            filteredTerms?.forEach(term => {
                 term.stages?.forEach(stage => {
                     counts[stage] = (counts[stage] ?? 0) + 1;
                 });
             });
-            counts["all"] = subjectFilteredTerms?.length ?? 0;
+            counts["all"] = filteredTerms?.length ?? 0;
         }
         return counts;
-    }, [rawGlossaryTerms, filterSubject]);
+    }, [rawGlossaryTerms, filterSubject, searchText]);
 
     /* Stores a reference to each glossary term component (specifically their inner paragraph tags) */
     const glossaryTermRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());

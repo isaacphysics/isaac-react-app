@@ -1443,11 +1443,13 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
     // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
     const [internalSearchText, setInternalSearchText] = useState(searchText);
 
-    // Deselect stage filters that no longer have results following a subject change
+    // Deselect stage filters that no longer have results following a subject/search term change
     useEffect(() => {
-        const remainingStages = filterStages?.filter(stage => stageCounts[stage]);
-        setFilterStages(remainingStages?.length ? remainingStages : undefined);
-    }, [filterSubject]);
+        if (stageCounts["all"] > 0) {
+            const remainingStages = filterStages?.filter(stage => stageCounts[stage]);
+            setFilterStages(remainingStages?.length ? remainingStages : undefined);
+        }
+    }, [filterSubject, searchText]);
 
     return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>
