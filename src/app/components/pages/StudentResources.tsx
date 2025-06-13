@@ -91,7 +91,7 @@ export const StudentResources = () => {
                     </ImageBlock>
                     <TextBlock>
                         <h2>Track your progress</h2>
-                        <p>With an Ada account, all your answers get saved so you can see what to work on and how you’re progressing. And you can track any assignments set by your teacher.</p>
+                        <p>With an Ada CS account, all your answers get saved so you can see what to work on and how you’re progressing. And you can track any assignments set by your teacher.</p>
                         {isLoggedIn(user) ? <>
                             <Button className="mt-3" tag={Link} to="/progress">View my progress</Button>
                         </> : <>
