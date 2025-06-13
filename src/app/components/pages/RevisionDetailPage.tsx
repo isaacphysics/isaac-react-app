@@ -57,7 +57,7 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
 
         <TeacherNotes notes={page.teacherNotes} />
 
-        <MetadataContainer>
+        <MetadataContainer className="d-flex flex-column gap-2">
             {!!page.gameboards?.length && <MetadataContainerLink id="introduction" title="Introduction" />}
             <MetadataContainerLink id="revision" title="Revision" />
             {!!tests.length && <MetadataContainerLink id="tests" title="Practice tests" />}

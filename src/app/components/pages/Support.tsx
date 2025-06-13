@@ -11,6 +11,7 @@ import {NotFound} from "./NotFound";
 import {MetaDescription} from "../elements/MetaDescription";
 import { FAQSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
+import { PageMetadata } from "../elements/PageMetadata";
 
 type SupportType = "student" | "teacher" | "tutor";
 
@@ -145,10 +146,10 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
                 )}
             </FAQSidebar>
             <MainContent>
+                <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title}/>
                 <TabContent activeTab={categoryIndex}>
                     {Object.values(section.categories).map((category, index) => 
                         <TabPane key={index} tabId={index}>
-                            <h2 className="mt-5">{category.title}</h2>
                             <div className="accordion-background">
                                 <PageFragment fragmentId={`support_${type}_${category.category}`} />
                             </div>

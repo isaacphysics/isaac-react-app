@@ -5,6 +5,7 @@ import { PageFragment } from "../elements/PageFragment";
 import { BooksOverviewSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { BookHiddenState, BookInfo, ISAAC_BOOKS } from "../../services";
 import { Link } from "react-router-dom";
+import { PageMetadata } from "../elements/PageMetadata";
 
 export const BookCard = (book: BookInfo) => {
     return <Link to={book.path} className="book-container d-flex p-2 gap-3">
@@ -30,6 +31,7 @@ export const BooksOverview = () => {
         <SidebarLayout>
             <BooksOverviewSidebar />
             <MainContent>
+                <PageMetadata title={"Isaac books: in print and online"}/>
                 <PageFragment fragmentId="books_overview_fragment" />
 
                 <h3>Explore our books online</h3>
