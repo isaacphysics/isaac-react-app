@@ -53,7 +53,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                         {doc?.subtitle && <h5 className="text-theme-dark"><Markup encoding="latex">{subtitle ?? doc.subtitle}</Markup></h5>}
                     </div>
                     <div className="d-flex gap-2 ms-auto">
-                        {<ShareLink linkUrl={location.pathname} clickAwayClose />}
+                        {<ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />}
                         <PrintButton questionPage={isQuestion} />
                         {doc?.id && <ReportButton pageId={doc.id} />}
                     </div>
