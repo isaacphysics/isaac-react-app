@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Card, CardBody, Button, Row, Col, Table, UncontrolledTooltip, Spinner } from "reactstrap";
 import { AssignmentBoardOrder, Boards } from "../../../IsaacAppTypes";
 import { isPhy, siteSpecific, difficultiesOrdered, difficultyShortLabelMap, isAda, BoardViews, BoardCreators, BoardCompletions, matchesAllWordsInAnyOrder, formatBoardOwner, boardCompletionSelection } from "../../services";
@@ -44,6 +44,58 @@ const PhyTable = (props: GameboardsTableProps) => {
             <CSTable {...props} />
         </CardBody>
     </Card>;
+};
+
+export const HorizontalScroller = ({ children }: { children: React.ReactElement }) => {
+    const topScrollbarRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
+    const childrenContentRef = useRef<HTMLDivElement>(null);
+    const [contentWidth, setContentWidth] = React.useState<number>(0);
+
+    // Synchronize the scroll position of the top and bottom scrollbars
+    const syncScroll = (source: "top" | "content") => {
+        if (source === "top") {
+            if (contentRef.current && topScrollbarRef.current) {
+                contentRef.current.scrollLeft = topScrollbarRef.current.scrollLeft;
+            }
+        } else if (source === "content") {
+            if (topScrollbarRef.current && contentRef.current) {
+                topScrollbarRef.current.scrollLeft = contentRef.current.scrollLeft;
+            }
+        }
+    };
+
+    useEffect(() => { 
+        if (childrenContentRef.current) {
+            setContentWidth(childrenContentRef.current.scrollWidth);
+        }
+    }, [children]);
+
+    const [heighty, setHeighty] = React.useState<string>("0px");
+
+    useEffect(() => {
+        function handleResize() {
+            if ((topScrollbarRef.current?.offsetWidth ?? contentWidth) < contentWidth) {
+                setHeighty("12px");
+            } else {
+                setHeighty("0px");
+            }
+        }
+
+        handleResize(); // Initial call to set height based on current width
+        window.addEventListener('resize', handleResize);
+    });
+
+    return (
+        <div>
+            <div className="overflow-x-auto" onScroll={() => syncScroll("top")} ref={topScrollbarRef} style={{ height: heighty }}>
+                <div style={{ width: contentWidth }}/>
+            </div>
+            <div className="overflow-x-auto" ref={contentRef} onScroll={() => syncScroll("content")}>
+                <div className={"children__content"} ref={childrenContentRef}>{children}</div>
+            </div>
+        </div>
+    )
 };
 
 const CSTable = (props: GameboardsTableProps) => {
@@ -94,28 +146,30 @@ const CSTable = (props: GameboardsTableProps) => {
     </tr>;
 
     return <div className={siteSpecific("", "mb-5 mb-md-6")}>
-        <Table className={classNames("my-gameboard-table", {"mb-0" : isPhy})} responsive>
-            <thead>
-                {tableHeader}
-            </thead>
-            <tbody>
-                {boards?.boards
-                    .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
-                    .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                    .filter(board => boardCompletionSelection(board, boardCompletion))
-                    .map(board =>
-                        <BoardCard
-                            key={board.id}
-                            board={board}
-                            selectedBoards={selectedBoards}
-                            setSelectedBoards={setSelectedBoards}
-                            boardView={boardView}
-                            user={user}
-                            boards={boards}
-                        />)
-                }
-            </tbody>
-        </Table>
+        <HorizontalScroller>
+            <Table className={classNames("my-gameboard-table", {"mb-0" : isPhy})}>
+                <thead>
+                    {tableHeader}
+                </thead>
+                <tbody>
+                    {boards?.boards
+                        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                        .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                        .filter(board => boardCompletionSelection(board, boardCompletion))
+                        .map(board =>
+                            <BoardCard
+                                key={board.id}
+                                board={board}
+                                selectedBoards={selectedBoards}
+                                setSelectedBoards={setSelectedBoards}
+                                boardView={boardView}
+                                user={user}
+                                boards={boards}
+                            />)
+                    }
+                </tbody>
+            </Table>
+        </HorizontalScroller>
     </div>;
 };
 
