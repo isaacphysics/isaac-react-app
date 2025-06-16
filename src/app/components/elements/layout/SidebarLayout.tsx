@@ -8,7 +8,7 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
     stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
-import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
+import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag, ContentSidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
@@ -102,8 +102,10 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     // A content sidebar is used to interact with the main content, e.g. filters or search boxes, or for in-page nav (e.g. lessons and revision);
     // the content in such a sidebar will collapse into a button accessible from above the main content on smaller screens
     const deviceSize = useDeviceSize();
-    const [menuOpen, setMenuOpen] = useState(false);
-    const toggleMenu = () => setMenuOpen(m => !m);
+    const dispatch = useAppDispatch();
+    const sidebarOpen = useAppSelector(selectors.sidebar.open);
+    const toggleMenu = () => dispatch(sidebarSlice.actions.toggle());
+    const closeMenu = () => dispatch(sidebarSlice.actions.setOpen(false));
 
     const pageTheme = useAppSelector(selectors.pageContext.subject);
 
@@ -114,11 +116,11 @@ const ContentSidebar = (props: ContentSidebarProps) => {
         {above['lg'](deviceSize) 
             ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
-                <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
+                {optionBar && <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     <div className="flex-grow-1 d-inline-grid align-items-end">{optionBar}</div>
-                </div>
-                {!hideButton && <SidebarButton buttonTitle={buttonTitle} toggleMenu={toggleMenu} />}
-                <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
+                </div>}
+                {!hideButton && <SidebarButton buttonTitle={buttonTitle} />}
+                <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={sidebarOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
                             <AffixButton color="keyline" size="lg" onClick={toggleMenu} data-testid="close-sidebar-button" affix={{
@@ -131,7 +133,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                         </div>
                     }/>
                     <OffcanvasBody>
-                        <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: () => setMenuOpen(false)}}>
+                        <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: closeMenu}}>
                             <Col {...rest} className={classNames("sidebar p-4 pt-0", className)} />
                         </ContentSidebarContext.Provider>
                     </OffcanvasBody>
