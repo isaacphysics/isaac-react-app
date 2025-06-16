@@ -1,18 +1,8 @@
-import React, {Suspense, useEffect, useMemo, useState} from 'react';
+import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
-import {
-    Button,
-    Col,
-    Container,
-    Form,
-    Input,
-    Nav,
-    NavItem,
-    NavLink,
-    TabContent,
-    TabPane,
-} from "reactstrap";
+import classNames from "classnames";
+import {Button, Container, Form, Input, Nav, NavItem, NavLink, TabContent, TabPane,} from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {
     AppDispatch,
@@ -52,7 +42,6 @@ import {
     isPhy,
     isStaff,
     isTeacherOrAbove,
-    siteSpecific,
     validateEmail,
     validateEmailPreferences,
     validatePassword
@@ -70,9 +59,10 @@ import {UserProfile} from '../elements/panels/UserProfile';
 import {UserContent} from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {MainContent, MyAccountSidebar, SidebarLayout} from '../elements/layout/SidebarLayout';
-import { Loading } from '../handlers/IsaacSpinner';
-import UserMFA from '../elements/panels/UserMFA';
-import classNames from 'classnames';
+import {Loading} from '../handlers/IsaacSpinner';
+
+// Avoid loading the (large) QRCode library unless necessary:
+const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
 // TODO: work out which of these `any`s can be specified
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -389,7 +379,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                             newPassword={newPassword} setNewPassword={setNewPassword} editingOtherUser={editingOtherUser}
                                             isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
                                         />
-                                    </TabPane>                   
+                                    </TabPane>
                                     {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                                         <UserEmailPreferencesPanel
                                             emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
@@ -419,7 +409,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                     <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
                                         userToEdit={userToEdit}
                                     />
-                                </TabPane> 
+                                </TabPane>
                             </TabContent>}
                             <div className={classNames({"py-4 card-footer": isAda})}>
                                 {isPhy && <div className="section-divider-bold"/>}
