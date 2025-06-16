@@ -102,7 +102,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                             {!preview && <CanonicalHrefElement />}
 
                             <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
-                                <MetadataContainer className="d-flex row">
+                                {isPhy && <MetadataContainer className="d-flex row">
                                     <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
                                         <span>Subject & topics</span>
                                         <div className="d-flex align-items-center">
@@ -126,7 +126,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                         <span>Stage & difficulty</span>
                                         <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/>
                                     </Col>
-                                </MetadataContainer>
+                                </MetadataContainer>}
                             </PageMetadata>
 
                             {isAda && pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}

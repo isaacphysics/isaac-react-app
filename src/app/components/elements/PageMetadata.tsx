@@ -8,7 +8,7 @@ import { EditContentButton } from './EditContentButton';
 import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
-import { below, useDeviceSize } from '../../services';
+import { below, isAda, isPhy, useDeviceSize } from '../../services';
 
 interface PageMetadataProps {
     doc?: SeguePageDTO;
@@ -26,6 +26,16 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const location = useLocation();
     const deviceSize = useDeviceSize();
 
+    const ActionButtons = () => {
+        return (
+            <div className="d-flex gap-2 ms-auto">
+                {<ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />}
+                <PrintButton questionPage={isQuestion} />
+                {doc?.id && <ReportButton pageId={doc.id} />}
+            </div>
+        );
+    };
+
     return <>
         {noTitle 
             ? <>
@@ -33,16 +43,13 @@ export const PageMetadata = (props: PageMetadataProps) => {
                     <div>
                         {children}
                     </div>
-                    <div className="d-flex gap-2 ms-auto">
-                        {<ShareLink linkUrl={location.pathname} clickAwayClose />}
-                        <PrintButton questionPage={isQuestion} />
-                        {doc?.id && <ReportButton pageId={doc.id} />}
-                    </div>
+                    <ActionButtons />
+                    {isAda && <EditContentButton doc={doc} />}
                 </div>
             </>
             : <>
                 <div className="d-flex align-items-center mt-3 gap-3 no-print">
-                    <div>
+                    {isPhy && <div>
                         <div className="d-flex align-items-center gap-3">
                             <h3>
                                 {title 
@@ -55,19 +62,18 @@ export const PageMetadata = (props: PageMetadataProps) => {
                             {badges}
                         </div>
                         {doc?.subtitle && <h5 className="text-theme-dark"><Markup encoding="latex">{subtitle ?? doc.subtitle}</Markup></h5>}
-                    </div>
-                    <div className="d-flex gap-2 ms-auto">
-                        {<ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />}
-                        <PrintButton questionPage={isQuestion} />
-                        {doc?.id && <ReportButton pageId={doc.id} />}
-                    </div>
+                    </div>}
+                    {isAda && <EditContentButton doc={doc} />}
+                    <ActionButtons />
                 </div>
                 {children}
             </>
         }
-        {sidebarButtonText && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
-        <div className="section-divider mt-3" />
-        <EditContentButton doc={doc} />
-        <TeacherNotes notes={doc?.teacherNotes} />
+        {isPhy && <>
+            {sidebarButtonText && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
+            <div className="section-divider mt-3" />
+            <EditContentButton doc={doc} />
+            <TeacherNotes notes={doc?.teacherNotes} />
+        </>}
     </>;
 };
