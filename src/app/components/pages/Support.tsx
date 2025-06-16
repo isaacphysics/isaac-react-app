@@ -149,9 +149,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
                     {Object.values(section.categories).map((category, index) => 
                         <TabPane key={index} tabId={index}>
                             <h2 className="mt-5">{category.title}</h2>
-                            <div className="accordion-background">
-                                <PageFragment fragmentId={`support_${type}_${category.category}`} />
-                            </div>
+                            <PageFragment fragmentId={`support_${type}_${category.category}`} />
                         </TabPane>
                     )}
                 </TabContent>

@@ -289,3 +289,9 @@ $viewport-sizes: (
     @content;
   }
 }
+
+@mixin only-print {
+  @media print {
+    @content;
+  }
+}

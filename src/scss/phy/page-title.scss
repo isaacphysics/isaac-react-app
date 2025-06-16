@@ -59,6 +59,18 @@
         }
     }
 
+    @include only-print {
+        .bread:has(+ h1#main-heading) {
+            + h1#main-heading {
+                display: none !important;
+            }
+        }
+
+        .bread:not(:has(+ h1#main-heading)) {
+            display: none !important;
+        }
+    }
+
     button.btn.btn-link.title-help {
         color: white;
     }
