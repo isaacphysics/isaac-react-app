@@ -31,6 +31,7 @@ import { tags as tagsService } from "../../../services";
 import { Markup } from "../markup";
 import { History } from "history";
 import { calculateSidebarLink, containsActiveTab, isSidebarGroup } from "../../../services/sidebar";
+import { SidebarButton } from "../SidebarButton";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -114,15 +115,9 @@ const ContentSidebar = (props: ContentSidebarProps) => {
             ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
                 <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
-                    {!hideButton && <AffixButton data-testid="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
-                        affix: "icon-sidebar", 
-                        position: "prefix", 
-                        type: "icon"
-                    }}>
-                        {buttonTitle ?? "Search and filter"}
-                    </AffixButton>}
                     <div className="flex-grow-1 d-inline-grid align-items-end">{optionBar}</div>
                 </div>
+                {!hideButton && <SidebarButton buttonTitle={buttonTitle} toggleMenu={toggleMenu} />}
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">

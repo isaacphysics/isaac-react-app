@@ -106,3 +106,31 @@
   align-content: center;
   margin-bottom: 3px;
 }
+
+.sidebar-toggle {
+  position: sticky;
+  top: 1.5rem;
+  min-height: 41px;
+  overflow: hidden;
+  z-index: 19;
+  box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.2);
+  transition: $btn-transition, max-width 0.3s ease-out;  
+  
+  > * {
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.3s ease-out;
+  }
+
+  &.stuck {
+    max-width: 59px;
+
+    > *:not(:is(i, img)) {
+      opacity: 0;
+    }
+  }
+}
+
+.btn.btn-keyline.sidebar-toggle {
+  background-color: $color-neutral-50;
+}
