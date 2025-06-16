@@ -332,10 +332,10 @@ export const Glossary = () => {
                 <GlossarySidebar 
                     searchText={searchText} setSearchText={debouncedSearchHandler} filterSubject={filterSubject} setFilterSubject={setFilterSubject}
                     filterStages={filterStages} setFilterStages={setFilterStages} subjects={subjects} stages={stages} stageCounts={stageCounts}
-                    subjectCounts={subjectCounts}
+                    subjectCounts={subjectCounts} hideButton
                 />
                 <MainContent>
-                    <PageMetadata />
+                    <PageMetadata sidebarButtonText="Search glossary" />
                     <Row>
                         <Col md={{size: 9}} className="py-4">
                             <Row className="no-print">

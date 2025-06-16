@@ -137,7 +137,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
             icon={{type: "hex", icon: "icon-finder"}}
         />  {/* TODO replace this icon */}
         <SidebarLayout>
-            <FAQSidebar>
+            <FAQSidebar hideButton>
                 {Object.values(section.categories).map((category, index) => 
                     <StyledTabPicker
                         key={index} id={category.category} tabIndex={0} checkboxTitle={category.title} checked={categoryIndex === index}
@@ -146,7 +146,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
                 )}
             </FAQSidebar>
             <MainContent>
-                <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title}/>
+                <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title} sidebarButtonText="Select a topic"/>
                 <TabContent activeTab={categoryIndex}>
                     {Object.values(section.categories).map((category, index) => 
                         <TabPane key={index} tabId={index}>

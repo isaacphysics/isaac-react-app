@@ -38,9 +38,9 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
             } : undefined}
         />
         <SidebarLayout>
-            <QuestionDecksSidebar validStageSubjectPairs={validQuestionDeckStageSubjectPairs} context={pageContext} />
+            <QuestionDecksSidebar validStageSubjectPairs={validQuestionDeckStageSubjectPairs} context={pageContext} hideButton />
             <MainContent>
-                <PageMetadata />
+                <PageMetadata sidebarButtonText="Search and filter" />
                 <PageFragment fragmentId={getFragmentFromContext(pageContext)} />
             </MainContent>
         </SidebarLayout>

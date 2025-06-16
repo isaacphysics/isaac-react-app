@@ -54,7 +54,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                 defaultErrorTitle="Unable to load book contents"
                 thenRender={(definedBookIndexPage) => {
                     return <>
-                        <ContentControlledSidebar sidebar={book?.sidebar}/>
+                        <ContentControlledSidebar sidebar={book?.sidebar} hideButton/>
                         <MainContent>
                             {pageId
                                 ? <ShowLoadingQuery
@@ -63,7 +63,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                     thenRender={(bookDetailPage) => <BookPage page={bookDetailPage} />}
                                 />
                                 : <>
-                                    <PageMetadata doc={definedBookIndexPage} />
+                                    <PageMetadata doc={definedBookIndexPage} sidebarButtonText={book?.sidebar?.subtitle}/>
                                     {definedBookIndexPage.value && <div>
                                         <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
                                             <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />

@@ -29,9 +29,9 @@ export const BooksOverview = () => {
             icon={{type: "hex", icon: "icon-book"}}
         />
         <SidebarLayout>
-            <BooksOverviewSidebar />
+            <BooksOverviewSidebar hideButton />
             <MainContent>
-                <PageMetadata title={"Isaac books: in print and online"}/>
+                <PageMetadata title={"Isaac books: in print and online"} sidebarButtonText="View all books"/>
                 <PageFragment fragmentId="books_overview_fragment" />
 
                 <h3>Explore our books online</h3>

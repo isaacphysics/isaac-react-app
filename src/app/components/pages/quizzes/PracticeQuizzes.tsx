@@ -96,9 +96,9 @@ const PracticeQuizzesComponent = () => {
             className={siteSpecific("mb-4", "")} 
         />
         <SidebarLayout>
-            <PracticeQuizzesSidebar {...sidebarProps}/>
+            <PracticeQuizzesSidebar {...sidebarProps} hideButton />
             <MainContent>
-                <PageMetadata noTitle>
+                <PageMetadata noTitle sidebarButtonText="Search and filter">
                     <PageFragment fragmentId="help_toptext_practice_tests"/>
                 </PageMetadata>
                 {!user 

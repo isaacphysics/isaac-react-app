@@ -187,9 +187,9 @@ export const Gameboard = withRouter(({ location }) => {
                             intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: "Assignments", to: "/assignments"}] : []}
                         />
                         <SidebarLayout>
-                            <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments}/>
+                            <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />
                             <MainContent>
-                                <PageMetadata title={gameboard.title} />
+                                <PageMetadata title={gameboard.title} sidebarButtonText="Details"/>
                                 {/* // {isPhy && <h3 className="mt-3">{gameboard.title}</h3>} */}
                                 <GameboardViewer gameboard={gameboard} className={siteSpecific("mt-3", "mt-4 mt-lg-5")} />
                                 {user && isTutorOrAbove(user)

@@ -119,7 +119,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                 {optionBar && <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     <div className="flex-grow-1 d-inline-grid align-items-end">{optionBar}</div>
                 </div>}
-                {!hideButton && <SidebarButton buttonTitle={buttonTitle} />}
+                {!hideButton && <SidebarButton buttonTitle={buttonTitle} className="my-3"/>}
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={sidebarOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
@@ -258,13 +258,13 @@ export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) =
     </NavigationSidebar>;
 };
 
-interface GameboardSidebarProps extends SidebarProps {
+interface GameboardSidebarProps extends ContentSidebarProps {
     gameboard: GameboardDTO;
     assignments: AssignmentDTO[] | false;
 };
 
 export const GameboardSidebar = (props: GameboardSidebarProps) => {
-    const {gameboard, assignments} = props;
+    const {gameboard, assignments, ...rest} = props;
     const multipleAssignments = assignments && assignments.length > 1;
 
     const GameboardDetails = () => {
@@ -300,7 +300,7 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         </>;
     };
     
-    return <ContentSidebar buttonTitle="Details">
+    return <ContentSidebar buttonTitle="Details" {...rest}>
         <div className="section-divider"/>
         <h5>Question deck</h5>
         <GameboardDetails />
@@ -380,7 +380,7 @@ const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnab
     />;
 };
 
-interface ConceptListSidebarProps extends SidebarProps {
+interface ConceptListSidebarProps extends ContentSidebarProps {
     searchText: string | null;
     setSearchText: React.Dispatch<React.SetStateAction<string | null>>;
     conceptFilters: Tag[];
@@ -529,7 +529,7 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface QuestionFinderSidebarProps extends SidebarProps {
+interface QuestionFinderSidebarProps extends ContentSidebarProps {
     searchText: string;
     setSearchText: (searchText: string) => void;
     tagCounts?: Record<string, number>;
@@ -563,7 +563,7 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface PracticeQuizzesSidebarProps extends SidebarProps {
+interface PracticeQuizzesSidebarProps extends ContentSidebarProps {
     filterText: string;
     setFilterText: Dispatch<SetStateAction<string>>;
     filterTags?: Tag[];
@@ -684,7 +684,7 @@ export const LessonsAndRevisionSidebar = (props: SidebarProps) => {
     return <ContentSidebar {...props}/>;
 };
 
-export const FAQSidebar = (props: SidebarProps) => {
+export const FAQSidebar = (props: ContentSidebarProps) => {
     return <ContentSidebar buttonTitle="Select a topic" {...props}>
         <div className="section-divider mb-3"/>
         <h5 className="mb-3">Select a topic</h5>
@@ -803,7 +803,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface MyGameboardsSidebarProps extends SidebarProps {
+interface MyGameboardsSidebarProps extends ContentSidebarProps {
     displayMode: BoardViews;
     setDisplayMode: React.Dispatch<React.SetStateAction<BoardViews>>;
     displayLimit: BoardLimit;
@@ -1365,17 +1365,17 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface QuestionDecksSidebarProps extends SidebarProps {
+interface QuestionDecksSidebarProps extends ContentSidebarProps {
     validStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]};
     context: NonNullable<Required<PageContextState>>;
 };
 
 export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
-    const { validStageSubjectPairs, context } = props;
+    const { validStageSubjectPairs, context, ...rest } = props;
 
     const history = useHistory();
 
-    return <ContentSidebar buttonTitle="Switch stage/subject" {...props}>
+    return <ContentSidebar buttonTitle="Switch stage/subject" {...rest}>
         <div className="section-divider"/>
         <search>
             <h5>Decks by stage</h5>
@@ -1551,11 +1551,11 @@ const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: H
         </li>;
 };
 
-export const ContentControlledSidebar = ({sidebar}: {sidebar?: SidebarDTO}) => {
+export const ContentControlledSidebar = ({sidebar, ...rest}: ContentSidebarProps & {sidebar?: SidebarDTO}) => {
 
     const history = useHistory();
 
-    return <ContentSidebar buttonTitle={sidebar?.subtitle}>
+    return <ContentSidebar buttonTitle={sidebar?.subtitle} {...rest}>
         <div className="section-divider"/>
         <ul>
             {sidebar?.sidebarEntries?.map((entry, index) => (

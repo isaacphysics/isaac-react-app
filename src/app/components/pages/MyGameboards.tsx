@@ -190,9 +190,10 @@ export const MyGameboards = () => {
                 boardTitleFilter={boardTitleFilter} setBoardTitleFilter={setBoardTitleFilter}
                 boardCreatorFilter={boardCreator} setBoardCreatorFilter={setBoardCreator}
                 boardCompletionFilter={boardCompletion} setBoardCompletionFilter={setBoardCompletion}
+                hideButton
             />
             <MainContent>
-                <PageMetadata noTitle>
+                <PageMetadata noTitle sidebarButtonText="Search and filter">
                     <PageFragment fragmentId={`${siteSpecific("gameboards", "quizzes")}_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
                 </PageMetadata>
                 {boards && boards.totalResults == 0 ?

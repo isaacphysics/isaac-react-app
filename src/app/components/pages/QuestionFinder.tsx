@@ -468,12 +468,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     selections, setSelections,
                     applyFilters: searchAndUpdateURL, clearFilters,
                     validFiltersSelected, searchDisabled, setSearchDisabled
-                }} optionBar={BrowseAllButton}/>
+                }} optionBar={BrowseAllButton} hideButton/>
             <MainContent>
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
 
-                <PageMetadata noTitle>
+                <PageMetadata noTitle sidebarButtonText="Search and filter">
                     {siteSpecific(
                         <div>
                             {(pageContext?.subject && pageContext.stage)
