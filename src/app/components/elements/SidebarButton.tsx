@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AffixButton } from './AffixButton';
 import { ButtonProps } from 'reactstrap';
-import { selectors, sidebarSlice, useAppDispatch, useAppSelector } from '../../state';
+import { sidebarSlice, useAppDispatch } from '../../state';
 import classNames from 'classnames';
 
 interface SidebarButtonProps extends ButtonProps {
@@ -11,15 +11,14 @@ interface SidebarButtonProps extends ButtonProps {
 export const SidebarButton = ({ buttonTitle, ...rest }: SidebarButtonProps) => {
     const dispatch = useAppDispatch();
     const [sticky, setSticky] = useState(false);
-    const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
-    const mainContent = document.getElementById(mainContentId);
+    const buttonRef = useRef<HTMLButtonElement>(null);
     const textRef = useRef<HTMLSpanElement>(null);
 
     const toggleMenu = () => dispatch(sidebarSlice.actions.toggle());
 
     const isSticky = useCallback(() => {
-        setSticky(!!mainContent && window.scrollY >= mainContent.offsetTop);
-    }, [mainContent]);
+        setSticky(!!buttonRef.current && window.scrollY >= buttonRef.current.offsetTop - 36);
+    }, [buttonRef]);
 
     useEffect(() => {
         window.addEventListener('scroll', isSticky);
@@ -30,6 +29,7 @@ export const SidebarButton = ({ buttonTitle, ...rest }: SidebarButtonProps) => {
 
     return <AffixButton 
         {...rest} 
+        innerRef={buttonRef}
         data-testid="sidebar-toggle" 
         className={classNames("sidebar-toggle", {"stuck": sticky}, rest.className)} 
         color="keyline" 
