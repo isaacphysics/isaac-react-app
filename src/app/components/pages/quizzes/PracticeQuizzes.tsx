@@ -93,11 +93,10 @@ const PracticeQuizzesComponent = () => {
             currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} 
             icon={{"type": "hex", "icon": "icon-tests"}}
             intermediateCrumbs={crumb ? [crumb] : []}
-            className={siteSpecific("mb-4", "")} 
         />
         <SidebarLayout>
             <PracticeQuizzesSidebar {...sidebarProps} hideButton />
-            <MainContent>
+            <MainContent className="mb-4">
                 <PageMetadata noTitle sidebarButtonText="Search and filter">
                     <PageFragment fragmentId="help_toptext_practice_tests"/>
                 </PageMetadata>
