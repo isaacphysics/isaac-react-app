@@ -8,6 +8,7 @@ import { Loading } from "../handlers/IsaacSpinner";
 import { PageContextState } from "../../../IsaacAppTypes";
 import { MainContent, QuestionDecksSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ArrayElement, LEARNING_STAGE, PHY_NAV_SUBJECTS } from "../../services";
+import { PageMetadata } from "../elements/PageMetadata";
 
 export const QuestionDecks = withRouter((props: RouteComponentProps) => {
     const pageContext = useUrlPageTheme();
@@ -39,6 +40,7 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
         <SidebarLayout>
             <QuestionDecksSidebar validStageSubjectPairs={validQuestionDeckStageSubjectPairs} context={pageContext} />
             <MainContent>
+                <PageMetadata />
                 <PageFragment fragmentId={getFragmentFromContext(pageContext)} />
             </MainContent>
         </SidebarLayout>

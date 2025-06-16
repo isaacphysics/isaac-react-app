@@ -58,7 +58,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 
     const question = questions?.[0];
 
-    return <div className="py-4 container-override random-question-panel">
+    return <div className="d-flex flex-column pb-4 container-override random-question-panel">
         <div className="d-flex my-3 justify-content-between align-items-center">
             <h4 className="m-0">Try a random question!</h4>
             <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>

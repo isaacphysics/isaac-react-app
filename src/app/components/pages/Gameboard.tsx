@@ -38,6 +38,7 @@ import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { GameboardSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { PageMetadata } from "../elements/PageMetadata";
 
 export const getProgressIcon = (question: GameboardItem) => {
     const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
@@ -188,7 +189,8 @@ export const Gameboard = withRouter(({ location }) => {
                         <SidebarLayout>
                             <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments}/>
                             <MainContent>
-                                {isPhy && <h3 className="mt-3">{gameboard.title}</h3>}
+                                <PageMetadata title={gameboard.title} />
+                                {/* // {isPhy && <h3 className="mt-3">{gameboard.title}</h3>} */}
                                 <GameboardViewer gameboard={gameboard} className={siteSpecific("mt-3", "mt-4 mt-lg-5")} />
                                 {user && isTutorOrAbove(user)
                                     ? <Row>
