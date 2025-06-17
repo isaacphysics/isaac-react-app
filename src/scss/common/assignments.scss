@@ -116,3 +116,13 @@
     }
   }
 }
+
+.top-scrollbar-container {
+  height: 16px;
+  overflow-x: auto;
+
+  &.closed {
+    height: 0;
+    overflow-x: hidden;
+  }
+}
