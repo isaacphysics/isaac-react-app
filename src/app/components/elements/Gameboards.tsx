@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardBody, Button, Row, Col, Table, UncontrolledTooltip, Spinner } from "reactstrap";
 import { AssignmentBoardOrder, Boards } from "../../../IsaacAppTypes";
-import { isPhy, siteSpecific, difficultiesOrdered, difficultyShortLabelMap, isAda, BoardViews, BoardCreators, BoardCompletions, matchesAllWordsInAnyOrder, formatBoardOwner, boardCompletionSelection, isMobile, isTouchDevice } from "../../services";
+import { isPhy, siteSpecific, difficultiesOrdered, difficultyShortLabelMap, isAda, BoardViews, BoardCreators, BoardCompletions, matchesAllWordsInAnyOrder, formatBoardOwner, boardCompletionSelection } from "../../services";
 import { SortItemHeader } from "./SortableItemHeader";
 import { BoardCard } from "./cards/BoardCard";
 import { RegisteredUserDTO, GameboardDTO } from "../../../IsaacApiTypes";
@@ -100,7 +100,7 @@ const CSTable = (props: GameboardsTableProps) => {
         .filter(board => boardCompletionSelection(board, boardCompletion));
 
     return <div className={siteSpecific("", "mb-5 mb-md-6")}>
-        <HorizontalScroller enabled={!isTouchDevice() && (filteredBoards ? filteredBoards.length > 6 : false)}>
+        <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
             <Table className={classNames("my-gameboard-table", {"mb-0" : isPhy})}>
                 <thead>
                     {tableHeader}
