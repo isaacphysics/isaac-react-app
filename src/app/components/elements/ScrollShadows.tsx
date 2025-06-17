@@ -58,7 +58,7 @@ export const ScrollShadows = <T extends HTMLElement>({element, shadowType} : {el
         : 0;
 
     return (scrollWidth - clientWidth) > 5 ? <>
-        <div aria-hidden className={classNames(shadowType ?? "scroll-shadow", "left")} style={{opacity: leftOpacity}}/>
-        <div aria-hidden className={classNames(shadowType ?? "scroll-shadow", "right")} style={{opacity: rightOpacity}}/>
+        <div aria-hidden className={classNames(shadowType ?? "scroll-shadow", "left no-print")} style={{opacity: leftOpacity}}/>
+        <div aria-hidden className={classNames(shadowType ?? "scroll-shadow", "right no-print")} style={{opacity: rightOpacity}}/>
     </> : null;
 };
