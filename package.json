@@ -116,7 +116,7 @@
     "@babel/eslint-parser": "^7.24.1",
     "@babel/plugin-transform-classes": "^7.24.7",
     "@babel/plugin-transform-modules-commonjs": "^7.24.7",
-    "@babel/preset-env": "^7.24.6",
+    "@babel/preset-env": "^7.27.2",
     "@babel/preset-react": "^7.24.7",
     "@babel/preset-typescript": "^7.24.1",
     "@testing-library/dom": "^9.3.4",
