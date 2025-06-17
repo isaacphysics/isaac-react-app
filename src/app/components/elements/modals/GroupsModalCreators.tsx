@@ -94,7 +94,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
     title: firstTime ? "Group Created" : "Invite Users",
     body: <CurrentGroupInviteModal group={group} firstTime={firstTime} />,
     buttons: [
-        <Row key={0}>
+        <Row key={0} className="w-100">
             {/* Only teachers are allowed to add additional managers to a group. */}
             {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pd-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
                 <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
