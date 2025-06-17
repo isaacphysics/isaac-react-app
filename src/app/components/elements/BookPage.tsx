@@ -14,7 +14,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             doc={page}
             title={<>
                 {page.subtitle && <span className="me-3 text-theme">{page.subtitle} </span>}
-                <Markup encoding="latex">{page.title}</Markup>
+                <Markup encoding="latex" className="text-black">{page.title}</Markup>
             </>}
             subtitle=""
             sidebarButtonText={page.sidebar?.subtitle}

@@ -51,7 +51,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                 <div className="d-flex align-items-center mt-3 gap-3 no-print">
                     {isPhy && <div>
                         <div className="d-flex align-items-center gap-3">
-                            <h3>
+                            <h3 className="text-theme-dark">
                                 {title 
                                     ? typeof title === "string"
                                         ? <Markup encoding="latex">{title}</Markup>
@@ -61,7 +61,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                             </h3>
                             {badges}
                         </div>
-                        {doc?.subtitle && <h5 className="text-theme-dark"><Markup encoding="latex">{subtitle ?? doc.subtitle}</Markup></h5>}
+                        {doc?.subtitle && <h5><Markup encoding="latex">{subtitle ?? doc.subtitle}</Markup></h5>}
                     </div>}
                     {isAda && <EditContentButton doc={doc} />}
                     <ActionButtons />
