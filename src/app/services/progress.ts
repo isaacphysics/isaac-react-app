@@ -22,7 +22,7 @@ export const AssignmentOrder = {
 export function useAssignmentProgressAccessibilitySettings({user}: {user: RegisteredUserDTO}): AssignmentProgressPageSettings {
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
-    const [attemptedOrCorrect, setAttemptedOrCorrect] = useState<"ATTEMPTED" | "CORRECT">("ATTEMPTED");
+    const [attemptedOrCorrect, setAttemptedOrCorrect] = useState<"ATTEMPTED" | "CORRECT">("CORRECT");
     const [assignmentOrder, setAssignmentOrder] = useState<AssignmentOrderSpec>(AssignmentOrder.startDateDescending);
     const [groupSortOrder, setGroupSortOrder] = useState<GroupSortOrder>(GroupSortOrder.Alphabetical);
 
