@@ -41,7 +41,7 @@ export const generateCorrectnessIcon = (correct: number, incorrect: number, notA
     }
 };
 
-export const getQuizQuestionCorrectnessIcon = (state: CompletionState) => {
+const getAssignmentQuestionCorrectnessIcon = (state: CompletionState) => {
     switch (state) {
         case CompletionState.ALL_CORRECT:
             return ICON.correct;
@@ -52,6 +52,23 @@ export const getQuizQuestionCorrectnessIcon = (state: CompletionState) => {
             return ICON.partial;
         case CompletionState.NOT_ATTEMPTED:
             return ICON.notAttempted;
+    }
+};
+
+const getQuizQuestionCorrectnessIcon = (attemptedOrCorrect: "ATTEMPTED" | "CORRECT", studentProgress: AssignmentProgressDTO, questionIndex: number) => {
+    if (attemptedOrCorrect === "CORRECT") {
+        if ((studentProgress.correctPartResults || [])[questionIndex] === 1) {
+            return ICON.correct;
+        }
+        else if ((studentProgress.incorrectPartResults || [])[questionIndex] === 1) {
+            return ICON.incorrect;
+        }
+        return ICON.notAttempted;
+    } else {
+        if ((studentProgress.correctPartResults || [])[questionIndex] === 1 || (studentProgress.incorrectPartResults || [])[questionIndex] === 1) {
+            return ICON.correct;
+        }
+        return ICON.notAttempted;
     }
 };
 
@@ -249,9 +266,13 @@ export function ResultsTable<Q extends QuestionType>({
                                 <th title={fullAccess ? undefined : "Not Sharing"}>
                                     {fullAccess 
                                         ? formatMark(
-                                            pageSettings?.attemptedOrCorrect === "CORRECT"
-                                                ? studentProgress.tickCount
-                                                : studentProgress.questionResults?.filter(r => r !== CompletionState.NOT_ATTEMPTED).length ?? 0,
+                                            isAssignment
+                                                ? pageSettings?.attemptedOrCorrect === "CORRECT"
+                                                    ? studentProgress.tickCount
+                                                    : studentProgress.questionResults?.filter(r => r !== CompletionState.NOT_ATTEMPTED).length ?? 0
+                                                : pageSettings?.attemptedOrCorrect === "CORRECT"
+                                                    ? studentProgress.correctQuestionPartsCount
+                                                    : studentProgress.correctQuestionPartsCount + studentProgress.incorrectQuestionPartsCount,
                                             questions.length,
                                             !!pageSettings?.formatAsPercentage
                                         ) 
@@ -270,12 +291,10 @@ export function ResultsTable<Q extends QuestionType>({
                                                         questions[index].questionPartsTotal as number, 
                                                         !!pageSettings?.formatAsPercentage
                                                     ) 
-                                                    : getQuizQuestionCorrectnessIcon((studentProgress.questionResults || [])[index])
+                                                    : getAssignmentQuestionCorrectnessIcon((studentProgress.questionResults || [])[index])
                                                 : ""
                                             )
-                                            : (studentProgress.correctPartResults || [])[index] === 1 ? ICON.correct :
-                                                (studentProgress.incorrectPartResults || [])[index] === 1 ? ICON.incorrect :
-                                                /* default */ ICON.notAttempted
+                                            : getQuizQuestionCorrectnessIcon(pageSettings?.attemptedOrCorrect || "CORRECT", studentProgress, index)
                                         }
                                     </td> 
                                 )}
