@@ -154,7 +154,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                     <StyledCheckbox
                         checked={assignmentProgressContext?.formatAsPercentage}
                         onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
-                        label={<span className="text-muted small">Show mark as percentages</span>}
+                        label={<span className="text-muted">Show mark as percentages</span>}
                     />
                     <Spacer />
                     <AdaKey />
@@ -176,13 +176,13 @@ const AdaKey = () => {
         </span>
     );
 
-    return <div className="d-flex flex-column flex-md-row align-items-md-center gap-2 gap-md-3">
-        <span className="font-size-1 fw-bold">Key</span>
-        <div className="d-flex flex-column flex-sm-row flex-md-col gap-2">
+    return <div className="d-flex flex-column flex-md-row align-items-md-center column-gap-4 row-gap-2">
+        <span className="d-inline d-lg-none d-xl-inline font-size-1 fw-bold">Key</span>
+        <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
             <KeyItem icon={ICON.correct} label="Correct" />
             <KeyItem icon={ICON.partial} label="Partially correct" />
         </div>
-        <div className="d-flex flex-column flex-sm-row flex-md-col gap-2">
+        <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
             <KeyItem icon={ICON.incorrect} label="Incorrect" />
             <KeyItem icon={ICON.notAttempted} label="Not attempted" />
         </div>
@@ -222,7 +222,12 @@ const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...
     return <div {...rest} className={classNames("assignment-progress-card w-100 my-2", {"open": isOpen}, rest.className)}>
         <button onClick={() => setIsOpen(o => !o)} className="w-100 p-3 d-flex align-items-center text-start bg-transparent">
             <div className="d-flex flex-column">
-                <h5 className="m-0">{questionIndex + 1}. <Link to={`/questions/${questions[questionIndex].id}` + (gameboardId ? `?board=${gameboardId}` : "")}><Markup encoding="latex">{questions[questionIndex].title}</Markup></Link></h5>
+                <h5 className="m-0">
+                    {questionIndex + 1}.{" "}
+                    <Link to={`/questions/${questions[questionIndex].id}` + (gameboardId ? `?board=${gameboardId}` : "")} target="_blank" onClick={(e) => e.stopPropagation()}>
+                        <Markup encoding="latex">{questions[questionIndex].title}</Markup>
+                    </Link>
+                </h5>
                 {difficultParts.length > 0 && <span className="mt-2 small">
                     <strong>50%</strong> or more of the group answered incorrectly on part{difficultParts.length > 1 && <>s</>} <strong>{difficultParts.slice(0, 3).map(i => i + 1).join(", ")}{difficultParts.length > 3 ? `, and ${difficultParts.length - 3} more` : ""}</strong>.
                 </span>}

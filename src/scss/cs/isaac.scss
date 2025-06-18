@@ -330,6 +330,8 @@ $enable-negative-margins: true;
 
 $card-border-width: 0;
 $card-border-radius: 1rem;
+$card-spacer-x: 1.5rem;
+$card-spacer-y: 1.5rem;
 
 // all Bootstrap overrides must appear before this
 @import "~bootstrap/scss/bootstrap"; 
