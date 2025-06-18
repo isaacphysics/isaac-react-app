@@ -1130,8 +1130,8 @@ export const specificDoughnutColours: { [key: string]: string } = siteSpecific(
     {
         "Physics": "#944cbe",
         "Maths": "#007fa9",
-        "Chemistry": "#e22e25",
-        "Biology": "#005210",
+        "Chemistry": "#b7236d",
+        "Biology": "#127025",
         [difficultyLabelMap.practice_1]: "#509e2e",
         [difficultyLabelMap.practice_2]: "#3b6e25",
         [difficultyLabelMap.practice_3]: "#27421a",
@@ -1146,10 +1146,10 @@ export const doughnutColours = siteSpecific(
     [
         "#944cbe",
         "#007fa9",
-        "#e22e25",
-        "#005210",
-        "#991846",
-        "#fea100"
+        "#b7236d",
+        "#127025",
+        "#001f47",
+        "#fea102"
     ],
     [
         "#870D5A",
@@ -1163,7 +1163,7 @@ export const doughnutColours = siteSpecific(
 );
 
 export const progressColour = siteSpecific(
-    '#509E2E',
+    '#3a8621',
     '#000000'
 );
 
