@@ -7,9 +7,9 @@ export const StreakPanel = ({userProgress}: {userProgress?: UserProgress | null}
     const largestWeeklyStreak = userProgress?.userSnapshot?.weeklyStreakRecord?.largestStreak || 0;
     const currentDailyStreak = userProgress?.userSnapshot?.dailyStreakRecord?.currentStreak || 0;
     return <div className={"d-flex flex-column align-items-center"}>
-        <div className={"text-center-width mb-2"}>
+        <b className={"text-center-width mb-2"}>
             Weekly Streak
-        </div>
+        </b>
         <Row>
             <Col size={4} className="d-md-none"/>
             <Col size={4}>

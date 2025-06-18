@@ -14,14 +14,14 @@ export const StreakGauge = (props: StreakGaugeProps) => {
     const maxParts = 10;
     return <CircularProgressbarWithChildren value={streakActivity}
         maxValue={maxParts}
-        strokeWidth={15}
+        strokeWidth={12}
         styles={buildStyles({
-            pathColor: progressColour,
+            pathColor: "#3A8621", // color-brand-500
             trailColor: GRAY_120
 
         })}>
-        <div style={{fontSize: 24}}>
-            {currentStreak}
+        <div className="progress-gauge align-content-center">
+            <b>{currentStreak}</b><br/>WEEK{currentStreak !== 1 && "S"}
         </div>
     </CircularProgressbarWithChildren>;
 };
