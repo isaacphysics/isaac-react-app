@@ -14,6 +14,67 @@ import { CollapsibleContainer } from "../elements/CollapsibleContainer";
 import StyledToggle from "../elements/inputs/StyledToggle";
 import { Markup } from "../elements/markup";
 
+export const AssignmentProgressSettings = () => {
+    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
+
+    return <div className="d-flex w-100 flex-column flex-md-row content-metadata-container my-0 align-items-stretch align-items-md-center px-4 px-sm-5 px-md-0">
+        <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
+            <span>Table display mode</span>
+            <Spacer />
+            <StyledToggle falseLabel="Fractions" trueLabel="Percentages" 
+                checked={assignmentProgressContext?.formatAsPercentage} 
+                onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
+            />
+        </div>
+
+        {isPhy && <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
+            <span>Colour-blind mode</span>
+            <Spacer />
+            <StyledToggle falseLabel="Off" trueLabel="On" 
+                checked={assignmentProgressContext?.colourBlind} 
+                onChange={(e) => assignmentProgressContext?.setColourBlind?.(e.currentTarget.checked)} 
+            />
+        </div>}
+
+        {isPhy && <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
+            <span>Completion display mode</span>
+            <Spacer />
+            <StyledToggle trueLabel="Correct" falseLabel="Attempted"
+                checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"} 
+                onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} 
+            />
+        </div>}
+    </div>;
+};
+
+export function markClassesInternal(attemptedOrCorrect: "ATTEMPTED" | "CORRECT", studentProgress: AssignmentProgressDTO, status: CompletionState | null, correctParts: number, incorrectParts: number, totalParts: number) {
+    if (attemptedOrCorrect === "CORRECT") {
+        if (!isAuthorisedFullAccess(studentProgress)) {
+            return "revoked";
+        } else if (status === CompletionState.ALL_CORRECT || correctParts === totalParts) {
+            return "completed";
+        } else if (status === CompletionState.NOT_ATTEMPTED || correctParts + incorrectParts === 0) {
+            return "not-attempted";
+        } else if ((correctParts / totalParts) >= passMark) {
+            return "passed";
+        } else if ((incorrectParts / totalParts) > (1 - passMark)) {
+            return "failed";
+        } else {
+            return "in-progress";
+        }
+    } else {
+        if (!isAuthorisedFullAccess(studentProgress)) {
+            return "revoked";
+        } else if (status && isQuestionFullyAttempted(status) || correctParts + incorrectParts === totalParts) {
+            return "completed";
+        } else if (status === CompletionState.NOT_ATTEMPTED || correctParts + incorrectParts === 0) {
+            return "not-attempted";
+        } else {
+            return "in-progress";
+        }
+    }
+}
+
 interface GroupAssignmentTabProps {
     assignment: EnhancedAssignmentWithProgress;
     progress: AssignmentProgressDTO[];
@@ -27,36 +88,6 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
         return acc + (q?.questionPartsTotal ?? 0);
     }, 0);
 
-    function markClassesInternal(studentProgress: AssignmentProgressDTO, status: CompletionState | null, correctParts: number, incorrectParts: number, totalParts: number) {
-        if (assignmentProgressContext?.attemptedOrCorrect === "CORRECT") {
-            if (!isAuthorisedFullAccess(studentProgress)) {
-                return "revoked";
-            } else if (status === CompletionState.ALL_CORRECT || correctParts === totalParts) {
-                return "completed";
-            } else if (status === CompletionState.NOT_ATTEMPTED || correctParts + incorrectParts === 0) {
-                return "not-attempted";
-            } else if ((correctParts / totalParts) >= passMark) {
-                return "passed";
-            } else if ((incorrectParts / totalParts) > (1 - passMark)) {
-                return "failed";
-            } else {
-                return "in-progress";
-            }
-        } else {
-            if (!isAuthorisedFullAccess(studentProgress)) {
-                return "revoked";
-            } else if (status && isQuestionFullyAttempted(status) || correctParts + incorrectParts === totalParts) {
-                return "completed";
-            } else if (status === CompletionState.NOT_ATTEMPTED || correctParts + incorrectParts === 0) {
-                return "not-attempted";
-            } else {
-                return "in-progress";
-            }
-
-        }
-
-    }
-
     function markClasses(studentProgress: AssignmentProgressDTO, totalParts: number) {
         if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
@@ -66,7 +97,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
         const incorrectParts = studentProgress.incorrectQuestionPartsCount;
         const status = null;
 
-        return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
+        return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, status, correctParts, incorrectParts, totalParts);
     }
 
     function markQuestionClasses(studentProgress: AssignmentProgressDTO, index: number) {
@@ -82,15 +113,26 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
         const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
         const status = (studentProgress.questionResults || [])[index];
 
-        return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
+        return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, status, correctParts, incorrectParts, totalParts);
     }
+
+    const [settingsVisible, setSettingsVisible] = useState(false);
     
     return <Card>
         <CardBody>
             <div className="d-flex w-100 flex-column flex-md-row align-items-start align-items-md-center">
-                <div className="me-3 mb-2">
-                    <h3>Group assignment overview</h3>
-                    <span>See who attempted the assignment and which questions they struggled with.</span>
+                <div className="d-flex w-100 align-items-start justify-content-between">
+                    <div>
+                        {siteSpecific(
+                            <h4>Group assignment overview</h4>,
+                            <h3>Group assignment overview</h3>
+                        )}
+                        <span>See who attempted the assignment and which questions they struggled with.</span>
+                    </div>
+                    {isPhy && <button onClick={() => setSettingsVisible(o => !o)} className="d-flex align-items-center bg-transparent gap-2 invert-underline">
+                        {settingsVisible ? "Hide settings" : "Show settings"}
+                        <i className="icon icon-cog"/>
+                    </button>}
                 </div>
                 <Spacer/>
                 {isAda && <StyledToggle 
@@ -102,22 +144,21 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
             </div>
 
             <div className="d-flex flex-column flex-lg-row mt-2 mb-2 row-gap-2">
-                <div className="d-flex w-100 align-items-center">
+                {isPhy && <CollapsibleContainer expanded={settingsVisible} className="w-100">
+                    <div className="py-3">
+                        <AssignmentProgressSettings />
+                    </div>
+                </CollapsibleContainer>}
+
+                {isAda && <>
                     <StyledCheckbox
                         checked={assignmentProgressContext?.formatAsPercentage}
                         onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
                         label={<span className="text-muted small">Show mark as percentages</span>}
                     />
-                    <Spacer/>
-                    {isPhy && <StyledToggle 
-                        trueLabel="Correct"
-                        falseLabel="Attempted"
-                        checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"} 
-                        onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} 
-                    />}
-                </div>
-                <Spacer/>
-                {isAda && <AdaKey/>}
+                    <Spacer />
+                    <AdaKey />
+                </>}
             </div>
 
             <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions}
@@ -216,7 +257,10 @@ const DetailedMarksTab = ({assignment, progress}: DetailedMarksTabProps) => {
 
     return <Card>
         <CardBody>
-            <h3>Performance on questions</h3>
+            {siteSpecific(
+                <h4>Performance on questions</h4>,
+                <h3>Performance on questions</h3>
+            )}
             <span>See the questions your students answered and which parts they struggled with.</span>
 
             {questions.map((_, questionIndex) => (

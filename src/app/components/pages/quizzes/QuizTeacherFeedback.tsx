@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
     getRTKQueryErrorMessage,
     useGetQuizAssignmentWithFeedbackQuery,
@@ -15,14 +15,16 @@ import {
     TODAY,
     useAssignmentProgressAccessibilitySettings,
     isQuestion,
-    isAuthorisedFullAccess} from "../../../services";
+    isAuthorisedFullAccess,
+    isPhy} from "../../../services";
 import {AuthorisedAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {formatDate} from "../../elements/DateString";
-import {ResultsTable, passMark} from "../../elements/quiz/QuizProgressCommon";
+import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
 import {
     Alert,
     Button,
+    Card,
     Container,
     DropdownItem,
     DropdownMenu,
@@ -33,7 +35,10 @@ import {
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
-import { AssignmentProgressLegend } from "../SingleAssignmentProgress";
+import { AssignmentProgressSettings, markClassesInternal } from "../AssignmentProgressIndividual";
+import classNames from "classnames";
+import { Spacer } from "../../elements/Spacer";
+import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.
@@ -71,6 +76,8 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
             <p>{getRTKQueryErrorMessage(error)?.message}</p>
         </Alert>
     </>;
+
+    const [settingsVisible, setSettingsVisible] = useState(false);
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "hex", icon: quizAssignmentQuery?.isError ? "icon-error" : "icon-tests"}}/>
@@ -125,10 +132,26 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-                        <AssignmentProgressLegend showQuestionKey />
-                        <div className="p-4">
+                        {/* <AssignmentProgressLegend showQuestionKey /> */}
+                        <Card className="p-4 my-3">
+                            <div className="d-flex mb-3">
+                                {siteSpecific(
+                                    <h4>Group results</h4>,
+                                    <h3>Group results</h3>
+                                )}
+                                <Spacer />
+                                {isPhy && <button onClick={() => setSettingsVisible(o => !o)} className="d-flex align-items-center bg-transparent gap-2 invert-underline">
+                                    {settingsVisible ? "Hide settings" : "Show settings"}
+                                    <i className={classNames("icon icon-cog anim-rotate-45", { "active": settingsVisible })}/>
+                                </button>}
+                            </div>
+                            {isPhy && <CollapsibleContainer expanded={settingsVisible} className="w-100">
+                                <div className="py-3">
+                                    <AssignmentProgressSettings />
+                                </div>
+                            </CollapsibleContainer>}
                             <QuizProgressDetails assignment={quizAssignment} />
-                        </div>
+                        </Card>
                     </AssignmentProgressPageSettingsContext.Provider>
                 </div>
             </>}
@@ -143,6 +166,7 @@ interface QuizQuestion extends ContentBaseDTO {
 export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO}) => {
 
     const questions : QuizQuestion[] = questionsInQuiz(assignment.quiz).map(q => ({...q, questionPartsTotal: 1} as QuizQuestion));
+    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
 
     function questionsInSection(section?: IsaacQuizSectionDTO) {
         return section?.children?.filter(isQuestion) || [];
@@ -158,22 +182,6 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         return questions;
     }
 
-    function markClassesInternal(studentProgress: AssignmentProgressDTO, correctParts: number, incorrectParts: number, totalParts: number) {
-        if (!isAuthorisedFullAccess(studentProgress)) {
-            return "revoked";
-        } else if (correctParts === totalParts) {
-            return "completed";
-        } else if ((correctParts / totalParts) >= passMark) {
-            return "passed";
-        } else if ((incorrectParts / totalParts) > (1 - passMark)) {
-            return "failed";
-        } else if (correctParts > 0 || incorrectParts > 0) {
-            return "in-progress";
-        } else {
-            return "not-attempted";
-        }
-    }
-
     function markClasses(studentProgress: AssignmentProgressDTO) {
         if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
@@ -183,7 +191,7 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         const incorrectParts = studentProgress.incorrectQuestionPartsCount;
         const total = questions.reduce((acc, q) => acc + (q.questionPartsTotal ?? 0), 0);
 
-        return markClassesInternal(studentProgress, correctParts, incorrectParts, total);
+        return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, null, correctParts, incorrectParts, total);
     }
 
     function markQuestionClasses(studentProgress: AssignmentProgressDTO, index: number) {
@@ -195,7 +203,7 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
         const totalParts = questions[index].questionPartsTotal ?? 0;
 
-        return markClassesInternal(studentProgress, correctParts, incorrectParts, totalParts);
+        return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, null, correctParts, incorrectParts, totalParts);
     }
 
     const totalParts = questions.length;
