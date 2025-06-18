@@ -201,14 +201,21 @@ export function ResultsTable<Q extends QuestionType>({
             </SortItemHeader>
         }
         {questions.map((q, index) =>
-            <th key={index}>
+            <SortItemHeader<ProgressSortOrder> 
+                defaultOrder={index}
+                reverseOrder={index}
+                currentOrder={sortOrder}
+                setOrder={toggleSort}
+                reversed={reverseOrder}
+                key={index}
+            >
                 {isAssignment
                     ? <a className="d-block" href={`/questions/${q.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
                         {index + 1}
                     </a> 
                     : <span>{index + 1}</span>
                 }
-            </th>
+            </SortItemHeader>
         )}
     </tr>;
 
@@ -331,10 +338,24 @@ export function ResultsTablePartBreakdown({
         }
     }
 
-    const sortedProgress = useMemo(() => orderBy((progress), (item) => {
+    const semiSortedProgress = useMemo(() => orderBy(progress, (item) => {
         if (!isAuthorisedFullAccess(item)) return -1;
-        return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
-    }), [progress]);
+        return -item.notAttemptedPartResults.reduce((sum, increment) => sum + increment, 0);
+    }, [reverseOrder ? "desc" : "asc"]), [progress, reverseOrder]);
+
+    const sortedProgress = useMemo(() => orderBy((semiSortedProgress), (item) => {
+        if (!isAuthorisedFullAccess(item)) return -1;
+        switch (sortOrder) {
+            case "name":
+                return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
+            case "totalQuestionPartPercentage":
+            case "totalQuestionPercentage":
+            case "totalAttemptedQuestionPercentage":
+                return 0; // These sorts are not applicable for part breakdown
+            default:
+                return -(item.correctPartResults?.[sortOrder] ?? 0);
+        }}, [reverseOrder ? "desc" : "asc"]
+    ), [reverseOrder, semiSortedProgress, sortOrder]);
 
     return !!sortedProgress?.length && <table {...rest} className={classNames("progress-table border assignment-progress-progress w-100", rest.className)}>
         <thead className="progress-table-header-footer">
@@ -347,9 +368,18 @@ export function ResultsTablePartBreakdown({
                 Name
             </SortItemHeader>
             {sortedProgress[0].questionPartResults?.[questionIndex]?.map((_, i) => 
-                <th key={i} className="text-center">
+                // <th key={i} className="text-center">
+                <SortItemHeader<ProgressSortOrder>
+                    defaultOrder={i}
+                    reverseOrder={i}
+                    currentOrder={sortOrder}
+                    setOrder={toggleSort}
+                    reversed={reverseOrder}
+                    key={i}
+                >
                     Part {i + 1}
-                </th>
+                </SortItemHeader>
+                // </th>
             )}
         </thead>
         <tbody>

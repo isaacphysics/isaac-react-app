@@ -422,20 +422,30 @@ $failed-bg-size: 25%;
 
   font-size: 12px;
   tbody td, tbody th {
-    min-width: 40px;
+    min-width: 50px;
     z-index: 1;
   }
   .total-column.left {
-    right: 40px;
+    right: 50px;
   }
 
-  @include respond-above(sm) {
-    font-size: 17px;
+  @include respond-between(xs, sm) {
+    font-size: 14px;
     tbody td, tbody th {
       min-width: 65px;
     }
     .total-column.left {
       right: 65px;
+    }
+  }
+
+  @include respond-above(sm) {
+    font-size: 17px;
+    tbody td, tbody th {
+      min-width: 85px;
+    }
+    .total-column.left {
+      right: 85px;
     }
   }
 
@@ -457,6 +467,12 @@ $failed-bg-size: 25%;
 
   .progress-table-header-footer th {
     position: relative;
+  }
+
+  @include respond-below(xs) {
+    button.sort {
+      display: none;
+    }
   }
 
   .progress-table-header-footer button {
