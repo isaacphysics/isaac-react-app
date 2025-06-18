@@ -1,0 +1,13 @@
+@import "../common/my-progress";
+
+.progress-gauge {
+  font-family: $secondary-font-semi-bold;
+  height: 140px;
+  width: 140px;
+  > b {
+    color: $color-brand-700;
+    font-size: 32px;
+    line-height: 32px;
+    font-weight: 700;
+  }
+}
