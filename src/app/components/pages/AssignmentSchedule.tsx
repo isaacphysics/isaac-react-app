@@ -665,7 +665,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Assignment Schedule" icon={{type: "hex", icon: "icon-events"}} help={pageHelp}/>
+        <TitleAndBreadcrumb currentPageTitle="Assignment schedule" icon={{type: "hex", icon: "icon-events"}} help={pageHelp}/>
         {/*<h4 className="mt-4 mb-3">*/}
         {/*    Assign a {siteSpecific("question deck", "quiz")} from...*/}
         {/*</h4>*/}
@@ -676,11 +676,6 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         >
             <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 ps-2 pe-2 timeline-column mb-4 pt-2">
-                    {!isStaff(user) && <Alert className="mt-2" color="info">
-                        The Assignment Schedule page is an alternate way to manage your assignments, focusing on the start and due dates of the assignments, rather than the assigned question deck.
-                        <br/>
-                        It is a work in progress, and we would love to <a target="_blank" href="/contact?subject=Assignment%20Schedule%20Feedback">hear your feedback</a>!
-                    </Alert>}
                     {!showSetAssignmentUI && <AssignmentScheduleStickyHeader
                         assignmentsSetByMe={assignmentsSetByMe}
                         groupsToInclude={groupsToInclude} setGroupsToInclude={setGroupsToInclude}

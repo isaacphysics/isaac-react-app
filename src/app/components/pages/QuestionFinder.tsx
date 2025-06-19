@@ -447,7 +447,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb
-            currentPageTitle={siteSpecific("Question Finder", "Questions")}
+            currentPageTitle={siteSpecific("Question finder", "Questions")}
             help={pageHelp}
             intermediateCrumbs={crumb ? [crumb] : []}
             icon={{type: "hex", icon: "icon-finder"}}
