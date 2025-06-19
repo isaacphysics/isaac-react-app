@@ -132,7 +132,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [randomSeed, setRandomSeed] = useState<number | undefined>(params.randomSeed === undefined ? undefined : parseInt(params.randomSeed.toString()));
-    
+
     const [readingFromUrlParams, setReadingFromUrlParams] = useState(FILTER_PARAMS.some(p => params[p]));
 
     useEffect(function populateFiltersFromAccountSettings() {
@@ -162,7 +162,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 processTagHierarchy(
                     tags,
                     arrayFromPossibleCsv(params.subjects).concat(pageContext?.subject ? [pageContext.subject] : []),
-                    arrayFromPossibleCsv(params.fields), 
+                    arrayFromPossibleCsv(params.fields),
                     arrayFromPossibleCsv(params.topics)
                 )
             );
@@ -184,16 +184,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
 
-    const debouncedSearch = useMemo(() => 
+    const debouncedSearch = useMemo(() =>
         debounce(({
             searchQuery: searchString,
-            searchTopics: topics, 
-            searchExamBoards: examBoards, 
-            searchBooks: book, 
+            searchTopics: topics,
+            searchExamBoards: examBoards,
+            searchBooks: book,
             searchStages: stages,
-            searchDifficulties: difficulties, 
-            selections: hierarchySelections, 
-            excludeBooks, 
+            searchDifficulties: difficulties,
+            selections: hierarchySelections,
+            excludeBooks,
             searchStatuses: questionStatuses,
             startIndex, randomSeed
         }) => {
@@ -206,6 +206,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             setIsCurrentSearchEmpty(false);
 
             dispatch(searchQuestions({
+                querySource: "questionFinder",
                 searchString: searchString || undefined,
                 tags: getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value).join(",") || undefined,
                 topics: siteSpecific(undefined, [...topics].filter((query) => query != "").join(",") || undefined),
@@ -225,20 +226,20 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }, 250),
     [dispatch]);
 
-    
+
     const filteringByStatus = Object.values(searchStatuses).some(v => v) && !Object.values(searchStatuses).every(v => v);
 
     const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
         setDisableLoadMore(false);
         setDisplayQuestions(undefined);
-        
+
         const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
         debouncedSearch({
             searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages: filteredStages,
             searchDifficulties, selections, excludeBooks, searchStatuses, startIndex: 0, randomSeed
         });
-        
+
         if (!selections.length) return;
         setReadingFromUrlParams(false);
 
@@ -336,7 +337,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             if (!readingFromUrlParams) {
                 setRandomSeed(undefined);
             }
-            
+
             // on physics, we immediately update the search if filters change; on ada, we wait until "Apply filters" is clicked
             searchAndUpdateURL();
         }
@@ -378,7 +379,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     );
 
     const loadingPlaceholder = <div className="w-100 text-center pb-2">
-        <h2 aria-hidden="true" className="pt-5">Searching...</h2>
+        <h2 aria-hidden="true" className="pt-7">Searching...</h2>
         <IsaacSpinner />
     </div>;
 
@@ -432,10 +433,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 : <div/>}
         </div>;
     };
-    
+
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
-    const BrowseAllButton = (pageContext?.subject && pageContext.stage) && 
+    const BrowseAllButton = (pageContext?.subject && pageContext.stage) &&
         <AffixButton color="keyline" tag={Link} to="/questions" className={classNames("ms-auto mw-max-content", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
             affix={{
                 affix: "icon-arrow-right",
@@ -445,16 +446,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             Browse all questions
         </AffixButton>;
 
-    return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
+    return <Container id="finder-page" className={classNames("mb-7")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question Finder", "Questions")} 
             help={pageHelp}
-            intermediateCrumbs={crumb ? [crumb] : []} 
+            intermediateCrumbs={crumb ? [crumb] : []}
             icon={{type: "hex", icon: "icon-finder"}}
         />
 
         <SidebarLayout>
-            <QuestionFinderSidebar 
+            <QuestionFinderSidebar
                 searchText={searchQuery} setSearchText={debouncedSearchHandler}
                 questionFinderFilterPanelProps={{
                     searchDifficulties, setSearchDifficulties,
@@ -464,7 +465,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     searchStatuses, setSearchStatuses,
                     searchBooks, setSearchBooks,
                     excludeBooks, setExcludeBooks,
-                    choices, 
+                    choices,
                     selections, setSelections,
                     applyFilters: searchAndUpdateURL, clearFilters,
                     validFiltersSelected, searchDisabled, setSearchDisabled
@@ -516,7 +517,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             searchStatuses, setSearchStatuses,
                             searchBooks, setSearchBooks,
                             excludeBooks, setExcludeBooks,
-                            choices, 
+                            choices,
                             selections, setSelections,
                             applyFilters: () => {
                                 if (isDefined(randomSeed)) {
@@ -543,7 +544,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
                                         .
                                     </Col>
-                                    <Col>                                        
+                                    <Col>
                                         <button className={siteSpecific(
                                             "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end",
                                             "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
@@ -557,18 +558,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                                     {displayQuestions?.length
-                                        ? isPhy 
-                                            ? <ListView type="item" items={displayQuestions} /> 
-                                            : <LinkToContentSummaryList 
-                                                items={displayQuestions} className="m-0" 
-                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY} 
-                                                ignoreIntendedAudience noCaret 
+                                        ? isPhy
+                                            ? <ListView type="item" items={displayQuestions} />
+                                            : <LinkToContentSummaryList
+                                                items={displayQuestions} className="m-0"
+                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
+                                                ignoreIntendedAudience noCaret
                                             />
                                         : isCurrentSearchEmpty
                                             ? filteringByStatus
                                                 ? <em>Please select more filters</em>
                                                 : <em>Please select and apply filters</em>
-                                            : filteringByStatus 
+                                            : filteringByStatus
                                                 ? <em>Expecting results? Try narrowing down your filters</em>
                                                 : <em>No results match your criteria</em>
                                     }
@@ -581,10 +582,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     <Button
                                         onClick={() => {
                                             debouncedSearch({
-                                                searchQuery, 
+                                                searchQuery,
                                                 searchTopics,
                                                 searchExamBoards,
-                                                searchBooks, 
+                                                searchBooks,
                                                 searchStages,
                                                 searchDifficulties,
                                                 selections,

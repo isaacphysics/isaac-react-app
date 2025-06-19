@@ -58,7 +58,7 @@ export const RegistrationVerifyEmail = () => {
     };
 
     return <Container className="text-center">
-        <Card className="my-5">
+        <Card className="my-7">
             <CardBody>
                 {!emailVerified && userFromParamVerificationFailed &&
                     <ExigentAlert color="warning">
@@ -86,9 +86,9 @@ export const RegistrationVerifyEmail = () => {
                 <Row className="justify-content-center">
                     <Col>
                         {emailVerified ?
-                            <img className="img-fluid w-md-50 mx-auto my-5" src={"/assets/cs/decor/verify_done.png"} alt="" />
+                            <img className="img-fluid w-md-50 mx-auto my-7" src={"/assets/cs/decor/verify_done.png"} alt="" />
                             :
-                            <img className="img-fluid w-md-50 mx-auto my-5" src={"/assets/cs/decor/verify_request.png"} alt="" />
+                            <img className="img-fluid w-md-50 mx-auto my-7" src={"/assets/cs/decor/verify_request.png"} alt="" />
                         }
                     </Col>
                 </Row>

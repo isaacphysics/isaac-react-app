@@ -104,7 +104,7 @@ export const Contact = () => {
         "Contact the Isaac team with questions, comments or feedback about our resources.",
         "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!");
 
-    return <Container id="contact-page" className="pb-5">
+    return <Container id="contact-page" className="pb-7">
         <TitleAndBreadcrumb 
             currentPageTitle="Contact us" 
             icon={{type: "hex", "icon": "icon-contact"}}

@@ -175,7 +175,7 @@ export const Gameboard = withRouter(({ location }) => {
     </>;
     return !gameboardId
         ? <Redirect to={PATHS.QUESTION_FINDER} />
-        : <Container className="mb-5">
+        : <Container className="mb-7">
             <ShowLoadingQuery
                 query={gameboardQuery}
                 defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboardId}`}
@@ -191,7 +191,7 @@ export const Gameboard = withRouter(({ location }) => {
                             <MainContent>
                                 <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
                                 {/* // {isPhy && <h3 className="mt-3">{gameboard.title}</h3>} */}
-                                <GameboardViewer gameboard={gameboard} className={siteSpecific("mt-3", "mt-4 mt-lg-5")} />
+                                <GameboardViewer gameboard={gameboard} className={siteSpecific("mt-3", "mt-4 mt-lg-7")} />
                                 {user && isTutorOrAbove(user)
                                     ? <Row>
                                         <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">

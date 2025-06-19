@@ -166,7 +166,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
             </Col>
         </Row>
         <Row>
-            <Col className="pt-4 pb-5">
+            <Col className="pt-4 pb-7">
                 <Tabs
                     activeTabOverride={categoryIndex} onActiveTabChange={activeTabChanged} tabContentClass="pt-4"
                 >

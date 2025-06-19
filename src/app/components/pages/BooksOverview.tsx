@@ -36,7 +36,7 @@ export const BooksOverview = () => {
 
                 <h3>Explore our books online</h3>
                 <span>Click on a book image below to go to the homepage of each book and explore further.</span>
-                <div className="row mt-3 mb-5 row-cols-1 row-cols-md-2 row-cols-lg-1 row-cols-xxl-2">
+                <div className="row mt-3 mb-7 row-cols-1 row-cols-md-2 row-cols-lg-1 row-cols-xxl-2">
                     {ISAAC_BOOKS.filter(b => b.hidden !== BookHiddenState.HIDDEN).map((book, index) => {
                         return <BookCard key={index} {...book} />;
                     })}

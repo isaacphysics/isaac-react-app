@@ -75,7 +75,7 @@ export const TutorRequest = () => {
         setEmailVerified(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
     }, [user]);
 
-    return <Container id="contact-page" className="pb-5">
+    return <Container id="contact-page" className="pb-7">
         <TitleAndBreadcrumb currentPageTitle="Tutor Account request" icon={{type: "hex", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>

@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 
 
 export const ExamSpecificationsDirectory = () => {
-    return <Container className="mb-5">
+    return <Container className="mb-7">
         <TitleAndBreadcrumb currentPageTitle={"Exam specifications"}/>
         <MetaDescription description="Discover our free A level computer science topics and questions."/>
         <Row className={"justify-content-center d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-xl-4 my-3"}>

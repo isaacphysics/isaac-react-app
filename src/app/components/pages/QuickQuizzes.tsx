@@ -20,6 +20,6 @@ export const QuickQuizzes = withRouter((props: RouteComponentProps) => {
                 icon: "icon-finder"
             } : undefined}
         />
-        <div className="mt-5">This is a quick quizzes listing page for {getHumanContext(pageContext)}!</div>
+        <div className="mt-7">This is a quick quizzes listing page for {getHumanContext(pageContext)}!</div>
     </Container>;
 });

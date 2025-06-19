@@ -292,10 +292,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setSelectedQuestionsStack: setRedoSelectedQuestionsStack
     });
 
-    return <Container id="gameboard-builder" fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
+    return <Container id="gameboard-builder">
         <div ref={sentinel}/>
         <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question Deck", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_gameboard_builder"/>
-        <Card className="p-3 mt-4 mb-5">
+        <Card className="p-3 mt-4 mb-7">
             <CardBody>
                 {submissionAttempted && !allInputIsValid  &&
                     <ExigentAlert color={"warning"}>

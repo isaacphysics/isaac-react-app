@@ -313,7 +313,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab]);
 
-    return <Container id="account-page" className="mb-5">
+    return <Container id="account-page" className="mb-7">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-account"}} className="mb-3"/>
         {isAda && <h3 className="d-md-none text-center text-muted m-3">
             <small>
