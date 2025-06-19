@@ -33,6 +33,11 @@ enum PUBLISHED_FILTER {
     UNPUBLISHED = "Unpublished"
 }
 
+enum CRITICAL_FILTER {
+    CRITICAL = "Critical",
+    NON_CRITICAL = "Other error"
+}
+
 export const AdminContentErrors = () => {
     const errorsQuery = useGetContentErrorsQuery();
 
@@ -40,6 +45,7 @@ export const AdminContentErrors = () => {
     const errorReducer = (show: boolean, errorStr: string) => show || matchesAllWordsInAnyOrder(errorStr, errorFilter);
 
     const [publishedFilter, setPublishedFilter] = useState<PUBLISHED_FILTER[]>([PUBLISHED_FILTER.PUBLISHED, PUBLISHED_FILTER.UNPUBLISHED]);
+    const [criticalFilter, setCriticalFilter] = useState<CRITICAL_FILTER[]>([CRITICAL_FILTER.CRITICAL, CRITICAL_FILTER.NON_CRITICAL]);
 
     return <Container>
         <Row>
@@ -74,7 +80,21 @@ export const AdminContentErrors = () => {
                             </Label>
                             <Input id="error-message-filter" type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error message"/>
                         </Col>
-                        <Col lg={6} className="mb-2">
+                        <Col lg={3} className="mb-2">
+                            <Label htmlFor="critical-filter-select">Filter by severity</Label>
+                            <StyledSelect
+                                inputId="critical-filter-select"
+                                isMulti
+                                placeholder="None"
+                                value={criticalFilter.map(x => ({value: x, label: x}))}
+                                options={[
+                                    {value: CRITICAL_FILTER.CRITICAL, label: CRITICAL_FILTER.CRITICAL},
+                                    {value: CRITICAL_FILTER.NON_CRITICAL, label: CRITICAL_FILTER.NON_CRITICAL}
+                                ]}
+                                onChange={selectOnChange(setCriticalFilter, true)}
+                            />
+                        </Col>
+                        <Col lg={3} className="mb-2">
                             <Label htmlFor="published-filter-select">Filter by published status</Label>
                             <StyledSelect
                                 inputId="published-filter-select"
@@ -101,9 +121,16 @@ export const AdminContentErrors = () => {
                                     </tr>
                                     {errors.errorsList
                                         .filter((error) => error.listOfErrors.reduce(errorReducer, false))
-                                        .filter((error) =>
-                                            (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED))
-                                        || (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)) )
+                                        .filter(
+                                            (error) =>
+                                                (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
+                                                (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)),
+                                        )
+                                        .filter(
+                                            (error) =>
+                                                (error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.NON_CRITICAL)) ||
+                                                (!error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.CRITICAL)),
+                                        )
                                         .map(ContentErrorRow)
                                     }
                                 </tbody>
