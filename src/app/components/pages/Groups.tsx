@@ -276,7 +276,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
         <CardBody>
             <h4 className={"mb-2"}>{group ? "Manage group" : "Create group"}</h4>
             {isAda && <hr/>}
-            <Row className={classNames({"d-flex align-items-center": isPhy})}>
+            <Row className={classNames({"d-flex": isPhy})}>
                 <Col xs={12} sm={canArchive ? 8 : 12}>
                     <Form className="form-inline" onSubmit={saveUpdatedGroup}>
                         <InputGroup className="w-100 separate-input-group">
@@ -298,7 +298,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
                         </InputGroup>
                     </Form>
                 </Col>
-                {canArchive && <Col xs={12} sm={4} className={"mt-2 mt-sm-0"}>
+                {canArchive && <Col xs={12} sm={4} className={"d-flex mt-2 mt-sm-0"}>
                     <Button title={group?.archived ? "Unarchive this group" : "Archive this group"} block size="sm" color={siteSpecific("solid", "keyline")} onClick={toggleArchived}>
                         {group?.archived ? "Unarchive" : "Archive"}
                     </Button>
