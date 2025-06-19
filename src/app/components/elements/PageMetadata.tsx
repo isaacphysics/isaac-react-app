@@ -35,7 +35,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
 
     const ActionButtons = () => {
         return (
-            <div className="d-flex gap-2 ms-auto">
+            <div className="d-flex no-print gap-2 ms-auto">
                 {<ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />}
                 <PrintButton questionPage={isQuestion} />
                 {doc?.id && <ReportButton pageId={doc.id} />}
@@ -55,7 +55,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                 </div>
             </>
             : <>
-                <div className="d-flex align-items-center mt-3 gap-3 no-print">
+                <div className="d-flex align-items-center mt-3 gap-3">
                     {isPhy && <div>
                         <div className="d-flex align-items-center gap-3">
                             <h3 className="text-theme-dark">
