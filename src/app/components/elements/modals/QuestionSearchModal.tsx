@@ -47,6 +47,7 @@ import { ChoiceTree, getChoiceTreeLeaves } from "../panels/QuestionFinderFilterP
 import { CollapsibleList } from "../CollapsibleList";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { updateTopicChoices, initialiseListState, listStateReducer } from "../../../services";
+import { HorizontalScroller } from "../inputs/HorizontalScroller";
 
 // Immediately load GameboardBuilderRow, but allow splitting
 const importGameboardBuilderRow = import("../GameboardBuilderRow");
@@ -284,37 +285,39 @@ export const QuestionSearchModal = (
         </Col>
         <Col className="col-12 col-xl-9">
             <Suspense fallback={<Loading/>}>
-                <Table bordered responsive className="mt-4">
-                    <thead>
-                        <tr className="search-modal-table-header">
-                            <th className="w-5"> </th>
-                            <SortItemHeader<SortOrder>
-                                className={siteSpecific("w-40", "w-30")}
-                                setOrder={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
-                                defaultOrder={SortOrder.ASC}
-                                reverseOrder={SortOrder.DESC}
-                                currentOrder={questionsSort['title']}
-                                alignment="start"
-                            >Question title</SortItemHeader>
-                            <th className={siteSpecific("w-25", "w-20")}>Topic</th>
-                            <th className="w-15">Stage</th>
-                            <th className="w-15">Difficulty</th>
-                            {isAda && <th className="w-15">Exam boards</th>}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {isSearching ? <tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr> : sortedQuestions?.map(question =>
-                            <GameboardBuilderRow
-                                key={`question-search-modal-row-${question.id}`} 
-                                question={question}
-                                currentQuestions={modalQuestions}
-                                undoStack={undoStack}
-                                redoStack={redoStack}
-                                creationContext={creationContext}
-                            />
-                        )}
-                    </tbody>
-                </Table>
+                <HorizontalScroller enabled className="my-4">
+                    <Table bordered className="my-0">
+                        <thead>
+                            <tr className="search-modal-table-header">
+                                <th className="w-5"> </th>
+                                <SortItemHeader<SortOrder>
+                                    className={siteSpecific("w-40", "w-30")}
+                                    setOrder={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
+                                    defaultOrder={SortOrder.ASC}
+                                    reverseOrder={SortOrder.DESC}
+                                    currentOrder={questionsSort['title']}
+                                    alignment="start"
+                                >Question title</SortItemHeader>
+                                <th className={siteSpecific("w-25", "w-20")}>Topic</th>
+                                <th className="w-15">Stage</th>
+                                <th className="w-15">Difficulty</th>
+                                {isAda && <th className="w-15">Exam boards</th>}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {isSearching ? <tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr> : sortedQuestions?.map(question =>
+                                <GameboardBuilderRow
+                                    key={`question-search-modal-row-${question.id}`} 
+                                    question={question}
+                                    currentQuestions={modalQuestions}
+                                    undoStack={undoStack}
+                                    redoStack={redoStack}
+                                    creationContext={creationContext}
+                                />
+                            )}
+                        </tbody>
+                    </Table>
+                </HorizontalScroller>
             </Suspense>
         </Col>
     </Row>;

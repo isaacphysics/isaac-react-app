@@ -43,6 +43,7 @@ import { FilterCount } from "../../elements/svg/FilterCount";
 import { MainContent, MyQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
 import { CardGrid } from "../../elements/CardGrid";
+import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 
 export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -179,87 +180,91 @@ function QuizGrid({quizzes, emptyMessage}: AssignmentGridProps) {
 // To avoid the chaos of QuizProgressCommon, this and PracticeQuizTable are **separate components**. Despite this repeating some code, please don't try to merge them.
 const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void, emptyMessage: ReactNode}) => {
 
-    return <Table className="my-quizzes-table mb-0" responsive>
-        <colgroup>
-            <col className={"col-md-5"}/>
-            <col className={"col-md-2"}/>
-            <col className={"col-md-2"}/>
-            <col className={"col-md-2"}/>
-            <col className={"col-md-1"}/>
-        </colgroup>
-        <thead className="card-header">
-            <tr>
-                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
-                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setBy} reverseOrder={QuizzesBoardOrder["-setBy"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Set by</SortItemHeader>
-                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.dueDate} reverseOrder={QuizzesBoardOrder["-dueDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Due Date</SortItemHeader>
-                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setDate} reverseOrder={QuizzesBoardOrder["-setDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Set Date</SortItemHeader>
-                {/* extra th for chevrons */}
-                <th/>
-            </tr>
-        </thead>
-        <tbody>
-            {quizzes.map(quiz => {
-                return <TrLink to={quiz.link} key={quiz.id} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete}, {"overdue": quiz.status === QuizStatus.Overdue})}>
-                    <td>
-                        <div>
-                            {quiz.title || quiz.id}<br/>
-                            {quiz.status === QuizStatus.Overdue && <span className="small text-muted mt-1">Overdue</span>}
-                            {quiz.status === QuizStatus.Started && <span className="small text-muted mt-1">Started</span>}
-                            {quiz.status === QuizStatus.NotStarted && <span className="small text-muted mt-1">Not started</span>}
-                            {quiz.status === QuizStatus.Complete && <>
-                                <span className="small text-muted mt-1">Completed &middot; </span>
-                                {quiz.quizFeedbackMode === "NONE" ? <span className="small text-muted mt-1">No feedback available</span> 
-                                    : <span className="small text-muted mt-1">Feedback available</span>
-                                }
-                            </>}
-                        </div>
-                    </td>
-                    <td>{quiz.assignerSummary && extractTeacherName(quiz.assignerSummary)}</td>
-                    <td>{quiz.dueDate && formatDate(quiz.dueDate)}</td>
-                    <td>{quiz.setDate && formatDate(quiz.setDate)}</td>
-                    <td className="text-center"><img className="icon-dropdown-90" aria-disabled={!quiz.link} src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
-                </TrLink>;
-            })}
-            {quizzes.length === 0 && <tr>
-                <td colSpan={5} className="text-center">{emptyMessage}</td>
-            </tr>}
-        </tbody>
-    </Table>;
+    return <HorizontalScroller enabled={quizzes.length > 6} scrollbarClassName="">
+        <Table className="my-quizzes-table mb-0">
+            <colgroup>
+                <col className={"col-md-5"}/>
+                <col className={"col-md-2"}/>
+                <col className={"col-md-2"}/>
+                <col className={"col-md-2"}/>
+                <col className={"col-md-1"}/>
+            </colgroup>
+            <thead className="card-header">
+                <tr>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setBy} reverseOrder={QuizzesBoardOrder["-setBy"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Set by</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.dueDate} reverseOrder={QuizzesBoardOrder["-dueDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Due Date</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setDate} reverseOrder={QuizzesBoardOrder["-setDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Set Date</SortItemHeader>
+                    {/* extra th for chevrons */}
+                    <th/>
+                </tr>
+            </thead>
+            <tbody>
+                {quizzes.map(quiz => {
+                    return <TrLink to={quiz.link} key={quiz.id} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete}, {"overdue": quiz.status === QuizStatus.Overdue})}>
+                        <td>
+                            <div>
+                                {quiz.title || quiz.id}<br/>
+                                {quiz.status === QuizStatus.Overdue && <span className="small text-muted mt-1">Overdue</span>}
+                                {quiz.status === QuizStatus.Started && <span className="small text-muted mt-1">Started</span>}
+                                {quiz.status === QuizStatus.NotStarted && <span className="small text-muted mt-1">Not started</span>}
+                                {quiz.status === QuizStatus.Complete && <>
+                                    <span className="small text-muted mt-1">Completed &middot; </span>
+                                    {quiz.quizFeedbackMode === "NONE" ? <span className="small text-muted mt-1">No feedback available</span> 
+                                        : <span className="small text-muted mt-1">Feedback available</span>
+                                    }
+                                </>}
+                            </div>
+                        </td>
+                        <td>{quiz.assignerSummary && extractTeacherName(quiz.assignerSummary)}</td>
+                        <td>{quiz.dueDate && formatDate(quiz.dueDate)}</td>
+                        <td>{quiz.setDate && formatDate(quiz.setDate)}</td>
+                        <td className="text-center"><img className="icon-dropdown-90" aria-disabled={!quiz.link} src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
+                    </TrLink>;
+                })}
+                {quizzes.length === 0 && <tr>
+                    <td colSpan={5} className="text-center">{emptyMessage}</td>
+                </tr>}
+            </tbody>
+        </Table>
+    </HorizontalScroller>;
 };
 
 const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void, emptyMessage: ReactNode}) => {
-    return <Table className="my-quizzes-table mb-0" responsive>
-        <colgroup>
-            <col className={"col-md-9"}/>
-            <col className={"col-md-2"}/>
-            <col className={"col-md-1"}/>
-        </colgroup>
-        <thead className="card-header">
-            <tr>
-                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
-                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.startDate} reverseOrder={QuizzesBoardOrder["-startDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Start Date</SortItemHeader>
-                {/* extra th for chevrons */}
-                <th/>
-            </tr>
-        </thead>
-        <tbody>
-            {quizzes.map(quiz => {
-                return <TrLink to={quiz.link} key={quiz.id} tabIndex={0} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete})}>
-                    <td>
-                        <div className="d-flex flex-column align-items-start">
-                            {quiz.title || quiz.id}
-                            {quiz.status === QuizStatus.Complete && <span className="small text-muted mt-1">Completed</span>}
-                        </div>
-                    </td>
-                    <td>{formatDate(quiz.startDate)}</td>
-                    <td className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
-                </TrLink>;
-            })}
-            {quizzes.length === 0 && <tr>
-                <td colSpan={3} className="text-center">{emptyMessage}</td>
-            </tr>}
-        </tbody>
-    </Table>;
+    return <HorizontalScroller enabled={quizzes.length > 6}>
+        <Table className="my-quizzes-table mb-0">
+            <colgroup>
+                <col className={"col-md-9"}/>
+                <col className={"col-md-2"}/>
+                <col className={"col-md-1"}/>
+            </colgroup>
+            <thead className="card-header">
+                <tr>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
+                    <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.startDate} reverseOrder={QuizzesBoardOrder["-startDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Start Date</SortItemHeader>
+                    {/* extra th for chevrons */}
+                    <th/>
+                </tr>
+            </thead>
+            <tbody>
+                {quizzes.map(quiz => {
+                    return <TrLink to={quiz.link} key={quiz.id} tabIndex={0} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete})}>
+                        <td>
+                            <div className="d-flex flex-column align-items-start">
+                                {quiz.title || quiz.id}
+                                {quiz.status === QuizStatus.Complete && <span className="small text-muted mt-1">Completed</span>}
+                            </div>
+                        </td>
+                        <td>{formatDate(quiz.startDate)}</td>
+                        <td className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
+                    </TrLink>;
+                })}
+                {quizzes.length === 0 && <tr>
+                    <td colSpan={3} className="text-center">{emptyMessage}</td>
+                </tr>}
+            </tbody>
+        </Table>
+    </HorizontalScroller>;
 };
 
 interface AdaQuizFiltersProps {

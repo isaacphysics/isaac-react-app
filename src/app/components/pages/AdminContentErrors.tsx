@@ -6,6 +6,7 @@ import {ContentErrorItem} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import { HorizontalScroller } from "../elements/inputs/HorizontalScroller";
 
 const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number) => {
     return <li key={index}>{errorDetailsListItem}</li>;
@@ -92,23 +93,25 @@ export const AdminContentErrors = () => {
                     </Row>
                     <Row>
                         <Col>
-                            <Table responsive bordered>
-                                <tbody>
-                                    <tr>
-                                        <th>Title / Filename</th>
-                                        <th title="Is this file published?">Published</th>
-                                        <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
-                                        <th>List of Error Messages</th>
-                                    </tr>
-                                    {errors.errorsList
-                                        .filter((error) => error.listOfErrors.reduce(errorReducer, false))
-                                        .filter((error) =>
-                                            (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED))
-                                        || (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)) )
-                                        .map(ContentErrorRow)
-                                    }
-                                </tbody>
-                            </Table>
+                            <HorizontalScroller enabled={errors.errorsList.length > 10} className="mb-3">
+                                <Table bordered className="my-0">
+                                    <tbody>
+                                        <tr>
+                                            <th>Title / Filename</th>
+                                            <th title="Is this file published?">Published</th>
+                                            <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
+                                            <th>List of Error Messages</th>
+                                        </tr>
+                                        {errors.errorsList
+                                            .filter((error) => error.listOfErrors.reduce(errorReducer, false))
+                                            .filter((error) =>
+                                                (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED))
+                                            || (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)) )
+                                            .map(ContentErrorRow)
+                                        }
+                                    </tbody>
+                                </Table>
+                            </HorizontalScroller>
                         </Col>
                     </Row>
                 </div>;

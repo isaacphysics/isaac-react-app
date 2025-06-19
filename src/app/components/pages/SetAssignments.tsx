@@ -68,6 +68,7 @@ import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { SortItemHeader } from "../elements/SortableItemHeader";
 import { MainContent, SetAssignmentsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { HorizontalScroller } from "../elements/inputs/HorizontalScroller";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -305,7 +306,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                 </Col>
             </Row>
 
-            <div className="overflow-auto mt-3">
+            <HorizontalScroller enabled={boards ? boards.boards.length > 6 : false} className="mt-3">
                 <Table className="mb-0">
                     <thead>
                         {tableHeader}
@@ -327,7 +328,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                         }
                     </tbody>
                 </Table>
-            </div>
+            </HorizontalScroller>
         </CardBody>
     </Card>;
 };
@@ -384,26 +385,28 @@ const CSTable = (props: SetAssignmentsTableProps) => {
                 </Label>
             </Col>
         </Row>
-        <Table className="mt-3 my-gameboard-table" responsive>
-            <thead>
-                {tableHeader}
-            </thead>
-            <tbody>
-                {boards?.boards
-                    .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter)
-                    && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All"))
-                    .map(board =>
-                        <BoardCard
-                            key={board.id}
-                            user={user}
-                            board={board}
-                            boardView={boardView}
-                            assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                            toggleAssignModal={() => openAssignModal(board)}
-                        />)
-                }
-            </tbody>
-        </Table>
+        <HorizontalScroller enabled={boards ? boards.boards.length > 6 : false}>
+            <Table className="mt-3 my-gameboard-table">
+                <thead>
+                    {tableHeader}
+                </thead>
+                <tbody>
+                    {boards?.boards
+                        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter)
+                        && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All"))
+                        .map(board =>
+                            <BoardCard
+                                key={board.id}
+                                user={user}
+                                board={board}
+                                boardView={boardView}
+                                assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                toggleAssignModal={() => openAssignModal(board)}
+                            />)
+                    }
+                </tbody>
+            </Table>
+        </HorizontalScroller>
     </div>;
 };
 const SetAssignmentsTable = siteSpecific(PhyTable, CSTable);
