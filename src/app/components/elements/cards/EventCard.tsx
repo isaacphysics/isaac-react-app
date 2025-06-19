@@ -18,7 +18,7 @@ export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & Car
     return <Card {...rest} className={classNames("pod", rest.className)}>
         {eventThumbnail &&
             <a className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} href={`/events/${id}`}>
-                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
+                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby="event-title" />
                 {hasExpired &&
                     <div className="event-pod-badge">
                         <Badge className="badge rounded-pill">EXPIRED</Badge>
@@ -39,7 +39,7 @@ export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & Car
                     </div>}
             </a>}
         <CardBody className="d-flex flex-column ps-0">
-            {title && <CardTitle className="mb-0 pod-title">{title}</CardTitle>}
+            {title && <CardTitle className="mb-0 pod-title" id="event-title">{title}</CardTitle>}
             {subtitle && <CardText className="mb-0">
                 {subtitle}
             </CardText>}
