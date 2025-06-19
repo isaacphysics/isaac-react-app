@@ -47,7 +47,7 @@ const HomepageHero = () => {
         return <div className="homepage-hero">
             {above['md'](deviceSize) && <div className="homepage-hero-img"/>}
             <Container className="pt-5">
-                <div className="w-100 w-md-50 mb-4 mb-md-5 mb-xl-6 pe-xl-5">
+                <div className="w-100 w-md-50 mb-4 mb-md-7 mb-xl-9 pe-xl-7">
                     <div className="physics-strapline mb-3">
                         <h2><span className="text-green">Master Science subjects</span> by solving problems</h2>
                     </div>

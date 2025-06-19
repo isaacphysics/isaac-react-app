@@ -93,7 +93,7 @@ const CSTable = (props: GameboardsTableProps) => {
         )}
     </tr>;
 
-    return <div className={siteSpecific("", "mb-5 mb-md-6")}>
+    return <div className={siteSpecific("", "mb-7")}>
         <Table className={classNames("my-gameboard-table", {"mb-0" : isPhy})} responsive>
             <thead>
                 {tableHeader}

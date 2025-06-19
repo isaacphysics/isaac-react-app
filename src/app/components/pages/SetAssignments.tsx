@@ -362,7 +362,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         <th>Delete</th>
     </tr>;
 
-    return <div className={"mb-5 mb-md-6 mt-4"}>
+    return <div className={"mb-7 mt-4"}>
         <Row>
             <Col xs={6} md={4} lg={3} xl={3}>
                 <Label className="w-100">
@@ -518,8 +518,7 @@ export const SetAssignments = () => {
         groupsByGameboard, openAssignModal
     };
 
-    return <Container> {/* fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})} */}
-
+    return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
             modalId="help_modal_set_assignments" className={siteSpecific("mb-4", "")} />
         <SidebarLayout>

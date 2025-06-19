@@ -252,7 +252,7 @@ export const HomepageCS = () => {
             </section>}
 
             <section id="search">
-                <Container className={"py-lg-6 py-5 text-center"}>
+                <Container className={"py-9 text-center"}>
                     <h3 className={"text-white mb-4"}>Ready to get started?</h3>
                     <AdaHomepageSearch className={"d-block"} />
                 </Container>
