@@ -1,31 +1,33 @@
 import classNames from "classnames";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useEffect, useRef, useState } from "react";
 import { isTouchDevice } from "../../../services";
 import { debounce } from "lodash";
 
-export const HorizontalScroller = ({ children, enabled, className }: { children: React.ReactElement, enabled?: boolean, className?: string }) => {
+export const HorizontalScroller = ({ children, enabled, className, scrollbarClassName }: { children: React.ReactElement, enabled?: boolean, className?: string, scrollbarClassName?: string }) => {
     const topScrollbarRef = useRef<HTMLDivElement>(null);
     const bottomScrollbarRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const [contentWidth, setContentWidth] = useState<number>(0);
     const [displayScroll, setDisplayScroll] = useState<boolean>(false);
+    const [scrollbarSize, setScrollbarSize] = useState<number>(0);
     enabled = enabled && !isTouchDevice();
 
-    const debouncedScrollHandler = useMemo(() =>
-        debounce((searchTerm: boolean) => {
-            setDisplayScroll(searchTerm);
-        }, 100),
-    [setDisplayScroll]);
+    const debouncedScrollEnabler = useMemo(() =>
+        debounce((ds: boolean) => {
+            setDisplayScroll(ds);
 
-    const handleResize = React.useCallback(() => {
+            const bottomScrollBarSize = (bottomScrollbarRef.current?.offsetHeight || 0) - (bottomScrollbarRef.current?.clientHeight || 0);
+            setScrollbarSize((enabled && ds) ? (bottomScrollBarSize ? bottomScrollBarSize + 1 : 5) : 0);
+        }, 100),
+    [enabled]);
+
+    const handleResize = useCallback(() => {
         if (contentRef.current) {
             setContentWidth(contentRef.current.scrollWidth);
         }
-        
-        debouncedScrollHandler(topScrollbarRef.current?.offsetWidth ? topScrollbarRef.current?.offsetWidth < contentWidth : false);
-        console.log("HorizontalScroller: handleResize", topScrollbarRef.current?.offsetWidth, contentWidth, displayScroll, enabled);
-    }, [contentWidth, displayScroll, enabled]);
+        debouncedScrollEnabler(topScrollbarRef.current?.offsetWidth ? topScrollbarRef.current?.offsetWidth < contentWidth : false);
+    }, [contentWidth, debouncedScrollEnabler]);
 
     // Synchronize the scroll position of the top and bottom scrollbars
     const syncScroll = (source: string) => {
@@ -42,10 +44,6 @@ export const HorizontalScroller = ({ children, enabled, className }: { children:
         }
     };
 
-    useEffect(() => { 
-        handleResize();
-    }, [children, handleResize]);
-
     useEffect(() => {
         handleResize();
         window.addEventListener("resize", handleResize);
@@ -57,7 +55,9 @@ export const HorizontalScroller = ({ children, enabled, className }: { children:
 
     return (
         <div className={className}>
-            <div className={classNames("top-scrollbar-container", {"closed": !displayScroll || !enabled})} onScroll={() => syncScroll("top")} ref={topScrollbarRef}>
+            <div className={classNames(scrollbarClassName, "top-scrollbar-container", {"closed": !displayScroll || !enabled})} 
+                onScroll={() => syncScroll("top")} ref={topScrollbarRef} style={{ height: scrollbarSize }} 
+            >
                 <div style={{ width: contentWidth }}/>
             </div>
             <div className="overflow-x-auto" ref={bottomScrollbarRef} onScroll={() => syncScroll("bottom")}>
