@@ -14,9 +14,8 @@ const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number
 const ContentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
     return <tr key={index}>
         <td className="text-break">
-            {/* eslint-disable-next-line react/jsx-no-target-blank */}
             <a href={EDITOR_URL + errorRecord.partialContent.canonicalSourceFile} title={`Content ID: ${errorRecord.partialContent.id}`} target="_blank" rel="noopener">
-                {errorRecord.partialContent.title || errorRecord.partialContent.id}
+                {errorRecord.partialContent.canonicalSourceFile || errorRecord.partialContent.id}
             </a>
         </td>
         <td>{(!!errorRecord.partialContent.published).toString()}</td>{/*The published key may be missing, also meaning false*/}
@@ -95,7 +94,7 @@ export const AdminContentErrors = () => {
                             <Table responsive bordered>
                                 <tbody>
                                     <tr>
-                                        <th>Title / Filename</th>
+                                        <th>File</th>
                                         <th title="Is this file published?">Published</th>
                                         <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
                                         <th>List of Error Messages</th>
