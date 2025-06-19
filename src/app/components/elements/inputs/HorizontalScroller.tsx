@@ -4,7 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { isTouchDevice } from "../../../services";
 import { debounce } from "lodash";
 
-export const HorizontalScroller = ({ children, enabled, className, scrollbarClassName }: { children: React.ReactElement, enabled?: boolean, className?: string, scrollbarClassName?: string }) => {
+export interface HorizontalScrollerProps {
+    children: React.ReactElement;
+    enabled?: boolean;
+    className?: string;
+}
+
+export const HorizontalScroller = ({ children, enabled, className }: HorizontalScrollerProps) => {
     const topScrollbarRef = useRef<HTMLDivElement>(null);
     const bottomScrollbarRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
@@ -55,7 +61,7 @@ export const HorizontalScroller = ({ children, enabled, className, scrollbarClas
 
     return (
         <div className={className}>
-            <div className={classNames(scrollbarClassName, "top-scrollbar-container", {"closed": !displayScroll || !enabled})} 
+            <div className={classNames("top-scrollbar-container", {"closed": !displayScroll || !enabled})} 
                 onScroll={() => syncScroll("top")} ref={topScrollbarRef} style={{ height: scrollbarSize }} 
             >
                 <div style={{ width: contentWidth }}/>

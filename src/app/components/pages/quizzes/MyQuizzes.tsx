@@ -180,7 +180,7 @@ function QuizGrid({quizzes, emptyMessage}: AssignmentGridProps) {
 // To avoid the chaos of QuizProgressCommon, this and PracticeQuizTable are **separate components**. Despite this repeating some code, please don't try to merge them.
 const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void, emptyMessage: ReactNode}) => {
 
-    return <HorizontalScroller enabled={quizzes.length > 6} scrollbarClassName="">
+    return <HorizontalScroller enabled={quizzes.length > 6}>
         <Table className="my-quizzes-table mb-0">
             <colgroup>
                 <col className={"col-md-5"}/>
