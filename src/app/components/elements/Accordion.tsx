@@ -115,7 +115,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     accordionIndex: index
                 };
             }
-            debounce(() => dispatch(logAction(eventDetails)), 200, {leading: true, trailing: false});
+            debounce(() => dispatch(logAction(eventDetails)), 200, {leading: true, trailing: false})();
         }
     }
 
