@@ -24,19 +24,19 @@ export const RegistrationStart = () => {
         <SidebarLayout>
             <SignupSidebar activeTab={0}/>
             <MainContent>
-                <Card className="my-5">
+                <Card className="my-7">
                     <CardBody>
                         <Row className="align-items-start">
                             <Col xs={12} lg={6}>
-                                <div className="mb-5">
+                                <div className="mb-7">
                                     <h2>{siteSpecific("Hello!", "How would you like to sign up?")}</h2>
                                     <p>Here, you can create an {SITE_TITLE} account, or log in to an existing one.</p>
                                 </div>
-                                <div className="my-5">
+                                <div className="my-7">
                                     <div className={siteSpecific("h4 mb-3", "h3")}>Create a new account with your email:</div>
                                     <Button block onClick={emailSignUp}>Continue with email</Button>
                                 </div>
-                                <div className="my-5">
+                                <div className="my-7">
                                     <div className={siteSpecific("h4 mb-3", "h3")}>Or log in with:</div>
                                     {isAda && <div className="mb-2">
                                         <RaspberryPiSignInButton />
@@ -44,7 +44,7 @@ export const RegistrationStart = () => {
                                     <GoogleSignInButton />
                                 </div>
                                 {siteSpecific(<div className="section-divider"/>, <hr/>)}
-                                <div className="mt-5">
+                                <div className="mt-7">
                                     <div className={siteSpecific("h4 mb-3", "h3")}>Already have an account?</div>
                                     <Button color={siteSpecific("solid", "keyline")} block onClick={login}>Log in</Button>
                                 </div>

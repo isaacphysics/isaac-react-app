@@ -138,7 +138,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
             </Card>
         </>}
 
-        <Card className="mb-5">
+        <Card className="mb-7">
             <CardBody>
                 <div className="text-center">
                     {!emailSent ?

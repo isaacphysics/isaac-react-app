@@ -164,7 +164,7 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
                     <Link to="/assignments" className="d-inline panel-link">
                         See all assignments
                     </Link>
-                    <Link to="/tests" className="d-inline panel-link ms-auto ms-lg-5 ms-xl-auto">
+                    <Link to="/tests" className="d-inline panel-link ms-auto ms-lg-7 ms-xl-auto">
                         See all tests
                     </Link>
                 </div>

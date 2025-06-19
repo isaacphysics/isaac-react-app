@@ -70,14 +70,14 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
             query={tokenQuery}
             defaultErrorTitle={"Error fetching group joining token"}
             thenRender={token => <>
-                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-5"))}>
+                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-7"))}>
                     <span className={siteSpecific("h4", "h2 font-size-1-5")}>Option 1: Share link</span>
                     <p>Share the following link with your students to have them join your group:</p>
                     <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1" data-testid={"share-link"}>
                         {location.origin}/account?authToken={token?.token}
                     </span>
                 </div>
-                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-5"))}>
+                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-7"))}>
                     <span className={siteSpecific("h4", "h2 font-size-1-5")}>Option 2: Share code</span>
                     <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
                     <span className={classNames("text-center user-select-all d-block border bg-light p-1", siteSpecific("h4", "h3"))} data-testid={"share-code"}>{token?.token}</span>

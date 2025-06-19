@@ -116,7 +116,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                     </div>
                     <div className={classNames("d-flex book-listing-container", {"flex-column col": !fullWidthBooks}, {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
                         {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
-                        {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-5">View more books</Button>}
+                        {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-7">View more books</Button>}
                     </div>
                 </>
                 : <>
@@ -185,8 +185,8 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
         {pageContext && isSingleStageContext(pageContext) && <>
             <RandomQuestionBanner context={pageContext} />
 
-            <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-5" />
-
+            <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-7" />
+            
             <LandingPageFooter context={pageContext} />
         </>}
 

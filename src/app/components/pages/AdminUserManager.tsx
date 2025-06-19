@@ -154,7 +154,7 @@ export const AdminUserManager = () => {
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager" icon={{type: "hex", icon: "icon-account"}}/>
 
         {/* Search */}
-        <Card className="mt-5">
+        <Card className="mt-7">
             <Form name="register" onSubmit={search}>
                 <CardBody>
                     <Row>

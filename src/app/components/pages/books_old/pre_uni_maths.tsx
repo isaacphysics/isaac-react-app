@@ -14,7 +14,7 @@ export const PreUniMaths = () => {
     return <Container className="maths">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Pre-University Mathematics for Sciences" help={pageHelp} modalId="help_modal_maths_book"/>
+                <TitleAndBreadcrumb className="mb-7" currentPageTitle="Pre-University Mathematics for Sciences" help={pageHelp} modalId="help_modal_maths_book"/>
                 <img className="book-cover" src="/assets/phy/books/pre_uni_maths.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="pre_uni_maths_intro"/>
             </div>

@@ -60,7 +60,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             </div>}
 
             {/* Physics Hints */}
-            {isPhy && <div className={correct ? "mt-5" : ""}>
+            {isPhy && <div className={correct ? "mt-7" : ""}>
                 <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
             </div>}
         </div>

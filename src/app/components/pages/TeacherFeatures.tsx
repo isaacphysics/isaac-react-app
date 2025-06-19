@@ -115,7 +115,7 @@ export const TeacherFeatures = () => {
         <Row className="my-4">
             <h4>Teacher Resources</h4>
         </Row>
-        <Row className="isaac-cards-body mb-5 mt-2 px-3">
+        <Row className="isaac-cards-body mb-7 mt-2 px-3">
             <Col md={6} lg={4} className="mb-3 mb-lg-0">
                 <TeacherFeatureCard
                     url = "/pages/order_books"

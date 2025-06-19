@@ -81,7 +81,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
             <Col sm={isSetAssignments ? 4 : 12} md={4} className="d-flex flex-column justify-content-between">
                 <div className={classNames("d-flex flex-wrap justify-content-center justify-content-sm-end", 
-                    {"justify-content-lg-center justify-content-xl-end column-gap-5 column-gap-md-4": !isSetAssignments},
+                    {"justify-content-lg-center justify-content-xl-end column-gap-7 column-gap-md-4": !isSetAssignments},
                 )}>
                     {!isSetAssignments 
                         ? <>

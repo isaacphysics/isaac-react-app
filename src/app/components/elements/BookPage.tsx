@@ -27,7 +27,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
         {!!page.gameboards?.length && <>
             <h4 className="mb-3" id="questions">Questions</h4>
-            <div className="mt-3 mb-5 list-results-container p-2">
+            <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"
                     items={convertToALVIGameboards(page.gameboards)}
@@ -51,7 +51,7 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         {!!page.extensionGameboards?.length && <>
             <h4 className="mt-4 mb-3" id="extension">Extension work</h4>
             <span>Expand your boundaries by having a go at these additional extension questions.</span>
-            <div className="mt-3 mb-5 list-results-container p-2">
+            <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"
                     items={convertToALVIGameboards(page.extensionGameboards)}

@@ -198,7 +198,7 @@ a.icon-card, a.cs-card {
 .cs-card-plain, .news-card, .board-card {
   // This is to make sure that the "footers" of multiple cards line up nicely
   &::after {
-    @extend .mb-5;
+    @extend .mb-7;
     display: block;
     content: " ";
     width: 100%;
