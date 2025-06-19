@@ -2,7 +2,7 @@ import { withRouter } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Input, Col, Container } from "reactstrap";
 import { generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
-import { getFilteredStageOptions, isAda, isDefined, isLoggedIn, isPhy, LearningStage, siteSpecific, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
+import { getFilteredStageOptions, isAda, isDefined, isLoggedIn, isPhy, LearningStage, siteSpecific, sortByStringValue, STAGE_TO_LEARNING_STAGE, Subjects, TAG_ID, tags } from "../../../services";
 import { AudienceContext, QuizSummaryDTO, Stage } from "../../../../IsaacApiTypes";
 import { Tag} from "../../../../IsaacAppTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
@@ -116,7 +116,7 @@ const PracticeQuizzesComponent = () => {
                             </Col>
                             <ListView
                                 type="quiz"
-                                items={quizzes.filter((quiz) => isRelevant(quiz))} 
+                                items={quizzes.filter((quiz) => isRelevant(quiz)).sort(sortByStringValue("title"))} 
                                 className={classNames({"quiz-list border-radius-2 mb-3": isAda})}
                                 useViewQuizLink
                             />
