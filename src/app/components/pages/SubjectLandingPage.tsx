@@ -32,6 +32,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
         }
 
         dispatch(searchQuestions({
+            querySource: "randomQuestion",
             searchString: "",
             tags: "",
             fields: undefined,
@@ -94,8 +95,8 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
     // this should be used under the assumption that the above props have been fetched; they may still be undefined, but they will not change
 
     const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s])).flat() ?? [];
-    const relevantEvents = events?.filter(event => 
-        context?.subject 
+    const relevantEvents = events?.filter(event =>
+        context?.subject
         && event.tags?.includes(context.subject)
         && (!context?.stage?.length || eventStages(event).includes(context.stage[0]))
     ).slice(0, 2);
@@ -112,7 +113,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                     <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                         <h4 className="m-0">{getHumanContext(context)} books</h4>
                         <div className="section-divider-bold flex-grow-1"/>
-                    </div> 
+                    </div>
                     <div className={classNames("d-flex book-listing-container", {"flex-column col": !fullWidthBooks}, {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
                         {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
                         {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-7">View more books</Button>}
