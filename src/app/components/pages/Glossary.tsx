@@ -36,6 +36,7 @@ import { GlossarySidebar, MainContent, SidebarLayout } from "../elements/layout/
 import classNames from "classnames";
 import debounce from "lodash/debounce";
 import { PageMetadata } from "../elements/PageMetadata";
+import { PageFragment } from "../elements/PageFragment";
 
 type FilterParams = "subjects" | "stages" | "query";
 
@@ -335,7 +336,9 @@ export const Glossary = () => {
                     subjectCounts={subjectCounts} hideButton
                 />
                 <MainContent>
-                    <PageMetadata sidebarButtonText="Search glossary" />
+                    <PageMetadata noTitle showSidebarButton sidebarButtonText="Search glossary">
+                        <PageFragment fragmentId="help_toptext_glossary" />
+                    </PageMetadata>
                     <Row>
                         <Col md={{size: 9}} className="py-4">
                             <Row className="no-print">
