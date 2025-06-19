@@ -366,7 +366,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Starting</span>
         {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
         <Input
-            id="manage-quizzes-set-date-filter" type="date" className={classNames("quiz-filter-date-input p-1", rowFiltersView ? "mb-4" : "mb-2")}
+            id="manage-quizzes-set-date-filter" type="date" className={classNames("quiz-filter-date-input p-1 vertical-center", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
             placeholder="Filter by set date" aria-label="Filter by set date"
         />
@@ -376,7 +376,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Due</span>
         {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
         <Input
-            id="manage-quizzes-due-date-filter" type="date" className={classNames("quiz-filter-date-input p-1", rowFiltersView ? "mb-4" : "mb-2")}
+            id="manage-quizzes-due-date-filter" type="date" className={classNames("quiz-filter-date-input p-1 vertical-center", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
             placeholder="Filter by due date" aria-label="Filter by due date"
         />
