@@ -75,7 +75,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
                     <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a>
                     {" us if this keeps happening."}
                 </small>
-                <Row className="mt-4 mb-5">
+                <Row className="mt-4 mb-7">
                     <Col>
                         <div className="alert alert-info small overflow-auto">
                             <h4>Useful information to include in your email</h4>

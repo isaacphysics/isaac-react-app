@@ -62,7 +62,7 @@ export const TutorFeatures = () => {
         <Row className="my-4">
             <h4>Tutor Support and Resources</h4>
         </Row>
-        <Row className="isaac-cards-body mb-5 mt-2 px-3">
+        <Row className="isaac-cards-body mb-7 mt-2 px-3">
             <Col sm={6} md={4} className="mb-3 mb-md-0">
                 <TeacherFeatureCard               
                     url = "/support/tutor/general"

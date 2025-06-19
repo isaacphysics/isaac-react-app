@@ -9,7 +9,7 @@ export const LogOutHandler = () => {
     }, []);
     return <>
         <div className="w-100 text-center">
-            <h2 className="pt-5 pb-2">
+            <h2 className="pt-7 pb-2">
                 Logging out...
             </h2>
             <IsaacSpinner />

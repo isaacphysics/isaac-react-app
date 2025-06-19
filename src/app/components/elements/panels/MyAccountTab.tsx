@@ -16,7 +16,7 @@ export const MyAccountTab = ({leftColumn, rightColumn, className} : MyAccountTab
             {rightColumn}
         </div>,   
         
-        <CardBody className={classNames("my-account-tab px-4 px-sm-5", className)}>
+        <CardBody className={classNames("my-account-tab px-4 px-sm-7", className)}>
             <Container>
                 <Row>
                     <Col lg={6} className="my-account-left pe-lg-4 ps-lg-2">

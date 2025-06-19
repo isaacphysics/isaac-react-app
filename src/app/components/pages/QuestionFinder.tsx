@@ -377,7 +377,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     );
 
     const loadingPlaceholder = <div className="w-100 text-center pb-2">
-        <h2 aria-hidden="true" className="pt-5">Searching...</h2>
+        <h2 aria-hidden="true" className="pt-7">Searching...</h2>
         <IsaacSpinner />
     </div>;
 
@@ -444,7 +444,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             Browse all questions
         </AffixButton>;
 
-    return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
+    return <Container id="finder-page" className={classNames("mb-7")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question Finder", "Questions")} 
             help={pageHelp}

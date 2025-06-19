@@ -51,7 +51,7 @@ export const HomepageCS = () => {
                             <Button className="mt-3" tag={Link} to="/topics" color="dark-primary">Explore our resources</Button>
                         </TextBlock>
                         <ImageBlock lg={5} className={"mb-1 mb-sm-3 mb-lg-0"}>
-                            <AdaHero2x1 className={"mt-5 mt-lg-0 d-block"}/>
+                            <AdaHero2x1 className={"mt-7 mt-lg-0 d-block"}/>
                         </ImageBlock>
                     </Row>
                 </Container>
@@ -59,7 +59,7 @@ export const HomepageCS = () => {
             <section id="news-and-updates">
                 <Container className="homepage-padding mw-1600 position-relative" fluid>
                     <ColumnSlice>
-                        <TextBlock className="pe-5">
+                        <TextBlock className="pe-7">
                             <h2>Our latest updates</h2>
                             <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read
                                 the latest news and updates from the team.</p>
@@ -80,7 +80,7 @@ export const HomepageCS = () => {
                             buttonStyle: "link"
                         }}/> : <div/>}
                     </ColumnSlice>
-                    {showNewsletterPrompts && <div className={"mt-4 mt-lg-5 w-100 text-center d-lg-none"}>
+                    {showNewsletterPrompts && <div className={"mt-4 mt-lg-7 w-100 text-center d-lg-none"}>
                         <Button onClick={() => {setLinkedSetting("news-preference");}} color="solid"
                             tag={Link} to={"/account#notifications"}>
                                 Join our newsletter
@@ -95,7 +95,7 @@ export const HomepageCS = () => {
                         <Col xs={12} lg={5} className="mt-4 mt-lg-4 order-1 order-lg-0">
                             <picture>
                                 <source srcSet="/assets/cs/decor/benefits-for-homepage.png" type="image/png"/>
-                                <img className={"d-block w-100 mw-760 px-sm-5 px-lg-0"} src={"/assets/cs/decor/benefits-for-homepage.png"} alt="" />
+                                <img className={"d-block w-100 mw-760 px-sm-7 px-lg-0"} src={"/assets/cs/decor/benefits-for-homepage.png"} alt="" />
                             </picture>
                         </Col>
                         <Col xs={12} lg={7}>
@@ -188,7 +188,7 @@ export const HomepageCS = () => {
                     <ColumnSlice>
                         <Container className="cs-card-container px-3 my-3">
                             <Card className={classNames("cs-card-plain w-100 border-0 backslash-1")}>
-                                <CardTitle className={"px-4 mt-5"}>
+                                <CardTitle className={"px-4 mt-7"}>
                                     <h3 className={"mt-1 font-size-1-5"}>Core</h3>
                                 </CardTitle>
                                 <CardBody className={"px-4 pb-4"}>
@@ -205,7 +205,7 @@ export const HomepageCS = () => {
                         </Container>
                         <Container className="cs-card-container px-3 my-3">
                             <Card className={classNames("cs-card-plain w-100 border-0 backslash-2")}>
-                                <CardTitle className={"px-4 mt-5 font-size-1-5"}>
+                                <CardTitle className={"px-4 mt-7 font-size-1-5"}>
                                     <h3 className={"mt-1"}>Advanced</h3>
                                 </CardTitle>
                                 <CardBody className={"px-4 pb-4"}>
@@ -231,7 +231,7 @@ export const HomepageCS = () => {
                     <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around my-3">
                         {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n} showTitle cardClassName="bg-cultured-grey" />)}
                     </Row>
-                    <div className={"mt-4 mt-lg-5 w-100 text-center"}>
+                    <div className={"mt-4 mt-lg-7 w-100 text-center"}>
                         <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
                     </div>
                     {showNewsletterPrompts &&

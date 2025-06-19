@@ -1211,7 +1211,7 @@ export const EventsSidebar = (props: SidebarProps) => {
 
     return <ContentSidebar buttonTitle="Filter events" {...props}>
         <Form tag={"search"}>
-            {above["lg"](deviceSize) && <div className="section-divider mt-5"/>}
+            {above["lg"](deviceSize) && <div className="section-divider mt-7"/>}
             <h5 className="mb-3">Event type</h5>
             <ul>               
                 {Object.entries(EventStatusFilter)

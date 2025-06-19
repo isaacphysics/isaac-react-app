@@ -111,7 +111,7 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
                 icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`
             } : undefined}
         />
-        {humanSubject && <div className="mt-5">
+        {humanSubject && <div className="mt-7">
             <h4>Introducing Isaac {humanSubject}</h4>
             <p>
                 Welcome to Isaac {humanSubject}, part of <a href="/">Isaac Science</a>! 

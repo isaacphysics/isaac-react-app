@@ -275,7 +275,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <th className="text-center align-middle">Manage</th>
     </tr>;
 
-    return <Card className="mt-2 mb-5">
+    return <Card className="mt-2 mb-7">
         <CardBody id="boards-table">
             <Row>
                 <Col lg={4}>
@@ -539,7 +539,7 @@ export const SetAssignments = () => {
                     Please <Link to="/groups">create a group here first.</Link>
                 </Alert>}
                 {boards && boards.totalResults === 0
-                    ? <h3 className="text-center mt-4 mb-5">
+                    ? <h3 className="text-center mt-4 mb-7">
                         You have no {siteSpecific("question decks", "quizzes")} to assign
                         {siteSpecific(
                             "; use one of the options above to find one.",

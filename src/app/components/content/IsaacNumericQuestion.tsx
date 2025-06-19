@@ -124,7 +124,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                             {!readonly && !(isPhy && above['md'](deviceSize)) && tooltip}
                         </InputGroup>
                     </div>
-                    {(doc.requireUnits || doc.displayUnit) && <div className="d-flex flex-column unit-selection ps-md-5 w-100 w-md-50 mb-2">
+                    {(doc.requireUnits || doc.displayUnit) && <div className="d-flex flex-column unit-selection ps-md-7 w-100 w-md-50 mb-2">
                         Unit{noDisplayUnit && "s"}
                         <Dropdown className="flex-grow-1" disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                             <DropdownToggle

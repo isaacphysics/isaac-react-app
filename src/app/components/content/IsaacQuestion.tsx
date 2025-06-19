@@ -181,7 +181,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     "question-component",
                     doc.type,
                     {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)},
-                    {"p-md-5": isAda}
+                    {"p-md-7": isAda}
                 )}>
                 
                 {isLLMFreeTextQuestion && <LLMFreeTextQuestionRemainingAttemptsView canAttemptQuestionType={canAttemptQuestionType} />}
@@ -267,7 +267,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     :
                     (!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) && !locked &&
                         <div
-                            className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-5 mb-n3": correct})}>
+                            className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-7 mb-n3": correct})}>
                             {secondaryAction &&
                             <div
                                 className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3 pb-3": primaryAction})}>
