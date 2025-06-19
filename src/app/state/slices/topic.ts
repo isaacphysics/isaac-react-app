@@ -3,16 +3,16 @@ import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {createSlice} from "@reduxjs/toolkit";
 import {NOT_FOUND} from "../../services";
 
+export type CurrentTopicState = IsaacTopicSummaryPageDTO | NOT_FOUND_TYPE | null;
+
 interface actionType {
-    payload: TopicState,
+    payload: CurrentTopicState,
     type: string
 }
 
-export type TopicState = IsaacTopicSummaryPageDTO | NOT_FOUND_TYPE | null;
-
 export const topicSlice = createSlice({
     name: 'topicSlice',
-    initialState: null as TopicState,
+    initialState: null as CurrentTopicState,
     reducers: {
         setCurrentTopic: (_state, action: actionType) => {
             return action.payload;

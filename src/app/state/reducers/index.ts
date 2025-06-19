@@ -20,7 +20,6 @@ import {
     testQuestions,
     quizAttempt,
     groupMemberships,
-    currentTopic,
     questionSearchResult,
     search,
     isaacApi,
@@ -59,7 +58,6 @@ export const rootReducer = combineReducers({
 
     // Content
     page: docSlice.reducer,
-    topic: topicSlice.reducer,
 
     // Question
     questions,
@@ -78,7 +76,7 @@ export const rootReducer = combineReducers({
     groupMemberships,
 
     // Topics
-    currentTopic,
+    currentTopic: topicSlice.reducer,
 
     // Gameboards
     boards: gameboardsSlice.reducer,
