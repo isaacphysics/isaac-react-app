@@ -144,7 +144,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                     : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>
                 }
                 <MainContent>
-                    <PageMetadata noTitle sidebarButtonText="Search and filter">
+                    <PageMetadata noTitle showSidebarButton>
                         {pageContext?.subject 
                             ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
                                 <p className="me-0 me-lg-3">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>

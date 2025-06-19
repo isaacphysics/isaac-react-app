@@ -473,7 +473,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
 
-                <PageMetadata noTitle sidebarButtonText="Search and filter">
+                <PageMetadata noTitle showSidebarButton>
                     {siteSpecific(
                         <div>
                             {(pageContext?.subject && pageContext.stage)

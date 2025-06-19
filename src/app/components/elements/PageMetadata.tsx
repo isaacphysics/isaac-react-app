@@ -10,18 +10,25 @@ import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { below, isAda, isPhy, useDeviceSize } from '../../services';
 
-interface PageMetadataProps {
+type PageMetadataProps = {
     doc?: SeguePageDTO;
     title?: ReactNode;
     subtitle?: string;
     badges?: ReactNode;
-    sidebarButtonText?: string;
     children?: ReactNode; // any content-type specific metadata that may require information outside of `doc`; e.g. question completion state, event info, etc.
     noTitle?: boolean; // if true, any children (usually text) will be rendered in place of the title, with any action buttons (e.g. share, print, report) rendered to the side
-}
+} & (
+    {
+        showSidebarButton: true;
+        sidebarButtonText?: string;
+    } | {
+        showSidebarButton?: never;
+        sidebarButtonText?: never;
+    }
+);
 
 export const PageMetadata = (props: PageMetadataProps) => {
-    const { doc, title, subtitle, badges, sidebarButtonText, children, noTitle } = props;
+    const { doc, title, subtitle, badges, children, noTitle, showSidebarButton, sidebarButtonText } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const location = useLocation();
     const deviceSize = useDeviceSize();
@@ -70,7 +77,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
             </>
         }
         {isPhy && <>
-            {sidebarButtonText && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
+            {showSidebarButton && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
             <div className="section-divider mt-3" />
             <EditContentButton doc={doc} />
             <TeacherNotes notes={doc?.teacherNotes} />

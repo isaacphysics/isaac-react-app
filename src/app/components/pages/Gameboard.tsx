@@ -189,7 +189,7 @@ export const Gameboard = withRouter(({ location }) => {
                         <SidebarLayout>
                             <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />
                             <MainContent>
-                                <PageMetadata title={gameboard.title} sidebarButtonText="Details"/>
+                                <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
                                 {/* // {isPhy && <h3 className="mt-3">{gameboard.title}</h3>} */}
                                 <GameboardViewer gameboard={gameboard} className={siteSpecific("mt-3", "mt-4 mt-lg-5")} />
                                 {user && isTutorOrAbove(user)

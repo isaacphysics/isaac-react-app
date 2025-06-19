@@ -31,7 +31,7 @@ export const BooksOverview = () => {
         <SidebarLayout>
             <BooksOverviewSidebar hideButton />
             <MainContent>
-                <PageMetadata title={"Isaac books: in print and online"} sidebarButtonText="View all books"/>
+                <PageMetadata title={"Isaac books: in print and online"} showSidebarButton sidebarButtonText="View all books"/>
                 <PageFragment fragmentId="books_overview_fragment" />
 
                 <h3>Explore our books online</h3>

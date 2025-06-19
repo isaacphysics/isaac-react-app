@@ -193,7 +193,7 @@ export const MyGameboards = () => {
                 hideButton
             />
             <MainContent>
-                <PageMetadata noTitle sidebarButtonText="Search and filter">
+                <PageMetadata noTitle showSidebarButton>
                     <PageFragment fragmentId={`${siteSpecific("gameboards", "quizzes")}_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
                 </PageMetadata>
                 {boards && boards.totalResults == 0 ?

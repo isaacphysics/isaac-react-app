@@ -63,7 +63,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                     thenRender={(bookDetailPage) => <BookPage page={bookDetailPage} />}
                                 />
                                 : <>
-                                    <PageMetadata doc={definedBookIndexPage} sidebarButtonText={book?.sidebar?.subtitle}/>
+                                    <PageMetadata doc={definedBookIndexPage} showSidebarButton sidebarButtonText={book?.sidebar?.subtitle}/>
                                     {definedBookIndexPage.value && <div>
                                         <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
                                             <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />

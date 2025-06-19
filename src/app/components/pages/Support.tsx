@@ -146,7 +146,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
                 )}
             </FAQSidebar>
             <MainContent>
-                <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title} sidebarButtonText="Select a topic"/>
+                <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title} showSidebarButton sidebarButtonText="Select a topic"/>
                 <TabContent activeTab={categoryIndex}>
                     {Object.values(section.categories).map((category, index) => 
                         <TabPane key={index} tabId={index}>
