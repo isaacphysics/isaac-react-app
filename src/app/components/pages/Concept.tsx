@@ -96,12 +96,12 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                         <ConceptSidebar relatedContent={doc.relatedContent} />
                         <MainContent>
                             {isPhy && <>
-                                <div className="no-print d-flex align-items-center my-3">
+                                <div className="d-flex align-items-center my-3">
                                     <div>
                                         <h2 className="text-theme-dark"><Markup encoding="latex">{doc.title as string}</Markup></h2>
                                         {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
                                     </div>
-                                    <div className="d-flex gap-2 ms-auto">
+                                    <div className="no-print d-flex gap-2 ms-auto">
                                         <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
                                         <PrintButton />
                                         <ReportButton pageId={conceptId}/>
@@ -119,7 +119,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                             {isAda && <>
                                 {below["sm"](deviceSize) && <ManageButtons />}
 
-                                <div className="d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
+                                <div className="no-print d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
                                     <EditContentButton doc={doc} />
                                     <UserContextPicker />
                                     {above["md"](deviceSize) && <ManageButtons />}

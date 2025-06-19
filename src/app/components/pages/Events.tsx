@@ -135,7 +135,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                                 </Row>
 
                                 {/* Load More Button */}
-                                {numberOfLoadedEvents < total && <div className="text-center mt-4 mb-5">
+                                {numberOfLoadedEvents < total && <div className="text-center mt-4 mb-7">
                                     <Button color="solid"
                                         onClick={() => {getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});}}>
                                         Load more events
@@ -148,7 +148,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                                 </div>}
                             </div>;
                         }} />
-                    <div className="mb-5">
+                    <div className="mb-7">
                         <PageFragment fragmentId="event_type_descriptions" ifNotFound={RenderNothing}/>
                     </div>
                 </MainContent>

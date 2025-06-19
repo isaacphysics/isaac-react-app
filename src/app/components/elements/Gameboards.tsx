@@ -40,7 +40,7 @@ export interface GameboardsCardsProps {
 }
 
 const PhyTable = (props: GameboardsTableProps) => {
-    return <Card className="mb-5 mt-3">
+    return <Card className="mb-7 mt-3">
         <CardBody id="boards-table" className="px-3 py-2">
             <CSTable {...props} />
         </CardBody>
@@ -99,7 +99,7 @@ const CSTable = (props: GameboardsTableProps) => {
         .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
         .filter(board => boardCompletionSelection(board, boardCompletion));
 
-    return <div className={siteSpecific("", "mb-5 mb-md-6")}>
+    return <div className={siteSpecific("", "mb-7")}>
         <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
             <Table className={classNames("my-gameboard-table", {"mb-0" : isPhy})}>
                 <thead>
@@ -147,7 +147,7 @@ const Cards = (props: GameboardsCardsProps) => {
                 />
             </Col>)}
         </Row>}
-        <div className="text-center mt-3 mb-5" style={{clear: "both"}}>
+        <div className="text-center mt-3 mb-7" style={{clear: "both"}}>
             {boards.boards.length === filteredBoards.length
                 ? <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong> results.</p>
                 : <p>Showing <strong>{filteredBoards.length}</strong> match from <strong>{boards.boards.length}</strong> results.</p>}

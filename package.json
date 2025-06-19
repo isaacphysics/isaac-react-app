@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "4.0.0-rc18-SNAPSHOT",
+  "version": "4.0.0-rc19-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=18",

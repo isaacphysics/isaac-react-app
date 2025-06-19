@@ -47,12 +47,12 @@ export const AdminStats = () => {
             thenRender={adminStatsWithTotals => {
                 return <>
                     <div className="py-3">A high-level overview of the users and activity on the platform:</div>
-                    <Card className="mb-5 px-3 pt-1">
+                    <Card className="mb-7 px-3 pt-1">
                         <CardBody>
                             <Row>
                                 <Col>
                                     <strong>Users:</strong>
-                                    <ul className="list-unstyled mb-5">
+                                    <ul className="list-unstyled mb-7">
                                         <li>Last 6 months:&nbsp;
                                             <strong>{(adminStatsWithTotals.activeUsersOverPrevious.sixMonths.TOTAL || 0).toLocaleString()}</strong>
                                         </li>

@@ -14,7 +14,7 @@ export const StepUpPhys = () => {
     return <Container className="physics">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Step Up to GCSE Physics" help={pageHelp} />
+                <TitleAndBreadcrumb className="mb-7" currentPageTitle="Step Up to GCSE Physics" help={pageHelp} />
                 <img className="book-cover" src="/assets/phy/books/step_up_phys.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="phys_book_step_up_intro"/>
             </div>

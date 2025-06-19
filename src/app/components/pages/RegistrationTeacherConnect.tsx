@@ -61,7 +61,7 @@ export const RegistrationTeacherConnect = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
-        <Card className={"my-5"}>
+        <Card className={"my-7"}>
             <CardBody>
                 <Form onSubmit={submit}>
                     <h3>Connect your account to your teacher</h3>

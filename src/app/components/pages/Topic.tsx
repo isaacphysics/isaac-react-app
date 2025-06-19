@@ -75,7 +75,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                 </Col>
             </Row>}
 
-            <Row className="mt-3 mb-5">
+            <Row className="mt-3 mb-7">
                 <Col className={"pb-3 mw-760"}>
                     <Row>
                         <Col size={6} className="text-center">

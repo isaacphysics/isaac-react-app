@@ -598,6 +598,7 @@ export interface QuestionSearchQuery {
     startIndex?: number;
     limit?: number;
     randomSeed?: number;
+    querySource: string;
 }
 
 export interface ContentSummary extends ContentSummaryDTO {

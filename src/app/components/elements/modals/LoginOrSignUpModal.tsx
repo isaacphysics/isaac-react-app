@@ -45,7 +45,7 @@ const LoginOrSignUpBody = () => {
             <div className={classNames({"ps-3 pt-3": isPhy})}>
                 {siteSpecific(
                     <img src={"/assets/phy/logo.svg"} alt={"Isaac Science Logo"} />,
-                    <img src={"/assets/common/logos/ada_logo_3-stack_aqua.svg"} className={"mt-5 mb-4 pb-2 ms-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
+                    <img src={"/assets/common/logos/ada_logo_3-stack_aqua.svg"} className={"mt-7 mb-4 pb-2 ms-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
                 )}
             </div>
             <div className={"px-3 mb-4"}>

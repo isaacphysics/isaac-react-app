@@ -391,7 +391,7 @@ const GroupDetails = ({group, user}: {group: AppGroup, user: RegisteredUserDTO})
         <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} id={`legend-${group.id}`} />
         {/* Only full teachers can see the tests tab */}
         {pageSettings.isTeacher
-            ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab} style="tabs">
+            ? <Tabs className="my-4 mb-7" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab} style="tabs">
                 {{
                     [`Assignments (${assignments.length || 0})`]: assignmentTabComponents,
                     [`Tests (${quizAssignments.length || 0})`]: quizTabComponents
@@ -547,11 +547,11 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 const sortedGroups = groupSortOrder === GroupSortOrder.Alphabetical
                     ? sortBy(groups, g => g.groupName && g.groupName.toLowerCase())
                     : sortBy(groups, g => g.created).reverse();
-                return <div className="assignment-progress-container mb-5">
+                return <div className="assignment-progress-container mb-7">
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                         {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} user={user} />)}
                     </AssignmentProgressPageSettingsContext.Provider>
-                    {sortedGroups.length === 0 && <Container className="py-5">
+                    {sortedGroups.length === 0 && <Container className="py-7">
                         <h3 className="text-center">
                             You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
                         </h3>

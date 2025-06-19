@@ -699,7 +699,7 @@ export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<
     dispatch(openActiveModal({
         closeAction: () => {dispatch(closeActiveModal() as any);},
         title: "Test already submitted",
-        body: <div className="text-center my-5 pb-4">
+        body: <div className="text-center my-7 pb-4">
             <strong>A submission has already been recorded for this test by your account.</strong>
         </div>
     }) as any);

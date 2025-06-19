@@ -18,7 +18,7 @@ export const ProgrammingLanguageInput = ({programmingLanguage, setProgrammingLan
         setProgrammingLanguage(event.target.value ? {...newProgrammingLanguage, [event.target.value]: true} : newProgrammingLanguage);
     };
 
-    return <FormGroup className="form-group me-lg-5">
+    return <FormGroup className="form-group me-lg-7">
         <Label className={classNames("fw-bold", (isRequired ? "form-required" : "form-optional"))} htmlFor="programming-language-select">
             Preferred programming language
         </Label>
