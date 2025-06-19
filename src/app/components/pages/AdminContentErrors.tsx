@@ -64,7 +64,7 @@ export const AdminContentErrors = () => {
     return <Container>
         <Row>
             <Col>
-                <TitleAndBreadcrumb 
+                <TitleAndBreadcrumb
                     currentPageTitle="Content errors"
                     icon={{type: "hex", icon: "icon-tests"}}
                 />
@@ -77,13 +77,13 @@ export const AdminContentErrors = () => {
                 return <div>
                     <Row>
                         <Col>
+                            <p className="mt-2">
+                                <strong>Content Version:</strong> {errors.currentLiveVersion}
+                            </p>
                             <p>
                                 <strong>Critical errors:</strong> {errors.failedFiles},&nbsp;
                                 <strong>Files with errors:</strong> {errors.brokenFiles},&nbsp;
                                 <strong>Total errors:</strong> {errors.totalErrors}
-                            </p>
-                            <p>
-                                <strong>Content Version:</strong> {errors.currentLiveVersion}
                             </p>
                         </Col>
                     </Row>
