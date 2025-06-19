@@ -92,7 +92,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                     <i className="icon icon-download ms-2" color="white"/>
                 </Button>
                 {isTeacherOrAbove(user) && <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupQuizProgressCSVDownloadLink(group.id as number))))}>
-                    Download quizzes CSV
+                    Download tests CSV
                     <i className="icon icon-download ms-2" color="white"/>
                 </Button>}
             </>}
