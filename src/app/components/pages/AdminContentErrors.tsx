@@ -7,6 +7,20 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
+const sortBySourcePath = (error1: ContentErrorItem, error2: ContentErrorItem) => {
+    const path1 = error1.partialContent?.canonicalSourceFile;
+    const path2 = error2.partialContent?.canonicalSourceFile;
+    if (path1 === path2) {
+        return 0;
+    } else if (!path1) {
+        return -1;
+    } else if (!path2) {
+        return 1;
+    } else {
+        return path1 < path2 ? -1: 1;
+    }
+};
+
 const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number) => {
     return <li key={index}>{errorDetailsListItem}</li>;
 };
@@ -131,6 +145,7 @@ export const AdminContentErrors = () => {
                                                 (error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.NON_CRITICAL)) ||
                                                 (!error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.CRITICAL)),
                                         )
+                                        .sort(sortBySourcePath)
                                         .map(ContentErrorRow)
                                     }
                                 </tbody>
