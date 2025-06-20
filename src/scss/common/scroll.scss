@@ -122,11 +122,3 @@
     }
   }
 }
-
-.vertical-scroll-shadow {
-  @include vertical-scroll-shadow($color-neutral-50, rgba(0, 0, 0, 0.2));
-}
-
-.horizontal-scroll-shadow {
-  @include horizontal-scroll-shadow($color-neutral-50, rgba(0, 0, 0, 0.2));
-}
