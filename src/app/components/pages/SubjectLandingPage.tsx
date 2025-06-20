@@ -59,7 +59,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 
     const question = questions?.[0];
 
-    return <div className="py-4 container-override random-question-panel">
+    return <div className="d-flex flex-column pb-4 container-override random-question-panel">
         <div className="d-flex my-3 justify-content-between align-items-center">
             <h4 className="m-0">Try a random question!</h4>
             <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
@@ -116,7 +116,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                     </div>
                     <div className={classNames("d-flex book-listing-container", {"flex-column col": !fullWidthBooks}, {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
                         {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
-                        {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-5">View more books</Button>}
+                        {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-7">View more books</Button>}
                     </div>
                 </>
                 : <>
@@ -185,8 +185,8 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
         {pageContext && isSingleStageContext(pageContext) && <>
             <RandomQuestionBanner context={pageContext} />
 
-            <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-5" />
-
+            <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-7" />
+            
             <LandingPageFooter context={pageContext} />
         </>}
 

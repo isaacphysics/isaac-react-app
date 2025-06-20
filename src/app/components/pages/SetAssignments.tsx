@@ -276,7 +276,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <th className="text-center align-middle">Manage</th>
     </tr>;
 
-    return <Card className="mt-2 mb-5">
+    return <Card className="mt-2 mb-7">
         <CardBody id="boards-table">
             <Row>
                 <Col lg={4}>
@@ -363,7 +363,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         <th>Delete</th>
     </tr>;
 
-    return <div className={"mb-5 mb-md-6 mt-4"}>
+    return <div className={"mb-7 mt-4"}>
         <Row>
             <Col xs={6} md={4} lg={3} xl={3}>
                 <Label className="w-100">
@@ -519,8 +519,7 @@ export const SetAssignments = () => {
         groupsByGameboard, openAssignModal
     };
 
-    return <Container> {/* fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})} */}
-
+    return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
             modalId="help_modal_set_assignments" className={siteSpecific("mb-4", "")} />
         <SidebarLayout>
@@ -541,7 +540,7 @@ export const SetAssignments = () => {
                     Please <Link to="/groups">create a group here first.</Link>
                 </Alert>}
                 {boards && boards.totalResults === 0
-                    ? <h3 className="text-center mt-4 mb-5">
+                    ? <h3 className="text-center mt-4 mb-7">
                         You have no {siteSpecific("question decks", "quizzes")} to assign
                         {siteSpecific(
                             "; use one of the options above to find one.",

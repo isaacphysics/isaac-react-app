@@ -221,7 +221,7 @@ export const LogIn = () => {
         "Log in to Isaac to learn and track your progress.",
         "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.");
 
-    return <Container id="login-page" className="my-4 mb-5">
+    return <Container id="login-page" className="my-4 mb-7">
         <MetaDescription description={metaDescription} />
         <Row>
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>

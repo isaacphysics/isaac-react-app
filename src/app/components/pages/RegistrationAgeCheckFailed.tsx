@@ -16,7 +16,7 @@ export const RegistrationAgeCheckFailed = () => {
         <SidebarLayout>
             <SignupSidebar activeTab={1}/>
             <MainContent>
-                <Card className="my-5">
+                <Card className="my-7">
                     <CardBody>
                         <h3>Unable to create account</h3>
                         <p>Unfortunately, we aren&apos;t able to offer accounts to students under {siteSpecific("10", "13")} years old.</p>

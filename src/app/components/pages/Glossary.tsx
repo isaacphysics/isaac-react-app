@@ -4,8 +4,6 @@ import queryString from "query-string";
 import {AppState, logAction, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ShareLink} from "../elements/ShareLink";
-import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
 import {GlossaryTermDTO, Stage} from "../../../IsaacApiTypes";
 import {
@@ -25,7 +23,6 @@ import {
     isFullyDefinedContext,
     isSingleStageContext,
     getHumanContext,
-    above,
     useDeviceSize,
     useQueryParams,
     ListParams,
@@ -38,6 +35,8 @@ import {useHistory} from "react-router";
 import { GlossarySidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
 import debounce from "lodash/debounce";
+import { PageMetadata } from "../elements/PageMetadata";
+import { PageFragment } from "../elements/PageFragment";
 
 type FilterParams = "subjects" | "stages" | "query";
 
@@ -319,15 +318,6 @@ export const Glossary = () => {
         "A glossary of important words and phrases used in maths, physics, chemistry and biology.",
         "Confused about a computer science term? Look it up in our glossary. Get GCSE and A level support today!");
 
-    const optionBar = <div className={classNames("no-print d-flex align-items-center", {"gap-2": isPhy})}>
-        <div className="question-actions question-actions-leftmost mt-2">
-            <ShareLink linkUrl={`/glossary`} clickAwayClose/>
-        </div>
-        <div className="question-actions mt-2">
-            <PrintButton/>
-        </div>
-    </div>;
-
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
     const thenRender = <div className="glossary-page">
@@ -343,10 +333,12 @@ export const Glossary = () => {
                 <GlossarySidebar 
                     searchText={searchText} setSearchText={debouncedSearchHandler} filterSubject={filterSubject} setFilterSubject={setFilterSubject}
                     filterStages={filterStages} setFilterStages={setFilterStages} subjects={subjects} stages={stages} stageCounts={stageCounts}
-                    subjectCounts={subjectCounts} optionBar={optionBar}
+                    subjectCounts={subjectCounts} hideButton
                 />
                 <MainContent>
-                    {(above['lg'](deviceSize) || isAda) && <> <div className="mt-1"/> {optionBar} </>}  
+                    <PageMetadata noTitle showSidebarButton sidebarButtonText="Search glossary">
+                        <PageFragment fragmentId="help_toptext_glossary" />
+                    </PageMetadata>
                     <Row>
                         <Col md={{size: 9}} className="py-4">
                             <Row className="no-print">
@@ -396,7 +388,7 @@ export const Glossary = () => {
                                 {alphabetList}
                             </div>
                         </div>
-                        {Object.entries(glossaryTerms).map(([letter, terms]) => <div key={letter} className="row pb-5" ref={(el: HTMLDivElement) => alphabetHeaderRefs.current.set(letter, el)}>
+                        {Object.entries(glossaryTerms).map(([letter, terms]) => <div key={letter} className="row pb-7" ref={(el: HTMLDivElement) => alphabetHeaderRefs.current.set(letter, el)}>
                             <Col md={{size: 1, offset: 1}}>
                                 <h2 style={{position: 'sticky', top: `calc(0px - ${ALPHABET_HEADER_OFFSET}px)`}}>
                                     {letter}

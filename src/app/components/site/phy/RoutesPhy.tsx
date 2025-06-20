@@ -43,6 +43,7 @@ import { PreUniMaths } from "../../pages/books_old/pre_uni_maths";
 import { QuizView } from "../../pages/quizzes/QuizView";
 import { BooksOverview } from "../../pages/BooksOverview";
 import { RevisionPage } from "../../pages/RevisionDetailPage";
+import { AnvilAppsListing } from "../../pages/AnvilAppsListing";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -57,6 +58,7 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
     "/quick_quizzes": QuickQuizzes,
     "/question_decks": QuestionDecks,
     "/glossary": Glossary,
+    "/apps": AnvilAppsListing,
 };
 
 // TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones

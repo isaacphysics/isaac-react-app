@@ -9,10 +9,9 @@ import {useGetBookDetailPageQuery, useGetBookIndexPageQuery} from "../../state/s
 import {BookPage} from "./BookPage";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {TeacherNotes} from "./TeacherNotes";
 import {IsaacContentValueOrChildren} from "../content/IsaacContentValueOrChildren";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {EditContentButton} from "./EditContentButton";
+import { PageMetadata } from "./PageMetadata";
 
 interface BookProps {
     match: { params: { bookId: string } };
@@ -45,7 +44,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
 
     return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
         <TitleAndBreadcrumb
-            currentPageTitle={book?.title ?? "Book"}
+            currentPageTitle={pageId === undefined ? "Book" : book?.title ?? "Book"}
             icon={{type: "hex", icon: "icon-book"}}
             intermediateCrumbs={pageId !== undefined && book?.title ? [BOOKS_CRUMB, {title: book.title, to: `/books/${bookId}`}] : [BOOKS_CRUMB]}
         />
@@ -55,8 +54,8 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                 defaultErrorTitle="Unable to load book contents"
                 thenRender={(definedBookIndexPage) => {
                     return <>
-                        <ContentControlledSidebar sidebar={book?.sidebar}/>
-                        <MainContent className="my-4">
+                        <ContentControlledSidebar sidebar={book?.sidebar} hideButton/>
+                        <MainContent>
                             {pageId
                                 ? <ShowLoadingQuery
                                     query={bookDetailPageQuery}
@@ -64,8 +63,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                     thenRender={(bookDetailPage) => <BookPage page={bookDetailPage} />}
                                 />
                                 : <>
-                                    <EditContentButton doc={definedBookIndexPage}/>
-                                    <TeacherNotes notes={definedBookIndexPage.teacherNotes} />
+                                    <PageMetadata doc={definedBookIndexPage} showSidebarButton sidebarButtonText={book?.sidebar?.subtitle}/>
                                     {definedBookIndexPage.value && <div>
                                         <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
                                             <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />

@@ -57,7 +57,7 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
 
         <TeacherNotes notes={page.teacherNotes} />
 
-        <MetadataContainer>
+        <MetadataContainer className="d-flex flex-column gap-2">
             {!!page.gameboards?.length && <MetadataContainerLink id="introduction" title="Introduction" />}
             <MetadataContainerLink id="revision" title="Revision" />
             {!!tests.length && <MetadataContainerLink id="tests" title="Practice tests" />}
@@ -66,7 +66,7 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
         {!!page.gameboards?.length && <>
             <h4 className="mb-3" id="introduction">Introduction</h4>
             <span>First, have a go at these baseline questions to assess your understanding and identify which aspects of this topic you should focus your revision on:</span>
-            <div className="mt-3 mb-5 list-results-container p-2">
+            <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"
                     items={convertToALVIGameboards(page.gameboards)}
@@ -82,7 +82,7 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
         {!!tests.length && <>
             <h4 className="mt-4 mb-3" id="tests">Practice tests</h4>
             <span>To demonstrate your progress once you&apos;ve revised this section, have a go at a practice test:</span>
-            <div className="mt-3 mb-5 list-results-container p-2">
+            <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="quiz"
                     items={tests}

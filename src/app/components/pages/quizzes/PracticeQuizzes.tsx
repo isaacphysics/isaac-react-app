@@ -11,10 +11,9 @@ import { PageFragment } from "../../elements/PageFragment";
 import { MainContent, PracticeQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { isFullyDefinedContext, useUrlPageTheme } from "../../../services/pageContext";
 import { selectors, useAppSelector } from "../../../state";
-import { PrintButton } from "../../elements/PrintButton";
-import { ShareLink } from "../../elements/ShareLink";
 import { ListView } from "../../elements/list-groups/ListView";
 import classNames from "classnames";
+import { PageMetadata } from "../../elements/PageMetadata";
 
 const PracticeQuizzesComponent = () => {
     const pageContext = useUrlPageTheme();
@@ -94,22 +93,13 @@ const PracticeQuizzesComponent = () => {
             currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} 
             icon={{"type": "hex", "icon": "icon-tests"}}
             intermediateCrumbs={crumb ? [crumb] : []}
-            className={siteSpecific("mb-4", "")} 
         />
         <SidebarLayout>
-            <PracticeQuizzesSidebar {...sidebarProps}/>
-            <MainContent>
-                <div className="d-flex align-items-center">
-                    <span><PageFragment fragmentId="help_toptext_practice_tests"/></span>
-                    {isPhy && <div className="no-print d-flex gap-2 ms-auto">
-                        <div className="question-actions question-actions-leftmost">
-                            <ShareLink linkUrl={isFullyDefinedContext(pageContext) ? `/${pageSubject}/${pageStage}/practice_tests` : "/practice_tests"}/>
-                        </div>
-                        <div className="question-actions not-mobile">
-                            <PrintButton/>
-                        </div>
-                    </div>}
-                </div>
+            <PracticeQuizzesSidebar {...sidebarProps} hideButton />
+            <MainContent className="mb-4">
+                <PageMetadata noTitle showSidebarButton>
+                    <PageFragment fragmentId="help_toptext_practice_tests"/>
+                </PageMetadata>
                 {!user 
                     ? <b>You must be logged in to view practice tests.</b> 
                     : <ShowLoading until={quizzes}>

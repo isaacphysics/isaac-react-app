@@ -6,7 +6,7 @@ interface MetadataContainerProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const MetadataContainer = ({ children, ...rest }: MetadataContainerProps) => {
-    return <div {...rest} className={classNames("content-metadata-container d-flex flex-column gap-2", rest.className)}>
+    return <div {...rest} className={classNames("content-metadata-container", rest.className)}>
         {children}
     </div>;
 };

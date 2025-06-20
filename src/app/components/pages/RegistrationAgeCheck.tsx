@@ -52,7 +52,7 @@ export const RegistrationAgeCheck = () => {
         <SidebarLayout>
             <SignupSidebar activeTab={1}/>
             <MainContent>
-                <Card className="my-5">
+                <Card className="my-7">
                     <CardBody>
                         <div className={siteSpecific("h4", "h3")}>How old are you?</div>
                         <p>{siteSpecific(

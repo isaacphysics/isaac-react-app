@@ -26,6 +26,16 @@ export const mainContentIdSlice = createSlice({
     }
 });
 
+export type SidebarState = {open?: boolean} | null;
+export const sidebarSlice = createSlice({
+    name: "sidebar",
+    initialState: null as SidebarState,
+    reducers: {
+        setOpen: (state, action: PayloadAction<boolean | undefined>) => ({...state, open: action.payload}),
+        toggle: (state) => ({...state, open: !state?.open}),
+    }
+});
+
 export type TransientUserContextState = {examBoard?: EXAM_BOARD, stage?: STAGE, isFixedContext?: boolean} | null;
 export const transientUserContextSlice = createSlice({
     name: "transientUserContext",

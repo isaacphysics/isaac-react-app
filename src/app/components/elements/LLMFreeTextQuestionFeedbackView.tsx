@@ -30,7 +30,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
         }
     }, [hasSubmitted]);
 
-    return <div ref={feedbackPanelRef} className='llm-feedback question-component p-md-5'>
+    return <div ref={feedbackPanelRef} className='llm-feedback question-component p-md-7'>
         <h2 className="mb-0">Do you agree with the LLM’s predicted marks?</h2>
         <p className="mb-0">1 in 3 times the predicted mark will be wrong. Find out more in our <Link to="/support/student/general" target="_blank">FAQs</Link></p>
         <div className="prediction my-4">

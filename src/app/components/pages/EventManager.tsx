@@ -28,7 +28,7 @@ export const EventManager = ({user}: {user: PotentialUser}) => {
 
     return  <Container>
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin" icon={{type: "hex", icon: "icon-events"}}/>
-        <div className="my-5">
+        <div className="my-7">
             <EventOverviews user={user} setSelectedEventId={setSelectedEventId} />
             <div className="mt-3" ref={selectedEventRef}/>
             {selectedEventId !== null && event && <>

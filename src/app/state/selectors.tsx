@@ -60,6 +60,10 @@ export const selectors = {
         orDefault: (state: AppState) => state?.mainContentId || "main",
     },
 
+    sidebar: {
+        open: (state: AppState) => state?.sidebar?.open ?? false,
+    },
+
     teacher: {
         userProgress: (state: AppState) => state?.userProgress && anonymiseIfNeededWith(anonymisationFunctions.userProgress)(state.userProgress),
         userAnsweredQuestionsByDate: (state: AppState) => state?.userAnsweredQuestionsByDate
