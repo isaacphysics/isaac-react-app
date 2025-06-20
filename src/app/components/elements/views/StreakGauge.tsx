@@ -20,7 +20,7 @@ export const StreakGauge = (props: StreakGaugeProps) => {
             trailColor: GRAY_120
 
         })}>
-        <div className="progress-gauge align-content-center">
+        <div className="align-content-center">
             <b>{currentStreak}</b><br/>WEEK{currentStreak !== 1 && "S"}
         </div>
     </CircularProgressbarWithChildren>;
