@@ -30,6 +30,7 @@ import {
     interstitialCookieSlice,
     pageContextSlice,
     linkableSettingSlice,
+    sidebarSlice,
 } from "../index";
 
 export const rootReducer = combineReducers({
@@ -58,6 +59,7 @@ export const rootReducer = combineReducers({
 
     // Content
     page: docSlice.reducer,
+    sidebar: sidebarSlice.reducer,
 
     // Question
     questions,

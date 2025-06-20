@@ -2,24 +2,26 @@ import React from "react";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 import { convertToALVIGameboards, ListView } from "./list-groups/ListView";
 import { IsaacBookDetailPageDTO } from "../../../IsaacApiTypes";
-import { TeacherNotes } from "./TeacherNotes";
-import { EditContentButton } from "./EditContentButton";
 import { MetadataContainer, MetadataContainerLink } from "./panels/MetadataContainer";
 import { Markup } from "./markup";
+import { PageMetadata } from "./PageMetadata";
 
 export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
 
     return <div className="book-page">
-        <h3 className="mb-3">
-            {page.subtitle && <span className="me-3 text-theme">{page.subtitle} </span>}
-            <Markup encoding="latex">{page.title}</Markup>
-        </h3>
 
-        <EditContentButton doc={page}/>
+        <PageMetadata
+            doc={page}
+            title={<>
+                {page.subtitle && <span className="me-3 text-theme">{page.subtitle} </span>}
+                <Markup encoding="latex" className="text-black">{page.title}</Markup>
+            </>}
+            subtitle=""
+            showSidebarButton
+            sidebarButtonText={page.sidebar?.subtitle}
+        />
 
-        <TeacherNotes notes={page.teacherNotes} />
-
-        <MetadataContainer>
+        <MetadataContainer className="d-flex flex-column gap-2">
             {!!page.gameboards?.length && <MetadataContainerLink id="questions" title="Questions" />}
             <MetadataContainerLink id="resources" title="Resources" />
             {!!page.extensionGameboards?.length && <MetadataContainerLink id="extension" title="Extension work" />}

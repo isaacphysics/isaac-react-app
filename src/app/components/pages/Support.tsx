@@ -11,6 +11,7 @@ import {NotFound} from "./NotFound";
 import {MetaDescription} from "../elements/MetaDescription";
 import { FAQSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
+import { PageMetadata } from "../elements/PageMetadata";
 
 type SupportType = "student" | "teacher" | "tutor";
 
@@ -136,7 +137,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
             icon={{type: "hex", icon: "icon-finder"}}
         />  {/* TODO replace this icon */}
         <SidebarLayout>
-            <FAQSidebar>
+            <FAQSidebar hideButton>
                 {Object.values(section.categories).map((category, index) => 
                     <StyledTabPicker
                         key={index} id={category.category} tabIndex={0} checkboxTitle={category.title} checked={categoryIndex === index}
@@ -145,10 +146,10 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
                 )}
             </FAQSidebar>
             <MainContent>
+                <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title} showSidebarButton sidebarButtonText="Select a topic"/>
                 <TabContent activeTab={categoryIndex}>
                     {Object.values(section.categories).map((category, index) => 
                         <TabPane key={index} tabId={index}>
-                            <h2 className="mt-7">{category.title}</h2>
                             <PageFragment fragmentId={`support_${type}_${category.category}`} />
                         </TabPane>
                     )}
