@@ -148,7 +148,7 @@ const ContentEmails = (props: ContentEmailsProps) => {
             </CardBody>
         </Card>
 
-        <Card className="mb-5">
+        <Card className="mb-7">
             <CardBody>
                 <div className="text-center">
                     {!emailSent ?

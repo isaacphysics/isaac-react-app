@@ -9,7 +9,7 @@ export const MarkdownBuilder = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Markdown builder" icon={{type: "hex", icon: "icon-concept"}} />
-        <Card className="mt-4 mb-5">
+        <Card className="mt-4 mb-7">
             <CardBody>
                 <InputGroup>
                     <Label className="w-100">

@@ -76,7 +76,7 @@ export const RegistrationSetPreferences = () => {
         <SidebarLayout>
             <SignupSidebar activeTab={3}/>
             <MainContent>
-                <Card className="my-5">
+                <Card className="my-7">
                     <CardBody>
                         {errorMessage &&
                             <ExigentAlert color="warning">

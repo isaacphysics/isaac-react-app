@@ -32,6 +32,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
         }
 
         dispatch(searchQuestions({
+            querySource: "randomQuestion",
             searchString: "",
             tags: "",
             fields: undefined,
@@ -58,7 +59,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 
     const question = questions?.[0];
 
-    return <div className="py-4 container-override random-question-panel">
+    return <div className="d-flex flex-column pb-4 container-override random-question-panel">
         <div className="d-flex my-3 justify-content-between align-items-center">
             <h4 className="m-0">Try a random question!</h4>
             <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
@@ -92,8 +93,8 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
     // this should be used under the assumption that the above props have been fetched; they may still be undefined, but they will not change
 
     const eventStages = (event: AugmentedEvent) => event.audience?.map(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s])).flat() ?? [];
-    const relevantEvents = events?.filter(event => 
-        context?.subject 
+    const relevantEvents = events?.filter(event =>
+        context?.subject
         && event.tags?.includes(context.subject)
         && (!context?.stage?.length || eventStages(event).includes(context.stage[0]))
     ).slice(0, 2);
@@ -110,10 +111,10 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                     <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
                         <h4 className="m-0">{getHumanContext(context)} books</h4>
                         <div className="section-divider-bold flex-grow-1"/>
-                    </div> 
+                    </div>
                     <div className={classNames("d-flex book-listing-container", {"flex-column col": !fullWidthBooks}, {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
                         {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
-                        {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-5">View more books</Button>}
+                        {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-7">View more books</Button>}
                     </div>
                 </>
                 : <>
@@ -182,7 +183,7 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
         {pageContext && isSingleStageContext(pageContext) && <>
             <RandomQuestionBanner context={pageContext} />
 
-            <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-5" />
+            <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-7" />
             
             <LandingPageFooter context={pageContext} />
         </>}

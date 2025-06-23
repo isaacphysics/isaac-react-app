@@ -45,7 +45,7 @@ export const AccountDeletion = () => {
     const [confirmDeletion, setConfirmDeletion] = useState(false);
     const [deleteAccount, {isLoading: isDeletingAccount}] = useDeleteAccountMutation();
 
-    return <Container className="pb-5">
+    return <Container className="pb-7">
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Account Deletion", "Account deletion")} className="mb-4"
             icon={{"type": "hex", "icon": "icon-account"}}

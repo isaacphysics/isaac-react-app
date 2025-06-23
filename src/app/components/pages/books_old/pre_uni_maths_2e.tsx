@@ -14,7 +14,7 @@ export const PreUniMaths2e = () => {
     return <Container className="maths">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Pre-University Mathematics for Sciences"
+                <TitleAndBreadcrumb className="mb-7" currentPageTitle="Pre-University Mathematics for Sciences"
                     help={pageHelp} modalId="help_modal_maths_book"
                     subTitle="2nd Edition"
                 />

@@ -70,7 +70,7 @@ export const QuestionSearchModal = (
     const deviceSize = useDeviceSize();
     const sublistDelimiter = " >>> ";
 
-    const [topicSelections, setTopicSelections] = useState<ChoiceTree[]>([]); 
+    const [topicSelections, setTopicSelections] = useState<ChoiceTree[]>([]);
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
     const [searchQuestionName, setSearchQuestionName] = useState("");
     const [searchStages, setSearchStages] = useState<STAGE[]>([]);
@@ -122,6 +122,7 @@ export const QuestionSearchModal = (
             setIsSearching(true);
 
             dispatch(searchQuestions({
+                querySource: "gameboardBuilder",
                 searchString: searchString || undefined,
                 tags: tags || undefined,
                 stages: stages.join(",") || undefined,
@@ -305,7 +306,7 @@ export const QuestionSearchModal = (
                     <tbody>
                         {isSearching ? <tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr> : sortedQuestions?.map(question =>
                             <GameboardBuilderRow
-                                key={`question-search-modal-row-${question.id}`} 
+                                key={`question-search-modal-row-${question.id}`}
                                 question={question}
                                 currentQuestions={modalQuestions}
                                 undoStack={undoStack}

@@ -10,6 +10,7 @@ import { LandingPageFooter } from "./SubjectLandingPage";
 import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
 import { AbstractListViewItemState } from "../elements/list-groups/AbstractListViewItem";
 import { GameboardDTO } from "../../../IsaacApiTypes";
+import { PageMetadata } from "../elements/PageMetadata";
 
 const SubjectCards = ({context}: { context: PageContextState }) => {
     const deviceSize = useDeviceSize();
@@ -111,8 +112,8 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
                 icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`
             } : undefined}
         />
-        {humanSubject && <div className="mt-5">
-            <h4>Introducing Isaac {humanSubject}</h4>
+        {humanSubject && <div className="mt-7">
+            <PageMetadata title={`Introducing Isaac ${humanSubject}`} />
             <p>
                 Welcome to Isaac {humanSubject}, part of <a href="/">Isaac Science</a>! 
                 The place to learn maths and science by solving problems. 

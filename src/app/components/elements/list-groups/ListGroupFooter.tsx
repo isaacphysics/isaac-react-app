@@ -52,7 +52,7 @@ export const ListGroupFooter = () => (
     siteSpecific(
         // Physics
         <>
-            <ListGroup className="mb-3 w-max-content me-sm-5">
+            <ListGroup className="mb-3 w-max-content me-sm-7">
                 {footerLinksPhy.left}
             </ListGroup>
             <div className="mb-3 w-max-content me-xl-4">

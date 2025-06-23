@@ -606,6 +606,13 @@ export const ISAAC_BOOKS_BY_TAG: {[tag in BookTag]: BookInfo} = ISAAC_BOOKS.redu
 
 export const BOOK_DETAIL_ID_SEPARATOR = "__";
 
+export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNING_STAGE, string>>>> = { 
+    "chemistry": {
+        [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_chem_fragment",
+        [LEARNING_STAGE.A_LEVEL]: "app_page_overview_alevel_chem_fragment",
+    },
+};
+
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',

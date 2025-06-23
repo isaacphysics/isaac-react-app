@@ -375,7 +375,7 @@ export const FreeTextBuilder = () => {
                 </CardBody>
             </Card>
 
-            <div className="mb-5 text-center">
+            <div className="mb-7 text-center">
                 <Button type="submit" color="secondary" className={siteSpecific("btn-xl", "form-control border-0")}>Test question</Button>
             </div>
         </Form>

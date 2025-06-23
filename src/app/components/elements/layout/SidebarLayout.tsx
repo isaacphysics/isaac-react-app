@@ -6,9 +6,9 @@ import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacCon
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
-    stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL} from "../../../services";
+    stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
-import { mainContentIdSlice, selectors, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
+import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag, ContentSidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
@@ -31,6 +31,7 @@ import { tags as tagsService } from "../../../services";
 import { Markup } from "../markup";
 import { History } from "history";
 import { calculateSidebarLink, containsActiveTab, isSidebarGroup } from "../../../services/sidebar";
+import { SidebarButton } from "../SidebarButton";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -101,8 +102,10 @@ const ContentSidebar = (props: ContentSidebarProps) => {
     // A content sidebar is used to interact with the main content, e.g. filters or search boxes, or for in-page nav (e.g. lessons and revision);
     // the content in such a sidebar will collapse into a button accessible from above the main content on smaller screens
     const deviceSize = useDeviceSize();
-    const [menuOpen, setMenuOpen] = useState(false);
-    const toggleMenu = () => setMenuOpen(m => !m);
+    const dispatch = useAppDispatch();
+    const sidebarOpen = useAppSelector(selectors.sidebar.open);
+    const toggleMenu = () => dispatch(sidebarSlice.actions.toggle());
+    const closeMenu = () => dispatch(sidebarSlice.actions.setOpen(false));
 
     const pageTheme = useAppSelector(selectors.pageContext.subject);
 
@@ -113,17 +116,11 @@ const ContentSidebar = (props: ContentSidebarProps) => {
         {above['lg'](deviceSize) 
             ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
-                <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
-                    {!hideButton && <AffixButton data-testid="sidebar-toggle" color="keyline" size="lg" onClick={toggleMenu} affix={{
-                        affix: "icon-sidebar", 
-                        position: "prefix", 
-                        type: "icon"
-                    }}>
-                        {buttonTitle ?? "Search and filter"}
-                    </AffixButton>}
+                {optionBar && <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     <div className="flex-grow-1 d-inline-grid align-items-end">{optionBar}</div>
-                </div>
-                <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
+                </div>}
+                {!hideButton && <SidebarButton buttonTitle={buttonTitle} className="my-3"/>}
+                <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={sidebarOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
                             <AffixButton color="keyline" size="lg" onClick={toggleMenu} data-testid="close-sidebar-button" affix={{
@@ -136,7 +133,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                         </div>
                     }/>
                     <OffcanvasBody>
-                        <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: () => setMenuOpen(false)}}>
+                        <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: closeMenu}}>
                             <Col {...rest} className={classNames("sidebar p-4 pt-0", className)} />
                         </ContentSidebarContext.Provider>
                     </OffcanvasBody>
@@ -261,13 +258,13 @@ export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) =
     </NavigationSidebar>;
 };
 
-interface GameboardSidebarProps extends SidebarProps {
+interface GameboardSidebarProps extends ContentSidebarProps {
     gameboard: GameboardDTO;
     assignments: AssignmentDTO[] | false;
 };
 
 export const GameboardSidebar = (props: GameboardSidebarProps) => {
-    const {gameboard, assignments} = props;
+    const {gameboard, assignments, ...rest} = props;
     const multipleAssignments = assignments && assignments.length > 1;
 
     const GameboardDetails = () => {
@@ -303,7 +300,7 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         </>;
     };
     
-    return <ContentSidebar buttonTitle="Details">
+    return <ContentSidebar buttonTitle="Details" {...rest}>
         <div className="section-divider"/>
         <h5>Question deck</h5>
         <GameboardDetails />
@@ -383,7 +380,7 @@ const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnab
     />;
 };
 
-interface ConceptListSidebarProps extends SidebarProps {
+interface ConceptListSidebarProps extends ContentSidebarProps {
     searchText: string | null;
     setSearchText: React.Dispatch<React.SetStateAction<string | null>>;
     conceptFilters: Tag[];
@@ -532,7 +529,7 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface QuestionFinderSidebarProps extends SidebarProps {
+interface QuestionFinderSidebarProps extends ContentSidebarProps {
     searchText: string;
     setSearchText: (searchText: string) => void;
     tagCounts?: Record<string, number>;
@@ -566,7 +563,7 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface PracticeQuizzesSidebarProps extends SidebarProps {
+interface PracticeQuizzesSidebarProps extends ContentSidebarProps {
     filterText: string;
     setFilterText: Dispatch<SetStateAction<string>>;
     filterTags?: Tag[];
@@ -687,7 +684,7 @@ export const LessonsAndRevisionSidebar = (props: SidebarProps) => {
     return <ContentSidebar {...props}/>;
 };
 
-export const FAQSidebar = (props: SidebarProps) => {
+export const FAQSidebar = (props: ContentSidebarProps) => {
     return <ContentSidebar buttonTitle="Select a topic" {...props}>
         <div className="section-divider mb-3"/>
         <h5 className="mb-3">Select a topic</h5>
@@ -806,7 +803,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface MyGameboardsSidebarProps extends SidebarProps {
+interface MyGameboardsSidebarProps extends ContentSidebarProps {
     displayMode: BoardViews;
     setDisplayMode: React.Dispatch<React.SetStateAction<BoardViews>>;
     displayLimit: BoardLimit;
@@ -1211,7 +1208,7 @@ export const EventsSidebar = (props: SidebarProps) => {
 
     return <ContentSidebar buttonTitle="Filter events" {...props}>
         <Form tag={"search"}>
-            {above["lg"](deviceSize) && <div className="section-divider mt-5"/>}
+            {above["lg"](deviceSize) && <div className="section-divider mt-7"/>}
             <h5 className="mb-3">Event type</h5>
             <ul>               
                 {Object.entries(EventStatusFilter)
@@ -1368,17 +1365,17 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface QuestionDecksSidebarProps extends SidebarProps {
+interface QuestionDecksSidebarProps extends ContentSidebarProps {
     validStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]};
     context: NonNullable<Required<PageContextState>>;
 };
 
 export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
-    const { validStageSubjectPairs, context } = props;
+    const { validStageSubjectPairs, context, ...rest } = props;
 
     const history = useHistory();
 
-    return <ContentSidebar buttonTitle="Switch stage/subject" {...props}>
+    return <ContentSidebar buttonTitle="Switch stage/subject" {...rest}>
         <div className="section-divider"/>
         <search>
             <h5>Decks by stage</h5>
@@ -1554,11 +1551,11 @@ const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: H
         </li>;
 };
 
-export const ContentControlledSidebar = ({sidebar}: {sidebar?: SidebarDTO}) => {
+export const ContentControlledSidebar = ({sidebar, ...rest}: ContentSidebarProps & {sidebar?: SidebarDTO}) => {
 
     const history = useHistory();
 
-    return <ContentSidebar buttonTitle={sidebar?.subtitle}>
+    return <ContentSidebar buttonTitle={sidebar?.subtitle} {...rest}>
         <div className="section-divider"/>
         <ul>
             {sidebar?.sidebarEntries?.map((entry, index) => (
@@ -1602,6 +1599,23 @@ export const BooksOverviewSidebar = (props: ContentSidebarProps) => {
         <ul>
             {ISAAC_BOOKS.filter(book => book.hidden !== BookHiddenState.HIDDEN).map((book, index) => <li key={index}>
                 <StyledTabPicker checkboxTitle={book.title} checked={false} onClick={() => history.push(book.path)}/>
+            </li>)}
+        </ul>
+    </ContentSidebar>;
+};
+
+export const AnvilAppsListingSidebar = (props: ContentSidebarProps) => {
+    const history = useHistory();
+    const context = useAppSelector(selectors.pageContext.context);
+    return <ContentSidebar buttonTitle="See all apps" {...props}>
+        <div className="section-divider"/>
+        <h5>Select stage</h5>
+        <ul>
+            {isFullyDefinedContext(context) && Object.keys(VALID_APPS_CONTEXTS[context.subject] ?? {}).map((stage, index) => <li key={index}>
+                <StyledTabPicker 
+                    checkboxTitle={HUMAN_STAGES[stage as LearningStage]} checked={context?.stage?.includes(stage as LearningStage)}
+                    onClick={() => history.push(`/${context?.subject}/${stage}/apps`)} 
+                />
             </li>)}
         </ul>
     </ContentSidebar>;

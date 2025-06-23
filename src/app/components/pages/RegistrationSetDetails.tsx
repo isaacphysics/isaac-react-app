@@ -118,7 +118,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         <SidebarLayout>
             <SignupSidebar activeTab={2}/>
             <MainContent>
-                <Card className="my-5">
+                <Card className="my-7">
                     <CardBody>
                         {errorMessage &&
                             <ExigentAlert color={"warning"}>
@@ -190,7 +190,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 }
                                 <hr className={classNames({"d-none": role != 'TEACHER'}, siteSpecific("section-divider", "my-4"))} />
                                 <GenderInput
-                                    className="mt-4 mb-5"
+                                    className="mt-4 mb-7"
                                     userToUpdate={registrationUser}
                                     setUserToUpdate={setRegistrationUser}
                                     submissionAttempted={attemptedSignUp}

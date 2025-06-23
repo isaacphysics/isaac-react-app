@@ -20,7 +20,7 @@ export const RegistrationAgeCheckParentalConsent = () => {
         <SidebarLayout>
             <SignupSidebar activeTab={1}/>
             <MainContent>
-                <Card className="my-5">
+                <Card className="my-7">
                     <CardBody>
                         <p>Before signing up to any online programme or website you should ask for permission from a parent or carer so they may check that it is appropriate for you to use.</p>
                         <p>Often websites store some information about you to give you the best possible experience on the site but you should always check what data is being kept to do this – you can read how we use your data to provide our service <Link to={"/privacy"}>here</Link>.</p>

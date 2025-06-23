@@ -38,7 +38,7 @@ export const StudentResources = () => {
             <Container className="homepage-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <ColumnSlice>
-                    <TextBlock className="pe-5">
+                    <TextBlock className="pe-7">
                         <h2>Our latest updates</h2>
                         <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read the latest news and updates from the team.</p>
                     </TextBlock>
