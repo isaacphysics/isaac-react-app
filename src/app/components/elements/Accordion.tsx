@@ -25,6 +25,7 @@ import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import debounce from "lodash/debounce";
 import { UncontrolledTooltip, Collapse, Card, CardBody } from "reactstrap";
 import { useReducedMotion } from "../../services/accessibility";
+import { Spacer } from "./Spacer";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -156,7 +157,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     return <div className="accordion">
         <button 
             className={classNames(
-                "accordion-header d-flex w-100 p-0 align-items-stretch", 
+                "accordion-header d-flex w-100 p-0", 
                 {"de-emphasised": deEmphasised || disabled, "active": isOpen, "btn btn-link": isAda}
             )}
             id={anchorId || ""} type="button"
@@ -201,6 +202,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     <Markup encoding={"latex"}>
                         {trustedTitle || (isAda ? "" : (isDefined(index) ? `(${ALPHABET[index % ALPHABET.length].toLowerCase()})` : "Untitled"))}
                     </Markup>
+                    {isPhy && <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-black mx-2", {"active": isOpen})}/>}
                 </div>
                 {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
                     <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
@@ -231,6 +233,10 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                         </>
                 }
             </span>}
+            {isAda && <>
+                <Spacer />
+                {<i className={classNames("icon icon-chevron-right icon-dropdown-90 me-3", {"active": isOpen})}/>}
+            </>}
         </button>
         <Collapse isOpen={isOpen} className={siteSpecific("accordion-body", "mt-1")}>
             <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open: isOpen}}>

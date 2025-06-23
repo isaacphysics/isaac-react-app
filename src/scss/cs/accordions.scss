@@ -46,15 +46,6 @@
 }
 
 button.accordion-header {
-  &:after {
-    content: "";
-    background: url('/assets/common/icons/chevron_down.svg') no-repeat center center;
-    background-size: contain;
-    width: 12px;
-    height: 12px;
-    margin: auto 0 auto 1rem;
-  }
-
   &.active {
     border-bottom: 1px solid $shadow-08 !important;
   }

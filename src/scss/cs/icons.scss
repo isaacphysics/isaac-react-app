@@ -122,3 +122,15 @@ icon-status {
 .bg-grey {
   background: $cs-silver;
 }
+
+i.icon.icon-color-black {
+  @include icon-color-override($cs-jet);
+}
+
+i.icon.icon-color-muted {
+  @include icon-color-override($cs-muted);
+}
+
+i.icon.icon-color-white {
+  @include icon-color-override($cs-cultured);
+}

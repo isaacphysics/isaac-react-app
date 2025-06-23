@@ -217,7 +217,9 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                     <td>{quiz.assignerSummary && extractTeacherName(quiz.assignerSummary)}</td>
                     <td>{quiz.dueDate && formatDate(quiz.dueDate)}</td>
                     <td>{quiz.setDate && formatDate(quiz.setDate)}</td>
-                    <td className="text-center"><img className="icon-dropdown-90" aria-disabled={!quiz.link} src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
+                    <td className="text-center">
+                        <i className={classNames("icon icon-arrow-right d-block justify-self-center", {"icon-color-muted": !quiz.link})} aria-hidden="true" />
+                    </td>
                 </TrLink>;
             })}
             {quizzes.length === 0 && <tr>
@@ -252,7 +254,9 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                         </div>
                     </td>
                     <td>{formatDate(quiz.startDate)}</td>
-                    <td className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
+                    <td className="text-center">
+                        <i className={classNames("icon icon-arrow-right d-block justify-self-center", {"icon-color-muted": !quiz.link})} aria-hidden="true" />
+                    </td>
                 </TrLink>;
             })}
             {quizzes.length === 0 && <tr>

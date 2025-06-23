@@ -38,7 +38,7 @@ export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dropRegionContext?.shouldGetFocus]);
 
-    return <Badge id={id} className={classNames(type === "item-section" && "m-2", "p-1 cloze-item feedback-zone", isDefined(isCorrect) && "feedback-showing")} color="theme" style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
+    return <Badge id={id} className={classNames("p-1 cloze-item feedback-zone", {"cloze-bg": !!item, "m-2": type === "item-section", "feedback-showing": isDefined(isCorrect)})} color="theme" style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
         <span className={"visually-hidden"}>{item.altText ?? item.value ?? "cloze item without a description"}</span>
         <span aria-hidden={true}>
             <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
@@ -104,7 +104,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
         className="cloze-dropdown"
     >
         <DropdownToggle className={classNames({"empty": !item, "px-1 py-0": isPhy, "p-2": isAda})} style={{minHeight: height, width: width}} innerRef={zoneRef}>
-            <div className={classNames("d-flex cloze-item feedback-zone", {"feedback-showing": isDefined(isCorrect), "p-2": isAda && !!item})}>
+            <div className={classNames("d-flex cloze-item feedback-zone", {"cloze-bg": !!item, "feedback-showing": isDefined(isCorrect), "p-2": isAda && !!item})}>
                 <span className={"visually-hidden"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
                 <span aria-hidden={true}>
                     <Markup trusted-markup-encoding={"html"}>
@@ -114,7 +114,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
                 {isDefined(isCorrect) && <div className={"feedback-box"}>
                     <span className={classNames("feedback", isCorrect ? "correct" : "incorrect")}>{isCorrect ? "✔" : "✘"}</span>
                 </div>}
-                {!item && <img className={classNames("dropzone-dropdown", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"></img>}
+                {!item && <i className={classNames("icon icon-chevron-right icon-dropdown-90 ms-auto", {"active": isOpen})} aria-hidden="true"/>}
             </div>
         </DropdownToggle>
         <DropdownMenu container={zoneRef.current?.closest(".question-content") as HTMLElement || "body"} end>

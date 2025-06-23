@@ -69,6 +69,18 @@ img[aria-disabled="true"] {
 }
 
 .icon-chevron-right {
+  // use for dropdowns, tabs, etc. prefer arrow-right for links.
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-chevron-down {
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  // we use `rotate: x` for image rotations, and `transform: rotate(x)` for individual element rotations.
+  // this means we can reuse just one image for all directions, and animations can animate over transform oblivious to the image rotation.
+  rotate: 90deg;
+}
+
+.icon-arrow-right {
   @include svg-icon('/assets/common/icons/arrow-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
@@ -113,7 +125,7 @@ i.icon:not(.icon-raw) {
     background-color: var(--icon-primary);
     
     @include not-reduced-motion {
-      transition: background-color 0.15s ease-in-out; // mirrors BS's $btn-transition
+      transition: all 0.15s ease-in-out; // mirrors BS's $btn-transition
     }
   
     // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
@@ -121,7 +133,7 @@ i.icon:not(.icon-raw) {
       background-color: var(--icon-primary);
       
       @include not-reduced-motion {
-        transition: background-color 0.15s ease-in-out;
+        transition: all 0.15s ease-in-out;
       }
     }
   }
