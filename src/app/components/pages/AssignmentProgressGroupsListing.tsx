@@ -73,20 +73,15 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     const {groupSortOrder, setGroupSortOrder} = pageSettings ?? {};
 
-    const pageHelp = <span>
-        Click on your groups to see the assignments you have set. View your students&apos; progress by question.
-    </span>;
-
     return <>
         <Container className="mb-5">
             <TitleAndBreadcrumb
                 currentPageTitle={siteSpecific("Assignment Progress", "Markbook")}
-                help={pageHelp}
                 modalId="help_modal_assignment_progress"
                 icon={{type: "hex", icon: "icon-revision"}}
             />
             <div className="mt-3">
-                <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_help")} ifNotFound={RenderNothing} />
+                <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_landing_toptext")} ifNotFound={RenderNothing} />
             </div>
             <Card>
                 <CardBody>
