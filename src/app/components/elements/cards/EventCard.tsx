@@ -26,15 +26,20 @@ export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?:
   } = event;
 
   const getCourseName = (subtitle: string | undefined) => {
-    if (!subtitle) return "N/A";
+    if (!subtitle) return "GCSE/A level";
 
     const lowerCaseSubtitle = subtitle.toLowerCase();
-    if (lowerCaseSubtitle.includes("gcse")) {
+    const hasGcse = lowerCaseSubtitle.includes("gcse");
+    const hasALevel = lowerCaseSubtitle.includes("a level");
+
+    if (hasGcse && hasALevel) {
+      return "GCSE/A level";
+    } else if (hasGcse) {
       return "GCSE";
-    } else if (lowerCaseSubtitle.includes("a level")) {
+    } else if (hasALevel) {
       return "A level";
     } else {
-      return "N/A";
+      return "GCSE/A level";
     }
   };
 
