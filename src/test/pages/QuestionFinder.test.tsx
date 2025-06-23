@@ -1,22 +1,43 @@
 import {act, screen, waitFor, within} from "@testing-library/react";
 import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, setUrl, withMockedRandom} from "../testUtils";
-import { buildMockQuestionFinderResults, buildMockQuestions, mockQuestionFinderResults } from "../../mocks/data";
+import { mockQuestionFinderResults, mockQuestionFinderResultsWithMultipleStages } from "../../mocks/data";
 import _ from "lodash";
 import { buildFunctionHandler } from "../../mocks/handlers";
 import { isPhy, siteSpecific } from "../../app/services";
 import userEvent from "@testing-library/user-event";
+import { PageContextState } from "../../IsaacAppTypes";
+import { expectPhyBreadCrumbs } from "../helpers/quiz";
+import { IsaacQuestionPageDTO } from "../../IsaacApiTypes";
+
+type QuestionFinderResultsResponse = {
+    results: IsaacQuestionPageDTO[];
+    nextSearchOffset: number;
+    totalResults: number;
+};
+
+const buildMockQuestions = (n: number, questions: QuestionFinderResultsResponse): IsaacQuestionPageDTO[] => {
+    return Array(n).fill(null).map((_, i) => ({ ...questions.results[i % questions.results.length], id: `q${i}`, title: `Question ${i}: ${questions.results[i % questions.results.length].title}` }));
+};
+
+const buildMockQuestionFinderResults = <T extends IsaacQuestionPageDTO[]>(questions: T, start: number): QuestionFinderResultsResponse => ({
+    results: questions.slice(start, start + 31),
+    nextSearchOffset: start + 31,
+    totalResults: questions.length
+});
 
 describe("QuestionFinder", () => {
-    const questions = buildMockQuestions(40);
-    const resultsResponse = buildMockQuestionFinderResults(questions, 0);               
-        
-    const renderQuestionFinderPage = async ({questionsSearchResponse, queryParams} : RenderParameters) => {
+    const questions = buildMockQuestions(40, mockQuestionFinderResults as QuestionFinderResultsResponse);
+    const resultsResponse = buildMockQuestionFinderResults(questions, 0);
+
+    const questionsWithMultipleStages = buildMockQuestions(40, mockQuestionFinderResultsWithMultipleStages as QuestionFinderResultsResponse);
+    const resultsResponseWithMultipleStages = buildMockQuestionFinderResults(questionsWithMultipleStages, 0);
+
+    const renderQuestionFinderPage = async ({questionsSearchResponse, queryParams, context} : RenderParameters) => {
         await act(async () => {
             renderTestEnvironment({
-                extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed', 'startIndex'], questionsSearchResponse)]
-                    
+                extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], questionsSearchResponse)]
             });
-            setUrl({ pathname: '/questions', search: queryParams });
+            setUrl({ pathname: context ? `${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
         });
     };
 
@@ -129,15 +150,58 @@ describe("QuestionFinder", () => {
                 await expectPageIndicator("Showing 40 of 40.");
             });
         });
+
+        if (isPhy) {
+            it('Context-specific question finders should lead back to the relevant landing page in the breadcrumb', async () => {
+                await renderQuestionFinderPage({ 
+                    questionsSearchResponse: () => resultsResponse, 
+                    context: { subject: "physics", stage: ["gcse"] },
+                });
+                expectPhyBreadCrumbs({href: "/physics/gcse", text: "GCSE Physics"});
+            });
+
+            it('Context-specific question finders should only load questions for that context', async () => {
+                const getQuestionsWithMultipleStages = jest.fn(() => resultsResponseWithMultipleStages);
+
+                await renderQuestionFinderPage({ 
+                    questionsSearchResponse: getQuestionsWithMultipleStages, 
+                    context: { subject: "physics", stage: ["a_level"] },
+                });
+
+                await waitFor(() => expect(getQuestionsWithMultipleStages).toHaveBeenCalledWith(expect.objectContaining({
+                    tags: "physics",
+                    stages: "a_level",
+                })));
+            });
+
+            it('"Load more" on a context-specific question finders should still only load questions for that context', async () => {
+                const getQuestionsWithMultipleStages = jest.fn(() => resultsResponseWithMultipleStages);
+
+                await renderQuestionFinderPage({ 
+                    questionsSearchResponse: getQuestionsWithMultipleStages, 
+                    context: { subject: "physics", stage: ["a_level"] },
+                });
+
+                await clickOn("Load more");
+
+                await waitFor(() => expect(getQuestionsWithMultipleStages).toHaveBeenLastCalledWith(expect.objectContaining({
+                    tags: "physics",
+                    stages: "a_level",
+                })));
+            });
+        }
     });
 });
 
 type RenderParameters = {
     questionsSearchResponse: (options: {
+        tags: string | null;
+        stages: string | null;
         randomSeed: string | null;
         startIndex: string | null;
-    }) => typeof mockQuestionFinderResults;
+    }) => QuestionFinderResultsResponse;
     queryParams?: string;
+    context?: NonNullable<PageContextState>;
 };
 
 const mainContainer = () => screen.findByTestId('main');
@@ -146,7 +210,7 @@ const findQuestions = () => screen.findByTestId("question-finder-results").then(
 
 const getQuestionText = (q: HTMLElement) => q.querySelector(isPhy ? 'span' : 'span.question-link-title')?.textContent;
 
-const expectQuestions = (expectedQuestions: typeof mockQuestionFinderResults.results) => waitFor(async () => {
+const expectQuestions = (expectedQuestions: IsaacQuestionPageDTO[]) => waitFor(async () => {
     const found = await findQuestions();
     expect(found.length).toEqual(expectedQuestions.length);
     expect(found.map(getQuestionText)).toEqual(expectedQuestions.map(q => q.title));
