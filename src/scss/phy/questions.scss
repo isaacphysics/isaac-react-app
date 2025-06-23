@@ -158,10 +158,10 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
 
   > .question-component > div:first-child {
     @include respond-below(md) {
-      padding: 0 0 0.5rem;
+      padding: 0.5rem 0;
     }
     @include respond-above(md) {
-      padding: 0 0.5rem 0.5rem;
+      padding: 0.5rem;
     }
   }
 
