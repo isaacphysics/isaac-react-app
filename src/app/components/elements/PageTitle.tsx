@@ -88,7 +88,6 @@ export interface PageTitleProps {
     currentPageTitle: string;
     displayTitleOverride?: string;
     subTitle?: string;
-    description?: string;
     disallowLaTeX?: boolean;
     help?: ReactElement;
     className?: string;
@@ -97,7 +96,7 @@ export interface PageTitleProps {
     preview?: boolean;
     icon?: TitleIconProps;
 }
-export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, description, disallowLaTeX, help, className, audienceViews, modalId, preview, icon}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, help, className, audienceViews, modalId, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
     const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
@@ -135,20 +134,17 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, des
     }
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-2 mb-0": isPhy}, className)}>
-        <div className="me-auto">
-            <div className={classNames(siteSpecific("d-flex", "d-sm-flex"), "align-items-center")}>
-                {icon && (
-                    icon.type === "img" ? <img src={icon.icon} alt="" height={icon.height} width={icon.width} className="me-3"/> 
-                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/> 
-                            : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/>
-                                : undefined
-                )}
-                <div className="me-auto" data-testid={"main-heading"}>
-                    {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX)}
-                    {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
-                </div>
+        <div className="d-flex w-100" data-testid={"main-heading"}>
+            {isPhy && icon && (
+                icon.type === "img" ? <img src={icon.icon} alt="" height={icon.height} width={icon.width} className="me-3"/> 
+                    : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/> 
+                        : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/>
+                            : undefined
+            )}
+            <div className="d-flex flex-column justify-content-center">
+                {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX)}
+                {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
             </div>
-            {description && <div className="h-description">{description}</div>}
         </div>
         <Helmet>
             <meta property="og:title" content={currentPageTitle} />
