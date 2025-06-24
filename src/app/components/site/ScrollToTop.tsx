@@ -20,7 +20,7 @@ export const ScrollToTop = ({mainContent}: {mainContent: React.MutableRefObject<
     return <IconButton
         color={siteSpecific("keyline", "white")}
         icon="icon-chevron-up"
-        className={classNames("scroll-btn d-print-none p-2", {"is-sticky": sticky})}
+        className={classNames("scroll-btn d-print-none", {"is-sticky": sticky})}
         onClick={() => mainContent.current?.scrollIntoView({behavior: 'smooth'})}
         tabIndex={sticky ? 0 : -1}
         aria-label="Scroll to top of page"
