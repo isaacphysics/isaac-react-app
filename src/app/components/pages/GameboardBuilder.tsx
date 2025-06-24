@@ -500,7 +500,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                         }));
                                     }}
                                 >
-                                    {siteSpecific("Add Questions", "Add questions")}
+                                    Add questions
                                     {siteSpecific(<img src={"/assets/phy/icons/redesign/plus.svg"} height={"12px"}
                                         className={"ms-2"} alt=""/>,
                                     <img className={"plus-icon"}
@@ -516,7 +516,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 type={"submit"}
                             >
                                 {isWaitingForCreateGameboard ?
-                                    <Spinner size={"md"}/> : siteSpecific("Save Question Deck", "Save quiz")}
+                                    <Spinner size={"md"}/> : siteSpecific("Save question deck", "Save quiz")}
                             </Button>
                         </Col>
                     </Row>

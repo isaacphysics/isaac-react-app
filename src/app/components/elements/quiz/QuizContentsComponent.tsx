@@ -124,7 +124,7 @@ function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps)
 function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewProps) {
     const dispatch = useAppDispatch();
     if (view) {
-        return isTeacherOrAbove(user) && <Button className="float-end ms-3 mb-3" onClick={() => dispatch(showQuizSettingModal(view.quiz!))}>Set Test</Button>;
+        return isTeacherOrAbove(user) && <Button className="float-end ms-3 mb-3" onClick={() => dispatch(showQuizSettingModal(view.quiz!))}>Set test</Button>;
     }
     else if (preview) {
         return <>
@@ -132,7 +132,7 @@ function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewP
             <div data-testid="quiz-action" className="d-flex">
                 <p>You are previewing this test.</p>
                 <Spacer />
-                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz!))}>Set Test</Button>}
+                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz!))}>Set test</Button>}
             </div>
         </>;
     } else if (isDefined(attempt.quizAssignment)) {
@@ -313,7 +313,7 @@ function QuizQuestions(props: Omit<QuizAttemptProps, 'page'> & {page: number}) {
     // Assumes that ids of questions are defined - I don't know why this is not enforced in the editor/backend, because
     // we do unchecked casts of "possibly undefined" content ids to strings almost everywhere
     const questionNumbers = Object.assign({}, ...props.questions.map((q, i) => ({[q.id as string]: i + 1})));
-    
+
     return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
         <QuizSection {...props} page={props.page}/>
     </QuizAttemptContext.Provider>;
@@ -324,16 +324,16 @@ export function QuizContentsComponent(props: QuizAttemptProps | QuizViewProps) {
 
     const questions = attempt ? props.questions : [];
     const sections = attempt ? props.sections : {};
-    
+
     const sectionState = (section: IsaacQuizSectionDTO) => {
         const sectionQs = section ? inSection(section, questions) : undefined;
         const isStarted = sectionQs?.some(q => q.bestAttempt !== undefined);
         const isCompleted = sectionQs?.every(q => q.bestAttempt !== undefined);
         return isCompleted ? SectionProgress.COMPLETED : isStarted ? SectionProgress.STARTED : SectionProgress.NOT_STARTED;
     };
-    
+
     const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
-    
+
     const sidebarProps: QuizSidebarAttemptProps | QuizSidebarViewProps = Object.assign({
         viewingAsSomeoneElse,
         totalSections: Object.keys(sections).length,
@@ -341,7 +341,7 @@ export function QuizContentsComponent(props: QuizAttemptProps | QuizViewProps) {
         sectionStates: Object.values(sections).map(section => sectionState(section)),
         sectionTitles: Object.keys(sections).map(k => sections[k].title || "Section " + k),
     }, attempt ? {attempt} : {view});
-    
+
     return <>
         <QuizTitle {...props} />
         <SidebarLayout>

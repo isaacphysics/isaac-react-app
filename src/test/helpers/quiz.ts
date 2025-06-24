@@ -26,7 +26,7 @@ export const expectActionMessage = expectTextInElementWithId('quiz-action');
 
 export const expectRubric = expectTextInElementWithId('quiz-rubric');
 
-export const setTestButton = () => screen.queryByRole('button', {name: "Set Test"});
+export const setTestButton = () => screen.queryByRole('button', {name: "Set test"});
 
 export const editButton = () => screen.queryByRole('heading', {name: "Published ✎"});
 
@@ -66,4 +66,4 @@ export const expectSidebarToggle = async (text: string) => {
     await withSizedWindow(400, 400, () => {
         expect(sidebarToggle()).toHaveTextContent(text);
     });
-}; 
+};
