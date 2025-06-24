@@ -10,6 +10,7 @@ import { StudentDashboard } from "../../elements/StudentDashboard";
 import { ListViewCardProps, ListViewCards } from "../../elements/list-groups/ListView";
 import { Spacer } from "../../elements/Spacer";
 import { TeacherDashboard } from "../../elements/TeacherDashboard";
+import { NewsCarousel } from "../../elements/NewsCarousel";
 
 interface HomepageHeroCardProps extends CardProps {
     title?: string;
