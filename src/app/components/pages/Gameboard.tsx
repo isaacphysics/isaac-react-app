@@ -106,7 +106,9 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     } />
                 </span>}
             </div>
-            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to question"}/></div>}
+            {isAda && <div className="list-caret align-content-center" aria-hidden="true">
+                <i className="icon icon-chevron-right" aria-hidden="true"/>
+            </div>}
         </Link>
     </ListGroupItem>;
 };

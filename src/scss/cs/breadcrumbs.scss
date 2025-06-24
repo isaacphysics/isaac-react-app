@@ -17,6 +17,8 @@
   }
 
   .breadcrumb-item {
+    display: flex;
+    align-items: center;
     font-family: $secondary-font-medium;
     &.active {
       color: $gray-blue;
@@ -24,15 +26,9 @@
   }
 
   .breadcrumb-item + .breadcrumb-item::before {
-    position: relative;
-    background-image: url('/assets/common/icons/chevron_right.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    content: '';
-    height: 0.888rem;
-    left: 3px;
-    top: 4px;
-    margin: 0;
-    width: 21px;
+    @include pseudo-icon('/assets/common/icons/chevron-right.svg', 18px, 18px, 100%, 35% 50%);
+    background-color: $cs-jet;
+    padding: 0;
+    margin-right: 0.4rem;
   }
 }
