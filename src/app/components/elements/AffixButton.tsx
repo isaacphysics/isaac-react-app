@@ -51,5 +51,5 @@ interface IconButtonProps extends ButtonProps {
 
 export const IconButton = (props: IconButtonProps) => {
     const { icon, className, affixClassName, ...rest } = props;
-    return <AffixButton {...rest} className={classNames(className, "p-3")} affix={{affix: icon, position: "center", type: "icon", affixClassName}}/>;
+    return <AffixButton {...rest} className={classNames(className)} affix={{affix: icon, position: "center", type: "icon", affixClassName}}/>;
 };

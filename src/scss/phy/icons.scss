@@ -137,11 +137,6 @@
   @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
 }
 
-.icon-chevron-up {
-  @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
-  transform: rotate(180deg);
-}
-
 .icon-question {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-question-fg.svg',

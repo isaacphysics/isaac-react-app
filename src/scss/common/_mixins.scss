@@ -223,6 +223,12 @@ $viewport-sizes: (
   }
 }
 
+@mixin pseudo-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
+  content: "";
+  position: relative;
+  @include svg-icon($path, $width, $height, $mask-size, $mask-position);
+}
+
 // modified from https://css-tricks.com/books/greatest-css-tricks/scroll-shadows/
 @mixin vertical-scroll-shadow($background-color: white, $shadow-color: rgba(0, 0, 0, 0.2)) {
   background:
