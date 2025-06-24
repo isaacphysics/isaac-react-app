@@ -37,15 +37,15 @@ export const testSectionsHeader = () => screen.queryByRole('heading', {name: "Te
 export const expectPhyBreadCrumbs = ({href, text}: {href: string, text: string}) => {
     const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');
     expect(Array.from(breadcrumbs.children).map(e => e.innerHTML)).toEqual([
-        `<a href="${href}"><span>${text}</span></a>`,
+        `<a class="breadcrumb-link" href="${href}"><span>${text}</span></a>`,
     ]);
 };
 
 export const expectAdaBreadCrumbs = ([first, second, third]: [{href: string, text: string}, {href: string, text: string}, string | undefined]) => {
     const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');
     expect(Array.from(breadcrumbs.children).map(e => e.innerHTML)).toEqual([
-        `<a href="${first.href}"><span>${first.text}</span></a>`,
-        `<a href="${second.href}"><span>${second.text}</span></a>`,
+        `<a class="breadcrumb-link" href="${first.href}"><span>${first.text}</span></a>`,
+        `<a class="breadcrumb-link" href="${second.href}"><span>${second.text}</span></a>`,
         `<span>${third}</span>`
     ]);
 };
