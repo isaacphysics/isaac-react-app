@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Fail on error, so this script can be chained safely:
+set -e
+
+# Cannot manage live deployment with the script!
+if [ "$2" == "live" ]; then
+  echo "Cannot manage live deployment with this script. Please use ./compose-live"
+  exit 1
+fi
+
+# Need at least four args and the first argument to be the site:
+if [ $# -lt 4 ] || ! { [ "$1" = "ada" ] || [ "$1" = "phy" ] || [ "$1" = "sci" ]; } || ! { [ "$2" = "dev" ] || [ "$2" = "staging" ] || [ "$2" = "test" ]; } ; then
+  echo "Usage: compose [ada|phy|sci] [staging|dev|test] [APP_VERSION] [DOCKER_ARGS]..."
+  exit 1
+fi
+
+# Delegate to the correct script:
+if { [ "$1" = "ada" ] || [ "$1" = "phy" ]; } ; then
+  ./compose-dev "$@"
+
+elif [ "$1" = "sci" ]; then
+  shift 1
+  ./compose-sci "$@"
+fi
