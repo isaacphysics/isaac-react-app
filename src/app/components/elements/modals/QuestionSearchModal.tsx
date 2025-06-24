@@ -286,7 +286,7 @@ export const QuestionSearchModal = (
         </Col>
         <Col className="col-12 col-xl-9">
             <Suspense fallback={<Loading/>}>
-                <HorizontalScroller enabled className="my-4">
+                <HorizontalScroller enabled={sortedQuestions && sortedQuestions.length > 6} className="my-4">
                     <Table bordered className="my-0">
                         <thead>
                             <tr className="search-modal-table-header">
