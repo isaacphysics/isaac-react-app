@@ -248,12 +248,6 @@
     background-color: $color-neutral-100;
     border: 1px solid $color-neutral-300;
     border-radius: 6px;
-
-    &.active {
-      i.icon {
-        transform: rotate(180deg);
-      }
-    }
   }
 }
 
