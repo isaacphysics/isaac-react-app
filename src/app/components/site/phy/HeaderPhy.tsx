@@ -13,7 +13,7 @@ export const LoginLogoutButton = (props : React.HTMLAttributes<HTMLButtonElement
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
-    return user && (user.loggedIn   
+    return (user && user.loggedIn
         ? above["lg"](deviceSize) 
             ? <Nav navbar className="justify-content-end" id="login-logout-button">
                 <NavigationSection topLevelLink className="mx-n3" to="/logout" title={"Log out"}/> 
