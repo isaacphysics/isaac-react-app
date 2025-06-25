@@ -54,11 +54,11 @@
   }
 
   i.icon {
-    background-color: var(--layered-icon-parent-bg-override, var(--buttons-dark-icon));
+    background-color: var(--layered-icon-parent-bg-override, var(--buttons-light-icon));
   }
 
   i.icon::after {
-    background-color: var(--buttons-dark-icon);
+    background-color: var(--buttons-light-icon);
   }
 }
 
