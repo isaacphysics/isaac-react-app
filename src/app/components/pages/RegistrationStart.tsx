@@ -3,8 +3,9 @@ import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
-import {history, isAda, SITE_TITLE, siteSpecific} from "../../services";
+import {history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
+import { MicrosoftSignInButton } from "../elements/MicrosoftSignInButton";
 
 export const RegistrationStart = () => {
 
@@ -42,6 +43,9 @@ export const RegistrationStart = () => {
                                         <RaspberryPiSignInButton />
                                     </div>}
                                     <GoogleSignInButton />
+                                    {isPhy && <div className="mt-2">
+                                        <MicrosoftSignInButton />
+                                    </div>}
                                 </div>
                                 {siteSpecific(<div className="section-divider"/>, <hr/>)}
                                 <div className="mt-7">

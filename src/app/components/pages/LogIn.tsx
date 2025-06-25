@@ -287,7 +287,7 @@ export const LogIn = () => {
                                                 <RaspberryPiSignInButton/>
                                             </Col>
                                         </Row>}
-                                    <Row className="mb-3 justify-content-center">
+                                    <Row className={classNames("justify-content-center", siteSpecific("mb-2", "mb-3"))} >
                                         <Col sm={9}>
                                             <GoogleSignInButton/>
                                         </Col>
