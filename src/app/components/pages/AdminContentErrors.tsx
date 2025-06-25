@@ -126,6 +126,9 @@ export const AdminContentErrors = () => {
                     <Row>
                         <Col>
                             <Table responsive bordered>
+                                <colgroup>
+                                    <col style={{minWidth: "20ex"}} />
+                                </colgroup>
                                 <tbody>
                                     <tr>
                                         <th>File</th>
