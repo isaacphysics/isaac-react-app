@@ -131,7 +131,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                     </div>
                     {isPhy && <button onClick={() => setSettingsVisible(o => !o)} className="d-flex align-items-center bg-transparent gap-2 invert-underline">
                         {settingsVisible ? "Hide settings" : "Show settings"}
-                        <i className="icon icon-cog"/>
+                        <i className={classNames("icon icon-cog icon-dropdown-90", {"active": settingsVisible})}/>
                     </button>}
                 </div>
                 <Spacer/>
