@@ -412,7 +412,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "groups";
 @import "events";
 @import "../common/fasttrack";
-@import "../common/scroll";
+@import "scroll";
 @import "assignments";
 @import "assignment-progress";
 @import "books";

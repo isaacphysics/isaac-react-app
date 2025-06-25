@@ -954,7 +954,9 @@ export enum SEARCH_RESULT_TYPE {
     BOOK_DETAIL_PAGE = "isaacBookDetailPage",
 }
 
-export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
+export type SearchableDocumentType = DOCUMENT_TYPE | SEARCH_RESULT_TYPE;
+
+export const documentDescription: {[documentType in SearchableDocumentType]: string} = {
     [DOCUMENT_TYPE.CONCEPT]: "Concepts",
     [DOCUMENT_TYPE.QUESTION]: "Questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
@@ -964,6 +966,9 @@ export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
     [DOCUMENT_TYPE.GENERIC]: "Other pages",
     [DOCUMENT_TYPE.QUIZ]: "Tests",
+    [SEARCH_RESULT_TYPE.SHORTCUT]: "Shortcuts",
+    [SEARCH_RESULT_TYPE.GAMEBOARD]: "Gameboards",
+    [SEARCH_RESULT_TYPE.BOOK_DETAIL_PAGE]: "Book sections",
 };
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {

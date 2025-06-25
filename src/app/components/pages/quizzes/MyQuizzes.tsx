@@ -85,7 +85,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
     const determineQuizSubject = (quizSummary?: DisplayableQuiz) => {
         return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `${tag.toLowerCase()}`, "");
     };
-    const subject = determineQuizSubject(quiz); 
+    const subject = determineQuizSubject(quiz);
     return <div className="p-2">
         <Card className="h-100 rounded-card">
             <CardBody className="d-flex flex-column">
@@ -106,7 +106,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                     <Col className="d-flex flex-column justify-content-between col-sm-4">
                         {quiz.isAssigned
                             ? quiz.dueDate && <p>Due date: <strong>{getFriendlyDaysUntil(quiz.dueDate)}</strong></p>
-                            : quiz.attempt && <p>Freely {quiz.status === QuizStatus.Started ? "attempting" : "attempted"}</p>                           
+                            : quiz.attempt && <p>Freely {quiz.status === QuizStatus.Started ? "attempting" : "attempted"}</p>
                         }
                         {quiz.isAssigned && <p>
                             Set: <strong>{getFriendlyDaysUntil(assignmentStartDate as Date)}</strong>
@@ -208,7 +208,7 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                             {quiz.status === QuizStatus.NotStarted && <span className="small text-muted mt-1">Not started</span>}
                             {quiz.status === QuizStatus.Complete && <>
                                 <span className="small text-muted mt-1">Completed &middot; </span>
-                                {quiz.quizFeedbackMode === "NONE" ? <span className="small text-muted mt-1">No feedback available</span> 
+                                {quiz.quizFeedbackMode === "NONE" ? <span className="small text-muted mt-1">No feedback available</span>
                                     : <span className="small text-muted mt-1">Feedback available</span>
                                 }
                             </>}
@@ -291,15 +291,15 @@ const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFil
             <Col xs={12}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by status</span>
-                    <StyledSelect 
+                    <StyledSelect
                         isMulti
-                        value={quizStatusFilter.map(status => ({value: status, label: status}))} 
+                        value={quizStatusFilter.map(status => ({value: status, label: status}))}
                         options={Object.values(QuizStatus).map(status => ({value: status, label: status}))}
                         onChange={(newValues) => {
                             selectOnChange(setQuizStatusFilter, true)(newValues);
                             setShowCompleted(newValues.map(v => v.value).includes(QuizStatus.Complete) || newValues.map(v => v.value).includes(QuizStatus.Overdue));
                         }}
-                        menuPortalTarget={document.body} 
+                        menuPortalTarget={document.body}
                         styles={{ menuPortal: base => ({ ...base, zIndex: 1000 }) }}
                     />
                 </Label>
@@ -307,7 +307,7 @@ const AdaQuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreatorFil
         </Row>
     </CollapsibleContainer>;
 };
-    
+
 export const DisplayModeToggle = ({displayMode, setDisplayMode}: {displayMode: "table" | "cards", setDisplayMode: React.Dispatch<React.SetStateAction<"table" | "cards">>}) => {
     return <div className={classNames("d-flex flex-column align-items-start", {"pb-3 pe-3 col-8 col-sm-6 col-md-3": isAda})}>
         {isAda && <span>Display in</span>}
@@ -350,7 +350,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     const [showCompleted, setShowCompleted] = useState(false);
 
     const deviceSize = useDeviceSize();
-    
+
     const [showFilters, setShowFilters] = useState(false);
     const [quizTitleFilter, setQuizTitleFilter] = useState("");
     const [quizCreatorFilter, setQuizCreatorFilter] = useState("");
@@ -360,8 +360,8 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         // if we're in table mode, sort by the order set by the user via the columns (boardOrder).
         // if we're in cards mode, sort by the default order: due date, then set date, then title.
         return displayMode === "table" ? orderBy(
-            quizzes, 
-            [boardOrder.valueOf().charAt(0) === "-" ? boardOrder.valueOf().slice(1) : boardOrder, "title"], 
+            quizzes,
+            [boardOrder.valueOf().charAt(0) === "-" ? boardOrder.valueOf().slice(1) : boardOrder, "title"],
             [boardOrder.valueOf().charAt(0) === "-" ? "desc" : "asc", "asc"]
         ) : orderBy(quizzes, [
             (q) => q.dueDate,
@@ -393,7 +393,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
 
     const tabAnchors = ["#in-progress", "#completed", "#practice"];
 
-    const anchorMap = tabAnchors.reduce((acc, anchor, index) => 
+    const anchorMap = tabAnchors.reduce((acc, anchor, index) =>
         ({...acc, [anchor]: index + 1}), {} as Record<string, number>
     );
 
@@ -429,7 +429,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                 {above["sm"](deviceSize) && <PastTestsToggle showCompleted={showCompleted} setShowCompleted={setShowCompleted} setQuizStatusFilter={setQuizStatusFilter}/>}
                 {filtersToggle}
             </div>
-            <AdaQuizFilters setShowCompleted={setShowCompleted} setQuizCreatorFilter={setQuizCreatorFilter} setQuizTitleFilter={setQuizTitleFilter} 
+            <AdaQuizFilters setShowCompleted={setShowCompleted} setQuizCreatorFilter={setQuizCreatorFilter} setQuizTitleFilter={setQuizTitleFilter}
                 quizStatusFilter={quizStatusFilter} setQuizStatusFilter={setQuizStatusFilter} showFilters={showFilters}/>
         </>}
     </>;
@@ -445,9 +445,9 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     }</span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} className={siteSpecific("mb-4", "")} />
+        <TitleAndBreadcrumb currentPageTitle="My tests" icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} className={siteSpecific("mb-4", "")} />
         <SidebarLayout>
-            <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter} 
+            <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter}
                 setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}/>
             <MainContent>
                 <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-7"}/>} />
@@ -456,30 +456,30 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                     setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
                 }}>
                     {{
-                        [siteSpecific("Assigned Tests", "Assigned tests")]:
-                            <ShowLoading 
+                        ["Assigned tests"]:
+                            <ShowLoading
                                 until={quizAssignments}
                                 ifNotFound={<Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>}
                             >
                                 <div className="d-flex flex-column">
                                     {tabTopContent}
                                     {displayMode === "table" ? <Card>
-                                        <AssignedQuizTable 
+                                        <AssignedQuizTable
                                             quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
                                             emptyMessage={emptyAssignedMessage}
                                         />
                                     </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} emptyMessage={emptyAssignedMessage}/>}
                                 </div>
                             </ShowLoading>,
-                        [siteSpecific("My Practice Tests", "My practice tests")]:
-                            <ShowLoading 
+                        ["My practice tests"]:
+                            <ShowLoading
                                 until={freeAttempts}
                                 ifNotFound={<Alert color="warning">Your practice test attempts failed to load, please try refreshing the page.</Alert>}
                             >
                                 <div className="d-flex flex-column">
                                     {tabTopContent}
                                     {displayMode === "table" ? <Card>
-                                        <PracticeQuizTable 
+                                        <PracticeQuizTable
                                             quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
                                             emptyMessage={emptyPracticeMessage}
                                         />
