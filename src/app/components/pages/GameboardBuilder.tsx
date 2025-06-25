@@ -28,7 +28,7 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardDTO, GameboardItem, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
-import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
+import {DragDropContext, Draggable, Droppable, DropResult} from "@hello-pangea/dnd";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {
     convertContentSummaryToGameboardItem,

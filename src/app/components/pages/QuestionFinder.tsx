@@ -17,6 +17,7 @@ import {
     isFullyDefinedContext,
     isLoggedIn,
     isPhy,
+    isSingleStageContext,
     Item,
     itemiseTag,
     LearningStage,
@@ -128,11 +129,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const history = useHistory();
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
-    const isSolitaryStage = pageStageToSearchStage(pageContext?.stage).length === 1;
+    const [isSolitaryStage, setIsSolitaryStage] = useState(false); // we can't calculate this until we have the page context
     const [selections, setSelections] = useState<ChoiceTree[]>([]); // we can't populate this until we have the page context
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages).concat(isSolitaryStage ? pageStageToSearchStage(pageContext?.stage)[0] : []) as STAGE[]);
+    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the page context
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
@@ -150,7 +151,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             if (filtersHaveNotBeenSpecifiedByQueryParams) {
                 const accountStages = user.registeredContexts?.map(c => c.stage).filter(s => s) as STAGE[];
                 const allStagesSelected = accountStages?.some(stage => STAGE_NULL_OPTIONS.includes(stage));
-                if (!allStagesSelected && (isPhy || accountStages.length === 1)) { // Ada only want to apply stages filter if there is only one
+                if (!allStagesSelected && (isPhy ? !pageContext?.stage?.length : accountStages.length === 1)) { // Ada only want to apply stages filter if there is only one
                     setSearchStages(accountStages);
                 }
                 const examBoardStages = user.registeredContexts?.map(c => c.examBoard).filter(e => e) as EXAM_BOARD[];
@@ -174,6 +175,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     arrayFromPossibleCsv(params.topics)
                 )
             );
+
+            const solitary = isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext); 
+            setIsSolitaryStage(solitary);
+            setSearchStages(arrayFromPossibleCsv(params.stages).concat(solitary ? pageStageToSearchStage(pageContext?.stage)[0] : []) as STAGE[]);
         }
     }, [pageContext]);
 

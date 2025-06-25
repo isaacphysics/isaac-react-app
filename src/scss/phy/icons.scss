@@ -346,3 +346,7 @@ i.icon.icon-color-grey {
 i.icon.icon-color-white {
   @include icon-color-override($color-neutral-white);
 }
+
+i.icon.icon-color-black-hoverable {
+  --buttons-light-icon: #{$color-neutral-900};
+}

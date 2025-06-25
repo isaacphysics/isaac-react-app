@@ -46,7 +46,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                 <IconButton
                     icon="icon-print"
                     className="w-max-content h-max-content"
-                    affixClassName="icon-color-black"
+                    affixClassName="icon-color-black-hoverable"
                     aria-label="Print page" 
                     title="Print page"
                     color="tint"
@@ -65,7 +65,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
             <IconButton
                 icon="icon-print"
                 className="w-max-content h-max-content"
-                affixClassName="icon-color-black"
+                affixClassName="icon-color-black-hoverable"
                 aria-label="Print page" 
                 title="Print page"
                 color="tint"

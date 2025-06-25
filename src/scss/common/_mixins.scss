@@ -195,14 +195,12 @@ $viewport-sizes: (
 }
 
 @mixin svg-icon-layered($fg_path, $bg_path, $width: 16px, $height: 16px, $mask-size: 100%, $mask-position: none) {
+  --layered-icon-parent-bg-override: transparent;
   display: inline-flex;
   width: $width;
   height: $height;
   min-width: $width;
   min-height: $height;
-  &:is(i.icon.icon) { // increase specificity over theming
-    background-color: transparent;
-  }
   &::before {
     content: '';
     @include svg-icon($bg_path, $width, $height);
@@ -236,6 +234,17 @@ $viewport-sizes: (
   min-height: $height;
   @if $mask-size != none {
     mask-size: $mask-size;
+  }
+}
+
+@mixin icon-color-override($color) {
+  background-color: var(--layered-icon-parent-bg-override, $color) !important;
+  
+  &::before {
+    background-color: $color !important;
+  }
+  &::after {
+    background-color: $color !important;
   }
 }
 
