@@ -53,12 +53,12 @@
     --focus-outline-color: #{$a11y_blue};
   }
 
-  i.icon:not(:has(::after)) {
-    background-color: var(--buttons-light-icon);
+  i.icon {
+    background-color: var(--layered-icon-parent-bg-override, var(--buttons-dark-icon));
   }
 
   i.icon::after {
-    background-color: var(--buttons-light-icon);
+    background-color: var(--buttons-dark-icon);
   }
 }
 
@@ -79,8 +79,8 @@
     color: var(--buttons-light-disabled-text);
   }
 
-  i.icon:not(:has(::after)) {
-    background-color: var(--buttons-light-icon);
+  i.icon {
+    background-color: var(--layered-icon-parent-bg-override, var(--buttons-light-icon));
   }
 
   i.icon::after {
@@ -103,8 +103,8 @@
     color: var(--buttons-light-disabled-text);
   }
 
-  i.icon:not(:has(::after)) {
-    background-color: var(--buttons-light-icon);
+  i.icon {
+    background-color: var(--layered-icon-parent-bg-override, var(--buttons-light-icon));
   }
 
   i.icon::after {
