@@ -28,6 +28,7 @@ import {RenderNothing} from "../elements/RenderNothing";
 import { GameboardsCards, GameboardsCardsProps, GameboardsTable, GameboardsTableProps } from "../elements/Gameboards";
 import classNames from "classnames";
 import { MainContent, MyGameboardsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { PageMetadata } from "../elements/PageMetadata";
 
 export interface GameboardsDisplaySettingsProps {
     boardView: BoardViews,
@@ -181,7 +182,7 @@ export const MyGameboards = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} className={siteSpecific("mb-4", "")} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
         <SidebarLayout>
             <MyGameboardsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
@@ -189,9 +190,12 @@ export const MyGameboards = () => {
                 boardTitleFilter={boardTitleFilter} setBoardTitleFilter={setBoardTitleFilter}
                 boardCreatorFilter={boardCreator} setBoardCreatorFilter={setBoardCreator}
                 boardCompletionFilter={boardCompletion} setBoardCompletionFilter={setBoardCompletion}
+                hideButton
             />
             <MainContent>
-                <PageFragment fragmentId={`${siteSpecific("gameboards", "quizzes")}_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
+                <PageMetadata noTitle showSidebarButton>
+                    <PageFragment fragmentId={`${siteSpecific("gameboards", "quizzes")}_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
+                </PageMetadata>
                 {boards && boards.totalResults == 0 ?
                     <>
                         <h3 className="text-center mt-4">You have no {siteSpecific("question decks", "quizzes")} to view.</h3>

@@ -20,13 +20,10 @@ import {
     isDefined
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {EditContentButton} from "../elements/EditContentButton";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
-import {ShareLink} from "../elements/ShareLink";
-import {PrintButton} from "../elements/PrintButton";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
@@ -34,25 +31,17 @@ import queryString from "query-string";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
-import {ReportButton} from "../elements/ReportButton";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
 import { LLMFreeTextQuestionIndicator } from "../elements/LLMFreeTextQuestionIndicator";
 import { GameboardQuestionSidebar, MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StageAndDifficultySummaryIcons } from "../elements/StageAndDifficultySummaryIcons";
-import { TeacherNotes } from "../elements/TeacherNotes";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
-
-interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
-    questionIdOverride?: string;
-    match: match & { params: { questionId: string } };
-    preview?: boolean;
-}
-
-
+import { PageMetadata } from "../elements/PageMetadata";
+import { MetadataContainer } from "../elements/panels/MetadataContainer";
 
 function getTags(docTags?: string[]) {
     if (!isPhy) {
@@ -62,6 +51,11 @@ function getTags(docTags?: string[]) {
 
     return tags.getByIdsAsHierarchy(docTags as TAG_ID[])
         .map(tag => ({title: tag.title}));
+}
+interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
+    questionIdOverride?: string;
+    match: match & { params: { questionId: string } };
+    preview?: boolean;
 }
 
 export const Question = withRouter(({questionIdOverride, match, location, preview}: QuestionPageProps) => {
@@ -108,62 +102,39 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                         <MainContent>
                             {!preview && <CanonicalHrefElement />}
 
-                            <div className={classNames("no-print d-flex align-items-center", siteSpecific("my-3", "mt-3"))}>
-                                {isAda && <>
-                                    {pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
-                                    <EditContentButton doc={doc} />
-                                    <div className="d-flex ms-auto">
-                                        <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
-                                        <PrintButton questionPage />
-                                        <ReportButton pageId={questionId}/>
-                                    </div>
-                                </>}
-                                {isPhy && <>
-                                    <div>
-                                        <h2 className="text-theme-dark"><Markup encoding="latex">{generateQuestionTitle(doc)}</Markup></h2>
-                                        {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
-                                    </div>
-                                    <div className="d-flex gap-2 ms-auto">
-                                        <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
-                                        <PrintButton questionPage />
-                                        <ReportButton pageId={questionId}/>
-                                    </div>
-                                </>}
-                            </div>
+                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
+                                {isPhy && <MetadataContainer className="d-flex row">
+                                    <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
+                                        <span>Subject & topics</span>
+                                        <div className="d-flex align-items-center">
+                                            <i className="icon icon-hexagon me-2"/>
+                                            {getTags(doc.tags).map((tag, index, arr) => <>
+                                                <span key={tag.title} className="text-theme">{tag.title}</span>
+                                                {index !== arr.length - 1 && <span className="mx-2">|</span>}
+                                            </>)}
+                                        </div>
+                                    </Col>
+                                    <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0">
+                                        <span>Status</span>
+                                        {allQuestionsCorrect
+                                            ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-correct me-2"/> Correct</div>
+                                            : allQuestionsAttempted
+                                                ? isPhy
+                                                    ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-attempted me-2"/> All attempted (some errors)</div>
+                                                    : <div className="d-flex align-items-center"><span className="icon icon-raw icon-incorrect me-2"/> Incorrect</div>
+                                                : anyQuestionAttempted
+                                                    ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-in-progress me-2"/> In progress</div>
+                                                    : <div className="d-flex align-items-center"><span className="icon icon-raw icon-not-started me-2"/> Not started</div>
+                                        }
+                                    </Col>
+                                    <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0 pb-sm-0">
+                                        <span>Stage & difficulty</span>
+                                        <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/>
+                                    </Col>
+                                </MetadataContainer>}
+                            </PageMetadata>
 
-                            {isPhy && <Row className="content-metadata-container d-flex">
-                                <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
-                                    <span>Subject & topics</span>
-                                    <div className="d-flex align-items-center">
-                                        <i className="icon icon-hexagon me-2"/>
-                                        {getTags(doc.tags).map((tag, index, arr) => <>
-                                            <span key={tag.title} className="text-theme">{tag.title}</span>
-                                            {index !== arr.length - 1 && <span className="mx-2">|</span>}
-                                        </>)}
-                                    </div>
-                                </Col>
-                                <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0">
-                                    <span>Status</span>
-                                    {allQuestionsCorrect
-                                        ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-correct me-2"/> Correct</div>
-                                        : allQuestionsAttempted
-                                            ? isPhy
-                                                ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-attempted me-2"/> All attempted (some errors)</div>
-                                                : <div className="d-flex align-items-center"><span className="icon icon-raw icon-incorrect me-2"/> Incorrect</div>
-                                            : anyQuestionAttempted
-                                                ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-in-progress me-2"/> In progress</div>
-                                                : <div className="d-flex align-items-center"><span className="icon icon-raw icon-not-started me-2"/> Not started</div>
-                                    }
-                                </Col>
-                                <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0 pb-sm-0">
-                                    <span>Stage & difficulty</span>
-                                    <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/>
-                                </Col>
-                            </Row>}
-
-                            {isPhy && <EditContentButton doc={doc} />}
-
-                            <TeacherNotes notes={doc.teacherNotes} />
+                            {isAda && pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
 
                             <Row className="question-content-container">
                                 <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>

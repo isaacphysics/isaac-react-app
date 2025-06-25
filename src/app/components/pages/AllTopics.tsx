@@ -87,7 +87,7 @@ export const AllTopics = () => {
             </Row>
         </Container>
         <section id={'topics-question-finder'}>
-            <Container className={"mb-5 p-5 mx-auto"}>
+            <Container className={"mb-7 p-7 mx-auto"}>
                 <Row className={"align-items-center justify-content-center"}>
                     <Col xs={12} lg={6}>
                         <h2 className={"font-size-1-75 mb-4"}>Check your understanding</h2>

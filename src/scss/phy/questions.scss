@@ -18,9 +18,11 @@
 }
 
 .question-panel .isaac-accordion {
-  background: $gray-103;
+  @include no-print {
+    background: $gray-103;
+  }
   .card-body > .content-chunk > .content-value {
-    @extend .px-md-5;
+    @extend .px-md-7;
     font-size: $question-font-size;
     line-height: $question-line-height;
   }
@@ -126,7 +128,7 @@
 }
 
 // styling for question components outside an accordion
-form:has(> .question-component) {
+form:has(> .question-component), div.quiz-question-container:has(> .question-component) {
   background-color: white;
   box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
   padding: 0;
@@ -148,11 +150,20 @@ form:has(> .question-component) {
 }
 
 // any such styling that should not be present in an accordion
-.isaac-accordion form:has(> .question-component) {
+.isaac-accordion form:has(> .question-component), .isaac-accordion div.quiz-question-container:has(> .question-component) {
   border: unset;
   // padding is overridden above
   border-radius: unset;
   box-shadow: none;
+
+  > .question-component > div:first-child {
+    @include respond-below(md) {
+      padding: 0.5rem 0;
+    }
+    @include respond-above(md) {
+      padding: 0.5rem;
+    }
+  }
 
   > .tabbed-hints {
     padding: 0;

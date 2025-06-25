@@ -153,8 +153,6 @@
       background-color: $cs-white !important;
       background-image: url("/assets/cs/icons/share-pink.svg");
     }
-    margin-right: 7.5px;
-    margin-left: 7.5px;
     position: relative;
     z-index: 2;
   }
@@ -169,8 +167,6 @@
   &.outline {
     @include ada-icon-button-base(48px, 48px, true);
   }
-  margin-right: 7.5px;
-  margin-left: 7.5px;
   background-image: url("/assets/cs/icons/print.svg");
 }
 
@@ -181,8 +177,6 @@
   &.outline {
     @include ada-icon-button-base(48px, 48px, true);
   }
-  margin-right: 7.5px;
-  margin-left: 7.5px;
   background-image: url("/assets/cs/icons/flag.svg");
 }
 
@@ -281,7 +275,7 @@ div.isaac-nav-link {
 
 a:not(.btn):not(.nav-link) {
   // FIXME this breaks tables with links
-  &:not(.link-light):not(.footer-link):not(.a-link) {
+  &:not(.link-light):not(.footer-link):not(.a-link):not(.breadcrumb-link) {
     color: $cs-jet;
     &:hover {
       @extend .btn-link;

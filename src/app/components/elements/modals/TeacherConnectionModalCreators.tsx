@@ -5,7 +5,7 @@ import {
     closeActiveModal,
     store
 } from "../../../state";
-import {extractTeacherName, siteSpecific} from "../../../services";
+import {extractTeacherName, SITE_TITLE_SHORT, siteSpecific} from "../../../services";
 import { Table, Button } from "reactstrap";
 
 export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
@@ -13,7 +13,7 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
         closeAction: () => {store.dispatch(closeActiveModal());},
         title: "Sharing your data",
         body: <React.Fragment>
-            <p>Are you sure you would like to give the following {siteSpecific("Isaac", "Ada")} users access to your data?</p>
+            <p>Are you sure you would like to give the following {SITE_TITLE_SHORT} users access to your data?</p>
             <Table bordered>
                 <tbody>
                     {usersToGrantAccess.map((member) => (<tr key={member.id}>

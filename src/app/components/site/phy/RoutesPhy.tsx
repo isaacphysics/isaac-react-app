@@ -34,17 +34,16 @@ import { SubjectLandingPage } from "../../pages/SubjectLandingPage";
 import { QuestionFinder } from "../../pages/QuestionFinder";
 import { QuestionDecks } from "../../pages/QuestionDecks";
 import { QuickQuizzes } from "../../pages/QuickQuizzes";
-import { LessonsAndRevision } from "../../pages/LessonsAndRevision";
 import { SubjectOverviewPage } from "../../pages/SubjectOverviewPage";
 import { Glossary } from "../../pages/Glossary";
 import { Book } from "../../elements/Book";
-import { QuantumMechanicsPrimer } from "../../pages/books_old/QuantumMechanicsPrimer";
 import { SolvingPhysProblems } from "../../pages/books_old/SolvingPhysProblems";
-import { Chemistry16 } from "../../pages/books_old/chemistry_16";
 import { PhysBookYrNine } from "../../pages/books_old/phys_book_yr9";
 import { PreUniMaths } from "../../pages/books_old/pre_uni_maths";
 import { QuizView } from "../../pages/quizzes/QuizView";
 import { BooksOverview } from "../../pages/BooksOverview";
+import { RevisionPage } from "../../pages/RevisionDetailPage";
+import { AnvilAppsListing } from "../../pages/AnvilAppsListing";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -55,11 +54,11 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
     "": SubjectLandingPage,
     "/questions": QuestionFinder,
     "/concepts": Concepts,
-    "/lessons_and_revision": LessonsAndRevision,
     "/practice_tests": PracticeQuizzes,
     "/quick_quizzes": QuickQuizzes,
     "/question_decks": QuestionDecks,
     "/glossary": Glossary,
+    "/apps": AnvilAppsListing,
 };
 
 // TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
@@ -133,6 +132,10 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path={"/books/:bookId"} component={Book} />,
     <TrackedRoute key={key++} exact path={"/books/:bookId/:pageId"} component={Book} />,
     <TrackedRoute key={key++} exact path={"/books"} component={BooksOverview} />,
+
+    // Revision pages
+    // <TrackedRoute key={key++} exact path="/revision" component={SubjectLandingPage} />,
+    <TrackedRoute key={key++} exact path="/revision/:pageId" component={RevisionPage} />,
 
     // Subject-stage pages -- see subjectSpecificPages, defined above
     ...(Object.entries(subjectStagePairPages).map(([path, component]) => (

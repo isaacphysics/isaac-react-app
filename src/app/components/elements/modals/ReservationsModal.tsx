@@ -216,7 +216,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
         <div id="reservation-modal">
             {!event.allowGroupReservations && <p>This event does not allow group reservations.</p>}
             {event.allowGroupReservations && <Col>
-                <Row className="mb-5">
+                <Row className="mb-7">
                     <Col md={3}>
                         <ShowLoading until={sortedActiveGroups}>
                             <React.Fragment>
@@ -420,6 +420,6 @@ export const reservationsModal = ({event}: {event: AugmentedEvent}): ActiveModal
         size: 'xl',
         title: "Group reservations",
         body: <ReservationsModal event={event} />,
-        overflowVisible: true
+        bodyContainerClassName: "overflow-visible",
     };
 };

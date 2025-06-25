@@ -300,7 +300,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 </Row>
             </GameboardCard>,
             <Card className={"board-card"} data-testid={"gameboard-card"}>
-                <CardBody className="pb-5 pt-4">
+                <CardBody className="pb-7 pt-4">
                     <Row className={"mb-2"}>
                         <Col xs={8} sm={7} md={8}>
                             <h4><Link className={"d-inline"} to={boardLink}>{board.title}</Link></h4>

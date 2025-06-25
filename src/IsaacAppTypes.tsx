@@ -1,4 +1,4 @@
-import React, {ReactElement} from "react";
+import React, {ReactElement, ReactNode} from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
@@ -315,14 +315,13 @@ export interface Toast {
 
 export interface ActiveModal {
     centered?: boolean;
-    noPadding?: boolean;
     closeAction?: () => void;
     closeLabelOverride?: string;
-    size?: string;
+    size?: "sm" | "md" | "lg" | "xl";
     title?: string;
-    body: any;
-    buttons?: any[];
-    overflowVisible?: boolean;
+    body: ReactNode | (() => ReactNode);
+    bodyContainerClassName?: string;
+    buttons?: ReactNode[];
 }
 
 export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
@@ -606,6 +605,7 @@ export interface QuestionSearchQuery {
     startIndex?: number;
     limit?: number;
     randomSeed?: number;
+    querySource: string;
 }
 
 export interface ContentSummary extends ContentSummaryDTO {

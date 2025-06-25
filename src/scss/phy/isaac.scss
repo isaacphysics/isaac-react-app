@@ -287,7 +287,11 @@ $element-sizes: (
 
 $spacer: 1rem !default;
 $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
-    6: ($spacer * 6.25) // 100px-ish
+    5: ($spacer * 2),
+    6: ($spacer * 2.5),
+    7: ($spacer * 3),
+    8: ($spacer * 3.5),
+    9: ($spacer * 4),
 ));
 
 // Theme colours
@@ -409,7 +413,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "groups";
 @import "events";
 @import "../common/fasttrack";
-@import "../common/scroll";
+@import "scroll";
 @import "assignments";
 @import "assignment-progress";
 @import "books";
@@ -452,10 +456,14 @@ body {
 }
 
 .content-body {
+  @include no-print {
     background-color: $color-neutral-50;
+  }
 }
 
 .content-body > .container {
+  @include no-print {
     background-color: $color-neutral-50;
     box-shadow: 0 0 200px 35px $color-neutral-100;
+  }
 }

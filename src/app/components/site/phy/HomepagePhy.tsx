@@ -7,7 +7,6 @@ import { NewsCard } from "../../elements/cards/NewsCard";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { EventCard } from "../../elements/cards/EventCard";
 import { StudentDashboard } from "../../elements/StudentDashboard";
-import { ShortcutResponse } from "../../../../IsaacAppTypes";
 import { ListViewCardProps, ListViewCards } from "../../elements/list-groups/ListView";
 import { Spacer } from "../../elements/Spacer";
 import { TeacherDashboard } from "../../elements/TeacherDashboard";
@@ -20,7 +19,7 @@ interface HomepageHeroCardProps extends CardProps {
 
 const HomepageHeroCard = ({title, content, isStudent}: HomepageHeroCardProps) => {
     return <Card className="homepage-hero-card border-0">
-        <CardBody className="p-4 pt-5 d-flex flex-column">
+        <CardBody className="p-4 pt-7 d-flex flex-column">
             <div className="homepage-hero-card-tag">
                 {isStudent
                     ? <>
@@ -47,8 +46,8 @@ const HomepageHero = () => {
     if (!isLoggedIn(user)) {
         return <div className="homepage-hero">
             {above['md'](deviceSize) && <div className="homepage-hero-img"/>}
-            <Container className="pt-5">
-                <div className="w-100 w-md-50 mb-4 mb-md-5 mb-xl-6 pe-xl-5">
+            <Container className="pt-7">
+                <div className="w-100 w-md-50 mb-4 mb-md-7 mb-xl-9 pe-xl-7">
                     <div className="physics-strapline mb-3">
                         <h2><span className="text-green">Master Science subjects</span> by solving problems</h2>
                     </div>
@@ -96,13 +95,10 @@ const subjectDescriptions: Record<Subject, string> = {
 };
 
 const getListViewSubjectCard = (sc: subjectCategory) => {
-    const item: ShortcutResponse = {
-        title: sc.humanSubject,
-        subtitle: subjectDescriptions[sc.subject as Subject],
-    };
 
     const listViewSubjectCard: ListViewCardProps = {
-        item: item,
+        title: sc.humanSubject,
+        subtitle: subjectDescriptions[sc.subject as Subject],
         icon: {
             type: "img", 
             icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`,
@@ -165,7 +161,7 @@ export const HomepagePhy = () => {
     }, []);
 
     return <>
-        <div id="homepage" className="homepage pb-5">
+        <div id="homepage" className="homepage pb-7">
             <section id="dashboard">
                 {isLoggedIn(user) && (isTutorOrAbove(user)
                     ? <TeacherDashboard assignmentsSetByMe={assignmentsSetByMe} quizzesSetByMe={isTutor(user) ? [] : quizzesSetByMe} groups={groups} myAssignments={myAssignments}
@@ -177,7 +173,7 @@ export const HomepagePhy = () => {
             </section>
             <Container>
                 <section id="explore-learn">
-                    <div className="mt-5">
+                    <div className="mt-7">
                         <div className="d-flex">
                             <h3>Explore and learn!</h3>
                             <div className="section-divider flex-grow-1 ms-2"/>
@@ -186,7 +182,7 @@ export const HomepagePhy = () => {
                     </div>
                 </section>
                 <section id="events-news">
-                    <Row className="mt-5 row-cols-1 row-cols-lg-2">
+                    <Row className="mt-7 row-cols-1 row-cols-lg-2">
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
                                 <h3>Upcoming events</h3>

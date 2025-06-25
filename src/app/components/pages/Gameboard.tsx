@@ -38,6 +38,7 @@ import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { GameboardSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { PageMetadata } from "../elements/PageMetadata";
 
 export const getProgressIcon = (question: GameboardItem) => {
     const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
@@ -184,7 +185,7 @@ export const Gameboard = withRouter(({ location }) => {
     </>;
     return !gameboardId
         ? <Redirect to={PATHS.QUESTION_FINDER} />
-        : <Container className="mb-5">
+        : <Container className="mb-7">
             <ShowLoadingQuery
                 query={gameboardQuery}
                 defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboardId}`}
@@ -196,10 +197,11 @@ export const Gameboard = withRouter(({ location }) => {
                             intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: "Assignments", to: "/assignments"}] : []}
                         />
                         <SidebarLayout>
-                            <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments}/>
+                            <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />
                             <MainContent>
-                                {isPhy && <h3 className="mt-3">{gameboard.title}</h3>}
-                                <GameboardViewer gameboard={gameboard} className={siteSpecific("mt-3", "mt-4 mt-lg-5")} />
+                                <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
+                                {/* // {isPhy && <h3 className="mt-3">{gameboard.title}</h3>} */}
+                                <GameboardViewer gameboard={gameboard} className={siteSpecific("mt-3", "mt-4 mt-lg-7")} />
                                 {user && isTutorOrAbove(user)
                                     ? <Row>
                                         <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">

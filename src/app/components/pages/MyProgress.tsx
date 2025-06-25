@@ -104,7 +104,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
-    return <Container id="my-progress" className="mb-5">
+    return <Container id="my-progress" className="mb-7">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-progress"}} disallowLaTeX />
         <Card className="mt-4">
             <CardBody>
@@ -205,7 +205,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Most recently answered questions</h4>
                             {isPhy ?
-                                <ListView items={progress.mostRecentQuestions} fullWidth={below["lg"](screenSize)}/> :
+                                <ListView type="item" items={progress.mostRecentQuestions} fullWidth={below["lg"](screenSize)}/> :
                                 <LinkToContentSummaryList
                                     items={progress.mostRecentQuestions}
                                     contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN}
@@ -215,7 +215,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                         {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                             <h4>Oldest unsolved questions</h4>
                             {isPhy ?
-                                <ListView items={progress.oldestIncompleteQuestions} fullWidth={below["lg"](screenSize)}/> :
+                                <ListView type="item" items={progress.oldestIncompleteQuestions} fullWidth={below["lg"](screenSize)}/> :
                                 <LinkToContentSummaryList
                                     items={progress.oldestIncompleteQuestions}
                                     contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN}

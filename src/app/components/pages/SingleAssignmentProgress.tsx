@@ -70,7 +70,7 @@ export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
                 query={combineQueries(assignmentQuery, assignmentProgressQuery, augmentAssignmentWithProgress)}
                 defaultErrorTitle={"Error fetching assignment progress"}
                 thenRender={(assignmentWithProgress) =>
-                    <div className="assignment-progress-container mb-5">
+                    <div className="assignment-progress-container mb-7">
                         <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                             <SingleProgressDetails assignment={assignmentWithProgress} />
                         </AssignmentProgressPageSettingsContext.Provider>

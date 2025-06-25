@@ -15,7 +15,7 @@ import {
     Stage,
     UserRole
 } from "../../IsaacApiTypes";
-import {isPhy, siteSpecific} from "./";
+import {isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 
 export const STAGING_URL = siteSpecific(
@@ -85,7 +85,7 @@ export const SOCIAL_LINKS = siteSpecific(
 // Change to "http://localhost:3000" if you want to run a local version of the code editor
 export const CODE_EDITOR_BASE_URL = "https://code-editor.ada-cs.org";
 
-export const API_REQUEST_FAILURE_MESSAGE = `There may be an error connecting to the ${siteSpecific("Isaac", "Ada")} platform.`;
+export const API_REQUEST_FAILURE_MESSAGE = `There may be an error connecting to the ${SITE_TITLE_SHORT} platform.`;
 export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attempts at this question. Please try again later!";
 
 export const NOT_FOUND: NOT_FOUND_TYPE = 404;
@@ -328,7 +328,7 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
     [EXAM_BOARD.SQA]: "SQA",
-    [EXAM_BOARD.ADA]: "Ada",
+    [EXAM_BOARD.ADA]: "Ada CS",
     [EXAM_BOARD.ALL]: "All exam boards",
 };
 
@@ -603,6 +603,15 @@ export const ISAAC_BOOKS_BY_TAG: {[tag in BookTag]: BookInfo} = ISAAC_BOOKS.redu
     acc[book.tag] = book;
     return acc;
 }, {} as {[tag in BookTag]: BookInfo});
+
+export const BOOK_DETAIL_ID_SEPARATOR = "__";
+
+export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNING_STAGE, string>>>> = { 
+    "chemistry": {
+        [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_chem_fragment",
+        [LEARNING_STAGE.A_LEVEL]: "app_page_overview_alevel_chem_fragment",
+    },
+};
 
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
@@ -929,6 +938,7 @@ export enum DOCUMENT_TYPE {
     QUESTION = "isaacQuestionPage",
     FAST_TRACK_QUESTION = "isaacFastTrackQuestionPage",
     BOOK_INDEX_PAGE = "isaacBookIndexPage",
+    REVISION = "isaacRevisionDetailPage",
     EVENT = "isaacEventPage",
     TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
@@ -944,15 +954,21 @@ export enum SEARCH_RESULT_TYPE {
     BOOK_DETAIL_PAGE = "isaacBookDetailPage",
 }
 
-export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
+export type SearchableDocumentType = DOCUMENT_TYPE | SEARCH_RESULT_TYPE;
+
+export const documentDescription: {[documentType in SearchableDocumentType]: string} = {
     [DOCUMENT_TYPE.CONCEPT]: "Concepts",
     [DOCUMENT_TYPE.QUESTION]: "Questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
     [DOCUMENT_TYPE.BOOK_INDEX_PAGE]: "Books",
+    [DOCUMENT_TYPE.REVISION]: "Revision",
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
     [DOCUMENT_TYPE.GENERIC]: "Other pages",
     [DOCUMENT_TYPE.QUIZ]: "Tests",
+    [SEARCH_RESULT_TYPE.SHORTCUT]: "Shortcuts",
+    [SEARCH_RESULT_TYPE.GAMEBOARD]: "Gameboards",
+    [SEARCH_RESULT_TYPE.BOOK_DETAIL_PAGE]: "Book sections",
 };
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
@@ -961,6 +977,7 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.QUESTION]: "questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "questions",
     [DOCUMENT_TYPE.BOOK_INDEX_PAGE]: "books",
+    [DOCUMENT_TYPE.REVISION]: "revision",
     [DOCUMENT_TYPE.EVENT]: "events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics",
     [DOCUMENT_TYPE.QUIZ]: "quiz",
@@ -1012,6 +1029,7 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "Assignment Progress", to: "/assignment_progress"},
     {title: "Markbook", to: "/my_markbook"}
 );
+export const BOOKS_CRUMB = {title: "Books", to: "/books"};
 
 export const UserFacingRole: {[role in UserRole]: string} = {
     ADMIN: "admin",

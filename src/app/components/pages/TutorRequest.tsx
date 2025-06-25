@@ -25,8 +25,7 @@ import {
     isPhy,
     isTutorOrAbove,
     selectOnChange,
-    SITE_TITLE,
-    siteSpecific,
+    SITE_TITLE, SITE_TITLE_SHORT,
     tags,
     validateEmail,
     WEBMASTER_EMAIL
@@ -63,7 +62,7 @@ export const TutorRequest = () => {
 
     const subject = "Tutor Account Request";
     const message = "Hello,\n\n" +
-        `Please could you convert my ${siteSpecific("Isaac", "Ada")} account into a tutor account.` + "\n\n" +
+        `Please could you convert my ${SITE_TITLE_SHORT} account into a tutor account.` + "\n\n" +
         (subjects.length > 0 ? ("I would like to teach subjects: " + subjects.join(", ") + "\n\n") : "") +
         (reason ? "I would like to upgrade because: " + reason + "\n\n" : "") +
         "Thanks, \n\n" + firstName + " " + lastName;
@@ -76,7 +75,7 @@ export const TutorRequest = () => {
         setEmailVerified(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
     }, [user]);
 
-    return <Container id="contact-page" className="pb-5">
+    return <Container id="contact-page" className="pb-7">
         <TitleAndBreadcrumb currentPageTitle="Tutor Account request" icon={{type: "hex", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>

@@ -188,7 +188,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 onMouseEnter={() => setValidated(new Set(['group', 'feedbackMode']))}
                 onClick={assign}
             >
-                {isAssigning ? <IsaacSpinner size={"sm"} /> : siteSpecific("Set Test", "Set test")}
+                {isAssigning ? <IsaacSpinner size={"sm"} /> : "Set test"}
             </Button>
         </div>
     </div>;

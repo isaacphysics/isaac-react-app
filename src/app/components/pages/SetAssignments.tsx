@@ -8,10 +8,6 @@ import {
     Container,
     Input,
     Label,
-    Modal,
-    ModalBody,
-    ModalFooter,
-    ModalHeader,
     Row,
     Spinner,
     Table,
@@ -20,6 +16,8 @@ import {
 import {Link, useLocation} from "react-router-dom";
 import {
     assignGameboard,
+    closeActiveModal,
+    openActiveModal,
     openIsaacBooksModal,
     selectors,
     setAssignBoardPath,
@@ -62,15 +60,15 @@ import {
     UTC_MIDNIGHT_IN_SIX_DAYS
 } from "../../services";
 import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
-import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
-import {BoardAssignee, AssignmentBoardOrder, Boards} from "../../../IsaacAppTypes";
+import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
+import {BoardAssignee, AssignmentBoardOrder, Boards, ActiveModal} from "../../../IsaacAppTypes";
 import {BoardCard} from "../elements/cards/BoardCard";
-import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { SortItemHeader } from "../elements/SortableItemHeader";
 import { MainContent, SetAssignmentsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import classNames from "classnames";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -158,23 +156,20 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
 };
 
 type SetAssignmentsModalProps = {
-    user: RegisteredUserDTO;
-    isOpen: boolean;
-    toggle: () => void;
-    groups: UserGroupDTO[];
     board: GameboardDTO | undefined;
     assignees: BoardAssignee[];
-    boards?: Boards;
+    groups: UserGroupDTO[];
+    toggle: () => void;
+    unassignBoard: (props: {boardId: string, groupId: number}) => void;
 };
-const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
-    const {isOpen, toggle, board, assignees} = props;
 
-    const [ unassignBoard ] = useUnassignGameboardMutation();
+export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModal => {
+    const {board, assignees, toggle, unassignBoard} = props;
 
     const hasStarted = (a : {startDate?: Date | number}) => !a.startDate || (Date.now() > a.startDate.valueOf());
 
-    const startedAssignees = useMemo(() => assignees.filter(hasStarted), [assignees]);
-    const scheduledAssignees = useMemo(() => assignees.filter(a => !hasStarted(a)), [assignees]);
+    const startedAssignees = assignees.filter(hasStarted);
+    const scheduledAssignees = assignees.filter(a => !hasStarted(a));
 
     function confirmUnassignBoard(groupId: number, groupName?: string) {
         if (board?.id && confirm(`Are you sure you want to unassign this ${siteSpecific("question deck", "quiz")} from ${groupName ? `group ${groupName}` : "this group"}?`)) {
@@ -185,42 +180,38 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
     const description = "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. " +
         "Assignments are due by the end of the day indicated.";
 
-    return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle} data-bs-theme="neutral">
-        <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break d-flex justify-content-between"} close={
-            <button className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy})} onClick={toggle}>
-                Close
-            </button>
-        }>
-            {board?.title}
-        </ModalHeader>
-        <ModalBody>
+    return {
+        closeAction: toggle,
+        size: "md",
+        title: board?.title,
+        body: <>
             <p className="px-1">{description}</p>
             <hr className="text-center" />
             <AssignGroup closeModal={toggle} {...props} />
             <hr className="text-center" />
-            <div className="py-2 border-bottom" data-testid="currently-assigned-to">
-                <Label>{siteSpecific("Question deck", "Quiz")} currently assigned to:</Label>
+            <div className="py-2 border-bottom d-flex flex-column" data-testid="currently-assigned-to">
+                <span>{siteSpecific("Question deck", "Quiz")} currently assigned to:</span>
                 {startedAssignees.length > 0
-                    ? <Container className="mb-4">{startedAssignees.map(assignee =>
-                        <div data-testid={"current-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
+                    ? <ul className="p-2 mb-3">{startedAssignees.map(assignee =>
+                        <li data-testid={"current-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
-                        </div>
-                    )}</Container>
-                    : <p>No groups.</p>}
+                        </li>
+                    )}</ul>
+                    : <p className="px-2">No groups.</p>}
             </div>
-            <div className="py-2">
-                <Label className={siteSpecific("d-flex align-items-center", "")}>
+            <div className="py-2 d-flex flex-column">
+                <span className={classNames("mb-2", siteSpecific("d-flex align-items-center", ""))}>
                     Pending {siteSpecific("assignments", "quiz assignments")}:
                     <i className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help mx-1")} id={`pending-assignments-help-${board?.id}`}/>
-                </Label>
+                </span>
                 <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
                     These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the morning of the scheduled date, students
                     will be able to see the {siteSpecific("assignment", "quiz")}, and will receive a notification email.
                 </UncontrolledTooltip>
                 {scheduledAssignees.length > 0
-                    ? <Container className="mb-4">{scheduledAssignees.map(assignee =>
-                        <div data-testid={"pending-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
+                    ? <ul className="p-2 mb-3">{scheduledAssignees.map(assignee =>
+                        <li data-testid={"pending-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             {assignee.startDate && <>
                                 <span id={`start-date-${assignee.groupId}`} className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
@@ -229,15 +220,13 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                                 </span>
                             </>}
                             <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
-                        </div>
-                    )}</Container>
-                    : <p>No groups.</p>}
+                        </li>
+                    )}</ul>
+                    : <p className="px-2">No groups.</p>}
             </div>
-        </ModalBody>
-        {isPhy && <ModalFooter>
-            <Button block color="tertiary" onClick={toggle}>Close</Button>
-        </ModalFooter>}
-    </Modal>;
+        </>,
+        buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]
+    };
 };
 
 interface SetAssignmentsTableProps {
@@ -287,7 +276,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <th className="text-center align-middle">Manage</th>
     </tr>;
 
-    return <Card className="mt-2 mb-5">
+    return <Card className="mt-2 mb-7">
         <CardBody id="boards-table">
             <Row>
                 <Col lg={4}>
@@ -374,7 +363,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         <th>Delete</th>
     </tr>;
 
-    return <div className={"mb-5 mb-md-6 mt-4"}>
+    return <div className={"mb-7 mt-4"}>
         <Row>
             <Col xs={6} md={4} lg={3} xl={3}>
                 <Label className="w-100">
@@ -449,21 +438,23 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
     </>;
 };
 
+export const getAssigneesByBoard = (assignmentsSetByMe: AssignmentDTO[] | undefined): Record<string, BoardAssignee[]> => {
+    return assignmentsSetByMe?.reduce((acc, assignment) => {
+        if (!isDefined(assignment?.gameboardId) || !isDefined(assignment?.groupId)) return acc;
+        const newAssignee = {groupId: assignment.groupId, groupName: assignment.groupName, startDate: assignment.scheduledStartDate};
+        if (!(assignment.gameboardId in acc)) {
+            return {...acc, [assignment.gameboardId]: [newAssignee]};
+        }
+        return {...acc, [assignment.gameboardId]: [...acc[assignment.gameboardId], newAssignee]};
+    }, {} as {[gameboardId: string]: BoardAssignee[]}) ?? {};
+};
+
 export const SetAssignments = () => {
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
     const { data: groups } = useGetGroupsQuery(false);
     const { data: assignmentsSetByMe } = useGetMySetAssignmentsQuery(undefined);
-    const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
-        assignmentsSetByMe?.reduce((acc, assignment) => {
-            if (!isDefined(assignment?.gameboardId) || !isDefined(assignment?.groupId)) return acc;
-            const newAssignee = {groupId: assignment.groupId, groupName: assignment.groupName, startDate: assignment.scheduledStartDate};
-            if (!(assignment.gameboardId in acc)) {
-                return {...acc, [assignment.gameboardId]: [newAssignee]};
-            }
-            return {...acc, [assignment.gameboardId]: [...acc[assignment.gameboardId], newAssignee]};
-        }, {} as {[gameboardId: string]: BoardAssignee[]}) ?? {}
-    , [assignmentsSetByMe]);
+    const groupsByGameboard = useMemo(() => getAssigneesByBoard(assignmentsSetByMe), [assignmentsSetByMe]);
 
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
     const [boardSubject, setBoardSubject] = useState<BoardSubjects>(BoardSubjects.all);
@@ -490,11 +481,17 @@ export const SetAssignments = () => {
         setHashAnchor(hash.includes("#") ? hash.slice(1) : undefined);
     }, [hash]);
 
-    const [modalBoard, setModalBoard] = useState<GameboardDTO>();
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const dispatch = useAppDispatch();
+    const [ unassignBoard ] = useUnassignGameboardMutation();
+
     const openAssignModal = (board: GameboardDTO) => {
-        setModalBoard(board);
-        setIsModalOpen(true);
+        dispatch(openActiveModal(SetAssignmentsModal({
+            board,
+            groups: groups ?? [],
+            assignees: (isDefined(board) && isDefined(board?.id) && groupsByGameboard[board.id]) || [],
+            toggle: () => dispatch(closeActiveModal()),
+            unassignBoard
+        })));
     };
 
     useEffect(() => {
@@ -522,16 +519,7 @@ export const SetAssignments = () => {
         groupsByGameboard, openAssignModal
     };
 
-    return <Container> {/* fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})} */}
-        <SetAssignmentsModal
-            isOpen={isModalOpen}
-            toggle={() => setIsModalOpen(false)}
-            user={user}
-            groups={groups ?? []}
-            board={modalBoard}
-            assignees={(isDefined(modalBoard) && isDefined(modalBoard?.id) && groupsByGameboard[modalBoard.id]) || []}
-        />
-
+    return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
             modalId="help_modal_set_assignments" className={siteSpecific("mb-4", "")} />
         <SidebarLayout>
@@ -552,7 +540,7 @@ export const SetAssignments = () => {
                     Please <Link to="/groups">create a group here first.</Link>
                 </Alert>}
                 {boards && boards.totalResults === 0
-                    ? <h3 className="text-center mt-4 mb-5">
+                    ? <h3 className="text-center mt-4 mb-7">
                         You have no {siteSpecific("question decks", "quizzes")} to assign
                         {siteSpecific(
                             "; use one of the options above to find one.",

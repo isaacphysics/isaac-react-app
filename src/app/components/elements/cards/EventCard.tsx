@@ -40,9 +40,9 @@ export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & Car
             </a>}
         <CardBody className="d-flex flex-column ps-0">
             {title && <CardTitle className="mb-0 pod-title">{title}</CardTitle>}
-            <CardText className="mb-0">
-                {subtitle && <p className="m-0">{subtitle}</p>}
-            </CardText>
+            {subtitle && <CardText className="mb-0">
+                {subtitle}
+            </CardText>}
             <Spacer/>
             <div className="section-divider"/>
             <CardText>

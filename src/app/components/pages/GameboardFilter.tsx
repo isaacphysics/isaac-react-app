@@ -187,7 +187,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
     const deviceSize = useDeviceSize();
     const [filterExpanded, setFilterExpanded] = useState(deviceSize != "xs");
 
-    return <Card id="filter-panel" className="mt-4 px-1 py-3 p-sm-4 pb-5 pb-sm-5">
+    return <Card id="filter-panel" className="mt-4 px-1 py-3 p-sm-4 pb-7 pb-sm-7">
         <Row>
             <Col sm={8} lg={9}>
                 <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
@@ -351,8 +351,8 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics]);
     }
 
-    return <Card id="filter-panel" className="mx-auto mt-4 mb-5">
-        <CardBody className={"px-2 py-3 p-sm-4 pb-5"}>
+    return <Card id="filter-panel" className="mx-auto mt-4 mb-7">
+        <CardBody className={"px-2 py-3 p-sm-4 pb-7"}>
             <Row className={"mb-3"}>
                 <Col>
                     <span>Specify your search criteria and we will generate a random selection of up to 10 questions for your chosen filter(s). Shuffle the questions to get a new random selection.</span>
@@ -635,7 +635,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         "Find physics, maths, chemistry and biology questions by topic and difficulty.",
         "Search for the perfect computer science questions to study. For revision. For homework. For the classroom.");
 
-    return <Container id="gameboard-generator" className="mb-5">
+    return <Container id="gameboard-generator" className="mb-7">
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="help_modal_gameboard_filter"/>
         <MetaDescription description={metaDescription} />
         <CanonicalHrefElement />

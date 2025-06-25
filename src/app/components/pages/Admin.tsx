@@ -4,7 +4,15 @@ import {
 } from "../../state";
 import {Link} from "react-router-dom";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {EDITOR_COMPARE_URL, isAdmin, isAdminOrEventManager, isDefined, isPhy, siteSpecific} from "../../services";
+import {
+    EDITOR_COMPARE_URL,
+    isAdmin,
+    isAdminOrEventManager,
+    isDefined,
+    isPhy,
+    SITE_TITLE_SHORT,
+    siteSpecific
+} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {AnonymisationCheckboxes} from "../elements/AnonymisationCheckboxes";
@@ -38,7 +46,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="admin-page">
         <TitleAndBreadcrumb 
-            currentPageTitle={`${siteSpecific("Isaac", "Ada")} administration`} breadcrumbTitleOverride="Admin tools" 
+            currentPageTitle={`${SITE_TITLE_SHORT} administration`} breadcrumbTitleOverride="Admin tools" 
             icon={{"type": "hex", "icon": "icon-account"}}
         />
 

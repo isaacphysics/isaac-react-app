@@ -48,3 +48,10 @@ div.dashboard.dashboard-outer {
         padding-right: calc(map.get($spacing-container-margins, 3xl) / 1.5);
     }
 }
+
+.modal .container {
+    // modals have their own padding, and containers ought to be full width inside these.
+    // most modals should not have containers in the first place, but some (like question previews) work by
+    // reusing the question page container. in these cases, ignore the above padding.
+    padding: 0;
+}

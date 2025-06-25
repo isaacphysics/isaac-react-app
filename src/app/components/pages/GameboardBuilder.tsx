@@ -292,10 +292,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setSelectedQuestionsStack: setRedoSelectedQuestionsStack
     });
 
-    return <Container id="gameboard-builder" fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
+    return <Container id="gameboard-builder">
         <div ref={sentinel}/>
         <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question Deck", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_gameboard_builder"/>
-        <Card className="p-3 mt-4 mb-5">
+        <Card className="p-3 mt-4 mb-7">
             <CardBody>
                 {submissionAttempted && !allInputIsValid  &&
                     <ExigentAlert color={"warning"}>
@@ -379,13 +379,11 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             </Input>
                         </Col>
                     </Row>}
-                    <div
-                        className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "mt-4 responsive")}>
-                        <Label className={classNames("fw-bold form-required")}
-                            htmlFor="gameboard-builder-questions">Questions</Label>
-                        <p className="d-block input-description mb-2">
-                            You can add up to 10 questions.
-                        </p>
+                    <span className={classNames("fw-bold form-required")}>Questions</span>
+                    <p className="d-block input-description mb-2">
+                        You can add up to 10 questions.
+                    </p>
+                    <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "mt-4 responsive vertical-scroll-shadow")}>
                         <DragDropContext onDragEnd={reorder}>
                             <Droppable droppableId="droppable">
                                 {(providedDrop) => {
@@ -393,7 +391,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                         <Table className={"mb-0"} id={"gameboard-builder-questions"} bordered
                                             innerRef={providedDrop.innerRef}>
                                             <thead>
-                                                <tr>
+                                                <tr className="border-top-0">
                                                     <th className="w-5">{isAda && selectedQuestions.size > 0 && "Remove"}</th>
                                                     <th className={siteSpecific("w-40", "w-30")}>Question title</th>
                                                     <th className={siteSpecific("w-25", "w-20")}>Topic</th>
@@ -502,7 +500,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                         }));
                                     }}
                                 >
-                                    {siteSpecific("Add Questions", "Add questions")}
+                                    Add questions
                                     {siteSpecific(<img src={"/assets/phy/icons/redesign/plus.svg"} height={"12px"}
                                         className={"ms-2"} alt=""/>,
                                     <img className={"plus-icon"}
@@ -518,7 +516,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 type={"submit"}
                             >
                                 {isWaitingForCreateGameboard ?
-                                    <Spinner size={"md"}/> : siteSpecific("Save Question Deck", "Save quiz")}
+                                    <Spinner size={"md"}/> : siteSpecific("Save question deck", "Save quiz")}
                             </Button>
                         </Col>
                     </Row>

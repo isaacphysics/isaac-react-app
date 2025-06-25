@@ -1,7 +1,7 @@
 import React, {ReactNode, useEffect, useRef, useState} from "react";
 import {Button, ButtonGroup, Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
-import {isAda, isDefined, siteSpecific} from "../../services";
+import {isAda, isDefined, isPhy, siteSpecific} from "../../services";
 import classNames from "classnames";
 import {useStatefulElementRef} from "./markup/portals/utils";
 import {useExpandContent} from "./markup/portals/Tables";
@@ -52,7 +52,7 @@ const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab, c
 };
 
 // e.g.:   (Tab 1|Tab 2|Tab 3), i.e. as joined buttons
-const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass="", className}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
     const gliderRef = useRef<HTMLSpanElement>(null);
     const numberOfTabs = Object.keys(children).length;
     const buttonRefs = useRef<(HTMLButtonElement | null)[]>(Array(numberOfTabs).fill(null));
@@ -68,7 +68,7 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsPr
     }
 
     return <div className={"w-100 text-center"}>
-        <ButtonGroup className={"selector-tabs"}>
+        <ButtonGroup className={classNames(className, "selector-tabs")}>
             {Object.keys(children).map((tabTitle, i) =>
                 <Button key={i} innerRef={el => buttonRefs.current[i] = el}
                     color={"secondary"} outline={activeTab !== i + 1}
@@ -83,8 +83,8 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsPr
     </div>;
 };
 
-const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
-    return <div className="mt-3 mb-1">
+const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass="", className}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+    return <div className={classNames(className, "mt-3 mb-1")}>
         {Object.keys(children).map((tabTitle, i) =>
             <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2 mb-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
                 affix: "icon-chevron-down",
@@ -141,22 +141,30 @@ export const Tabs = (props: TabsProps) => {
             {style === "tabs"
                 ? <TabNavbar {...props} className="no-print" activeTab={activeTab} changeTab={changeTab}>{children}</TabNavbar>
                 : style === "buttons"
-                    ? <ButtonNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</ButtonNavbar>
+                    ? <ButtonNavbar {...props} activeTab={activeTab} changeTab={changeTab}>{children}</ButtonNavbar>
                     : style === "dropdowns" 
-                        ? <DropdownNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</DropdownNavbar>
-                        : <CardsNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</CardsNavbar>
+                        ? <DropdownNavbar {...props} className={classNames({"no-print": isPhy}, props.className)} activeTab={activeTab} changeTab={changeTab}>{children}</DropdownNavbar>
+                        : <CardsNavbar  {...props} activeTab={activeTab} changeTab={changeTab}>{children}</CardsNavbar>
             }
             <ExpandableParentContext.Provider value={true}>
                 <TabContent activeTab={activeTab} className={tabContentClass}>
                     {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
                         const tabIndex = mapIndex + 1;
-                        return <>
+                        return <React.Fragment key={tabTitle}>
                             {/* This navbar exists only when printing so each tab has its own heading */}
-                            {style === "tabs" && <TabNavbar {...props} className={classNames("d-none d-print-flex mb-3 mt-2", {"mt-n4": mapIndex === 0 && tabContentClass.includes("pt-4")})} activeTab={tabIndex} changeTab={changeTab}>{children}</TabNavbar>}
+                            {style === "tabs" ?
+                                <TabNavbar {...props} className={classNames("d-none d-print-flex mb-3 mt-2", {"mt-n4": mapIndex === 0 && tabContentClass.includes("pt-4")})} activeTab={tabIndex} changeTab={changeTab}>
+                                    {children}
+                                </TabNavbar> :
+                                style === "dropdowns" && isPhy && 
+                                <DropdownNavbar  {...props} className={classNames("d-none d-print-flex mb-3 mt-2", {"mt-n4": mapIndex === 0 && tabContentClass.includes("pt-4")})} activeTab={tabIndex} changeTab={changeTab}>
+                                    {children}
+                                </DropdownNavbar>
+                            }
                             <TabPane key={tabTitle} tabId={tabIndex}>
                                 {tabBody as ReactNode}
                             </TabPane>
-                        </>;
+                        </React.Fragment>;
                     })}
                 </TabContent>
             </ExpandableParentContext.Provider>

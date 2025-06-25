@@ -4,28 +4,24 @@ import {selectors, useAppSelector} from "../../state";
 import {Col, Container, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
-import {Subject, above, below, usePreviousPageContext, isAda, isPhy, useDeviceSize, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES} from "../../services";
+import {Subject, usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
-import {EditContentButton} from "../elements/EditContentButton";
-import {ShareLink} from "../elements/ShareLink";
-import {PrintButton} from "../elements/PrintButton";
 import {Markup} from "../elements/markup";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
-import {ReportButton} from "../elements/ReportButton";
 import classNames from "classnames";
 import { ConceptSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { TeacherNotes } from "../elements/TeacherNotes";
 import { useGetConceptQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
+import { PageMetadata } from "../elements/PageMetadata";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -40,7 +36,6 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     const conceptQuery = useGetConceptQuery(conceptId);
     const {data: doc, isLoading} = conceptQuery;
     const navigation = useNavigation(doc ?? null);
-    const deviceSize = useDeviceSize();
     
     const userContext = useUserViewingContext();
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
@@ -58,18 +53,6 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
             // all other cases use the default behaviour
         }
     }, [pageContext]);
-
-    const ManageButtons = () => <div className={classNames("no-print d-flex justify-content-end mt-1 ms-2", {"gap-2": isPhy})}>
-        <div className="question-actions">
-            <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
-        </div>
-        <div className="question-actions">
-            <PrintButton />
-        </div>
-        <div className="question-actions">
-            <ReportButton pageId={conceptId}/>
-        </div>
-    </div>;
 
     return <ShowLoadingQuery
         query={conceptQuery}
@@ -95,38 +78,9 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     <SidebarLayout>
                         <ConceptSidebar relatedContent={doc.relatedContent} />
                         <MainContent>
-                            {isPhy && <>
-                                <div className="no-print d-flex align-items-center my-3">
-                                    <div>
-                                        <h2 className="text-theme-dark"><Markup encoding="latex">{doc.title as string}</Markup></h2>
-                                        {doc.subtitle && <h5 className="text-theme-dark">{doc.subtitle}</h5>}
-                                    </div>
-                                    <div className="d-flex gap-2 ms-auto">
-                                        <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
-                                        <PrintButton />
-                                        <ReportButton pageId={conceptId}/>
-                                    </div>
-                                </div>
+                            <PageMetadata doc={doc} />
+                            <UserContextPicker />
 
-                                <div className="section-divider"/>
-
-                                <div className="d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
-                                    <EditContentButton doc={doc} />
-                                    <UserContextPicker />
-                                </div>
-                            </>}
-
-                            {isAda && <>
-                                {below["sm"](deviceSize) && <ManageButtons />}
-
-                                <div className="d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
-                                    <EditContentButton doc={doc} />
-                                    <UserContextPicker />
-                                    {above["md"](deviceSize) && <ManageButtons />}
-                                </div>
-                            </>}
-
-                            <TeacherNotes notes={doc.teacherNotes} />
 
                             <Row className="concept-content-container">
                                 <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>

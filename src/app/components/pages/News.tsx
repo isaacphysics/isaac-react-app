@@ -51,7 +51,7 @@ export const News = () => {
                                 {isPhy && above["md"](deviceSize) && <div className="section-divider"/>}
                             </Col>)}
                         </Row>
-                        <div className="w-100 d-flex justify-content-center mb-5">
+                        <div className="w-100 d-flex justify-content-center mb-7">
                             <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load older news</Button>
                         </div>
                     </>

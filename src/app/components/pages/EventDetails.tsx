@@ -51,16 +51,13 @@ import {Link} from "react-router-dom";
 import {EventBookingForm} from "../elements/EventBookingForm";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
-import {EditContentButton} from "../elements/EditContentButton";
 import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
 import * as L from "leaflet";
 import {teacherEventConfirmationModal} from "../elements/modals/TeacherEventConfirmationModal";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import { PrintButton } from "../elements/PrintButton";
-import { ReportButton } from "../elements/ReportButton";
-import { ShareLink } from "../elements/ShareLink";
-import { TeacherNotes } from "../elements/TeacherNotes";
+import { PageMetadata } from "../elements/PageMetadata";
+import { MetadataContainer } from "../elements/panels/MetadataContainer";
 
 function formatDate(date: Date | number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -174,7 +171,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             const firstColumnWidths = siteSpecific("col-4 col-sm-3 col-md-2", "col-4 col-xl-3");
 
             const KeyEventInfo = () => {
-                return <div className="event-key-info">
+                return <div className="event-key-info px-4">
                     <Row>
                         <Col className={firstColumnWidths}>When:</Col>
                         <Col>
@@ -274,7 +271,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                             <Input
                                                 type="submit"
                                                 value={formatBookingModalConfirmMessage(event, canMakeABooking)}
-                                                className="w-25 btn btn-solid border-0"
+                                                className="w-fit-content btn btn-solid border-0"
                                             />
                                         </div>
                                     </div>
@@ -381,47 +378,33 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                         breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
                     />
                 }
-                <EditContentButton doc={event}/>
+                <PageMetadata 
+                    doc={event}
+                    badges={<>
+                        <Badge color="primary" className="fs-6 rounded-pill">
+                            {isTeacherEvent ? "Teacher event" : "Student event"}
+                        </Badge>
+                        <Badge className="fs-6 rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>
+                            EXPIRED
+                        </Badge>
+                    </>}
+                >
+                    <MetadataContainer>
+                        <KeyEventInfo/>
+                    </MetadataContainer>
+                </PageMetadata>
                 <div className={siteSpecific("", "mt-4 pt-2 card")}>
                     <div className={siteSpecific("", "card-body")}>
-                        {isPhy && <div className="w-100 d-flex mb-4">
-                            <div className="mt-2 me-4">
-                                {isTeacherEvent &&
-                                    <span className={"event-type-hex"}>
-                                        <b>TEACHER EVENT</b>
-                                        <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
-                                    </span>}
-                                {isStudentEvent &&
-                                    <span className={"event-type-hex"}>
-                                        <b>STUDENT EVENT</b>
-                                        <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
-                                    </span>}
-                            </div>
-                            <div>
-                                <h3 className="event-title">{event.title}</h3>
-                                {hasExpired &&
-                                    <span className="event-pod-badge me-2">
-                                        <Badge className="badge rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>EXPIRED</Badge>
-                                    </span>}
-                                <span className="event-subtitle">{event.subtitle}</span>
-                            </div>
-                            <div className="d-flex flex-nowrap ms-auto">
-                                <ShareLink linkUrl={`/events/${eventId}`} clickAwayClose />
-                                <PrintButton/>
-                                <ReportButton pageId={eventId}/> 
-                            </div>
-                        </div>}
                         <Row> 
                             {isAda && <Col lg={4}>
                                 <ImageAndMap/>
                             </Col>}
                             <Col>
-                                <Row className="mb-3">
+                                {/* <Row className="mb-3">
                                     <Col className="event-bg-grey event-key-info">
-                                        <KeyEventInfo/>
+                                        
                                     </Col>
-                                </Row>
-                                <TeacherNotes notes={event.teacherNotes} />
+                                </Row> */}
                                 <Row>
                                     <Col size={5} lg={8} xxl={9}>
                                         <IsaacContent doc={event}/>

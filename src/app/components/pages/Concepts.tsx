@@ -17,6 +17,7 @@ import { ContentSummaryDTO, Stage } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { AffixButton } from "../elements/AffixButton";
 import classNames from "classnames";
+import { PageMetadata } from "../elements/PageMetadata";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
@@ -139,14 +140,19 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             />
             <SidebarLayout>
                 {pageContext?.subject 
-                    ? <SubjectSpecificConceptListSidebar {...sidebarProps} optionBar={BrowseAllButton}/> 
-                    : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts}/>
+                    ? <SubjectSpecificConceptListSidebar {...sidebarProps} optionBar={BrowseAllButton} hideButton /> 
+                    : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>
                 }
                 <MainContent>
-                    {pageContext?.subject && <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
-                        <p className="me-0 me-lg-3">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                        {above["lg"](deviceSize) && BrowseAllButton}
-                    </div>}
+                    <PageMetadata noTitle showSidebarButton>
+                        {pageContext?.subject 
+                            ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
+                                <p className="me-0 me-lg-3">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                                {above["lg"](deviceSize) && BrowseAllButton}
+                            </div> 
+                            : <p>Use our concept finder to explore all concepts on the Isaac platform.</p>
+                        }
+                    </PageMetadata>
                     {isPhy && <div className="list-results-container p-2 my-4">
                         <ShowLoadingQuery
                             query={listConceptsQuery}
@@ -160,7 +166,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                                     </div>}
             
                                     {shortcutAndFilteredSearchResults.length
-                                        ? <ListView items={shortcutAndFilteredSearchResults}/>
+                                        ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
                                         : <em>No results found</em>
                                     }
                                 </>;

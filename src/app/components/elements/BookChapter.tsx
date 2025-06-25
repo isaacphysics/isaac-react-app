@@ -25,7 +25,7 @@ export const BookChapter = ({chapterId, chapterTitle, chapterSubHeading, chapter
         }));
     }
 
-    return <div className="px-2 px-md-5">
+    return <div className="px-2 px-md-7">
         <button onClick={() => bookChapterLoad()} className="btn book-chapter">
             <span className="icon-stack">
                 <svg className="book-contents-icon" viewBox="0 0 11.7 13.5">

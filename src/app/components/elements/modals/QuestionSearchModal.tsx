@@ -70,7 +70,7 @@ export const QuestionSearchModal = (
     const deviceSize = useDeviceSize();
     const sublistDelimiter = " >>> ";
 
-    const [topicSelections, setTopicSelections] = useState<ChoiceTree[]>([]); 
+    const [topicSelections, setTopicSelections] = useState<ChoiceTree[]>([]);
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
     const [searchQuestionName, setSearchQuestionName] = useState("");
     const [searchStages, setSearchStages] = useState<STAGE[]>([]);
@@ -122,6 +122,7 @@ export const QuestionSearchModal = (
             setIsSearching(true);
 
             dispatch(searchQuestions({
+                querySource: "gameboardBuilder",
                 searchString: searchString || undefined,
                 tags: tags || undefined,
                 stages: stages.join(",") || undefined,
@@ -177,7 +178,7 @@ export const QuestionSearchModal = (
         <div>
             <Input
                 type="button"
-                value={siteSpecific("Add Selections to Question Deck", "Add selections to quiz")}
+                value={siteSpecific("Add selections to question deck", "Add selections to quiz")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
                 className={classNames("btn w-100 h-100", siteSpecific("btn-keyline", "btn-solid border-0"))}
                 onClick={() => {
@@ -207,16 +208,18 @@ export const QuestionSearchModal = (
                     {isAda && <CollapsibleList title={<span className="ms-n3">Topic</span>} expanded={listState.topics.state} className="mb-3"
                         toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}>
                         {groupBaseTagOptions.map((tag, index) => (
-                            <CollapsibleList title={tag.label} key={index} asSubList
-                                expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
-                                toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}>
-                                {tag.options.map((topic, index) => (
-                                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
-                                        <StyledCheckbox color="primary" checked={searchTopics.includes(topic.value)}
-                                            onChange={() => setSearchTopics(s => s.includes(topic.value) ? s.filter(v => v !== topic.value) : [...s, topic.value])}
-                                            label={<span>{topic.label}</span>} className="ps-3"/>
-                                    </div>))}
-                            </CollapsibleList>))}
+                            <li key={index} style={{listStyle: "none"}}>
+                                <CollapsibleList title={tag.label} asSubList
+                                    expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
+                                    toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}>
+                                    {tag.options.map((topic, index) => (
+                                        <li className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} style={{listStyle: "none"}} key={index}>
+                                            <StyledCheckbox color="primary" checked={searchTopics.includes(topic.value)}
+                                                onChange={() => setSearchTopics(s => s.includes(topic.value) ? s.filter(v => v !== topic.value) : [...s, topic.value])}
+                                                label={<span>{topic.label}</span>} className="ps-3"/>
+                                        </li>))}
+                                </CollapsibleList>
+                            </li>))}
                     </CollapsibleList>}
                     {isPhy && <div className="mb-2">
                         <Label htmlFor="question-search-book">Book</Label>
@@ -303,7 +306,7 @@ export const QuestionSearchModal = (
                     <tbody>
                         {isSearching ? <tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr> : sortedQuestions?.map(question =>
                             <GameboardBuilderRow
-                                key={`question-search-modal-row-${question.id}`} 
+                                key={`question-search-modal-row-${question.id}`}
                                 question={question}
                                 currentQuestions={modalQuestions}
                                 undoStack={undoStack}

@@ -24,7 +24,8 @@ div:has(> .featured-profile:first-child:nth-last-child(2)) {
   @extend .row-cols-sm-2;
 
   .featured-profile {
-    @extend .isaac-tab;
+    background-color: $color-neutral-white;
+    box-shadow: 0 2px 30px 0 $shadow-08;
 
     width: 47.5%;
     @include media-breakpoint-down(sm) {
@@ -34,7 +35,6 @@ div:has(> .featured-profile:first-child:nth-last-child(2)) {
     margin-top: 0%;
     margin-right: 0%;
     padding: 2.5%;
-    overflow-x: hidden;
 
     .profile-description {
       padding: 1rem 0;

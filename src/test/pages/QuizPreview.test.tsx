@@ -16,7 +16,7 @@ describe("QuizPreview", () => {
         it('shows quiz title on the breadcrumbs', async () => {
             await teacherPreviewsQuiz();
             siteSpecific(
-                () => expectPhyBreadCrumbs({href: "/set_tests", text: "Set / Manage tests"}),
+                () => expectPhyBreadCrumbs({href: "/set_tests", text: "Set / manage tests"}),
                 () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/set_tests", text: "Set tests"}, `${preview.title} Preview`])
             )();
         });

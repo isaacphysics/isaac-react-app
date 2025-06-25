@@ -81,7 +81,7 @@ const ControlledCarouselInstance = (props: ControlledCarouselInstanceProps) => {
     return (
         <div ref={carouselContainer}>
             <Carousel
-                activeIndex={activeIndex} className="pb-5" interval={false} keyboard={false}
+                activeIndex={activeIndex} className="pb-7" interval={false} keyboard={false}
                 previous={previous} previousLabel="Previous" next={next} nextLabel="Next"
             >
                 <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />

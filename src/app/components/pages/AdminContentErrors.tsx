@@ -7,6 +7,20 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
+const sortBySourcePath = (error1: ContentErrorItem, error2: ContentErrorItem) => {
+    const path1 = error1.partialContent?.canonicalSourceFile;
+    const path2 = error2.partialContent?.canonicalSourceFile;
+    if (path1 === path2) {
+        return 0;
+    } else if (!path1) {
+        return -1;
+    } else if (!path2) {
+        return 1;
+    } else {
+        return path1 < path2 ? -1: 1;
+    }
+};
+
 const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number) => {
     return <li key={index}>{errorDetailsListItem}</li>;
 };
@@ -14,9 +28,8 @@ const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number
 const ContentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
     return <tr key={index}>
         <td className="text-break">
-            {/* eslint-disable-next-line react/jsx-no-target-blank */}
             <a href={EDITOR_URL + errorRecord.partialContent.canonicalSourceFile} title={`Content ID: ${errorRecord.partialContent.id}`} target="_blank" rel="noopener">
-                {errorRecord.partialContent.title || errorRecord.partialContent.id}
+                {errorRecord.partialContent.canonicalSourceFile || errorRecord.partialContent.id}
             </a>
         </td>
         <td>{(!!errorRecord.partialContent.published).toString()}</td>{/*The published key may be missing, also meaning false*/}
@@ -34,6 +47,11 @@ enum PUBLISHED_FILTER {
     UNPUBLISHED = "Unpublished"
 }
 
+enum CRITICAL_FILTER {
+    CRITICAL = "Critical",
+    NON_CRITICAL = "Other error"
+}
+
 export const AdminContentErrors = () => {
     const errorsQuery = useGetContentErrorsQuery();
 
@@ -41,11 +59,12 @@ export const AdminContentErrors = () => {
     const errorReducer = (show: boolean, errorStr: string) => show || matchesAllWordsInAnyOrder(errorStr, errorFilter);
 
     const [publishedFilter, setPublishedFilter] = useState<PUBLISHED_FILTER[]>([PUBLISHED_FILTER.PUBLISHED, PUBLISHED_FILTER.UNPUBLISHED]);
+    const [criticalFilter, setCriticalFilter] = useState<CRITICAL_FILTER[]>([CRITICAL_FILTER.CRITICAL, CRITICAL_FILTER.NON_CRITICAL]);
 
     return <Container>
         <Row>
             <Col>
-                <TitleAndBreadcrumb 
+                <TitleAndBreadcrumb
                     currentPageTitle="Content errors"
                     icon={{type: "hex", icon: "icon-tests"}}
                 />
@@ -58,13 +77,13 @@ export const AdminContentErrors = () => {
                 return <div>
                     <Row>
                         <Col>
+                            <p className="mt-2">
+                                <strong>Content Version:</strong> {errors.currentLiveVersion}
+                            </p>
                             <p>
                                 <strong>Critical errors:</strong> {errors.failedFiles},&nbsp;
                                 <strong>Files with errors:</strong> {errors.brokenFiles},&nbsp;
                                 <strong>Total errors:</strong> {errors.totalErrors}
-                            </p>
-                            <p>
-                                <strong>Content Version:</strong> {errors.currentLiveVersion}
                             </p>
                         </Col>
                     </Row>
@@ -75,7 +94,21 @@ export const AdminContentErrors = () => {
                             </Label>
                             <Input id="error-message-filter" type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error message"/>
                         </Col>
-                        <Col lg={6} className="mb-2">
+                        <Col lg={3} className="mb-2">
+                            <Label htmlFor="critical-filter-select">Filter by severity</Label>
+                            <StyledSelect
+                                inputId="critical-filter-select"
+                                isMulti
+                                placeholder="None"
+                                value={criticalFilter.map(x => ({value: x, label: x}))}
+                                options={[
+                                    {value: CRITICAL_FILTER.CRITICAL, label: CRITICAL_FILTER.CRITICAL},
+                                    {value: CRITICAL_FILTER.NON_CRITICAL, label: CRITICAL_FILTER.NON_CRITICAL}
+                                ]}
+                                onChange={selectOnChange(setCriticalFilter, true)}
+                            />
+                        </Col>
+                        <Col lg={3} className="mb-2">
                             <Label htmlFor="published-filter-select">Filter by published status</Label>
                             <StyledSelect
                                 inputId="published-filter-select"
@@ -93,18 +126,29 @@ export const AdminContentErrors = () => {
                     <Row>
                         <Col>
                             <Table responsive bordered>
+                                <colgroup>
+                                    <col style={{minWidth: "20ex"}} />
+                                </colgroup>
                                 <tbody>
                                     <tr>
-                                        <th>Title / Filename</th>
+                                        <th>File</th>
                                         <th title="Is this file published?">Published</th>
                                         <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
                                         <th>List of Error Messages</th>
                                     </tr>
                                     {errors.errorsList
                                         .filter((error) => error.listOfErrors.reduce(errorReducer, false))
-                                        .filter((error) =>
-                                            (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED))
-                                        || (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)) )
+                                        .filter(
+                                            (error) =>
+                                                (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
+                                                (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)),
+                                        )
+                                        .filter(
+                                            (error) =>
+                                                (error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.NON_CRITICAL)) ||
+                                                (!error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.CRITICAL)),
+                                        )
+                                        .sort(sortBySourcePath)
                                         .map(ContentErrorRow)
                                     }
                                 </tbody>

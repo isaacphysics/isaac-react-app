@@ -81,7 +81,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
             <Col sm={isSetAssignments ? 4 : 12} md={4} className="d-flex flex-column justify-content-between">
                 <div className={classNames("d-flex flex-wrap justify-content-center justify-content-sm-end", 
-                    {"justify-content-lg-center justify-content-xl-end column-gap-5 column-gap-md-4": !isSetAssignments},
+                    {"justify-content-lg-center justify-content-xl-end column-gap-7 column-gap-md-4": !isSetAssignments},
                 )}>
                     {!isSetAssignments 
                         ? <>
@@ -133,8 +133,8 @@ export const GameboardCard = (props: GameboardCardProps) => {
                     </p>}
                 </Col>
                 <Col xs={12} md={4} className="mt-sm-2">
-                    {boardStagesAndDifficulties.length > 0 && <p className="mb-0">
-                        <table className="w-100">
+                    {boardStagesAndDifficulties.length > 0 &&
+                        <table className="w-100 mb-0">
                             <thead>
                                 <tr>
                                     <th className="w-50">
@@ -156,7 +156,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                                 </tr>)}
                             </tbody>
                         </table>
-                    </p>}
+                    }
                 </Col>
             </Row>
         </Collapse>

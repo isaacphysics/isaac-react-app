@@ -3,12 +3,14 @@ import React, { HTMLAttributes, ReactNode } from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Button, Col, ListGroupItem, ListGroupItemProps } from "reactstrap";
-import { CompletionState } from "../../../../IsaacApiTypes";
-import { below, isPhy, siteSpecific, Subject, useDeviceSize } from "../../../services";
+import { Badge, Button, Col, ListGroupItem } from "reactstrap";
+import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
+import { below, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
+import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetGroupsQuery, useLazyGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
+import { getAssigneesByBoard, SetAssignmentsModal } from "../../pages/SetAssignments";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -45,6 +47,16 @@ const StatusDisplay = (props: StatusDisplayProps) => {
     }
 };
 
+interface ItemCountProps extends React.HTMLAttributes<HTMLSpanElement> {
+    count: number;
+}
+
+const ItemCount = ({count, ...rest}: ItemCountProps) => {
+    return <Badge color="theme" {...rest} className={classNames("list-view-status-indicator count-tag", rest.className)}>
+        {count < 100 ? count : "99+"}
+    </Badge>;
+};
+
 export interface ListViewTagProps extends HTMLAttributes<HTMLElement> {
     tag: string;
     url?: string;
@@ -76,40 +88,91 @@ const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUr
     </span>;
 };
 
+const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
+    const dispatch = useAppDispatch();
+    const [ getGroups ] = useLazyGetGroupsQuery();
+    const [ getAssignments ] = useLazyGetMySetAssignmentsQuery();
+    const [ unassignBoard ] = useUnassignGameboardMutation();
+
+    return <Button color="solid" 
+        onClick={async (e) => {
+            e.stopPropagation();
+            const {data: groups} = await getGroups(false, true);
+            const {data: assignmentsSetByMe} = await getAssignments(undefined, true);
+            const groupsByGameboard = getAssigneesByBoard(assignmentsSetByMe);
+            
+            dispatch(openActiveModal(SetAssignmentsModal({
+                board,
+                groups: groups ?? [],
+                assignees: (isDefined(board) && isDefined(board?.id) && groupsByGameboard[board.id]) || [],
+                toggle: () => dispatch(closeActiveModal()),
+                unassignBoard
+            })));
+        }}
+    >
+        Assign
+    </Button>;
+};
+
 export enum AbstractListViewItemState {
     COMING_SOON = "coming-soon",
     DISABLED = "disabled",
 }
 
-export interface AbstractListViewItemProps extends ListGroupItemProps {
+type ALVIType = {
+    // most ALVIs, represents plain lists with optional difficulties; questions, concepts, books, etc.
+    alviType: "item";
+    supersededBy?: string;
+    audienceViews?: ViewingContext[];
+    status?: CompletionState;
+    quizTag?: string; // this is for quick quizzes only, which are currently just gameboards; may change in future
+} | {
+    // quizzes – have exclusive "preview" and "view test" buttons
+    alviType: "quiz";
+    previewQuizUrl?: string;
+    quizButton?: JSX.Element;
+    audienceViews?: ViewingContext[];
+    status?: CompletionState;
+} | {
+    // gameboards – have exclusive "assign" buttons
+    alviType: "gameboard";
+    board?: GameboardDTO;
+};
+
+type ALVILayout = {
+    alviLayout: "card"
+    linkTags?: ListViewTagProps[];
+} | {
+    alviLayout: "list";
+};
+
+export type AbstractListViewItemProps = {
     title?: string;
     icon?: TitleIconProps;
     subject?: Subject;
     subtitle?: string;
     breadcrumb?: string[];
-    status?: CompletionState;
     tags?: string[];
-    supersededBy?: string;
-    linkTags?: ListViewTagProps[];
-    quizTag?: string;
-    url?: string;
-    audienceViews?: ViewingContext[];
-    previewQuizUrl?: string;
-    quizButton?: JSX.Element;
-    isCard?: boolean;
     fullWidth?: boolean;
+    url?: string;
     state?: AbstractListViewItemState;
-}
+    className?: string;
+} & ALVIType & ALVILayout;
 
-export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, supersededBy, linkTags, quizTag, url, audienceViews, previewQuizUrl, quizButton, isCard, fullWidth, state, ...rest}: AbstractListViewItemProps) => { 
+export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, fullWidth, url, state, className, ...typedProps}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
-    const isQuiz: boolean = !!(previewQuizUrl || quizButton);
+    const user = useAppSelector(selectors.user.orNull);
+
+    const isItem = typedProps.alviType === "item";
+    const isGameboard = typedProps.alviType === "gameboard";
+    const isQuiz = typedProps.alviType === "quiz";
+    const isCard = typedProps.alviLayout === "card";
     const isDisabled = state && [AbstractListViewItemState.COMING_SOON, AbstractListViewItemState.DISABLED].includes(state);
     
-    fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewQuizUrl || quizButton) ? false : true);
+    fullWidth = fullWidth || below["sm"](deviceSize) || (isItem && !(typedProps.status || typedProps.audienceViews));
     const cardBody =
     <div className="w-100 d-flex flex-row">
-        <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !linkTags?.length})}>
+        <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
             <div className="position-relative">
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
@@ -117,24 +180,34 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                             : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/> 
                                 : undefined
                 )}
-                {status && status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
-                    <StatusDisplay status={status} showText={false} />
+                {isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
+                    <StatusDisplay status={typedProps.status} showText={false} />
                 </div>}
+                {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
             </div>
             <div className="align-content-center text-overflow-ellipsis pe-2">
                 <div className="d-flex text-wrap">
-                    <span className={classNames("link-title", {"question-link-title": isPhy || !isQuiz})}><Markup encoding="latex">{title}</Markup></span>
-                    {quizTag && <span className="quiz-level-1-tag ms-sm-2">{quizTag}</span>}
-                    {isPhy && <div className="d-flex flex-column justify-self-end">
-                        {supersededBy && <a 
-                            className="superseded-tag mx-1 ms-sm-3 align-self-end" 
-                            href={`/questions/${supersededBy}`}
-                            onClick={(e) => e.stopPropagation()}
-                        >SUPERSEDED</a>}
-                        {tags?.includes("nofilter") && <span
-                            className="superseded-tag mx-1 ms-sm-3 align-self-end" 
-                        >NO-FILTER</span>}
-                    </div>}
+                    {url && !isDisabled
+                        ? <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                            <Markup encoding="latex">{title}</Markup>
+                        </Link>
+                        : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                            <Markup encoding="latex">{title}</Markup>
+                        </span>
+                    }
+                    {isItem && <>
+                        {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
+                        {isPhy && <div className="d-flex flex-column justify-self-end">
+                            {typedProps.supersededBy && <a 
+                                className="superseded-tag mx-1 ms-sm-3 align-self-end" 
+                                href={`/questions/${typedProps.supersededBy}`}
+                                onClick={(e) => e.stopPropagation()}
+                            >SUPERSEDED</a>}
+                            {tags?.includes("nofilter") && <span
+                                className="superseded-tag mx-1 ms-sm-3 align-self-end" 
+                            >NO-FILTER</span>}
+                        </div>}
+                    </>}
                 </div>
                 {subtitle && <div className="small text-muted text-wrap">
                     <Markup encoding="latex">{subtitle}</Markup>
@@ -142,41 +215,43 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {breadcrumb && <span className="hierarchy-tags d-flex flex-wrap mw-auto">
                     <Breadcrumb breadcrumb={breadcrumb}/>
                 </span>}
-                {audienceViews && fullWidth && <div className="d-flex mt-1"> 
-                    <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack/> 
+                {isItem && fullWidth && typedProps.audienceViews && <div className="d-flex mt-1"> 
+                    <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
                 </div>}
-                {status && status !== CompletionState.ALL_CORRECT && fullWidth &&
-                    <StatusDisplay status={status} showText className="py-1" />
+                {isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
+                    <StatusDisplay status={typedProps.status} showText className="py-1" />
                 }
-                {linkTags && <div className="d-flex py-3 flex-wrap">
-                    <LinkTags linkTags={linkTags}/>
+                {isGameboard && fullWidth && isTeacherOrAbove(user) && <div className="d-flex pt-3">
+                    <GameboardAssign board={typedProps.board} />
+                </div>}
+                {isCard && typedProps.linkTags && <div className="d-flex py-3 flex-wrap">
+                    <LinkTags linkTags={typedProps.linkTags}/>
                 </div>}
                 {isQuiz && fullWidth && <div className="d-flex d-md-none align-items-center">
-                    <QuizLinks previewQuizUrl={previewQuizUrl} quizButton={quizButton}/>
+                    <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/>
                 </div>}
             </div>
         </Col>
         {!fullWidth &&
             <>
-                {status && status !== CompletionState.ALL_CORRECT && <StatusDisplay status={status} showText className="ms-2 me-3" />}
-                {audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": audienceViews.length > 0})}>
-                    <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack className="w-100"/> 
+                {isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
+                {isItem && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": typedProps.audienceViews.length > 0})}>
+                    <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className="w-100"/> 
                 </div>}
+                {isGameboard && isTeacherOrAbove(user) && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
+                    <GameboardAssign board={typedProps.board} />
+                </Col>}
                 {isQuiz && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
-                    <QuizLinks previewQuizUrl={previewQuizUrl} quizButton={quizButton}/> 
+                    <QuizLinks previewQuizUrl={typedProps.previewQuizUrl} quizButton={typedProps.quizButton}/> 
                 </Col>}
             </>
         }
     </div>;
 
-    return <ListGroupItem 
-        {...rest} 
-        className={classNames("content-summary-item", {"correct": status === CompletionState.ALL_CORRECT}, rest.className, state)} 
+    return <ListGroupItem
+        className={classNames("content-summary-item", {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT}, className, state)} 
         data-bs-theme={subject && !isDisabled ? subject : "neutral"}
     >
-        {url && !isDisabled
-            ? <Link to={url} className="w-100 h-100 align-items-start"> {cardBody} </Link> 
-            : cardBody
-        }
+        {cardBody}
     </ListGroupItem>;
 };

@@ -8,7 +8,7 @@ const hasPageGroupSpecificScroll = (prevPathname: string, pathname: string, redu
     const pathnameParts = pathname.split("/");
 
     // books
-    if (prevPathnameParts[1] === "books" && pathnameParts[1] === "books" && prevPathnameParts[2] === pathnameParts[2]) {
+    if (prevPathnameParts[1] === "books" && pathnameParts[1] === "books" && pathnameParts[2] && prevPathnameParts[2] === pathnameParts[2]) {
         if (reducedMotion) return true;
 
         const pageTitle = document.querySelector("#page-title");

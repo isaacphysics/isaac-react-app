@@ -15,7 +15,7 @@ import {
     groupsApi,
 } from "../../../state";
 import sortBy from "lodash/sortBy";
-import {history, isAda, isDefined, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
+import {history, isAda, isDefined, isTeacherOrAbove, PATHS, SITE_TITLE_SHORT, siteSpecific} from "../../../services";
 import {Row, Col, Form, Input, Table, Alert, Label} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
@@ -70,14 +70,14 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
             query={tokenQuery}
             defaultErrorTitle={"Error fetching group joining token"}
             thenRender={token => <>
-                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-5"))}>
+                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-7"))}>
                     <span className={siteSpecific("h4", "h2 font-size-1-5")}>Option 1: Share link</span>
                     <p>Share the following link with your students to have them join your group:</p>
                     <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1" data-testid={"share-link"}>
                         {location.origin}/account?authToken={token?.token}
                     </span>
                 </div>
-                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-5"))}>
+                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-7"))}>
                     <span className={siteSpecific("h4", "h2 font-size-1-5")}>Option 2: Share code</span>
                     <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
                     <span className={classNames("text-center user-select-all d-block border bg-light p-1", siteSpecific("h4", "h3"))} data-testid={"share-code"}>{token?.token}</span>
@@ -302,7 +302,7 @@ Are you sure you want to promote this manager to group owner?\n
 
         {userIsOwner && <>
             <h4 className="mt-3">Add additional managers</h4>
-            <p>Enter the email of another {siteSpecific("Isaac", "Ada")} teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
+            <p>Enter the email of another {SITE_TITLE_SHORT} teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
             <Form onSubmit={addManager}>
                 <Input type="text" value={newManagerEmail} placeholder="Enter email address here" onChange={event => setNewManagerEmail(event.target.value)}/>
                 <ShowLoadingQuery

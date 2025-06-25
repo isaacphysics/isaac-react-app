@@ -4,11 +4,13 @@ import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { useUrlPageTheme } from "../../services/pageContext";
 import { above, HUMAN_SUBJECTS, isDefined, LEARNING_STAGE, LearningStage, PHY_NAV_SUBJECTS, SEARCH_RESULT_TYPE, Subject, useDeviceSize } from "../../services";
-import { PageContextState, ShortcutResponse } from "../../../IsaacAppTypes";
-import { ListView, ListViewCardProps, ListViewCards } from "../elements/list-groups/ListView";
+import { PageContextState } from "../../../IsaacAppTypes";
+import { convertToALVIGameboard, ListView, ListViewCardProps, ListViewCards } from "../elements/list-groups/ListView";
 import { LandingPageFooter } from "./SubjectLandingPage";
 import { DifficultyIcon } from "../elements/svg/DifficultyIcons";
 import { AbstractListViewItemState } from "../elements/list-groups/AbstractListViewItem";
+import { GameboardDTO } from "../../../IsaacApiTypes";
+import { PageMetadata } from "../elements/PageMetadata";
 
 const SubjectCards = ({context}: { context: PageContextState }) => {
     const deviceSize = useDeviceSize();
@@ -19,10 +21,8 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
 
     const cards: (ListViewCardProps | null)[] = [
         {
-            item: {
-                title: "11-14",
-                subtitle: `Our 11-14 ${humanSubject} resources introduce secondary ${humanSubject} concepts to students and build their numeracy skills through questions and a selection of experiments.`
-            },
+            title: "11-14",
+            subtitle: `Our 11-14 ${humanSubject} resources introduce secondary ${humanSubject} concepts to students and build their numeracy skills through questions and a selection of experiments.`,
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
@@ -32,10 +32,8 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             subject: context.subject,
         },
         {
-            item: {
-                title: "GCSE",
-                subtitle: `Our GCSE ${humanSubject} resources develop the ${humanSubject} knowledge needed at GCSE through the use of questions, concepts and books.`
-            },
+            title: "GCSE",
+            subtitle: `Our GCSE ${humanSubject} resources develop the ${humanSubject} knowledge needed at GCSE through the use of questions, concepts and books.`,
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
@@ -46,10 +44,8 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             state: context.subject === "biology" ? AbstractListViewItemState.COMING_SOON : undefined,
         },
         {
-            item: {
-                title: "A Level",
-                subtitle: `Our A Level ${humanSubject} resources further strengthen the understanding of ${humanSubject}, while developing problem solving skills. Our resources include questions, concepts and books.`
-            },
+            title: "A Level",
+            subtitle: `Our A Level ${humanSubject} resources further strengthen the understanding of ${humanSubject}, while developing problem solving skills. Our resources include questions, concepts and books.`,
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
@@ -59,10 +55,8 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
             subject: context.subject,
         },
         {
-            item: {
-                title: "University",
-                subtitle: `Our University ${humanSubject} resources help you prepare for your university STEM degree.`
-            },
+            title: "University",
+            subtitle: `Our University ${humanSubject} resources help you prepare for your university STEM degree.`,
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
@@ -80,30 +74,26 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
 };
 
 const ExampleQuestions = ({ subject, className }: { subject: Subject, className: string }) => {
-    const items: { [key in Subject]: ShortcutResponse[] } = {
+    const items: { [key in Subject]: GameboardDTO[] } = {
         maths: [{
             title: "Sample Maths Questions",
-            type: SEARCH_RESULT_TYPE.GAMEBOARD,
             id: "sample_maths_questions",
         }],
         physics: [/*{
             title: "Sample Physics Questions",
-            type: SEARCH_RESULT_TYPE.GAMEBOARD,
             id: "sample_phy_questions",
         }*/], // Uncomment when physics questions are available
         chemistry: [{
             title: "Sample Chemistry Questions",
-            type: SEARCH_RESULT_TYPE.GAMEBOARD,
             id: "sample_chem_questions",
         }],
         biology: [{
             title: "Sample Biology Questions",
-            type: SEARCH_RESULT_TYPE.GAMEBOARD,
             id: "sample_bio_questions",
         }],
     };
 
-    return items[subject].length > 0 ? <ListView className={className} items={items[subject]} /> : null;
+    return items[subject].length > 0 ? <ListView className={className} type="gameboard" items={items[subject].map(convertToALVIGameboard)} /> : null;
 };
 
 export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
@@ -122,8 +112,8 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
                 icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`
             } : undefined}
         />
-        {humanSubject && <div className="mt-5">
-            <h4>Introducing Isaac {humanSubject}</h4>
+        {humanSubject && <div className="mt-7">
+            <PageMetadata title={`Introducing Isaac ${humanSubject}`} />
             <p>
                 Welcome to Isaac {humanSubject}, part of <a href="/">Isaac Science</a>! 
                 The place to learn maths and science by solving problems. 

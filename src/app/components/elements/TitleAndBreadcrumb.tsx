@@ -28,7 +28,7 @@ const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionT
         ...intermediateCrumbs
     ]);
 
-    return !!breadcrumbHistory.length && <Breadcrumb className={classNames("mb-3 mb-md-0 bread", siteSpecific("container-override py-2", "px-md-0 py-md-2"))}>
+    return !!breadcrumbHistory.length && <Breadcrumb className={classNames("bread", siteSpecific("container-override py-2", "mb-3 mb-md-0 px-md-0 py-md-2"))}>
         {breadcrumbHistory.map((breadcrumb) => formatBreadcrumbHistoryItem(breadcrumb, disallowLaTeX))}
         {isAda && formatBreadcrumbItem(currentPageTitle, disallowLaTeX)}
     </Breadcrumb>;
@@ -40,7 +40,7 @@ export const formatBreadcrumbHistoryItem = (breadcrumb: LinkInfo, disallowLaTeX?
     const titleElement = formatBreadcrumbItemTitle(breadcrumb.title, disallowLaTeX);
 
     return <BreadcrumbItem key={breadcrumb.title}>
-        {breadcrumb.to ? <Link to={breadcrumb.to} replace={breadcrumb.replace}>{titleElement}</Link> : titleElement}
+        {breadcrumb.to ? <Link to={breadcrumb.to} replace={breadcrumb.replace} className="breadcrumb-link">{titleElement}</Link> : titleElement}
     </BreadcrumbItem>;
 };
 
@@ -54,8 +54,8 @@ type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
     breadcrumbTitleOverride?: string;
     children?: ReactElement | boolean;
 };
-export const TitleAndBreadcrumb = ({modalId, children, breadcrumbTitleOverride, currentPageTitle, displayTitleOverride, subTitle, description, disallowLaTeX, className, audienceViews, help, collectionType, intermediateCrumbs, preview, icon}: TitleAndBreadcrumbProps) => {
-    return <div id="page-title" className={classNames(className, {"title-breadcrumb-container": isPhy, "pt-4 pt-md-5": isAda})}>
+export const TitleAndBreadcrumb = ({modalId, children, breadcrumbTitleOverride, currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, className, audienceViews, help, collectionType, intermediateCrumbs, preview, icon}: TitleAndBreadcrumbProps) => {
+    return <div id="page-title" className={classNames(className, {"title-breadcrumb-container": isPhy, "pt-4 pt-md-7": isAda})}>
         {isPhy && <div className="title-graphics"/>}
         <BreadcrumbTrail
             currentPageTitle={breadcrumbTitleOverride ?? currentPageTitle}
@@ -64,12 +64,11 @@ export const TitleAndBreadcrumb = ({modalId, children, breadcrumbTitleOverride, 
         />
         {children}
         <PageTitle
-            modalId={modalId} subTitle={subTitle} description={description}
+            modalId={modalId} subTitle={subTitle}
             disallowLaTeX={disallowLaTeX} audienceViews={audienceViews}
             currentPageTitle={currentPageTitle} displayTitleOverride={displayTitleOverride}
             help={help} preview={preview} icon={icon}
         />
-        {isAda && <hr/>}
     </div>;
 };
 

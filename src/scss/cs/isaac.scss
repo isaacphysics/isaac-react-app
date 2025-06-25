@@ -323,7 +323,11 @@ $container-max-widths: (
 
 $spacer: 1rem !default;
 $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
-    6: ($spacer * 6.25) // 100px-ish
+    5: ($spacer * 2),
+    6: ($spacer * 2.5),
+    7: ($spacer * 3),
+    8: ($spacer * 3.5),
+    9: ($spacer * 4),
 ));
 
 $enable-negative-margins: true;
@@ -355,6 +359,7 @@ $card-spacer-y: 1.5rem;
 @import "fonts";
 @import "typography";
 @import "../common/modals";
+@import "page-title";
 @import "questions";
 @import "forms";
 @import "elements";

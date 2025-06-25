@@ -1,5 +1,5 @@
 import React, { ReactNode, useLayoutEffect, useRef, useState } from "react";
-import { Col, Row } from "reactstrap";
+import { Col, ColProps } from "reactstrap";
 import { Spacer } from "./Spacer";
 import { FilterCount } from "./svg/FilterCount";
 import classNames from "classnames";
@@ -13,7 +13,9 @@ export interface CollapsibleListProps {
     numberSelected?: number;
     children?: React.ReactNode;
     additionalOffset?: string | number; // css value for additional space to add to the bottom of the list when expanded; e.g. 4px, 1rem
+    hasUlTag?: boolean; // if true, don't wrap the result in another <ul> tag
     className?: string;
+    tag?: ColProps['tag'];
 }
 
 export const CollapsibleList = (props: CollapsibleListProps) => {
@@ -32,8 +34,8 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
             setExpandedHeight(listRef?.current 
                 // clientHeight cannot determine margin (nor can any reasonable alternative, since margins can overlap)! this will be smaller than the true height
                 // if margin exists. if this is the case, use additionalOffset to add additional space to the bottom of the list
-                ? Math.max([...listRef.current.children].map(c => c.getAttribute("data-targetHeight") 
-                    ? parseInt(c.getAttribute("data-targetHeight") as string) 
+                ? Math.max([...listRef.current.children].map(c => c.getAttribute("data-targetheight") 
+                    ? parseInt(c.getAttribute("data-targetheight") as string) 
                     : c.clientHeight
                 ).reduce((a, b) => a + b, 0), listRef.current.clientHeight) 
                 : 0
@@ -45,7 +47,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         ? <span>{props.title && props.asSubList ? props.title : <b>{props.title}</b>}</span>
         : props.title;
 
-    return <Col className={classNames("collapsible-list-container", props.className)} data-targetHeight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
+    return <Col tag={props.tag} className={classNames("collapsible-list-container", props.className)} data-targetheight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
         <div className="row m-0 collapsible-head" ref={headRef}>
             <button className={classNames("w-100 d-flex align-items-center p-3 text-start", {"bg-white": isAda, "bg-transparent": isPhy, "ps-4": props.asSubList})} onClick={toggle}>
                 {title && <span>{title}</span>}
@@ -61,7 +63,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         >
             <div ref={listRef} className={classNames({"ms-2": props.asSubList})} {...{"inert": expanded ? undefined : "true"}}> 
                 {/* when react is updated to v19, switch inert definition to regular prop */}
-                {props.children}
+                {props.hasUlTag ? props.children : <ul className="ps-0">{props.children}</ul>}
             </div>
         </div>
     </Col>;

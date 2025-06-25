@@ -8,17 +8,17 @@ import {Alert} from "reactstrap";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 
 const loadingPlaceholder = <div className="w-100 text-center pb-2">
-    <h2 aria-hidden="true" className="pt-5">Loading...</h2>
+    <h2 aria-hidden="true" className="pt-7">Loading...</h2>
     <IsaacSpinner />
 </div>;
 
 export const DefaultQueryError = ({error, title}: {error?: FetchBaseQueryError | SerializedError, title: string}) => {
     const errorDetails = getRTKQueryErrorMessage(error);
     return <Alert color={"warning"} className={"my-2"}>
-        {title ?? "Error fetching data from server"}: {errorDetails.message}
+        {title ?? "Error fetching data from server"}: {window.navigator.onLine ? errorDetails.message : "You appear to be offline."}
         {errorDetails.status ? <><br/>Status code: {errorDetails.status}</> : ""}
         <br/>
-        You may want to refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
+        You may want to{!window.navigator.onLine && " check your internet connection,"} refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
         this continues to happen.
         Please include in your email the name and email associated with this{" "}
         {SITE_TITLE} account, alongside the details of the error given above.

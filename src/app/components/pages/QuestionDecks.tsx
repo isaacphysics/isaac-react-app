@@ -8,6 +8,7 @@ import { Loading } from "../handlers/IsaacSpinner";
 import { PageContextState } from "../../../IsaacAppTypes";
 import { MainContent, QuestionDecksSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ArrayElement, LEARNING_STAGE, PHY_NAV_SUBJECTS } from "../../services";
+import { PageMetadata } from "../elements/PageMetadata";
 
 export const QuestionDecks = withRouter((props: RouteComponentProps) => {
     const pageContext = useUrlPageTheme();
@@ -15,7 +16,7 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
     const validQuestionDeckStageSubjectPairs: {[subject in keyof typeof PHY_NAV_SUBJECTS]: ArrayElement<typeof PHY_NAV_SUBJECTS[subject]>[]} = {
         "physics": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
         "chemistry": [LEARNING_STAGE.A_LEVEL],
-        "maths": [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL],
+        "maths": [LEARNING_STAGE.A_LEVEL],
         "biology": [LEARNING_STAGE.A_LEVEL],
     };
 
@@ -37,8 +38,9 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
             } : undefined}
         />
         <SidebarLayout>
-            <QuestionDecksSidebar validStageSubjectPairs={validQuestionDeckStageSubjectPairs} context={pageContext} />
+            <QuestionDecksSidebar validStageSubjectPairs={validQuestionDeckStageSubjectPairs} context={pageContext} hideButton />
             <MainContent>
+                <PageMetadata showSidebarButton />
                 <PageFragment fragmentId={getFragmentFromContext(pageContext)} />
             </MainContent>
         </SidebarLayout>

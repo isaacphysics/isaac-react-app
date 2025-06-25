@@ -14,7 +14,7 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
 import { useUntilFound } from "./Glossary";
-import { MainContent, SidebarLayout, GenericPageSidebar, PolicyPageSidebar } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout, GenericPageSidebar, PolicyPageSidebar, ContentControlledSidebar, GenericSidebarWithRelatedContent } from "../elements/layout/SidebarLayout";
 import { TeacherNotes } from "../elements/TeacherNotes";
 import { useGetGenericPageQuery } from "../../state/slices/api/genericApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
@@ -78,8 +78,15 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 </div>
             </div>;
 
-            const sidebar = React.cloneElement(PHY_SIDEBAR.has(pageId) ? PHY_SIDEBAR.get(pageId)!() : <GenericPageSidebar/>, { optionBar });
-            
+            const sidebar = doc.sidebar
+                ? <ContentControlledSidebar sidebar={doc.sidebar} />
+                : React.cloneElement(PHY_SIDEBAR.has(pageId) 
+                    ? PHY_SIDEBAR.get(pageId)!() 
+                    : doc.relatedContent
+                        ? <GenericSidebarWithRelatedContent relatedContent={doc.relatedContent} />
+                        : <GenericPageSidebar/>,
+                { optionBar });
+
             return <Container data-bs-theme={doc.subjectId}>
                 <TitleAndBreadcrumb 
                     currentPageTitle={doc.title as string} 
@@ -103,7 +110,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                     </MainContent>
                 </SidebarLayout>
 
-                {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                {isAda && doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
             </Container>;
         }}
     />;

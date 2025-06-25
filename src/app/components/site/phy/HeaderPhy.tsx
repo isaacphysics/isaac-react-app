@@ -45,14 +45,14 @@ export const HeaderPhy = () => {
                     {above["lg"](deviceSize) 
                         ? <>
                             {/* desktop menu bar */}
-                            <div className="d-flex justify-content-end align-items-center flex-wrap py-3">
+                            <div className="d-flex justify-content-end align-items-center flex-wrap py-3 d-print-none">
                                 <HeaderMenuPhy className={classNames("flex-row")} toggleMenu={toggleMenu}/>
                                 <LoginLogoutButton/>
                             </div>
                         </>
                         : <>
                             {/* mobile hamburger menu */}
-                            <div className="d-flex justify-content-end align-items-center flex-wrap py-3 gap-3">
+                            <div className="d-flex justify-content-end align-items-center flex-wrap py-3 gap-3 d-print-none">
                                 <LoginLogoutButton/>
                                 <AffixButton color="tint" size="lg" onClick={toggleMenu} data-testid="nav-menu-toggle" affix={{
                                     affix: "icon-menu", 
@@ -90,7 +90,7 @@ export const HeaderPhy = () => {
         {above["md"](deviceSize) && <Container id="content-nav-container">
             <Row>
                 <Col>
-                    <Nav tag="nav" className="d-flex align-items-stretch" id="content-nav">
+                    <Nav tag="nav" className="align-items-stretch" id="content-nav">
                         <NavigationMenuPhy toggleMenu={toggleMenu}/>
                     </Nav>
                 </Col>

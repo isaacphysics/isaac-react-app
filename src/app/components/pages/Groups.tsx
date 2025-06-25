@@ -276,7 +276,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
         <CardBody>
             <h4 className={"mb-2"}>{group ? "Manage group" : "Create group"}</h4>
             {isAda && <hr/>}
-            <Row className={classNames({"d-flex align-items-center": isPhy})}>
+            <Row className={classNames({"d-flex": isPhy})}>
                 <Col xs={12} sm={canArchive ? 8 : 12}>
                     <Form className="form-inline" onSubmit={saveUpdatedGroup}>
                         <InputGroup className="w-100 separate-input-group">
@@ -298,7 +298,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
                         </InputGroup>
                     </Form>
                 </Col>
-                {canArchive && <Col xs={12} sm={4} className={"mt-2 mt-sm-0"}>
+                {canArchive && <Col xs={12} sm={4} className={"d-flex mt-2 mt-sm-0"}>
                     <Button title={group?.archived ? "Unarchive this group" : "Archive this group"} block size="sm" color={siteSpecific("solid", "keyline")} onClick={toggleArchived}>
                         {group?.archived ? "Unarchive" : "Archive"}
                     </Button>
@@ -687,7 +687,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
         <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="help_modal_groups" />
         <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
-            <Row className="mb-5">
+            <Row className="mb-7">
                 <Col lg={4}>
                     <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
                         showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true}/>

@@ -2,7 +2,7 @@ import React from 'react';
 import {useGetSiteStatisticsQuery} from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {isDefined, siteSpecific} from "../../services";
+import {isDefined, SITE_TITLE_SHORT} from "../../services";
 import {produce} from "immer";
 import { Container, Card, CardBody, Row, Col } from 'reactstrap';
 
@@ -38,7 +38,7 @@ export const AdminStats = () => {
 
     return <Container id="admin-stats-page">
         <TitleAndBreadcrumb 
-            currentPageTitle={`${siteSpecific("Isaac", "Ada")} statistics`} 
+            currentPageTitle={`${SITE_TITLE_SHORT} statistics`} 
             breadcrumbTitleOverride="Admin statistics" 
             icon={{type: "hex", icon: "icon-progress"}} 
         />
@@ -47,12 +47,12 @@ export const AdminStats = () => {
             thenRender={adminStatsWithTotals => {
                 return <>
                     <div className="py-3">A high-level overview of the users and activity on the platform:</div>
-                    <Card className="mb-5 px-3 pt-1">
+                    <Card className="mb-7 px-3 pt-1">
                         <CardBody>
                             <Row>
                                 <Col>
                                     <strong>Users:</strong>
-                                    <ul className="list-unstyled mb-5">
+                                    <ul className="list-unstyled mb-7">
                                         <li>Last 6 months:&nbsp;
                                             <strong>{(adminStatsWithTotals.activeUsersOverPrevious.sixMonths.TOTAL || 0).toLocaleString()}</strong>
                                         </li>

@@ -24,7 +24,7 @@ export const StudentResources = () => {
                     <TextBlock>
                         <h1 className="font-size-1-75 font-size-md-2-5">
                             <span className="text-yellow">/</span><br/>
-                            Ada for students
+                            Ada CS for students
                         </h1>
                         <p>We&apos;ve got everything to help you study computer science – including classwork, homework, and exam prep. And it&apos;s all available for free.</p>
                     </TextBlock>
@@ -38,7 +38,7 @@ export const StudentResources = () => {
             <Container className="homepage-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <ColumnSlice>
-                    <TextBlock className="pe-5">
+                    <TextBlock className="pe-7">
                         <h2>Our latest updates</h2>
                         <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read the latest news and updates from the team.</p>
                     </TextBlock>
@@ -91,7 +91,7 @@ export const StudentResources = () => {
                     </ImageBlock>
                     <TextBlock>
                         <h2>Track your progress</h2>
-                        <p>With an Ada account, all your answers get saved so you can see what to work on and how you’re progressing. And you can track any assignments set by your teacher.</p>
+                        <p>With an Ada CS account, all your answers get saved so you can see what to work on and how you’re progressing. And you can track any assignments set by your teacher.</p>
                         {isLoggedIn(user) ? <>
                             <Button className="mt-3" tag={Link} to="/progress">View my progress</Button>
                         </> : <>

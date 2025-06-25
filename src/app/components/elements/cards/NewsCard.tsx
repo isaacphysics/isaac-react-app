@@ -13,7 +13,7 @@ interface NewsCardProps extends CardProps {
     cardClassName?: string;
 }
 
-const PhysicsNewsCard = ({newsItem, ...props}: NewsCardProps) => {
+const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassName, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
     return <Card data-testid={"news-pod"} {...props} className={classNames("pod news-card", props.className)}>
         {image && <a href={url} className="focus-target">
@@ -24,10 +24,10 @@ const PhysicsNewsCard = ({newsItem, ...props}: NewsCardProps) => {
             />
         </a>}
         <CardBody className="d-flex flex-column ps-0">
-            <CardTitle className="mb-0 pod-title">{title}</CardTitle>
-            <CardText>
-                {value && <p>{value}</p>}
-            </CardText>
+            {showTitle && <CardTitle className="mb-0 pod-title">{title}</CardTitle>}
+            {value && <CardText>
+                {value}
+            </CardText>}
             <Spacer/>
             <CardText>
                 {!url?.startsWith("http") ?
