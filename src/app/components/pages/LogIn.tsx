@@ -292,7 +292,7 @@ export const LogIn = () => {
                                             <GoogleSignInButton/>
                                         </Col>
                                     </Row>
-                                    {isPhy && <Row className="mb-3 justify-content-center">
+                                    {isPhy && <Row className="mb-2 justify-content-center">
                                         <Col sm={9}>
                                             <MicrosoftSignInButton/>
                                         </Col>
