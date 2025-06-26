@@ -1,0 +1,13 @@
+#main-heading div[data-testid="main-heading"] {
+    container: title-container / inline-size;
+}
+
+@container title-container (inline-size < 600px) {
+    span.h-subtitle {
+        padding-top: 0;
+    }
+    
+    span {
+        font-size: 32px;
+    }
+}

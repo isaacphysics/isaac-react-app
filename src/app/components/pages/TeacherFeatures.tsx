@@ -34,7 +34,7 @@ export const TeacherFeatures = () => {
     return <Container>
         <Row className="mb-4">
             <Col>
-                <TitleAndBreadcrumb currentPageTitle={"Teacher Features"} icon={{type: "hex", icon: "icon-account"}}/>
+                <TitleAndBreadcrumb currentPageTitle={"Teacher features"} icon={{type: "hex", icon: "icon-account"}}/>
             </Col>
         </Row>
         <Row className="mb-3">

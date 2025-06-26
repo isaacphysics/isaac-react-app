@@ -179,7 +179,7 @@ export const QuestionSearchModal = (
         <div>
             <Input
                 type="button"
-                value={siteSpecific("Add Selections to Question Deck", "Add selections to quiz")}
+                value={siteSpecific("Add selections to question deck", "Add selections to quiz")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
                 className={classNames("btn w-100 h-100", siteSpecific("btn-keyline", "btn-solid border-0"))}
                 onClick={() => {

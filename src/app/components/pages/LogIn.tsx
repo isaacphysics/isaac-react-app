@@ -21,7 +21,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history, isAda, MINIMUM_PASSWORD_LENGTH, SITE_TITLE, siteSpecific} from "../../services";
+import {history, isAda, isPhy, MINIMUM_PASSWORD_LENGTH, SITE_TITLE, siteSpecific} from "../../services";
 import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Loading} from "../handlers/IsaacSpinner";
@@ -30,6 +30,7 @@ import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {extractErrorMessage} from '../../services/errors';
 import { StyledCheckbox } from '../elements/inputs/StyledCheckbox';
+import { MicrosoftSignInButton } from '../elements/MicrosoftSignInButton';
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -286,11 +287,16 @@ export const LogIn = () => {
                                                 <RaspberryPiSignInButton/>
                                             </Col>
                                         </Row>}
-                                    <Row className="mb-3 justify-content-center">
+                                    <Row className={classNames("justify-content-center", siteSpecific("mb-2", "mb-3"))} >
                                         <Col sm={9}>
                                             <GoogleSignInButton/>
                                         </Col>
                                     </Row>
+                                    {isPhy && <Row className="mb-2 justify-content-center">
+                                        <Col sm={9}>
+                                            <MicrosoftSignInButton/>
+                                        </Col>
+                                    </Row>}
                                 </React.Fragment>
                             }
                         </Form>

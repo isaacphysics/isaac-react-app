@@ -69,6 +69,7 @@ import {RenderNothing} from "../elements/RenderNothing";
 import { SortItemHeader } from "../elements/SortableItemHeader";
 import { MainContent, SetAssignmentsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { HorizontalScroller } from "../elements/inputs/HorizontalScroller";
+import classNames from "classnames";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -189,29 +190,29 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
             <hr className="text-center" />
             <AssignGroup closeModal={toggle} {...props} />
             <hr className="text-center" />
-            <div className="py-2 border-bottom" data-testid="currently-assigned-to">
-                <Label>{siteSpecific("Question deck", "Quiz")} currently assigned to:</Label>
+            <div className="py-2 border-bottom d-flex flex-column" data-testid="currently-assigned-to">
+                <span>{siteSpecific("Question deck", "Quiz")} currently assigned to:</span>
                 {startedAssignees.length > 0
-                    ? <Container className="mb-4">{startedAssignees.map(assignee =>
-                        <div data-testid={"current-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
+                    ? <ul className="p-2 mb-3">{startedAssignees.map(assignee =>
+                        <li data-testid={"current-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
-                        </div>
-                    )}</Container>
-                    : <p>No groups.</p>}
+                        </li>
+                    )}</ul>
+                    : <p className="px-2">No groups.</p>}
             </div>
-            <div className="py-2">
-                <Label className={siteSpecific("d-flex align-items-center", "")}>
+            <div className="py-2 d-flex flex-column">
+                <span className={classNames("mb-2", siteSpecific("d-flex align-items-center", ""))}>
                     Pending {siteSpecific("assignments", "quiz assignments")}:
                     <i className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help mx-1")} id={`pending-assignments-help-${board?.id}`}/>
-                </Label>
+                </span>
                 <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
                     These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the morning of the scheduled date, students
                     will be able to see the {siteSpecific("assignment", "quiz")}, and will receive a notification email.
                 </UncontrolledTooltip>
                 {scheduledAssignees.length > 0
-                    ? <Container className="mb-4">{scheduledAssignees.map(assignee =>
-                        <div data-testid={"pending-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
+                    ? <ul className="p-2 mb-3">{scheduledAssignees.map(assignee =>
+                        <li data-testid={"pending-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             {assignee.startDate && <>
                                 <span id={`start-date-${assignee.groupId}`} className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
@@ -220,9 +221,9 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
                                 </span>
                             </>}
                             <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
-                        </div>
-                    )}</Container>
-                    : <p>No groups.</p>}
+                        </li>
+                    )}</ul>
+                    : <p className="px-2">No groups.</p>}
             </div>
         </>,
         buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]

@@ -142,7 +142,10 @@ export const AdminContentErrors = () => {
                     <Row>
                         <Col>
                             <HorizontalScroller enabled={filteredErrors(errors).length > 10} className="mb-3">
-                                <Table bordered className="my-0">
+                                <Table bordered>
+                                    <colgroup>
+                                        <col style={{minWidth: "20ex"}} />
+                                    </colgroup>
                                     <tbody>
                                         <tr>
                                             <th>File</th>
@@ -150,7 +153,21 @@ export const AdminContentErrors = () => {
                                             <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
                                             <th>List of Error Messages</th>
                                         </tr>
-                                        {filteredErrors(errors).sort(sortBySourcePath).map(ContentErrorRow)}
+                                        {errors.errorsList
+                                            .filter((error) => error.listOfErrors.reduce(errorReducer, false))
+                                            .filter(
+                                                (error) =>
+                                                    (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
+                                                    (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)),
+                                            )
+                                            .filter(
+                                                (error) =>
+                                                    (error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.NON_CRITICAL)) ||
+                                                    (!error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.CRITICAL)),
+                                            )
+                                            .sort(sortBySourcePath)
+                                            .map(ContentErrorRow)
+                                        }
                                     </tbody>
                                 </Table>
                             </HorizontalScroller>

@@ -4,21 +4,18 @@
   background: $gray-110;
 
   .progress-bar-inner, .progress-bar-secondary {
-    background: $secondary;
+    background: $color-brand-500;
   }
-  .bar-alevel {
-    background: $phy_physics !important;
-  }
-  .bar-gcse {
-    background: $a11y_green !important;
+  .bar-physics {
+    background: $color-physics-500;
   }
   .bar-maths {
-    background: $phy_maths !important;
+    background: $color-maths-500;
   }
   .bar-chemistry {
-    background: $phy_chemistry !important;
+    background: $color-chemistry-500;
   }
   .bar-biology {
-    background: $phy_biology !important;
+    background: $color-biology-500;
   }
 }
