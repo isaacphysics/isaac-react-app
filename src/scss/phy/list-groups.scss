@@ -54,6 +54,12 @@
       }
     }
   }
+
+  &.centered-final-card {
+    align-self: center;
+    border-radius: 0 0 8px 8px;
+    border-top: 0;
+  }
 }
 
 .status-tag {

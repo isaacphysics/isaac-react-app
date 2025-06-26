@@ -112,7 +112,19 @@ const getListViewSubjectCard = (sc: subjectCategory) => {
     return listViewSubjectCard;
 };
 
-const cards = subjectCategories.map((sc) => getListViewSubjectCard(sc));
+const AdaSubjectCard: ListViewCardProps = {
+    title: "Studying computer science?",
+    subtitle: "Check out Ada CS, our partner platform. It’s free and packed with resources for computer science teachers and students.",
+    icon: {
+        type: "img", 
+        icon: "/assets/common/logos/ada_logo_stamp_aqua.svg",
+        width: "70px",
+        height: "81px",
+    },
+    linkTags: [{tag: "Find out more", url: "", "aria-label": "Find out about Ada Computer Science"}]
+};
+
+const cards = [...subjectCategories.map((sc) => getListViewSubjectCard(sc)), AdaSubjectCard];
 
 export const HomepagePhy = () => {
 
@@ -178,7 +190,7 @@ export const HomepagePhy = () => {
                             <h3>Explore and learn!</h3>
                             <div className="section-divider flex-grow-1 ms-2"/>
                         </div>
-                        <ListViewCards cards={cards}/>
+                        <ListViewCards cards={cards} centreLast/>
                     </div>
                 </section>
                 <section id="events-news">

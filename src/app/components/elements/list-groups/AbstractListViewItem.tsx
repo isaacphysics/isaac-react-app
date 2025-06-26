@@ -167,7 +167,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const cardBody =
     <div className="w-100 d-flex flex-row">
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
-            <div className="position-relative">
+            <div className="position-relative" style={{minWidth: "80px"}}>
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
                         : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/>
