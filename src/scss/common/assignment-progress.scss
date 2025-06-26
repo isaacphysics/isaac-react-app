@@ -401,11 +401,6 @@ $failed-bg-size: 25%;
 .progress-table {
   padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders
 
-  th.selected {
-    // Fixes Firefox bug with position: relative table cells: https://bugzilla.mozilla.org/show_bug.cgi?id=688556
-    background-clip: padding-box !important;
-  }
-
   tbody tr:nth-of-type(even) {
     background: $gray-103;
     th {
@@ -450,19 +445,11 @@ $failed-bg-size: 25%;
   }
 
   thead th {
-    //border-top: 1px solid $gray-118;
     border-bottom: 1px solid $gray-118;
-    &.selected {
-      border-top-color: #fff;
-      background: #fff;
-    }
   }
 
   tfoot th {
     border-top: 1px solid $gray-118;
-    &.selected {
-      background: #fff;
-    }
   }
 
   .progress-table-header-footer th {
@@ -508,17 +495,8 @@ $failed-bg-size: 25%;
     text-decoration: line-through;
   }
 
-  .selected {
-    border-left: 2px solid $gray-160;
-    border-right: 2px solid $gray-160;
-  }
-
   th {
     font-weight: normal;
-  }
-
-  td.selected, td.total-column {
-    font-weight: bold;
   }
 
   .student-name {

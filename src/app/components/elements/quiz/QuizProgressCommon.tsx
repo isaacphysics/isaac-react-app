@@ -9,6 +9,7 @@ import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStude
 import { SortItemHeader } from "../SortableItemHeader";
 import { AssignmentProgressDTO, CompletionState, QuestionPartState } from "../../../../IsaacApiTypes";
 import classNames from "classnames";
+import { Markup } from "../markup";
 
 export const ICON = {
     correct: <i className="icon-md icon-correct"/>,
@@ -140,6 +141,8 @@ export function ResultsTable<Q extends QuestionType>({
         }));
     };
 
+    const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number | undefined>(undefined);
+
     const [sortOrder, setSortOrder] = useState<ProgressSortOrder>("name");
     const [reverseOrder, setReverseOrder] = useState(false);
 
@@ -153,7 +156,7 @@ export function ResultsTable<Q extends QuestionType>({
     }
 
     const semiSortedProgress = useMemo(() => orderBy(progress, (item) => {
-        return isAuthorisedFullAccess(item) && -item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
+        return isAuthorisedFullAccess(item) && item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
     }, [reverseOrder ? "desc" : "asc"]), [progress, reverseOrder]);
 
     const sortedProgress = useMemo(() => orderBy((semiSortedProgress), (item) => {
@@ -168,7 +171,11 @@ export function ResultsTable<Q extends QuestionType>({
             case "totalAttemptedQuestionPercentage":
                 return -(item.questionResults || []).filter(r => r !== CompletionState.NOT_ATTEMPTED).length;
             default:
-                return -(item.correctPartResults || [])[sortOrder];
+                if (pageSettings?.attemptedOrCorrect === "CORRECT") {
+                    return -(item.correctPartResults || [])[sortOrder];
+                } else {
+                    return (item.notAttemptedPartResults || [])[sortOrder];
+                }
         }
     }, [reverseOrder ? "desc" : "asc"])
     , [semiSortedProgress, reverseOrder, sortOrder]);
@@ -179,6 +186,8 @@ export function ResultsTable<Q extends QuestionType>({
             defaultOrder={"name"} 
             reverseOrder={"name"} 
             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+            onClick={() => setSelectedQuestionIndex(undefined)}
+            label={"Name"}
         >
             Name
         </SortItemHeader>
@@ -188,6 +197,8 @@ export function ResultsTable<Q extends QuestionType>({
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                onClick={() => setSelectedQuestionIndex(undefined)}
+                label={"Total correct"}
             >
                 Correct
             </SortItemHeader>
@@ -196,6 +207,8 @@ export function ResultsTable<Q extends QuestionType>({
                 defaultOrder={"totalAttemptedQuestionPercentage"}
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                onClick={() => setSelectedQuestionIndex(undefined)}
+                label={"Total attempted"}
             >
                 Attempted
             </SortItemHeader>
@@ -207,14 +220,12 @@ export function ResultsTable<Q extends QuestionType>({
                 currentOrder={sortOrder}
                 setOrder={toggleSort}
                 reversed={reverseOrder}
+                onClick={() => setSelectedQuestionIndex(index)}
+                className={classNames("pointer-cursor", {"selected": index === selectedQuestionIndex})}
+                label={`Question ${index + 1}`}
                 key={index}
             >
-                {isAssignment
-                    ? <a className="d-block" href={`/questions/${q.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
-                        {index + 1}
-                    </a> 
-                    : <span>{index + 1}</span>
-                }
+                <span>{index + 1}</span>
             </SortItemHeader>
         )}
     </tr>;
@@ -227,6 +238,18 @@ export function ResultsTable<Q extends QuestionType>({
                 <table ref={tableRef} className="progress-table w-100 border">
                     <thead>
                         {tableHeaderFooter}
+                        {isPhy && selectedQuestionIndex !== undefined && <tr>
+                            <th className="py-2" colSpan={2 + questions.length}>
+                                <div className="progress-table-question-link">
+                                    <a href={`/questions/${questions[selectedQuestionIndex]?.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
+                                        <Markup encoding="latex">
+                                            {`Q${selectedQuestionIndex + 1}: ${questions[selectedQuestionIndex]?.title}`}
+                                        </Markup>
+                                    </a>
+                                </div>
+                                &nbsp;
+                            </th>
+                        </tr>}
                     </thead>
                     <tbody>
                         {sortedProgress.map((studentProgress, index) => {
@@ -287,7 +310,10 @@ export function ResultsTable<Q extends QuestionType>({
                                     }
                                 </th>
                                 {questions.map((q, index) =>
-                                    <td key={q.id} className={classNames({[markQuestionClasses(studentProgress, index)]: isPhy})}>
+                                    <td key={q.id} className={classNames(
+                                        {[markQuestionClasses(studentProgress, index)]: isPhy},
+                                        {"selected": index === selectedQuestionIndex},
+                                    )}>
                                         {isAssignment 
                                             ? (fullAccess 
                                                 ? isPhy

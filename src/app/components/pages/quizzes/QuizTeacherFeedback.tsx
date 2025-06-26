@@ -77,7 +77,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
         </Alert>
     </>;
 
-    const [settingsVisible, setSettingsVisible] = useState(false);
+    const [settingsVisible, setSettingsVisible] = useState(true);
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "hex", icon: quizAssignmentQuery?.isError ? "icon-error" : "icon-tests"}}/>

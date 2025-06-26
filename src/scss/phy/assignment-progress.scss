@@ -1,5 +1,8 @@
 @import "../common/assignment-progress";
 
+$table-selected-background: rgb(223, 237, 255);
+$table-selected-border: 2px solid rgb(75, 157, 252);
+
 .assignment-progress-gameboard .gameboard-header > *:first-child:before {
   background: $secondary;
   color: white;
@@ -13,4 +16,42 @@
   @include pill-tag(white, darken($phy_green, 20));
   min-width: 25px;
   text-align: center;
+}
+
+.progress-table {
+  .selected {
+    border-left: $table-selected-border;
+    border-right: $table-selected-border;
+    background: $table-selected-background;
+  }
+
+  .progress-table-question-link {
+    // this relies on elements in the table never having relative positioning!
+    position: absolute;
+    width: 100%;
+    left: 0;
+  }
+
+  td.selected, td.total-column {
+    font-weight: bold;
+  }
+
+  &:has(.selected) {
+    thead tr:nth-of-type(2) {
+      background: $table-selected-background;
+    }
+    
+    thead tr:first-of-type th:not(.selected) {
+      border-bottom: $table-selected-border;
+    }
+
+    tbody tr:first-of-type td:not(.selected), tbody tr:first-of-type th {
+      border-top: $table-selected-border;
+    }
+
+    thead:has(tr:first-of-type .selected:last-of-type) tr:nth-of-type(2) th {
+      // apply a selected border over the last column if selected
+      border-right: $table-selected-border;
+    }
+  }
 }
