@@ -95,19 +95,9 @@ const LegendKey = ({cellClass, description}: {cellClass: string, description?: s
     </li>;
 };
 
-export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey?: boolean, id?: string}) => {
-    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
-    const deviceSize = useDeviceSize();
-    return <div className="p-4"><div className="assignment-progress-legend">
-        {showQuestionKey && <>
-            <Label htmlFor={`question-key-${id}`}>Question key:</Label>
-            <ul id={`question-key-${id}`} className="block-grid-xs-3">
-                <QuestionKey icon={ICON.correct} description="Correct"/>
-                <QuestionKey icon={ICON.notAttempted} description="Not&nbsp;attempted"/>
-                <QuestionKey icon={ICON.incorrect} description="Incorrect"/>
-            </ul>
-        </>}
-        {showQuestionKey && <Label htmlFor={`key-${id}`} className="mt-2">Section key:</Label>}
+export const AssignmentProgressLegend = ({id}: {id?: string}) => {
+    return <div className="mb-2">
+        <Label htmlFor={`key-${id}`} className="mt-2">Section key:</Label>
         <div className="d-flex flex-row flex-sm-column justify-content-between">
             <ul id={`key-${id}`} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-5 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
                 <LegendKey cellClass="completed" description={`100% correct`}/>
@@ -116,32 +106,6 @@ export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey
                 <LegendKey cellClass="failed" description={`>${100 - (passMark * 100)}% incorrect`}/>
                 <LegendKey cellClass="" description={`Not attempted`}/>
             </ul>
-            <div className="d-sm-flex flex-sm-row justify-content-sm-evenly assignment-progress-options">
-                <div className="d-flex flex-column align-items-center mt-sm-2">
-                    <span>Colour-blind mode</span>
-                    <StyledToggle falseLabel="Off" trueLabel="On" checked={pageSettings?.colourBlind} onChange={(e) => pageSettings?.setColourBlind?.(e.currentTarget.checked)} />
-                </div>
-
-                <div className="d-flex flex-column align-items-center mt-2">
-                    <span>Table display mode</span>
-                    <StyledToggle falseLabel="Fractions" trueLabel="Percentages" checked={pageSettings?.formatAsPercentage} onChange={(e) => pageSettings?.setFormatAsPercentage?.(e.currentTarget.checked)} />
-                </div>
-
-                <div className="d-flex flex-column align-items-center mt-2">
-                    <div className="d-flex flex-row h-100">
-                        <span>Class average mode</span>
-                        {above["md"](deviceSize) && <>
-                            <span id={`attempted-toggle-${id}`} className="icon-help"/>
-                            <UncontrolledTooltip className="spaced-tooltip" placement="left" autohide={false} target={`attempted-toggle-${id}`}>
-                                This toggle changes what the percentages at the top and bottom of the table represent.<br/><br/>
-                                <b>Attempted</b> displays the percentage of students who have attempted all parts of that question.<br/><br/>
-                                <b>Correct</b> displays the percentage of students who have achieved full marks on that question.
-                            </UncontrolledTooltip>
-                        </>}
-                    </div>
-                    <StyledToggle falseLabel="Attempted" trueLabel="Correct" checked={pageSettings?.attemptedOrCorrect === "CORRECT"} onChange={(e) => pageSettings?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} />
-                </div>
-            </div>
         </div>
-    </div></div>;
+    </div>;
 };

@@ -13,6 +13,7 @@ import classNames from "classnames";
 import { CollapsibleContainer } from "../elements/CollapsibleContainer";
 import StyledToggle from "../elements/inputs/StyledToggle";
 import { Markup } from "../elements/markup";
+import { AssignmentProgressLegend } from "./SingleAssignmentProgress";
 
 export const AssignmentProgressSettings = () => {
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
@@ -116,7 +117,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
         return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, status, correctParts, incorrectParts, totalParts);
     }
 
-    const [settingsVisible, setSettingsVisible] = useState(false);
+    const [settingsVisible, setSettingsVisible] = useState(true);
     
     return <Card>
         <CardBody>
@@ -160,6 +161,8 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                     <AdaKey />
                 </>}
             </div>
+
+            {isPhy && <AssignmentProgressLegend id={`${assignment.id ?? ""}`} />}
 
             <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions}
                 assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
