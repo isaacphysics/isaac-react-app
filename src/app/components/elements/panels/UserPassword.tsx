@@ -75,7 +75,8 @@ export const UserPassword = (
 
     const authButtonsMap : Record<any, (isLinked: boolean) => JSX.Element> = {
         "RASPBERRYPI": (isLinked: boolean) => <ThirdPartyAccount provider={"RASPBERRYPI"} imgCss="rpf-button" isLinked={isLinked}/>,
-        "GOOGLE": (isLinked: boolean) => <ThirdPartyAccount provider={"GOOGLE"} imgCss="google-button" isLinked={isLinked}/>
+        "GOOGLE": (isLinked: boolean) => <ThirdPartyAccount provider={"GOOGLE"} imgCss="google-button" isLinked={isLinked}/>,
+        "MICROSOFT": (isLinked: boolean) => <ThirdPartyAccount provider={"MICROSOFT"} imgCss="microsoft-button" isLinked={isLinked}/>
     };
 
     const connectedAccounts : AuthenticationProvider[] = [];
