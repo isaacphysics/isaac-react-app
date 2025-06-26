@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {useGetContentErrorsQuery} from "../../state";
 import {Col, Container, Input, Label, Row, Table} from "reactstrap";
 import {EDITOR_URL, matchesAllWordsInAnyOrder, selectOnChange} from "../../services";
-import {ContentErrorItem} from "../../../IsaacAppTypes";
+import {ContentErrorItem, ContentErrorsResponse} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
@@ -61,6 +61,21 @@ export const AdminContentErrors = () => {
 
     const [publishedFilter, setPublishedFilter] = useState<PUBLISHED_FILTER[]>([PUBLISHED_FILTER.PUBLISHED, PUBLISHED_FILTER.UNPUBLISHED]);
     const [criticalFilter, setCriticalFilter] = useState<CRITICAL_FILTER[]>([CRITICAL_FILTER.CRITICAL, CRITICAL_FILTER.NON_CRITICAL]);
+
+    const filteredErrors = (errors: ContentErrorsResponse) => {
+        return errors.errorsList
+            .filter((error) => error.listOfErrors.reduce(errorReducer, false))
+            .filter(
+                (error) =>
+                    (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
+                    (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)),
+            )
+            .filter(
+                (error) =>
+                    (error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.NON_CRITICAL)) ||
+                    (!error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.CRITICAL)),
+            );
+    };
 
     return <Container>
         <Row>
@@ -126,7 +141,7 @@ export const AdminContentErrors = () => {
                     </Row>
                     <Row>
                         <Col>
-                            <HorizontalScroller enabled={errors.errorsList.length > 10} className="mb-3">
+                            <HorizontalScroller enabled={filteredErrors(errors).length > 10} className="mb-3">
                                 <Table bordered className="my-0">
                                     <tbody>
                                         <tr>
@@ -135,21 +150,7 @@ export const AdminContentErrors = () => {
                                             <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
                                             <th>List of Error Messages</th>
                                         </tr>
-                                        {errors.errorsList
-                                            .filter((error) => error.listOfErrors.reduce(errorReducer, false))
-                                            .filter(
-                                            (error) =>
-                                                    (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
-                                                    (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)),
-                                            )
-                                            .filter(
-                                                (error) =>
-                                                    (error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.NON_CRITICAL)) ||
-                                                    (!error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.CRITICAL)),
-                                            )
-                                            .sort(sortBySourcePath)
-                                            .map(ContentErrorRow)
-                                            }
+                                        {filteredErrors(errors).sort(sortBySourcePath).map(ContentErrorRow)}
                                     </tbody>
                                 </Table>
                             </HorizontalScroller>

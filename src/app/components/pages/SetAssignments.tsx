@@ -255,6 +255,13 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         groupsByGameboard, openAssignModal
     } = props;
 
+    const filteredBoards = useMemo(() => {
+        return boards?.boards
+            .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+            .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())));
+    }, [boards, boardTitleFilter, boardCreator, boardSubject, user]);
+
     const tableHeader = <tr className="my-gameboard-table-header">
         <th className="text-center align-middle"><span className="ps-2 pe-2">Groups</span></th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
@@ -306,25 +313,21 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                 </Col>
             </Row>
 
-            <HorizontalScroller enabled={boards ? boards.boards.length > 6 : false} className="mt-3">
+            <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false} className="mt-3">
                 <Table className="mb-0">
                     <thead>
                         {tableHeader}
                     </thead>
                     <tbody>
-                        {boards?.boards
-                            .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
-                            .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
-                            .map(board =>
-                                <BoardCard
-                                    key={board.id}
-                                    user={user}
-                                    board={board}
-                                    boardView={boardView}
-                                    assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                                    toggleAssignModal={() => openAssignModal(board)}
-                                />)
+                        {filteredBoards?.map(board =>
+                            <BoardCard
+                                key={board.id}
+                                user={user}
+                                board={board}
+                                boardView={boardView}
+                                assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                toggleAssignModal={() => openAssignModal(board)}
+                            />)
                         }
                     </tbody>
                 </Table>
