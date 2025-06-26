@@ -11,7 +11,7 @@ export const MicrosoftSignInButton = () => {
         dispatch(handleProviderLoginRedirect("MICROSOFT"));
     };
 
-    return <Button className={"position-relative"} block outline color={siteSpecific("primary", undefined)} style={{borderColor: "#545461", borderWidth: "1.5px"}} onClick={logInWithMicrosoft}>
+    return <Button color="keyline" onClick={logInWithMicrosoft}>
         <img className="google-button-logo" src={"/assets/common/logos/microsoft-logo.svg"} alt={"Microsoft logo"}/>Microsoft
     </Button>;
 };
