@@ -898,11 +898,11 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
             </Input>
             <div className="section-divider"/>
             <h5 className="mb-3">Display</h5>
-            <div className="d-flex">
+            <div className="d-flex flex-xl-column flex-xxl-row">
                 <Input className="w-auto" type="select" aria-label="Set display mode" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
-                <Spacer/>
+                {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
                 <div className="select-pretext me-2">Limit:</div>
                 <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
