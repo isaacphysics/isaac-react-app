@@ -44,6 +44,7 @@ import { QuizView } from "../../pages/quizzes/QuizView";
 import { BooksOverview } from "../../pages/BooksOverview";
 import { RevisionPage } from "../../pages/RevisionDetailPage";
 import { AnvilAppsListing } from "../../pages/AnvilAppsListing";
+import {AdaCSOverviewPage} from "../../pages/AdaCSOverviewPage";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -151,6 +152,7 @@ export const RoutesPhy = [
     ...(Object.keys(PHY_NAV_SUBJECTS).map((subject) => (
         <TrackedRoute key={key++} exact path={`/${subject}`} component={SubjectOverviewPage} />
     ))),
+    <TrackedRoute key={key++} exact path="/computerscience" component={AdaCSOverviewPage} />,
 
     // Concepts List
     <TrackedRoute key={key++} exact path="/concepts" component={Concepts} />,
