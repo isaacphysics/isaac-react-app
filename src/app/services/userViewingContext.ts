@@ -379,7 +379,7 @@ export function isRelevantPageContextOrIntendedAudience(intendedAudience: Conten
     return isIntendedAudience(intendedAudience, userContext, user);
 }
 
-export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null): boolean {
+export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UserContext, user: Immutable<PotentialUser> | null): boolean {
     // If no audience is specified, we default to true
     if (!intendedAudience) {
         return true;
@@ -389,7 +389,7 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
         // If stages are specified do we have any of them in our context
         if (audienceClause.stage) {
             const userStage = userContext.stage;
-            const satisfiesStageCriteria = userStage === STAGE.ALL || audienceClause.stage.includes(userStage);
+            const satisfiesStageCriteria = !userStage || userStage === STAGE.ALL || audienceClause.stage.includes(userStage);
             if (!satisfiesStageCriteria) {
                 return false;
             }
@@ -399,7 +399,7 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
         if (audienceClause.examBoard) {
             const userExamBoard = userContext.examBoard;
             const satisfiesExamBoardCriteria =
-                userExamBoard === EXAM_BOARD.ALL || audienceClause.examBoard.includes(userExamBoard);
+                !userExamBoard || userExamBoard === EXAM_BOARD.ALL || audienceClause.examBoard.includes(userExamBoard);
             if (!satisfiesExamBoardCriteria) {
                 return false;
             }
