@@ -116,3 +116,19 @@
     }
   }
 }
+
+.top-scrollbar-container {
+  height: 5px;
+  overflow-x: auto;
+
+  &.closed {
+    height: 0;
+    overflow-x: hidden;
+  }
+
+  &:has(+ div .my-quizzes-table) {
+    background-color: $gray-103;
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+  }
+}

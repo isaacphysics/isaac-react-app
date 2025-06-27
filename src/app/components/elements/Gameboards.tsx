@@ -6,6 +6,7 @@ import { SortItemHeader } from "./SortableItemHeader";
 import { BoardCard } from "./cards/BoardCard";
 import { RegisteredUserDTO, GameboardDTO } from "../../../IsaacApiTypes";
 import classNames from "classnames";
+import { HorizontalScroller } from "./inputs/HorizontalScroller";
 
 export interface GameboardsTableProps {
     user: RegisteredUserDTO;
@@ -93,17 +94,19 @@ const CSTable = (props: GameboardsTableProps) => {
         )}
     </tr>;
 
+    const filteredBoards = boards && boards.boards
+        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+        .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+        .filter(board => boardCompletionSelection(board, boardCompletion));
+
     return <div className={siteSpecific("", "mb-7")}>
-        <Table className={classNames("my-gameboard-table", {"mb-0" : isPhy})} responsive>
-            <thead>
-                {tableHeader}
-            </thead>
-            <tbody>
-                {boards?.boards
-                    .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
-                    .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                    .filter(board => boardCompletionSelection(board, boardCompletion))
-                    .map(board =>
+        <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
+            <Table className={classNames("my-gameboard-table", {"mb-0" : isPhy})}>
+                <thead>
+                    {tableHeader}
+                </thead>
+                <tbody>
+                    {filteredBoards && filteredBoards.map(board =>
                         <BoardCard
                             key={board.id}
                             board={board}
@@ -113,9 +116,10 @@ const CSTable = (props: GameboardsTableProps) => {
                             user={user}
                             boards={boards}
                         />)
-                }
-            </tbody>
-        </Table>
+                    }
+                </tbody>
+            </Table>
+        </HorizontalScroller>
     </div>;
 };
 
