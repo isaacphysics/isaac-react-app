@@ -10,12 +10,14 @@ import {
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
 import {Button, Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap";
-import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     below,
+    convertGameboardItemToContentSummary,
     determineAudienceViews,
+    DOCUMENT_TYPE,
     filterAudienceViewsByProperties,
     generateQuestionTitle,
     isAda,
@@ -24,6 +26,7 @@ import {
     isNotPartiallyLoggedIn,
     isPhy,
     isTutorOrAbove, PATHS,
+    SEARCH_RESULT_TYPE,
     showWildcard,
     siteSpecific,
     TAG_ID,
@@ -39,6 +42,8 @@ import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { GameboardSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { PageMetadata } from "../elements/PageMetadata";
+import { ListView } from "../elements/list-groups/ListView";
+import { convert } from "html-to-text";
 
 export const getProgressIcon = (question: GameboardItem) => {
     const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
@@ -153,6 +158,11 @@ export const Gameboard = withRouter(({ location }) => {
     const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId)));
+    //const displayQuestions = ([gameboard?.wildCard, ...(gameboard?.contents ?? [])]).map(convertGameboardItemToContentSummary);
+    const contentSummary = gameboard?.contents?.map(q => convertGameboardItemToContentSummary(q)) || []; // http://localhost:8004/question_decks#6b56cf5a-78fb-4e5d-b05e-4dbea85a0e91
+    const wildCard: ContentSummaryDTO | undefined = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT} as ContentSummaryDTO; // should not be "sig_figs_wildcard"
+    const displayQuestions = wildCard ? [wildCard, ...contentSummary] : contentSummary;
+    console.log("wc", wildCard);
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
@@ -191,7 +201,10 @@ export const Gameboard = withRouter(({ location }) => {
                             <MainContent>
                                 <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
                                 {/* // {isPhy && <h3 className="mt-3">{gameboard.title}</h3>} */}
-                                <GameboardViewer gameboard={gameboard} className={siteSpecific("mt-3", "mt-4 mt-lg-7")} />
+                                {isPhy 
+                                    ? <ListView type="item" items={displayQuestions} />
+                                    : <GameboardViewer gameboard={gameboard} className={siteSpecific("mt-3", "mt-4 mt-lg-7")} /> 
+                                }
                                 {user && isTutorOrAbove(user)
                                     ? <Row>
                                         <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
