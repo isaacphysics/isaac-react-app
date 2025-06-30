@@ -15,15 +15,13 @@ export const Overview = () => {
     const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
     const {setLinkedSetting} = useLinkableSetting();
     return <div id={"overview"}>
-        <Container className="overview-padding mw-1600">
-            <div id={"page-title"} className={"pt-4 pt-md-7"}>
-                <PageTitle currentPageTitle={"Overview"} />
-            </div>
-        </Container>
         <section id="browse">
             <Container className="overview-padding mw-1600">
+                <div id={"page-title"} className={"py-3"}>
+                    <PageTitle currentPageTitle={"Overview"} />
+                </div>
                 <h2>Browse Ada CS</h2>
-                <ColumnSlice>
+                <ColumnSlice className={"row-cols-lg-4 row-cols-md-2"}>
                     <IconCard className={"without-margin"} card={{
                         title: "Student groups",
                         icon: {src: "/assets/cs/icons/group-cyan.svg"},
