@@ -368,8 +368,7 @@ export function isRelevantToPageContext(intendedAudience: ContentBaseDTO['audien
     );
 }
 
-export function isRelevantPageContextOrIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null, pageContext: PageContextState) {
-    
+export function isRelevantPageContextOrIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UserContext, user: Immutable<PotentialUser> | null, pageContext: PageContextState) {
     // if we are in a subject-stage-specific route, this is only relevant if there is some overlap between that route and the content object; we ignore the user entirely.
     if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
         return isRelevantToPageContext(intendedAudience, pageContext);
@@ -481,7 +480,7 @@ export function audienceStyle(audienceString: string): string {
     return uniqueLabels.size === 1 ? uniqueLabels.values().next().value as string : "stage-label-all";
 }
 
-export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType, intendedAudience: boolean): string {
+export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType, intendedAudience: boolean, allUserContexts?: UserContext[]): string {
     let stagesSet: Set<Stage>;
     if (!audience) {
         stagesSet = new Set<Stage>([STAGE.ALL]);
@@ -491,7 +490,7 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     }
     // order stages
     const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
-    const stagesFilteredByUserContext = audienceStages.filter(s => userContext.stage === s);
+    const stagesFilteredByUserContext = allUserContexts ? audienceStages.filter(s => allUserContexts.some(uc => uc.stage === s)) : audienceStages.filter(s => userContext.stage === s);;
     let stagesToView: Stage[] = [];
 
     if (isAda) {

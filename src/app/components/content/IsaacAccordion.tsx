@@ -53,6 +53,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
     const page = useAppSelector(selectors.doc.get);
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
+    const allUserContexts = user?.loggedIn && user.registeredContexts ? user.registeredContexts : [];
     const pageContext = useAppSelector(selectors.pageContext.context);
 
     const isConceptPage = page && page !== 404 && page.type === DOCUMENT_TYPE.CONCEPT;
@@ -77,7 +78,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         // Handle conditional display settings
         .map(section => {
             const sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
-            const sectionDisplaySettings = isRelevantPageContextOrIntendedAudience(section.audience, userContext, user, pageContext) 
+            const sectionDisplaySettings = allUserContexts.some(uc => isRelevantPageContextOrIntendedAudience(section.audience, uc, user, pageContext))
                 ? sectionDisplay?.["audience"] 
                 : sectionDisplay?.["nonAudience"];
             if (sectionDisplaySettings?.includes("open")) {section.startOpen = true;}
@@ -171,7 +172,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
 
     return <div className="isaac-accordion">
         {sections?.map((section, index) => {
-            const intendedAudience = isIntendedAudience(section.audience, userContext, user);
+            const intendedAudience = allUserContexts.some(uc => isIntendedAudience(section.audience, uc, user));
             const audienceString = stringifyAudience(section.audience, userContext, intendedAudience);
             return <React.Fragment key={section.id || index}>
                 {isPhy && stageInserts?.[index] && <StageInsert stage={stageInserts[index]} />}
