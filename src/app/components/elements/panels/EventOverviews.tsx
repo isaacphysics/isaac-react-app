@@ -99,6 +99,10 @@ export const EventOverviews = ({
     setSelectedEventId(null);
     dispatch(clearEventOverviews);
     dispatch(getEventOverviews(overviewFilter, startIndex));
+
+    if (overviewFilter === EventOverviewFilter["Upcoming events"]) {
+      setReverse(false); // Latest upcoming event first
+    }
   }, [dispatch, setSelectedEventId, overviewFilter]);
 
   const EventTableButton = ({ sort, children }: PropsWithChildren<{ sort: string }>) => {

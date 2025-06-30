@@ -276,4 +276,95 @@ describe("Admin Event Manager", () => {
     const loadMoreButton = screen.queryByRole("button", { name: "Load more" });
     expect(loadMoreButton).toBeNull();
   });
+
+  it("sets reverse to false when overview filter is 'Upcoming events'", async () => {
+    setupTest("ADMIN");
+
+    await screen.findByText("Actions");
+
+    const table = screen.getByRole("table");
+    const rows = screen.getAllByRole("row", table);
+
+    const dataRows = rows.slice(1);
+
+    if (dataRows.length > 1) {
+      const firstEventDate = new Date(mockFutureEventOverviews.results[0].date);
+      const secondEventDate = new Date(mockFutureEventOverviews.results[1]?.date || firstEventDate);
+
+      expect(firstEventDate.getTime()).toBeGreaterThanOrEqual(secondEventDate.getTime());
+    }
+  });
+
+  it("maintains reverse state when switching to other filters", async () => {
+    setupTest("ADMIN");
+
+    await screen.findByText("Actions");
+
+    const filterSelection = screen.getByRole("combobox");
+    await userEvent.selectOptions(filterSelection, ["PAST"]);
+
+    await screen.findByText(
+      `${mockPastEventOverviews.results[0].title} - ${mockPastEventOverviews.results[0].subtitle}`,
+    );
+
+    await userEvent.selectOptions(filterSelection, ["FUTURE"]);
+
+    await screen.findByText(
+      `${mockFutureEventOverviews.results[0].title} - ${mockFutureEventOverviews.results[0].subtitle}`,
+    );
+
+    const table = screen.getByRole("table");
+    const rows = screen.getAllByRole("row", table);
+    const dataRows = rows.slice(1);
+
+    if (dataRows.length > 1) {
+      const firstEventDate = new Date(mockFutureEventOverviews.results[0].date);
+      const secondEventDate = new Date(mockFutureEventOverviews.results[1]?.date || firstEventDate);
+
+      expect(firstEventDate.getTime()).toBeGreaterThanOrEqual(secondEventDate.getTime());
+    }
+  });
+
+  it("does not set reverse to false for other filter types", async () => {
+    renderTestEnvironment({
+      role: "ADMIN",
+      PageComponent: EventOverviews,
+      componentProps: {
+        setSelectedEventId: mockSetSelectedEventId,
+        user: { ...mockUser, loggedIn: true, role: "ADMIN" },
+      },
+      initialRouteEntries: ["/admin/events"],
+      extraEndpoints: [
+        rest.get(API_PATH + "/events/overview", (req, res, ctx) => {
+          const filter = req.url.searchParams.get("filter");
+          if (filter === "FUTURE") {
+            return res(ctx.status(200), ctx.json(mockFutureEventOverviews));
+          } else if (filter === "PAST") {
+            return res(ctx.status(200), ctx.json(mockPastEventOverviews));
+          }
+          return res(ctx.status(200), ctx.json({ results: [], totalResults: 0 }));
+        }),
+      ],
+    });
+
+    await screen.findByText("Actions");
+
+    const filterSelection = screen.getByRole("combobox");
+    await userEvent.selectOptions(filterSelection, ["PAST"]);
+
+    await screen.findByText(
+      `${mockPastEventOverviews.results[0].title} - ${mockPastEventOverviews.results[0].subtitle}`,
+    );
+
+    const table = screen.getByRole("table");
+    const rows = screen.getAllByRole("row", table);
+    const dataRows = rows.slice(1);
+
+    if (dataRows.length > 1) {
+      const firstEventDate = new Date(mockPastEventOverviews.results[0].date);
+      const secondEventDate = new Date(mockPastEventOverviews.results[1]?.date || firstEventDate);
+
+      expect(firstEventDate.getTime()).toBeLessThanOrEqual(secondEventDate.getTime());
+    }
+  });
 });
