@@ -49,9 +49,9 @@ const HomepageHero = () => {
             <Container className="pt-7">
                 <div className="w-100 w-md-50 mb-4 mb-md-7 mb-xl-9 pe-xl-7">
                     <div className="physics-strapline mb-3">
-                        <h2><span className="text-green">Master Science subjects</span> by solving problems</h2>
+                        <h2><span className="text-green">Master science subjects</span> by solving problems</h2>
                     </div>
-                    From School to University – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.
+                    From school to university – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.
                 </div>
                 {!above['md'](deviceSize) && <div className="homepage-hero-img container-override"/>}
                 <Row className="row-cols-1 row-cols-md-2">

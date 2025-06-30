@@ -1,5 +1,5 @@
 import {http, HttpResponse, HttpHandler} from "msw";
-import {API_PATH, isAda, PATHS, siteSpecific} from "../../app/services";
+import {API_PATH, getSearchPlaceholder, isAda, PATHS, siteSpecific} from "../../app/services";
 import {screen, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
@@ -9,7 +9,7 @@ import {DDMMYYYY_REGEX, DAYS_AGO, dayMonthYearStringToDate, SOME_FIXED_FUTURE_DA
 import produce from "immer";
 
 
-const FILTER_LABEL_TEXT = siteSpecific("e.g. Forces", "Filter quizzes by name");
+const FILTER_LABEL_TEXT = siteSpecific(`e.g. ${getSearchPlaceholder()}`, "Filter quizzes by name");
 const ASSIGNED_TEXT_PREFIX = siteSpecific("Assigned on ", "Assigned: ");
 const DATE_REGEX = siteSpecific(TEXTUAL_DATE_REGEX, DDMMYYYY_REGEX);
 
