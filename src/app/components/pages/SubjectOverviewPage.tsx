@@ -153,7 +153,7 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
             </div>
 
             <p className="mt-3">
-                In Isaac {humanSubject},
+                Across Isaac {humanSubject},
                 <ul>
                     <li>Practice questions are those that require one concept or equation to solve.</li>
                     <li>Challenge questions are those that require one or more concepts, or require more creativity to solve the problem, helping to develop important problem solving skills. </li>

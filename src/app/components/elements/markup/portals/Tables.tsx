@@ -5,6 +5,7 @@ import {above, isAda, isMobile, siteSpecific, useDeviceSize} from "../../../../s
 import {ScrollShadows} from "../../ScrollShadows";
 import {ExpandableParentContext} from "../../../../../IsaacAppTypes";
 import {PortalInHtmlHook, useStatefulElementRef, useTableCompatiblePortalsInHtml} from "./utils";
+import { HorizontalScroller } from "../../inputs/HorizontalScroller";
 
 // A portal component to manage table elements from inside the React DOM
 const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLElement}) => {
@@ -16,15 +17,19 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLE
     const [scrollRef, updateScrollRef] = useStatefulElementRef<HTMLDivElement>();
     const [expandRef, updateExpandRef] = useStatefulElementRef<HTMLElement>();
     const {expandButton, innerClasses, outerClasses} = useExpandContent(classes.includes("expandable"), expandRef, "mb-4");
+    const tableInnerClasses = classNames(innerClasses, {"overflow-auto": !classes.includes("topScrollable")});
+    const tableOuterClasses = classNames(outerClasses, "isaac-table");
 
     if (modifiedHtml && parentElement) {
         return ReactDOM.createPortal(
-            <div className={classNames(outerClasses, "isaac-table")} ref={updateExpandRef}>
+            <div className={tableOuterClasses} ref={updateExpandRef}>
                 <div className={"position-relative"}>
                     {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
                     {isAda && window.ResizeObserver && <ScrollShadows element={scrollRef} />}
                     {expandButton}
-                    <div ref={updateScrollRef} className={classNames(innerClasses, "overflow-auto")} dangerouslySetInnerHTML={{__html: modifiedHtml}} />
+                    <HorizontalScroller enabled={classes.includes("topScrollable")}>
+                        <div ref={updateScrollRef} className={tableInnerClasses} dangerouslySetInnerHTML={{__html: modifiedHtml}} />
+                    </HorizontalScroller>
                     {renderPortalElements(scrollRef)}
                 </div>
             </div>,
@@ -55,7 +60,7 @@ export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpand
 
     const expandButton = (show && <div className={"expand-button position-relative"}>
         <button type={"button"} aria-label={"Expand content"} onClick={toggleExpanded}>
-            <div><span><img aria-hidden src={"/assets/common/icons/expand-arrow.svg"}/> {expanded ? "Close" : "Expand"}</span></div>
+            <div><span><img aria-hidden alt="" src={"/assets/common/icons/expand-arrow.svg"}/> {expanded ? "Close" : "Expand"}</span></div>
         </button>
     </div>) || null;
 

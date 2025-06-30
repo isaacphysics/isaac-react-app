@@ -11,11 +11,11 @@ interface ProgressBarProps {
 }
 
 const BAR_COLOURS = new Map([
-    ["phys_book_step_up", "bar-gcse"],
-    ["phys_book_gcse", "bar-gcse"],
-    ["physics_skills_14", "bar-alevel"],
-    ["physics_skills_19", "bar-alevel"],
-    ["physics_linking_concepts", "bar-alevel"],
+    ["phys_book_step_up", "bar-physics"],
+    ["phys_book_gcse", "bar-physics"],
+    ["physics_skills_14", "bar-physics"],
+    ["physics_skills_19", "bar-physics"],
+    ["physics_linking_concepts", "bar-physics"],
     ["maths_book_gcse", "bar-maths"],
     ["maths_book", "bar-maths"],
     ["maths_book_2e", "bar-maths"],
