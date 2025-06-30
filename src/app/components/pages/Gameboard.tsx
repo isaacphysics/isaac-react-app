@@ -70,22 +70,20 @@ export const getProgressIcon = (question: GameboardItem) => {
     return {itemClasses: classNames(itemClasses, `bg-${backgroundColor}`), icon, message};
 };
 
+// TODO Replace with new gameboard state (Correct / Some Errors / In Progress / Not Started) once implemented
 export const gameboardItemStateToCompletionState = (state?: GameboardItemState) => {
-    let a: CompletionState;
     switch (state) {
         case "PERFECT":
-            a = CompletionState.ALL_CORRECT;
-            break;
+            return CompletionState.ALL_CORRECT;
         case "PASSED":
         case "IN_PROGRESS":
-            a = CompletionState.IN_PROGRESS;
-            break;
+        case "FAILED": 
+            return CompletionState.IN_PROGRESS;
         case "NOT_ATTEMPTED":
         default: 
-            a = CompletionState.NOT_ATTEMPTED; 
+            return CompletionState.NOT_ATTEMPTED; 
     }
-    return a;
-}
+};
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
     const {itemClasses, icon, message} = getProgressIcon(question);
