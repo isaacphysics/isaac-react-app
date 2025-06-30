@@ -270,12 +270,17 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
 
     const GameboardDetails = () => {
         const subjects = determineGameboardSubjects(gameboard);
-        const topics = tags.getTopicTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
+        
+        const gameboardTags = Array.from((gameboard?.contents || []).reduce((a, c) => {
             if (isDefined(c.tags) && c.tags.length > 0) {
                 return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
             }
             return a;
-        }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
+        }, new Set<TAG_ID>())).filter(tag => isDefined(tag));
+        const topics = (tags.getTopicTags(gameboardTags).length > 0 
+            ? tags.getTopicTags(gameboardTags) 
+            : tags.getFieldTags(gameboardTags)
+        ).map(tag => tag.title).sort();
 
         return <>
             <div className="mb-2">

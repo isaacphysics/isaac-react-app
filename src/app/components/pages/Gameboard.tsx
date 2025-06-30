@@ -10,7 +10,7 @@ import {
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
 import {Button, Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap";
-import {ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
+import {CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, GameboardItemState, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     AUDIENCE_DISPLAY_FIELDS,
@@ -43,7 +43,6 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { GameboardSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { PageMetadata } from "../elements/PageMetadata";
 import { ListView } from "../elements/list-groups/ListView";
-import { convert } from "html-to-text";
 
 export const getProgressIcon = (question: GameboardItem) => {
     const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
@@ -70,6 +69,23 @@ export const getProgressIcon = (question: GameboardItem) => {
     }
     return {itemClasses: classNames(itemClasses, `bg-${backgroundColor}`), icon, message};
 };
+
+export const gameboardItemStateToCompletionState = (state?: GameboardItemState) => {
+    let a: CompletionState;
+    switch (state) {
+        case "PERFECT":
+            a = CompletionState.ALL_CORRECT;
+            break;
+        case "PASSED":
+        case "IN_PROGRESS":
+            a = CompletionState.IN_PROGRESS;
+            break;
+        case "NOT_ATTEMPTED":
+        default: 
+            a = CompletionState.NOT_ATTEMPTED; 
+    }
+    return a;
+}
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
     const {itemClasses, icon, message} = getProgressIcon(question);
@@ -159,10 +175,15 @@ export const Gameboard = withRouter(({ location }) => {
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId)));
     //const displayQuestions = ([gameboard?.wildCard, ...(gameboard?.contents ?? [])]).map(convertGameboardItemToContentSummary);
-    const contentSummary = gameboard?.contents?.map(q => convertGameboardItemToContentSummary(q)) || []; // http://localhost:8004/question_decks#6b56cf5a-78fb-4e5d-b05e-4dbea85a0e91
+    const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { 
+        return {
+            ...convertGameboardItemToContentSummary(q), 
+            state: gameboardItemStateToCompletionState(q.state)
+        }; 
+    }) || []; // http://localhost:8004/question_decks#6b56cf5a-78fb-4e5d-b05e-4dbea85a0e91
+    console.log("gc", gameboard?.contents);
     const wildCard: ContentSummaryDTO | undefined = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT} as ContentSummaryDTO; // should not be "sig_figs_wildcard"
-    const displayQuestions = wildCard ? [wildCard, ...contentSummary] : contentSummary;
-    console.log("wc", wildCard);
+    const displayQuestions = (wildCard && gameboard && showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
@@ -202,8 +223,8 @@ export const Gameboard = withRouter(({ location }) => {
                                 <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
                                 {/* // {isPhy && <h3 className="mt-3">{gameboard.title}</h3>} */}
                                 {isPhy 
-                                    ? <ListView type="item" items={displayQuestions} />
-                                    : <GameboardViewer gameboard={gameboard} className={siteSpecific("mt-3", "mt-4 mt-lg-7")} /> 
+                                    ? <ListView type="item" items={displayQuestions} className="mt-3"/>
+                                    : <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-7" /> 
                                 }
                                 {user && isTutorOrAbove(user)
                                     ? <Row>
