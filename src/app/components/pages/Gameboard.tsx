@@ -174,16 +174,9 @@ export const Gameboard = withRouter(({ location }) => {
     const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId)));
-    //const displayQuestions = ([gameboard?.wildCard, ...(gameboard?.contents ?? [])]).map(convertGameboardItemToContentSummary);
-    const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { 
-        return {
-            ...convertGameboardItemToContentSummary(q), 
-            state: gameboardItemStateToCompletionState(q.state)
-        }; 
-    }) || []; // http://localhost:8004/question_decks#6b56cf5a-78fb-4e5d-b05e-4dbea85a0e91
-    console.log("gc", gameboard?.contents);
-    const wildCard: ContentSummaryDTO | undefined = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT} as ContentSummaryDTO; // should not be "sig_figs_wildcard"
-    const displayQuestions = (wildCard && gameboard && showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
+    const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: gameboardItemStateToCompletionState(q.state)}; }) || [];
+    const wildCard: ContentSummaryDTO | undefined = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT} as ContentSummaryDTO;
+    const displayQuestions = (wildCard && gameboard && !showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
@@ -221,7 +214,6 @@ export const Gameboard = withRouter(({ location }) => {
                             <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />
                             <MainContent>
                                 <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
-                                {/* // {isPhy && <h3 className="mt-3">{gameboard.title}</h3>} */}
                                 {isPhy 
                                     ? <ListView type="item" items={displayQuestions} className="mt-3"/>
                                     : <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-7" /> 
