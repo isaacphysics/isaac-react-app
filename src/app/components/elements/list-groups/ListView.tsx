@@ -2,7 +2,7 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { above, BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags, useDeviceSize } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { ContentSummaryDTO, GameboardDTO, QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -258,19 +258,12 @@ export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemPr
 
 export type ListViewCardProps = Omit<Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}>, "alviType" | "alviLayout">;
 
-export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & {showBlanks?: boolean} & {centreLast?: boolean} & ListGroupProps) => {
-    const { cards, showBlanks, centreLast, ...rest } = props;
-    const deviceSize = useDeviceSize();
-    const gridCards = centreLast && above["lg"](deviceSize) ? cards.slice(0, -1) : cards;
+export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & {showBlanks?: boolean} & ListGroupProps) => {
+    const { cards, showBlanks, ...rest } = props;
     return <>
         <ListGroup {...rest} className={classNames("list-view-card-container link-list list-group-links p-0 m-0 flex-row row-cols-1 row-cols-lg-2 row", rest.className)}>
-            {gridCards.map((card, index) => card ? <ListViewCardItem {...card} key={index} alviType="item" alviLayout="card"/> : (showBlanks ? <ListGroupItem key={index}/> : null))}
+            {cards.map((card, index) => card ? <ListViewCardItem {...card} key={index} alviType="item" alviLayout="card"/> : (showBlanks ? <ListGroupItem key={index}/> : null))}
         </ListGroup>
-        {centreLast && above["lg"](deviceSize) && <div className="d-flex flex-column">
-            <ListGroup {...rest} className={classNames("list-view-card-container link-list list-group-links p-0 m-0 w-50 centered-final-card", rest.className)}>
-                <ListViewCardItem {...cards.slice(-1)[0]} alviType="item" alviLayout="card"/>
-            </ListGroup>
-        </div>}
     </>;
 };
 

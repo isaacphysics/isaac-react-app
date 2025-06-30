@@ -121,7 +121,8 @@ const AdaSubjectCard: ListViewCardProps = {
         width: "70px",
         height: "81px",
     },
-    linkTags: [{tag: "Find out more", url: "", "aria-label": "Find out about Ada Computer Science"}]
+    linkTags: [{tag: "Find out more", url: "", "aria-label": "Find out about Ada Computer Science"}],
+    className: "centered-final-card"
 };
 
 const cards = [...subjectCategories.map((sc) => getListViewSubjectCard(sc)), AdaSubjectCard];
