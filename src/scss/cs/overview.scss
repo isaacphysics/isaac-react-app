@@ -1,11 +1,11 @@
 .overview-padding {
   @extend .px-md-4;
-  @include media-breakpoint-up(lg) {
+  @include media-breakpoint-up(xl) {
     padding-left: 100px !important;
     padding-right: 100px !important;
   }
   @extend .py-7;
-  @include media-breakpoint-up(lg) {
+  @include media-breakpoint-up(xl) {
     padding-top: 2rem !important;
     padding-bottom: 2rem !important;
   }
