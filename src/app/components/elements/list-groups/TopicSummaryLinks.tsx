@@ -24,7 +24,7 @@ import { ListGroup, ListGroupItem, Button, UncontrolledTooltip } from "reactstra
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
-    const allUserContexts = user?.loggedIn && user.registeredContexts ? user.registeredContexts : [];
+    const allUserContexts = user?.loggedIn && user.registeredContexts;
     const deviceSize = useDeviceSize();
 
     return <ListGroup className="mt-4 link-list list-group-links">
@@ -37,7 +37,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
 
             // Handle conditional display settings
             .map(item => {
-                const intendedAudience = allUserContexts.some(uc => isIntendedAudience(item.audience, uc, user));
+                const intendedAudience = !allUserContexts || allUserContexts.some(uc => isIntendedAudience(item.audience, uc, user));
                 return {...item, deEmphasised: !intendedAudience};
             })
 
@@ -45,8 +45,8 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
             .map((item, index) => {
                 const audienceString = stringifyAudience(
                     item.audience, userContext,
-                    allUserContexts.some(uc => isIntendedAudience(item.audience, uc, user)),
-                    [...allUserContexts]
+                    !allUserContexts || allUserContexts.some(uc => isIntendedAudience(item.audience, uc, user)),
+                    allUserContexts ? [...allUserContexts] : undefined
                 );
 
                 return <ListGroupItem key={item.id} className="topic-summary-link">
