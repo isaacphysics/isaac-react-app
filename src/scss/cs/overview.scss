@@ -11,3 +11,38 @@
   }
 
 }
+
+#overview {
+  z-index: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+#overview:before {
+  content: "";
+  background-image: url("/assets/cs/decor/fingerprint-stage-slice.svg");
+  position: absolute;
+  opacity: 0.1;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 1000px;
+  width: 800px;
+  top: -20%;
+  left: 70%;
+  transform: rotate(210deg);
+}
+
+#overview:after {
+  content: "";
+  background-image: url("/assets/cs/decor/fingerprint-stage-slice.svg");
+  position: absolute;
+  opacity: 0.1;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 1000px;
+  width: 800px;
+  top: 10%;
+  left: -30%;
+  z-index: -1;
+  transform: rotate(300deg);
+}
