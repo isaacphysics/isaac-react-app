@@ -119,9 +119,10 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                         {allQuestionsCorrect
                                             ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-correct me-2"/> Correct</div>
                                             : allQuestionsAttempted
-                                                ? isPhy
-                                                    ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-attempted me-2"/> All attempted (some errors)</div>
-                                                    : <div className="d-flex align-items-center"><span className="icon icon-raw icon-incorrect me-2"/> Incorrect</div>
+                                                // uncomment the lines below if reusing this logic elsewhere!
+                                                // ? isPhy
+                                                ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-attempted me-2"/> All attempted (some errors)</div>
+                                                // : <div className="d-flex align-items-center"><span className="icon icon-raw icon-incorrect me-2"/> Incorrect</div>
                                                 : anyQuestionAttempted
                                                     ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-in-progress me-2"/> In progress</div>
                                                     : <div className="d-flex align-items-center"><span className="icon icon-raw icon-not-started me-2"/> Not started</div>
