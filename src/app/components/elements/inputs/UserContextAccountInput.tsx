@@ -176,7 +176,7 @@ export function UserContextAccountInput({
             {userContexts.length ? userContexts.map((userContext, index) => {
                 return <FormGroup key={index}>
                     <UserContextRow
-                        userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
+                        userContext={userContext} showNullStageOption={true} submissionAttempted={submissionAttempted}
                         setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
                         existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
                         tutorOrAbove={tutorOrAbove} userContexts={userContexts} setUserContexts={setUserContexts}
