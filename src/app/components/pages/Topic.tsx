@@ -28,7 +28,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage ?? null);
 
     const searchQuery = `?topic=${topicName}`;
-    const linkedRelevantGameboards = topicPage && topicPage.linkedGameboards && topicPage.linkedGameboards;
+    const linkedRelevantGameboards = topicPage && topicPage.linkedGameboards;
 
     return <ShowLoading until={topicPage} thenRender={topicPage =>
         <Container id="topic-page">
