@@ -287,10 +287,10 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
                 Subject{subjects.length > 1 && "s"}:
                 <ul className="d-inline ms-1">{subjects.map(s => <li className="d-inline" key={s}><Pill title={HUMAN_SUBJECTS[s]} theme={s}/></li>)}</ul>
             </div>
-            <div className="mb-2">
+            {(topics.length > 0) && <div className="mb-2">
                 Topic{subjects.length > 1 && "s"}:
                 <ul className="d-inline ms-1">{topics.map(t => <li key={t} className="d-inline"><Pill title={t}/></li>)}</ul>
-            </div>
+            </div>}
         </>;
     };
 
