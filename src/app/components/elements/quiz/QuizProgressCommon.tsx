@@ -42,18 +42,32 @@ export const generateCorrectnessIcon = (correct: number, incorrect: number, notA
     }
 };
 
-const getAssignmentQuestionCorrectnessIcon = (state: CompletionState) => {
-    switch (state) {
-        case CompletionState.ALL_CORRECT:
-            return ICON.correct;
-        case CompletionState.ALL_INCORRECT:
-            return ICON.incorrect;
-        case CompletionState.ALL_ATTEMPTED:
-        case CompletionState.IN_PROGRESS:
-            return ICON.partial;
-        case CompletionState.NOT_ATTEMPTED:
-            return ICON.notAttempted;
+const getAssignmentQuestionCorrectnessIcon = (state: CompletionState, attemptedOrCorrect: "ATTEMPTED" | "CORRECT") => {
+    if (attemptedOrCorrect === "CORRECT") {
+        switch (state) {
+            case CompletionState.ALL_CORRECT:
+                return ICON.correct;
+            case CompletionState.ALL_INCORRECT:
+                return ICON.incorrect;
+            case CompletionState.ALL_ATTEMPTED:
+            case CompletionState.IN_PROGRESS:
+                return ICON.partial;
+            case CompletionState.NOT_ATTEMPTED:
+                return ICON.notAttempted;
+        }
+    } else {
+        switch (state) {
+            case CompletionState.ALL_CORRECT:
+            case CompletionState.ALL_ATTEMPTED:
+            case CompletionState.ALL_INCORRECT:
+                return ICON.correct;
+            case CompletionState.IN_PROGRESS:
+                return ICON.partial;
+            case CompletionState.NOT_ATTEMPTED:
+                return ICON.notAttempted;
+        }
     }
+
 };
 
 const getQuizQuestionCorrectnessIcon = (attemptedOrCorrect: "ATTEMPTED" | "CORRECT", studentProgress: AssignmentProgressDTO, questionIndex: number) => {
@@ -213,13 +227,14 @@ export function ResultsTable<Q extends QuestionType>({
                 Attempted
             </SortItemHeader>
         }
-        {questions.map((q, index) =>
+        {questions.map((_, index) =>
             <SortItemHeader<ProgressSortOrder> 
                 defaultOrder={index}
                 reverseOrder={index}
                 currentOrder={sortOrder}
                 setOrder={toggleSort}
                 reversed={reverseOrder}
+                alignment="center"
                 onClick={() => setSelectedQuestionIndex(index)}
                 className={classNames("pointer-cursor", {"selected": index === selectedQuestionIndex})}
                 label={`Question ${index + 1}`}
@@ -324,7 +339,7 @@ export function ResultsTable<Q extends QuestionType>({
                                                         questions[index].questionPartsTotal as number, 
                                                         !!pageSettings?.formatAsPercentage
                                                     ) 
-                                                    : getAssignmentQuestionCorrectnessIcon((studentProgress.questionResults || [])[index])
+                                                    : getAssignmentQuestionCorrectnessIcon((studentProgress.questionResults || [])[index], pageSettings?.attemptedOrCorrect || "CORRECT")
                                                 : ""
                                             )
                                             : getQuizQuestionCorrectnessIcon(pageSettings?.attemptedOrCorrect || "CORRECT", studentProgress, index)

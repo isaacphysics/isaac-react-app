@@ -75,16 +75,16 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             icon={{type: "hex", icon: "icon-group"}}
         />
 
-        <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-flex align-items-center mb-2 mt-4", siteSpecific("d-md-none", "d-xl-none"))}>
+        {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-flex align-items-center mb-2 mt-4 d-md-none")}>
             <i className="icon icon-arrow-left me-2"/>
             Back to assignment progress
-        </Link>
+        </Link>}
 
         <div className={classNames("d-flex flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
-            <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-none align-items-center", siteSpecific("d-md-flex", "d-xl-flex"))}>
+            {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-none align-items-center d-md-flex")}>
                 <i className="icon icon-arrow-left me-2"/>
                 Back to assignment progress
-            </Link>
+            </Link>}
             {isDefined(group?.id) && <>
                 {above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
                 <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupProgressCSVDownloadLink(group.id as number))))}>

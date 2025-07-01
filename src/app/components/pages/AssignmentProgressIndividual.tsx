@@ -177,6 +177,8 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
 };
 
 const AdaKey = () => {
+    const context = useContext(AssignmentProgressPageSettingsContext);
+
     const KeyItem = ({icon, label}: {icon: React.ReactNode, label: string}) => (
         <span className="d-flex align-items-center w-max-content gap-2">
             {icon} {label}
@@ -185,14 +187,25 @@ const AdaKey = () => {
 
     return <div className="d-flex flex-column flex-md-row align-items-md-center column-gap-4 row-gap-2">
         <span className="d-inline d-lg-none d-xl-inline font-size-1 fw-bold">Key</span>
-        <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
-            <KeyItem icon={ICON.correct} label="Correct" />
-            <KeyItem icon={ICON.partial} label="Partially correct" />
-        </div>
-        <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
-            <KeyItem icon={ICON.incorrect} label="Incorrect" />
-            <KeyItem icon={ICON.notAttempted} label="Not attempted" />
-        </div>
+        {context?.attemptedOrCorrect === "CORRECT" 
+            ? <>
+                <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
+                    <KeyItem icon={ICON.correct} label="Correct" />
+                    <KeyItem icon={ICON.partial} label="Partially correct" />
+                </div>
+                <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
+                    <KeyItem icon={ICON.incorrect} label="Incorrect" />
+                    <KeyItem icon={ICON.notAttempted} label="Not attempted" />
+                </div>
+            </>
+            : <>
+                <div className="d-flex flex-column flex-md-row column-gap-4 row-gap-2">
+                    <KeyItem icon={ICON.correct} label="Fully attempted" />
+                    <KeyItem icon={ICON.partial} label="Partially attempted" />
+                    <KeyItem icon={ICON.notAttempted} label="Not attempted" />
+                </div>
+            </>
+        }
     </div>;
 };
 interface DetailedMarksProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -334,10 +347,10 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
 
     return <>
         <div className={classNames("d-flex flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
-            <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${assignment.groupId}`} className="d-flex align-items-center">
+            {isPhy && <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${assignment.groupId}`} className="d-flex align-items-center">
                 <i className="icon icon-arrow-left me-2"/>
                 Back to group assignments and tests
-            </Link>
+            </Link>}
             <Spacer/>
             <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getAssignmentCSVDownloadLink(assignment.id))))}>
                 Download CSV

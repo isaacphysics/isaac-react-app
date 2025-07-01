@@ -190,6 +190,7 @@ $perfect-fill: $cs-perfect;
 $passed-fill: $cs-jet;
 $in-progress-fill: $cs-in-progress;
 $failed-fill: $cs-failed;
+$fully-attempted-fill: $cs-perfect; // Ada don't use these colours, but given ticks are used in place reusing $cs-perfect would make sense
 
 
 // fonts
