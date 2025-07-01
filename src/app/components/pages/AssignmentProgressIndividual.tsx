@@ -67,9 +67,11 @@ export function markClassesInternal(attemptedOrCorrect: "ATTEMPTED" | "CORRECT",
         if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
         } else if (status && isQuestionFullyAttempted(status) || correctParts + incorrectParts === totalParts) {
-            return "completed";
+            return "fully-attempted";
         } else if (status === CompletionState.NOT_ATTEMPTED || correctParts + incorrectParts === 0) {
             return "not-attempted";
+        } else if ((correctParts + incorrectParts) / totalParts >= passMark) {
+            return "passed";
         } else {
             return "in-progress";
         }

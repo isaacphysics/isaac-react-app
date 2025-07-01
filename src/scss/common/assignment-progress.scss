@@ -94,6 +94,13 @@ $completed-cb-bg-img: linear-gradient(
                 to right, rgba($perfect-fill, $status-opacity), rgba($perfect-fill, $status-opacity));
 $completed-bg-size: 100%;
 
+// FULLY ATTEMPTED
+$fully-attempted-bg-img: linear-gradient(to right, rgba($fully-attempted-fill, $status-opacity), rgba($fully-attempted-fill, $status-opacity));
+$fully-attempted-total-bg-img: linear-gradient(to right, rgba($fully-attempted-fill, $total-status-opacity), rgba($fully-attempted-fill, $total-status-opacity));
+$fully-attempted-cb-bg-img: linear-gradient(
+                to right, rgba($fully-attempted-fill, $status-opacity), rgba($fully-attempted-fill, $status-opacity));
+$fully-attempted-bg-size: 100%;
+
 // PASSED
 $passed-bg-img: linear-gradient(to right, rgba($passed-fill, $status-opacity), rgba($passed-fill, $status-opacity));
 $passed-total-bg-img: linear-gradient(to right, rgba($passed-fill, $total-status-opacity), rgba($passed-fill, $total-status-opacity));
@@ -131,6 +138,10 @@ $failed-bg-size: 25%;
       background-image: $completed-bg-img;
       background-size: $completed-bg-size;
     }
+    .fully-attempted {
+      background-image: $fully-attempted-bg-img;
+      background-size: $fully-attempted-bg-size;
+    }
     .passed {
       background-image: $passed-bg-img;
       background-size: $passed-bg-size;
@@ -150,6 +161,14 @@ $failed-bg-size: 25%;
     &.total-column {
       background-image: $completed-total-bg-img;
       background-size: $completed-bg-size;
+    }
+  }
+
+  .fully-attempted th {
+    &:first-child { color: rgba($fully-attempted-fill, 1); }
+    &.total-column {
+      background-image: $fully-attempted-total-bg-img;
+      background-size: $fully-attempted-bg-size;
     }
   }
 
@@ -211,6 +230,9 @@ $failed-bg-size: 25%;
     .completed {
       background-image: $completed-cb-bg-img;
     }
+    .fully-attempted {
+      background-image: $fully-attempted-cb-bg-img;
+    }
     .passed {
       background-image: $passed-cb-bg-img;
     }
@@ -224,6 +246,7 @@ $failed-bg-size: 25%;
 
   .completed th.total-column { background-image: $completed-cb-bg-img;}
   .passed th.total-column { background-image: $passed-cb-bg-img; }
+  .fully-attempted th.total-column { background-image: $fully-attempted-cb-bg-img; }
   .in-progress th.total-column { background-image: $in-progress-cb-bg-img; }
   .failed th.total-column { background-image: $failed-cb-bg-img; }
 }
