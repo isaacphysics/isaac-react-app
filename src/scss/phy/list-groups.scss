@@ -21,36 +21,46 @@
 }
 
 .list-view-card-container {
-  border-radius: 10px;
-  border: 1px solid $gray-107;
-  background: white;
+  border: none;
+  background: transparent;
+  $inner-border: 1px solid var(--border-light);
 
   > .list-group-item {
-    border: none;
+    border: 1px solid $gray-107;
     border-radius: 0;
-    background-color: transparent;
+    background-color: white;
 
     @include media-breakpoint-down(lg) {
-      &:not(:last-child) {
-        border-bottom: 1px solid var(--border-light);
-      }
-      &:not(:first-child) {
-        border-top: 1px solid var(--border-light);
-      }
+      &:not(:last-child)  { border-bottom: $inner-border }
+      &:not(:first-child) { border-top:    $inner-border }
+
+      &:first-child { border-radius: 10px 10px 0 0; }
+      &:last-child  { border-radius: 0 0 10px 10px; }
     }
 
     @include media-breakpoint-up(lg) {
-      &:nth-child(odd) {
-        border-right: 1px solid var(--border-light);
+      &:nth-child(odd)   { border-right: $inner-border }
+      &:nth-child(even)  { border-left:  $inner-border }
+
+      &:nth-child(n+3)      { border-top:    $inner-border }
+      &:nth-last-child(n+3) { border-bottom: $inner-border }
+
+      &:nth-child(1) { border-top-left-radius: 10px }
+      &:nth-child(2) { border-top-right-radius: 10px }
+
+      &:nth-last-child(3):has(~ .centered-final-card),
+      &:nth-last-child(2):not(:has(~ .centered-final-card)) {
+        border-bottom-left-radius: 10px;
       }
-      &:nth-child(even) {
-        border-left: 1px solid var(--border-light);
+      
+      &:nth-last-child(2):has(~ .centered-final-card),
+      &:last-child:not(:has(~ .centered-final-card)) {
+        border-bottom-right-radius: 10px;
       }
-      &:nth-child(n+3) {
-        border-top: 1px solid var(--border-light);
-      }
-      &:nth-last-child(n+3) {
-        border-bottom: 1px solid var(--border-light);
+
+      &.centered-final-card {
+        margin-left: 25%;
+        border-radius: 0 0 10px 10px;
       }
     }
   }
