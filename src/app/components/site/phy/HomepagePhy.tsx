@@ -191,7 +191,7 @@ export const HomepagePhy = () => {
                             <h3>Explore and learn!</h3>
                             <div className="section-divider flex-grow-1 ms-2"/>
                         </div>
-                        <ListViewCards cards={cards} centreLast/>
+                        <ListViewCards cards={cards} centreLast />
                     </div>
                 </section>
                 <section id="events-news">

@@ -68,3 +68,24 @@ details.teacher-notes {
     }
   }
 }
+
+.ada-overview-page {
+  position: relative;
+  overflow-y: hidden;
+  &::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 800px;
+    rotate: 60deg;
+    bottom: -400px;
+    right: -200px;
+    background: url("/assets/cs/decor/fingerprint-stage-slice.svg") no-repeat bottom right;
+    background-size: contain;
+    opacity: 0.4;
+  }
+
+  ul {
+    list-style-image: unset;
+  }
+}

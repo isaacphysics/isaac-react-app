@@ -4,12 +4,14 @@ import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageMetadata} from "../elements/PageMetadata";
 import {AffixButton} from "../elements/AffixButton";
+import { ColumnSlice } from "../elements/layout/ColumnSlice";
+import { TextBlock } from "../elements/layout/TextBlock";
+import { ImageBlock } from "../elements/layout/ImageBlock";
 
 
 export const AdaCSOverviewPage = withRouter(() => {
 
-
-    return <Container data-bs-theme={undefined}>
+    return <Container data-bs-theme={undefined} className="ada-overview-page">
         <TitleAndBreadcrumb
             currentPageTitle={"Computer Science"}
             icon={{
@@ -20,7 +22,7 @@ export const AdaCSOverviewPage = withRouter(() => {
                 height: "81px",
             }}
         />
-        <div className="mt-7">
+        <div>
             <PageMetadata title="Ada Computer Science" />
             <p>
                 Ada Computer Science is a free learning platform for computing teachers and students.
@@ -29,12 +31,10 @@ export const AdaCSOverviewPage = withRouter(() => {
                 teachers and students. These include concept pages, interactive questions, and teacher tools, amongst a
                 wide range of other resources designed to enhance computer science education.
             </p>
-            <h4>
-                Here&apos;s how Ada CS can support you:
-            </h4>
-            <div className="d-flex row-cols-1 row-cols-md-2 row">
-                <div className="d-flex flex-column">
-                    <h5>For students</h5>
+
+            <ColumnSlice>
+                <TextBlock>
+                    <h2>For students</h2>
                     <div>
                         Explore interactive resources designed to help you study computer science:
                         <ul>
@@ -44,9 +44,18 @@ export const AdaCSOverviewPage = withRouter(() => {
                             <li>Join termly challenges to test your knowledge and skills.</li>
                         </ul>
                     </div>
-                </div>
-                <div className="d-flex flex-column">
-                    <h5>For teachers</h5>
+                </TextBlock>
+                <ImageBlock>
+                    <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/learner-1.png" alt=""/>
+                </ImageBlock>
+            </ColumnSlice>
+
+            <ColumnSlice reverseUnderBreakpoint>
+                <ImageBlock>
+                    <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-1.png" alt=""/>
+                </ImageBlock>
+                <TextBlock>
+                    <h2>For teachers</h2>
                     <div>
                         Access structured resources to help you deliver high-quality computer science education:
                         <ul>
@@ -55,19 +64,19 @@ export const AdaCSOverviewPage = withRouter(() => {
                             <li>Track student progress with a personal markbook to identify areas for improvement.</li>
                         </ul>
                     </div>
-                </div>
-            </div>
+                </TextBlock>
+            </ColumnSlice>
 
-            <p className="text-center my-4">
+            <div className="text-center py-4">
                 <AffixButton
-                    color="keyline"
+                    color="solid"
                     target={"_blank"}
                     href={"https://adacomputerscience.org"}
                     affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}
                 >
                     Go to Ada CS
                 </AffixButton>
-            </p>
+            </div>
 
         </div>
     </Container>;
