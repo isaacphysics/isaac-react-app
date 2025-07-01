@@ -1,4 +1,4 @@
-#main-heading div[data-testid="main-heading"] {
+#main-heading > div:first-child {
     container: title-container / inline-size;
 }
 

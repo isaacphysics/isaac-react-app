@@ -17,6 +17,7 @@ import {
     isFullyDefinedContext,
     isLoggedIn,
     isPhy,
+    isSingleStageContext,
     Item,
     itemiseTag,
     LearningStage,
@@ -65,8 +66,10 @@ type FilterParams = typeof FILTER_PARAMS[number];
 
 export interface QuestionStatus {
     notAttempted: boolean;
-    complete: boolean;
     tryAgain: boolean;
+    allIncorrect: boolean; // Ada only
+    allAttempted: boolean; // Phy only
+    complete: boolean;
 }
 
 function questionStatusToURIComponent(statuses: QuestionStatus): string {
@@ -75,8 +78,10 @@ function questionStatusToURIComponent(statuses: QuestionStatus): string {
         .map(e => {
             switch(e[0]) {
                 case "notAttempted": return "NOT_ATTEMPTED";
-                case "complete": return "ALL_CORRECT";
                 case "tryAgain": return "IN_PROGRESS";
+                case "allIncorrect": return "ALL_INCORRECT"; 
+                case "allAttempted": return "ALL_ATTEMPTED";
+                case "complete": return "ALL_CORRECT";
             }
         })
         .join(",");
@@ -88,16 +93,20 @@ function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionS
         // If no statuses set use default
         return {
             notAttempted: false,
-            complete: false,
             tryAgain: false,
+            allIncorrect: false,
+            allAttempted: false,
+            complete: false,
         };
     }
     else {
         // otherwise set use the URI components
         return {
             notAttempted: statuses.includes("notAttempted"),
-            complete: statuses.includes("complete"),
             tryAgain: statuses.includes("tryAgain"),
+            allIncorrect: statuses.includes("allIncorrect"),
+            allAttempted: statuses.includes("allAttempted"),
+            complete: statuses.includes("complete"),
         };
     }
 }
@@ -120,11 +129,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const history = useHistory();
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
-    const isSolitaryStage = pageStageToSearchStage(pageContext?.stage).length === 1;
+    const [isSolitaryStage, setIsSolitaryStage] = useState(false); // we can't calculate this until we have the page context
     const [selections, setSelections] = useState<ChoiceTree[]>([]); // we can't populate this until we have the page context
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages).concat(isSolitaryStage ? pageStageToSearchStage(pageContext?.stage)[0] : []) as STAGE[]);
+    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the page context
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
@@ -142,7 +151,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             if (filtersHaveNotBeenSpecifiedByQueryParams) {
                 const accountStages = user.registeredContexts?.map(c => c.stage).filter(s => s) as STAGE[];
                 const allStagesSelected = accountStages?.some(stage => STAGE_NULL_OPTIONS.includes(stage));
-                if (!allStagesSelected && (isPhy || accountStages.length === 1)) { // Ada only want to apply stages filter if there is only one
+                if (!allStagesSelected && (isPhy ? !pageContext?.stage?.length : accountStages.length === 1)) { // Ada only want to apply stages filter if there is only one
                     setSearchStages(accountStages);
                 }
                 const examBoardStages = user.registeredContexts?.map(c => c.examBoard).filter(e => e) as EXAM_BOARD[];
@@ -166,6 +175,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     arrayFromPossibleCsv(params.topics)
                 )
             );
+
+            const solitary = isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext); 
+            setIsSolitaryStage(solitary);
+            setSearchStages(arrayFromPossibleCsv(params.stages).concat(solitary ? pageStageToSearchStage(pageContext?.stage)[0] : []) as STAGE[]);
         }
     }, [pageContext]);
 
@@ -354,9 +367,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setSelections([pageContext?.subject ? {"subject": [itemiseTag(tags.getById(pageContext.subject as TAG_ID))]} : {}, {}, {}]);
         setSearchStatuses(
             {
-                notAttempted: false,
-                complete: false,
                 tryAgain: false,
+                notAttempted: false,
+                allIncorrect: false,
+                allAttempted: false,
+                complete: false,
             });
         setSearchDisabled(!searchQuery);
     }, [isSolitaryStage, pageContext, searchQuery]);

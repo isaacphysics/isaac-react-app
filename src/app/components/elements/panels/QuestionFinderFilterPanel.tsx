@@ -363,6 +363,36 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 />
                             </CheckboxWrapper>
                         </li>
+                        {isAda && <li>
+                            <CheckboxWrapper active={searchStatuses.allIncorrect}>
+                                <StyledCheckbox
+                                    color="primary"
+                                    checked={searchStatuses.allIncorrect}
+                                    onChange={() => setSearchStatuses(s => {return {...s, allIncorrect: !s.allIncorrect};})}
+                                    label={
+                                        <div className="d-flex">
+                                            All incorrect
+                                            <img className="ps-2" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt="All incorrect"/> 
+                                        </div>
+                                    }
+                                />
+                            </CheckboxWrapper>
+                        </li>}
+                        {isPhy && <li>
+                            <CheckboxWrapper active={searchStatuses.allAttempted}>
+                                <StyledCheckbox
+                                    color="primary"
+                                    checked={searchStatuses.allAttempted}
+                                    onChange={() => setSearchStatuses(s => {return {...s, allAttempted: !s.allAttempted};})}
+                                    label={
+                                        <div className="d-flex">
+                                            All attempted
+                                            <img className="ps-2" src={`/assets/phy/icons/redesign/status-attempted.svg`} alt="All attempted"/> 
+                                        </div>
+                                    }
+                                />
+                            </CheckboxWrapper>
+                        </li>}
                         <li>
                             <CheckboxWrapper active={searchStatuses.tryAgain}>
                                 <StyledCheckbox

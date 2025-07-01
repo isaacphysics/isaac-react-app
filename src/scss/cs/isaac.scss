@@ -190,6 +190,7 @@ $perfect-fill: $cs-perfect;
 $passed-fill: $cs-jet;
 $in-progress-fill: $cs-in-progress;
 $failed-fill: $cs-failed;
+$fully-attempted-fill: $cs-perfect; // Ada don't use these colours, but given ticks are used in place reusing $cs-perfect would make sense
 
 
 // fonts
@@ -331,6 +332,11 @@ $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to ge
 ));
 
 $enable-negative-margins: true;
+
+$card-border-width: 0;
+$card-border-radius: 1rem;
+$card-spacer-x: 1.5rem;
+$card-spacer-y: 1.5rem;
 
 // all Bootstrap overrides must appear before this
 @import "~bootstrap/scss/bootstrap"; 

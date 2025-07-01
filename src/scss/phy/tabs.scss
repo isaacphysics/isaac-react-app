@@ -7,3 +7,14 @@
     }
   }
 }
+
+.card-tabs > .card-tab {
+  margin-bottom: calc(-1 * $border-width - 1px); // -1px fixes some clipping issues
+  z-index: 1;
+  border: $border-width solid $border-color-translucent;
+  border-bottom: none;
+
+  span {
+    font-size: 1.1rem;
+  }
+}

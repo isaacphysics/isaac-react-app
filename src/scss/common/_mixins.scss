@@ -162,6 +162,22 @@ $viewport-sizes: (
   aspect-ratio: calc($width / $height);
 }
 
+@mixin svg-icon-raw($path, $width, $height, $background-size: none, $background-position: none) {
+  // use this only for SVG icons that should not be recoloured; prefer @svg-icon in general
+  display: inline-block;
+  background: url($path) center center no-repeat;
+  width: $width;
+  height: $height;
+  min-width: $width;
+  min-height: $height;
+  @if $background-size != none {
+    background-size: $background-size;
+  }
+  @if $background-position != none {
+    background-position: $background-position;
+  }
+}
+
 @mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
   display: inline-block;
   mask: url($path) center center no-repeat;
@@ -179,14 +195,12 @@ $viewport-sizes: (
 }
 
 @mixin svg-icon-layered($fg_path, $bg_path, $width: 16px, $height: 16px, $mask-size: 100%, $mask-position: none) {
+  --layered-icon-parent-bg-override: transparent;
   display: inline-flex;
   width: $width;
   height: $height;
   min-width: $width;
   min-height: $height;
-  &:is(i.icon.icon) { // increase specificity over theming
-    background-color: transparent;
-  }
   &::before {
     content: '';
     @include svg-icon($bg_path, $width, $height);
@@ -220,6 +234,17 @@ $viewport-sizes: (
   min-height: $height;
   @if $mask-size != none {
     mask-size: $mask-size;
+  }
+}
+
+@mixin icon-color-override($color) {
+  background-color: var(--layered-icon-parent-bg-override, $color) !important;
+  
+  &::before {
+    background-color: $color !important;
+  }
+  &::after {
+    background-color: $color !important;
   }
 }
 

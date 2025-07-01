@@ -168,7 +168,7 @@ export const FreeTextBuilder = () => {
                                                         className="w-100" type="text" value={choice.value}
                                                         onChange={e => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, value: e.target.value} : c))}
                                                     />
-                                                    <i id={`choice-help-${choice.choiceNumber}`} className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help me-2")} />
+                                                    <i id={`choice-help-${choice.choiceNumber}`} className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help me-2")} />
                                                 </div>
                                             </Label>
                                             <UncontrolledTooltip target={`choice-help-${choice.choiceNumber}`} placement="bottom" innerClassName="">

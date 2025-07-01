@@ -149,7 +149,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         <Label htmlFor="medical-reqs">
                             <span className={siteSpecific("d-flex align-items-center", "")}>
                                 Dietary requirements or relevant medical conditions
-                                <i id="dietary-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help has-tip")} />
+                                <i id="dietary-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help has-tip")} />
                             </span>
                             <UncontrolledPopover trigger="click" placement="bottom" target="dietary-reqs-help">
                                 <PopoverBody>For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...</PopoverBody>
@@ -165,7 +165,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         <Label htmlFor="access-reqs">
                             <span className={siteSpecific("d-flex align-items-center", "")}>
                                 Accessibility requirements
-                                <i id="access-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help has-tip")} />
+                                <i id="access-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help has-tip")} />
                             </span>
                             <UncontrolledPopover trigger="click" placement="bottom" target="access-reqs-help">
                                 <PopoverBody>For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.</PopoverBody>

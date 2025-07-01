@@ -18,7 +18,7 @@ export const ReportButton = ({pageId} : {pageId?: string}) => {
         <IconButton
             icon="icon-flag"
             className="w-max-content h-max-content"
-            affixClassName="icon-color-black"
+            affixClassName="icon-color-black-hoverable"
             aria-label="Report a problem (opens in new tab)" 
             title="Report a problem (opens in new tab)"
             color="tint"

@@ -14,7 +14,7 @@ import {
     DroppableProvided,
     DropResult,
     NotDraggingStyle,
-} from "react-beautiful-dnd";
+} from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
 import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";

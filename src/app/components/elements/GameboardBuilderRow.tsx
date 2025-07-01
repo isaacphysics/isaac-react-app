@@ -16,7 +16,7 @@ import {
 import React from "react";
 import {AudienceContext} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal, useAppDispatch} from "../../state";
-import {DraggableProvided, DraggableStateSnapshot} from "react-beautiful-dnd";
+import {DraggableProvided, DraggableStateSnapshot} from "@hello-pangea/dnd";
 import {Question} from "../pages/Question";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
