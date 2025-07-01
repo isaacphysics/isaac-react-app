@@ -431,8 +431,8 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
                 </Button>
             </Col>
             <Col md={6} lg={4} className="pt-1">
-                <Button tag={Link} to={"/pages/pre_made_gameboards"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
-                    our Boards by Topic
+                <Button tag={Link} to={"/physics/a_level/question_decks"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                    our topic question decks
                 </Button>
             </Col>
             <Col md={12} lg={4} className="pt-1">
@@ -539,7 +539,7 @@ export const SetAssignments = () => {
                 sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
             />
             <MainContent>
-                <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />          
+                <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
                 {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
                 {groups && groups.length === 0 && <Alert color="warning">
                     You have not created any groups to assign work to.
