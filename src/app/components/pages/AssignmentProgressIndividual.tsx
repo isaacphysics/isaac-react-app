@@ -2,9 +2,9 @@ import React, {useContext, useMemo, useState} from "react";
 import { Link } from "react-router-dom";
 import { AssignmentProgressDTO, GameboardItem, CompletionState } from "../../../IsaacApiTypes";
 import { EnhancedAssignmentWithProgress, AssignmentProgressPageSettingsContext, AuthorisedAssignmentProgress } from "../../../IsaacAppTypes";
-import { getThemeFromTags, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
+import { getAssignmentCSVDownloadLink, getThemeFromTags, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
 import { ICON, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
-import { Badge, Card, CardBody } from "reactstrap";
+import { Badge, Button, Card, CardBody } from "reactstrap";
 import { formatDate } from "../elements/DateString";
 import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 import { Spacer } from "../elements/Spacer";
@@ -14,6 +14,8 @@ import { CollapsibleContainer } from "../elements/CollapsibleContainer";
 import StyledToggle from "../elements/inputs/StyledToggle";
 import { Markup } from "../elements/markup";
 import { AssignmentProgressLegend } from "./SingleAssignmentProgress";
+import { downloadLinkModal } from "../elements/modals/AssignmentProgressModalCreators";
+import { openActiveModal, useAppDispatch } from "../../state";
 
 export const AssignmentProgressSettings = () => {
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
@@ -294,6 +296,7 @@ function isQuestionFullyAttempted (state?: CompletionState) {
 
 export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWithProgress }) => {
 
+    const dispatch = useAppDispatch();
     const questions = assignment.gameboard.contents;
 
     const progressData = useMemo<[AssignmentProgressDTO, boolean][]>(() => assignment.progress.map(p => {
@@ -330,10 +333,18 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
     const numStudentsCompletedAll = progress.filter(p => p.questionResults?.every(r => r === CompletionState.ALL_CORRECT)).length;
 
     return <>
-        <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${assignment.groupId}`} className="d-flex align-items-center">
-            <i className="icon icon-arrow-left me-2"/>
-            Back to group assignments and tests
-        </Link>
+        <div className={classNames("d-flex flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>
+            <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${assignment.groupId}`} className="d-flex align-items-center">
+                <i className="icon icon-arrow-left me-2"/>
+                Back to group assignments and tests
+            </Link>
+            <Spacer/>
+            <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getAssignmentCSVDownloadLink(assignment.id))))}>
+                Download CSV
+                <i className="icon icon-download ms-2" color="white"/>
+            </Button>
+        </div>
+        
         <Card className="my-4">
             <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">

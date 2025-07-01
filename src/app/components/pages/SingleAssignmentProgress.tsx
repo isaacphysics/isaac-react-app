@@ -1,10 +1,8 @@
 import React, {useContext} from "react";
 import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Container, Label, UncontrolledTooltip} from "reactstrap";
+import {Container, Label} from "reactstrap";
 import {
-    openActiveModal,
-    useAppDispatch,
     useGetAssignmentProgressQuery,
     useGetSingleSetAssignmentQuery
 } from "../../state";
@@ -13,37 +11,19 @@ import {
     EnhancedAssignmentWithProgress
 } from "../../../IsaacAppTypes";
 import {
-    above,
     ASSIGNMENT_PROGRESS_CRUMB,
-    useAssignmentProgressAccessibilitySettings,
-    useDeviceSize
-} from "../../services";
+    useAssignmentProgressAccessibilitySettings} from "../../services";
 import {ProgressDetails} from "./AssignmentProgressIndividual";
-import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {combineQueries, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {AssignmentDTO, AssignmentProgressDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
-import StyledToggle from "../elements/inputs/StyledToggle";
-import { ICON, passMark } from "../elements/quiz/QuizProgressCommon";
+import { passMark } from "../elements/quiz/QuizProgressCommon";
 
 const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
-    const dispatch = useAppDispatch();
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
-    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
-        event.stopPropagation();
-        event.preventDefault();
-        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
-    }
-
     return <div className={"assignment-progress-details single-assignment" + (pageSettings?.colourBlind ? " colour-blind" : "")}>
-        {/* <AssignmentProgressLegend /> */}
-        {/* <div className="single-download mb-2 mx-4">
-            <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
-        </div> */}
-        {/* <div className="mx-md-4 mx-sm-2"> */}
         <ProgressDetails assignment={assignment}/>
-        {/* </div> */}
     </div>;
 };
 
@@ -79,13 +59,6 @@ export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
             />
         </Container>
     </>;
-};
-
-const QuestionKey = ({icon, description}: {icon: React.JSX.Element, description?: string}) => {
-    return <li className="d-flex flex-column flex-md-row flex-wrap px-1 align-items-center justify-content-center">
-        <div className="key-cell me-0 me-md-2">{icon}</div>
-        {description && <div className="key-description">{description}</div>}
-    </li>;
 };
 
 const LegendKey = ({cellClass, description}: {cellClass: string, description?: string}) => {
