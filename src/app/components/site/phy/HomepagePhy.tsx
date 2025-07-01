@@ -121,7 +121,7 @@ const AdaSubjectCard: ListViewCardProps = {
         width: "70px",
         height: "81px",
     },
-    linkTags: [{tag: "Find out more", url: "/computerscience", "aria-label": "Find out about Ada Computer Science"}],
+    linkTags: [{tag: "Find out more", url: "/computer_science", "aria-label": "Find out about Ada Computer Science"}],
     className: "centered-final-card"
 };
 

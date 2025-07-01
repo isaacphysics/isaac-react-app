@@ -152,7 +152,7 @@ export const RoutesPhy = [
     ...(Object.keys(PHY_NAV_SUBJECTS).map((subject) => (
         <TrackedRoute key={key++} exact path={`/${subject}`} component={SubjectOverviewPage} />
     ))),
-    <TrackedRoute key={key++} exact path="/computerscience" component={AdaCSOverviewPage} />,
+    <TrackedRoute key={key++} exact path="/computer_science" component={AdaCSOverviewPage} />,
 
     // Concepts List
     <TrackedRoute key={key++} exact path="/concepts" component={Concepts} />,
