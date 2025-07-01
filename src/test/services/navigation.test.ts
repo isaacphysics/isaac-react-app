@@ -24,7 +24,7 @@ describe("Breadcrumb trails", () => {
 
             // Act
             const actual = determinePageNavigation(document, "some_fasttrack_q", gameboard, "ft_core_2018",
-                undefined, null, undefined, undefined, "", {}).breadcrumbHistory;
+                undefined, undefined, undefined, undefined, "", {}).breadcrumbHistory;
 
             // Assert
             const expected = [
@@ -60,7 +60,7 @@ describe("Breadcrumb trails", () => {
 
             // Act
             const actual = determinePageNavigation(document, "some_q", gameboard, "some_gameboard", undefined,
-                null, undefined, assignments, "", {}).breadcrumbHistory;
+                undefined, undefined, assignments, "", {}).breadcrumbHistory;
 
             // Assert
             const expected = [
@@ -92,7 +92,7 @@ describe("Breadcrumb trails", () => {
 
         // Act
         const actual = determinePageNavigation(document, "some_q", gameboard, "some_gameboard", undefined,
-            null, undefined, undefined, "", {}).breadcrumbHistory;
+            undefined, undefined, undefined, "", {}).breadcrumbHistory;
 
         // Assert
         const expected =  [
@@ -114,7 +114,7 @@ describe("Breadcrumb trails", () => {
 
         // Act
         const actual = determinePageNavigation(document, "some_question", undefined, undefined, undefined,
-            null, undefined, undefined, "", {}).breadcrumbHistory;
+            undefined, undefined, undefined, "", {}).breadcrumbHistory;
 
         // Assert
         const expected = [
@@ -169,7 +169,7 @@ describe("Breadcrumb trails", () => {
 
             // Act
             const actual = determinePageNavigation(document, "some_concept", undefined, undefined, undefined,
-                null, undefined, undefined, "", {}).breadcrumbHistory;
+                undefined, undefined, undefined, "", {}).breadcrumbHistory;
 
             // Assert
             const expected = [

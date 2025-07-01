@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import queryString from "query-string";
-import {fetchTopicSummary, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery} from "../state";
+import {selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery} from "../state";
 import {
     determineCurrentCreationContext,
     determineGameboardHistory,
@@ -30,6 +30,7 @@ import {AssignmentDTO, AudienceContext, ContentDTO, GameboardDTO, IsaacTopicSumm
 import {NOT_FOUND_TYPE, PageContextState} from "../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {useLocation} from "react-router-dom";
+import {useGetTopicQuery} from "../state";
 
 export interface LinkInfo {title: string; to?: string; replace?: boolean}
 export type CollectionType = "Question deck" | "Quiz" | "Topic" | "Master Mathematics";
@@ -50,12 +51,8 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
     const dispatch = useAppDispatch();
     const {data: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
+    const {data: currentTopic} = useGetTopicQuery(topic || skipToken);
 
-    useEffect(() => {
-        if (topic) dispatch(fetchTopicSummary(topic as TAG_ID));
-    }, [topic, currentDocId, dispatch]);
-
-    const currentTopic = useAppSelector(selectors.topic.currentTopic);
     const user = useAppSelector(selectors.user.orNull);
     const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
@@ -70,7 +67,7 @@ export const determinePageNavigation = (
     currentGameboard: GameboardDTO | undefined,
     gameboardId: string | undefined,
     questionHistory: string | undefined,
-    currentTopic: IsaacTopicSummaryPageDTO | null,
+    currentTopic: IsaacTopicSummaryPageDTO | undefined,
     topic: string | undefined,
     assignments: AssignmentDTO[] | undefined,
     search: string,
