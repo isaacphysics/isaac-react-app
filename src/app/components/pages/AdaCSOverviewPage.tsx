@@ -73,6 +73,7 @@ export const AdaCSOverviewPage = withRouter(() => {
                     target={"_blank"}
                     href={"https://adacomputerscience.org"}
                     affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}
+                    className="px-9 py-3 fs-6"
                 >
                     Go to Ada CS
                 </AffixButton>

@@ -71,7 +71,7 @@ details.teacher-notes {
 
 .ada-overview-page {
   position: relative;
-  overflow-y: hidden;
+  overflow: hidden;
   &::before {
     content: '';
     position: absolute;
