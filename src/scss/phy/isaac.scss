@@ -409,7 +409,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "my-account";
 @import "../common/topic";
 @import "search";
-@import "../common/my-progress";
+@import "my-progress";
 @import "gameboard";
 @import "groups";
 @import "events";

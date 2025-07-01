@@ -862,6 +862,6 @@ export type GroupMembershipStatus = "ACTIVE" | "INACTIVE" | "DELETED";
 
 export type Gender = "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY" | "UNKNOWN";
 
-export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE" | "RASPBERRYPI";
+export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE" | "RASPBERRYPI" | "MICROSOFT";
 
 export type QuestionPartState = "CORRECT" | "INCORRECT" | "NOT_ATTEMPTED";

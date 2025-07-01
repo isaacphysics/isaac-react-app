@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Button, Card, Col, Container, Row } from "reactstrap";
+import { Button, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
@@ -67,21 +67,19 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                 <i className="icon icon-refresh icon-color-black"/>
             </button>
         </div>
-        <Card className="w-100 px-0 hf-6">
-            {question
-                ? <ListView type="item" items={[{
-                    type: DOCUMENT_TYPE.QUESTION,
-                    title: question.title,
-                    tags: question.tags,
-                    id: question.id,
-                    audience: question.audience,
-                } as ContentSummaryDTO]}/>
-                : <div className="w-100 d-flex justify-content-center">
-                    <IsaacSpinner size="sm" />
-                </div>
-            }
-        </Card>
-    </div>;
+        {question
+            ? <ListView className="border-0" type="item" items={[{
+                type: DOCUMENT_TYPE.QUESTION,
+                title: question.title,
+                tags: question.tags,
+                id: question.id,
+                audience: question.audience,
+            } as ContentSummaryDTO]}/>
+            : <div className="w-100 d-flex justify-content-center">
+                <IsaacSpinner size="sm" />
+            </div>
+        }
+</div>;
 };
 
 interface FooterRowProps {

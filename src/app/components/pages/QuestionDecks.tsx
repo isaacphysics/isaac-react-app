@@ -29,10 +29,10 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
     }
 
     return <Container data-bs-theme={pageContext?.subject}>
-        <TitleAndBreadcrumb 
-            currentPageTitle="Question decks"
+        <TitleAndBreadcrumb
+            currentPageTitle="Question decks by topic"
             icon={pageContext?.subject ? {
-                type: "hex", 
+                type: "hex",
                 subject: pageContext.subject,
                 icon: "icon-finder"
             } : undefined}

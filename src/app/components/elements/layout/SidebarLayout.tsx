@@ -6,7 +6,7 @@ import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacCon
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
-    stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS} from "../../../services";
+    stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS, getSearchPlaceholder} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -415,7 +415,7 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
             <Input
                 className='search--filter-input my-4'
                 type="search" value={searchText || ""}
-                placeholder="e.g. Forces"
+                placeholder={`e.g. ${getSearchPlaceholder(pageContext?.subject)}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
             />
 
@@ -482,7 +482,7 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
             <Input
                 className='search--filter-input my-4'
                 type="search" value={searchText || ""}
-                placeholder="e.g. Forces"
+                placeholder={`e.g. ${getSearchPlaceholder()}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
             />
 
@@ -609,7 +609,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
         <div className="section-divider"/>
         <search>
             <h5>Search practice tests</h5>
-            <Input type="search" placeholder="e.g. Challenge" value={filterText} className="search--filter-input my-3"
+            <Input type="search" placeholder="e.g. Practice" value={filterText} className="search--filter-input my-3"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)} />
 
             {!pageContext?.subject && Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).length > 0 && <>
@@ -776,7 +776,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                     <Input
                         className='search--filter-input my-3'
                         type="search" value={titleFilter || ""}
-                        placeholder="e.g. Forces"
+                        placeholder={`e.g. ${getSearchPlaceholder()}`}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setTitleFilter(e.target.value)}
                     />
                     <div className="section-divider"/>
@@ -833,7 +833,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
                 data-testid="title-filter"
                 className='search--filter-input my-3'
                 type="search" value={boardTitleFilter || ""}
-                placeholder="e.g. Forces"
+                placeholder={`e.g. ${getSearchPlaceholder()}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
             />
             <div className="section-divider"/>
@@ -887,7 +887,7 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
             <Input
                 className='search--filter-input my-3'
                 type="search" value={boardTitleFilter || ""}
-                placeholder="e.g. Forces"
+                placeholder={`e.g. ${getSearchPlaceholder()}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
             />
             <div className="section-divider"/>
@@ -901,11 +901,11 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
             </Input>
             <div className="section-divider"/>
             <h5 className="mb-3">Display</h5>
-            <div className="d-flex">
+            <div className="d-flex flex-xl-column flex-xxl-row">
                 <Input className="w-auto" type="select" aria-label="Set display mode" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
-                <Spacer/>
+                {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
                 <div className="select-pretext me-2">Limit:</div>
                 <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
@@ -1120,7 +1120,7 @@ export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
                 id="available-quizzes-title-filter" type="search"
                 className="search--filter-input my-3"
                 value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
-                placeholder="e.g. Forces"
+                placeholder="e.g. Practice"
             />
         </search>
     </ContentSidebar>;
@@ -1171,7 +1171,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
                 id="manage-quizzes-title-filter" type="search"
                 value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
                 className="search--filter-input mt-3 mb-4"
-                placeholder="e.g. Forces" aria-label="Search by title"
+                placeholder="e.g. Practice" aria-label="Search by title"
             /> 
             <h5>Search by group</h5>
             <Input
@@ -1341,7 +1341,7 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                 <search>
                     <h5>Search tests</h5>
                     <Input type="search" className="search--filter-input my-3" onChange={(e) => setQuizTitleFilter(e.target.value)} 
-                        placeholder="e.g. Forces" aria-label="Search by title"/>
+                        placeholder="e.g. Practice" aria-label="Search by title"/>
                     <div className="section-divider"/>
                     <h5 className="mb-3">Filter by status</h5>
                     <ul>
@@ -1467,7 +1467,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             <Input
                 className='search--filter-input my-4'
                 type="search" value={internalSearchText || ""}
-                placeholder="e.g. Forces"
+                placeholder={`e.g. ${getSearchPlaceholder(pageContext?.subject)}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
                     setSearchText(e.target.value); 
                     setInternalSearchText(e.target.value);
