@@ -37,7 +37,7 @@ describe("QuestionFinder", () => {
             renderTestEnvironment({
                 extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], questionsSearchResponse)]
             });
-            setUrl({ pathname: context ? `${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
+            setUrl({ pathname: context ? `/${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
         });
     };
 
@@ -150,6 +150,9 @@ describe("QuestionFinder", () => {
                 await expectPageIndicator("Showing 40 of 40.");
             });
         });
+    });
+
+    describe('Context-specific question finders', () => {
 
         if (isPhy) {
             it('Context-specific question finders should lead back to the relevant landing page in the breadcrumb', async () => {
@@ -174,7 +177,7 @@ describe("QuestionFinder", () => {
                 })));
             });
 
-            it('"Load more" on a context-specific question finders should still only load questions for that context', async () => {
+            it('"Load more" on a context-specific question finder should still only load questions for that context', async () => {
                 const getQuestionsWithMultipleStages = jest.fn(() => resultsResponseWithMultipleStages);
 
                 await renderQuestionFinderPage({ 
@@ -208,7 +211,7 @@ const mainContainer = () => screen.findByTestId('main');
 
 const findQuestions = () => screen.findByTestId("question-finder-results").then(e => within(e).findAllByRole('listitem'));
 
-const getQuestionText = (q: HTMLElement) => q.querySelector(isPhy ? 'span' : 'span.question-link-title')?.textContent;
+const getQuestionText = (q: HTMLElement) => q.querySelector(isPhy ? '.question-link-title > span' : 'span.question-link-title')?.textContent;
 
 const expectQuestions = (expectedQuestions: IsaacQuestionPageDTO[]) => waitFor(async () => {
     const found = await findQuestions();
