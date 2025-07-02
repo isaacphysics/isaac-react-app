@@ -5,6 +5,7 @@ import {useAppSelector, selectors} from "../../state";
 import {isLoggedIn, isTutorOrAbove, PATHS} from "../../services";
 import {Link} from "react-router-dom";
 import { TeacherFeatureCard } from "./TeacherFeatures";
+import { PageMetadata } from "../elements/PageMetadata";
 
 // A version of the "teacher features" page to showcase tutor account features
 export const TutorFeatures = () => {
@@ -13,22 +14,14 @@ export const TutorFeatures = () => {
 
     const isDisabled = !isLoggedIn(user) || !isTutorOrAbove(user);
 
-    return<Container>
-        <Row className="mb-4">
-            <Col>
-                <TitleAndBreadcrumb currentPageTitle={"Tutor features"} icon={{type: "hex", icon: "icon-account"}}/>
-            </Col>
-        </Row>
-        <Row className="mb-3">
-            <Col md={isDisabled ? 6 : undefined}>
-                <p className="subtitle">Isaac Science provides you with a huge range of resources to support your tutoring of science subjects.</p>
-            </Col>
-            {isDisabled && <Col md={6} className="text-center text-md-end">
-                <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/tutor_account_request" : "/register"}>
-                    {isLoggedIn(user) ? "Upgrade my account" : "Get a tutor account"}
-                </Button>
-            </Col>}
-        </Row>
+    return <Container>
+        <TitleAndBreadcrumb currentPageTitle={"Tutor features"} icon={{type: "hex", icon: "icon-account"}}/>
+        <PageMetadata noTitle>
+            {isDisabled && <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/tutor_account_request" : "/register"} className="float-end">
+                {isLoggedIn(user) ? "Upgrade my account" : "Get a tutor account"}
+            </Button>}
+            Isaac Science provides you with a huge range of resources to support your tutoring of science subjects.
+        </PageMetadata>
         <Row className="my-4">
             <h4>Tutor workflow</h4>
         </Row>
