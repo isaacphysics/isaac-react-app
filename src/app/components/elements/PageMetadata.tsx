@@ -47,7 +47,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
         {noTitle 
             ? <>
                 <div className="d-flex align-items-start mt-3 gap-3 no-print">
-                    <div>
+                    <div className="w-100">
                         {children}
                     </div>
                     <ActionButtons />
