@@ -8,8 +8,12 @@
 }
 
 .new-tab {
-  height: 24px;
-  width: 24px;
+  height: fit-content;
+  background: none;
+  > img {
+    height: 24px;
+    width: 24px;
+  }
 }
 
 .content-summary-link {
