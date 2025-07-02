@@ -203,9 +203,10 @@ export const ShortcutListViewItem = ({item, ...rest}: ShortcutListViewItemProps)
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${item.url}${item.hash ? `#${item.hash}` : ""}`;
+    const icon = (url.includes("concepts/") || !item.className?.includes("wildcard-list-view")) ? "icon-concept" : "icon-wildcard";
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-concept", size: "lg"}}
+        icon={{type: "hex", icon: icon, size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
