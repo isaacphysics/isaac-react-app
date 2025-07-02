@@ -441,16 +441,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
-    const BrowseAllButton = (pageContext?.subject && pageContext.stage) &&
-        <AffixButton color="keyline" tag={Link} to="/questions" className={classNames("ms-auto mw-max-content", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
-            affix={{
-                affix: "icon-arrow-right",
-                position: "suffix",
-                type: "icon"
-            }}>
-            Browse all questions
-        </AffixButton>;
-
     return <Container id="finder-page" className={classNames("mb-7")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question finder", "Questions")} 
@@ -474,7 +464,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     selections, setSelections,
                     applyFilters: searchAndUpdateURL, clearFilters,
                     validFiltersSelected, searchDisabled, setSearchDisabled
-                }} optionBar={BrowseAllButton} hideButton/>
+                }} hideButton/>
             <MainContent>
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
@@ -484,8 +474,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         <div>
                             {(pageContext?.subject && pageContext.stage)
                                 ? <div className="d-flex align-items-start flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
-                                    <p className="me-0 me-lg-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                                    {above["lg"](deviceSize) && BrowseAllButton}
+                                    <p className="me-0 me-lg-3">
+                                        The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
+                                        You can browse all questions <Link to="/questions">here</Link>.
+                                    </p>
                                 </div>
                                 : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
                                 Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
