@@ -215,6 +215,7 @@ export const ShortcutListViewItem = ({item, ...rest}: ShortcutListViewItemProps)
         status={item.state}
         url={url}
         audienceViews={audienceViews}
+        className={item.className}
         {...rest}
     />;
 };
