@@ -18,7 +18,7 @@ import {buildPostHandler} from "../../mocks/handlers";
 
 const expectedPhysicsTopLinks = {
     "our books": null,
-    "our Boards by Topic": "/pages/pre_made_gameboards",
+    "our topic question decks": "/physics/a_level/question_decks",
     "create a question deck": PATHS.GAMEBOARD_BUILDER
 };
 

@@ -35,6 +35,7 @@ import classNames from "classnames";
 import sortBy from "lodash/sortBy";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import { HorizontalScroller } from "../inputs/HorizontalScroller";
 
 const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
     const dispatch = useAppDispatch();
@@ -250,58 +251,60 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             </>
                         }
                         <>
-                            <Table bordered responsive className="bg-white reserved">
-                                <thead>
-                                    <tr>
-                                        <th colSpan={4}>All current reservations</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="align-middle checkbox">
-                                            <Input
-                                                id="check_all_reserved"
-                                                type="checkbox"
-                                                checked={checkAllCancelReservationsCheckbox || false}
-                                                onChange={() => toggleAllCancelReservationCheckboxes()}
-                                            />
-                                            <Label for="check_all_reserved" className="ms-2">All</Label>
-                                        </th>
-                                        <th className="align-middle student-name">
-                                            Student
-                                        </th>
-                                        <th className="align-middle booking-status">
-                                            Booking status
-                                        </th>
-                                        <th className="align-middle reserved-by">
-                                            Reserved by
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {eventBookingsForGroup?.map(booking => {
-                                        const bookingCancelled = booking.bookingStatus === "CANCELLED";
-                                        return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id} className={classNames({"bg-light text-muted": bookingCancelled})}>
-                                            <td className="align-middle">
-                                                <Input key={booking.userBooked.id}
-                                                    id={`${booking.userBooked.id}`}
+                            <HorizontalScroller enabled={eventBookingsForGroup && eventBookingsForGroup.length > 10} className="mb-3">
+                                <Table bordered className="bg-white reserved mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th colSpan={4}>All current reservations</th>
+                                        </tr>
+                                        <tr>
+                                            <th className="align-middle checkbox">
+                                                <Input
+                                                    id="check_all_reserved"
                                                     type="checkbox"
-                                                    name={`reserved_student-${booking.userBooked.id}`}
-                                                    checked={cancelReservationCheckboxes[booking.userBooked.id] ?? false}
-                                                    // I'm including the full access autorisation here because we do the same in the next table
-                                                    disabled={bookingCancelled || (!booking.userBooked.authorisedFullAccess && booking.userBooked.emailVerificationStatus !== 'VERIFIED')}
-                                                    onChange={() => toggleCancelReservationCheckboxForUser(booking.userBooked?.id)}
+                                                    checked={checkAllCancelReservationsCheckbox || false}
+                                                    onChange={() => toggleAllCancelReservationCheckboxes()}
                                                 />
-                                            </td>
-                                            <td className="align-middle">
-                                                {booking.userBooked.givenName + " " + booking.userBooked.familyName}
-                                                {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">E-mail not verified</div>}
-                                            </td>
-                                            <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
-                                            <td className="align-middle">{!booking.reservedById ? '' : (booking.reservedById === user?.id ? 'You' : 'Someone else')}</td>
-                                        </tr>);
-                                    })}
-                                    {eventBookingsForGroup && eventBookingsForGroup.length === 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
-                                </tbody>
-                            </Table>
+                                                <Label for="check_all_reserved" className="ms-2">All</Label>
+                                            </th>
+                                            <th className="align-middle student-name">
+                                                Student
+                                            </th>
+                                            <th className="align-middle booking-status">
+                                                Booking status
+                                            </th>
+                                            <th className="align-middle reserved-by">
+                                                Reserved by
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {eventBookingsForGroup?.map(booking => {
+                                            const bookingCancelled = booking.bookingStatus === "CANCELLED";
+                                            return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id} className={classNames({"bg-light text-muted": bookingCancelled})}>
+                                                <td className="align-middle">
+                                                    <Input key={booking.userBooked.id}
+                                                        id={`${booking.userBooked.id}`}
+                                                        type="checkbox"
+                                                        name={`reserved_student-${booking.userBooked.id}`}
+                                                        checked={cancelReservationCheckboxes[booking.userBooked.id] ?? false}
+                                                        // I'm including the full access autorisation here because we do the same in the next table
+                                                        disabled={bookingCancelled || (!booking.userBooked.authorisedFullAccess && booking.userBooked.emailVerificationStatus !== 'VERIFIED')}
+                                                        onChange={() => toggleCancelReservationCheckboxForUser(booking.userBooked?.id)}
+                                                    />
+                                                </td>
+                                                <td className="align-middle">
+                                                    {booking.userBooked.givenName + " " + booking.userBooked.familyName}
+                                                    {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">E-mail not verified</div>}
+                                                </td>
+                                                <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
+                                                <td className="align-middle">{!booking.reservedById ? '' : (booking.reservedById === user?.id ? 'You' : 'Someone else')}</td>
+                                            </tr>);
+                                        })}
+                                        {eventBookingsForGroup && eventBookingsForGroup.length === 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
+                                    </tbody>
+                                </Table>
+                            </HorizontalScroller>
 
                             <div className="text-center mb-3">
                                 <Button color="keyline" disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
@@ -310,7 +313,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             </div>
                         </>
                         {groupMembers && groupMembers.length > 0 && <>
-                            <Table bordered responsive className="mt-3 bg-white unreserved">
+                            <Table bordered className="mt-3 bg-white unreserved">
                                 <thead>
                                     <tr>
                                         <th colSpan={2}>Other students in this group</th>

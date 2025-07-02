@@ -1,7 +1,5 @@
 import React from "react";
 import {Circle} from "./Circle";
-import { siteSpecific } from "../../../services";
-import { Hexagon } from "./Hexagon";
 
 export interface FilterCountProps extends React.SVGProps<SVGSVGElement> {
     count: number;
@@ -20,7 +18,7 @@ export const FilterCount = (props: FilterCountProps) => {
         <title>{`${count} filters selected`}</title>
         <g>
             <Circle radius={filterIconWidth / 2} className={"circle filter-count"} />
-            <foreignObject width={siteSpecific(filterIconWidth * Math.sqrt(3)/2, filterIconWidth)} height={filterIconWidth}>
+            <foreignObject width={filterIconWidth} height={filterIconWidth}>
                 <div aria-hidden={"true"} className={`filter-count-title`}>
                     {count}
                 </div>

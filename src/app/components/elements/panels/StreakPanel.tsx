@@ -6,10 +6,10 @@ import { Col, Row, UncontrolledTooltip } from "reactstrap";
 export const StreakPanel = ({userProgress}: {userProgress?: UserProgress | null}) => {
     const largestWeeklyStreak = userProgress?.userSnapshot?.weeklyStreakRecord?.largestStreak || 0;
     const currentDailyStreak = userProgress?.userSnapshot?.dailyStreakRecord?.currentStreak || 0;
-    return <div className={"align-items-center"}>
-        <div className={"text-center-width"}>
+    return <div className={"d-flex flex-column align-items-center"}>
+        <b className={"text-center-width mb-2"}>
             Weekly Streak
-        </div>
+        </b>
         <Row>
             <Col size={4} className="d-md-none"/>
             <Col size={4}>
@@ -19,7 +19,7 @@ export const StreakPanel = ({userProgress}: {userProgress?: UserProgress | null}
             </Col>
             <Col size={4} className="d-md-none"/>
         </Row>
-        <div id="streak-help" className={"text-center-width"}>
+        <div id="streak-help" className={"text-center-width mt-2"}>
             Longest streak: {largestWeeklyStreak}&nbsp;Week{largestWeeklyStreak !== 1 && "s"}<br/>
             {currentDailyStreak >= 14 && `Daily streak: ${currentDailyStreak} Days`}
         </div>

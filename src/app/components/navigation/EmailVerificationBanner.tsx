@@ -28,9 +28,8 @@ export const EmailVerificationBanner = () => {
             <Row style={{alignItems: "center"}}>
                 <Col xs={12} sm={2} md={1}>
                     <h3 className="text-center">
-                        <span role="presentation" aria-labelledby="email-verification-heading">
-                            <img className={siteSpecific("mt-n2 mt-sm-0 mt-md-n1", "mt-n1 mt-sm-1")} src="/assets/common/icons/info.svg" style={{height: "1.5rem"}} alt="" />
-                        </span>
+                        <img className={siteSpecific("mt-n2 mt-sm-0 mt-md-n1", "mt-n1 mt-sm-1")} src="/assets/common/icons/info.svg" style={{height: "1.5rem"}}
+                            alt="" aria-labelledby="email-verification-heading"/>
                         <span id="email-verification-heading" className="d-inline-block d-sm-none">&nbsp;Email Verification</span>
                     </h3>
                 </Col>

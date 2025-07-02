@@ -112,7 +112,7 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
                 icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`
             } : undefined}
         />
-        {humanSubject && <div className="mt-7">
+        {humanSubject && <div>
             <PageMetadata title={`Introducing Isaac ${humanSubject}`} />
             <p>
                 Welcome to Isaac {humanSubject}, part of <a href="/">Isaac Science</a>! 
@@ -153,7 +153,7 @@ export const SubjectOverviewPage = withRouter((props: RouteComponentProps) => {
             </div>
 
             <p className="mt-3">
-                In Isaac {humanSubject},
+                Across Isaac {humanSubject},
                 <ul>
                     <li>Practice questions are those that require one concept or equation to solve.</li>
                     <li>Challenge questions are those that require one or more concepts, or require more creativity to solve the problem, helping to develop important problem solving skills. </li>
