@@ -271,7 +271,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 setWildcardId(e.target.value);
                             }}
                         >
-                            <option value="random">Random wildcard</option>
+                            <option value="">No wildcard</option>
                             {isDefined(wildcards) && wildcards.map((wildcard) => {
                                 return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>;
                             })}
@@ -299,7 +299,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                             const question = selectedQuestions.get(questionId);
                                             return question && question.id && <Draggable key={question.id} draggableId={question.id} index={index}>
                                                 {(providedDrag, snapshot) => {
-                                                    return <tbody ref={providedDrag && providedDrag.innerRef} 
+                                                    return <tbody ref={providedDrag && providedDrag.innerRef}
                                                         className={classNames({"table-row-dragging" : snapshot.isDragging})}
                                                         {...(providedDrag && providedDrag.draggableProps)} {...(providedDrag && providedDrag.dragHandleProps)}
                                                     >
@@ -401,7 +401,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
                                 let wildcard = undefined;
                                 if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
-                                    wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
+                                    wildcard = wildcards.filter((wildcard) => wildcard.id === wildcardId)[0];
                                 }
 
                                 let subjects = [];
@@ -423,14 +423,14 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
                                 createGameboard({
                                     gameboard: {
-                                        id: gameboardURL,
+                                        id: gameboardURL ? gameboardURL : undefined,
                                         title: gameboardTitle,
                                         contents: questionOrder.map((questionId) => {
                                             const question = selectedQuestions.get(questionId);
                                             return question && convertContentSummaryToGameboardItem(question);
                                         }).filter((question) => question !== undefined) as GameboardItem[],
                                         wildCard: wildcard,
-                                        wildCardPosition: 0,
+                                        wildCardPosition: wildcard ? 0 : undefined,
                                         gameFilter: {subjects: subjects},
                                         tags: gameboardTags.map(getValue)
                                     },
