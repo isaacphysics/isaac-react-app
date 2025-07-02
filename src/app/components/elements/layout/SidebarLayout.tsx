@@ -6,7 +6,8 @@ import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacCon
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
-    stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS, getSearchPlaceholder} from "../../../services";
+    stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS, getSearchPlaceholder,
+    sortByStringValue} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -165,8 +166,8 @@ interface RelatedContentSidebarProps extends SidebarProps {
 }
 
 const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "concept" | "question" | "page"}) => {
-    const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage") as IsaacConceptPageDTO[] | undefined;
-    const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage") as QuestionDTO[] | undefined;
+    const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage").sort(sortByStringValue("title")) as IsaacConceptPageDTO[] | undefined;
+    const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage").sort(sortByStringValue("title")) as QuestionDTO[] | undefined;
 
     const pageContext = useAppSelector(selectors.pageContext.context);
     const pageContextStage = useAppSelector(selectors.pageContext.stage);
