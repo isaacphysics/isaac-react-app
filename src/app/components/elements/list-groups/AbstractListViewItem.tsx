@@ -182,9 +182,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             <div className="align-content-center text-overflow-ellipsis pe-2">
                 <div className="d-flex text-wrap">
                     {url && !isDisabled
-                        ? <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                        ? <a href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                             <Markup encoding="latex">{title}</Markup>
-                        </Link>
+                        </a>
                         : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                             <Markup encoding="latex">{title}</Markup>
                         </span>
