@@ -37,9 +37,10 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
         </Link>
     </div>;
 
+    const anyLinks = [previousItemLink, backToCollectionLink, nextItemLink].filter(l => l).length > 0;
     const threeLinks = [previousItemLink, backToCollectionLink, nextItemLink].filter(l => l).length === 3;
 
-    return <>
+    return anyLinks && <>
         <div className="section-divider my-4"/>
         <div className="d-flex justify-content-between align-items-stretch no-print">
             {previousItemLink}
