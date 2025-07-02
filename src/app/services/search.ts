@@ -1,12 +1,12 @@
 import {History} from "history";
-import {DOCUMENT_TYPE, isStaff, TAG_ID} from ".";
+import {DOCUMENT_TYPE, isDefined, isStaff, PHY_NAV_SUBJECTS, SEARCH_RESULT_TYPE, SearchableDocumentType, Subject, TAG_ID} from ".";
 import {ContentSummaryDTO, Stage} from "../../IsaacApiTypes";
 import {PotentialUser} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {Immutable} from "immer";
 import pickBy from "lodash/pickBy";
 
-export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {
+export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: SearchableDocumentType[]) {
     const previousQuery = queryString.parse(history.location.search);
     const newQueryOptions = {
         query: encodeURI(searchQuery),
@@ -41,7 +41,7 @@ export const searchResultIsPublic = function(content: ContentSummaryDTO, user?: 
     }
 };
 
-export function parseLocationSearch(search: string): [Nullable<string>, DOCUMENT_TYPE[]] {
+export function parseLocationSearch(search: string): [Nullable<string>, SearchableDocumentType[]] {
     const searchParsed = queryString.parse(search);
 
     const parsedQuery = searchParsed.query || "";
@@ -49,7 +49,19 @@ export function parseLocationSearch(search: string): [Nullable<string>, DOCUMENT
 
     const parsedFilters = searchParsed.types || "";
     const possibleFilters = (Array.isArray(parsedFilters) ? parsedFilters[0] || "" : parsedFilters || "").split(",");
-    const filters = possibleFilters.filter(pf => Object.values(DOCUMENT_TYPE).includes(pf as DOCUMENT_TYPE)) as DOCUMENT_TYPE[];
+    const filters = possibleFilters.filter(pf => [...Object.values(DOCUMENT_TYPE), ...Object.values(SEARCH_RESULT_TYPE)].includes(pf as SearchableDocumentType)) as SearchableDocumentType[];
 
     return [query, filters];
 }
+
+const searchPlaceholdersBySubject: {[subject in keyof typeof PHY_NAV_SUBJECTS]: string} = {
+    "physics": "Forces",
+    "chemistry": "Bond",
+    "maths": "Triangle",
+    "biology": "Cell"
+};
+
+export const getSearchPlaceholder = (subject?: Subject): string => {
+    if (!isDefined(subject)) return searchPlaceholdersBySubject["physics"];
+    return searchPlaceholdersBySubject[subject];
+};

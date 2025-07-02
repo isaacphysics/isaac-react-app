@@ -158,6 +158,8 @@ $color-misc-red: #b40c0c;
 $color-misc-pale-yellow: #f9fdd5;
 $color-misc-correct: #ecf7e9;
 
+$color-wildcard-orange: #ff7800;
+
 $isaac-color-palettes: (
   // brand is excluded as there are no pages with the "brand" colour scheme;
   // it is used exclusively for styling individual components
@@ -407,12 +409,12 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "my-account";
 @import "../common/topic";
 @import "search";
-@import "../common/my-progress";
+@import "my-progress";
 @import "gameboard";
 @import "groups";
 @import "events";
 @import "../common/fasttrack";
-@import "../common/scroll";
+@import "scroll";
 @import "assignments";
 @import "assignment-progress";
 @import "books";
@@ -458,11 +460,10 @@ body {
   @include no-print {
     background-color: $color-neutral-50;
   }
-}
-
-.content-body > .container {
-  @include no-print {
-    background-color: $color-neutral-50;
-    box-shadow: 0 0 200px 35px $color-neutral-100;
+  
+  > .container {
+    @include no-print {
+      background-color: $color-neutral-50;
+    }
   }
 }

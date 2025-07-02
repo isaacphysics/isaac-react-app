@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {
     above,
@@ -14,7 +14,7 @@ import {
     siteSpecific,
     useDeviceSize,
 } from "../../services";
-import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {v4 as uuid_v4} from "uuid";
@@ -88,6 +88,10 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         return null;
     }
 
+    const debouncedLogAccordion = useMemo(() =>
+        debounce((eventDetails) =>
+            dispatch(logAction(eventDetails)), 200, {leading: true, trailing: false}), [dispatch]);
+
     function logAccordionOpen() {
         const currentPage = getPage();
         if (currentPage) {
@@ -116,7 +120,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     accordionIndex: index
                 };
             }
-            debounce(() => dispatch(logAction(eventDetails)), 200, {leading: true, trailing: false});
+            debouncedLogAccordion(eventDetails);
         }
     }
 

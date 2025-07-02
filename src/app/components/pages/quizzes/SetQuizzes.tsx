@@ -165,8 +165,8 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
             {siteSpecific(
                 <>
                     <Row className="w-100 ms-0 d-flex flex-row">
-                        <Col className="d-flex align-items-center col-7 col-sm-8 col-md-6">                       
-                            <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="d-none d-sm-block assignment-hex"/>                       
+                        <Col className="d-flex align-items-center col-7 col-sm-8 col-md-6">
+                            <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="d-none d-sm-block assignment-hex"/>
 
                             <span className="manage-quiz-title me-3">{quizTitle}</span>
                         </Col>
@@ -176,7 +176,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                                     assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
                                     e.stopPropagation();}}>
-                                Set Test
+                                Set test
                             </AffixButton>
                             <div className="d-none d-md-block w-max-content text-center text-nowrap me-3">
                                 Assigned to
@@ -247,8 +247,8 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                 <td className="text-center">{formatDate(assignedGroup.assignment.scheduledStartDate ?? assignedGroup.assignment.creationDate)}</td>
                                 {above["sm"](deviceSize) &&
                                     <td className="text-center">
-                                        {assignedGroup.assignment.dueDate 
-                                            ? <span>{formatDate(assignedGroup.assignment.dueDate)}</span> 
+                                        {assignedGroup.assignment.dueDate
+                                            ? <span>{formatDate(assignedGroup.assignment.dueDate)}</span>
                                             : "-"
                                         }
                                     </td>
@@ -317,7 +317,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     const [quizStartDate, setQuizStartDate] = useState<Date | undefined>(undefined);
     const [quizDueDate, setQuizDueDate] = useState<Date | undefined>(undefined);
 
-    const pageTitle= siteSpecific("Set / Manage Tests", "Manage tests");
+    const pageTitle= siteSpecific("Set / manage tests", "Manage tests");
     const pageHelp = <span>
         Use this page to manage and set tests to your groups. You can assign any test the {SITE_TITLE_SHORT} team have built.
         <br />
@@ -368,7 +368,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Starting</span>
         {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
         <Input
-            id="manage-quizzes-set-date-filter" type="date" className={classNames("quiz-filter-date-input p-1", rowFiltersView ? "mb-4" : "mb-2")}
+            id="manage-quizzes-set-date-filter" type="date" className={classNames("quiz-filter-date-input p-1 vertical-center", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
             placeholder="Filter by set date" aria-label="Filter by set date"
         />
@@ -378,7 +378,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Due</span>
         {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
         <Input
-            id="manage-quizzes-due-date-filter" type="date" className={classNames("quiz-filter-date-input p-1", rowFiltersView ? "mb-4" : "mb-2")}
+            id="manage-quizzes-due-date-filter" type="date" className={classNames("quiz-filter-date-input p-1 vertical-center", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
             placeholder="Filter by due date" aria-label="Filter by due date"
         />
@@ -398,15 +398,15 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                 <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
                 <Tabs style="tabs" className="my-4 mb-7" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
                     {{
-                        [siteSpecific("Set Tests", "Available tests")]:
+                        [siteSpecific("Set tests", "Available tests")]:
                         <ShowLoading until={undeprecatedQuizzes}>
                             {undeprecatedQuizzes && <>
                                 <p>The following tests are available to set to your groups.</p>
 
                                 {undeprecatedQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
-                                
+
                                 {siteSpecific(
-                                    <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>, 
+                                    <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>,
                                     <ListGroup className="mb-2 quiz-list">
                                         {undeprecatedQuizzes.map(quiz => <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                             <Row className="w-100">
@@ -418,7 +418,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                 </Col>
                                                 <Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
                                                     <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(showQuizSettingModal(quiz))}>
-                                                        {siteSpecific("Set Test", "Set test")}
+                                                        Set test
                                                     </Button>
                                                 </Col>
                                                 <Col md={1} className="d-flex justify-content-end align-items-center d-none d-md-flex p-0">
@@ -433,7 +433,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                         </DropdownToggle>
                                                         <DropdownMenu>
                                                             <DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz))} style={{zIndex: '1'}}>
-                                                                {siteSpecific("Set Test", "Set test")}
+                                                                Set test
                                                             </DropdownItem>
                                                             <DropdownItem divider />
                                                             <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
@@ -450,7 +450,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                             </>}
                         </ShowLoading>,
 
-                        [siteSpecific("Manage Tests", "Previously set tests")]:
+                        [siteSpecific("Manage tests", "Previously set tests")]:
                         <>
                             {isAda && <div className="d-flex justify-content-center mb-4">
                                 <Button color="tertiary" size="sm" onClick={() => setShowFilters(s => !s)}>
@@ -509,7 +509,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                         }
                                         quizAssignmentsWithGroupNames = quizAssignmentsWithGroupNames.filter(filters.reduce((acc, filter) => (assignment) => acc(assignment) && filter(assignment), () => true));
                                     }
-                                                                                     
+
                                     // an array of objects, each representing one test and the groups it is assigned to
                                     const quizAssignment: QuizAssignmentProps[] = quizAssignmentsWithGroupNames.reduce((acc, assignment) => {
                                         const existing = acc.find(q => q.assignedGroups.map(a => a.assignment.quizId).includes(assignment.quizId));

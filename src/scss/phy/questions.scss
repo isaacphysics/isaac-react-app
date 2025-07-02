@@ -156,6 +156,15 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   border-radius: unset;
   box-shadow: none;
 
+  > .question-component > div:first-child {
+    @include respond-below(md) {
+      padding: 0.5rem 0;
+    }
+    @include respond-above(md) {
+      padding: 0.5rem;
+    }
+  }
+
   > .tabbed-hints {
     padding: 0;
   }

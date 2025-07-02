@@ -50,9 +50,9 @@ const HomepageHero = () => {
             <Container className="pt-7">
                 <div className="w-100 w-md-50 mb-4 mb-md-7 mb-xl-9 pe-xl-7">
                     <div className="physics-strapline mb-3">
-                        <h2><span className="text-green">Master Science subjects</span> by solving problems</h2>
+                        <h2><span className="text-green">Master science subjects</span> by solving problems</h2>
                     </div>
-                    From School to University – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.
+                    From school to university – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.
                 </div>
                 {!above['md'](deviceSize) && <div className="homepage-hero-img container-override"/>}
                 <Row className="row-cols-1 row-cols-md-2">
@@ -113,7 +113,20 @@ const getListViewSubjectCard = (sc: subjectCategory) => {
     return listViewSubjectCard;
 };
 
-const cards = subjectCategories.map((sc) => getListViewSubjectCard(sc));
+const AdaSubjectCard: ListViewCardProps = {
+    title: "Studying computer science?",
+    subtitle: "Check out Ada CS, our partner platform. It’s free and packed with resources for computer science teachers and students.",
+    icon: {
+        type: "img", 
+        icon: "/assets/common/logos/ada_logo_stamp_aqua.svg",
+        width: "70px",
+        height: "81px",
+    },
+    linkTags: [{tag: "Find out more", url: "/computer_science", "aria-label": "Find out about Ada Computer Science"}],
+    className: "centered-final-card"
+};
+
+const cards = [...subjectCategories.map((sc) => getListViewSubjectCard(sc)), AdaSubjectCard];
 
 export const HomepagePhy = () => {
 
@@ -179,7 +192,7 @@ export const HomepagePhy = () => {
                             <h3>Explore and learn!</h3>
                             <div className="section-divider flex-grow-1 ms-2"/>
                         </div>
-                        <ListViewCards cards={cards}/>
+                        <ListViewCards cards={cards} />
                     </div>
                 </section>
                 <section id="events-news">

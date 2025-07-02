@@ -89,8 +89,8 @@ const PracticeQuizzesComponent = () => {
     const sidebarProps = {filterText, setFilterText, filterTags, setFilterTags, tagCounts: tagCounts(), filterStages, setFilterStages, stageCounts: stageCounts()};
 
     return <Container { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
-        <TitleAndBreadcrumb 
-            currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} 
+        <TitleAndBreadcrumb
+            currentPageTitle={"Practice tests"}
             icon={{"type": "hex", "icon": "icon-tests"}}
             intermediateCrumbs={crumb ? [crumb] : []}
         />
@@ -100,8 +100,8 @@ const PracticeQuizzesComponent = () => {
                 <PageMetadata noTitle showSidebarButton>
                     <PageFragment fragmentId="help_toptext_practice_tests"/>
                 </PageMetadata>
-                {!user 
-                    ? <b>You must be logged in to view practice tests.</b> 
+                {!user
+                    ? <b>You must be logged in to view practice tests.</b>
                     : <ShowLoading until={quizzes}>
                         {quizzes && <>
                             {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
@@ -116,7 +116,7 @@ const PracticeQuizzesComponent = () => {
                             </Col>
                             <ListView
                                 type="quiz"
-                                items={quizzes.filter((quiz) => isRelevant(quiz)).sort(sortByStringValue("title"))} 
+                                items={quizzes.filter((quiz) => isRelevant(quiz)).sort(sortByStringValue("title"))}
                                 className={classNames({"quiz-list border-radius-2 mb-3": isAda})}
                                 useViewQuizLink
                             />

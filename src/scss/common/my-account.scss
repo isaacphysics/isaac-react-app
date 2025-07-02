@@ -221,6 +221,11 @@
     padding: 10px;
     background: url("/assets/common/logos/google-g-icon-light.svg") center no-repeat content-box;
   }
+
+  &.microsoft-button {
+    padding: 10px;
+    background: url("/assets/common/logos/microsoft-logo.svg") center no-repeat content-box;
+  }
 }
 
 .qrcode-mfa {

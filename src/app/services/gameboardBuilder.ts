@@ -40,6 +40,7 @@ export const convertContentSummaryToGameboardItem = (question: ContentSummary): 
         level: undefined,
         url: undefined,
         deprecated: undefined,
+        className: undefined,
     };
     const newQuestion = {
         ...question,

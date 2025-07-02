@@ -264,7 +264,7 @@
 
 a:not(.btn):not(.nav-link) {
   // FIXME this breaks tables with links
-  &:not(.link-light):not(.footer-link):not(.a-link) {
+  &:not(.link-light):not(.footer-link):not(.a-link):not(.breadcrumb-link) {
     color: $cs-jet;
     &:hover {
       @extend .btn-link;

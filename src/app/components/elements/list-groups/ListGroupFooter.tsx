@@ -26,7 +26,6 @@ const footerLinksPhy = {
         <FooterLink key={key++} linkTo="/contact">Contact us</FooterLink>,
     ],
     right: [
-        <p className="footer-link-header" key={key++}>Explore by subject</p>,
         <FooterLink key={key++} linkTo="/physics">Physics</FooterLink>,
         <FooterLink key={key++} linkTo="/maths">Maths</FooterLink>,
         <FooterLink key={key++} linkTo="/chemistry">Chemistry</FooterLink>,
@@ -56,9 +55,12 @@ export const ListGroupFooter = () => (
             <ListGroup className="mb-3 w-max-content me-sm-7">
                 {footerLinksPhy.left}
             </ListGroup>
-            <ListGroup className="mb-3 w-max-content me-xl-4">
-                {footerLinksPhy.right}
-            </ListGroup>
+            <div className="mb-3 w-max-content me-xl-4">
+                <p className="footer-link-header">Explore by subject</p>
+                <ListGroup>
+                    {footerLinksPhy.right}
+                </ListGroup>
+            </div>
         </>,
 
         // CS

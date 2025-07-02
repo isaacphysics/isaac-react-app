@@ -118,7 +118,7 @@ const MathsSkillsCard = (context: NonNullable<Required<PageContextState>>): List
 };
 
 const MathsRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Revision", "Revise with our tailored revision decks on core pure, further pure, and mechanics.", [{tag: "List of revision decks", url: "/pages/maths_practice#master_maths"}])(context);
+    return ArbitraryPageLinkCard("Revision", "Revise with our tailored revision decks on core pure, further pure, and mechanics.", [{tag: "List of revision decks", url: "/pages/revision_maths_alevel"}])(context);
 };
 
 const BiologyExtensionQuestionsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
@@ -198,12 +198,12 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
 
 export const getBooksForContext = (context: PageContextState): BookInfo[] => {
     if (!isFullyDefinedContext(context)) return [];
-    
+
     if (!context?.stage?.length) {
         return ISAAC_BOOKS.filter(b => !b.hidden).filter(book => book.subject === context.subject);
     }
-    
+
     if (!isSingleStageContext(context)) return [];
-    
+
     return (subjectSpecificBooksMap[context.subject][context.stage[0] as keyof typeof subjectSpecificBooksMap[typeof context.subject]] || []).map(tag => ISAAC_BOOKS_BY_TAG[tag]);
 };
