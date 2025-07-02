@@ -38,7 +38,7 @@ export const TeacherFeatures = () => {
             {isDisabled && <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"} className="float-end">
                 {isLoggedIn(user) ? "Upgrade my account" : "Get a teacher account"}
             </Button>}
-            Isaac provides you with a huge range of resources to support your teaching of Science subjects – all for free.
+            Isaac provides you with a huge range of resources to support your teaching of science subjects – all for free.
         </PageMetadata>
         <Row className="my-4">
             <h4>Teacher workflow</h4>
@@ -116,10 +116,10 @@ export const TeacherFeatures = () => {
             </Col>
             <Col md={6} lg={4}>
                 <TeacherFeatureCard
-                    url = "/pages/pre_made_gameboards"
+                    url = "/physics/a_level/question_decks"
                     imgSrc = "/assets/phy/icons/key_stage_sprite.svg#triple"
-                    title = "Boards by topic"
-                    subtitle = {isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}
+                    title = "Decks by topic"
+                    subtitle = "A selection of our questions organised by topic."
                 />
             </Col>
             <Col md={{size: 6, offset: 3}} lg={{size: 4, offset: 0}}>
