@@ -361,7 +361,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
             : <div className="px-4">
                 <span>You&apos;re not currently logged in. Log in or sign up for free below!</span>
                 <br/>
-                <LoginLogoutButton className="my-2 w-max-content"/>
+                <LoginLogoutButton className="my-2 w-max-content" onClick={toggleMenu}/>
             </div>
         }
     </>;

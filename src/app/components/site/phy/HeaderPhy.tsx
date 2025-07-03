@@ -62,18 +62,18 @@ export const HeaderPhy = () => {
                             </div>
 
                             <MenuOpenContext.Provider value={{menuOpen, setMenuOpen}}>
-                                <Offcanvas id="header-offcanvas" direction="end" isOpen={menuOpen} toggle={toggleMenu} container="#root">
+                                <Offcanvas id="header-offcanvas" data-testid="header-offcanvas" direction="end" isOpen={menuOpen} toggle={toggleMenu} container="root">
                                     <OffcanvasHeader toggle={toggleMenu} className="justify-content-between" close={
                                         <div className="d-flex justify-content-end align-items-center flex-wrap gap-3 py-3">
                                             <LoginLogoutButton onClick={toggleMenu}/>
-                                            <AffixButton color="tint" size="lg" onClick={toggleMenu} affix={{
+                                            <AffixButton color="tint" size="lg" onClick={toggleMenu} data-testid="nav-menu-toggle" affix={{
                                                 affix: "icon-close", 
                                                 position: "suffix", 
                                                 type: "icon"
                                             }}>Menu</AffixButton>
                                         </div>
                                     }>
-                                        <Link to="/">
+                                        <Link to="/" onClick={toggleMenu}>
                                             <img src="/assets/phy/logo-small.svg" alt="The Isaac Science logo; a green hexagon with the word &apos;Isaac&apos; overlaid in white text." className="d-block"/>
                                         </Link>
                                     </OffcanvasHeader>
