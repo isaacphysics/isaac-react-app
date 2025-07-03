@@ -2,9 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {AppState, clearQuestionSearch, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
 import debounce from "lodash/debounce";
 import {
-    above,
     arrayFromPossibleCsv,
-    below,
     BookInfo,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
@@ -55,7 +53,6 @@ import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { processTagHierarchy, pruneTreeNode } from "../../services/questionHierarchy";
 import { SearchInputWithIcon } from "../elements/SearchInputs";
-import { AffixButton } from "../elements/AffixButton";
 import { Link } from "react-router-dom";
 import { updateTopicChoices } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
@@ -158,19 +155,22 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         if (pageContext) {
-            // on physics' subject-QFs, the url path (i.e. pageContext.subject) is the first tier of the hierarchy.
+            const solitary = isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext); 
+            
+            // on subject-QFs, the url path (i.e. pageContext.subject) is the first tier of the hierarchy.
             setSelections(
                 processTagHierarchy(
                     tags,
-                    arrayFromPossibleCsv(params.subjects).concat(pageContext?.subject ? [pageContext.subject] : []),
+                    solitary ? [pageContext.subject] : arrayFromPossibleCsv(params.subjects),
                     arrayFromPossibleCsv(params.fields),
                     arrayFromPossibleCsv(params.topics)
                 )
             );
 
-            const solitary = isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext); 
             setIsSolitaryStage(solitary);
-            setSearchStages(arrayFromPossibleCsv(params.stages).concat(solitary ? pageStageToSearchStage(pageContext?.stage)[0] : []) as STAGE[]);
+            if (solitary) {
+                setSearchStages(pageStageToSearchStage(pageContext?.stage) as STAGE[]);
+            }
         }
     }, [pageContext]);
 
