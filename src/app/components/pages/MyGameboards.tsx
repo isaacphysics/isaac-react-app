@@ -67,10 +67,10 @@ const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, board
         <Col xs={3} sm={{size: 2, offset: 1}} md={{size: 2, offset: 0}} lg={1}>
             <Label className="w-100 d-flex flex-column">
                 Filters
-                <Button color="secondary" className={classNames("gameboards-filter-dropdown")}
+                <Button color="secondary" className={classNames("gameboards-filter-dropdown d-flex justify-content-center align-items-center")}
                     onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"
                 >
-                    <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-white d-block justify-self-center", {"active": showFilters})} aria-hidden="true"/>
+                    <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-white", {"active": showFilters})} aria-hidden="true"/>
                 </Button>
             </Label>
         </Col>
