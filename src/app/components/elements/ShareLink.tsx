@@ -55,7 +55,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
             <IconButton
                 icon="icon-share"
                 className="w-max-content h-max-content"
-                affixClassName="icon-color-black"
+                affixClassName="icon-color-black-hoverable"
                 aria-label="Share page" 
                 title="Share page"
                 color="tint"
