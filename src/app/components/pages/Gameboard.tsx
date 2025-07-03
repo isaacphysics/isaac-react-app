@@ -212,7 +212,7 @@ export const Gameboard = withRouter(({ location }) => {
                             <MainContent>
                                 <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
                                 {isPhy 
-                                    ? <ListView type="item" items={displayQuestions} className="mt-3"/>
+                                    ? <ListView type="item" items={displayQuestions} linkedBoardId={gameboardId} className="mt-3"/>
                                     : <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-7" /> 
                                 }
                                 {user && isTutorOrAbove(user)
