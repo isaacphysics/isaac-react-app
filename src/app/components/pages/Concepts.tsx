@@ -3,7 +3,7 @@ import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
-import {above, below, getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags, useDeviceSize} from "../../services";
+import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags, useDeviceSize} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -15,8 +15,6 @@ import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { ContentSummaryDTO, Stage } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { AffixButton } from "../elements/AffixButton";
-import classNames from "classnames";
 import { PageMetadata } from "../elements/PageMetadata";
 
 const subjectToTagMap = {
@@ -31,7 +29,6 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
     const user = useAppSelector(selectors.user.orNull);
     const pageContext = useUrlPageTheme();
-    const deviceSize = useDeviceSize();
 
     const searchParsed = queryString.parse(location.search, {arrayFormat: "comma"});
 

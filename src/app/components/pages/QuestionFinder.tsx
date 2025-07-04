@@ -117,7 +117,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
     const pageContext = useUrlPageTheme();
-    const deviceSize = useDeviceSize();
     const [isSolitaryStage, setIsSolitaryStage] = useState(false); // we can't calculate this until we have the page context
     const [selections, setSelections] = useState<ChoiceTree[]>([]); // we can't populate this until we have the page context
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
