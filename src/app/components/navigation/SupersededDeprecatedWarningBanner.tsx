@@ -26,7 +26,7 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: SeguePageDTO}) {
     // Tutors and teachers should see superseded/deprecated messages because they have to setting assignments etc. and
     // want up to date content.
     const teacherMessage = isTutorOrAbove(user) && <React.Fragment>
-        <i id="superseded-help" className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help")} />
+        <i id="superseded-help" className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help")} />
         <UncontrolledTooltip placement="bottom" target="superseded-help">
             <div className="text-start">
                 {supersededBy && <>

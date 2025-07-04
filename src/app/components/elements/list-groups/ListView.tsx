@@ -8,6 +8,7 @@ import { AffixButton } from "../AffixButton";
 import { ContentSummaryDTO, GameboardDTO, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
 import { selectors, showQuizSettingModal, useAppDispatch, useAppSelector } from "../../../state";
+import { UnionToIntersection } from "@reduxjs/toolkit/dist/tsHelpers";
 import classNames from "classnames";
 
 type ListViewCardItemProps = Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}>;
@@ -20,15 +21,16 @@ export const ListViewCardItem = (props: ListViewCardItemProps) => {
 
 interface QuestionListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
     item: ContentSummaryDTO;
+    linkedBoardId?: string;
 }
 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
-    const { item, ...rest } = props;
+    const { item, linkedBoardId, ...rest } = props;
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "");
 
     return <AbstractListViewItem
         {...rest}
@@ -58,7 +60,7 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
         icon={{type: "hex", icon: "icon-concept", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
-        subtitle={item.summary}
+        subtitle={item.summary ?? item.subtitle}
         url={url}
         {...rest}
     />;
@@ -287,8 +289,33 @@ type ListViewProps<T, G extends "item" | "gameboard" | "quiz"> = {
         items: Required<T> extends Required<Extract<ListViewItemProps, {alviType: G}>['item']> ? T[] : never;
         type: G;
     } 
-    & Omit<Extract<ListViewItemProps, {alviType: G}>, "item" | keyof AbstractListViewItemProps>
-);
+    & Omit<UnionToIntersection<Extract<ListViewItemProps, {alviType: G}>>, "item" | keyof AbstractListViewItemProps>
+)
+
+// ListView type system in excessive detail:
+//   ListView is a wrapper component for rendering a group of various types of ListViewItems. The idea is that ListView is always the component you want when
+//   building anything; there is no need to know the details of which ListViewItem is being rendered. You merely provide the "type" of ListView, the "layout"
+//   (i.e. list / cards), and then pass in the items you want to render.
+
+//   The different types exist to allow the underlying AbstractListViewItem to render different types of item. The most common type is "item", used for questions,
+//   concepts, search results... – these have titles, subtitles, tags, and a url (e.g. ContentSummaryDTOs, ShortcutResponses). The other types are "gameboard",
+//   which have exclusive "Assign" buttons for teachers, and "quiz", which have exclusive "Preview" and "Take quiz" buttons.
+
+//   On to the typing. ListView has two generic types, T and G, which should not be specified directly in a component – if TS can infer them, you're using it 
+//   right. T is the type of the items being passed in; G is the type of ListView being rendered ("item" | "gameboard" | "quiz"). 
+
+//   In order to ensure that the items being passed in are valid under the context of type G, T is not immediately inferred from the items prop. Instead, it is
+//   checked against the union of all possible ListViewItem prop types, provided that ListViewItem is of the type G. The items prop is valid if its type extends
+//   the type of any single ListViewItem type of type G. We use `Required` as most of these types (e.g. ContentSummaryDTO) are fully optional by nature.
+
+//   The second part of the type system is the {...rest} props. These are props that can be passed to an individual ListViewItem type; for example, a 
+//   QuestionListViewItem can have a `linkedBoardId` prop, which is not present on a ConceptListViewItem. In a ListView where this is prop is set 
+//   (<ListView type="item" linkedBoardId="123" items={...} />), all question items will have the `linkedBoardId` prop passed to them. The prop is ignored on
+//   other item types.
+
+//   These type of {...rest} props is calculated similarly to the items prop. However, with items, we wanted validity to be checked entirely against a single
+//   ListViewItem type. Here, we want to allow props that are valid on any ListViewItem of type G, even if they are not valid on another. As such, we need convert
+//   the union of all ListViewItem types of type G into an intersection, as to obtain all props for that type.
 
 export const ListView = <T extends {type?: string}, G extends "item" | "gameboard" | "quiz">(props: ListViewProps<T, G>) => {
     const {items, className, type, ...rest} = props;

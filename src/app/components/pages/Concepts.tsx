@@ -119,16 +119,6 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     useEffect(() => {doSearch();}, [conceptFilters, searchStages]);
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
-
-    const BrowseAllButton = <AffixButton size="md" color="keyline" tag={Link} to="/concepts" className={classNames("ms-auto mw-max-content", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
-        affix={{
-            affix: "icon-arrow-right",
-            position: "suffix",
-            type: "icon"
-        }}>
-        Browse all concepts
-    </AffixButton>;
-
     const sidebarProps = {searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts};
 
     return (
@@ -140,15 +130,17 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             />
             <SidebarLayout>
                 {pageContext?.subject 
-                    ? <SubjectSpecificConceptListSidebar {...sidebarProps} optionBar={BrowseAllButton} hideButton /> 
+                    ? <SubjectSpecificConceptListSidebar {...sidebarProps} hideButton /> 
                     : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>
                 }
                 <MainContent>
                     <PageMetadata noTitle showSidebarButton>
                         {pageContext?.subject 
                             ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
-                                <p className="me-0 me-lg-3">The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                                {above["lg"](deviceSize) && BrowseAllButton}
+                                <p className="me-0 me-lg-3">
+                                    The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
+                                    You can browse all concepts <Link to="/concepts">here</Link>.
+                                </p>
                             </div> 
                             : <p>Use our concept finder to explore all concepts on the Isaac platform.</p>
                         }
