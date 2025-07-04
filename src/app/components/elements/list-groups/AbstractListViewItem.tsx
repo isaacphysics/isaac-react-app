@@ -120,7 +120,6 @@ type ALVIType = {
     audienceViews?: ViewingContext[];
     status?: CompletionState;
     quizTag?: string; // this is for quick quizzes only, which are currently just gameboards; may change in future
-    linkedBoardId?: string; // if the item is part of a gameboard
 } | {
     // quizzes – have exclusive "preview" and "view test" buttons
     alviType: "quiz";
@@ -163,11 +162,6 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isQuiz = typedProps.alviType === "quiz";
     const isCard = typedProps.alviLayout === "card";
     const isDisabled = state && [AbstractListViewItemState.COMING_SOON, AbstractListViewItemState.DISABLED].includes(state);
-
-    const fullUrl = url ? new URL(url, window.location.origin) : undefined;
-    if (fullUrl && typedProps.alviType === "item" && typedProps.linkedBoardId) {
-        fullUrl.searchParams.set("board", typedProps.linkedBoardId);
-    }
     
     fullWidth = fullWidth || below["sm"](deviceSize) || (isItem && !(typedProps.status || typedProps.audienceViews));
     const cardBody =
@@ -187,8 +181,8 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             </div>
             <div className="align-content-center text-overflow-ellipsis pe-2">
                 <div className="d-flex text-wrap">
-                    {fullUrl && !isDisabled
-                        ? <a href={fullUrl.toString()} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                    {url && !isDisabled
+                        ? <a href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                             <Markup encoding="latex">{title}</Markup>
                         </a>
                         : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
