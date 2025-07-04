@@ -114,8 +114,11 @@
 
 // Cloze questions
 .cloze-item {
-  background: $yellow-300 !important;
   color: $cs-black;
+
+  &.cloze-bg {
+    background: $yellow-300 !important;
+  }
 }
 
 .cloze-drop-zone, .cloze-dropdown {

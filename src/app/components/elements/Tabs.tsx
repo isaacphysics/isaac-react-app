@@ -87,9 +87,10 @@ const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass="", class
     return <div className={classNames(className, "mt-3 mb-1")}>
         {Object.keys(children).map((tabTitle, i) =>
             <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2 mb-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
-                affix: "icon-chevron-down",
+                affix: "icon-chevron-right",
                 position: "suffix",
                 type: "icon",
+                affixClassName: classNames("ms-2 icon-dropdown-90", {"active icon-color-white": activeTab === i + 1}),
             }}>
                 {tabTitle}
             </AffixButton>
@@ -100,9 +101,11 @@ const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass="", class
 export const Tabs = (props: TabsProps) => {
     const {
         className="", tabContentClass="", children, activeTabOverride, onActiveTabChange,
-        deselectable=false, refreshHash, expandable, style=(siteSpecific("dropdowns", "tabs")),
+        deselectable=undefined, refreshHash, expandable, style=(siteSpecific("dropdowns", "tabs")),
     } = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
+
+    const isDeselectable = deselectable ?? (style === "dropdowns" ? true : deselectable);
 
     useEffect(() => {
         if (isDefined(activeTabOverride)) {
@@ -113,7 +116,7 @@ export const Tabs = (props: TabsProps) => {
     function changeTab(tabIndex: number) {
         pauseAllVideos();
         let nextTabIndex = tabIndex;
-        if (deselectable && activeTab === tabIndex) {
+        if (isDeselectable && activeTab === tabIndex) {
             nextTabIndex = -1;
         }
         setActiveTab(nextTabIndex);

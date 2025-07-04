@@ -139,16 +139,16 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 </>)}
             {below["md"](deviceSize) && isAda && <div>
                 <button
-                    className="bg-opacity-10 p-0 bg-white"
+                    className="d-flex bg-opacity-10 p-0 bg-white"
                     onClick={handleFilterPanelExpansion}
                 >
-                    <img
-                        className={classNames(
-                            "icon-dropdown-90",
-                            {"active": above["lg"](deviceSize)
-                                ? Object.values(listState).some(v => v.state && !v.subList)
-                                : filtersVisible})}
-                        src={"/assets/common/icons/chevron_right.svg"} alt="" />
+                    <i className={classNames(
+                        "icon icon-chevron-right icon-color-black icon-dropdown-90", 
+                        {"active": above["lg"](deviceSize)
+                            ? Object.values(listState).some(v => v.state && !v.subList)
+                            : filtersVisible
+                        }
+                    )} aria-hidden="true"/>
                 </button>
             </div>}
         </CardHeader>
