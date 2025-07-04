@@ -43,10 +43,10 @@ import {useContext} from "react";
 import {Immutable} from "immer";
 
 export interface UseUserContextReturnType {
-    stage: STAGE;
+    stages: STAGE[];
     setStage: (stage: STAGE) => void;
-    examBoard: EXAM_BOARD;
-    setExamBoard: (stage: EXAM_BOARD) => void;
+    examBoards: EXAM_BOARD[];
+    setExamBoard: (examBoard: EXAM_BOARD) => void;
     isFixedContext: boolean;
     setFixedContext: (isFixedContext: boolean) => void;
     explanation: {stage: CONTEXT_SOURCE, examBoard: CONTEXT_SOURCE};
@@ -78,7 +78,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
     const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
     const {questionId} = useParams<{ questionId: string}>();
 
-    const registeredContext = isLoggedIn(user) ? user.registeredContexts?.[0] : undefined;
+    const registeredContexts = isLoggedIn(user) && user.registeredContexts ? Array.from(user.registeredContexts) : undefined;
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext) || {};
 
     const { id, contents} = useContext(GameboardContext) || {};
@@ -88,46 +88,46 @@ export function useUserViewingContext(): UseUserContextReturnType {
     const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));
     const setFixedContext = (isFixedContext: boolean) => dispatch(transientUserContextSlice?.actions.setFixedContext(isFixedContext));
 
-    const context = determineUserContext(transientUserContext, registeredContext, gameboardAndPathInfo, displaySettings);
+    const context = determineUserContext(transientUserContext, registeredContexts, gameboardAndPathInfo, displaySettings);
 
     return { ...context, setStage, setExamBoard, setFixedContext };
 }
 
-export const determineUserContext = (transientUserContext: TransientUserContextState, registeredContext: UserContext | undefined,
+export const determineUserContext = (transientUserContext: TransientUserContextState, registeredContexts: UserContext[] | undefined,
     gameboardAndPathInfo: GameboardAndPathInfo | undefined, displaySettings: DisplaySettings | undefined) => {
     const explanation: UseUserContextReturnType["explanation"] = { stage: CONTEXT_SOURCE.DEFAULT, examBoard: CONTEXT_SOURCE.DEFAULT };
 
     // Stage
-    let stage: STAGE;
+    let stages: STAGE[];
     if (transientUserContext?.stage) {
-        stage = transientUserContext.stage;
+        stages = [transientUserContext.stage];
         explanation.stage = CONTEXT_SOURCE.TRANSIENT;
-    } else if (registeredContext?.stage) {
-        stage = registeredContext.stage as STAGE;
+    } else if (registeredContexts?.some(rc => rc.stage)) {
+        stages = (registeredContexts.map(rc => rc.stage)) as STAGE[];
         explanation.stage = CONTEXT_SOURCE.REGISTERED;
     } else {
-        stage = STAGE.ALL;
+        stages = [STAGE.ALL];
         explanation.stage = CONTEXT_SOURCE.DEFAULT;
     }
 
     // Exam Board
-    let examBoard: EXAM_BOARD;
+    let examBoards: EXAM_BOARD[];
     if (isPhy) {
-        examBoard = EXAM_BOARD.ALL;
+        examBoards = [EXAM_BOARD.ALL];
         explanation.examBoard = CONTEXT_SOURCE.NOT_IMPLEMENTED;
     } else if (transientUserContext?.examBoard) {
-        examBoard = transientUserContext?.examBoard;
+        examBoards = [transientUserContext?.examBoard];
         explanation.examBoard = CONTEXT_SOURCE.TRANSIENT;
-    } else if (registeredContext?.examBoard) {
-        examBoard = registeredContext.examBoard as EXAM_BOARD;
+    } else if (registeredContexts?.some(rc => rc.examBoard)) {
+        examBoards = registeredContexts.map(rc => rc.examBoard) as EXAM_BOARD[];
         explanation.examBoard = CONTEXT_SOURCE.REGISTERED;
     } else {
-        examBoard = EXAM_BOARD_DEFAULT_OPTION;
+        examBoards = [EXAM_BOARD_DEFAULT_OPTION];
         explanation.examBoard = CONTEXT_SOURCE.DEFAULT;
     }
 
     // Whether stage and examboard are the default
-    const hasDefaultPreferences = isAda && stage === STAGE.ALL && examBoard === EXAM_BOARD.ADA;
+    const hasDefaultPreferences = isAda && stages.length === 1 && stages[0] === STAGE.ALL && examBoards.length === 1 && examBoards[0] === EXAM_BOARD.ADA;
 
     // Gameboard views overrides all context options
     if (gameboardAndPathInfo?.questionIdFromPath && gameboardAndPathInfo?.boardIdFromQueryParams
@@ -137,20 +137,20 @@ export const determineUserContext = (transientUserContext: TransientUserContextS
             const gameboardDeterminedViews = determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext);
             // If user's stage selection is not one specified by the gameboard change it
             if (gameboardDeterminedViews.length > 0) {
-                if (!gameboardDeterminedViews.map(v => v.stage).includes(stage) && !STAGE_NULL_OPTIONS.includes(stage)) {
+                if (!stages.some(s => gameboardDeterminedViews.map(v => v.stage).includes(s)) && !STAGE_NULL_OPTIONS.includes(stages[0])) {
                     explanation.stage = CONTEXT_SOURCE.GAMEBOARD;
                     if (gameboardDeterminedViews.length === 1) {
-                        stage = gameboardDeterminedViews[0].stage as STAGE;
+                        stages = [gameboardDeterminedViews[0].stage] as STAGE[];
                     } else {
-                        stage = STAGE.ALL;
+                        stages = [STAGE.ALL];
                     }
                 }
-                if (!gameboardDeterminedViews.map(v => v.examBoard).includes(examBoard) && !EXAM_BOARD_NULL_OPTIONS.includes(examBoard)) {
+                if (!examBoards.some(eb => gameboardDeterminedViews.map(v => v.examBoard).includes(eb)) && !EXAM_BOARD_NULL_OPTIONS.includes(examBoards[0])) {
                     explanation.examBoard = CONTEXT_SOURCE.GAMEBOARD;
                     if (gameboardDeterminedViews.length === 1) {
-                        examBoard = gameboardDeterminedViews[0].examBoard as EXAM_BOARD;
+                        examBoards = [gameboardDeterminedViews[0].examBoard] as EXAM_BOARD[];
                     } else {
-                        examBoard = EXAM_BOARD.ALL;
+                        examBoards = [EXAM_BOARD.ALL];
                     }
                 }
             }
@@ -163,7 +163,7 @@ export const determineUserContext = (transientUserContext: TransientUserContextS
         explanation.stage = CONTEXT_SOURCE.PAGE_CONTEXT;
     }
 
-    return { stage, examBoard, isFixedContext, hasDefaultPreferences, explanation };
+    return { stages, examBoards, isFixedContext, hasDefaultPreferences, explanation };
 };
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
@@ -368,7 +368,7 @@ export function isRelevantToPageContext(intendedAudience: ContentBaseDTO['audien
     );
 }
 
-export function isRelevantPageContextOrIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UserContext, user: Immutable<PotentialUser> | null, pageContext: PageContextState) {
+export function isRelevantPageContextOrIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null, pageContext: PageContextState) {
     // if we are in a subject-stage-specific route, this is only relevant if there is some overlap between that route and the content object; we ignore the user entirely.
     if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
         return isRelevantToPageContext(intendedAudience, pageContext);
@@ -378,7 +378,7 @@ export function isRelevantPageContextOrIntendedAudience(intendedAudience: Conten
     return isIntendedAudience(intendedAudience, userContext, user);
 }
 
-export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UserContext, user: Immutable<PotentialUser> | null): boolean {
+export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null): boolean {
     // If no audience is specified, we default to true
     if (!intendedAudience) {
         return true;
@@ -387,8 +387,8 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
     return intendedAudience.some(audienceClause => {
         // If stages are specified do we have any of them in our context
         if (audienceClause.stage) {
-            const userStage = userContext.stage;
-            const satisfiesStageCriteria = !userStage || userStage === STAGE.ALL || audienceClause.stage.includes(userStage);
+            const userStages = userContext.stages;
+            const satisfiesStageCriteria = !userStages.length || userStages.includes(STAGE.ALL) || userStages.some(s => audienceClause.stage?.includes(s));
             if (!satisfiesStageCriteria) {
                 return false;
             }
@@ -396,9 +396,8 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
 
         // If exam boards are specified do we have any of them in our context
         if (audienceClause.examBoard) {
-            const userExamBoard = userContext.examBoard;
-            const satisfiesExamBoardCriteria =
-                !userExamBoard || userExamBoard === EXAM_BOARD.ALL || audienceClause.examBoard.includes(userExamBoard);
+            const userExamBoards = userContext.examBoards;
+            const satisfiesExamBoardCriteria = !userExamBoards.length || userExamBoards.includes(EXAM_BOARD.ALL) || userExamBoards.some(eb => audienceClause.examBoard?.includes(eb));
             if (!satisfiesExamBoardCriteria) {
                 return false;
             }
@@ -435,11 +434,11 @@ export function mergeDisplayOptions(source: ContentBaseDTO["display"], update: C
 
 export function notRelevantMessage(userContext: UseUserContextReturnType): string {
     const message = [];
-    if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
-        message.push(stageLabelMap[userContext.stage]);
+    if (userContext.stages.length === 1 && !STAGE_NULL_OPTIONS.includes(userContext.stages[0])) {
+        message.push(stageLabelMap[userContext.stages[0]]);
     }
-    if (isAda && !EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
-        message.push(examBoardLabelMap[userContext.examBoard]);
+    if (isAda && userContext.examBoards.length === 1 && !EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoards[0])) {
+        message.push(examBoardLabelMap[userContext.examBoards[0]]);
     }
     if (message.length === 0) { // should never happen...
         message.push("your account settings" /* "anyone!" */);
@@ -480,7 +479,7 @@ export function audienceStyle(audienceString: string): string {
     return uniqueLabels.size === 1 ? uniqueLabels.values().next().value as string : "stage-label-all";
 }
 
-export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType, intendedAudience: boolean, allUserContexts?: UserContext[]): string {
+export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType, intendedAudience: boolean): string {
     let stagesSet: Set<Stage>;
     if (!audience) {
         stagesSet = new Set<Stage>([STAGE.ALL]);
@@ -490,7 +489,7 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     }
     // order stages
     const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
-    const stagesFilteredByUserContext = allUserContexts ? audienceStages.filter(s => allUserContexts.some(uc => uc.stage === s)) : audienceStages.filter(s => userContext.stage === s);;
+    const stagesFilteredByUserContext = audienceStages.filter(s => userContext.stages.some(uc => uc === s));
     let stagesToView: Stage[] = [];
 
     if (isAda) {
@@ -522,10 +521,7 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
             return acc;
         }, [[], [], [], []] as Stage[][]);
 
-        // FIXME: use result.findLastIndex when supported
-        // const lastNonEmptyIndex = result.findLastIndex((labels) => labels.length > 0);
-        const reversed = result.slice().reverse();
-        const lastNonEmptyIndex = (result.length - 1) - reversed.findIndex(((labels) => labels.length > 0));
+        const lastNonEmptyIndex = result.findLastIndex((labels) => labels.length > 0);
 
         return result.reduce((acc, labels, index) => {
             if (labels.length === 0) return acc;
@@ -548,4 +544,8 @@ export function makeIntendedAudienceComparator(user: Immutable<PotentialUser> | 
         const isAudienceB = isIntendedAudience(sectionB.audience, userContext, user);
         return isAudienceA === isAudienceB ? 0 : isAudienceB ? 1 : -1;
     };
+}
+
+export function hasNullExamBoardOptions(userContext: UseUserContextReturnType) {
+    return userContext.examBoards.some(eb => EXAM_BOARD_NULL_OPTIONS.includes(eb));
 }

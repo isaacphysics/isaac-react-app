@@ -31,7 +31,7 @@ import { PhyHexIcon, PhyHexIconProps } from "./svg/PhyHexIcon";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserViewingContext();
-    const viewsWithMyStage = audienceViews.filter(vc => vc.stage === userContext.stage);
+    const viewsWithMyStage = audienceViews.filter(vc => userContext.stages.includes(vc.stage as STAGE));
     // If there is a possible audience view that is correct for our user context, show that specific one
     const viewsToUse = viewsWithMyStage.length > 0 ? viewsWithMyStage.slice(0, 1) : audienceViews;
     const filteredViews = filterAudienceViewsByProperties(viewsToUse, AUDIENCE_DISPLAY_FIELDS);

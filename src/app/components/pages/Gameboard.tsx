@@ -29,7 +29,8 @@ import {
     TAG_ID,
     tags,
     useDeviceSize,
-    useUserViewingContext
+    useUserViewingContext,
+    STAGE
 } from "../../services";
 import {Redirect} from "react-router";
 import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySummaryIcons";
@@ -76,7 +77,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     const userViewingContext = useUserViewingContext();
     const deviceSize = useDeviceSize();
     const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
-    const uniqueStage = questionViewingContexts.find(context => context.stage === userViewingContext.stage);
+    const uniqueStage = questionViewingContexts.find(context => context.stage && userViewingContext.stages.includes(context.stage as STAGE));
     return <ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "justify-content-center": isAda})}>
             <span className={"question-progress-icon"}>

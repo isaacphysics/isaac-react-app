@@ -53,7 +53,6 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
     const page = useAppSelector(selectors.doc.get);
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
-    const allUserContexts = user?.loggedIn && user.registeredContexts;
     const pageContext = useAppSelector(selectors.pageContext.context);
 
     const isConceptPage = page && page !== 404 && page.type === DOCUMENT_TYPE.CONCEPT;
@@ -78,7 +77,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         // Handle conditional display settings
         .map(section => {
             const sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
-            const sectionDisplaySettings = !allUserContexts || allUserContexts.some(uc => isRelevantPageContextOrIntendedAudience(section.audience, uc, user, pageContext))
+            const sectionDisplaySettings = isRelevantPageContextOrIntendedAudience(section.audience, userContext, user, pageContext)
                 ? sectionDisplay?.["audience"] 
                 : sectionDisplay?.["nonAudience"];
             if (sectionDisplaySettings?.includes("open")) {section.startOpen = true;}
@@ -120,18 +119,18 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         // now collapse indices before/after the userContext stage into "additional learning stages" when there are multiple
 
         const getMaxRelevantIndex = () => {
-            const learningStage = STAGE_TO_LEARNING_STAGE[userContext.stage];
-            if (learningStage) {
-                const applicableStages = LEARNING_STAGE_TO_STAGES[learningStage];
+            const learningStages = userContext.stages.map(s => STAGE_TO_LEARNING_STAGE[s]);
+            if (learningStages) {
+                const applicableStages = learningStages.filter(ls => isDefined(ls)).map(ls => LEARNING_STAGE_TO_STAGES[ls]).flat();
                 return Math.max(...applicableStages.map(stage => stageToFirstIndexMap[stage] ?? -1));
             }
             return -1; // only occurs when userContext.stage === STAGE.ALL
         };
 
         // if we need to show everything, don't remove anything
-        if (userContext.stage && isDefined(stageToFirstIndexMap[userContext.stage]) && userContext.stage !== STAGE.ALL) {
+        if (userContext.stages && isDefined(stageToFirstIndexMap[userContext.stages[0]]) && !userContext.stages.includes(STAGE.ALL)) {
             const beforeUserStage = Object.keys(stageToFirstIndexMap).filter(stage => {
-                return stageToFirstIndexMap[stage] < stageToFirstIndexMap[userContext.stage];
+                return stageToFirstIndexMap[stage] < stageToFirstIndexMap[userContext.stages[0]];
             });
             const afterUserStage = Object.keys(stageToFirstIndexMap).filter(stage => {
                 return stageToFirstIndexMap[stage] > getMaxRelevantIndex();
@@ -159,7 +158,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         }
 
         return stageToFirstIndexMap;
-    }, [isConceptPage, sections, userContext.stage]);
+    }, [isConceptPage, sections, userContext.stages]);
 
     const stageInserts = useMemo(() => {
         // flip key and value; we don't construct it this way as when building we need fast lookup of audience
@@ -172,7 +171,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
 
     return <div className="isaac-accordion">
         {sections?.map((section, index) => {
-            const intendedAudience = !allUserContexts || allUserContexts.some(uc => isIntendedAudience(section.audience, uc, user));
+            const intendedAudience = isIntendedAudience(section.audience, userContext, user);
             const audienceString = stringifyAudience(section.audience, userContext, intendedAudience);
             return <React.Fragment key={section.id || index}>
                 {isPhy && stageInserts?.[index] && <StageInsert stage={stageInserts[index]} />}
