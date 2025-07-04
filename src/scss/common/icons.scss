@@ -119,25 +119,9 @@ img[aria-disabled="true"] {
   --mask-size: initial;
 }
 
-@mixin icon-color-override($color) {
-  &.layered {
-    &::before {
-      background-color: $color !important;
-    }
-    &::after {
-      background-color: $color !important;
-    }
-  }
-
-  // .layered is a bit grim; if we could set something in @svg-icon-layered as a flag instead this would be ideal.
-  &:not(.layered) {
-    background-color: $color !important;
-  }
-}
-
 i.icon:not(.icon-raw) {
   &, &[color="primary"] {
-    background-color: var(--icon-primary);
+    background-color: var(--layered-icon-parent-bg-override, var(--icon-primary));
     
     @include not-reduced-motion {
       transition: all 0.15s ease-in-out; // mirrors BS's $btn-transition
@@ -154,14 +138,14 @@ i.icon:not(.icon-raw) {
   }
 
   &[color="secondary"] {
-    background-color: var(--icon-secondary);
+    background-color: var(--layered-icon-parent-bg-override, var(--icon-secondary));
     &::after {
       background-color: var(--icon-secondary);
     }
   }
 
   &[color="tertiary"] {
-    background-color: var(--icon-tertiary);
+    background-color: var(--layered-icon-parent-bg-override, var(--icon-tertiary));
     &::after {
       background-color: var(--icon-tertiary);
     }

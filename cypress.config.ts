@@ -25,12 +25,12 @@ export default defineConfig({
                 return launchOptions;
             });
         },
-        retries: 5
+        retries: 2
     },
     env: {
         pluginVisualRegressionImagesPath : `{spec_path}/__image_snapshots__/${SITE_STRING}`,
         pluginVisualRegressionMaxDiffThreshold: 0,
         pluginVisualRegressionUpdateImages: UPDATE_BASELINE,
-        pluginVisualRegressionCreateMissingImages: false,
+        pluginVisualRegressionCreateMissingImages: UPDATE_BASELINE,
     }
 });

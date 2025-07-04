@@ -353,3 +353,7 @@ i.icon.icon-color-muted {
 i.icon.icon-color-white {
   @include icon-color-override($color-neutral-white);
 }
+
+i.icon.icon-color-black-hoverable {
+  --buttons-light-icon: #{$color-neutral-900};
+}

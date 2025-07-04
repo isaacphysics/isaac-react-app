@@ -299,7 +299,7 @@ export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey
                     <div className={classNames("d-flex flex-row h-100", {"align-items-center": isPhy})}>
                         <span>Class average mode</span>
                         {above["md"](deviceSize) && <>
-                            <i id={`attempted-toggle-${id}`} className={siteSpecific("icon icon-info layered icon-color-grey ms-1", "icon-help")}/>
+                            <i id={`attempted-toggle-${id}`} className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help")}/>
                             <UncontrolledTooltip className="spaced-tooltip" placement="left" autohide={false} target={`attempted-toggle-${id}`}>
                                 This toggle changes what the percentages at the top and bottom of the table represent.<br/><br/>
                                 <b>Attempted</b> displays the percentage of students who have attempted all parts of that question.<br/><br/>
@@ -440,7 +440,7 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
             <div className={classNames("group-name ps-2 ps-md-3 justify-content-between", {"flex-grow-1" : below['xs'](deviceSize)})}>
                 <div className="d-flex align-items-center">
                     {siteSpecific(
-                        <i className="icon icon-group icon-color-white layered me-2"/>,
+                        <i className="icon icon-group icon-color-white me-2"/>,
                         <span className="icon-group"/>
                     )}
                     <span data-testid={"group-name"}>{group.groupName}</span>
