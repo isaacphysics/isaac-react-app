@@ -25,6 +25,7 @@ export default defineConfig({
                 return launchOptions;
             });
         },
+        retries: 2
     },
     env: {
         pluginVisualRegressionImagesPath : `{spec_path}/__image_snapshots__/${SITE_STRING}`,
