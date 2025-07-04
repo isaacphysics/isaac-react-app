@@ -210,8 +210,8 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                             Set test
                         </Button>
                     </td>
-                    <td className="align-content-center">
-                        <i className={classNames("icon icon-chevron-right icon-dropdown-90 d-block justify-self-center", {"active": isExpanded})} aria-hidden="true" />
+                    <td className="text-center align-middle">
+                        <i className={classNames("icon icon-chevron-right icon-dropdown-90", {"active": isExpanded})} aria-hidden="true" />
                     </td>
                 </>
             )}

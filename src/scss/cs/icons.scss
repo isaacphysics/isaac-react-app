@@ -123,6 +123,11 @@ icon-status {
   background: $cs-silver;
 }
 
+:is(a, span) > i.icon:only-child {
+  // centers the icon in the default line height of 1.5rem
+  margin-top: 0.25rem;
+}
+
 i.icon.icon-color-black {
   @include icon-color-override($cs-jet);
 }
