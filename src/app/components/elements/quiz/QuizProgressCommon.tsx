@@ -269,8 +269,9 @@ export function ResultsTable<Q extends QuestionType>({
                     <tbody>
                         {sortedProgress.map((studentProgress, index) => {
                             const fullAccess = isAuthorisedFullAccess(studentProgress);
+                            const internalCellSpacing = isPhy && isAssignment ? "py-1" : "py-3";
                             return <tr key={studentProgress.user?.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
-                                <th className="student-name py-3 fw-bold">
+                                <th className={`student-name ${internalCellSpacing} fw-bold`}>
                                     {fullAccess && pageSettings?.isTeacher ?
                                         (
                                             isAssignment ?
