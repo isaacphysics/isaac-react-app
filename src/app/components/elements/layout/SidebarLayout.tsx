@@ -584,16 +584,9 @@ interface PracticeQuizzesSidebarProps extends ContentSidebarProps {
 export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
     const { filterText, setFilterText, filterTags, setFilterTags, tagCounts, filterStages, setFilterStages, stageCounts, ...rest } = props;
     const pageContext = useAppSelector(selectors.pageContext.context);
+    const subjectTag = tags.getById(pageContext?.subject as TAG_ID);
     const fields = pageContext?.subject ? tags.getDirectDescendents(pageContext.subject as TAG_ID) : [];
 
-    const updateFilterTags = (tag: Tag) => {
-        if (filterTags?.includes(tag)) {
-            setFilterTags(filterTags.filter(t => t !== tag));
-        }
-        else {
-            setFilterTags([...(filterTags ?? []), tag]);
-        }
-    };
 
     const updateFilterStages = (stage: Stage) => {
         if (filterStages?.includes(stage)) {
@@ -649,10 +642,18 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                 <div className="section-divider"/>
                 <h5>Filter by topic</h5>
                 <ul className="ps-2">
+                    <li>
+                        <AllFiltersCheckbox 
+                            conceptFilters={filterTags ?? []} setConceptFilters={setFilterTags} tagCounts={tagCounts} baseTag={subjectTag}
+                        />
+                    </li>
+                    <div className="section-divider-small"/>
                     {fields.filter(tag => tagCounts[tag.id] > 0)
                         .map((tag, j) => <li key={j} >
-                            <StyledTabPicker checkboxTitle={tag.title} checked={filterTags?.includes(tag)}
-                                count={tagCounts[tag.id]} onInputChange={() => updateFilterTags(tag)}/>
+                            <FilterCheckbox
+                                tag={tag} conceptFilters={filterTags ?? []} setConceptFilters={setFilterTags}
+                                tagCounts={tagCounts} incompatibleTags={[subjectTag]} baseTag={subjectTag}
+                            />
                         </li>)}
                 </ul>
             </>}
