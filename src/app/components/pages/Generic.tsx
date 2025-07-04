@@ -68,7 +68,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
         thenRender={supertypedDoc => {
             const doc = supertypedDoc as SeguePageDTO & DocumentSubject;
 
-            const optionBar = <div className={classNames("no-print d-flex align-items-center", {"gap-2 pb-2": isPhy})} >
+            const optionBar = <div className={classNames("no-print d-flex align-items-center gap-2", {"pb-2": isPhy})} >
                 <EditContentButton doc={doc} />
                 <div className="question-actions question-actions-leftmost mt-2">
                     <ShareLink linkUrl={`/pages/${doc.id}`}/>
