@@ -1,0 +1,48 @@
+.overview-padding {
+  @extend .px-md-4;
+  @include media-breakpoint-up(xl) {
+    padding-left: 100px !important;
+    padding-right: 100px !important;
+  }
+  @extend .py-7;
+  @include media-breakpoint-up(xl) {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+}
+
+#overview {
+  z-index: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+#overview:before {
+  content: "";
+  background-image: url("/assets/cs/decor/fingerprint-stage-slice.svg");
+  position: absolute;
+  opacity: 0.1;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 1000px;
+  width: 800px;
+  top: -20%;
+  left: 70%;
+  transform: rotate(210deg);
+}
+
+#overview:after {
+  content: "";
+  background-image: url("/assets/cs/decor/fingerprint-stage-slice.svg");
+  position: absolute;
+  opacity: 0.1;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 1000px;
+  width: 800px;
+  top: 10%;
+  left: -30%;
+  z-index: -1;
+  transform: rotate(300deg);
+}

@@ -2,20 +2,35 @@ import React, {useEffect} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardFooter, CardTitle, Col, Container, Row} from "reactstrap";
-import {PATHS, SITE_TITLE, useDeviceSize} from "../../../services";
+import {isLoggedIn, isTeacherOrAbove, PATHS, SITE_TITLE, useDeviceSize} from "../../../services";
 import {AdaHero2x1} from "../../elements/svg/AdaHero";
 import {NewsCard} from "../../elements/cards/NewsCard";
 import {AdaHomepageSearch} from "../../elements/SearchInputs";
 import {MetaDescription} from "../../elements/MetaDescription";
 import classNames from "classnames";
-import { ImageBlock } from "../../elements/layout/ImageBlock";
-import { IconCard } from "../../elements/cards/IconCard";
-import { TextBlock } from "../../elements/layout/TextBlock";
-import { ColumnSlice } from "../../elements/layout/ColumnSlice";
-import { AdaCard } from "../../elements/cards/AdaCard";
+import {ImageBlock} from "../../elements/layout/ImageBlock";
+import {IconCard} from "../../elements/cards/IconCard";
+import {TextBlock} from "../../elements/layout/TextBlock";
+import {ColumnSlice} from "../../elements/layout/ColumnSlice";
+import {AdaCard} from "../../elements/cards/AdaCard";
 import {useLinkableSetting} from "../../../services/linkableSetting";
+import {Overview} from "../../pages/Overview";
+import {ShowLoading} from "../../handlers/ShowLoading";
 
 export const HomepageCS = () => {
+
+    const user = useAppSelector(selectors.user.orNull);
+
+    return <ShowLoading until={user}>
+        {isLoggedIn(user) && isTeacherOrAbove(user) ?
+            <Overview/>
+            :
+            <Homepage />
+        }
+    </ShowLoading>;
+};
+
+const Homepage = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
     const featuredNewsItem = news ? news[0] : undefined;
