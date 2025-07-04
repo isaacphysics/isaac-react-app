@@ -31,10 +31,10 @@
 .accordion button.accordion-header {
   span, button, button:hover {
     color: black !important;
+  }
 
-    &.stage-label-higher, &.de-emphasised > span {
-      color: white !important;
-    }
+  &.stage-label-higher, &.de-emphasised > span {
+    color: white !important;
   }
 
   &::after {

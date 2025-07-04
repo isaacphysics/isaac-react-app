@@ -237,11 +237,11 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         if (concepts && (!baseGameboardId)) {
             const params: { [key: string]: string } = {};
             params.concepts = concepts;
-            if (userContext.stage !== STAGE.ALL) {
-                params.stages = userContext.stage;
+            if (!userContext.stages.includes(STAGE.ALL)) {
+                params.stages = userContext.stages.join(",");
             }
-            if (userContext.examBoard !== EXAM_BOARD.ALL) {
-                params.examBoards = userContext.examBoard;
+            if (!userContext.examBoards.includes(EXAM_BOARD.ALL)) {
+                params.examBoards = userContext.examBoards.join(",");
             }
             generateTemporaryGameboard(params).then((gameboardResponse) => {
                 if (mutationSucceeded(gameboardResponse)) {
@@ -251,7 +251,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                 }
             });
         }
-    }, [dispatch, concepts, baseGameboardId, cloneGameboard, generateTemporaryGameboard, userContext.examBoard, userContext.stage]);
+    }, [dispatch, concepts, baseGameboardId, cloneGameboard, generateTemporaryGameboard, userContext.examBoards, userContext.stages]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});

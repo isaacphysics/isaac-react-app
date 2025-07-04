@@ -22,8 +22,8 @@ import {Markup} from "../markup";
 import { ListGroup, ListGroupItem, Button, UncontrolledTooltip } from "reactstrap";
 
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
-    const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
+    const userContext = useUserViewingContext();
     const deviceSize = useDeviceSize();
 
     return <ListGroup className="mt-4 link-list list-group-links">

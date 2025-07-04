@@ -13,10 +13,10 @@ import {MultiValue} from "react-select";
 import {
     tags,
     DIFFICULTY_ICON_ITEM_OPTIONS,
-    EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     groupTagSelectionsByParent,
+    hasNullExamBoardOptions,
     isAda,
     isPhy,
     isStaff,
@@ -78,8 +78,8 @@ export const QuestionSearchModal = (
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>([]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>([]);
     useEffect(function populateExamBoardFromUserContext() {
-        if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
-    }, [userContext.examBoard]);
+        if (!hasNullExamBoardOptions(userContext)) setSearchExamBoards(userContext.examBoards);
+    }, [userContext.examBoards]);
 
     const [isSearching, setIsSearching] = useState(false);
     const [searchBook, setSearchBook] = useState<string[]>([]);
