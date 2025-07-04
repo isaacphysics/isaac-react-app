@@ -1,5 +1,5 @@
 import {History} from "history";
-import {DOCUMENT_TYPE, isStaff, SEARCH_RESULT_TYPE, SearchableDocumentType, TAG_ID} from ".";
+import {DOCUMENT_TYPE, isDefined, isStaff, PHY_NAV_SUBJECTS, SEARCH_RESULT_TYPE, SearchableDocumentType, Subject, TAG_ID} from ".";
 import {ContentSummaryDTO, Stage} from "../../IsaacApiTypes";
 import {PotentialUser} from "../../IsaacAppTypes";
 import queryString from "query-string";
@@ -53,3 +53,15 @@ export function parseLocationSearch(search: string): [Nullable<string>, Searchab
 
     return [query, filters];
 }
+
+const searchPlaceholdersBySubject: {[subject in keyof typeof PHY_NAV_SUBJECTS]: string} = {
+    "physics": "Forces",
+    "chemistry": "Bond",
+    "maths": "Triangle",
+    "biology": "Cell"
+};
+
+export const getSearchPlaceholder = (subject?: Subject): string => {
+    if (!isDefined(subject)) return searchPlaceholdersBySubject["physics"];
+    return searchPlaceholdersBySubject[subject];
+};

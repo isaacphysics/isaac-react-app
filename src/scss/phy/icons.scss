@@ -307,6 +307,19 @@
   )
 }
 
+.icon-wildcard {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-revision-fg.svg',
+    '/assets/phy/icons/redesign/page-generic-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 58%)
+  );
+
+  // Reusing layers from other icons so this needs slight adjustments to fit
+  &::after {
+    scale: 0.9;
+  }
+}
+
 svg {
   &.almost-fill {
     fill: $phy_extra_force_yellow;
@@ -348,4 +361,8 @@ i.icon.icon-color-grey {
 
 i.icon.icon-color-white {
   @include icon-color-override($color-neutral-white);
+}
+
+i.icon.icon-color-black-hoverable {
+  --buttons-light-icon: #{$color-neutral-900};
 }

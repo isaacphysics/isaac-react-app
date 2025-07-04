@@ -204,7 +204,7 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
             <div className="py-2 d-flex flex-column">
                 <span className={classNames("mb-2", siteSpecific("d-flex align-items-center", ""))}>
                     Pending {siteSpecific("assignments", "quiz assignments")}:
-                    <i className={siteSpecific("icon icon-info layered icon-color-grey ms-2", "icon-help mx-1")} id={`pending-assignments-help-${board?.id}`}/>
+                    <i className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help mx-1")} id={`pending-assignments-help-${board?.id}`}/>
                 </span>
                 <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
                     These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the morning of the scheduled date, students
@@ -271,7 +271,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <th colSpan={2} className="text-center align-middle">
             <div className="d-flex align-items-center">
                 Stages and Difficulties
-                <i id="difficulties-help" className="icon icon-info layered icon-color-grey ms-2"/>
+                <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2"/>
             </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
@@ -431,8 +431,8 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
                 </Button>
             </Col>
             <Col md={6} lg={4} className="pt-1">
-                <Button tag={Link} to={"/pages/pre_made_gameboards"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
-                    our Boards by Topic
+                <Button tag={Link} to={"/physics/a_level/question_decks"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                    our topic question decks
                 </Button>
             </Col>
             <Col md={12} lg={4} className="pt-1">
@@ -539,7 +539,7 @@ export const SetAssignments = () => {
                 sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
             />
             <MainContent>
-                <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />          
+                <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
                 {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
                 {groups && groups.length === 0 && <Alert color="warning">
                     You have not created any groups to assign work to.

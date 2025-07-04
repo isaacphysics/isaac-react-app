@@ -281,6 +281,21 @@ iframe.email-html {
 //  }
 //}
 
+.text-block {
+  h2, p {
+    margin-bottom: 1.2rem;
+  }
+}
+
+.image-block {
+  object-fit: contain;
+  @extend .vertical-center;
+
+  > img {
+    width: 100%;
+  }
+}
+
 .collapsible-list-container {
   border-top: 2px solid $gray-107;
   img {
