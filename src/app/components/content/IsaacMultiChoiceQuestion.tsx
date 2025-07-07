@@ -18,7 +18,7 @@ const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
         </div>
         <ul>{doc?.choices?.map((choice, index) =>
             <li key={choice.value} className="list-unstyled">
-                <Label className="label-radio multichoice-option d-flex">
+                <Label className="label-radio multichoice-option d-flex align-items-center">
                     <Input
                         id={`${questionId}${index}`} color="secondary" type="radio"
                         checked={currentAttempt?.value === choice.value}
