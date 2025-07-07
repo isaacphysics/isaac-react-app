@@ -1,4 +1,4 @@
-import React, {useContext, useMemo, useRef, useState} from "react";
+import React, {useCallback, useContext, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
 import {isAuthorisedFullAccess, isPhy, siteSpecific, TODAY} from "../../../services";
@@ -97,6 +97,27 @@ export const getQuizQuestionPartCorrectnessIcon = (state: QuestionPartState) => 
             return ICON.notAttempted;
     }
 };
+
+function questionPartResultToNumber(partResult: QuestionPartState | undefined): number {
+    switch (partResult) {
+        case "CORRECT":
+            return 1;
+        case "INCORRECT":
+            return 0;
+        default:
+            return -1;
+    }
+}
+
+const sortByName = ((item: AssignmentProgressDTO): string => {
+    return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
+});
+
+const sortByNotAttemptedParts = ((questionIndex: number, item: AssignmentProgressDTO): number => {
+    if (!isAuthorisedFullAccess(item)) return -Infinity;
+    return item.notAttemptedPartResults[questionIndex];
+});
+
 export interface QuestionType {
     id?: string | undefined;
     title?: string | undefined;
@@ -169,15 +190,11 @@ export function ResultsTable<Q extends QuestionType>({
         }
     }
 
-    const semiSortedProgress = useMemo(() => orderBy(progress, (item) => {
-        return isAuthorisedFullAccess(item) && item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
-    }, [reverseOrder ? "desc" : "asc"]), [progress, reverseOrder]);
-
-    const sortedProgress = useMemo(() => orderBy((semiSortedProgress), (item) => {
-        if (!isAuthorisedFullAccess(item)) return -1;
+    const sortBySelectedSortOrder = useCallback((item: AssignmentProgressDTO): string | number => {
+        if (!isAuthorisedFullAccess(item)) return -Infinity;
         switch (sortOrder) {
             case "name":
-                return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
+                return sortByName(item);
             case "totalQuestionPartPercentage":
                 return -item.correctQuestionPartsCount;
             case "totalQuestionPercentage":
@@ -191,8 +208,15 @@ export function ResultsTable<Q extends QuestionType>({
                     return (item.notAttemptedPartResults || [])[sortOrder];
                 }
         }
-    }, [reverseOrder ? "desc" : "asc"])
-    , [semiSortedProgress, reverseOrder, sortOrder]);
+    }, [pageSettings?.attemptedOrCorrect, sortOrder]);
+
+    const sortedProgress = useMemo(() => orderBy(progress,
+        typeof sortOrder === "number" 
+            ? [sortBySelectedSortOrder, sortByNotAttemptedParts.bind(null, sortOrder), sortByName]
+            : [sortBySelectedSortOrder, sortByName],
+        new Array(3).fill(reverseOrder ? "desc" : "asc")
+    ), [progress, reverseOrder, sortBySelectedSortOrder, sortOrder]);
+
 
     const tableHeaderFooter = <tr className="progress-table-header-footer fw-bold">
         <SortItemHeader<ProgressSortOrder> 
@@ -380,12 +404,7 @@ export function ResultsTablePartBreakdown({
         }
     }
 
-    const semiSortedProgress = useMemo(() => orderBy(progress, (item) => {
-        if (!isAuthorisedFullAccess(item)) return -1;
-        return -item.notAttemptedPartResults.reduce((sum, increment) => sum + increment, 0);
-    }, [reverseOrder ? "desc" : "asc"]), [progress, reverseOrder]);
-
-    const sortedProgress = useMemo(() => orderBy((semiSortedProgress), (item) => {
+    const sortBySelectedSortOrder = useCallback((item: AssignmentProgressDTO) => {
         if (!isAuthorisedFullAccess(item)) return -1;
         switch (sortOrder) {
             case "name":
@@ -395,9 +414,14 @@ export function ResultsTablePartBreakdown({
             case "totalAttemptedQuestionPercentage":
                 return 0; // These sorts are not applicable for part breakdown
             default:
-                return -(item.correctPartResults?.[sortOrder] ?? 0);
-        }}, [reverseOrder ? "desc" : "asc"]
-    ), [reverseOrder, semiSortedProgress, sortOrder]);
+                return -questionPartResultToNumber(item.questionPartResults?.[questionIndex][sortOrder]);
+        }
+    }, [questionIndex, sortOrder]);
+
+    const sortedProgress = useMemo(() => orderBy(progress,
+        [sortBySelectedSortOrder, sortByName],
+        new Array(3).fill(reverseOrder ? "desc" : "asc")
+    ), [progress, reverseOrder, sortBySelectedSortOrder]);
 
     return !!sortedProgress?.length && <table {...rest} className={classNames("progress-table border assignment-progress-progress w-100", rest.className)}>
         <thead className="progress-table-header-footer">
