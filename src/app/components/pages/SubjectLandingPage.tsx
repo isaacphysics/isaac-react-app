@@ -175,9 +175,9 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
                 type: "img",
                 subject: pageContext.subject,
                 icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`,
-                width: "70px",
-                height: "81px",
-            } : placeholderIcon({width: "70px", height: "81px"})}
+                width: "75px",
+                height: "75px",
+            } : placeholderIcon({width: "75px", height: "75px"})}
         />
 
         {pageContext && isSingleStageContext(pageContext) && <>
