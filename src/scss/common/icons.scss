@@ -92,6 +92,12 @@ img[aria-disabled="true"] {
   --mask-size: initial;
 }
 
+.icon-inline { // intended for inline 16px icons
+  --icon-size: 1lh;
+  --mask-size: 83%;
+  vertical-align: bottom;
+}
+
 @mixin icon-color-override($color) {
   &.layered {
     &::before {
