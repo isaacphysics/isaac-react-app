@@ -109,7 +109,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             {books?.length
                 ? <>
                     <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                        <h4 className="m-0">{getHumanContext(context)} books</h4>
+                        <h4 className="m-0">Interactive online books</h4>
                         <div className="section-divider-bold flex-grow-1"/>
                     </div>
                     <div className={classNames("d-flex book-listing-container", {"flex-column col": !fullWidthBooks}, {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
