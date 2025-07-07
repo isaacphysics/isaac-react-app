@@ -33,7 +33,7 @@ export const InlineMultiChoiceEntryZone = ({questionDTO, focusRef, setModified, 
                         {currentAttempt?.value ?? ""}
                     </Markup>
                 </span>
-                <img className={classNames("dropzone-dropdown", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"/>
+                <i className={classNames("icon icon-chevron-right icon-dropdown-90 ms-auto", {"active": isOpen})} aria-hidden="true"/>
             </DropdownToggle>
             <DropdownMenu container={focusRef.current?.closest(".question-content") as HTMLElement || "body"} end> 
                 {/* Dummy option added to clear selection */}

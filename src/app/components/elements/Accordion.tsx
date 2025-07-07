@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {
     above,
@@ -14,7 +14,7 @@ import {
     siteSpecific,
     useDeviceSize,
 } from "../../services";
-import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {v4 as uuid_v4} from "uuid";
@@ -25,6 +25,7 @@ import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import debounce from "lodash/debounce";
 import { UncontrolledTooltip, Collapse, Card, CardBody } from "reactstrap";
 import { useReducedMotion } from "../../services/accessibility";
+import { Spacer } from "./Spacer";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -87,6 +88,10 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         return null;
     }
 
+    const debouncedLogAccordion = useMemo(() =>
+        debounce((eventDetails) =>
+            dispatch(logAction(eventDetails)), 200, {leading: true, trailing: false}), [dispatch]);
+
     function logAccordionOpen() {
         const currentPage = getPage();
         if (currentPage) {
@@ -115,7 +120,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     accordionIndex: index
                 };
             }
-            debounce(() => dispatch(logAction(eventDetails)), 200, {leading: true, trailing: false});
+            debouncedLogAccordion(eventDetails);
         }
     }
 
@@ -156,7 +161,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     return <div className="accordion">
         <button 
             className={classNames(
-                "accordion-header d-flex w-100 p-0 align-items-stretch", 
+                "accordion-header d-flex w-100 p-0", 
                 {"de-emphasised": deEmphasised || disabled, "active": isOpen, "btn btn-link": isAda}
             )}
             id={anchorId || ""} type="button"
@@ -183,7 +188,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             aria-expanded={isOpen ? "true" : "false"}
         >
             {isConceptPage && audienceString && isAda && <span className={
-                classNames("stage-label d-flex align-items-center p-2 justify-content-center ", audienceStyle(audienceString))
+                classNames("stage-label d-flex align-self-stretch align-items-center p-2 justify-content-center ", audienceStyle(audienceString))
             }>
                 {(above["sm"](deviceSize) 
                     ? audienceString 
@@ -201,6 +206,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     <Markup encoding={"latex"}>
                         {trustedTitle || (isAda ? "" : (isDefined(index) ? `(${ALPHABET[index % ALPHABET.length].toLowerCase()})` : "Untitled"))}
                     </Markup>
+                    {isPhy && <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-black mx-2", {"active": isOpen})}/>}
                 </div>
                 {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
                     <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
@@ -228,6 +234,10 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                         </>
                 }
             </span>}
+            {isAda && <>
+                <Spacer />
+                {<i className={classNames("icon icon-chevron-right icon-dropdown-90 me-3", {"active": isOpen})}/>}
+            </>}
         </button>
         <Collapse isOpen={isOpen} className={siteSpecific("accordion-body", "mt-1")}>
             <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open: isOpen}}>

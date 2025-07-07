@@ -165,7 +165,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
         let wildcard = undefined;
         if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
-            wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
+            wildcard = wildcards.filter((wildcard) => wildcard.id === wildcardId)[0];
         }
 
         let subjects = [];
@@ -187,14 +187,14 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
         createGameboard({
             gameboard: {
-                id: gameboardURL,
+                id: gameboardURL ? gameboardURL : undefined,
                 title: gameboardTitle,
                 contents: questionOrder.map((questionId) => {
                     const question = selectedQuestions.get(questionId);
                     return question && convertContentSummaryToGameboardItem(question);
                 }).filter((question) => question !== undefined) as GameboardItem[],
                 wildCard: wildcard,
-                wildCardPosition: 0,
+                wildCardPosition: wildcard ? 0 : undefined,
                 gameFilter: {subjects: subjects},
                 tags: gameboardTags.map(getValue)
             },
@@ -372,7 +372,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     setWildcardId(e.target.value);
                                 }}
                             >
-                                <option value="random">Random wildcard</option>
+                                <option value="">No wildcard</option>
                                 {isDefined(wildcards) && wildcards.map((wildcard) => {
                                     return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>;
                                 })}

@@ -45,15 +45,6 @@
       }
     }
 
-    .accordion-title::after {
-      content: "";
-      display: inline-block;
-      background: url('/assets/phy/icons/redesign/chevron-down.svg') no-repeat center center;
-      height: 16px;
-      width: 16px;
-      margin-left: 8px;
-    }
-
     .stage-label {
       border-top-left-radius: 6px;
       border-bottom-left-radius: 6px;      
@@ -68,10 +59,6 @@
     &.active {
       .stage-label {
         border-bottom-left-radius: 0;
-      }
-
-      .accordion-title::after {
-        transform: rotate(180deg);
       }
     }
   }

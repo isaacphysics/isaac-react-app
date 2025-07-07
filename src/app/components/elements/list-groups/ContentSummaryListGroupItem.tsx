@@ -206,7 +206,9 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                     {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={stack}/>}
                 </div>
             </div>
-            {isAda && !noCaret && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to page"}/></div>}
+            {isAda && !noCaret && <div className="list-caret align-content-center" aria-hidden="true">
+                <i className="icon icon-chevron-right" aria-hidden="true"/>
+            </div>}
         </Link>
     </ListGroupItem>;
 };

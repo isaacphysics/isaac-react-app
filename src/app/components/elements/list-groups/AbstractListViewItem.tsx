@@ -175,7 +175,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
             <div className="position-relative">
                 {icon && (
-                    icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
+                    icon.type === "img" ? <img src={icon.icon} alt="" width={icon.width} height={icon.height} className="me-3"/> 
                         : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/>
                             : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/> 
                                 : undefined
@@ -188,9 +188,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             <div className="align-content-center text-overflow-ellipsis pe-2">
                 <div className="d-flex text-wrap">
                     {url && !isDisabled
-                        ? <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                        ? <a href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                             <Markup encoding="latex">{title}</Markup>
-                        </Link>
+                        </a>
                         : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                             <Markup encoding="latex">{title}</Markup>
                         </span>

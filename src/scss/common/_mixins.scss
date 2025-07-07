@@ -237,6 +237,12 @@ $viewport-sizes: (
   }
 }
 
+@mixin pseudo-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
+  content: "";
+  position: relative;
+  @include svg-icon($path, $width, $height, $mask-size, $mask-position);
+}
+
 @mixin icon-color-override($color) {
   background-color: var(--layered-icon-parent-bg-override, $color) !important;
   

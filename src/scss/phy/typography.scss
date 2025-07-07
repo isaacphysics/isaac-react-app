@@ -230,23 +230,6 @@ a {
     }
   }
 
-  &.next-link {
-    padding-right: 1.2rem;
-    background-image: url('/assets/common/icons/chevron_right.svg');
-    background-repeat: no-repeat;
-    background-position: center right;
-    clear: right;
-    text-decoration: none;
-  }
-  &.previous-link {
-    padding-left: 1.2rem;
-    background-image: url('/assets/common/icons/chevron_left.svg');
-    background-repeat: no-repeat;
-    background-position: center left;
-    clear: left;
-    text-decoration: none;
-  }
-
   &.a-link:has(> i.icon) {
     display: inline-flex;
     align-items: center;

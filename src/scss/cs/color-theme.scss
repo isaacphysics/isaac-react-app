@@ -4,7 +4,7 @@
 // - copy any required theming from phy/isaac.scss
 // - ensure all variables are named equivalently across the two files
 
-#root {
+:root {
     --tab-active: #{$dark-pink-300};
     --tab-hover: #{$cs-light-gray};
 

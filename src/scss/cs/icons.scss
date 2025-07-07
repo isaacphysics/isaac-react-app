@@ -118,12 +118,6 @@ icon-status {
   @include svg-icon('/assets/cs/icons/group.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-arrow-left {
-  // TODO: merge with phy's icon-arrows?
-  @include svg-icon('/assets/common/icons/arrow-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-  transform: rotate(180deg);
-}
-
 .icon-correct {
   @include svg-icon-raw('/assets/common/icons/correctness-correct.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
@@ -138,4 +132,21 @@ icon-status {
 
 .icon-not-attempted {
   @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+:is(a, span) > i.icon:only-child {
+  // centers the icon in the default line height of 1.5rem
+  margin-top: 0.25rem;
+}
+
+i.icon.icon-color-black {
+  @include icon-color-override($cs-jet);
+}
+
+i.icon.icon-color-muted {
+  @include icon-color-override($cs-muted);
+}
+
+i.icon.icon-color-white {
+  @include icon-color-override($cs-cultured);
 }

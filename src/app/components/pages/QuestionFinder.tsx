@@ -2,9 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {AppState, clearQuestionSearch, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
 import debounce from "lodash/debounce";
 import {
-    above,
     arrayFromPossibleCsv,
-    below,
     BookInfo,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
@@ -55,7 +53,6 @@ import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { processTagHierarchy, pruneTreeNode } from "../../services/questionHierarchy";
 import { SearchInputWithIcon } from "../elements/SearchInputs";
-import { AffixButton } from "../elements/AffixButton";
 import { Link } from "react-router-dom";
 import { updateTopicChoices } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
@@ -166,19 +163,22 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         if (pageContext) {
-            // on physics' subject-QFs, the url path (i.e. pageContext.subject) is the first tier of the hierarchy.
+            const solitary = isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext); 
+            
+            // on subject-QFs, the url path (i.e. pageContext.subject) is the first tier of the hierarchy.
             setSelections(
                 processTagHierarchy(
                     tags,
-                    arrayFromPossibleCsv(params.subjects).concat(pageContext?.subject ? [pageContext.subject] : []),
+                    solitary ? [pageContext.subject] : arrayFromPossibleCsv(params.subjects),
                     arrayFromPossibleCsv(params.fields),
                     arrayFromPossibleCsv(params.topics)
                 )
             );
 
-            const solitary = isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext); 
             setIsSolitaryStage(solitary);
-            setSearchStages(arrayFromPossibleCsv(params.stages).concat(solitary ? pageStageToSearchStage(pageContext?.stage)[0] : []) as STAGE[]);
+            if (solitary) {
+                setSearchStages(pageStageToSearchStage(pageContext?.stage) as STAGE[]);
+            }
         }
     }, [pageContext]);
 
@@ -451,16 +451,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
-    const BrowseAllButton = (pageContext?.subject && pageContext.stage) &&
-        <AffixButton color="keyline" tag={Link} to="/questions" className={classNames("ms-auto mw-max-content", {"btn-lg": below["md"](deviceSize), "btn-md": above["lg"](deviceSize)})}
-            affix={{
-                affix: "icon-arrow-right",
-                position: "suffix",
-                type: "icon"
-            }}>
-            Browse all questions
-        </AffixButton>;
-
     return <Container id="finder-page" className={classNames("mb-7")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question finder", "Questions")} 
@@ -484,7 +474,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     selections, setSelections,
                     applyFilters: searchAndUpdateURL, clearFilters,
                     validFiltersSelected, searchDisabled, setSearchDisabled
-                }} optionBar={BrowseAllButton} hideButton/>
+                }} hideButton/>
             <MainContent>
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
@@ -494,8 +484,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         <div>
                             {(pageContext?.subject && pageContext.stage)
                                 ? <div className="d-flex align-items-start flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
-                                    <p className="me-0 me-lg-3">The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-                                    {above["lg"](deviceSize) && BrowseAllButton}
+                                    <p className="me-0 me-lg-3">
+                                        The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
+                                        You can browse all questions <Link to="/questions">here</Link>.
+                                    </p>
                                 </div>
                                 : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
                                 Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}

@@ -178,12 +178,12 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                     e.stopPropagation();}}>
                                 Set test
                             </AffixButton>
-                            <Label className="d-none d-md-block w-max-content text-center text-nowrap me-3">
+                            <div className="d-none d-md-block w-max-content text-center text-nowrap me-3">
                                 Assigned to
                                 <div className="board-bubble-info-sm">{assignedGroups.length}</div>
                                 group{assignedGroups.length !== 1 && "s"}
-                            </Label>
-                            <div className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
+                            </div>
+                            <i className={classNames("icon icon-md icon-chevron-right icon-dropdown-90", {"active": isExpanded})} aria-hidden="true" />
                         </Col>
                     </Row>
                     <div className="section-divider my-0 py-0"/>
@@ -210,7 +210,9 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                             Set test
                         </Button>
                     </td>
-                    <td className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
+                    <td className="text-center align-middle">
+                        <i className={classNames("icon icon-chevron-right icon-dropdown-90", {"active": isExpanded})} aria-hidden="true" />
+                    </td>
                 </>
             )}
 

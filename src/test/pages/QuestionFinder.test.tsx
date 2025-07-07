@@ -173,7 +173,7 @@ describe("QuestionFinder", () => {
 
                 await waitFor(() => expect(getQuestionsWithMultipleStages).toHaveBeenCalledWith(expect.objectContaining({
                     tags: "physics",
-                    stages: "a_level",
+                    stages: "a_level,further_a",
                 })));
             });
 
@@ -189,7 +189,7 @@ describe("QuestionFinder", () => {
 
                 await waitFor(() => expect(getQuestionsWithMultipleStages).toHaveBeenLastCalledWith(expect.objectContaining({
                     tags: "physics",
-                    stages: "a_level",
+                    stages: "a_level,further_a",
                 })));
             });
         }
