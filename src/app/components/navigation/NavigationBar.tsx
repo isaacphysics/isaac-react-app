@@ -63,7 +63,7 @@ export const NavigationSection = ({className, children, title, topLevelLink, to}
                 <NavLink className={linkClasses} tag={Link} to={to} onClick={() => setMenuOpen(false)}>{title}</NavLink> :
                 <DropdownToggle nav tag={"button"} caret={isPhy} className={classNames(linkClasses, "w-100 text-start invert-underline")}>
                     {title}
-                    {isAda && <span onClick={toggle} className={classNames("cs-caret float-end d-nav-none d-inline-block", {"open": isOpen})}/>}
+                    {isAda && <i className={classNames("icon icon-chevron-down icon-dropdown-180 icon-color-white float-end d-nav-none d-inline-block", {"active": isOpen})}/>}
                 </DropdownToggle>}
             {children && <DropdownMenu className={dropdownClasses} onClick={() => setMenuOpen(false)}>
                 <ul className="plain-list ps-0">{children}</ul>

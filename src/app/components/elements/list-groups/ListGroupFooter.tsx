@@ -21,6 +21,7 @@ const footerLinksPhy = {
     left: [
         <FooterLink key={key++} linkTo="/about">About Isaac</FooterLink>,
         <FooterLink key={key++} linkTo="/news">News</FooterLink>,
+        <FooterLink key={key++} linkTo="/pages/stem_smart">STEM SMART</FooterLink>,
         <FooterLink key={key++} linkTo="/events">Events</FooterLink>,
         <FooterLink key={key++} linkTo="/books">Books</FooterLink>,
         <FooterLink key={key++} linkTo="/contact">Contact us</FooterLink>,
@@ -30,6 +31,7 @@ const footerLinksPhy = {
         <FooterLink key={key++} linkTo="/maths">Maths</FooterLink>,
         <FooterLink key={key++} linkTo="/chemistry">Chemistry</FooterLink>,
         <FooterLink key={key++} linkTo="/biology">Biology</FooterLink>,
+        <FooterLink key={key++} linkTo="/computer_science">Computer science</FooterLink>,
     ]
 };
 

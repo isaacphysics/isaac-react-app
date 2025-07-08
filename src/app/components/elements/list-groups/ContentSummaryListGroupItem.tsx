@@ -197,7 +197,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                 </div>
 
                 {isPhy && !isContentsIntendedAudience && <div className="ms-auto me-3 d-flex align-items-center">
-                    <i id={`audience-help-${componentId}`} className="icon icon-info layered icon-color-grey" />
+                    <i id={`audience-help-${componentId}`} className="icon icon-info icon-color-grey" />
                     <UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
                         {`This content has ${notRelevantMessage(userContext)}.`}
                     </UncontrolledTooltip>
@@ -206,7 +206,9 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                     {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={stack}/>}
                 </div>
             </div>
-            {isAda && !noCaret && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to page"}/></div>}
+            {isAda && !noCaret && <div className="list-caret align-content-center" aria-hidden="true">
+                <i className="icon icon-chevron-right" aria-hidden="true"/>
+            </div>}
         </Link>
     </ListGroupItem>;
 };

@@ -128,22 +128,9 @@
   @include svg-icon('/assets/phy/icons/redesign/sidebar.svg', 16px, 16px);
 }
 
-.icon-arrow-right {
-  @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
-}
-
 .icon-arrow-down {
   @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
   transform: rotate(90deg);
-}
-
-.icon-chevron-down {
-  @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
-}
-
-.icon-chevron-up {
-  @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
-  transform: rotate(180deg);
 }
 
 .icon-question {
@@ -307,6 +294,19 @@
   )
 }
 
+.icon-wildcard {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-revision-fg.svg',
+    '/assets/phy/icons/redesign/page-generic-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 58%)
+  );
+
+  // Reusing layers from other icons so this needs slight adjustments to fit
+  &::after {
+    scale: 0.9;
+  }
+}
+
 svg {
   &.almost-fill {
     fill: $phy_extra_force_yellow;
@@ -346,6 +346,14 @@ i.icon.icon-color-grey {
   @include icon-color-override($color-neutral-500);
 }
 
+i.icon.icon-color-muted {
+  @include icon-color-override($color-neutral-300);
+}
+
 i.icon.icon-color-white {
   @include icon-color-override($color-neutral-white);
+}
+
+i.icon.icon-color-black-hoverable {
+  --buttons-light-icon: #{$color-neutral-900};
 }

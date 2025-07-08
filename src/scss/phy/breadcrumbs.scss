@@ -8,6 +8,7 @@
 
     .breadcrumb-item {
         display: flex;
+        align-items: center;
         color: white;
     }
     
@@ -20,24 +21,13 @@
     }
 
     .breadcrumb-item + .breadcrumb-item::before, .breadcrumb-item:last-child::after {
-        display: block;
-        background-image: url('/assets/common/icons/chevron_up_white.svg');
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: contain;
-        rotate: 90deg;
-        opacity: 0.8;
-        content: '';
-        height: 14px;
-        left: 20px;
-        margin-bottom: -2px;
-        margin-left: 2px;
-        margin-right: 10px;
-        margin-top: 7px;
-        width: 9px;
+        @include pseudo-icon('/assets/common/icons/chevron-right.svg', 16px, 16px, 100%);
+        background-color: $color-neutral-white;
+        padding: 0;
+        margin-right: 0.5rem;
     }
-
+    
     .breadcrumb-item:last-child::after {
-        margin-left: 9px;
+        margin-left: $breadcrumb-item-padding-x;
     }
 }

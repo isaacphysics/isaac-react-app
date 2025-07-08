@@ -9,22 +9,6 @@
     display: flex;
     border-bottom: 1px solid $gray-107;
 
-    .quiz-list-separator {
-      border-left: 1px solid $gray-107;
-      &:after {
-        @include pseudo-element;
-        background-image: url('/assets/common/icons/chevron_right.svg');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position-y: center;
-        height: 100%;
-        right: 10px;
-        top: 0;
-        bottom: 0;
-        width: 9px;
-      }
-    }
-
     .set-quiz-button-md {
       min-width: 120px;
       height: 45px;
@@ -164,23 +148,6 @@
 .set-quiz-table-dropdown {
   cursor: pointer;
   user-select: none;
-  
-  .dropdown-arrow {
-    content: "";
-    background-image: url('/assets/common/icons/chevron_down.svg');
-    background-repeat: no-repeat;
-    background-position: left center;
-    width: 20px;
-    height: 10px;
-    min-width: 1rem;
-    margin-right: 1rem;
-    margin-top: auto;
-    margin-bottom: auto;
-
-    &.active {
-        background-image: url('/assets/common/icons/chevron_up.svg');
-    }
-  }
 
   button.btn.btn {
     min-width: max-content;

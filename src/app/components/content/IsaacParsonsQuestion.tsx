@@ -14,7 +14,7 @@ import {
     DroppableProvided,
     DropResult,
     NotDraggingStyle,
-} from "react-beautiful-dnd";
+} from "@hello-pangea/dnd";
 import _differenceBy from "lodash/differenceBy";
 import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
@@ -38,7 +38,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
 
     const canIndent = (!isDefined(doc.disableIndentation) || !doc.disableIndentation) && !readonly;
 
-    // WARNING: There's a limit to how far to the right we can drag an element, presumably due to react-beautiful-dnd
+    // WARNING: There's a limit to how far to the right we can drag an element, presumably due to @hello-pangea/dnd
     const onMouseMove = useCallback((e: MouseEvent | TouchEvent) => {
         if (draggedElement) {
             const x = draggedElement.getBoundingClientRect().left;
@@ -318,22 +318,20 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                 <pre>
                                                     {item.value}
                                                     {canIndent && <div className="controls">
-                                                        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                                                        <span
-                                                            className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' }`}
-                                                            role="img" onMouseUp={() => reduceIndentation(index)}
+                                                        <button
+                                                            className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' } me-1`}
+                                                            onMouseUp={() => reduceIndentation(index)} type="button"
                                                             aria-label={`reduce indentation ${!canDecreaseIndentation ? "(disabled)" : ""}`}
                                                         >
-                                                                &nbsp;
-                                                        </span>
-                                                        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                                                        <span
+                                                            <i className="icon icon-chevron-left icon-color-white d-block justify-self-center" />
+                                                        </button>
+                                                        <button
                                                             className={`increase ${canIncreaseIndentation ? 'show' : 'hide' }`}
-                                                            role="img" onMouseUp={() => increaseIndentation(index)}
+                                                            onMouseUp={() => increaseIndentation(index)} type="button"
                                                             aria-label={`increase indentation ${!canIncreaseIndentation ? "(disabled)" : ""}`}
                                                         >
-                                                                &nbsp;
-                                                        </span>
+                                                            <i className="icon icon-chevron-right icon-color-white d-block justify-self-center" />
+                                                        </button>
                                                     </div>}
                                                 </pre>
                                             </div>;
