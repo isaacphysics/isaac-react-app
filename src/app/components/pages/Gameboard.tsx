@@ -10,7 +10,7 @@ import {
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
 import {Button, Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap";
-import {CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, GameboardItemState, IsaacWildcard} from "../../../IsaacApiTypes";
+import {CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     AUDIENCE_DISPLAY_FIELDS,
@@ -46,42 +46,37 @@ import { ListView } from "../elements/list-groups/ListView";
 export const getProgressIcon = (question: GameboardItem) => {
     const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
     let backgroundColor = "white";
-    let icon = siteSpecific("icon-not-started", "/assets/cs/icons/question-not-started.svg");
+    let icon = siteSpecific("icon icon-raw icon-not-started", "/assets/cs/icons/question-not-started.svg");
     let message = siteSpecific("", "Not started");
     switch (question.state) {
-        case "PERFECT":
+        case CompletionState.ALL_CORRECT:
             if (isPhy) {
                 backgroundColor = "correct";
             }
             message = "Correct";
-            icon = siteSpecific("icon-correct", "/assets/cs/icons/question-correct.svg");
+            icon = siteSpecific("icon icon-raw icon-correct", "/assets/cs/icons/question-correct.svg");
             break;
-        case "PASSED":
-        case "IN_PROGRESS":
+        case CompletionState.ALL_INCORRECT:
+            if (isAda) {
+                backgroundColor = "incorrect";
+                message = "Incorrect";
+                icon = siteSpecific("icon icon-raw icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
+                break;
+            }
+            // fallthrough if isPhy
+        case CompletionState.ALL_ATTEMPTED:
+            if (isPhy) {
+                message = "All attempted (some errors)";
+                icon = siteSpecific("icon icon-raw icon-attempted", "/assets/cs/icons/question-attempted.svg");
+                break;
+            }
+            // fallthrough if isAda
+        case CompletionState.IN_PROGRESS:
             message = "In progress";
-            icon = siteSpecific("icon-in-progress", "/assets/cs/icons/question-in-progress.svg");
-            break;
-        case "FAILED":
-            message = "Try again";
-            icon = siteSpecific("icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
+            icon = siteSpecific("icon icon-raw icon-in-progress", "/assets/cs/icons/question-in-progress.svg");
             break;
     }
     return {itemClasses: classNames(itemClasses, `bg-${backgroundColor}`), icon, message};
-};
-
-// TODO Replace with new gameboard state (Correct / Some Errors / In Progress / Not Started) once implemented
-export const gameboardItemStateToCompletionState = (state?: GameboardItemState) => {
-    switch (state) {
-        case "PERFECT":
-            return CompletionState.ALL_CORRECT;
-        case "PASSED":
-        case "IN_PROGRESS":
-        case "FAILED": 
-            return CompletionState.IN_PROGRESS;
-        case "NOT_ATTEMPTED":
-        default: 
-            return CompletionState.NOT_ATTEMPTED; 
-    }
 };
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
@@ -173,7 +168,7 @@ export const Gameboard = withRouter(({ location }) => {
     const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId)));
-    const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: gameboardItemStateToCompletionState(q.state)}; }) || [];
+    const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
     const wildCard: ContentSummaryDTO = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT, tags: [], className: "wildcard-list-view"} as ContentSummaryDTO;
     const displayQuestions = (wildCard && gameboard && showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
 

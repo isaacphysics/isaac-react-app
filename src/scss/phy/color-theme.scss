@@ -97,6 +97,9 @@
 
   --border-light: #F5F4F0;
 
+  --icon-secondary: #{$color-brand-500};
+  --icon-tertiary: #{$color-neutral-900};
+
   --sidebar-tab-disabled: #{$color-neutral-300};
 
   /* number */
@@ -126,7 +129,7 @@
 .text-theme {
   color: var(--subject-color-500);
 
-  &a {
+  &:is(a) {
     &:hover, &:focus {
       color: var(--subject-color-600);
     }
@@ -136,7 +139,7 @@
 .text-theme-dark {
   color: var(--subject-color-800);
 
-  &a {
+  &:is(a) {
     &:hover, &:focus {
       color: var(--subject-color-900);
     }
@@ -149,4 +152,13 @@
 
 .border-theme {
   border-color: var(--subject-color-500);
+}
+
+.text-brand {
+  color: $color-brand-500;
+  &:is(a) {
+    &:hover, &:focus {
+      color: $color-brand-700;
+    }
+  }
 }

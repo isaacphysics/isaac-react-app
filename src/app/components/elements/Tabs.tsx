@@ -10,7 +10,7 @@ import {Markup} from "./markup";
 import { AffixButton } from "./AffixButton";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
-export type TabStyle = "tabs" | "buttons" | "dropdowns";
+export type TabStyle = "tabs" | "buttons" | "dropdowns" | "cards";
 interface TabsProps {
     className?: string;
     tabTitleClass?: StringOrTabFunction;
@@ -98,6 +98,16 @@ const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass="", class
     </div>;
 };
 
+const CardsNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+    return <div className="d-flex card-tabs">
+        {Object.keys(children).map((tabTitle, i) =>
+            <button key={i} className={classNames(tabTitleClass, "flex-grow-1 py-3 card-tab", {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} type="button">
+                <span>{tabTitle}</span>
+            </button>
+        )}
+    </div>;
+};
+
 export const Tabs = (props: TabsProps) => {
     const {
         className="", tabContentClass="", children, activeTabOverride, onActiveTabChange,
@@ -135,7 +145,9 @@ export const Tabs = (props: TabsProps) => {
                 ? <TabNavbar {...props} className="no-print" activeTab={activeTab} changeTab={changeTab}>{children}</TabNavbar>
                 : style === "buttons"
                     ? <ButtonNavbar {...props} activeTab={activeTab} changeTab={changeTab}>{children}</ButtonNavbar>
-                    : <DropdownNavbar  {...props} className={classNames({"no-print": isPhy})} activeTab={activeTab} changeTab={changeTab}>{children}</DropdownNavbar>
+                    : style === "dropdowns" 
+                        ? <DropdownNavbar {...props} className={classNames({"no-print": isPhy}, props.className)} activeTab={activeTab} changeTab={changeTab}>{children}</DropdownNavbar>
+                        : <CardsNavbar  {...props} activeTab={activeTab} changeTab={changeTab}>{children}</CardsNavbar>
             }
             <ExpandableParentContext.Provider value={true}>
                 <TabContent activeTab={activeTab} className={tabContentClass}>
