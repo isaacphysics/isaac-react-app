@@ -38,7 +38,6 @@ polygon.fill-secondary {
   align-self: center;
   right: 5px;
   @extend .icon-dropdown-180;
-  transition: transform 0.15s ease-in-out;
   opacity: 0.3;
 }
 
@@ -52,11 +51,17 @@ polygon.fill-secondary {
   &.active {
     @include icon-dropdown(180deg);
   }
+  @include not-reduced-motion {
+    transition: transform 0.15s ease-in-out;
+  }
 }
 
 .icon-dropdown-90 {
   &.active {
     @include icon-dropdown(90deg);
+  }
+  @include not-reduced-motion {
+    transition: transform 0.15s ease-in-out;
   }
 }
 
@@ -103,9 +108,62 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/search-icon.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-file {
+  @include svg-icon('/assets/common/icons/file.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-person {
+  @include svg-icon('/assets/common/icons/person.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-school {
+  @include svg-icon('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-event-upcoming {
+  @include svg-icon('/assets/common/icons/event-upcoming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-event-complete {
+  @include svg-icon('/assets/common/icons/event-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-task-complete {
+  @include svg-icon('/assets/common/icons/task-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-file {
+  @include svg-icon('/assets/common/icons/file.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-person {
+  @include svg-icon('/assets/common/icons/person.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-school {
+  @include svg-icon('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-event-upcoming {
+  @include svg-icon('/assets/common/icons/event-upcoming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-event-complete {
+  @include svg-icon('/assets/common/icons/event-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-task-complete {
+  @include svg-icon('/assets/common/icons/task-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 // Icon sizing
 .icon {
   --icon-size: 16px;
+  --mask-size: 100%;
+}
+
+.icon-md {
+  --icon-size: 24px;
   --mask-size: 100%;
 }
 
@@ -148,6 +206,13 @@ i.icon:not(.icon-raw) {
     background-color: var(--layered-icon-parent-bg-override, var(--icon-tertiary));
     &::after {
       background-color: var(--icon-tertiary);
+    }
+  }
+
+  &[color="white"] {
+    background-color: $white;
+    &::after {
+      background-color: $white;
     }
   }
 }

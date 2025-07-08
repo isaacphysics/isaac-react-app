@@ -64,6 +64,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
     const {data: doc, isLoading} = questionQuery;
     const user = useAppSelector(selectors.user.orNull);
     const allQuestionsCorrect = useAppSelector(selectors.questions.allQuestionsCorrect);
+    const allQuestionsAttempted = useAppSelector(selectors.questions.allQuestionsAttempted);
     const anyQuestionAttempted = useAppSelector(selectors.questions.anyQuestionPreviouslyAttempted);
     const navigation = useNavigation(doc ?? null);
     const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
@@ -116,10 +117,15 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                     <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0">
                                         <span>Status</span>
                                         {allQuestionsCorrect
-                                            ? <div className="d-flex align-items-center"><span className="icon-correct me-2"/> Correct</div>
-                                            : anyQuestionAttempted
-                                                ? <div className="d-flex align-items-center"><span className="icon-in-progress me-2"/> In Progress</div>
-                                                : <div className="d-flex align-items-center"><span className="icon-not-started me-2"/> Not Started</div>
+                                            ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-correct me-2"/> Correct</div>
+                                            : allQuestionsAttempted
+                                                // uncomment the lines below if reusing this logic elsewhere!
+                                                // ? isPhy
+                                                ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-attempted me-2"/> All attempted (some errors)</div>
+                                                // : <div className="d-flex align-items-center"><span className="icon icon-raw icon-incorrect me-2"/> Incorrect</div>
+                                                : anyQuestionAttempted
+                                                    ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-in-progress me-2"/> In progress</div>
+                                                    : <div className="d-flex align-items-center"><span className="icon icon-raw icon-not-started me-2"/> Not started</div>
                                         }
                                     </Col>
                                     <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0 pb-sm-0">

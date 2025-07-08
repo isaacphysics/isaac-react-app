@@ -1,4 +1,4 @@
-import {GameboardItem, IsaacFastTrackQuestionPageDTO} from "../../../IsaacApiTypes";
+import {CompletionState, GameboardItem, IsaacFastTrackQuestionPageDTO} from "../../../IsaacApiTypes";
 import queryString from "query-string";
 import {
     useAppSelector,
@@ -163,7 +163,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             isConcept: false,
             fastTrackLevel,
             isCurrentQuestion: question.id == currentlyWorkingOn.id,
-            isCompleted: question.state === 'PERFECT',
+            isCompleted: question.state === CompletionState.ALL_CORRECT,
             hexagonTitle: "" + (index + 1),
             href,
             id: question.id as string,
@@ -228,7 +228,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                 const correctQuestionParts = pageQuestionParts?.filter(q => q.bestAttempt?.correct) || [];
                 progress.questions.topTen.push(augmentQuestion({
                     ...question,
-                    state: correctQuestionParts.length === pageQuestionParts?.length ? "PERFECT" : question.state,
+                    state: correctQuestionParts.length === pageQuestionParts?.length ? CompletionState.ALL_CORRECT : question.state,
                     questionPartsCorrect: correctQuestionParts.length || 0,
                     questionPartStates: pageQuestionParts?.map(qp => qp.bestAttempt ? qp.bestAttempt.correct ? "CORRECT" : "INCORRECT" : "NOT_ATTEMPTED") || []
                 }, gameboard.id as string, questionHistory, index));
@@ -246,7 +246,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                         const correctQuestionParts = pageQuestionParts?.filter(q => q.bestAttempt?.correct) || [];
                         progress.questions[conceptQuestionType].push(augmentQuestion({
                             ...question,
-                            state: correctQuestionParts.length === pageQuestionParts?.length ? "PERFECT" : question.state,
+                            state: correctQuestionParts.length === pageQuestionParts?.length ? CompletionState.ALL_CORRECT : question.state,
                             questionPartsCorrect: correctQuestionParts.length || 0,
                             questionPartStates: pageQuestionParts?.map(qp => qp.bestAttempt ? qp.bestAttempt.correct ? "CORRECT" : "INCORRECT" : "NOT_ATTEMPTED") || []
                         }, gameboard?.id as string, questionHistory, index));

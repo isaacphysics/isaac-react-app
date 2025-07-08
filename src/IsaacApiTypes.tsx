@@ -48,7 +48,8 @@ export interface AssignmentProgressDTO {
     user?: UserSummaryDTO;
     correctPartResults?: number[];
     incorrectPartResults?: number[];
-    results?: GameboardItemState[];
+    questionResults?: CompletionState[];
+    questionPartResults?: QuestionPartState[][];
 }
 
 export interface GameboardDTO extends HasTitleOrId {
@@ -430,6 +431,8 @@ export interface ContentDTO extends ContentBaseDTO {
 
 export enum CompletionState {
     ALL_CORRECT = "ALL_CORRECT",
+    ALL_ATTEMPTED = "ALL_ATTEMPTED",
+    ALL_INCORRECT = "ALL_INCORRECT",
     IN_PROGRESS = "IN_PROGRESS",
     NOT_ATTEMPTED = "NOT_ATTEMPTED",
 }
@@ -719,7 +722,7 @@ export interface GameboardItem {
     questionPartsNotAttempted?: number;
     questionPartsTotal?: number;
     passMark?: number;
-    state?: GameboardItemState;
+    state?: CompletionState;
     questionPartStates?: QuestionPartState[];
     boardId?: string;
     supersededBy?: string;
@@ -861,7 +864,5 @@ export type GroupMembershipStatus = "ACTIVE" | "INACTIVE" | "DELETED";
 export type Gender = "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY" | "UNKNOWN";
 
 export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE" | "RASPBERRYPI" | "MICROSOFT";
-
-export type GameboardItemState = "PERFECT" | "PASSED" | "IN_PROGRESS" | "NOT_ATTEMPTED" | "FAILED";
 
 export type QuestionPartState = "CORRECT" | "INCORRECT" | "NOT_ATTEMPTED";

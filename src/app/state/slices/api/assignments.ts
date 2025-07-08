@@ -55,9 +55,9 @@ const sortAssignments = (assignments: SortFuncInputType[] | undefined, sortOrder
 
 // Returns assignment objects with full gameboard and question part data
 export const useGroupAssignments = (user: RegisteredUserDTO, groupId?: number, sortOrder?: AssignmentOrderSpec) => {
-    const {data: assignments} = useGetMySetAssignmentsQuery(groupId);
+    const {data: assignments, isFetching: isFetchingAssignments} = useGetMySetAssignmentsQuery(groupId);
     // Tutors can't set quizzes, so we skip the query in that case
-    const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery(isTeacherOrAbove(user) ? undefined : skipToken);
+    const {data: quizAssignments, isFetching: isFetchingQuizAssignments} = useGetQuizAssignmentsSetByMeQuery(isTeacherOrAbove(user) ? undefined : skipToken);
 
     const groupBoardAssignments = sortAssignments(assignments, sortOrder) as EnhancedAssignment[] | undefined;
     const groupQuizAssignments = isFound(quizAssignments)
@@ -66,6 +66,7 @@ export const useGroupAssignments = (user: RegisteredUserDTO, groupId?: number, s
 
     return {
         groupBoardAssignments,
-        groupQuizAssignments
+        groupQuizAssignments,
+        isFetching: isFetchingAssignments || isFetchingQuizAssignments,
     };
 };

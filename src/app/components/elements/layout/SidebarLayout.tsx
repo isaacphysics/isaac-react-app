@@ -145,17 +145,20 @@ const ContentSidebar = (props: ContentSidebarProps) => {
 
 const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
     const { icon, text, ...rest } = props;
-    return <li {...rest} className={classNames(rest.className, "d-flex align-items-center pt-2")}><img className="pe-2" src={`/assets/phy/icons/redesign/${icon}.svg`} alt=""/> {text}</li>;
+    return <li {...rest} className={classNames(rest.className, "d-flex align-items-center pt-2")}>
+        <i className={`icon icon-raw icon-${icon} me-2`} />
+        {text}
+    </li>;
 };
 
 const CompletionKey = () => {
     return <div className="d-flex flex-column sidebar-key">
-        Key
+        Question key
         <ul>
-            <KeyItem icon="status-not-started" text="Question not started"/>
-            <KeyItem icon="status-in-progress" text="Question in progress"/>
-            <KeyItem icon="status-correct" text="Question completed correctly"/>
-            <KeyItem icon="status-incorrect" text="Question completed incorrectly"/>
+            <KeyItem icon="not-started" text="Not started"/>
+            <KeyItem icon="in-progress" text="In progress"/>
+            <KeyItem icon="attempted" text="All attempted (some errors)"/>
+            <KeyItem icon="correct" text="All correct"/>
         </ul>
     </div>;
 };
@@ -252,7 +255,7 @@ export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) =
             <h5 className="mb-3">Question deck: {title}</h5>
         </Link>
         <ul>
-            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={q.id === currentQuestionId ? "selected-question" : ""}/></li>)}
+            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={classNames("board-sidebar-question", {"selected-question": q.id === currentQuestionId})}/></li>)}
         </ul>
         <div className="section-divider"/>
         <CompletionKey/>
@@ -966,9 +969,9 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A"}];
     
     const progressIcon = (section: number) => {
-        return sectionStates[section] === SectionProgress.COMPLETED ? "icon-correct"
-            : sectionStates[section] === SectionProgress.STARTED ? "icon-in-progress"
-                : "icon-not-started";
+        return sectionStates[section] === SectionProgress.COMPLETED ? "icon icon-raw icon-correct"
+            : sectionStates[section] === SectionProgress.STARTED ? "icon icon-raw icon-in-progress"
+                : "icon icon-raw icon-not-started";
     };
 
     const switchToPage = (page: string) => {
