@@ -50,7 +50,7 @@ polygon.fill-secondary {
 
 .icon-dropdown-180 {
   &.active {
-    @include icon-dropdown(180deg);
+    @include icon-dropdown(-180deg); // negative so it points outwards while spinning
   }
 }
 
