@@ -214,7 +214,9 @@ export function ResultsTable<Q extends QuestionType>({
         typeof sortOrder === "number" 
             ? [sortBySelectedSortOrder, sortByNotAttemptedParts.bind(null, sortOrder), sortByName]
             : [sortBySelectedSortOrder, sortByName],
-        new Array(3).fill(reverseOrder ? "desc" : "asc")
+        typeof sortOrder === "number" 
+            ? [(reverseOrder ? "desc" : "asc"), "asc", "asc"]
+            : [(reverseOrder ? "desc" : "asc"), "asc"]
     ), [progress, reverseOrder, sortBySelectedSortOrder, sortOrder]);
 
 
