@@ -117,7 +117,7 @@ const AdaSubjectCard: ListViewCardProps = {
     subtitle: "Check out Ada CS, our partner platform. It’s free and packed with resources for computer science teachers and students.",
     icon: {
         type: "img", 
-        icon: "/assets/common/logos/ada_logo_stamp_aqua.svg",
+        icon: "/assets/common/logos/ada_logo_stamp_black.svg",
         width: "70px",
         height: "81px",
     },
