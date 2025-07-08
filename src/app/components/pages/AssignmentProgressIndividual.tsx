@@ -256,7 +256,7 @@ const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...
             <Badge className="d-flex align-items-center me-2 text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                 {`${numAttemptedThisQuestion} of ${progress.length} attempted`}
             </Badge>
-            <img className={classNames("icon-dropdown-180", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"/>
+            <i className={classNames("icon icon-chevron-down icon-color-black icon-dropdown-180", {"active": isOpen})}/>
         </button>
         <CollapsibleContainer expanded={isOpen}>
             <div className="pb-2">
