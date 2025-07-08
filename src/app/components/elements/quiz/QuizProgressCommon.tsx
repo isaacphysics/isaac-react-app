@@ -422,7 +422,7 @@ export function ResultsTablePartBreakdown({
 
     const sortedProgress = useMemo(() => orderBy(progress,
         [sortBySelectedSortOrder, sortByName],
-        new Array(3).fill(reverseOrder ? "desc" : "asc")
+        [(reverseOrder ? "desc" : "asc"), "asc"]
     ), [progress, reverseOrder, sortBySelectedSortOrder]);
 
     return !!sortedProgress?.length && <table {...rest} className={classNames("progress-table border assignment-progress-progress w-100", rest.className)}>
