@@ -125,7 +125,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
     const pageContext = useUrlPageTheme();
-    const deviceSize = useDeviceSize();
     const [isSolitaryStage, setIsSolitaryStage] = useState(false); // we can't calculate this until we have the page context
     const [selections, setSelections] = useState<ChoiceTree[]>([]); // we can't populate this until we have the page context
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
@@ -216,12 +215,27 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 return;
             }
 
+            const tagss = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
+            console.log("hierarchySelections", hierarchySelections, "tags", tagss, pageContext?.subject, hierarchySelections[1]["maths"]);
+            if (pageContext?.subject === "maths") {
+                if (hierarchySelections[1]["maths"].length === 0) {
+                    tagss.push(TAG_ID.mechanics);
+                } else if (hierarchySelections[1]["maths"]?.some((tag: { value: TAG_ID; }) => tag.value === TAG_ID.mechanics)) {
+                    const index = tagss.indexOf(TAG_ID.maths);
+                    if (index > -1) {
+                        tagss.splice(index, 1);
+                    }
+                }
+                
+            }
+            console.log("hierarchySelections2", hierarchySelections, "tags", tagss);
+
             setIsCurrentSearchEmpty(false);
 
             dispatch(searchQuestions({
                 querySource: "questionFinder",
                 searchString: searchString || undefined,
-                tags: getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value).join(",") || undefined,
+                tags: tagss.join(",") || undefined,
                 topics: siteSpecific(undefined, [...topics].filter((query) => query != "").join(",") || undefined),
                 books: (!excludeBooks && book.join(",")) || undefined,
                 stages: stages.join(",") || undefined,
@@ -237,7 +251,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 randomSeed
             }));
         }, 250),
-    [dispatch]);
+    [dispatch, pageContext]);
 
 
     const filteringByStatus = Object.values(searchStatuses).some(v => v) && !Object.values(searchStatuses).every(v => v);

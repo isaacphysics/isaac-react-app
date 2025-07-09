@@ -86,12 +86,6 @@ export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_
     } else {
         choices.push({});
         choices[0][pageContext.subject] = tags.getChildren(pageContext.subject as TAG_ID).map(itemiseTag);
-        if (pageContext.subject === "maths") {
-            // Add "Mechanics" as topic
-            console.log("Adding mechanics to maths topic choices", choices);
-            choices[0]["maths"]?.push({"value": "mechanics" as TAG_ID, "label": "Mechanics"});
-            console.log("Adding mechanics to maths topic choices2", choices);
-        }
     }
     for (let tierIndex = 0; tierIndex < topicSelections.length && tierIndex < 2; tierIndex++) {
         if (Object.keys(topicSelections[tierIndex]).length > 0) {
@@ -99,15 +93,12 @@ export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_
             for (const v of Object.values(topicSelections[tierIndex])) {
                 for (const v2 of v) {
                     choices[tierIndex+1][v2.value] = tags.getChildren(v2.value).map(itemiseTag);
-                    if (pageContext?.subject === "maths" && v2.value === "maths" && tierIndex === 0) {
-                        // Add "Mechanics" as topic
-                        console.log("Adding mechanics to maths topic choices", choices);
-                        choices[1]["maths"]?.push({"value": "mechanics" as TAG_ID, "label": "Mechanics"});
-                        console.log("Adding mechanics to maths topic choices2", choices);
-                    }
                 }
             }
         }
+    }
+    if (pageContext?.subject === "maths" && choices.length > 1) {
+        choices[1]["maths"]?.push({"value": TAG_ID.mechanics, "label": "Mechanics"});
     }
     return choices;
 };
