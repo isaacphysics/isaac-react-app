@@ -8,12 +8,12 @@ import { useReducedMotion } from "./accessibility";
 export const OnPageLoad = () => {
     const dispatch = useAppDispatch();
     const reducedMotion = useReducedMotion();
-    const scroll = scrollTopOnPageLoad(reducedMotion);
+    const scrollTop = scrollTopOnPageLoad(reducedMotion);
 
     const onPageLoad = useCallback((location: Location, action: Action) => {
         dispatch(sidebarSlice.actions.setOpen(false));
-        scroll(location, action);
-    }, [dispatch, scroll]);
+        scrollTop(location, action);
+    }, [dispatch, scrollTop]);
 
     useEffect(() => {
         const unregisterListener = history.listen(onPageLoad);
