@@ -118,8 +118,11 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         // at this point, there exists a stageIndex for each unique stage.
         // now collapse indices before/after the userContext stage into "additional learning stages" when there are multiple
 
+        // only consider the first stage (even though teachers may have multiple) so the before/after logic works
+        const userContextStage = userContext.contexts[0].stage ?? STAGE.ALL;
+
         const getMaxRelevantIndex = () => {
-            const learningStage = STAGE_TO_LEARNING_STAGE[userContext.stage];
+            const learningStage = STAGE_TO_LEARNING_STAGE[userContextStage];
             if (learningStage) {
                 const applicableStages = LEARNING_STAGE_TO_STAGES[learningStage];
                 return Math.max(...applicableStages.map(stage => stageToFirstIndexMap[stage] ?? -1));
@@ -128,9 +131,9 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         };
 
         // if we need to show everything, don't remove anything
-        if (userContext.stage && isDefined(stageToFirstIndexMap[userContext.stage]) && userContext.stage !== STAGE.ALL) {
+        if (userContextStage && isDefined(stageToFirstIndexMap[userContextStage]) && userContextStage !== STAGE.ALL) {
             const beforeUserStage = Object.keys(stageToFirstIndexMap).filter(stage => {
-                return stageToFirstIndexMap[stage] < stageToFirstIndexMap[userContext.stage];
+                return stageToFirstIndexMap[stage] < stageToFirstIndexMap[userContextStage];
             });
             const afterUserStage = Object.keys(stageToFirstIndexMap).filter(stage => {
                 return stageToFirstIndexMap[stage] > getMaxRelevantIndex();
@@ -158,7 +161,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         }
 
         return stageToFirstIndexMap;
-    }, [isConceptPage, sections, userContext.stage]);
+    }, [isConceptPage, sections, userContext.contexts[0].stage]);
 
     const stageInserts = useMemo(() => {
         // flip key and value; we don't construct it this way as when building we need fast lookup of audience
