@@ -1015,9 +1015,9 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
                 <div className="d-flex flex-column sidebar-key">
                 Key
                     <ul>
-                        <KeyItem icon="status-not-started" text="Section not started"/>
-                        <KeyItem icon="status-in-progress" text="Section in progress"/>
-                        <KeyItem icon="status-correct" text="Section completed"/>
+                        <KeyItem icon="not-started" text="Section not started"/>
+                        <KeyItem icon="in-progress" text="Section in progress"/>
+                        <KeyItem icon="correct" text="Section completed"/>
                     </ul>
                 </div>
             </>}
