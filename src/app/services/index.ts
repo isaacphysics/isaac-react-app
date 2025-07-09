@@ -43,6 +43,7 @@ export * from "./api";
 export * from "./websockets";
 export * from "./search";
 export * from "./scrollManager";
+export * from "./pageLoad";
 export * from "./assignments";
 export * from "./events";
 export * from "./userViewingContext";
