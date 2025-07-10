@@ -675,6 +675,7 @@ export interface BaseTag {
     id: TAG_ID;
     title: string;
     parent?: TAG_ID;
+    parents?: TAG_ID[];
     comingSoonDate?: string;
     new?: boolean;
     hidden?: boolean;

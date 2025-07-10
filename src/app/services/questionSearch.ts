@@ -98,7 +98,7 @@ export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_
         }
     }
     if (pageContext?.subject === "maths" && choices.length > 1) {
-        choices[1]["maths"]?.push({"value": TAG_ID.mechanics, "label": "Mechanics"});
+        choices[1]["maths"]?.push(itemiseTag(tags.getById(TAG_ID.mechanics)));
     }
     return choices;
 };

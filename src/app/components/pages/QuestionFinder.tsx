@@ -170,7 +170,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     tags,
                     solitary ? [pageContext.subject] : arrayFromPossibleCsv(params.subjects),
                     arrayFromPossibleCsv(params.fields),
-                    arrayFromPossibleCsv(params.topics)
+                    arrayFromPossibleCsv(params.topics),
+                    pageContext
                 )
             );
 
@@ -216,9 +217,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             }
 
             const tagss = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
-            console.log("hierarchySelections", hierarchySelections, "tags", tagss, pageContext?.subject, hierarchySelections[1]["maths"]);
-            if (pageContext?.subject === "maths") {
-                if (hierarchySelections[1]["maths"].length === 0) {
+            console.log("hierarchySelections", hierarchySelections, "tags", tagss, pageContext?.subject);
+            if (pageContext?.subject === "maths" && hierarchySelections.length > 1) {
+                if (hierarchySelections[1]["maths"]?.length === 0) {
                     tagss.push(TAG_ID.mechanics);
                 } else if (hierarchySelections[1]["maths"]?.some((tag: { value: TAG_ID; }) => tag.value === TAG_ID.mechanics)) {
                     const index = tagss.indexOf(TAG_ID.maths);
@@ -226,7 +227,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         tagss.splice(index, 1);
                     }
                 }
-                
             }
             console.log("hierarchySelections2", hierarchySelections, "tags", tagss);
 

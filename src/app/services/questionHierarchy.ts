@@ -4,7 +4,7 @@ import { TAG_ID, TAG_LEVEL } from "./constants";
 import { AbstractBaseTagService } from "./tagsAbstract";
 import { itemiseTag } from "./filter";
 
-export function processTagHierarchy(tags: AbstractBaseTagService, subjects: string[], fields: string[], topics: string[]): ChoiceTree[] {
+export function processTagHierarchy(tags: AbstractBaseTagService, subjects: string[], fields: string[], topics: string[], pageContext?: PageContextState): ChoiceTree[] {
     const tagHierarchy = tags.getTagHierarchy();
     const selectionItems: ChoiceTree[] = [];
 
@@ -22,6 +22,11 @@ export function processTagHierarchy(tags: AbstractBaseTagService, subjects: stri
         else {
             const parents = selectionItems[index-1] ? Object.values(selectionItems[index-1]).flat() : [];
             const validChildren = parents.map(p => tags.getChildren(p.value).filter(c => tier.includes(c.id)).map(itemiseTag));
+            console.log("golly", pageContext?.subject, index, tier, validChildren);
+            if (pageContext?.subject === "maths" && index === 1 && tier.includes(TAG_ID.mechanics)) {
+                // Add "Mechanics" as topic
+                validChildren[0].push(itemiseTag(tags.getById(TAG_ID.mechanics)));
+            }
 
             const currentLayer: ChoiceTree = {};
             parents.forEach((p, i) => {
