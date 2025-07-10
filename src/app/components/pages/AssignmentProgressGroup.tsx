@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments } from '../../state';
 import { AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment } from '../../../IsaacAppTypes';
-import { above, AssignmentOrder, getAssignmentCSVDownloadLink, getGroupProgressCSVDownloadLink, getGroupQuizProgressCSVDownloadLink, isDefined, isPhy, isQuiz, isTeacherOrAbove, PATHS, siteSpecific, SortOrder, useDeviceSize } from '../../services';
+import { above, AssignmentOrder, getAssignmentCSVDownloadLink, getGroupProgressCSVDownloadLink, getGroupQuizProgressCSVDownloadLink, getQuizAssignmentCSVDownloadLink, isDefined, isPhy, isQuiz, isTeacherOrAbove, PATHS, siteSpecific, SortOrder, useDeviceSize } from '../../services';
 import { RegisteredUserDTO } from '../../../IsaacApiTypes';
 import { Link } from 'react-router-dom';
 import { Spacer } from '../elements/Spacer';
@@ -43,7 +43,10 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
             </div>
             <Spacer/>
             <strong className="align-content-center">
-                <a href={getAssignmentCSVDownloadLink(assignment.id as number)} target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
+                <a href={quiz
+                    ? getQuizAssignmentCSVDownloadLink(assignment.id as number)
+                    : getAssignmentCSVDownloadLink(assignment.id as number)
+                } target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
                     Download CSV
                 </a>
             </strong>
