@@ -49,7 +49,7 @@ polygon.fill-secondary {
 
 .icon-dropdown-180 {
   &.active {
-    @include icon-dropdown(180deg);
+    @include icon-dropdown(-180deg); // negative so it points outwards while spinning
   }
   @include not-reduced-motion {
     transition: transform 0.15s ease-in-out;
@@ -175,6 +175,12 @@ img[aria-disabled="true"] {
 .icon-xl {
   --icon-size: 75px;
   --mask-size: initial;
+}
+
+.icon-inline { // intended for inline 16px icons
+  --icon-size: 1lh;
+  --mask-size: 83%;
+  vertical-align: bottom;
 }
 
 i.icon:not(.icon-raw) {

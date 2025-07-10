@@ -18,8 +18,8 @@ export const AdaCSOverviewPage = withRouter(() => {
                 type: "img",
                 subject: undefined,
                 icon: "/assets/common/logos/ada_logo_stamp_aqua.svg",
-                width: "70px",
-                height: "81px",
+                width: "75px",
+                height: "75px",
             }}
         />
         <div>
