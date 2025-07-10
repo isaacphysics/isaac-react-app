@@ -70,6 +70,7 @@ import {SortItemHeader} from "../elements/SortableItemHeader";
 import {MainContent, SetAssignmentsSidebar, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
+import {IconCard} from "../elements/cards/IconCard";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -516,6 +517,8 @@ export const SetAssignments = () => {
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(isAda && above["lg"](deviceSize) ? BoardViews.table : BoardViews.card, BoardLimit.six);
 
+    const isGroupsEmptyState = !(groups && groups.length > 0);
+    const isBoardsEmptyState = !(boards && boards.boards?.length > 0);
     const switchView = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setBoardView(e.target.value as BoardViews);
     }, [setBoardView]);
@@ -584,112 +587,136 @@ export const SetAssignments = () => {
             <MainContent>
                 <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")}
                     ifNotFound={RenderNothing}/>
-                {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
-                {groups && groups.length === 0 && <Alert color="warning">
-                    You have not created any groups to assign work to.
-                    Please <Link to="/groups">create a group here first.</Link>
-                </Alert>}
-                {boards && boards.totalResults === 0
-                    ? <h3 className="text-center mt-4 mb-7">
-                        You have no {siteSpecific("question decks", "quizzes")} to assign
-                        {siteSpecific(
-                            "; use one of the options above to find one.",
-                            <><br/><Button className={"mt-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER}
-                                onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="solid">
-                                Create a quiz
-                            </Button></>
-                        )}
-                    </h3>
-                    : <>
-                        {isPhy && <h5>
-                            Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
-                            assignments by start date and due date.
-                            <div className="section-divider my-4"/>
-                        </h5>}
-                        {isAda && <>
-                            {boards && boards.totalResults > 0 && <h4>
-                                You
-                                have <strong>{boards.totalResults}</strong> quiz{boards.totalResults > 1 && "zes"} ready
-                                to assign...{" "}
-                                {<Button className={"font-size-1-25"} tag={Link} to={PATHS.GAMEBOARD_BUILDER}
-                                    onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
-                                    create another quiz?
-                                </Button>}
-                            </h4>}
-                            {!boards && <h4>
-                                You have <IsaacSpinner size="sm"
-                                    inline/> {siteSpecific("question decks", "quizzes")} ready to
-                                assign...
-                            </h4>}
-                        </>}
-                        {isAda && <Row>
-                            {boardView === BoardViews.card && <Col sm={6} lg={3}>
+                {isPhy &&
+                    <>
+                        <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>
+                        {isGroupsEmptyState && <Alert color="warning">
+                            You have not created any groups to assign work to.
+                            Please <Link to="/groups">create a group here first.</Link>
+                        </Alert>}
+                        {isBoardsEmptyState ?
+                            <Alert color="warning">
+                                You have no {siteSpecific("question decks", "quizzes")} to assign. Use one of the
+                                options above to find one.
+                            </Alert>
+                            :
+                            <>
+                                <h5>
+                                Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
+                                assignments by start date and due date.
+                                </h5>
+                                <div className="section-divider my-4"/>
+                            </>
+                        }
+
+                    </>
+                }
+                {isAda &&
+                    <>
+                        {isGroupsEmptyState &&
+                            <IconCard
+                                card={{
+                                    title: "You need a student group before you can assign a quiz to students",
+                                    icon: {src: "/assets/cs/icons/group.svg"},
+                                    bodyText: "",
+                                    clickUrl: "/groups",
+                                    buttonText: "Create a group",
+                                    className: "bg-yellow",
+                                    buttonStyle: "outline"
+                                }}
+                            />
+                        }
+                        <h3>Your quizzes</h3>
+                        <div
+                            className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
+                            {!(boards && boards.totalResults === 0) &&
+                                <div>
+                                    <p className={"my-auto"}>{`You have ${boards?.boards.length} created quiz${boards && boards.boards?.length > 1 ? "zes" : ""}.`}</p>
+                                </div>
+                            }
+                            <div className={"w-100 w-lg-auto"}>
+                                <Button className={"w-100 w-lg-auto"} tag={Link} to={PATHS.GAMEBOARD_BUILDER}
+                                    onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="solid">
+                                    Create a quiz
+                                </Button>
+                                <Button className={"w-100 w-lg-auto mt-2 mt-lg-auto mx-auto mx-lg-2"} tag={Link}
+                                    to={"/pages/revision_quizzes"} color={"secondary"} outline>
+                                    View pre-made quizzes
+                                </Button>
+                            </div>
+                        </div>
+                    </>
+                }
+                {!isBoardsEmptyState && <>
+                    <Row>
+                        {boardView === BoardViews.card && <Col sm={6} lg={3}>
+                            <Label className="w-100">
+                                Display in <Input type="select" value={boardView} onChange={switchView}>
+                                    {Object.values(BoardViews).map(view => <option key={view}
+                                        value={view}>{view}</option>)}
+                                </Input>
+                            </Label>
+                        </Col>}
+                        {boardView === BoardViews.card && <>
+                            <Col xs={6} lg={{size: 2, offset: 3}}>
                                 <Label className="w-100">
-                                    Display in <Input type="select" value={boardView} onChange={switchView}>
-                                        {Object.values(BoardViews).map(view => <option key={view}
-                                            value={view}>{view}</option>)}
+                                    Show <Input type="select" value={boardLimit}
+                                        onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                                        {Object.values(BoardLimit).map(limit => <option key={limit}
+                                            value={limit}>{limit}</option>)}
                                     </Input>
                                 </Label>
-                            </Col>}
-                            {boardView === BoardViews.card && <>
-                                <Col xs={6} lg={{size: 2, offset: 3}}>
-                                    <Label className="w-100">
-                                        Show <Input type="select" value={boardLimit}
-                                            onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
-                                            {Object.values(BoardLimit).map(limit => <option key={limit}
-                                                value={limit}>{limit}</option>)}
-                                        </Input>
-                                    </Label>
-                                </Col>
-                                <Col xs={6} lg={4}>
-                                    <Label className="w-100">
-                                        Sort by <Input type="select" value={boardOrder}
-                                            onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
-                                            {Object.values(AssignmentBoardOrder).map(order => <option key={order}
-                                                value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
-                                        </Input>
-                                    </Label>
-                                </Col>
-                            </>}
-                        </Row>}
-                        <ShowLoading until={boards}>
-                            {boards && boards.boards && <div>
-                                {boardView == BoardViews.card ?
-                                    // Card view
-                                    <>
-                                        <Row
-                                            className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
-                                            {boards.boards && boards.boards
-                                                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
-                                                .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                                                .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
-                                                .map(board =>
-                                                    <Col key={board.id}>
-                                                        <BoardCard
-                                                            user={user}
-                                                            board={board}
-                                                            boardView={boardView}
-                                                            assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                                                            toggleAssignModal={() => openAssignModal(board)}
-                                                        />
-                                                    </Col>
-                                                )
-                                            }
-                                        </Row>
-                                        <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
-                                            <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong>
-                                            </p>
-                                            {boards.boards.length < boards.totalResults &&
-                                                <Button onClick={viewMore} disabled={loading}>{loading ?
-                                                    <Spinner/> : "View more"}</Button>}
-                                        </div>
-                                    </>
-                                    :
-                                    // Table view
-                                    <SetAssignmentsTable {...tableProps}/>}
-                            </div>}
-                        </ShowLoading>
-                    </>}
+                            </Col>
+                            <Col xs={6} lg={4}>
+                                <Label className="w-100">
+                                    Sort by <Input type="select" value={boardOrder}
+                                        onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
+                                        {Object.values(AssignmentBoardOrder).map(order => <option key={order}
+                                            value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+                                    </Input>
+                                </Label>
+                            </Col>
+                        </>}
+                    </Row>
+                    <ShowLoading until={boards}>
+                        {boards && boards.boards && <div>
+                            {boardView == BoardViews.card ?
+                                // Card view
+                                <>
+                                    <Row
+                                        className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
+                                        {boards.boards && boards.boards
+                                            .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                                            .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                                            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
+                                            .map(board =>
+                                                <Col key={board.id}>
+                                                    <BoardCard
+                                                        user={user}
+                                                        board={board}
+                                                        boardView={boardView}
+                                                        assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                                        toggleAssignModal={() => openAssignModal(board)}
+                                                    />
+                                                </Col>
+                                            )
+                                        }
+                                    </Row>
+                                    <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
+                                        <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong>
+                                        </p>
+                                        {boards.boards.length < boards.totalResults &&
+                                            <Button onClick={viewMore} disabled={loading}>{loading ?
+                                                <Spinner/> : "View more"}</Button>}
+                                    </div>
+                                </>
+                                :
+                                // Table view
+                                <SetAssignmentsTable {...tableProps}/>}
+                        </div>}
+                    </ShowLoading>
+                </>
+                }
             </MainContent>
         </SidebarLayout>
     </Container>;

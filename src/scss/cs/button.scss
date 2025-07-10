@@ -26,22 +26,22 @@
   }
 }
 
-@mixin ada-button-outline($color, $hover-color, $active-color) {
-  background-color: transparent;
-  border: 3px solid $color;
+@mixin ada-button-outline($text-color, $color, $hover-color, $active-color) {
+  background-color: $color;
+  border: 3px solid $text-color;
   box-shadow: none;
-  color: $color;
+  color: $text-color;
   overflow: hidden;  // To stop margin collapse from hiding the focus outline
   text-decoration: none;
   &:hover {
     color: $hover-color;
     text-decoration: underline;
-    background-color: transparent;
+    background-color: $color;
   }
   &:active {
     color: $active-color !important;
     border-color: $active-color !important;
-    background-color: transparent !important;
+    background-color: $color !important;
     box-shadow: none !important;
   }
   &.disabled, &:disabled {
@@ -55,7 +55,7 @@
   @extend .btn;
 
   @if $outlined {
-    @include ada-button-outline($dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
+    @include ada-button-outline($dark-pink-300, transparent, $light-hover-dark-pink, $light-active-dark-pink);
   } @else {
     @include ada-button($cs-white, $dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
     background-color: $dark-pink-300;
@@ -94,7 +94,7 @@
   // Secondary buttons (for dark background)
   // Secondary Button components are expected to use the 'outline' prop!
   &.btn-outline-dark-secondary {
-    @include ada-button-outline($pink-300, $dark-hover-pink, $dark-active-pink);
+    @include ada-button-outline($pink-300, transparent, $dark-hover-pink, $dark-active-pink);
   }
 
   // Primary buttons (light background)
@@ -105,7 +105,7 @@
   // Secondary buttons (for light background)
   // Secondary Button components are expected to use the 'outline' prop!
   &.btn-outline-secondary, &.btn-outline-primary, &.btn-keyline {
-    @include ada-button-outline($dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
+    @include ada-button-outline($dark-pink-300, $cs-white, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
   &.btn-link {
@@ -307,5 +307,5 @@ a:not(.btn):not(.nav-link) {
 }
 
 .google-button:not(.linked-account-button) {
-  @include ada-button-outline($cs-black, $cs-jet, lighten($cs-jet, 20%));
+  @include ada-button-outline($cs-black, transparent, $cs-jet, lighten($cs-jet, 20%));
 }
