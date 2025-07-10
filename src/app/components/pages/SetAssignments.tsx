@@ -66,9 +66,9 @@ import {BoardCard} from "../elements/cards/BoardCard";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { SortItemHeader } from "../elements/SortableItemHeader";
-import { MainContent, SetAssignmentsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { HorizontalScroller } from "../elements/inputs/HorizontalScroller";
+import {SortItemHeader} from "../elements/SortableItemHeader";
+import {MainContent, SetAssignmentsSidebar, SidebarLayout} from "../elements/layout/SidebarLayout";
+import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 
 interface AssignGroupProps {
@@ -88,7 +88,14 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
     if (!board) return <Loading/>;
 
     function assign() {
-        dispatch(assignGameboard({boardId: board?.id as string, groups: selectedGroups, dueDate, scheduledStartDate, notes: assignmentNotes, userId: user?.id})).then(success => {
+        dispatch(assignGameboard({
+            boardId: board?.id as string,
+            groups: selectedGroups,
+            dueDate,
+            scheduledStartDate,
+            notes: assignmentNotes,
+            userId: user?.id
+        })).then(success => {
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(UTC_MIDNIGHT_IN_SIX_DAYS);
@@ -110,7 +117,9 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
             // Sets the scheduled date to 7AM in the timezone of the browser.
             setScheduledStartDate(scheduledDate);
         } else {
-            setScheduledStartDate(null as unknown as Date); {/* DANGER here with force-casting Date|null to Date */}
+            setScheduledStartDate(null as unknown as Date);
+            {/* DANGER here with force-casting Date|null to Date */
+            }
         }
     }
 
@@ -124,15 +133,19 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
             />
         </Label>
         <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
-            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
-                onChange={setScheduledStartDateAtSevenAM} />
+            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..."
+                yearRange={yearRange}
+                onChange={setScheduledStartDateAtSevenAM}/>
             {startDateInvalid && <small className={"pt-2 text-danger"}>Start date must be in the future.</small>}
         </Label>
         <Label className="w-100 pb-2">Due date reminder
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
-            {!dueDate && <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.</small>}
-            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)}/> {/* DANGER here with force-casting Date|null to Date */}
+            {!dueDate &&
+                <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are
+                    required for assignments.</small>}
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the
+                future.</small>}
         </Label>
         {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
@@ -143,7 +156,7 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
             />
             <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
             {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
-                    <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
+                <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
             }
         </Label>}
         <Button
@@ -161,13 +174,13 @@ type SetAssignmentsModalProps = {
     assignees: BoardAssignee[];
     groups: UserGroupDTO[];
     toggle: () => void;
-    unassignBoard: (props: {boardId: string, groupId: number}) => void;
+    unassignBoard: (props: { boardId: string, groupId: number }) => void;
 };
 
 export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModal => {
     const {board, assignees, toggle, unassignBoard} = props;
 
-    const hasStarted = (a : {startDate?: Date | number}) => !a.startDate || (Date.now() > a.startDate.valueOf());
+    const hasStarted = (a: { startDate?: Date | number }) => !a.startDate || (Date.now() > a.startDate.valueOf());
 
     const startedAssignees = assignees.filter(hasStarted);
     const scheduledAssignees = assignees.filter(a => !hasStarted(a));
@@ -187,16 +200,19 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
         title: board?.title,
         body: <>
             <p className="px-1">{description}</p>
-            <hr className="text-center" />
+            <hr className="text-center"/>
             <AssignGroup closeModal={toggle} {...props} />
-            <hr className="text-center" />
+            <hr className="text-center"/>
             <div className="py-2 border-bottom d-flex flex-column" data-testid="currently-assigned-to">
                 <span>{siteSpecific("Question deck", "Quiz")} currently assigned to:</span>
                 {startedAssignees.length > 0
                     ? <ul className="p-2 mb-3">{startedAssignees.map(assignee =>
-                        <li data-testid={"current-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
+                        <li data-testid={"current-assignment"} key={assignee.groupId}
+                            className="px-1 d-flex justify-content-between">
                             <span className="flex-grow-1">{assignee.groupName}</span>
-                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
+                            <button className="close" aria-label="Unassign group"
+                                onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×
+                            </button>
                         </li>
                     )}</ul>
                     : <p className="px-2">No groups.</p>}
@@ -204,23 +220,29 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
             <div className="py-2 d-flex flex-column">
                 <span className={classNames("mb-2", siteSpecific("d-flex align-items-center", ""))}>
                     Pending {siteSpecific("assignments", "quiz assignments")}:
-                    <i className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help mx-1")} id={`pending-assignments-help-${board?.id}`}/>
+                    <i className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help mx-1")}
+                        id={`pending-assignments-help-${board?.id}`}/>
                 </span>
                 <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
-                    These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the morning of the scheduled date, students
+                    These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the
+                    morning of the scheduled date, students
                     will be able to see the {siteSpecific("assignment", "quiz")}, and will receive a notification email.
                 </UncontrolledTooltip>
                 {scheduledAssignees.length > 0
                     ? <ul className="p-2 mb-3">{scheduledAssignees.map(assignee =>
-                        <li data-testid={"pending-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
+                        <li data-testid={"pending-assignment"} key={assignee.groupId}
+                            className="px-1 d-flex justify-content-between">
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             {assignee.startDate && <>
-                                <span id={`start-date-${assignee.groupId}`} className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
-                                    ? new Date(assignee.startDate)
-                                    : assignee.startDate).toDateString()}
+                                <span id={`start-date-${assignee.groupId}`}
+                                    className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
+                                        ? new Date(assignee.startDate)
+                                        : assignee.startDate).toDateString()}
                                 </span>
                             </>}
-                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
+                            <button className="close" aria-label="Unassign group"
+                                onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×
+                            </button>
                         </li>
                     )}</ul>
                     : <p className="px-2">No groups.</p>}
@@ -243,9 +265,10 @@ interface SetAssignmentsTableProps {
     setBoardCreator: (creator: BoardCreators) => void;
     boardOrder: AssignmentBoardOrder;
     setBoardOrder: (boardOrder: AssignmentBoardOrder) => void;
-    groupsByGameboard: {[p: string]: BoardAssignee[]};
+    groupsByGameboard: { [p: string]: BoardAssignee[] };
     openAssignModal: (board: GameboardDTO) => void;
 }
+
 const PhyTable = (props: SetAssignmentsTableProps) => {
     const {
         user,
@@ -265,7 +288,9 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <th className="text-center align-middle"><span className="ps-2 pe-2">Groups</span></th>
-        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
+        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title}
+            reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
+            setOrder={setBoardOrder} alignment="start">
             Board name
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
@@ -274,11 +299,13 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                 <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2"/>
             </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br/>
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
             </UncontrolledTooltip>
         </th>
-        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited} reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
+        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited}
+            reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder}
+            setOrder={setBoardOrder}>
             Last viewed
         </SortItemHeader>
         <th className="text-center align-middle">Manage</th>
@@ -348,18 +375,22 @@ const CSTable = (props: SetAssignmentsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <th>Groups</th>
-        <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
+        <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title}
+            reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
+            setOrder={setBoardOrder}>
             Quiz name
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
-            Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
+            Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1"/>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br/>
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
             </UncontrolledTooltip>
         </th>
         <th>Creator</th>
-        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited} reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
+        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited}
+            reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder}
+            setOrder={setBoardOrder}>
             Last viewed
         </SortItemHeader>
         <th>Manage</th>
@@ -376,15 +407,20 @@ const CSTable = (props: SetAssignmentsTableProps) => {
                     </Input>
                 </Label>
             </Col>
-            <Col xs={{size: 12, order: 3}} md={{size: 4, offset: 1, order: 1}} lg={{size: 4, offset: 3}} xl={{size: 4, offset: 3}}>
+            <Col xs={{size: 12, order: 3}} md={{size: 4, offset: 1, order: 1}} lg={{size: 4, offset: 3}}
+                xl={{size: 4, offset: 3}}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter {siteSpecific("question decks", "quizzes")} by name</span><Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} />
+                    <span
+                        className={"text-nowrap"}>Filter {siteSpecific("question decks", "quizzes")} by name</span><Input
+                        type="text" onChange={(e) => setBoardTitleFilter(e.target.value)}/>
                 </Label>
             </Col>
             <Col xs={6} md={{size: 3, order: 2}} lg={2} xl={2}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by Creator</span><Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                        {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+                    <span className={"text-nowrap"}>Filter by Creator</span><Input type="select" value={boardCreator}
+                        onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
+                        {Object.values(BoardCreators).map(creator => <option key={creator}
+                            value={creator}>{creator}</option>)}
                     </Input>
                 </Label>
             </Col>
@@ -415,7 +451,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
 };
 const SetAssignmentsTable = siteSpecific(PhyTable, CSTable);
 
-export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: string, redirectBackTo: string}) => {
+export const PhyAddGameboardButtons = ({className, redirectBackTo}: { className: string, redirectBackTo: string }) => {
     const dispatch = useAppDispatch();
     return <>
         <h4 className="mt-4 mb-3">
@@ -431,12 +467,14 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
                 </Button>
             </Col>
             <Col md={6} lg={4} className="pt-1">
-                <Button tag={Link} to={"/physics/a_level/question_decks"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                <Button tag={Link} to={"/physics/a_level/question_decks"}
+                    onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
                     our topic question decks
                 </Button>
             </Col>
             <Col md={12} lg={4} className="pt-1">
-                <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(redirectBackTo)}
+                    color="secondary" block>
                     create a question deck
                 </Button>
             </Col>
@@ -447,19 +485,23 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
 export const getAssigneesByBoard = (assignmentsSetByMe: AssignmentDTO[] | undefined): Record<string, BoardAssignee[]> => {
     return assignmentsSetByMe?.reduce((acc, assignment) => {
         if (!isDefined(assignment?.gameboardId) || !isDefined(assignment?.groupId)) return acc;
-        const newAssignee = {groupId: assignment.groupId, groupName: assignment.groupName, startDate: assignment.scheduledStartDate};
+        const newAssignee = {
+            groupId: assignment.groupId,
+            groupName: assignment.groupName,
+            startDate: assignment.scheduledStartDate
+        };
         if (!(assignment.gameboardId in acc)) {
             return {...acc, [assignment.gameboardId]: [newAssignee]};
         }
         return {...acc, [assignment.gameboardId]: [...acc[assignment.gameboardId], newAssignee]};
-    }, {} as {[gameboardId: string]: BoardAssignee[]}) ?? {};
+    }, {} as { [gameboardId: string]: BoardAssignee[] }) ?? {};
 };
 
 export const SetAssignments = () => {
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    const { data: groups } = useGetGroupsQuery(false);
-    const { data: assignmentsSetByMe } = useGetMySetAssignmentsQuery(undefined);
+    const {data: groups} = useGetGroupsQuery(false);
+    const {data: assignmentsSetByMe} = useGetMySetAssignmentsQuery(undefined);
     const groupsByGameboard = useMemo(() => getAssigneesByBoard(assignmentsSetByMe), [assignmentsSetByMe]);
 
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
@@ -488,7 +530,7 @@ export const SetAssignments = () => {
     }, [hash]);
 
     const dispatch = useAppDispatch();
-    const [ unassignBoard ] = useUnassignGameboardMutation();
+    const [unassignBoard] = useUnassignGameboardMutation();
 
     const openAssignModal = (board: GameboardDTO) => {
         dispatch(openActiveModal(SetAssignmentsModal({
@@ -526,8 +568,9 @@ export const SetAssignments = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
-            modalId="help_modal_set_assignments" className={siteSpecific("mb-4", "")} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
+            icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
+            modalId="help_modal_set_assignments" className={siteSpecific("mb-4", "")}/>
         <SidebarLayout>
             <SetAssignmentsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
@@ -539,7 +582,8 @@ export const SetAssignments = () => {
                 sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
             />
             <MainContent>
-                <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
+                <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")}
+                    ifNotFound={RenderNothing}/>
                 {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
                 {groups && groups.length === 0 && <Alert color="warning">
                     You have not created any groups to assign work to.
@@ -550,47 +594,59 @@ export const SetAssignments = () => {
                         You have no {siteSpecific("question decks", "quizzes")} to assign
                         {siteSpecific(
                             "; use one of the options above to find one.",
-                            <><br /><Button className={"mt-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="solid">
+                            <><br/><Button className={"mt-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER}
+                                onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="solid">
                                 Create a quiz
                             </Button></>
                         )}
                     </h3>
                     : <>
                         {isPhy && <h5>
-                            Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view assignments by start date and due date.
+                            Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view
+                            assignments by start date and due date.
                             <div className="section-divider my-4"/>
                         </h5>}
                         {isAda && <>
                             {boards && boards.totalResults > 0 && <h4>
-                                You have <strong>{boards.totalResults}</strong> quiz{boards.totalResults > 1 && "zes"} ready to assign...{" "}
-                                {<Button className={"font-size-1-25"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
+                                You
+                                have <strong>{boards.totalResults}</strong> quiz{boards.totalResults > 1 && "zes"} ready
+                                to assign...{" "}
+                                {<Button className={"font-size-1-25"} tag={Link} to={PATHS.GAMEBOARD_BUILDER}
+                                    onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
                                     create another quiz?
                                 </Button>}
                             </h4>}
                             {!boards && <h4>
-                                You have <IsaacSpinner size="sm" inline/> {siteSpecific("question decks", "quizzes")} ready to assign...
+                                You have <IsaacSpinner size="sm"
+                                    inline/> {siteSpecific("question decks", "quizzes")} ready to
+                                assign...
                             </h4>}
                         </>}
                         {isAda && <Row>
                             {boardView === BoardViews.card && <Col sm={6} lg={3}>
                                 <Label className="w-100">
                                     Display in <Input type="select" value={boardView} onChange={switchView}>
-                                        {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                                        {Object.values(BoardViews).map(view => <option key={view}
+                                            value={view}>{view}</option>)}
                                     </Input>
                                 </Label>
                             </Col>}
                             {boardView === BoardViews.card && <>
                                 <Col xs={6} lg={{size: 2, offset: 3}}>
                                     <Label className="w-100">
-                                        Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
-                                            {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+                                        Show <Input type="select" value={boardLimit}
+                                            onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                                            {Object.values(BoardLimit).map(limit => <option key={limit}
+                                                value={limit}>{limit}</option>)}
                                         </Input>
                                     </Label>
                                 </Col>
                                 <Col xs={6} lg={4}>
                                     <Label className="w-100">
-                                        Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
-                                            {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+                                        Sort by <Input type="select" value={boardOrder}
+                                            onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
+                                            {Object.values(AssignmentBoardOrder).map(order => <option key={order}
+                                                value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
                                         </Input>
                                     </Label>
                                 </Col>
@@ -601,7 +657,8 @@ export const SetAssignments = () => {
                                 {boardView == BoardViews.card ?
                                     // Card view
                                     <>
-                                        <Row className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
+                                        <Row
+                                            className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
                                             {boards.boards && boards.boards
                                                 .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
                                                 .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
@@ -623,7 +680,8 @@ export const SetAssignments = () => {
                                             <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong>
                                             </p>
                                             {boards.boards.length < boards.totalResults &&
-                                            <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner/> : "View more"}</Button>}
+                                                <Button onClick={viewMore} disabled={loading}>{loading ?
+                                                    <Spinner/> : "View more"}</Button>}
                                         </div>
                                     </>
                                     :
