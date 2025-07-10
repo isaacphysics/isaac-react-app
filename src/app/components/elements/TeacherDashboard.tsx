@@ -25,10 +25,10 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
         {sortedGroups.length ?
             <>
                 <div>
-                    {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress#${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
+                    {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress/group/${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
                 </div>
                 <Spacer/>
-                <Link to="/groups" className="d-inline panel-link mt-3">See all groups</Link>
+                <Link to="/assignment_progress" className="d-inline panel-link mt-3">See all groups</Link>
             </> :
             <>
                 <div className="text-center mt-lg-3">You have no active groups.</div>
