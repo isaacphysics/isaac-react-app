@@ -1202,6 +1202,7 @@ export const FEATURED_NEWS_TAG = "featured";
 export const NEWS_PODS_PER_PAGE = 12; // <= api.MAX_PODS_TO_RETURN (if lower, the backend will still return the maximum number of pods, but they won't be displayed in the frontend)
 
 export const PATHS = {
+    // Site-specific paths
     ...siteSpecific({
         ASSIGNMENT_PROGRESS: "/assignment_progress",
         MY_GAMEBOARDS: "/my_question_decks",
@@ -1212,8 +1213,6 @@ export const PATHS = {
         SET_ASSIGNMENTS: "/set_assignments",
         GAMEBOARD_BUILDER: "/question_deck_builder",
         ADD_GAMEBOARD: "/add_question_deck",
-        PREVIEW_TEST: "/test/preview",
-        TEST: "/test/assignment",
     },
     {
         ASSIGNMENT_PROGRESS: "/my_markbook",
@@ -1225,10 +1224,11 @@ export const PATHS = {
         SET_ASSIGNMENTS: "/quizzes/set",
         GAMEBOARD_BUILDER: "/quizzes/builder",
         ADD_GAMEBOARD: "/quizzes/add",
-        PREVIEW_TEST: "/test/preview",
-        TEST: "/test/assignment",
     }),
+    // Common paths
     MANAGE_GROUPS: "/groups",
+    TEST: "/test/assignment",
+    PREVIEW_TEST: "/test/preview",
 };
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
