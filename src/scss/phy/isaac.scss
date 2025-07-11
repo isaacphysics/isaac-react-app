@@ -52,6 +52,7 @@ $perfect-fill: $green;
 $passed-fill: #2C2C2C;
 $in-progress-fill: #555;
 $failed-fill: #C2423F;
+$fully-attempted-fill: $phy_extra_force_yellow;
 
 // Shadows
 $shadow-3: rgba(0, 0, 0, 0.3);
@@ -303,7 +304,8 @@ $theme-colour-overrides: (
     chemistry: $color-chemistry-500,
     biology: $color-biology-500,
     neutral: $color-neutral-500,
-
+    
+    neutral-light: $color-neutral-100,
     correct: $color-misc-correct,
 
     // these are intended for "action states", e.g. event status, not question feedback

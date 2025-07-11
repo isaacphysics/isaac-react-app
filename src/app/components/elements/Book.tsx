@@ -12,6 +12,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {IsaacContentValueOrChildren} from "../content/IsaacContentValueOrChildren";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import { PageMetadata } from "./PageMetadata";
+import { WithFigureNumbering } from "./WithFigureNumbering";
 
 interface BookProps {
     match: { params: { bookId: string } };
@@ -60,7 +61,11 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                 ? <ShowLoadingQuery
                                     query={bookDetailPageQuery}
                                     defaultErrorTitle="Unable to load book page"
-                                    thenRender={(bookDetailPage) => <BookPage page={bookDetailPage} />}
+                                    thenRender={(bookDetailPage) => {
+                                        return <WithFigureNumbering doc={bookDetailPage}>
+                                            <BookPage page={bookDetailPage} />
+                                        </WithFigureNumbering>;
+                                    }}
                                 />
                                 : <>
                                     <PageMetadata doc={definedBookIndexPage} showSidebarButton sidebarButtonText={book?.sidebar?.subtitle}/>
@@ -73,7 +78,9 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
                                     {!!definedBookIndexPage.children?.length && <>
                                         <div className="d-flex">
                                             <div className="flex-grow-1">
-                                                <IsaacContentValueOrChildren {...definedBookIndexPage.children[0] as ContentDTO} />
+                                                <WithFigureNumbering doc={definedBookIndexPage}>
+                                                    <IsaacContentValueOrChildren {...definedBookIndexPage.children[0] as ContentDTO} />
+                                                </WithFigureNumbering>
                                             </div>
                                             <div className="book-image-container book-height-lg d-none d-sm-block mx-3 float-end">
                                                 <img src={definedBookIndexPage.coverImage?.src} alt={definedBookIndexPage.title} />

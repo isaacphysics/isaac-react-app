@@ -5,6 +5,7 @@ import {useAppSelector, selectors} from "../../state";
 import {isLoggedIn, isTutorOrAbove, PATHS} from "../../services";
 import {Link} from "react-router-dom";
 import { TeacherFeatureCard } from "./TeacherFeatures";
+import { PageMetadata } from "../elements/PageMetadata";
 
 // A version of the "teacher features" page to showcase tutor account features
 export const TutorFeatures = () => {
@@ -13,57 +14,51 @@ export const TutorFeatures = () => {
 
     const isDisabled = !isLoggedIn(user) || !isTutorOrAbove(user);
 
-    return<Container>
-        <Row className="mb-4">
-            <Col>
-                <TitleAndBreadcrumb currentPageTitle={"Tutor Features"} icon={{type: "hex", icon: "icon-account"}}/>
-            </Col>
+    return <Container>
+        <TitleAndBreadcrumb currentPageTitle={"Tutor features"} icon={{type: "hex", icon: "icon-account"}}/>
+        <PageMetadata noTitle>
+            {isDisabled && <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/tutor_account_request" : "/register"} className="float-end">
+                {isLoggedIn(user) ? "Upgrade my account" : "Get a tutor account"}
+            </Button>}
+            Isaac Science provides you with a huge range of resources to support your tutoring of science subjects.
+        </PageMetadata>
+        <Row className="my-4">
+            <h4>Tutor workflow</h4>
         </Row>
-        <Row className="mb-3">
-            <Col md={isDisabled ? 6 : undefined}>
-                <p className="subtitle">Isaac Science provides you with a huge range of resources to support your tutoring of Physics, Maths, Chemistry and Biology.</p>
-            </Col>
-            {isDisabled && <Col md={6} className="text-center text-md-end">
-                <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/tutor_account_request" : "/register"}>
-                    {isLoggedIn(user) ? "Upgrade my Account" : "Get a Tutor Account"}
-                </Button>
-            </Col>}
-        </Row>
-        <Row className="isaac-cards-body px-3">
-            <Col sm={6} md={4} className="mb-3 mb-md-0">
+        <Row className="isaac-cards-body px-3 row-gap-4">
+            <Col md={6} lg={4}>
                 <TeacherFeatureCard
                     url = "/groups"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#groups"
-                    title = "1. Create a Group"
-                    subtitle = "Create and manage student groups."
+                    title = "1. Create a group"
+                    subtitle = "Create and manage class groups, and share them with colleagues."
                     disabled = {isDisabled}
                 />
             </Col>
-            <Col sm={6} md={4} className="mb-3 mb-md-0">
+            <Col md={6} lg={4}>
                 <TeacherFeatureCard
                     url = {PATHS.SET_ASSIGNMENTS}
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#set-assignments"
-                    title = "2. Set Assignments"
+                    title = "2. Set assignments"
                     subtitle = "Set assignments from our skills books, pre-made boards or create your own."
                     disabled = {isDisabled}
                 />
             </Col>
-            <Col xs={0} sm={3} className="d-md-none"/>
-            <Col sm={6} md={4}>
+            <Col md={{size: 6, offset: 3}} lg={{size: 4, offset: 0}}>
                 <TeacherFeatureCard
                     url = {PATHS.ASSIGNMENT_PROGRESS}
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#track-progress"
-                    title = "3. Assignment Progress"
-                    subtitle = "View your tutees’ progress through their assignments."
+                    title = "3. Assignment progress"
+                    subtitle = "View your students’ progress through their assignments."
                     disabled = {isDisabled}
                 />
             </Col>
         </Row>
         <Row className="my-4">
-            <h4>Tutor Support and Resources</h4>
+            <h4>Tutor support and resources</h4>
         </Row>
-        <Row className="isaac-cards-body mb-7 mt-2 px-3">
-            <Col sm={6} md={4} className="mb-3 mb-md-0">
+        <Row className="isaac-cards-body mb-7 px-3 row-gap-4">
+            <Col sm={6} md={4}>
                 <TeacherFeatureCard               
                     url = "/support/tutor/general"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#teacher-forum"
@@ -71,21 +66,20 @@ export const TutorFeatures = () => {
                     subtitle = "Answers to your questions and how-to guides."
                 />
             </Col>
-            <Col sm={6} md={4} className="mb-3 mb-md-0">
+            <Col sm={6} md={4}>
                 <TeacherFeatureCard
                     url = "/pages/order_books"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#skills-book-cover"
-                    title = "Isaac Books"
+                    title = "Isaac books"
                     subtitle = "Buy one of our Skills Mastery books at cost."
                 />
             </Col>
-            <Col xs={0} sm={3} className="d-md-none"/>
-            <Col sm={6} md={4}>
+            <Col md={{size: 6, offset: 3}} lg={{size: 4, offset: 0}}>
                 <TeacherFeatureCard
-                    url = "/pages/pre_made_gameboards"
+                    url = "/physics/a_level/question_decks"
                     imgSrc = "/assets/phy/icons/key_stage_sprite.svg#triple"
-                    title = "Boards by Topic"
-                    subtitle = {isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}
+                    title = "Decks by topic"
+                    subtitle = "A selection of our questions organised by topic."
                 />
             </Col>
         </Row>

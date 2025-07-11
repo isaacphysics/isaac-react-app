@@ -219,7 +219,9 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                         <td>{quiz.assignerSummary && extractTeacherName(quiz.assignerSummary)}</td>
                         <td>{quiz.dueDate && formatDate(quiz.dueDate)}</td>
                         <td>{quiz.setDate && formatDate(quiz.setDate)}</td>
-                        <td className="text-center"><img className="icon-dropdown-90" aria-disabled={!quiz.link} src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
+                        <td className="text-center">
+                            <i className={classNames("icon icon-arrow-right", {"icon-color-muted": !quiz.link})} aria-hidden="true" />
+                        </td>
                     </TrLink>;
                 })}
                 {quizzes.length === 0 && <tr>
@@ -256,7 +258,9 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                             </div>
                         </td>
                         <td>{formatDate(quiz.startDate)}</td>
-                        <td className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
+                        <td className="text-center">
+                            <i className={classNames("icon icon-arrow-right", {"icon-color-muted": !quiz.link})} aria-hidden="true" />
+                        </td>
                     </TrLink>;
                 })}
                 {quizzes.length === 0 && <tr>
@@ -421,8 +425,11 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                 Filters
                 {<FilterCount count={filterCount ?? 0} widthPx={siteSpecific(25, 20)} className={classNames("ms-2", {"mb-1" : isPhy})}/>}
             </span>
-            <Button color="secondary" className={classNames("w-100 gameboards-filter-dropdown align-self-center", {"selected": showFilters})}
-                onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"/>
+            <Button color="secondary" className={classNames("w-100 gameboards-filter-dropdown d-flex justify-content-center align-items-center", {"selected": showFilters})}
+                onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"
+            >
+                <i className={classNames("icon icon-chevron-right icon-color-white icon-dropdown-90", {"active": showFilters})} aria-hidden="true"/>
+            </Button>
         </Label>
     </Col>;
 

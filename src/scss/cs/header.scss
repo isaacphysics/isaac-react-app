@@ -102,20 +102,6 @@ header {
         @include focus-outline;
       }
     }
-
-    .cs-caret {
-      margin-top: 6px;
-      margin-right: 4px;
-      display: inline-block;
-      height: 9px;
-      width: 15px;
-      background-repeat: no-repeat;
-      background-size: contain;
-      background-image: url('/assets/common/icons/chevron_down_white.svg');
-      &.open {
-        background-image: url('/assets/common/icons/chevron_up_white.svg');
-      }
-    }
   }
 
   .nav-section {

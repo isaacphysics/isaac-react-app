@@ -258,17 +258,6 @@
   }
 }
 
-// --- Styling of links ---
-// This is really hard to do in general...
-
-div.isaac-nav-link {
-  display: inline-block;
-  text-decoration: underline;
-  &:hover {
-    text-decoration: none;
-  }
-}
-
 .nav-link {
   color: $cs-jet;
 }

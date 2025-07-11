@@ -25,6 +25,7 @@ import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import debounce from "lodash/debounce";
 import { UncontrolledTooltip, Collapse, Card, CardBody } from "reactstrap";
 import { useReducedMotion } from "../../services/accessibility";
+import { Spacer } from "./Spacer";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -160,7 +161,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     return <div className="accordion">
         <button 
             className={classNames(
-                "accordion-header d-flex w-100 p-0 align-items-stretch", 
+                "accordion-header d-flex w-100 p-0", 
                 {"de-emphasised": deEmphasised || disabled, "active": isOpen, "btn btn-link": isAda}
             )}
             id={anchorId || ""} type="button"
@@ -187,7 +188,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             aria-expanded={isOpen ? "true" : "false"}
         >
             {isConceptPage && audienceString && isAda && <span className={
-                classNames("stage-label d-flex align-items-center p-2 justify-content-center ", audienceStyle(audienceString))
+                classNames("stage-label d-flex align-self-stretch align-items-center p-2 justify-content-center ", audienceStyle(audienceString))
             }>
                 {(above["sm"](deviceSize) 
                     ? audienceString 
@@ -205,6 +206,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     <Markup encoding={"latex"}>
                         {trustedTitle || (isAda ? "" : (isDefined(index) ? `(${ALPHABET[index % ALPHABET.length].toLowerCase()})` : "Untitled"))}
                     </Markup>
+                    {isPhy && <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-black mx-2", {"active": isOpen})}/>}
                 </div>
                 {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
                     <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
@@ -218,23 +220,24 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             {accordionState && isPhy && <span className={"accordion-icon d-flex align-items-center gap-2 w-max-content h-100 pb-1 pe-3 align-self-center"}>
                 {accordionState === "correct"
                     ? <>
-                        <span>Correct</span>
-                        <div className="icon-correct"/>
+                        <span className="d-flex gap-2 align-items-center">Correct <i className="icon icon-raw icon-correct"/></span>
                         <span className="visually-hidden">All questions in this part are answered correctly.</span>
                     </>
                     : accordionState === "incorrect" 
                         ? <>
-                            <span>Incorrect</span>
-                            <div className="icon-incorrect"/>
+                            <span className="d-flex gap-2 align-items-center">Incorrect <i className="icon icon-raw icon-incorrect"/></span>
                             <span className="visually-hidden">All questions in this part are answered incorrectly.</span>
                         </>
                         : <>
-                            <span>In progress</span>
-                            <div className="icon-in-progress"/>
+                            <span className="d-flex gap-2 align-items-center">In progress <i className="icon icon-raw icon-in-progress"/></span>
                             <span className="visually-hidden">Some questions in this part are answered incorrectly.</span>
                         </>
                 }
             </span>}
+            {isAda && <>
+                <Spacer />
+                {<i className={classNames("icon icon-chevron-right icon-dropdown-90 me-3", {"active": isOpen})}/>}
+            </>}
         </button>
         <Collapse isOpen={isOpen} className={siteSpecific("accordion-body", "mt-1")}>
             <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open: isOpen}}>

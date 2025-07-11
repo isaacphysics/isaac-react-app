@@ -109,14 +109,6 @@ const MentoringSchemeCard = (context: NonNullable<Required<PageContextState>>): 
     return ArbitraryPageLinkCard("Mentoring scheme", "Take your problem solving skills to the next level by joining the mentoring scheme.", [{tag: "Find out more", url: "/pages/isaac_mentor"}])(context);
 };
 
-const AlgebraSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Core skills", "Keep training those maths skills with our algebra app.", [{tag: "Practise core skills", url: extendUrl(context, "skills_questions")}], AbstractListViewItemState.COMING_SOON)(context);
-};
-
-const MathsSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Core skills practice", `Practise those core skills, such as rearranging equations, vital for ${getHumanContext(context)}.`, [{tag: "Practise core skills", url: extendUrl(context, "skills_questions")}], AbstractListViewItemState.COMING_SOON)(context);
-};
-
 const MathsRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
     return ArbitraryPageLinkCard("Revision", "Revise with our tailored revision decks on core pure, further pure, and mechanics.", [{tag: "List of revision decks", url: "/pages/revision_maths_alevel"}])(context);
 };
@@ -131,7 +123,7 @@ const MathsUniCard = (context: NonNullable<Required<PageContextState>>): ListVie
 
 const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
     "physics": {
-        "11_14": [StepUpPhyCard, AlgebraSkillsCard, null],
+        "11_14": [StepUpPhyCard, AnvilAppsCoreCard, null],
         "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, CoreSkillsCard],
         "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, MentoringSchemeCard],
         "university": [BoardsByTopicCard, MathsUniCard, null],
@@ -142,9 +134,8 @@ const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[st
         "university": [BoardsByTopicCard, AnvilAppsRevisionCard, MathsUniCard],
     },
     "maths": {
-        "gcse": [BoardsByTopicCard, MathsSkillsCard],
-        // "practice maths" is boards by topic for maths – needs renaming
-        "a_level": [BoardsByTopicCard, MathsRevisionCard, MathsSkillsCard],
+        "gcse": [BoardsByTopicCard, AnvilAppsCoreCard],
+        "a_level": [BoardsByTopicCard, MathsRevisionCard, AnvilAppsCoreCard],
         "university": [BoardsByTopicCard, MathsUniCard, null],
     },
     "biology": {
