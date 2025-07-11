@@ -115,10 +115,17 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                                 {/* <AssignmentProgressPageSettingsContext.Provider value={pageSettings}> */}
                                 {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} user={user} />)}
                                 {/* </AssignmentProgressPageSettingsContext.Provider> */}
-                                {sortedGroups.length === 0 && <Container className="py-5">
-                                    <h3 className="text-center">
-                                        You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
-                                    </h3>
+                                {sortedGroups.length === 0 && <Container>
+                                    <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
+                                        <span>
+                                            You have no teaching groups yet.
+                                        </span>
+                                        <strong>
+                                            <Link to={PATHS.MANAGE_GROUPS} className={classNames("btn btn-link", {"fw-bold": isPhy})}>
+                                                Create new group
+                                            </Link>
+                                        </strong>
+                                    </div>
                                 </Container>}
                             </div>;
                         }}
