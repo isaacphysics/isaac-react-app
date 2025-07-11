@@ -2,9 +2,9 @@ import React, {useEffect, useRef, useState} from "react";
 import {isMobile, isPhy, isTutorOrAbove, PATHS, siteSpecific, useOutsideCallback} from "../../services";
 import {selectors, useAppSelector} from "../../state";
 import classNames from "classnames";
-import { IconButton } from "./AffixButton";
+import { IconButton, IconButtonProps } from "./AffixButton";
 
-export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean; outline?: boolean; className?: string}) => {
+export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className, buttonProps}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean; outline?: boolean; className?: string; buttonProps?: Partial<IconButtonProps>}) => {
     const [showShareLink, setShowShareLink] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
@@ -61,6 +61,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
                 color="tint"
                 data-bs-theme="neutral"
                 onClick={(e) => { e.preventDefault(); toggleShareLink(); }}
+                {...buttonProps}
             />,
             <button className={siteSpecific("btn-action", classNames("btn btn-solid", {"outline": outline}))} onClick={(e) => {e.preventDefault(); toggleShareLink();}} aria-label={buttonAriaLabel} />
         )}
