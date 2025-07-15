@@ -82,14 +82,27 @@ const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListVi
     state,
 });
 
-// intended for GCSE / A Level, where the apps are relevant precisely to that stage
-const AnvilAppsCoreCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Core skills practice", `Consolidate your ${context.subject} skills with these tools.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "tools")}])(context);
-};
+// Content want these to each have their own specific wordings
+const AnvilAppsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    const subjectSpecificAnvilCard: {[subject in keyof typeof PHY_NAV_SUBJECTS]: Partial<{[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (ListViewCardProps)}>} = {
+        "physics": {
+            "11_14": ArbitraryPageLinkCard("Core skills practice", `Keep training those maths skills with our algebra tools.`, [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
+            "gcse": ArbitraryPageLinkCard("Core skills practice", `Practise the important equations in GCSE physics with these tools.`, [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
+        },
+        "maths": {
+            // "11_14": ArbitraryPageLinkCard("Core skills practice", `Keep training those maths skills with our algebra tools.`, [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
+            "gcse": ArbitraryPageLinkCard("Core skills practice", `Practise those core skills, such as rearranging equations, vital for GCSE maths.`, [{tag: `Practise algebra`, url: extendUrl(context, "tools")}])(context),
+            "a_level": ArbitraryPageLinkCard("Core skills practice", `Practise those core skills, such as rearranging equations, vital for A Level maths.`, [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
+        },
+        "chemistry": {
+            "gcse": ArbitraryPageLinkCard("Core skills practice", `Practise core skills required in GCSE chemistry.`, [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
+            "a_level": ArbitraryPageLinkCard("Core skills practice", `Practise core skills required in A Level chemistry.`, [{tag: `Practise core skills`, url: extendUrl(context, "tools")}])(context),
+            "university": ArbitraryPageLinkCard("Skills practice", `Consolidate your chemistry skills with these tools`, [{tag: `Refine your chemistry skills`, url: extendUrl(context, "tools")}], AbstractListViewItemState.COMING_SOON)(context),
+        },
+        "biology": {},
+    };
 
-// intended for University, where the apps are more revision of previous stages
-const AnvilAppsRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Skills practice", `Consolidate your ${context.subject} skills with these tools.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "tools")}], AbstractListViewItemState.COMING_SOON)(context);
+    return subjectSpecificAnvilCard[context.subject][context.stage[0] as keyof typeof subjectSpecificAnvilCard[typeof context.subject]] || ArbitraryPageLinkCard("Core skills practice", `Consolidate your ${context.subject} skills with these tools.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "tools")}])(context);
 };
 
 /*const SPCCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
@@ -118,19 +131,19 @@ const MathsUniCard = (context: NonNullable<Required<PageContextState>>): ListVie
 
 const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
     "physics": {
-        "11_14": [QuestionFinderCard, ConceptPageCard, AnvilAppsCoreCard],
-        "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, AnvilAppsCoreCard],
+        "11_14": [QuestionFinderCard, ConceptPageCard, AnvilAppsCard],
+        "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, AnvilAppsCard],
         "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, MentoringSchemeCard],
         "university": [BoardsByTopicCard, MathsUniCard, null],
     },
     "chemistry": {
-        "gcse": [AnvilAppsCoreCard, GlossaryCard],
-        "a_level": [BoardsByTopicCard, GlossaryCard, AnvilAppsCoreCard],
-        "university": [BoardsByTopicCard, AnvilAppsRevisionCard, MathsUniCard],
+        "gcse": [AnvilAppsCard, GlossaryCard],
+        "a_level": [BoardsByTopicCard, GlossaryCard, AnvilAppsCard],
+        "university": [BoardsByTopicCard, AnvilAppsCard, MathsUniCard],
     },
     "maths": {
-        "gcse": [BoardsByTopicCard, AnvilAppsCoreCard],
-        "a_level": [BoardsByTopicCard, MathsRevisionCard, AnvilAppsCoreCard],
+        "gcse": [BoardsByTopicCard, AnvilAppsCard],
+        "a_level": [BoardsByTopicCard, MathsRevisionCard, AnvilAppsCard],
         "university": [BoardsByTopicCard, MathsUniCard, null],
     },
     "biology": {
