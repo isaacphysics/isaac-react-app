@@ -86,11 +86,15 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
         store.dispatch(requestCurrentUser());
     }
     render(<Provider store={store}>
-        {PageComponent
-            ? <MemoryRouter initialEntries={initalRouteEntries ?? []}>
-                <PageComponent/>
-            </MemoryRouter>
-            : <IsaacApp/>}
+        {/* #root usually exists in index-{phy|ada}.html, but this is not loaded in Jest */}
+        <div id="root" className="d-flex flex-column overflow-clip min-vh-100" data-bs-theme="neutral"> 
+            {PageComponent
+                ? <MemoryRouter initialEntries={initalRouteEntries ?? []}>
+                    <PageComponent/>
+                </MemoryRouter>
+                : <IsaacApp/>
+            }
+        </div>
     </Provider>);
 };
 

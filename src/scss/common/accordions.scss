@@ -89,12 +89,6 @@
       transition: all 0.5s ease;
     }
 
-    &.active {
-      &:after {
-        background-image: url('/assets/common/icons/chevron_up.svg');
-      }
-    }
-
     &.de-emphasised {
       background: darken(#fff, 9%);
       color: lighten(black, 10%);

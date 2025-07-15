@@ -36,6 +36,12 @@ const StatusDisplay = (props: StatusDisplayProps) => {
                 <i className="icon icon-raw icon-correct" />
                 {showText && "Correct"}
             </span>;
+        case CompletionState.ALL_INCORRECT:
+        case CompletionState.ALL_ATTEMPTED:
+            return <span {...rest} className={classNames("d-flex gap-2 status-tag align-items-center", className)}>
+                <i className="icon icon-raw icon-attempted" />
+                {showText && "Attempted"}
+            </span>;
         case CompletionState.NOT_ATTEMPTED:
             return;
     }
@@ -169,9 +175,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
             <div className="position-relative">
                 {icon && (
-                    icon.type === "img" ? <img src={icon.icon} alt="" width={icon.width} height={icon.height} className="me-3"/> 
-                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/>
-                            : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/> 
+                    icon.type === "img" ? <img src={icon.icon} alt="" width={icon.width} height={icon.height} className={classNames(icon.className, "me-3")} /> 
+                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size} className={icon.className} />
+                            : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}} /> 
                                 : undefined
                 )}
                 {isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">

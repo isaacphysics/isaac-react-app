@@ -430,3 +430,37 @@ iframe.email-html {
     @extend .visually-hidden;
   }
 }
+
+.inline-tabs {
+
+  $active-height: 4px;
+  $baseline-height: 3px;
+
+  position: relative;
+  button {
+    background: transparent;
+    padding: 0.5rem 0.5rem 0.2rem;
+    margin: 0.5rem 0.5rem 0.3rem;
+    border-bottom: $active-height solid transparent;
+    z-index: 1;
+
+    &.active {
+      border-bottom: $active-height solid var(--tab-active);
+      color: var(--tab-active);
+    }
+
+    &:hover:not(.active) {
+      border-bottom: $active-height solid var(--tab-hover);
+    }
+  }
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: calc(100% - 1rem);
+    left: 0.5rem;
+    bottom: calc(0.5rem - $active-height);
+    border-bottom: $baseline-height solid var(--tab-hover);
+  }
+}

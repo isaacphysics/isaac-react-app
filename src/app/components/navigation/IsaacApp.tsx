@@ -74,7 +74,7 @@ import {ChunkOrClientError} from "../pages/ClientError";
 import {Loading} from "../handlers/IsaacSpinner";
 import {ExternalRedirect} from "../handlers/ExternalRedirect";
 import {TutorRequest} from "../pages/TutorRequest";
-import {AssignmentProgress} from "../pages/AssignmentProgress";
+import {AssignmentProgress} from "../pages/AssignmentProgressWrapper";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
@@ -198,7 +198,10 @@ export const IsaacApp = () => {
                         {/* Tutors can set and manage assignments, but not tests/quizzes */}
                         <TrackedRoute exact path="/groups" ifUser={isTutorOrAbove} component={Groups} />
                         <TrackedRoute exact path={PATHS.SET_ASSIGNMENTS} ifUser={isTutorOrAbove} component={SetAssignments} />
-                        <TrackedRoute exact path={PATHS.ASSIGNMENT_PROGRESS} ifUser={isTutorOrAbove} component={AssignmentProgress} />
+                        <TrackedRoute exact path={[
+                            PATHS.ASSIGNMENT_PROGRESS,
+                            `${PATHS.ASSIGNMENT_PROGRESS}/group/:groupId`,
+                        ]} ifUser={isTutorOrAbove} component={AssignmentProgress} />
 
                         {/* Admin */}
                         <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />

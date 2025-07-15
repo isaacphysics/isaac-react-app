@@ -86,17 +86,11 @@ export const GameboardCard = (props: GameboardCardProps) => {
                     {!isSetAssignments 
                         ? <>
                             <Label className="d-block w-max-content text-center text-nowrap pt-3">
-                                {isDefined(gameboard) && ((gameboard.percentageAttempted === 100) ?
-                                    <div className="board-percent-completed subject-complete"/> :
-                                    <div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>
-                                )}
+                                {isDefined(gameboard) &&<div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>}
                                 Attempted
                             </Label>
                             <Label className="d-block w-max-content text-center text-nowrap pt-3">
-                                {isDefined(gameboard) && ((gameboard.percentageCorrect === 100) ?
-                                    <div className="board-percent-completed subject-complete"/> :
-                                    <div className="board-percent-completed">{gameboard.percentageCorrect ?? 0}</div>
-                                )}
+                                {isDefined(gameboard) && <div className="board-percent-completed">{gameboard.percentageCorrect ?? 0}</div>}
                                 Correct
                             </Label> 
                         </>

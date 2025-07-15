@@ -38,10 +38,11 @@ export interface SortItemHeaderProps<T> extends ComponentProps<"th"> {
     reverseOrder: T,
     currentOrder: T,
     setOrder: (order: T) => void,
-    clickToSelect?: () => void,
+    onClick?: () => void,
     hideIcons?: boolean,
     reversed?: boolean,
     alignment?: "start" | "center" | "end",
+    label?: string,
 }
 
 export const SortItemHeader = <T,>(props: SortItemHeaderProps<NonUndefined<T>>) => {
@@ -50,30 +51,35 @@ export const SortItemHeader = <T,>(props: SortItemHeaderProps<NonUndefined<T>>) 
         reverseOrder,
         currentOrder,
         setOrder,
-        clickToSelect,
+        onClick,
         hideIcons,
         reversed,
+        alignment,
+        label,
         ...rest
     } = props;
 
-    const justify = props.alignment ? "justify-content-" + props.alignment : siteSpecific("justify-content-center", "justify-content-start");
+    const justify = alignment ? "justify-content-" + alignment : siteSpecific("justify-content-center", "justify-content-start");
 
-    const sortArrows = <button
+    const sortArrow = <button
         className="sort"
+        aria-label={label}
         onClick={() => {toggleSort(defaultOrder, reverseOrder, currentOrder, setOrder);}}
     >
-        <span className="up">▲</span>
-        <span className="down">▼</span>
+        <span className="arrow">▲</span>
     </button>;
 
     return <th {...rest}
         className={classNames(props.className, "user-select-none", sortClass(defaultOrder, reverseOrder, currentOrder, reversed))}
-        onClick={clickToSelect ?? (() => toggleSort(defaultOrder, reverseOrder, currentOrder, setOrder))}
+        onClick={() => {
+            toggleSort(defaultOrder, reverseOrder, currentOrder, setOrder);
+            onClick?.();
+        }}
     >
         <div className={`d-flex ${justify} align-items-center`}>
             {props.children}
+            {!hideIcons && sortArrow}
             {justify === "justify-content-start" && <Spacer/>}
-            {!hideIcons && sortArrows}
         </div>
     </th>;
 };

@@ -21,14 +21,14 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
     const sortedGroups = sortBy(groups, g => g.created).reverse().slice(0, 5);
 
     return <div className="dashboard-panel">
-        <h4>Manage group progress</h4>
+        <h4>View group progress</h4>
         {sortedGroups.length ?
             <>
                 <div>
-                    {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress#${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
+                    {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress/group/${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
                 </div>
                 <Spacer/>
-                <Link to="/groups" className="d-inline panel-link mt-3">See all groups</Link>
+                <Link to="/assignment_progress" className="d-inline panel-link mt-3">See all groups&apos; progress</Link>
             </> :
             <>
                 <div className="text-center mt-lg-3">You have no active groups.</div>
@@ -76,10 +76,10 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
         <Spacer/>
         <div className="d-flex align-items-center">
             <Link to="/assignment_schedule" className="d-inline text-center panel-link me-3">
-                See all assignments
+                See assignment schedule
             </Link>
             {!isTutor(user) && <Link to="/set_tests#manage" className="d-inline text-center panel-link ms-auto">
-                See all tests
+                See all set tests
             </Link>}
         </div>
     </div>;

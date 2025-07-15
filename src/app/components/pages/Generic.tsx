@@ -19,6 +19,7 @@ import { TeacherNotes } from "../elements/TeacherNotes";
 import { useGetGenericPageQuery } from "../../state/slices/api/genericApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
+import { PageMetadata } from "../elements/PageMetadata";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -68,16 +69,6 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
         thenRender={supertypedDoc => {
             const doc = supertypedDoc as SeguePageDTO & DocumentSubject;
 
-            const optionBar = <div className={classNames("no-print d-flex align-items-center gap-2", {"pb-2": isPhy})} >
-                <EditContentButton doc={doc} />
-                <div className="question-actions question-actions-leftmost mt-2">
-                    <ShareLink linkUrl={`/pages/${doc.id}`}/>
-                </div>
-                <div className="question-actions mt-2">
-                    <PrintButton/>
-                </div>
-            </div>;
-
             const sidebar = doc.sidebar
                 ? <ContentControlledSidebar sidebar={doc.sidebar} />
                 : React.cloneElement(PHY_SIDEBAR.has(pageId) 
@@ -85,7 +76,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                     : doc.relatedContent
                         ? <GenericSidebarWithRelatedContent relatedContent={doc.relatedContent} />
                         : <GenericPageSidebar/>,
-                { optionBar });
+                );
 
             return <Container data-bs-theme={doc.subjectId}>
                 <TitleAndBreadcrumb 
@@ -97,8 +88,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 <SidebarLayout>
                     {sidebar}
                     <MainContent>
-                        {(above['lg'](deviceSize) || isAda) && <> <div className="mt-1"/> {optionBar} </>}
-                        <TeacherNotes notes={doc.teacherNotes} />
+                        <PageMetadata doc={doc} title={doc.subtitle} noTitle={!doc.subtitle} />
 
                         <Row className="generic-content-container">
                             <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>

@@ -102,8 +102,8 @@ const getListViewSubjectCard = (sc: subjectCategory) => {
         icon: {
             type: "img", 
             icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`,
-            width: "70px",
-            height: "81px",
+            width: "75px",
+            height: "75px",
         },
         subject: sc.subject as Subject,
         linkTags: sc.subcategories.map((subcat) => ({tag: subcat.humanStage, url: subcat.href, "aria-label": `Explore ${subcat.humanStage} ${sc.humanSubject}`})),
@@ -117,9 +117,11 @@ const AdaSubjectCard: ListViewCardProps = {
     subtitle: "Check out Ada CS, our partner platform. It’s free and packed with resources for computer science teachers and students.",
     icon: {
         type: "img", 
-        icon: "/assets/common/logos/ada_logo_stamp_aqua.svg",
-        width: "70px",
-        height: "81px",
+        icon: "/assets/common/logos/ada_logo_stamp_black.svg",
+        // a little smaller than the others, as it is visually bulkier
+        width: "71px",
+        height: "71px",
+        className: "m-1",
     },
     linkTags: [{tag: "Find out more", url: "/computer_science", "aria-label": "Find out about Ada Computer Science"}],
     className: "centered-final-card"

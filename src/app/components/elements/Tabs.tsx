@@ -10,7 +10,7 @@ import {Markup} from "./markup";
 import { AffixButton } from "./AffixButton";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
-export type TabStyle = "tabs" | "buttons" | "dropdowns";
+export type TabStyle = "tabs" | "buttons" | "dropdowns" | "cards";
 interface TabsProps {
     className?: string;
     tabTitleClass?: StringOrTabFunction;
@@ -87,9 +87,10 @@ const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass="", class
     return <div className={classNames(className, "mt-3 mb-1")}>
         {Object.keys(children).map((tabTitle, i) =>
             <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2 mb-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
-                affix: "icon-chevron-down",
+                affix: "icon-chevron-right",
                 position: "suffix",
                 type: "icon",
+                affixClassName: classNames("ms-2 icon-dropdown-90", {"active icon-color-white": activeTab === i + 1}),
             }}>
                 {tabTitle}
             </AffixButton>
@@ -97,12 +98,24 @@ const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass="", class
     </div>;
 };
 
+const CardsNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+    return <div className="d-flex card-tabs">
+        {Object.keys(children).map((tabTitle, i) =>
+            <button key={i} className={classNames(tabTitleClass, "flex-grow-1 py-3 card-tab", {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} type="button">
+                <span>{tabTitle}</span>
+            </button>
+        )}
+    </div>;
+};
+
 export const Tabs = (props: TabsProps) => {
     const {
         className="", tabContentClass="", children, activeTabOverride, onActiveTabChange,
-        deselectable=false, refreshHash, expandable, style=(siteSpecific("dropdowns", "tabs")),
+        deselectable=undefined, refreshHash, expandable, style=(siteSpecific("dropdowns", "tabs")),
     } = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
+
+    const isDeselectable = deselectable ?? (style === "dropdowns" ? true : deselectable);
 
     useEffect(() => {
         if (isDefined(activeTabOverride)) {
@@ -113,7 +126,7 @@ export const Tabs = (props: TabsProps) => {
     function changeTab(tabIndex: number) {
         pauseAllVideos();
         let nextTabIndex = tabIndex;
-        if (deselectable && activeTab === tabIndex) {
+        if (isDeselectable && activeTab === tabIndex) {
             nextTabIndex = -1;
         }
         setActiveTab(nextTabIndex);
@@ -132,7 +145,9 @@ export const Tabs = (props: TabsProps) => {
                 ? <TabNavbar {...props} className="no-print" activeTab={activeTab} changeTab={changeTab}>{children}</TabNavbar>
                 : style === "buttons"
                     ? <ButtonNavbar {...props} activeTab={activeTab} changeTab={changeTab}>{children}</ButtonNavbar>
-                    : <DropdownNavbar  {...props} className={classNames({"no-print": isPhy})} activeTab={activeTab} changeTab={changeTab}>{children}</DropdownNavbar>
+                    : style === "dropdowns" 
+                        ? <DropdownNavbar {...props} className={classNames({"no-print": isPhy}, props.className)} activeTab={activeTab} changeTab={changeTab}>{children}</DropdownNavbar>
+                        : <CardsNavbar  {...props} activeTab={activeTab} changeTab={changeTab}>{children}</CardsNavbar>
             }
             <ExpandableParentContext.Provider value={true}>
                 <TabContent activeTab={activeTab} className={tabContentClass}>

@@ -63,8 +63,10 @@ type FilterParams = typeof FILTER_PARAMS[number];
 
 export interface QuestionStatus {
     notAttempted: boolean;
-    complete: boolean;
     tryAgain: boolean;
+    allIncorrect: boolean; // Ada only
+    allAttempted: boolean; // Phy only
+    complete: boolean;
 }
 
 function questionStatusToURIComponent(statuses: QuestionStatus): string {
@@ -73,8 +75,10 @@ function questionStatusToURIComponent(statuses: QuestionStatus): string {
         .map(e => {
             switch(e[0]) {
                 case "notAttempted": return "NOT_ATTEMPTED";
-                case "complete": return "ALL_CORRECT";
                 case "tryAgain": return "IN_PROGRESS";
+                case "allIncorrect": return "ALL_INCORRECT"; 
+                case "allAttempted": return "ALL_ATTEMPTED";
+                case "complete": return "ALL_CORRECT";
             }
         })
         .join(",");
@@ -86,16 +90,20 @@ function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionS
         // If no statuses set use default
         return {
             notAttempted: false,
-            complete: false,
             tryAgain: false,
+            allIncorrect: false,
+            allAttempted: false,
+            complete: false,
         };
     }
     else {
         // otherwise set use the URI components
         return {
             notAttempted: statuses.includes("notAttempted"),
-            complete: statuses.includes("complete"),
             tryAgain: statuses.includes("tryAgain"),
+            allIncorrect: statuses.includes("allIncorrect"),
+            allAttempted: statuses.includes("allAttempted"),
+            complete: statuses.includes("complete"),
         };
     }
 }
@@ -358,9 +366,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setSelections([pageContext?.subject ? {"subject": [itemiseTag(tags.getById(pageContext.subject as TAG_ID))]} : {}, {}, {}]);
         setSearchStatuses(
             {
-                notAttempted: false,
-                complete: false,
                 tryAgain: false,
+                notAttempted: false,
+                allIncorrect: false,
+                allAttempted: false,
+                complete: false,
             });
         setSearchDisabled(!searchQuery);
     }, [isSolitaryStage, pageContext, searchQuery]);
