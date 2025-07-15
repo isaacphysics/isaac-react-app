@@ -17,11 +17,11 @@ export const AnvilAppsListing = () => {
     if (!(pageContext.stage[0] in (VALID_APPS_CONTEXTS[pageContext.subject] || {}))) {
         return <Container data-bs-theme={pageContext?.subject}>
             <TitleAndBreadcrumb 
-                currentPageTitle="Apps"
+                currentPageTitle="Tools"
                 intermediateCrumbs={crumb ? [crumb] : []}
                 icon={{ icon: "icon-revision", type: "hex" }}
             />
-            <p className="mt-4">Apps are not available for {getHumanContext(pageContext)}.</p>
+            <p className="mt-4">Tools are not available for {getHumanContext(pageContext)}.</p>
         </Container>;
     }
 

@@ -93,12 +93,12 @@ const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListVi
 
 // intended for GCSE / A Level, where the apps are relevant precisely to that stage
 const AnvilAppsCoreCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Core skills practice", `Consolidate your ${context.subject} skills with these apps.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "apps")}])(context);
+    return ArbitraryPageLinkCard("Core skills practice", `Consolidate your ${context.subject} skills with these tools.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "tools")}])(context);
 };
 
 // intended for University, where the apps are more revision of previous stages
 const AnvilAppsRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
-    return ArbitraryPageLinkCard("Skills practice", `Consolidate your ${context.subject} skills with these apps.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "apps")}], AbstractListViewItemState.COMING_SOON)(context);
+    return ArbitraryPageLinkCard("Skills practice", `Consolidate your ${context.subject} skills with these tools.`, [{tag: `Refine your ${context.subject} skills`, url: extendUrl(context, "tools")}], AbstractListViewItemState.COMING_SOON)(context);
 };
 
 /*const SPCCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
