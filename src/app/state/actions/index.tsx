@@ -45,7 +45,7 @@ import {
     AppDispatch,
     AppState,
     closeActiveModal,
-    errorSlice,
+    errorSlice, getAfterAuthPath,
     isaacApi,
     logAction,
     openActiveModal,
@@ -411,7 +411,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
         dispatch(requestCurrentUser() as any);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
+        history.replace(getAfterAuthPath(result.data));
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
