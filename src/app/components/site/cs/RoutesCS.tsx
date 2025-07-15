@@ -45,7 +45,6 @@ let key = 0;
 export const RoutesCS = [
 
     // Registration flow
-    // todo: temporary route for testing dashboard
     <TrackedRoute key={key++} exact path="/dashboard" component={Overview} />,
     <TrackedRoute key={key++} exact path="/register" component={RegistrationStart} />,
     <TrackedRoute key={key++} exact path="/register/role" component={RegistrationRoleSelect} />,
