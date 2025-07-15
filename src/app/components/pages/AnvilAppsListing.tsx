@@ -27,7 +27,7 @@ export const AnvilAppsListing = () => {
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb 
-            currentPageTitle={`${getHumanContext(pageContext)} Apps`}
+            currentPageTitle={pageContext.stage[0] === "university" ? "Skills practice" : "Core skills practice"}
             intermediateCrumbs={crumb ? [crumb] : []}
             icon={{icon: "icon-revision", type: "hex"}}
         />
