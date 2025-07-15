@@ -54,15 +54,6 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
     state: AbstractListViewItemState.COMING_SOON,
 });
 
-const CoreSkillsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
-    title: "Core skills practice",
-    subtitle: `Practise core skills required in ${getHumanContext(context)}.`,
-    icon: {type: "hex", icon: "icon-quiz"},
-    subject: context.subject,
-    linkTags: [{tag: "Practise a core skill", url: extendUrl(context, 'quick_quizzes')}],
-    state: AbstractListViewItemState.COMING_SOON,
-});
-
 const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     title: "Glossary",
     subtitle: `Use the glossary to understand the vocabulary you need for ${getHumanContext(context)}.`,
@@ -128,7 +119,7 @@ const MathsUniCard = (context: NonNullable<Required<PageContextState>>): ListVie
 const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
     "physics": {
         "11_14": [QuestionFinderCard, ConceptPageCard, AnvilAppsCoreCard],
-        "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, CoreSkillsCard],
+        "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, AnvilAppsCoreCard],
         "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, MentoringSchemeCard],
         "university": [BoardsByTopicCard, MathsUniCard, null],
     },
