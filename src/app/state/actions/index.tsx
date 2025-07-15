@@ -3,7 +3,6 @@ import {
     ACTION_TYPE,
     api,
     API_REQUEST_FAILURE_MESSAGE,
-    DOCUMENT_TYPE,
     FIRST_LOGIN_STATE,
     history,
     isNotPartiallyLoggedIn,
@@ -15,7 +14,7 @@ import {
     TAG_ID,
     trackEvent,
     siteSpecific,
-    isAda
+    isAda,
 } from "../../services";
 import {
     Action,
@@ -36,6 +35,7 @@ import {
     GlossaryTermDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
+    RegisteredUserDTO,
     TestCaseDTO,
     UserContext
 } from "../../../IsaacApiTypes";
@@ -45,7 +45,7 @@ import {
     AppDispatch,
     AppState,
     closeActiveModal,
-    errorSlice, getAfterAuthPath,
+    errorSlice,
     isaacApi,
     logAction,
     openActiveModal,
@@ -749,6 +749,16 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
 
 export const changePage = (path: string) => {
     history.push(path);
+};
+
+const getAfterAuthPath = (user: RegisteredUserDTO) => {
+    const pathOverride = persistence.pop(KEY.AFTER_AUTH_PATH);
+    if (pathOverride) {
+        return pathOverride;
+    } else if ((isTeacherOrAbove(user) && isAda)) {
+        return "/dashboard";
+    }
+    return "/";
 };
 
 // Hard redirect (refreshes page)
