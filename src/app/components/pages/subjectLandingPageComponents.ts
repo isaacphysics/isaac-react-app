@@ -109,6 +109,10 @@ const MentoringSchemeCard = (context: NonNullable<Required<PageContextState>>): 
     return ArbitraryPageLinkCard("Mentoring scheme", "Take your problem solving skills to the next level by joining the mentoring scheme.", [{tag: "Find out more", url: "/pages/isaac_mentor"}])(context);
 };
 
+const ExperimentsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
+    return ArbitraryPageLinkCard("Experiments", "Develop experimental skills with interesting experiments.", [{tag: "Explore experiments", url: "/books/step_into_phys/exp_falling"}])(context);
+};
+
 const MathsRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => {
     return ArbitraryPageLinkCard("Revision", "Revise with our tailored revision decks on core pure, further pure, and mechanics.", [{tag: "List of revision decks", url: "/pages/revision_maths_alevel"}])(context);
 };
@@ -123,7 +127,7 @@ const MathsUniCard = (context: NonNullable<Required<PageContextState>>): ListVie
 
 const subjectSpecificCardsMap: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: (LandingPageCard | null)[]}} = {
     "physics": {
-        "11_14": [StepUpPhyCard, AnvilAppsCoreCard, null],
+        "11_14": [QuestionFinderCard, ConceptPageCard, AnvilAppsCoreCard],
         "gcse": [BoardsByTopicCard, LessonsAndRevisionCard, CoreSkillsCard],
         "a_level": [BoardsByTopicCard, LessonsAndRevisionCard, MentoringSchemeCard],
         "university": [BoardsByTopicCard, MathsUniCard, null],
@@ -177,7 +181,7 @@ export const getLandingPageCardsForContext = (context: PageContextState, stacked
 
     const baseCards: LandingPageCard[] =
         context.stage.includes("11_14") && context.subject === "physics"
-            ? [StepIntoPhyCard, ConceptPageCard, QuestionFinderCard]
+            ? [StepIntoPhyCard, StepUpPhyCard, ExperimentsCard]
             : context.stage.includes("gcse") && (context.subject === "chemistry" || context.subject === "maths")
                 ? [QuestionFinderCard, ConceptPageCard]
                 : [QuestionFinderCard, ConceptPageCard, PracticeTestsCard];
