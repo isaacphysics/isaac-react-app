@@ -17,7 +17,7 @@ const CsAtWorkDescription = () => {
 
   const roleSpecificDescription = isStudent(user) ? student : teacherOrAbove;
 
-  return <p className="mb-3">{!user?.loggedIn ? loggedOutDescription : roleSpecificDescription}</p>;
+  return <span className="mb-3">{!user?.loggedIn ? loggedOutDescription : roleSpecificDescription}</span>;
 };
 
 interface CareerCardProps {
