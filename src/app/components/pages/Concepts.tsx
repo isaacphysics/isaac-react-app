@@ -3,7 +3,7 @@ import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
-import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags, useDeviceSize} from "../../services";
+import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
