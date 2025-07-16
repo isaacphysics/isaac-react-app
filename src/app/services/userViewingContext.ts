@@ -93,79 +93,61 @@ export function useUserViewingContext(): UseUserContextReturnType {
 
 export const determineUserContext = (transientUserContext: TransientUserContextState, registeredContexts: UserContext[] | undefined,
     gameboardAndPathInfo: GameboardAndPathInfo | undefined, displaySettings: DisplaySettings | undefined) => {
-    const explanation: UseUserContextReturnType["explanation"] = { stage: CONTEXT_SOURCE.DEFAULT, examBoard: CONTEXT_SOURCE.DEFAULT };
+    
     const contexts: UserContext[] = [];
+    let stage: STAGE = STAGE.ALL;
+    let examBoard: EXAM_BOARD = EXAM_BOARD_DEFAULT_OPTION;
+    const explanation: UseUserContextReturnType["explanation"] = {stage: CONTEXT_SOURCE.DEFAULT, examBoard: siteSpecific(CONTEXT_SOURCE.NOT_IMPLEMENTED, CONTEXT_SOURCE.DEFAULT)};
 
-    // Use transient context if possible
-    let stage: STAGE;
-    if (transientUserContext?.stage) {
-        stage = transientUserContext.stage;
-        explanation.stage = CONTEXT_SOURCE.TRANSIENT;
-    } else {
-        stage = STAGE.ALL;
-        explanation.stage = CONTEXT_SOURCE.DEFAULT;
-    }
-
-    let examBoard: EXAM_BOARD;
-    if (isPhy) {
-        examBoard = EXAM_BOARD.ALL;
-        explanation.examBoard = CONTEXT_SOURCE.NOT_IMPLEMENTED;
-    } else if (transientUserContext?.examBoard) {
-        examBoard = transientUserContext?.examBoard;
-        explanation.examBoard = CONTEXT_SOURCE.TRANSIENT;
-    } else {
-        examBoard = EXAM_BOARD_DEFAULT_OPTION;
-        explanation.examBoard = CONTEXT_SOURCE.DEFAULT;
-    }
-
-    // If there is no transient context, use registered context(s) if possible
-    if ((isPhy || explanation.examBoard === CONTEXT_SOURCE.DEFAULT) && explanation.stage === CONTEXT_SOURCE.DEFAULT && registeredContexts?.length) {
-        const registeredContextsWithExamBoards = isPhy ? registeredContexts.map(rc => ({stage: rc.stage, examBoard: EXAM_BOARD.ALL})) : registeredContexts;
-        contexts.push(...registeredContextsWithExamBoards);
-        explanation.stage = CONTEXT_SOURCE.REGISTERED;
-        if (isAda) {
-            explanation.examBoard = CONTEXT_SOURCE.REGISTERED;
-        }
-    }
-    else {
-        contexts.push({stage, examBoard});
-    }
-
-    // Whether stage and examboard are the default
-    const hasDefaultPreferences = isAda && contexts.length === 1 && contexts[0].stage === STAGE.ALL && contexts[0].examBoard === EXAM_BOARD.ADA;
-
-    // Gameboard views overrides all context options
     if (gameboardAndPathInfo?.questionIdFromPath && gameboardAndPathInfo?.boardIdFromQueryParams
         && gameboardAndPathInfo.boardIdFromDTO === gameboardAndPathInfo.boardIdFromQueryParams) {
+        // Gameboard context is active
         const gameboardItem = gameboardAndPathInfo.contentsFromDTO?.filter(c => c.id === gameboardAndPathInfo.questionIdFromPath)[0];
         if (gameboardItem) {
             const gameboardDeterminedViews = determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext);
-            // If user's stage selection is not one specified by the gameboard change it
             if (gameboardDeterminedViews.length > 0) {
-                if (!gameboardDeterminedViews.map(v => v.stage).includes(stage) && !STAGE_NULL_OPTIONS.includes(stage)) {
-                    explanation.stage = CONTEXT_SOURCE.GAMEBOARD;
-                    if (gameboardDeterminedViews.length === 1) {
-                        stage = gameboardDeterminedViews[0].stage as STAGE;
-                    } else {
-                        stage = STAGE.ALL;
-                    }
+                explanation.stage = CONTEXT_SOURCE.GAMEBOARD;
+                if (gameboardDeterminedViews.length === 1) {
+                    stage = gameboardDeterminedViews[0].stage as STAGE;
                 }
-                if (!gameboardDeterminedViews.map(v => v.examBoard).includes(examBoard) && !EXAM_BOARD_NULL_OPTIONS.includes(examBoard)) {
+                if (isAda) {
                     explanation.examBoard = CONTEXT_SOURCE.GAMEBOARD;
                     if (gameboardDeterminedViews.length === 1) {
                         examBoard = gameboardDeterminedViews[0].examBoard as EXAM_BOARD;
-                    } else {
-                        examBoard = EXAM_BOARD.ALL;
                     }
-                }
-                if (explanation.stage === CONTEXT_SOURCE.GAMEBOARD || explanation.examBoard === CONTEXT_SOURCE.GAMEBOARD) {
-                    contexts.length = 0;
-                    contexts.push({stage, examBoard});
                 }
             }
         }
+        contexts.push({stage, examBoard});
+    }
+    else if (transientUserContext && (transientUserContext.stage || transientUserContext.examBoard)) {
+        // Transient context is active
+        if (transientUserContext.stage) {
+            stage = transientUserContext.stage;
+            explanation.stage = CONTEXT_SOURCE.TRANSIENT;
+        }
+        if (isAda && transientUserContext.examBoard) {
+            examBoard = transientUserContext.examBoard;
+            explanation.examBoard = CONTEXT_SOURCE.TRANSIENT;
+        }
+        contexts.push({stage, examBoard});
+    } else if (registeredContexts?.length) {
+        // Registered context is active
+        explanation.stage = CONTEXT_SOURCE.REGISTERED;
+        if (isAda){
+            // Registered contexts on Ada will define both stage and exam board
+            explanation.examBoard = CONTEXT_SOURCE.REGISTERED;
+        }
+        // Registered contexts on phy don't have exam boards, so augment with ALL here
+        const registeredContextsWithExamBoards = isPhy ? registeredContexts.map(rc => ({stage: rc.stage, examBoard: EXAM_BOARD.ALL})) : registeredContexts;
+        contexts.push(...registeredContextsWithExamBoards);
+    }
+    else {
+        // Use default context
+        contexts.push({stage, examBoard});
     }
 
+    const hasDefaultPreferences = isAda && contexts.length === 1 && contexts[0].stage === STAGE.ALL && contexts[0].examBoard === EXAM_BOARD.ADA;
     const isFixedContext = !!transientUserContext?.isFixedContext;
 
     if (isFixedContext) {
