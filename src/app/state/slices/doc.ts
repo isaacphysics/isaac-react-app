@@ -15,10 +15,15 @@ export const docSlice = createSlice({
     name: 'docSlice',
     initialState: null as DocState,
     reducers: {
-        updatePage: (state, action: actionType) => ({
-            ...state,
-            doc: action.payload?.doc ?? null,
-        }),
+        updatePage: (state, action: actionType) => {
+            if (state?.doc === null) {
+                return {
+                    ...state,
+                    doc: action.payload?.doc ?? null,
+                };
+            }
+            return state;
+        },
         resetPage: (state) => ({
             ...state,
             doc: null,
