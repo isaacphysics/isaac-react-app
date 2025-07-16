@@ -119,8 +119,7 @@ export const determineUserContext = (transientUserContext: TransientUserContextS
             }
         }
         contexts.push({stage, examBoard});
-    }
-    else if (transientUserContext && (transientUserContext.stage || transientUserContext.examBoard)) {
+    } else if (transientUserContext && (transientUserContext.stage || transientUserContext.examBoard)) {
         // Transient context is active
         if (transientUserContext.stage) {
             stage = transientUserContext.stage;
@@ -141,8 +140,7 @@ export const determineUserContext = (transientUserContext: TransientUserContextS
         // Registered contexts on phy don't have exam boards, so augment with ALL here
         const registeredContextsWithExamBoards = isPhy ? registeredContexts.map(rc => ({stage: rc.stage, examBoard: EXAM_BOARD.ALL})) : registeredContexts;
         contexts.push(...registeredContextsWithExamBoards);
-    }
-    else {
+    } else {
         // Use default context
         contexts.push({stage, examBoard});
     }
