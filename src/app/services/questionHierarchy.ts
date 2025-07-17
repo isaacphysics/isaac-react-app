@@ -22,9 +22,8 @@ export function processTagHierarchy(tags: AbstractBaseTagService, subjects: stri
         else {
             const parents = selectionItems[index-1] ? Object.values(selectionItems[index-1]).flat() : [];
             const validChildren = parents.map(p => tags.getChildren(p.value).filter(c => tier.includes(c.id)).map(itemiseTag));
-            console.log("golly", pageContext?.subject, index, tier, validChildren);
             if (pageContext?.subject === "maths" && index === 1 && tier.includes(TAG_ID.mechanics)) {
-                // Add "Mechanics" as topic
+                // Add "Mechanics" as a topic only on the Maths QF
                 validChildren[0].push(itemiseTag(tags.getById(TAG_ID.mechanics)));
             }
 

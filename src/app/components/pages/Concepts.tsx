@@ -49,7 +49,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     }, [searchParsed]);
 
     const applicableTags = pageContext?.subject
-        ? tags.getDirectDescendents(subjectToTagMap[pageContext.subject])
+        ? tags.getChildren(subjectToTagMap[pageContext.subject])
         : [...tags.allSubjectTags, ...tags.allFieldTags];
 
     const [searchText, setSearchText] = useState(query);

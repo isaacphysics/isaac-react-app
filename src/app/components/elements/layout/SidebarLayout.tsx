@@ -347,7 +347,7 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
 
     const handleCheckboxChange = (checked: boolean) => {
         // Reselect parent if all children are deselected
-        const siblingTags = tag.type === TAG_LEVEL.field && tag.parent ? tags.getDirectDescendents(tag.parent).filter(t => t !== tag) : [];
+        const siblingTags = tag.type === TAG_LEVEL.field && tag.parent ? tags.getChildren(tag.parent).filter(t => t !== tag) : [];
         const reselectParent = tag.parent && siblingTags.every(t => !conceptFilters.includes(t));
 
         const newConceptFilters = checked 
@@ -498,7 +498,7 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
                 <ul>
                     {Object.keys(PHY_NAV_SUBJECTS).map((subject, i) => {
                         const subjectTag = tags.getById(subject as TAG_ID);
-                        const descendentTags = tags.getDirectDescendents(subjectTag.id);
+                        const descendentTags = tags.getChildren(subjectTag.id);
                         const isSelected = conceptFilters.includes(subjectTag) || descendentTags.some(tag => conceptFilters.includes(tag));
                         const isPartial = descendentTags.some(tag => conceptFilters.includes(tag)) && descendentTags.some(tag => !conceptFilters.includes(tag));
                         return <li key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
@@ -586,7 +586,7 @@ interface PracticeQuizzesSidebarProps extends ContentSidebarProps {
 export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
     const { filterText, setFilterText, filterTags, setFilterTags, tagCounts, filterStages, setFilterStages, stageCounts, ...rest } = props;
     const pageContext = useAppSelector(selectors.pageContext.context);
-    const fields = pageContext?.subject ? tags.getDirectDescendents(pageContext.subject as TAG_ID) : [];
+    const fields = pageContext?.subject ? tags.getChildren(pageContext.subject as TAG_ID) : [];
 
     const updateFilterTags = (tag: Tag) => {
         if (filterTags?.includes(tag)) {
@@ -623,7 +623,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                 <ul>
                     {Object.keys(PHY_NAV_SUBJECTS).filter(s => tagCounts[s] > 0).map((subject, i) => {
                         const subjectTag = tags.getById(subject as TAG_ID);
-                        const descendentTags = tags.getDirectDescendents(subjectTag.id);
+                        const descendentTags = tags.getChildren(subjectTag.id);
                         const isSelected = filterTags?.includes(subjectTag) || descendentTags.some(tag => filterTags?.includes(tag));
                         const isPartial = descendentTags.some(tag => filterTags?.includes(tag)) && descendentTags.some(tag => !filterTags?.includes(tag));
                         return <li key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>

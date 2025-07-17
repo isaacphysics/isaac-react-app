@@ -217,7 +217,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             }
 
             const tagss = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
-            console.log("hierarchySelections", hierarchySelections, "tags", tagss, pageContext?.subject);
             if (pageContext?.subject === "maths" && hierarchySelections.length > 1) {
                 if (hierarchySelections[1]["maths"]?.length === 0) {
                     tagss.push(TAG_ID.mechanics);
@@ -228,7 +227,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     }
                 }
             }
-            console.log("hierarchySelections2", hierarchySelections, "tags", tagss);
 
             setIsCurrentSearchEmpty(false);
 
