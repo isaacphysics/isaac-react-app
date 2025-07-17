@@ -35,7 +35,6 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.functions, title: "Functions", parent: TAG_ID.maths},
         {id: TAG_ID.calculus, title: "Calculus", parent: TAG_ID.maths},
         {id: TAG_ID.statistics, title: "Statistics", parent: TAG_ID.maths},
-        // {id: TAG_ID.mechanics, title: "Mechanics", parent: TAG_ID.maths},
         // Biology Fields
         {id: TAG_ID.cellBiology, title: "Cell Biology", parent: TAG_ID.biology},
         {id: TAG_ID.biochemistry, title: `Bio${softHyphen}chemistry`, parent: TAG_ID.biology},
