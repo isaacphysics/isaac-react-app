@@ -31,7 +31,6 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
     const user = useAppSelector(selectors.user.orNull);
     const pageContext = useUrlPageTheme();
-    const deviceSize = useDeviceSize();
 
     const searchParsed = queryString.parse(location.search, {arrayFormat: "comma"});
 
@@ -52,6 +51,11 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         ? tags.getChildren(subjectToTagMap[pageContext.subject])
         : [...tags.allSubjectTags, ...tags.allFieldTags];
 
+    if (pageContext?.subject === "maths") {
+        // Add "Mechanics" as a topic only on the Maths concept finder
+        applicableTags.push(tags.getById(TAG_ID.mechanics)); // should have 36
+    }
+
     const [searchText, setSearchText] = useState(query);
     const [conceptFilters, setConceptFilters] = useState<Tag[]>(
         applicableTags.filter(f => filters.includes(f.id))
@@ -59,8 +63,15 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const [searchStages, setSearchStages] = useState<Stage[]>(getFilteredStageOptions().filter(s => stages.includes(s.value)).map(s => s.value));
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
+    const tagIds = useMemo(() => pageContext?.subject 
+        ? pageContext.subject === "maths" 
+            ? "maths,mechanics"
+            : pageContext.subject 
+        : tags.allSubjectTags.map(t => t.id).join(","), [pageContext]
+    );
+
     const listConceptsQuery = useListConceptsQuery(pageContext 
-        ? {conceptIds: undefined, tagIds: pageContext?.subject ?? tags.allSubjectTags.map(t => t.id).join(",")}
+        ? {conceptIds: undefined, tagIds: tagIds}
         : skipToken
     );
 
@@ -68,7 +79,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         const searchResults = concepts?.filter(c =>
             (matchesAllWordsInAnyOrder(c.title, searchText || "") || matchesAllWordsInAnyOrder(c.summary, searchText || ""))
         );
-        
+
         const filteredSearchResults = searchResults
             ?.filter((result) => excludeTopicFiltering || !filters.length || result?.tags?.some(t => filters.includes(t)))
             .filter((result) => excludeStageFiltering || !searchStages.length || searchStages.some(s => result.audience?.some(a => a.stage?.includes(s))))

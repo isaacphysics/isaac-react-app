@@ -346,14 +346,10 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
     }, [conceptFilters, tag]);
 
     const handleCheckboxChange = (checked: boolean) => {
-        // Reselect parent if all children are deselected
-        const siblingTags = tag.type === TAG_LEVEL.field && tag.parent ? tags.getChildren(tag.parent).filter(t => t !== tag) : [];
-        const reselectParent = tag.parent && siblingTags.every(t => !conceptFilters.includes(t));
-
         const newConceptFilters = checked 
             ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), ...(!partiallySelected ? [tag] : [])] 
-            : [...conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c)), ...(reselectParent ? [tags.getById(tag.parent!)] : [])];
-        setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : (baseTag ? [baseTag] : []));
+            : conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c));
+        setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : []);
     };
 
     return checkboxStyle === "button" 
@@ -370,18 +366,18 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
 
 const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnabled?: boolean}) => {
     const { conceptFilters, setConceptFilters, tagCounts, baseTag, forceEnabled, ...rest } = props;
-    const [previousFilters, setPreviousFilters] = useState<Tag[]>(baseTag ? [baseTag] : []);
+    const [previousFilters, setPreviousFilters] = useState<Tag[]>([]);
     return <StyledTabPicker {...rest} 
-        id="all" checked={forceEnabled || baseTag ? conceptFilters.length === 1 && conceptFilters[0] === baseTag : !conceptFilters.length} 
-        checkboxTitle="All" count={tagCounts && (baseTag ? tagCounts[baseTag.id] : Object.values(tagCounts).reduce((a, b) => a + b, 0))}
+        id="all" checked={forceEnabled || !conceptFilters.length} 
+        checkboxTitle="All" count={tagCounts && (baseTag ? tagCounts[baseTag.id] + (baseTag.id === "maths" ? tagCounts["mechanics"] : 0) : Object.values(tagCounts).reduce((a, b) => a + b, 0))}
         onInputChange={(e) => {
             if (forceEnabled) {
-                setConceptFilters(baseTag ? [baseTag] : []);
+                setConceptFilters([]);
                 return;
             }
             if (e.target.checked) {
                 setPreviousFilters(conceptFilters);
-                setConceptFilters(baseTag ? [baseTag] : []);
+                setConceptFilters([]);
             } else {
                 setConceptFilters(previousFilters);
             }
