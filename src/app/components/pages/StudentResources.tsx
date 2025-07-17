@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ColumnSlice } from "../elements/layout/ColumnSlice";
 import { Button, Container } from "reactstrap";
 import { TextBlock } from "../elements/layout/TextBlock";
@@ -7,9 +7,10 @@ import { selectors, useAppSelector, useGetNewsPodListQuery } from "../../state";
 import { Link } from "react-router-dom";
 import { AdaCard } from "../elements/cards/AdaCard";
 import { ImageBlock } from "../elements/layout/ImageBlock";
-import { isLoggedIn } from "../../services";
+import { isLoggedIn, SITE_TITLE } from "../../services";
 
 export const StudentResources = () => {
+    useEffect( () => {document.title = "Students — " + SITE_TITLE;}, []);
     const {data: studentPods} = useGetNewsPodListQuery({subject: "news"});
     const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
     const featuredPod = studentPods?.[0];
