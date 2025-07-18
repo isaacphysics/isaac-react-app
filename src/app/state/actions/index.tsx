@@ -3,7 +3,6 @@ import {
     ACTION_TYPE,
     api,
     API_REQUEST_FAILURE_MESSAGE,
-    DOCUMENT_TYPE,
     FIRST_LOGIN_STATE,
     history,
     isNotPartiallyLoggedIn,
@@ -15,7 +14,7 @@ import {
     TAG_ID,
     trackEvent,
     siteSpecific,
-    isAda
+    isAda,
 } from "../../services";
 import {
     Action,
@@ -36,8 +35,9 @@ import {
     GlossaryTermDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
+    RegisteredUserDTO,
     TestCaseDTO,
-    UserContext
+    UserContext, UserRole
 } from "../../../IsaacApiTypes";
 import {AxiosError} from "axios";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
@@ -157,7 +157,7 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
         await dispatch(requestCurrentUser() as any);
-        history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
+        continueToAfterAuthPath(result.data);
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showAxiosErrorToastIfNeeded("Error with verification code.", e));
@@ -291,7 +291,7 @@ export const updateCurrentUser = (
             if (isFirstLogin) {
                 persistence.session.remove(KEY.FIRST_LOGIN);
                 if (redirect) {
-                    history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
+                    continueToAfterAuthPath({loggedIn: true, ...currentUser});
                 }
             } else if (!editingOtherUser) {
                 dispatch(showToast({
@@ -411,7 +411,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
         dispatch(requestCurrentUser() as any);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
+        continueToAfterAuthPath(result.data);
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -739,6 +739,17 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
 
 export const changePage = (path: string) => {
     history.push(path);
+};
+
+export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => {
+    let target = "/";
+    const pathOverride = persistence.pop(KEY.AFTER_AUTH_PATH);
+    if (pathOverride) {
+        target = pathOverride;
+    } else if (user && isTeacherOrAbove(user) && isAda) {
+        target = "/dashboard";
+    }
+    history.push(target);
 };
 
 // Hard redirect (refreshes page)

@@ -30,7 +30,7 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
     useSectionViewLogging(attempt, pageNumber);
 
-    const assignedQuizError = error?.toString().includes("You are currently set this test");
+    const assignedQuizError = error?.toString().includes("This test has been assigned to you by a teacher");
 
     const pageLink = useCallback((page?: number) =>
         `/test/attempt/${quizId}` + (isDefined(page) ? `/page/${page}` : "")
