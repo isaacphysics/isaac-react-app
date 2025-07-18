@@ -942,9 +942,9 @@ export enum TAG_LEVEL {
     topic = "topic",
 }
 
-// SUBJECT_SPECIFIC_CHILDREN_MAP is used to define tags which should be treated as children of a subject only in that subject-specific context
+// A mapping used to define tags which should be treated as children of a subject, but only in that subject-specific context
 export const SUBJECT_SPECIFIC_CHILDREN_MAP: Partial<Record<SUBJECTS, TAG_ID[]>> = {
-    [SUBJECTS.MATHS]: [TAG_ID.mechanics]
+    [SUBJECTS.MATHS]: [TAG_ID.mechanics],
 };
 
 export enum DOCUMENT_TYPE {

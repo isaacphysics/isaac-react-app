@@ -342,6 +342,7 @@ interface FilterCheckboxProps extends React.HTMLAttributes<HTMLElement> {
 const FilterCheckbox = (props : FilterCheckboxProps) => {
     const {tag, conceptFilters, setConceptFilters, tagCounts, checkboxStyle, incompatibleTags, dependentTags, baseTag, partial, partiallySelected, ...rest} = props;
     const [checked, setChecked] = useState(conceptFilters.includes(tag));
+    const pageContext = useAppSelector(selectors.pageContext.context);
 
     useEffect(() => {
         setChecked(conceptFilters.includes(tag));
@@ -354,16 +355,24 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
         setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : []);
     };
 
-    return checkboxStyle === "button" 
-        ? <StyledCheckbox {...rest} id={tag.id} checked={checked}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
-            label={<span>{tag.title} {tagCounts && isDefined(tagCounts[tag.id]) && <span className="text-muted">({tagCounts[tag.id]})</span>}</span>}
-            partial={partial}
-        />
-        : <StyledTabPicker {...rest} id={tag.id} checked={checked} 
-            onInputChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
-            checkboxTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
-        />;
+    return <>
+        {pageContext?.subject && SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject]?.includes(tag.id) && <div>
+            <p className="text-muted small mb-0 mt-1">
+                {tag.parent?.toUpperCase()}
+            </p>
+        </div>}
+        {checkboxStyle === "button" 
+            ? <StyledCheckbox {...rest} id={tag.id} checked={checked}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
+                label={<span>{tag.title} {tagCounts && isDefined(tagCounts[tag.id]) && <span className="text-muted">({tagCounts[tag.id]})</span>}</span>}
+                partial={partial}
+            />
+            : <StyledTabPicker {...rest} id={tag.id} checked={checked} 
+                onInputChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
+                checkboxTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
+            />
+        }
+    </>;
 };
 
 const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnabled?: boolean}) => {
