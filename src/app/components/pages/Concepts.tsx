@@ -3,7 +3,7 @@ import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
-import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
+import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, tags} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -46,13 +46,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     }, [searchParsed]);
 
     const applicableTags = pageContext?.subject
-        ? tags.getChildren(subjectToTagMap[pageContext.subject])
+        ? [...tags.getChildren(subjectToTagMap[pageContext.subject]), ...((SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject]?.map(tag => tags.getById(tag))) || [])]
         : [...tags.allSubjectTags, ...tags.allFieldTags];
-
-    if (pageContext?.subject === "maths") {
-        // Add "Mechanics" as a topic only on the Maths concept finder
-        applicableTags.push(tags.getById(TAG_ID.mechanics)); // should have 36
-    }
 
     const [searchText, setSearchText] = useState(query);
     const [conceptFilters, setConceptFilters] = useState<Tag[]>(
@@ -61,11 +56,9 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const [searchStages, setSearchStages] = useState<Stage[]>(getFilteredStageOptions().filter(s => stages.includes(s.value)).map(s => s.value));
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
-    const tagIds = useMemo(() => pageContext?.subject 
-        ? pageContext.subject === "maths" 
-            ? "maths,mechanics"
-            : pageContext.subject 
-        : tags.allSubjectTags.map(t => t.id).join(","), [pageContext]
+    const tagIds = useMemo(() => (pageContext?.subject 
+        ? [pageContext?.subject, ...(SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject] ?? [])]
+        : tags.allSubjectTags.map(t => t.id)).join(","), [pageContext]
     );
 
     const listConceptsQuery = useListConceptsQuery(pageContext 

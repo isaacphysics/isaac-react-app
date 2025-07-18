@@ -7,7 +7,8 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
     stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS, getSearchPlaceholder,
-    sortByStringValue} from "../../../services";
+    sortByStringValue,
+    SUBJECT_SPECIFIC_CHILDREN_MAP} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -368,9 +369,19 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
 const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnabled?: boolean}) => {
     const { conceptFilters, setConceptFilters, tagCounts, baseTag, forceEnabled, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<Tag[]>([]);
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
     return <StyledTabPicker {...rest} 
         id="all" checked={forceEnabled || !conceptFilters.length} 
-        checkboxTitle="All" count={tagCounts && (baseTag ? tagCounts[baseTag.id] + (baseTag.id === "maths" ? tagCounts["mechanics"] : 0) : Object.values(tagCounts).reduce((a, b) => a + b, 0))}
+        checkboxTitle="All" 
+        count={tagCounts && 
+            (baseTag 
+                ? tagCounts[baseTag.id] + (pageContext?.subject 
+                    ? SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject]?.reduce((partialSum, tag) => partialSum + tagCounts[tag], 0) ?? 0 
+                    : 0) 
+                : Object.values(tagCounts).reduce((a, b) => a + b, 0)
+            )
+        }
         onInputChange={(e) => {
             if (forceEnabled) {
                 setConceptFilters([]);
