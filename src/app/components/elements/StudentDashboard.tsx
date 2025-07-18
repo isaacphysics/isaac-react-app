@@ -112,7 +112,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
     return <Link to={link} className="w-100">
         <Card className="assignment-card px-3 d-flex flex-column h-100">
             <h5 className="d-inline">
-                <i className={`${icon} me-2`}/>
+                <i className={`${icon} icon-inline me-2`}/>
                 {title}
             </h5>
             <Spacer/>

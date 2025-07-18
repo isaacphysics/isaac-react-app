@@ -242,14 +242,6 @@ a:has(.assignment-card) {
     line-clamp: 4;
     -webkit-box-orient: vertical;
     
-    i.icon {
-      vertical-align: middle;
-      margin-top: -2px;
-    }
-  }
-
-  > div > i.icon:first-child {
-    margin-top: 2px;
   }
 
   .overdue {
