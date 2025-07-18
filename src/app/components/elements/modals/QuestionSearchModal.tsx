@@ -32,7 +32,8 @@ import {
     ISAAC_BOOKS,
     TAG_LEVEL,
     below,
-    useDeviceSize
+    useDeviceSize,
+    EXAM_BOARD
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -78,8 +79,9 @@ export const QuestionSearchModal = (
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>([]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>([]);
     useEffect(function populateExamBoardFromUserContext() {
-        if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
-    }, [userContext.examBoard]);
+        const userExamBoard = userContext.contexts[0].examBoard as EXAM_BOARD;
+        if (userContext.contexts.length === 1 && !EXAM_BOARD_NULL_OPTIONS.includes(userExamBoard)) setSearchExamBoards([userExamBoard]);
+    }, [userContext.contexts[0].examBoard]);
 
     const [isSearching, setIsSearching] = useState(false);
     const [searchBook, setSearchBook] = useState<string[]>([]);
