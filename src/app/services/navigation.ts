@@ -28,7 +28,6 @@ import {AssignmentDTO, AudienceContext, ContentDTO, GameboardDTO, IsaacTopicSumm
 import {NOT_FOUND_TYPE, PageContextState} from "../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {useLocation} from "react-router-dom";
-import {useGetTopicQuery} from "../state";
 
 export interface LinkInfo {title: string; to?: string; replace?: boolean}
 export type CollectionType = "Question deck" | "Quiz" | "Topic" | "Master Mathematics";
@@ -48,9 +47,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
     const {data: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
-
-    const isNotConceptPage = isDefined(doc) && doc !== NOT_FOUND && doc?.type !== DOCUMENT_TYPE.CONCEPT;
-    const {data: currentTopic} = useGetTopicQuery(isNotConceptPage && topic ? topic : skipToken);
+    const currentTopic = useAppSelector(selectors.topic.currentTopic) ?? undefined;
 
     const user = useAppSelector(selectors.user.orNull);
     const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
