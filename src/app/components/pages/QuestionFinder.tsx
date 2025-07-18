@@ -27,10 +27,10 @@ import {
     STAGE,
     STAGE_NULL_OPTIONS,
     stageLabelMap,
+    SUBJECT_SPECIFIC_CHILDREN_MAP,
     TAG_ID,
     tags,
     toSimpleCSV,
-    useDeviceSize,
     useQueryParams,
     useUrlPageTheme,
 } from "../../services";
@@ -216,16 +216,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 return;
             }
 
-            const tagss = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
-            if (pageContext?.subject === "maths" && hierarchySelections.length > 1) {
-                if (hierarchySelections[1]["maths"]?.length === 0) {
-                    tagss.push(TAG_ID.mechanics);
-                } else if (hierarchySelections[1]["maths"]?.some((tag: { value: TAG_ID; }) => tag.value === TAG_ID.mechanics)) {
-                    const index = tagss.indexOf(TAG_ID.maths);
-                    if (index > -1) {
-                        tagss.splice(index, 1);
+            const choiceTreeLeaves = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
+            if (hierarchySelections.length > 1 && pageContext?.subject) {
+                SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject]?.forEach(tag => {
+                    if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.length === 0) {
+                        choiceTreeLeaves.push(tag);
+                    } else if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.some((t: {value: TAG_ID}) => t.value === tag)) {
+                        const index = choiceTreeLeaves.indexOf(pageContext?.subject as TAG_ID);
+                        if (index > -1) {
+                            choiceTreeLeaves.splice(index, 1);
+                        }
                     }
-                }
+                });
             }
 
             setIsCurrentSearchEmpty(false);
@@ -233,7 +235,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             dispatch(searchQuestions({
                 querySource: "questionFinder",
                 searchString: searchString || undefined,
-                tags: tagss.join(",") || undefined,
+                tags: choiceTreeLeaves.join(",") || undefined,
                 topics: siteSpecific(undefined, [...topics].filter((query) => query != "").join(",") || undefined),
                 books: (!excludeBooks && book.join(",")) || undefined,
                 stages: stages.join(",") || undefined,

@@ -1,6 +1,6 @@
 import { PageContextState } from "../../IsaacAppTypes";
 import { ChoiceTree } from "../components/elements/panels/QuestionFinderFilterPanel";
-import { TAG_ID, TAG_LEVEL } from "./constants";
+import { SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, TAG_LEVEL } from "./constants";
 import { AbstractBaseTagService } from "./tagsAbstract";
 import { itemiseTag } from "./filter";
 
@@ -22,9 +22,13 @@ export function processTagHierarchy(tags: AbstractBaseTagService, subjects: stri
         else {
             const parents = selectionItems[index-1] ? Object.values(selectionItems[index-1]).flat() : [];
             const validChildren = parents.map(p => tags.getChildren(p.value).filter(c => tier.includes(c.id)).map(itemiseTag));
-            if (pageContext?.subject === "maths" && index === 1 && tier.includes(TAG_ID.mechanics)) {
-                // Add "Mechanics" as a topic only on the Maths QF
-                validChildren[0].push(itemiseTag(tags.getById(TAG_ID.mechanics)));
+           
+            if (index === 1 && pageContext?.subject) {
+                SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject]?.forEach(tag => {
+                    if (tier.includes(tag)) {
+                        validChildren[0].push(itemiseTag(tags.getById(tag)));
+                    }
+                });
             }
 
             const currentLayer: ChoiceTree = {};

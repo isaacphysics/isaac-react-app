@@ -4,7 +4,7 @@ import { isPhy } from "./siteConstants";
 import { ChoiceTree } from "../components/elements/panels/QuestionFinderFilterPanel";
 import { itemiseTag } from "./filter";
 import { tags } from "./tags";
-import { TAG_ID, TAG_LEVEL } from "./constants";
+import { SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, TAG_LEVEL } from "./constants";
 import { PageContextState } from "../../IsaacAppTypes";
 
 export const sublistDelimiter = " >>> ";
@@ -97,8 +97,10 @@ export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_
             }
         }
     }
-    if (pageContext?.subject === "maths" && choices.length > 1) {
-        choices[1]["maths"]?.push(itemiseTag(tags.getById(TAG_ID.mechanics)));
+    if (choices.length > 1 && pageContext?.subject) {
+        SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject]?.forEach(tag => 
+            pageContext.subject ? choices[1][pageContext?.subject]?.push(itemiseTag(tags.getById(tag))) : null
+        );
     }
     return choices;
 };
