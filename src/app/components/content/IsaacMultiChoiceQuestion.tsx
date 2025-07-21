@@ -18,13 +18,12 @@ const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
         </div>
         <ul>{doc?.choices?.map((choice, index) =>
             <li key={choice.value} className="list-unstyled">
-                <Label className="label-radio multichoice-option d-flex align-items-center">
+                <Label className="label-radio multichoice-option d-flex">
                     <Input
                         id={`${questionId}${index}`} color="secondary" type="radio"
                         checked={currentAttempt?.value === choice.value}
                         onChange={() => dispatchSetCurrentAttempt(choice)}
                         disabled={readonly}
-                        className={classNames({"mt-1": isAda})}
                     />
                     <div className="flex-fill overflow-x-auto">
                         <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />

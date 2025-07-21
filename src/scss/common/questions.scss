@@ -71,10 +71,15 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
 }
 
 .multichoice-question {
-  ul > li .multichoice-option div:nth-child(2) .content-value > div > p {
-    margin: 0;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+  ul > li .multichoice-option {
+    div:nth-child(2) .content-value > div > p {
+      margin: 0;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    input {
+      margin-top: 0.6rem;
+    }
   }
 }
 

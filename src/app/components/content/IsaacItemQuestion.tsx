@@ -37,7 +37,7 @@ const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaac
 
             <ul>{doc.items && doc.items.map((item) =>
                 <li key={item.value} className="list-unstyled">
-                    <Label className="label-radio multichoice-option d-flex align-items-center">
+                    <Label className="label-radio multichoice-option d-flex">
                         <Input
                             id={`${questionId}|${item.id}`}
                             color="secondary"
