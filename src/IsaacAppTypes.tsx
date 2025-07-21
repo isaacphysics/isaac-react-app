@@ -470,7 +470,7 @@ export const AssignmentScheduleContext = React.createContext<{
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
     completed?: boolean;
-    tickCount: number;
+    correctQuestionPagesCount: number;
     correctQuestionPartsCount: number;
     incorrectQuestionPartsCount: number;
     notAttemptedPartResults: number[];

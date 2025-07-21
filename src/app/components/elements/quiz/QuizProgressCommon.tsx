@@ -127,7 +127,7 @@ export function ResultsTable<Q extends QuestionType>({
             case "totalQuestionPartPercentage":
                 return -item.correctQuestionPartsCount;
             case "totalQuestionPercentage":
-                return -item.tickCount;
+                return -item.correctQuestionPagesCount;
             default:
                 return -(item.correctPartResults || [])[sortOrder];
         }
@@ -269,12 +269,12 @@ export function ResultsTable<Q extends QuestionType>({
                                         {isAssignment ? (fullAccess ? formatMark((studentProgress.correctPartResults || [])[index],
                                             questions[index].questionPartsTotal as number,
                                             pageSettings.formatAsPercentage) : ""
-                                        ) : 
+                                        ) :
                                             (studentProgress.correctPartResults || [])[index] === 1 ? ICON.correct :
                                                 (studentProgress.incorrectPartResults || [])[index] === 1 ? ICON.incorrect :
                                                 /* default */ ICON.notAttempted
                                         }
-                                    </td> 
+                                    </td>
                                 )}
                                 {isAssignment ? <>
                                     <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
@@ -283,11 +283,11 @@ export function ResultsTable<Q extends QuestionType>({
                                             pageSettings.formatAsPercentage) : ""}
                                     </th>
                                     <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark(studentProgress.tickCount,
+                                        {fullAccess ? formatMark(studentProgress.correctQuestionPagesCount,
                                             questions.length,
                                             pageSettings.formatAsPercentage) : ""}
                                     </th>
-                                </> : 
+                                </> :
                                     <th className="total-column" title={fullAccess ? undefined : "Not Sharing"}>
                                         {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
