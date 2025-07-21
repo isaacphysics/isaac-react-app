@@ -3,6 +3,7 @@ import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO, SOME_FIXED_FUTURE_DATE} from "../test/dateUtils";
 import {
     BookingStatus,
+    CompletionState,
     DetailedQuizSummaryDTO,
     EmailVerificationStatus,
     EventStatus,
@@ -4529,7 +4530,7 @@ export const mockQuestionFinderResults = {
                 "mechanics"
             ],
             "url": "/api/pages/questions/itsp24_calcspeed_class_q3",
-            "state": "FAILED",
+            "state": CompletionState.ALL_INCORRECT,
             "audience": [
                 {
                     "stage": [

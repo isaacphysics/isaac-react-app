@@ -31,8 +31,8 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     AssignmentProgressDTO,
+    CompletionState,
     GameboardItem,
-    GameboardItemState,
     QuizAssignmentDTO,
     RegisteredUserDTO
 } from "../../../IsaacApiTypes";
@@ -88,8 +88,8 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
             notAttemptedPartResults: []
         };
 
-        const ret = (p.results || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
-            const tickCount = ["PASSED", "PERFECT"].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
+        const ret = (p.questionResults || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
+            const tickCount = [CompletionState.ALL_CORRECT].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
             const questions = assignment.gameboard.contents;
             return {
                 ...oldP,
@@ -121,21 +121,21 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         } else {
             // for each column, calculate the percentage of students who got all parts of the question correct
             return questions?.reduce(([aAvg, aTQP], q, i) => {
-                const tickCount = progress.reduce((tc, p) => ((p.results || [])[i] === "PERFECT") ? tc + 1 : tc, 0);
+                const tickCount = progress.reduce((tc, p) => ((p.questionResults || [])[i] === CompletionState.ALL_CORRECT) ? tc + 1 : tc, 0);
                 const tickPercent = Math.round(100 * (tickCount / progress.length));
                 return [[...aAvg, tickPercent], aTQP + (q.questionPartsTotal ?? 0)];
             }, [[] as number[], 0]) ?? [[], 0];
         }
     }, [questions, progress]);
 
-    function markClassesInternal(studentProgress: AssignmentProgressDTO, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
+    function markClassesInternal(studentProgress: AssignmentProgressDTO, status: CompletionState | null, correctParts: number, incorrectParts: number, totalParts: number) {
         if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
         } else if (correctParts === totalParts) {
             return "completed";
-        } else if (status === "PASSED" || (correctParts / totalParts) >= passMark) {
+        } else if ((correctParts / totalParts) >= passMark) {
             return "passed";
-        } else if (status === "FAILED" || (incorrectParts / totalParts) > (1 - passMark)) {
+        } else if (status === CompletionState.ALL_INCORRECT || (incorrectParts / totalParts) > (1 - passMark)) {
             return "failed";
         } else if (correctParts > 0 || incorrectParts > 0) {
             return "in-progress";
@@ -167,7 +167,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         const totalParts = question.questionPartsTotal;
         const correctParts = (studentProgress.correctPartResults || [])[index];
         const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
-        const status = (studentProgress.results || [])[index];
+        const status = (studentProgress.questionResults || [])[index];
 
         return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }

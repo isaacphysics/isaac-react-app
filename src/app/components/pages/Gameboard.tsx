@@ -9,7 +9,7 @@ import {
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
 import {Button, Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap";
-import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
+import {CompletionState, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     AUDIENCE_DISPLAY_FIELDS,
@@ -46,19 +46,19 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     const messageClasses = "";
 
     switch (question.state) {
-        case "PERFECT":
+        case CompletionState.ALL_CORRECT:
             if (isPhy) {
                 itemClasses += " bg-success";
             }
             message = siteSpecific("perfect!", "Correct");
             iconHref = siteSpecific("/assets/phy/icons/tick-rp-hex.svg#icon", "/assets/cs/icons/question-correct.svg");
             break;
-        case "PASSED":
-        case "IN_PROGRESS":
+        case CompletionState.IN_PROGRESS:
             message = siteSpecific("in progress", "In progress");
             iconHref = siteSpecific("/assets/phy/icons/incomplete-hex.svg#icon", "/assets/cs/icons/question-in-progress.svg");
             break;
-        case "FAILED":
+        case CompletionState.ALL_ATTEMPTED:
+        case CompletionState.ALL_INCORRECT:
             message = siteSpecific("try again!", "Try again");
             iconHref = siteSpecific("/assets/phy/icons/cross-rp-hex.svg#icon", "/assets/cs/icons/question-incorrect.svg");
             break;
