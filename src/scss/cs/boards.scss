@@ -48,7 +48,7 @@
   position: relative;
   align-content: center;
   @include media-breakpoint-up(sm) {
-    min-width: 86px !important;
+    min-width: 90px !important;
   }
 
   .inner-progress-icon {

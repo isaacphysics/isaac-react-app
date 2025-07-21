@@ -115,3 +115,11 @@ a.skip-main:focus, a.skip-main:active {
   font-size: 1rem;
   z-index:999;
 }
+
+ul.plain-list {
+  list-style: none;
+  padding-left: 0;
+  > li {
+    border: none !important;
+  }
+}

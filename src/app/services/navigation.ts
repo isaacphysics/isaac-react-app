@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
+import React from "react";
 import queryString from "query-string";
-import {selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery} from "../state";
+import {selectors, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery} from "../state";
 import {
     determineCurrentCreationContext,
     determineGameboardHistory,
@@ -14,7 +14,6 @@ import {
     GENERIC_QUESTION_CRUMB,
     HUMAN_STAGES,
     HUMAN_SUBJECTS,
-    isAda,
     isDefined,
     isFullyDefinedContext,
     isFound,
@@ -23,14 +22,12 @@ import {
     isSingleStageContext,
     makeAttemptAtTopicHistory,
     NOT_FOUND, PATHS, siteSpecific,
-    TAG_ID,
     useQueryParams,
 } from "./";
 import {AssignmentDTO, AudienceContext, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE, PageContextState} from "../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {useLocation} from "react-router-dom";
-import {useGetTopicQuery} from "../state";
 
 export interface LinkInfo {title: string; to?: string; replace?: boolean}
 export type CollectionType = "Question deck" | "Quiz" | "Topic" | "Master Mathematics";
@@ -49,9 +46,8 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const {search} = useLocation();
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
-    const dispatch = useAppDispatch();
     const {data: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
-    const {data: currentTopic} = useGetTopicQuery(topic || skipToken);
+    const currentTopic = useAppSelector(selectors.topic.currentTopic) ?? undefined;
 
     const user = useAppSelector(selectors.user.orNull);
     const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;

@@ -609,6 +609,7 @@ export const BOOK_DETAIL_ID_SEPARATOR = "__";
 export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNING_STAGE, string>>>> = { 
     "physics": {
         [LEARNING_STAGE["11_TO_14"]]: "app_page_overview_ks3_phys",
+        [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_phys_fragment",
     },
     "maths": {
         // [LEARNING_STAGE["11_TO_14"]]: "app_page_overview_ks3_maths_fragment",

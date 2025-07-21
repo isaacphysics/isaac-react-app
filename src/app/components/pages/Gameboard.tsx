@@ -89,7 +89,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     const userViewingContext = useUserViewingContext();
     const deviceSize = useDeviceSize();
     const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
-    const uniqueStage = questionViewingContexts.find(context => context.stage === userViewingContext.stage);
+    const uniqueStage = questionViewingContexts.find(context => userViewingContext.contexts.map(c => c.stage).includes(context.stage));
     return <ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "justify-content-center": isAda})}>
             <span className={"question-progress-icon"}>
