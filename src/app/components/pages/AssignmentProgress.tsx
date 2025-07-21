@@ -82,18 +82,19 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
         const initialState = {
             ...p,
-            tickCount: 0,
+            correctQuestionsCount: 0,
             correctQuestionPartsCount: 0,
             incorrectQuestionPartsCount: 0,
             notAttemptedPartResults: []
         };
 
         const ret = (p.questionResults || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
-            const tickCount = [CompletionState.ALL_CORRECT].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
             const questions = assignment.gameboard.contents;
+            // Preserve the old "more than passMark correct = correct" logic, without PASSED existing anymore. Not nice.
+            const correctQuestionsCount = ((p.correctPartResults || [])[i] / questions[i].questionPartsTotal) >= passMark ? oldP.correctQuestionPagesCount + 1 : oldP.correctQuestionPagesCount;
             return {
                 ...oldP,
-                tickCount,
+                correctQuestionPagesCount: correctQuestionsCount,
                 correctQuestionPartsCount: oldP.correctQuestionPartsCount + (p.correctPartResults || [])[i],
                 incorrectQuestionPartsCount: oldP.incorrectQuestionPartsCount + (p.incorrectPartResults || [])[i],
                 notAttemptedPartResults: [
@@ -102,7 +103,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
                 ]
             };
         }, initialState);
-        return [ret, questions.length === ret.tickCount];
+        return [ret, questions.length === ret.correctQuestionPagesCount];
     }), [assignment.gameboard.contents, assignment.progress, questions.length]);
 
     const progress = progressData.map(pd => pd[0]);

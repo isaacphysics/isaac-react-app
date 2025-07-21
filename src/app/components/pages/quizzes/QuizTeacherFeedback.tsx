@@ -134,7 +134,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     </AssignmentProgressPageSettingsContext.Provider>
                 </div>
             </>}
-        /> 
+        />
     </Container>;
 };
 
@@ -245,7 +245,7 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
             incorrectPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0),
             notAttemptedPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.notAttempted ?? 0),
             results: [],
-            tickCount: user.feedback?.questionMarks?.[0]?.correct ?? 0,
+            correctQuestionPagesCount: user.feedback?.questionMarks?.[0]?.correct ?? 0,
             correctQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? 0]?.correct ?? 0), 0),
             incorrectQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0), 0),
         };
