@@ -111,7 +111,7 @@ const CardsNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsPro
 
 export const Tabs = (props: TabsProps) => {
     const {
-        className="", tabContentClass, tabNavbarClass, children, activeTabOverride, onActiveTabChange,
+        className, tabContentClass, tabNavbarClass, children, activeTabOverride, onActiveTabChange,
         deselectable=undefined, refreshHash, expandable, style=(siteSpecific("dropdowns", "tabs")),
     } = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);

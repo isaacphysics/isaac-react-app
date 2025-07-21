@@ -148,6 +148,10 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   > .tabbed-hints {
     padding: 0 2rem;
   }
+
+  &:has(> .question-component .quick-question) {
+    background-color: initial;
+  }
 }
 
 // any such styling that should not be present in an accordion
@@ -166,7 +170,7 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
     }
   }
 
-  > .tabbed-hints {
+  > .tabbed-hints, > .question-component > .quick-question:first-child {
     padding: 0;
   }
   

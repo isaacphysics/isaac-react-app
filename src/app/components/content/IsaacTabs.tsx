@@ -2,7 +2,7 @@ import React, {ReactElement, useEffect, useState} from "react";
 import {Tabs, TabStyle} from "../elements/Tabs";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
-import {isAda, isDefined} from "../../services";
+import {isAda, isDefined, isPhy} from "../../services";
 import classNames from "classnames";
 
 interface IsaacTabsProps {
@@ -35,7 +35,7 @@ export const IsaacTabs = (props: any) => {
     }, [tabs]);
 
     const adaCardClasses = "card card-body border bg-white pb-2 mb-4";
-    return <Tabs className={classNames("isaac-tab", {[adaCardClasses]: isAda})} tabContentClass={style === "dropdowns" ? "pt-2" : "pt-4"} expandable={expandable} style={style}>
+    return <Tabs className={classNames("isaac-tab", {[adaCardClasses]: isAda})} tabContentClass={(style === "dropdowns" || (isPhy && !style)) ? "pt-2" : "pt-4"} expandable={expandable} style={style}>
         {tabTitlesToContent}
     </Tabs>;
 };
