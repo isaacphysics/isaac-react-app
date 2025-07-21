@@ -356,7 +356,7 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
     };
 
     return <>
-        {pageContext?.subject && SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject]?.includes(tag.id) && <div>
+        {pageContext?.subject && pageContext?.stage?.length === 1 && SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject][pageContext.stage[0]]?.includes(tag.id) && <div>
             <p className="text-muted small mb-0 mt-1">
                 {tag.parent?.toUpperCase()}
             </p>
@@ -385,8 +385,8 @@ const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnab
         checkboxTitle="All" 
         count={tagCounts && 
             (baseTag 
-                ? tagCounts[baseTag.id] + (pageContext?.subject 
-                    ? SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject]?.reduce((partialSum, tag) => partialSum + tagCounts[tag], 0) ?? 0 
+                ? tagCounts[baseTag.id] + (pageContext?.subject && pageContext?.stage?.length === 1
+                    ? SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext?.stage[0]]?.reduce((partialSum, tag) => partialSum + tagCounts[tag], 0) ?? 0 
                     : 0) 
                 : Object.values(tagCounts).reduce((a, b) => a + b, 0)
             )

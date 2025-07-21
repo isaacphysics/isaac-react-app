@@ -97,8 +97,8 @@ export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_
             }
         }
     }
-    if (choices.length > 1 && pageContext?.subject) {
-        SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject]?.forEach(tag => 
+    if (choices.length > 1 && pageContext?.subject && pageContext.stage?.length === 1) {
+        SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext.stage[0]]?.forEach(tag => 
             pageContext.subject ? choices[1][pageContext?.subject]?.push(itemiseTag(tags.getById(tag))) : null
         );
     }

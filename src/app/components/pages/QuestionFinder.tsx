@@ -217,8 +217,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             }
 
             const choiceTreeLeaves = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
-            if (hierarchySelections.length > 1 && pageContext?.subject) {
-                SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject]?.forEach(tag => {
+            if (hierarchySelections.length > 1 && pageContext?.subject && pageContext.stage?.length === 1) {
+                SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext.stage[0]]?.forEach(tag => {
                     if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.length === 0) {
                         choiceTreeLeaves.push(tag);
                     } else if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.some((t: {value: TAG_ID}) => t.value === tag)) {

@@ -47,7 +47,7 @@ export function HierarchyFilterTreeList({tier, index, choices, selections, quest
             };
 
             return <>
-                {tier === 1 && pageContext?.subject && SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject]?.includes(choice.value) && <div>
+                {tier === 1 && pageContext?.subject && pageContext?.stage?.length === 1 && SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject][pageContext.stage[0]]?.includes(choice.value) && <div>
                     <p className="ps-3 text-muted small mb-0">
                         {tags.getBaseTagById(choice.value).parent?.toUpperCase()}
                     </p>

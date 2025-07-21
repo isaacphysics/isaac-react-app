@@ -23,8 +23,8 @@ export function processTagHierarchy(tags: AbstractBaseTagService, subjects: stri
             const parents = selectionItems[index-1] ? Object.values(selectionItems[index-1]).flat() : [];
             const validChildren = parents.map(p => tags.getChildren(p.value).filter(c => tier.includes(c.id)).map(itemiseTag));
            
-            if (index === 1 && pageContext?.subject) {
-                SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject]?.forEach(tag => {
+            if (index === 1 && pageContext?.subject && pageContext?.stage?.length === 1) {
+                SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject][pageContext.stage[0]]?.forEach(tag => {
                     if (tier.includes(tag)) {
                         validChildren[0].push(itemiseTag(tags.getById(tag)));
                     }

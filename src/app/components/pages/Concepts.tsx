@@ -45,8 +45,11 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         return [query, filters, stages];
     }, [searchParsed]);
 
-    const applicableTags = pageContext?.subject
-        ? [...tags.getChildren(subjectToTagMap[pageContext.subject]), ...((SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject]?.map(tag => tags.getById(tag))) || [])]
+    const applicableTags = pageContext?.subject && pageContext?.stage?.length === 1
+        ? [
+            ...tags.getChildren(subjectToTagMap[pageContext.subject]), 
+            ...((SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject][pageContext.stage[0]]?.map(tag => tags.getById(tag))) || [])
+        ]
         : [...tags.allSubjectTags, ...tags.allFieldTags];
 
     const [searchText, setSearchText] = useState(query);
@@ -56,8 +59,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const [searchStages, setSearchStages] = useState<Stage[]>(getFilteredStageOptions().filter(s => stages.includes(s.value)).map(s => s.value));
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
-    const tagIds = useMemo(() => (pageContext?.subject 
-        ? [pageContext?.subject, ...(SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject] ?? [])]
+    const tagIds = useMemo(() => (pageContext?.subject && pageContext?.stage?.length === 1
+        ? [pageContext?.subject, ...(SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject][pageContext.stage[0]] ?? [])]
         : tags.allSubjectTags.map(t => t.id)).join(","), [pageContext]
     );
 
