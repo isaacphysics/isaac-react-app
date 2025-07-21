@@ -480,7 +480,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 until={!baseGameboardId || baseGameboard}
                             >
                                 <Button
-                                    className={siteSpecific("d-flex align-items-center", "plus-button")}
+                                    className={classNames("d-flex align-items-center", {"plus-button": isAda})}
                                     color="keyline"
                                     onClick={() => {
                                         logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
