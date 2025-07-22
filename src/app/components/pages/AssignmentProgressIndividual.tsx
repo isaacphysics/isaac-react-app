@@ -2,7 +2,7 @@ import React, {useContext, useMemo, useState} from "react";
 import { Link } from "react-router-dom";
 import { AssignmentProgressDTO, GameboardItem, CompletionState } from "../../../IsaacApiTypes";
 import { EnhancedAssignmentWithProgress, AssignmentProgressPageSettingsContext, AuthorisedAssignmentProgress } from "../../../IsaacAppTypes";
-import { getAssignmentCSVDownloadLink, getThemeFromTags, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
+import { getAssignmentProgressCSVDownloadLink, getThemeFromTags, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
 import { ICON, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
 import { Badge, Button, Card, CardBody } from "reactstrap";
 import { formatDate } from "../elements/DateString";
@@ -24,8 +24,8 @@ export const AssignmentProgressSettings = () => {
         <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
             <span>Table display mode</span>
             <Spacer />
-            <StyledToggle falseLabel="Fractions" trueLabel="Percentages" 
-                checked={assignmentProgressContext?.formatAsPercentage} 
+            <StyledToggle falseLabel="Fractions" trueLabel="Percentages"
+                checked={assignmentProgressContext?.formatAsPercentage}
                 onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
             />
         </div>
@@ -33,9 +33,9 @@ export const AssignmentProgressSettings = () => {
         {isPhy && <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
             <span>Colour-blind mode</span>
             <Spacer />
-            <StyledToggle falseLabel="Off" trueLabel="On" 
-                checked={assignmentProgressContext?.colourBlind} 
-                onChange={(e) => assignmentProgressContext?.setColourBlind?.(e.currentTarget.checked)} 
+            <StyledToggle falseLabel="Off" trueLabel="On"
+                checked={assignmentProgressContext?.colourBlind}
+                onChange={(e) => assignmentProgressContext?.setColourBlind?.(e.currentTarget.checked)}
             />
         </div>}
 
@@ -43,8 +43,8 @@ export const AssignmentProgressSettings = () => {
             <span>Completion display mode</span>
             <Spacer />
             <StyledToggle trueLabel="Correct" falseLabel="Attempted"
-                checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"} 
-                onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} 
+                checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"}
+                onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")}
             />
         </div>}
     </div>;
@@ -122,7 +122,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
     }
 
     const [settingsVisible, setSettingsVisible] = useState(true);
-    
+
     return <Card>
         <CardBody>
             <div className="d-flex w-100 flex-column flex-md-row align-items-start align-items-md-center">
@@ -140,11 +140,11 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                     </button>}
                 </div>
                 <Spacer/>
-                {isAda && <StyledToggle 
+                {isAda && <StyledToggle
                     trueLabel="Correct"
                     falseLabel="Attempted"
-                    checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"} 
-                    onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} 
+                    checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"}
+                    onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")}
                 />}
             </div>
 
@@ -187,7 +187,7 @@ const AdaKey = () => {
 
     return <div className="d-flex flex-column flex-md-row align-items-md-center column-gap-4 row-gap-2">
         <span className="d-inline d-lg-none d-xl-inline font-size-1 fw-bold">Key</span>
-        {context?.attemptedOrCorrect === "CORRECT" 
+        {context?.attemptedOrCorrect === "CORRECT"
             ? <>
                 <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
                     <KeyItem icon={ICON.correct} label="Correct" />
@@ -289,7 +289,7 @@ const DetailedMarksTab = ({assignment, progress}: DetailedMarksTabProps) => {
             <span>See the questions your students answered and which parts they struggled with.</span>
 
             {questions.map((_, questionIndex) => (
-                <DetailedMarksCard 
+                <DetailedMarksCard
                     key={questionIndex}
                     progress={progress}
                     questions={questions}
@@ -352,12 +352,12 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
                 Back to group assignments and tests
             </Link>}
             <Spacer/>
-            <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getAssignmentCSVDownloadLink(assignment.id))))}>
+            <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getAssignmentProgressCSVDownloadLink(assignment.id))))}>
                 Download CSV
                 <i className="icon icon-download ms-2" color="white"/>
             </Button>
         </div>
-        
+
         <Card className="my-4">
             <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
