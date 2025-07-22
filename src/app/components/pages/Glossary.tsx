@@ -23,7 +23,6 @@ import {
     isFullyDefinedContext,
     isSingleStageContext,
     getHumanContext,
-    useDeviceSize,
     useQueryParams,
     ListParams,
     LEARNING_STAGE_TO_STAGES,

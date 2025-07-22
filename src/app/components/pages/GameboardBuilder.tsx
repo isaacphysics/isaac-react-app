@@ -340,8 +340,6 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 ])}
                                 name="colors"
                                 value={gameboardTags}
-                                className="basic-multi-select"
-                                classNamePrefix="select"
                                 placeholder="None"
                                 onChange={selectOnChange(setGameboardTags, false)}
                             />
