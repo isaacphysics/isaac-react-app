@@ -66,7 +66,7 @@ const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: 
                 {isDefined(assignees) &&
                 <UncontrolledTooltip placement={"top"} target={"#" + id}>{assignees.length === 0 ?
                     "No groups have been assigned."
-                    : (`${siteSpecific("Question Deck", "Quiz")} assigned to: ` + assignees.map(g => g.groupName).join(", "))}
+                    : (`${siteSpecific("Question deck", "Quiz")} assigned to: ` + assignees.map(g => g.groupName).join(", "))}
                 </UncontrolledTooltip>}
             </span>
         </div>

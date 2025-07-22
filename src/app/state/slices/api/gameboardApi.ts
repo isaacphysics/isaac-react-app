@@ -120,9 +120,9 @@ export const gameboardApi = isaacApi.injectEndpoints({
             }),
             invalidatesTags: (_, error, boardId) => !error ? [{type: "Gameboard", id: boardId}] : [],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: `${siteSpecific("Question Deck", "Quiz")} deleted`,
+                successTitle: `${siteSpecific("Question deck", "Quiz")} deleted`,
                 successMessage: `You have successfully unlinked your account from this ${siteSpecific("question deck", "quiz")}.`,
-                errorTitle: `${siteSpecific("Question Deck", "Quiz")} deletion failed`
+                errorTitle: `${siteSpecific("Question deck", "Quiz")} deletion failed`
             })
         }),
     })

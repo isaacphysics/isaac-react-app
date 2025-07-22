@@ -216,12 +216,12 @@ export const Gameboard = withRouter(({ location }) => {
                                     ? <Row>
                                         <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
                                             <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="keyline" block>
-                                                {siteSpecific("Set as Assignment", "Set as assignment")}
+                                                {"Set as assignment"}
                                             </Button>
                                         </Col>
                                         <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={4} xl={{size: 3, offset: 2}} className="mt-4">
                                             <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboardId}`}} color="keyline" block>
-                                                {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
+                                                {"Duplicate and edit"}
                                             </Button>
                                         </Col>
                                     </Row>
@@ -231,7 +231,7 @@ export const Gameboard = withRouter(({ location }) => {
                                                 onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
                                                 color="keyline" block
                                             >
-                                                {siteSpecific("Save to My Question Decks", "Save to My quizzes")}
+                                                {siteSpecific("Save to My question decks", "Save to My quizzes")}
                                             </Button>
                                         </Col>
                                     </Row>
