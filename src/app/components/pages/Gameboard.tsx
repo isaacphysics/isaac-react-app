@@ -10,7 +10,7 @@ import {
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
 import {Button, Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap";
-import {CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard, QuestionDTO} from "../../../IsaacApiTypes";
+import {CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     AUDIENCE_DISPLAY_FIELDS,
