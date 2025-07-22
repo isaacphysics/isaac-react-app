@@ -12,6 +12,7 @@ import { convertToALVIGameboards, ListView } from "../elements/list-groups/ListV
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 import { MetadataContainer, MetadataContainerLink } from "../elements/panels/MetadataContainer";
 import { Markup } from "../elements/markup";
+import { PageMetadata } from "../elements/PageMetadata";
 
 interface RevisionProps {
     match: { params: { pageId: string } };
@@ -48,14 +49,7 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
     const tests = (page.relatedContent?.filter(c => c.type === "isaacTest") || []) as QuizSummaryDTO[];
 
     return <div>
-        <h3 className="mb-3">
-            {page.subtitle && <span className="me-3 text-theme">{page.subtitle} </span>}
-            <Markup encoding="latex">{page.title}</Markup>
-        </h3>
-
-        <EditContentButton doc={page}/>
-
-        <TeacherNotes notes={page.teacherNotes} />
+        <PageMetadata doc={page} />
 
         <MetadataContainer className="d-flex flex-column gap-2">
             {!!page.gameboards?.length && <MetadataContainerLink id="introduction" title="Introduction" />}
