@@ -117,7 +117,6 @@ export const Glossary = () => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const pageContext = useUrlPageTheme();
-    const deviceSize = useDeviceSize();
     const params = useQueryParams<FilterParams, false>(false);
     
     const {queryStages, querySubjects} = processQueryString(params, pageContext);

@@ -2,7 +2,7 @@ import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, use
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, Stage } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
@@ -49,7 +49,7 @@ export const MainContent = (props: ColProps) => {
 };
 
 interface QuestionLinkProps {
-    question: QuestionDTO;
+    question: ContentSummaryDTO | GameboardItem;
     gameboardId?: string;
 }
 
@@ -61,7 +61,7 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
 
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
         <Link to={link} className="py-2">
-            <span className={classNames(getProgressIcon(question).icon, "mt-1 mx-2")} style={{minWidth: "16px"}}/>
+            <span className={classNames(getProgressIcon(question.state).icon, "mt-1 mx-2")} style={{minWidth: "16px"}}/>
             <div className="d-flex flex-column w-100">
                 <span className="hover-underline link-title"><Markup encoding="latex">{question.title}</Markup></span>
                 <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
@@ -70,7 +70,7 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
     </li>;
 };
 
-const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: IsaacConceptPageDTO}) => {
+const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: ContentSummaryDTO}) => {
     const { concept, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
     
@@ -169,8 +169,8 @@ interface RelatedContentSidebarProps extends SidebarProps {
 }
 
 const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "concept" | "question" | "page"}) => {
-    const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage").sort(sortByStringValue("title")) as IsaacConceptPageDTO[] | undefined;
-    const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage").sort(sortByStringValue("title")) as QuestionDTO[] | undefined;
+    const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage").sort(sortByStringValue("title"));
+    const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage").sort(sortByStringValue("title"));
 
     const pageContext = useAppSelector(selectors.pageContext.context);
     const pageContextStage = useAppSelector(selectors.pageContext.stage);

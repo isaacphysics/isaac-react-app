@@ -10,7 +10,7 @@ import {
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
 import {Button, Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap";
-import {CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
+import {CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard, QuestionDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     AUDIENCE_DISPLAY_FIELDS,
@@ -43,12 +43,12 @@ import { GameboardSidebar, MainContent, SidebarLayout } from "../elements/layout
 import { PageMetadata } from "../elements/PageMetadata";
 import { ListView } from "../elements/list-groups/ListView";
 
-export const getProgressIcon = (question: GameboardItem) => {
+export const getProgressIcon = (state?: CompletionState) => {
     const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
     let backgroundColor = "white";
     let icon = siteSpecific("icon icon-raw icon-not-started", "/assets/cs/icons/question-not-started.svg");
     let message = siteSpecific("", "Not started");
-    switch (question.state) {
+    switch (state) {
         case CompletionState.ALL_CORRECT:
             if (isPhy) {
                 backgroundColor = "correct";
@@ -80,7 +80,7 @@ export const getProgressIcon = (question: GameboardItem) => {
 };
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
-    const {itemClasses, icon, message} = getProgressIcon(question);
+    const {itemClasses, icon, message} = getProgressIcon(question.state);
 
     const questionTags = tags.getByIdsAsHierarchy((question.tags || []) as TAG_ID[])
         .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
