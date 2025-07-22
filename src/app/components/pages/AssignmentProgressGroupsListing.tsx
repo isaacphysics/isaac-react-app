@@ -76,7 +76,7 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
     return <>
         <Container className="mb-5">
             <TitleAndBreadcrumb
-                currentPageTitle={siteSpecific("Assignment Progress", "Markbook")}
+                currentPageTitle={siteSpecific("Assignment progress", "Markbook")}
                 modalId="help_modal_assignment_progress"
                 icon={{type: "hex", icon: "icon-revision"}}
             />

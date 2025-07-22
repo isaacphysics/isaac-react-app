@@ -1035,7 +1035,7 @@ export const EVENTS_CRUMB = {title: "Events", to: "/events"};
 export const GENERIC_QUESTION_CRUMB = {title: "Questions", to: "/questions"};
 export const GENERIC_CONCEPT_CRUMB = {title: "Concepts", to: siteSpecific("/concepts", "")};
 export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
-    {title: "Assignment Progress", to: "/assignment_progress"},
+    {title: "Assignment progress", to: "/assignment_progress"},
     {title: "Markbook", to: "/my_markbook"}
 );
 export const BOOKS_CRUMB = {title: "Books", to: "/books"};
