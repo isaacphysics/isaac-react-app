@@ -60,7 +60,7 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
 
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
         <Link to={link} className="py-2">
-            {isDefined(gameboardId) ? <span className={classNames(getProgressIcon(question).icon, "mt-1 mx-2")} style={{minWidth: "16px"}}/> : <i className="icon icon-question-thick"/>}
+            <span className={classNames(getProgressIcon(question).icon, "mt-1 mx-2")} style={{minWidth: "16px"}}/>
             <div className="d-flex flex-column w-100">
                 <span className="hover-underline link-title"><Markup encoding="latex">{question.title}</Markup></span>
                 <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
