@@ -59,7 +59,7 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
     "/quick_quizzes": QuickQuizzes,
     "/question_decks": QuestionDecks,
     "/glossary": Glossary,
-    "/apps": AnvilAppsListing,
+    "/tools": AnvilAppsListing,
 };
 
 // TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
