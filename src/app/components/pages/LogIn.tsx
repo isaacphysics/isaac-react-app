@@ -9,6 +9,7 @@ import {
     useAppSelector
 } from "../../state";
 import {
+    Alert,
     Button,
     Card,
     CardBody,
@@ -233,6 +234,12 @@ export const LogIn = () => {
                             <h2 className={classNames("h-title", {"mb-4": isAda})}  ref={headingRef} tabIndex={-1}>
                                 Log&nbsp;in or sign&nbsp;up:
                             </h2>
+                            {isPhy &&  // FIXME: post-launch cleanup
+                                <Alert color="info">
+                                    Already use Isaac Physics? <a href="/pages/isaacscience">Your login details and account
+                                    are the same here<span className="visually-hidden"> as on Isaac Physics</span>!</a>
+                                </Alert>
+                            }
                             {totpChallengePending ?
                                 <TFAInput ref={subHeadingRef} rememberMe={rememberMe} />
                                 :
@@ -246,8 +253,8 @@ export const LogIn = () => {
                                     <Row className={classNames("mb-4", {"mt-2": isAda})}>
                                         <Col className={"col-5 mt-1 d-flex"}>
                                             <StyledCheckbox
-                                                id="rememberMe" 
-                                                checked={rememberMe} 
+                                                id="rememberMe"
+                                                checked={rememberMe}
                                                 onChange={e => setRememberMe(e.target.checked)}
                                                 label={<p>Remember me</p>} className='mb-4'
                                             />
