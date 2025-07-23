@@ -349,10 +349,14 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
     }, [conceptFilters, tag]);
 
     const handleCheckboxChange = (checked: boolean) => {
+        // Reselect base tag if all children are deselected
+        const siblingTags = tag.type === TAG_LEVEL.field && tag.parent ? tags.getChildren(tag.parent).filter(t => t !== tag) : [];
+        const reselectBaseTag = baseTag === tag.parent && siblingTags.every(t => !conceptFilters.includes(t));
+
         const newConceptFilters = checked 
             ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), ...(!partiallySelected ? [tag] : [])] 
-            : conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c));
-        setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : []);
+            : [...conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c)), ...(reselectBaseTag && baseTag ? [tags.getById(baseTag)] : [])];
+        setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : (baseTag ? [baseTag] : []));
     };
 
     return <>
@@ -462,8 +466,7 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
                                 conceptFilters={conceptFilters} 
                                 setConceptFilters={setConceptFilters} 
                                 tagCounts={tagCounts} 
-                                incompatibleTags={[subjectTag]} 
-                                baseTag={subjectTag}
+                                incompatibleTags={[subjectTag]}
                             /></li>
                         )
                     }
@@ -531,7 +534,7 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
                                     // .sort((a, b) => tagCounts ? tagCounts[b.id] - tagCounts[a.id] : 0)
                                     .map((tag, j) => <li key={j}>
                                         <FilterCheckbox checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters} 
-                                            setConceptFilters={setConceptFilters} tagCounts={tagCounts} incompatibleTags={[subjectTag]}/>
+                                            setConceptFilters={setConceptFilters} tagCounts={tagCounts} incompatibleTags={[subjectTag]} baseTag={subjectTag} />
                                     </li>)
                                 }
                             </ul>}
