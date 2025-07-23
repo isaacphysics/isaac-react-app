@@ -65,7 +65,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     );
 
     const listConceptsQuery = useListConceptsQuery(pageContext 
-        ? {conceptIds: undefined, tagIds: tagIds}
+        ? {conceptIds: undefined, tagIds}
         : skipToken
     );
 
