@@ -648,36 +648,38 @@ export const SetAssignments = () => {
                     </>
                 }
                 {!isBoardsEmptyState && <>
-                    <Row>
-                        {boardView === BoardViews.card && <Col sm={6} lg={3}>
-                            <Label className="w-100">
+                    {isAda && <>
+                        <Row>
+                            {boardView === BoardViews.card && <Col sm={6} lg={3}>
+                                <Label className="w-100">
                                 Display in <Input type="select" value={boardView} onChange={switchView}>
-                                    {Object.values(BoardViews).map(view => <option key={view}
-                                        value={view}>{view}</option>)}
-                                </Input>
-                            </Label>
-                        </Col>}
-                        {boardView === BoardViews.card && <>
-                            <Col xs={6} lg={{size: 2, offset: 3}}>
-                                <Label className="w-100">
+                                        {Object.values(BoardViews).map(view => <option key={view}
+                                            value={view}>{view}</option>)}
+                                    </Input>
+                                </Label>
+                            </Col>}
+                            {boardView === BoardViews.card && <>
+                                <Col xs={6} lg={{size: 2, offset: 3}}>
+                                    <Label className="w-100">
                                     Show <Input type="select" value={boardLimit}
-                                        onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
-                                        {Object.values(BoardLimit).map(limit => <option key={limit}
-                                            value={limit}>{limit}</option>)}
-                                    </Input>
-                                </Label>
-                            </Col>
-                            <Col xs={6} lg={4}>
-                                <Label className="w-100">
+                                            onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                                            {Object.values(BoardLimit).map(limit => <option key={limit}
+                                                value={limit}>{limit}</option>)}
+                                        </Input>
+                                    </Label>
+                                </Col>
+                                <Col xs={6} lg={4}>
+                                    <Label className="w-100">
                                     Sort by <Input type="select" value={boardOrder}
-                                        onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
-                                        {Object.values(AssignmentBoardOrder).map(order => <option key={order}
-                                            value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
-                                    </Input>
-                                </Label>
-                            </Col>
-                        </>}
-                    </Row>
+                                            onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
+                                            {Object.values(AssignmentBoardOrder).map(order => <option key={order}
+                                                value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+                                        </Input>
+                                    </Label>
+                                </Col>
+                            </>}
+                        </Row>
+                    </>}
                     <ShowLoading until={boards}>
                         {boards && boards.boards && <div>
                             {boardView == BoardViews.card ?
