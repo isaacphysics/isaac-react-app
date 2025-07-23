@@ -148,8 +148,7 @@ main {
 }
 
 .context-picker-container select {
-  @include media-breakpoint-up(sm) {
+  @include media-breakpoint-up(md) {
     max-width: 200px;
   }
-  flex-basis: 0;
 }

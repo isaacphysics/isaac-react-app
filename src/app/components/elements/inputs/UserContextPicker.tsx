@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {Col, FormGroup, Input, Label, Row, UncontrolledTooltip} from "reactstrap";
+import {Input, Label, UncontrolledTooltip} from "reactstrap";
 import {
+    above,
     CONTEXT_SOURCE,
     EXAM_BOARD,
     examBoardLabelMap,
@@ -14,6 +15,7 @@ import {
     siteSpecific,
     STAGE,
     stageLabelMap,
+    useDeviceSize,
     useQueryParams,
     useUserViewingContext
 } from "../../../services";
@@ -47,7 +49,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const qParams = useQueryParams();
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
-
+    const deviceSize = useDeviceSize();
+    
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
     const allStages = getFilteredStageOptions({includeNullOptions: true});
 
@@ -62,8 +65,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     }, [userContext.stage]);
 
     if (isAda && !isLoggedIn(user) || isStaff(user)) {
-        return <Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
-            <Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}>
+        return <div className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
+            <div className={classNames("d-flex m-0 p-0 justify-content-md-end", {"ms-2": above["md"](deviceSize)})}>
                 {/* Stage Selector */}
                 <div className={classNames("form-group w-100 d-flex justify-content-end m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}
@@ -74,7 +77,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         }}/>
                     }
                     <Input
-                        className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", { "mb-2 me-1": isAda })}
+                        className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", {"mb-2 me-1": isAda})}
                         type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
                         value={userContext.stage}
@@ -110,7 +113,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                             {/* Exam Board Selector */}
                             {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
                             <Input
-                                className={`flex-grow-1 d-inline-block ps-2 pe-0 mb-2 ms-1`}
+                                className={`flex-grow-1 d-inline-block ps-2 pe-0 mb-2 ms-2`}
                                 type="select" id="uc-exam-board-select"
                                 aria-label={hideLabels ? "Exam Board" : undefined}
                                 value={userContext.examBoard}
@@ -128,7 +131,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     }
 
                     <div className="mt-2 ms-1">
-                        <i id={`viewing-context-explanation`} className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help mx-1")}/>
+                        <i id={`viewing-context-explanation`} className={siteSpecific("icon icon-info icon-color-grey mx-1", "icon-help mx-1")}/>
                         <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
                             You are seeing {stageLabelMap[userContext.stage]}{isAda ? ` - ${examBoardLabelMap[userContext.examBoard]}` : ""}
                             &nbsp;content.&nbsp;
@@ -139,7 +142,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         </UncontrolledTooltip>
                     </div>
                 </div>
-            </Row>
-        </Col>;
+            </div>
+        </div>;
     }
 };

@@ -92,12 +92,12 @@
     margin-bottom: 1.25rem;
     color: $color-neutral-700;
   }
-}
 
-[type='search'] {
+  [type='search'] {
     &.search--filter-input {
       max-width: 100% !important;
   }
+}
 }
 
 #content-sidebar-offcanvas {

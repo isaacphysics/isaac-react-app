@@ -10,10 +10,10 @@ import {
     Form,
     Label,
     Container,
-    Row
 } from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {
+    above,
     DOCUMENT_TYPE,
     documentDescription,
     isAda,
@@ -25,7 +25,8 @@ import {
     searchResultIsPublic,
     selectOnChange,
     shortcuts,
-    siteSpecific
+    siteSpecific,
+    useDeviceSize
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
@@ -70,6 +71,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const user = useAppSelector(selectors.user.orNull);
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     const [queryState, setQueryState] = useState(urlQuery);
+    const deviceSize = useDeviceSize();
 
     let initialFilters = urlFilters;
     if (isAda && urlFilters.length === 0) {
@@ -118,69 +120,55 @@ export const Search = withRouter((props: RouteComponentProps) => {
 
     return (
         <Container id="search-page">
-            <Row>
-                <Col>
-                    <TitleAndBreadcrumb currentPageTitle="Search" icon={{type: "hex", icon: "icon-finder"}}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={urlQuery ?? ""} />
-                </Col>
-            </Row>
-            <Row>
-                <Col className="py-4">
-                    <Card>
-                        <CardHeader className="search-header">
-                            <Col sm={6} md={5} lg={siteSpecific(5, 4)} xl={siteSpecific(5, 3)}>
-                                <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
-                                </h3>
-                            </Col>
-                            <Col sm={6} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className="d-flex justify-content-end flex-grow-1">
-                                <Form className="form-inline search-filters w-100">
-                                    <div className="w-100 align-items-center justify-content-end m-0 d-flex">
-                                        <Label htmlFor="document-filter" className="d-none d-lg-inline-block me-1">
-                                            {`Filter${siteSpecific("","s")}:`}
-                                        </Label>
-                                        <div className="search-filters-select-container">
-                                            <StyledSelect
-                                                inputId="document-filter" isMulti
-                                                placeholder="No page type filter"
-                                                value={filtersState}
-                                                options={
-                                                    ([DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.GENERIC] as SearchableDocumentType[])
-                                                        .concat(siteSpecific([DOCUMENT_TYPE.EVENT, DOCUMENT_TYPE.BOOK_INDEX_PAGE, SEARCH_RESULT_TYPE.BOOK_DETAIL_PAGE], [DOCUMENT_TYPE.TOPIC_SUMMARY]))
-                                                        .map(itemise)
-                                                }
-                                                className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
-                                                classNamePrefix="select"
-                                                onChange={selectOnChange(setFiltersState, false)}
-                                                styles={selectStyle}
-                                                menuPortalTarget={document.body}
-                                            />
-                                        </div>
-                                    </div>
+            <TitleAndBreadcrumb currentPageTitle="Search" icon={{type: "hex", icon: "icon-finder"}} />
+            <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={urlQuery ?? ""} />
+            <Card className="my-4">
+                <CardHeader className="search-header bg-transparent">
+                    <Col xs={12} md={5} lg={siteSpecific(5, 4)} xl={siteSpecific(5, 3)}>
+                        <h3 className="me-2">
+                            Search Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
+                        </h3>
+                    </Col>
+                    <Col xs={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className="d-flex justify-content-end flex-grow-1">
+                        <Form className="form-inline search-filters w-100">
+                            <div className="w-100 align-items-center justify-content-end m-0 d-flex">
+                                <Label htmlFor="document-filter" className="d-none d-lg-inline-block">
+                                    {`Filter${siteSpecific("","s")}:`}
+                                </Label>
+                                <div className={classNames("flex-grow-1 w-100 w-md-75 w-lg-50 mb-2 mb-md-0", {"ms-2": above["md"](deviceSize)})}>
+                                    <StyledSelect
+                                        inputId="document-filter" isMulti
+                                        placeholder="No page type filter"
+                                        value={filtersState}
+                                        options={
+                                            ([DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.GENERIC] as SearchableDocumentType[])
+                                                .concat(siteSpecific([DOCUMENT_TYPE.EVENT, DOCUMENT_TYPE.BOOK_INDEX_PAGE, SEARCH_RESULT_TYPE.BOOK_DETAIL_PAGE], [DOCUMENT_TYPE.TOPIC_SUMMARY]))
+                                                .map(itemise)
+                                        }
+                                        onChange={selectOnChange(setFiltersState, false)}
+                                        styles={selectStyle}
+                                        menuPortalTarget={document.body}
+                                    />
+                                </div>
+                            </div>
 
-                                    <UserContextPicker className="searchContextPicker"/>
-                                </Form>
-                            </Col>
-                        </CardHeader>
-                        {urlQuery != "" && <CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
-                            <ShowLoading until={shortcutAndFilteredSearchResults}>
-                                {gotResults ?
-                                    isPhy ? 
-                                        <ListView type="item" items={shortcutAndFilteredSearchResults}/> :
-                                        <LinkToContentSummaryList 
-                                            items={shortcutAndFilteredSearchResults} showBreadcrumb={true}
-                                            contentTypeVisibility={ContentTypeVisibility.SHOWN}   
-                                        />
-                                    : <em>No results found</em>}
-                            </ShowLoading>
-                        </CardBody>}
-                    </Card>
-                </Col>
-            </Row>
+                            <UserContextPicker className="searchContextPicker"/>
+                        </Form>
+                    </Col>
+                </CardHeader>
+                {urlQuery != "" && <CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
+                    <ShowLoading until={shortcutAndFilteredSearchResults}>
+                        {gotResults ?
+                            isPhy ? 
+                                <ListView type="item" items={shortcutAndFilteredSearchResults}/> :
+                                <LinkToContentSummaryList 
+                                    items={shortcutAndFilteredSearchResults} showBreadcrumb={true}
+                                    contentTypeVisibility={ContentTypeVisibility.SHOWN}   
+                                />
+                            : <em>No results found</em>}
+                    </ShowLoading>
+                </CardBody>}
+            </Card>
         </Container>
     );
 });
