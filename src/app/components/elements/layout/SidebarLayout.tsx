@@ -42,7 +42,7 @@ export const SidebarLayout = (props: RowProps) => {
 
 export const MainContent = (props: ColProps) => {
     const { className, ...rest } = props;
-    
+
     const dispatch = useAppDispatch();
     dispatch(mainContentIdSlice.actions.set("page-content"));
 
@@ -74,7 +74,7 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
 const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: IsaacConceptPageDTO}) => {
     const { concept, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
-    
+
     return <li key={concept.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, concept.tags ?? [])}>
         <Link to={`/concepts/${concept.id}`} className="py-2">
             <i className="icon icon-concept-thick"/>
@@ -115,7 +115,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
 
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
     return <>
-        {above['lg'](deviceSize) 
+        {above['lg'](deviceSize)
             ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
                 {optionBar && <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
@@ -126,8 +126,8 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
                             <AffixButton color="keyline" size="lg" onClick={toggleMenu} data-testid="close-sidebar-button" affix={{
-                                affix: "icon-close", 
-                                position: "prefix", 
+                                affix: "icon-close",
+                                position: "prefix",
                                 type: "icon"
                             }}>
                                 Close
@@ -140,7 +140,7 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                         </ContentSidebarContext.Provider>
                     </OffcanvasBody>
                 </Offcanvas>
-            </> 
+            </>
         }
     </>;
 };
@@ -275,15 +275,15 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
 
     const GameboardDetails = () => {
         const subjects = determineGameboardSubjects(gameboard);
-        
+
         const gameboardTags = Array.from((gameboard?.contents || []).reduce((a, c) => {
             if (isDefined(c.tags) && c.tags.length > 0) {
                 return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
             }
             return a;
         }, new Set<TAG_ID>())).filter(tag => isDefined(tag));
-        const topics = (tags.getTopicTags(gameboardTags).length > 0 
-            ? tags.getTopicTags(gameboardTags) 
+        const topics = (tags.getTopicTags(gameboardTags).length > 0
+            ? tags.getTopicTags(gameboardTags)
             : tags.getFieldTags(gameboardTags)
         ).map(tag => tag.title).sort();
 
@@ -310,7 +310,7 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
             {dueDate && <div>Due: <b>{getFriendlyDaysUntil(dueDate)}</b></div>}
         </>;
     };
-    
+
     return <ContentSidebar buttonTitle="Details" {...rest}>
         <div className="section-divider"/>
         <h5>Question deck</h5>
@@ -353,8 +353,8 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
         const siblingTags = tag.type === TAG_LEVEL.field && tag.parent ? tags.getChildren(tag.parent).filter(t => t !== tag) : [];
         const reselectBaseTag = baseTag === tag.parent && siblingTags.every(t => !conceptFilters.includes(t));
 
-        const newConceptFilters = checked 
-            ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), ...(!partiallySelected ? [tag] : [])] 
+        const newConceptFilters = checked
+            ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), ...(!partiallySelected ? [tag] : [])]
             : [...conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c)), ...(reselectBaseTag && baseTag ? [tags.getById(baseTag)] : [])];
         setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : (baseTag ? [baseTag] : []));
     };
@@ -365,13 +365,13 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
                 {tag.parent?.toUpperCase()}
             </p>
         </div>}
-        {checkboxStyle === "button" 
+        {checkboxStyle === "button"
             ? <StyledCheckbox {...rest} id={tag.id} checked={checked}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
                 label={<span>{tag.title} {tagCounts && isDefined(tagCounts[tag.id]) && <span className="text-muted">({tagCounts[tag.id]})</span>}</span>}
                 partial={partial}
             />
-            : <StyledTabPicker {...rest} id={tag.id} checked={checked} 
+            : <StyledTabPicker {...rest} id={tag.id} checked={checked}
                 onInputChange={(e: ChangeEvent<HTMLInputElement>) => handleCheckboxChange(e.target.checked)}
                 checkboxTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
             />
@@ -384,14 +384,14 @@ const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnab
     const [previousFilters, setPreviousFilters] = useState<Tag[]>([]);
     const pageContext = useAppSelector(selectors.pageContext.context);
 
-    return <StyledTabPicker {...rest} 
-        id="all" checked={forceEnabled || !conceptFilters.length} 
-        checkboxTitle="All" 
-        count={tagCounts && 
-            (baseTag 
+    return <StyledTabPicker {...rest}
+        id="all" checked={forceEnabled || !conceptFilters.length}
+        checkboxTitle="All"
+        count={tagCounts &&
+            (baseTag
                 ? tagCounts[baseTag.id] + (pageContext?.subject && pageContext?.stage?.length === 1
-                    ? SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext?.stage[0]]?.reduce((partialSum, tag) => partialSum + tagCounts[tag], 0) ?? 0 
-                    : 0) 
+                    ? SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext?.stage[0]]?.reduce((partialSum, tag) => partialSum + tagCounts[tag], 0) ?? 0
+                    : 0)
                 : Object.values(tagCounts).reduce((a, b) => a + b, 0)
             )
         }
@@ -451,8 +451,8 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
                 <h5>Filter by topic</h5>
                 <ul>
                     <li>
-                        <AllFiltersCheckbox 
-                            conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag} 
+                        <AllFiltersCheckbox
+                            conceptFilters={conceptFilters} setConceptFilters={setConceptFilters} tagCounts={tagCounts} baseTag={subjectTag}
                             forceEnabled={applicableTags.filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0).length === 0}
                         />
                     </li>
@@ -460,12 +460,12 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
                     {applicableTags
                         .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0)
                         .map(tag => <li key={tag.id}>
-                            <FilterCheckbox 
-                                key={tag.id} 
-                                tag={tag} 
-                                conceptFilters={conceptFilters} 
-                                setConceptFilters={setConceptFilters} 
-                                tagCounts={tagCounts} 
+                            <FilterCheckbox
+                                key={tag.id}
+                                tag={tag}
+                                conceptFilters={conceptFilters}
+                                setConceptFilters={setConceptFilters}
+                                tagCounts={tagCounts}
                                 incompatibleTags={[subjectTag]}
                             /></li>
                         )
@@ -492,7 +492,7 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
             setSearchStages([...(searchStages ?? []), stage]);
         }
     };
-    
+
     // If exactly one subject is selected, infer a colour for the stage checkboxes
     const singleSubjectColour = useMemo(() => {
         return conceptFilters.length === 1 && conceptFilters[0].type === TAG_LEVEL.subject ? conceptFilters[0].id
@@ -512,7 +512,7 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
             />
 
             <div className="section-divider"/>
-            
+
             <div className="d-flex flex-column">
                 <h5>Filter by subject and topic</h5>
                 <ul>
@@ -522,8 +522,8 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
                         const isSelected = conceptFilters.includes(subjectTag) || descendentTags.some(tag => conceptFilters.includes(tag));
                         const isPartial = descendentTags.some(tag => conceptFilters.includes(tag)) && descendentTags.some(tag => !conceptFilters.includes(tag));
                         return <li key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
-                            <FilterCheckbox 
-                                checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters} 
+                            <FilterCheckbox
+                                checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={conceptFilters}
                                 setConceptFilters={setConceptFilters} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
                                 partial partiallySelected={descendentTags.some(tag => conceptFilters.includes(tag))} // not quite isPartial; this is also true if all descendents selected
                                 className={classNames("icon", {"icon-checkbox-off": !isSelected, "icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
@@ -533,7 +533,7 @@ export const GenericConceptsSidebar = (props: GenericConceptsSidebarProps) => {
                                     .filter(tag => !isDefined(tagCounts) || tagCounts[tag.id] > 0 || conceptFilters.includes(tag))
                                     // .sort((a, b) => tagCounts ? tagCounts[b.id] - tagCounts[a.id] : 0)
                                     .map((tag, j) => <li key={j}>
-                                        <FilterCheckbox checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters} 
+                                        <FilterCheckbox checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={conceptFilters}
                                             setConceptFilters={setConceptFilters} tagCounts={tagCounts} incompatibleTags={[subjectTag]} baseTag={subjectTag} />
                                     </li>)
                                 }
@@ -640,8 +640,8 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                         const isSelected = filterTags?.includes(subjectTag) || descendentTags.some(tag => filterTags?.includes(tag));
                         const isPartial = descendentTags.some(tag => filterTags?.includes(tag)) && descendentTags.some(tag => !filterTags?.includes(tag));
                         return <li key={i} className={classNames("ps-2", {"checkbox-active": isSelected})}>
-                            <FilterCheckbox 
-                                checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={filterTags as Tag[]} 
+                            <FilterCheckbox
+                                checkboxStyle="button" color="theme" data-bs-theme={subject} tag={subjectTag} conceptFilters={filterTags as Tag[]}
                                 setConceptFilters={setFilterTags} tagCounts={tagCounts} dependentTags={descendentTags} incompatibleTags={descendentTags}
                                 partiallySelected={descendentTags.some(tag => filterTags?.includes(tag))}
                                 className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && isPartial, "icon-checkbox-selected": isSelected && !isPartial})}
@@ -650,7 +650,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                                 {descendentTags.filter(tag => tagCounts[tag.id] > 0)
                                     .map((tag, j) => <li key={j}>
                                         <FilterCheckbox
-                                            checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={filterTags as Tag[]} 
+                                            checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={filterTags as Tag[]}
                                             setConceptFilters={setFilterTags} tagCounts={tagCounts} incompatibleTags={[subjectTag]}
                                         />
                                     </li>)}
@@ -665,7 +665,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                 <h5>Filter by topic</h5>
                 <ul className="ps-2">
                     <li>
-                        <AllFiltersCheckbox 
+                        <AllFiltersCheckbox
                             conceptFilters={filterTags ?? []} setConceptFilters={setFilterTags} tagCounts={tagCounts} baseTag={subjectTag}
                         />
                     </li>
@@ -731,7 +731,7 @@ interface AssignmentStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelEl
 
 const AssignmentStatusCheckbox = (props: AssignmentStatusCheckboxProps) => {
     const {status, statusFilter, setStatusFilter, count, ...rest} = props;
-    return <StyledTabPicker 
+    return <StyledTabPicker
         id={status ?? ""} checkboxTitle={status}
         onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== AssignmentState.ALL), status]) : setStatusFilter(c => c.filter(s => s !== status))}
         checked={statusFilter.includes(status)}
@@ -742,7 +742,7 @@ const AssignmentStatusCheckbox = (props: AssignmentStatusCheckboxProps) => {
 const AssignmentStatusAllCheckbox = (props: Omit<AssignmentStatusCheckboxProps, "status">) => {
     const { statusFilter, setStatusFilter, count, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<AssignmentState[]>([]);
-    return <StyledTabPicker 
+    return <StyledTabPicker
         id="all" checkboxTitle="All"
         onInputChange={(e) => {
             if (e.target.checked) {
@@ -788,7 +788,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
     useEffect(() => {
         if (statusFilter.length === 0) {
             setStatusFilter([AssignmentState.ALL]);
-        }    
+        }
     }, [statusFilter, setStatusFilter]);
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
@@ -969,7 +969,7 @@ export interface QuizSidebarViewProps extends QuizSidebarProps {
 }
 
 export const Pill = ({ title, theme }: {title: string, theme?: string}) =>
-    <span className="badge rounded-pill bg-theme me-1" data-bs-theme={theme}> 
+    <span className="badge rounded-pill bg-theme me-1" data-bs-theme={theme}>
         {title}
     </span>;
 
@@ -978,7 +978,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const deviceSize = useDeviceSize();
     const history = useHistory();
     const location = history.location.pathname;
-    const rubricPath = 
+    const rubricPath =
         viewingAsSomeoneElse ? location.split("/").slice(0, 6).join("/") :
             attempt && attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
                 location.split("/page")[0];
@@ -988,7 +988,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const topics = tagsService.getTopicTags(tags as TAG_ID[]);
     const fields = tagsService.getFieldTags(tags as TAG_ID[]);
     const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A"}];
-    
+
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon icon-raw icon-correct"
             : sectionStates[section] === SectionProgress.STARTED ? "icon icon-raw icon-in-progress"
@@ -1024,7 +1024,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
                     <li>
                         <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
                     </li>
-                    {Array.from({length: totalSections}, (_, i) => i).map(section => 
+                    {Array.from({length: totalSections}, (_, i) => i).map(section =>
                         <li key={section}>
                             <StyledTabPicker key={section} checkboxTitle={sectionTitles[section]} checked={currentSection === section+1} onClick={() => switchToPage(String(section+1))}
                                 suffix={{icon: progressIcon(section), info: sectionStates[section]}}/>
@@ -1073,12 +1073,12 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
         <div className="section-divider mt-0"/>
         <h5>Account settings</h5>
         <ul>
-            {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
+            {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) =>
                 <li key={tab}>
                     <ContentSidebarContext.Consumer>
-                        {(context) => 
+                        {(context) =>
                             <StyledTabPicker id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
-                                onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}/>                           
+                                onClick={() => { setActiveTab(tab); context?.close(); }} onKeyDown={ifKeyIsEnter(() => { setActiveTab(tab); context?.close(); })}/>
                         }
                     </ContentSidebarContext.Consumer>
                 </li>
@@ -1173,7 +1173,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
         setQuizDueDateFilterType, manageQuizzesGroupNameFilter, setManageQuizzesGroupNameFilter} = props;
 
     const deviceSize = useDeviceSize();
-    
+
     const dateFilterTypeSelector = (dateFilterType: string, setDateFilterType: React.Dispatch<React.SetStateAction<string>>) => <UncontrolledDropdown>
         <DropdownToggle className="bg-transparent border-0 px-2" color="dropdown" caret>{dateFilterType}</DropdownToggle>
         <DropdownMenu>
@@ -1198,7 +1198,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
                 value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
                 className="search--filter-input mt-3 mb-4"
                 placeholder="e.g. Practice" aria-label="Search by title"
-            /> 
+            />
             <h5>Search by group</h5>
             <Input
                 id="manage-quizzes-group-name-filter" type="search"
@@ -1240,13 +1240,13 @@ export const EventsSidebar = (props: SidebarProps) => {
         <Form tag={"search"}>
             {above["lg"](deviceSize) && <div className="section-divider mt-7"/>}
             <h5 className="mb-3">Event type</h5>
-            <ul>               
+            <ul>
                 {Object.entries(EventStatusFilter)
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])
                     .map(([statusLabel, statusValue]) =>
                         <li key={statusValue}>
-                            <StyledTabPicker                                   
+                            <StyledTabPicker
                                 id={statusValue}
                                 checkboxTitle={statusLabel}
                                 checked={
@@ -1272,7 +1272,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             <ul>
                 {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                     <li key={typeValue}>
-                        <StyledTabPicker                                   
+                        <StyledTabPicker
                             id={typeValue}
                             checkboxTitle={typeLabel}
                             checked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All groups"]}
@@ -1287,10 +1287,10 @@ export const EventsSidebar = (props: SidebarProps) => {
 
             <div className="section-divider"/>
             <h5 className="mb-3">Stages</h5>
-            <ul>               
+            <ul>
                 {Object.entries(EventStageMap).map(([label, value]) =>
                     <li key={value}>
-                        <StyledTabPicker                                                           
+                        <StyledTabPicker
                             id={value}
                             checkboxTitle={label}
                             checked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
@@ -1316,7 +1316,7 @@ interface QuizStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement>
 
 const QuizStatusCheckbox = (props: QuizStatusCheckboxProps) => {
     const {status, statusFilter, setStatusFilter, count, ...rest} = props;
-    return <StyledTabPicker 
+    return <StyledTabPicker
         id={status ?? ""} checkboxTitle={status}
         onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== QuizStatus.All), status]) : setStatusFilter(c => c.filter(s => s !== status))}
         checked={statusFilter.includes(status)}
@@ -1327,7 +1327,7 @@ const QuizStatusCheckbox = (props: QuizStatusCheckboxProps) => {
 const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status">) => {
     const { statusFilter, setStatusFilter, count, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<QuizStatus[]>([]);
-    return <StyledTabPicker 
+    return <StyledTabPicker
         id="all" checkboxTitle="All"
         onInputChange={(e) => {
             if (e.target.checked) {
@@ -1366,7 +1366,7 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                 {above["lg"](deviceSize) && <div className="section-divider"/>}
                 <search>
                     <h5>Search tests</h5>
-                    <Input type="search" className="search--filter-input my-3" onChange={(e) => setQuizTitleFilter(e.target.value)} 
+                    <Input type="search" className="search--filter-input my-3" onChange={(e) => setQuizTitleFilter(e.target.value)}
                         placeholder="e.g. Practice" aria-label="Search by title"/>
                     <div className="section-divider"/>
                     <h5 className="mb-3">Filter by status</h5>
@@ -1410,10 +1410,10 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
         <search>
             <h5>Decks by stage</h5>
             <ul>
-                {validStageSubjectPairs[context.subject].map((stage, index) => 
+                {validStageSubjectPairs[context.subject].map((stage, index) =>
                     <li key={index}>
-                        <StyledTabPicker 
-                            checkboxTitle={HUMAN_STAGES[stage]} 
+                        <StyledTabPicker
+                            checkboxTitle={HUMAN_STAGES[stage]}
                             checked={context.stage.includes(stage)}
                             onClick={() => history.push(`/${context.subject}/${stage}/question_decks`)}
                         />
@@ -1425,10 +1425,10 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
             <ul>
                 {Object.entries(validStageSubjectPairs)
                     .filter(([_subject, stages]) => (stages as LearningStage[]).includes(context.stage[0]))
-                    .map(([subject, _stages], index) => 
+                    .map(([subject, _stages], index) =>
                         <li key={index}>
-                            <StyledTabPicker 
-                                checkboxTitle={HUMAN_SUBJECTS[subject]} 
+                            <StyledTabPicker
+                                checkboxTitle={HUMAN_SUBJECTS[subject]}
                                 checked={context.subject === subject}
                                 onClick={() => history.push(`/${subject}/${context.stage}/question_decks`)}
                             />
@@ -1495,7 +1495,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
                 type="search" value={internalSearchText || ""}
                 placeholder={`e.g. ${getSearchPlaceholder(pageContext?.subject)}`}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
-                    setSearchText(e.target.value); 
+                    setSearchText(e.target.value);
                     setInternalSearchText(e.target.value);
                 }}
             />
@@ -1533,10 +1533,10 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
                 <h5>Switch learning stage</h5>
                 <ul>
-                    {PHY_NAV_SUBJECTS[pageContext.subject].map((stage, index) => 
+                    {PHY_NAV_SUBJECTS[pageContext.subject].map((stage, index) =>
                         <li key={index}>
                             <StyledTabPicker
-                                checkboxTitle={HUMAN_STAGES[stage]} checked={pageContext.stage[0] === stage} 
+                                checkboxTitle={HUMAN_STAGES[stage]} checked={pageContext.stage[0] === stage}
                                 onClick={() => history.replace(`/${pageContext.subject}/${stage}/glossary`)}
                             />
                         </li>
@@ -1564,7 +1564,7 @@ const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: H
             toggle={() => setIsOpen(o => !o)}
         >
             <ul>
-                {entry.sidebarEntries?.map((subEntry, subIndex) => 
+                {entry.sidebarEntries?.map((subEntry, subIndex) =>
                     <SidebarEntries key={subIndex} entry={subEntry} history={history} />
                 )}
             </ul>
@@ -1642,9 +1642,9 @@ export const AnvilAppsListingSidebar = (props: ContentSidebarProps) => {
         <h5>Select stage</h5>
         <ul>
             {isFullyDefinedContext(context) && Object.keys(VALID_APPS_CONTEXTS[context.subject] ?? {}).map((stage, index) => <li key={index}>
-                <StyledTabPicker 
+                <StyledTabPicker
                     checkboxTitle={HUMAN_STAGES[stage as LearningStage]} checked={context?.stage?.includes(stage as LearningStage)}
-                    onClick={() => history.push(`/${context?.subject}/${stage}/tools`)} 
+                    onClick={() => history.push(`/${context?.subject}/${stage}/tools`)}
                 />
             </li>)}
         </ul>
