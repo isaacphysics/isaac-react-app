@@ -193,6 +193,24 @@ describe("QuestionFinder", () => {
                 await toggleAssert([Skills, Number], [Selected, Deselected, Selected, Deselected]);
                 await toggleAssert([Physics, Maths], [Deselected, Missing, Deselected, Missing]);
             });
+
+            describe('on a conxtext-specific question finder', () => {
+                it('reselects parent topic after unselecting subtopics, multiple parents', async () => {
+                    await renderQuestionFinderPage({ 
+                        questionsSearchResponse: () => resultsResponse, 
+                        context: { subject: "maths", stage: ["a_level"] },
+                    });
+                    // Number -> Arithmetic
+                    // Geometry -> Shapes
+                    const toggleAssert = setTestFilters([Number, Arithmetic, Geometry, Shapes]);
+                
+                    await toggleAssert([], [Deselected, Missing, Deselected, Missing]);
+                    await toggleAssert([Number, Geometry], [Selected, Deselected, Selected, Deselected]);
+                    await toggleAssert([Arithmetic, Shapes], [Partial, Selected, Partial, Selected]);
+                    await toggleAssert([Arithmetic, Shapes], [Selected, Deselected, Selected, Deselected]);
+                    await toggleAssert([Number, Geometry], [Deselected, Missing, Deselected, Missing]);
+                });
+            });
         });
     }
 
@@ -317,7 +335,10 @@ enum Filters {
     Mechanics = "Mechanics",
     SigFig = "Significant Figures",
     Maths = "Maths",
-    Number = "Number"
+    Number = "Number",
+    Arithmetic = "Arithmetic",
+    Geometry = "Geometry",
+    Shapes = "Shapes"
 }
 
-const { Physics, Skills, Mechanics, SigFig, Maths, Number } = Filters;
+const { Physics, Skills, Mechanics, SigFig, Maths, Number, Arithmetic, Geometry, Shapes } = Filters;
