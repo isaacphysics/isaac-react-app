@@ -71,6 +71,7 @@ import {MainContent, SetAssignmentsSidebar, SidebarLayout} from "../elements/lay
 import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 import {IconCard} from "../elements/cards/IconCard";
+import {PromptBanner} from "../elements/cards/PromptBanner";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -614,17 +615,21 @@ export const SetAssignments = () => {
                 {isAda &&
                     <>
                         {isGroupsEmptyState &&
-                            <IconCard
-                                card={{
-                                    title: "You need a student group before you can assign a quiz to students",
-                                    icon: {src: "/assets/cs/icons/group.svg"},
-                                    bodyText: "",
-                                    clickUrl: "/groups",
-                                    buttonText: "Create a group",
-                                    className: "bg-yellow",
-                                    buttonStyle: "outline"
-                                }}
-                            />
+                                <PromptBanner
+                                    card={{
+                                        title: "You need a student group before you can assign a quiz to students.",
+                                        icon: {src: "/assets/cs/icons/group.svg"},
+                                        bodyText: "",
+                                        color: "yellow",
+                                        buttons: {
+                                            primary: {
+                                                text: "Create a group",
+                                                clickUrl: "/groups",
+                                                style: "outline"
+                                            }
+                                        }
+                                    }}
+                                />
                         }
                         <h3>Your quizzes</h3>
                         <div
