@@ -635,7 +635,7 @@ export const SetAssignments = () => {
                             className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
                             {!(boards && boards.totalResults === 0) &&
                                 <div>
-                                    <p className={"my-auto"}>{`You have ${boards?.boards.length} created quiz${boards && boards.boards?.length > 1 ? "zes" : ""}.`}</p>
+                                    <p className={"d-none d-lg-block my-auto"}>{`You have ${boards?.boards.length} created quiz${boards && boards.boards?.length > 1 ? "zes" : ""}.`}</p>
                                 </div>
                             }
                             <div className={"w-100 w-lg-auto"}>
