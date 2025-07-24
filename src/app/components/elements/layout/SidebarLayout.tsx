@@ -356,7 +356,7 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
         const newConceptFilters = checked
             ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), ...(!partiallySelected ? [tag] : [])]
             : [...conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c)), ...(reselectBaseTag && baseTag ? [baseTag] : [])];
-        setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : (baseTag ? [baseTag] : []));
+        setConceptFilters(newConceptFilters.length > 0 ? [...new Set(newConceptFilters)] : (baseTag ? [baseTag] : []));
     };
 
     return <>
