@@ -351,11 +351,11 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
     const handleCheckboxChange = (checked: boolean) => {
         // Reselect base tag if all children are deselected
         const siblingTags = tag.type === TAG_LEVEL.field && tag.parent ? tags.getChildren(tag.parent).filter(t => t !== tag) : [];
-        const reselectBaseTag = baseTag === tag.parent && siblingTags.every(t => !conceptFilters.includes(t));
+        const reselectBaseTag = baseTag?.id === tag.parent && siblingTags.every(t => !conceptFilters.includes(t));
 
         const newConceptFilters = checked
             ? [...conceptFilters.filter(c => !incompatibleTags?.includes(c)), ...(!partiallySelected ? [tag] : [])]
-            : [...conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c)), ...(reselectBaseTag && baseTag ? [tags.getById(baseTag)] : [])];
+            : [...conceptFilters.filter(c => ![tag, ...(dependentTags ?? [])].includes(c)), ...(reselectBaseTag && baseTag ? [baseTag] : [])];
         setConceptFilters(newConceptFilters.length > 0 ? newConceptFilters : (baseTag ? [baseTag] : []));
     };
 
