@@ -651,7 +651,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                                     .map((tag, j) => <li key={j}>
                                         <FilterCheckbox
                                             checkboxStyle="button" color="theme" bsSize="sm" data-bs-theme={subject} tag={tag} conceptFilters={filterTags as Tag[]}
-                                            setConceptFilters={setFilterTags} tagCounts={tagCounts} incompatibleTags={[subjectTag]}
+                                            setConceptFilters={setFilterTags} tagCounts={tagCounts} incompatibleTags={[subjectTag]} baseTag={subjectTag}
                                         />
                                     </li>)}
                             </ul>}
@@ -674,7 +674,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
                         .map((tag, j) => <li key={j} >
                             <FilterCheckbox
                                 tag={tag} conceptFilters={filterTags ?? []} setConceptFilters={setFilterTags}
-                                tagCounts={tagCounts} incompatibleTags={[subjectTag]} baseTag={subjectTag}
+                                tagCounts={tagCounts} incompatibleTags={[subjectTag]}
                             />
                         </li>)}
                 </ul>
