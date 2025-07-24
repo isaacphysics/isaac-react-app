@@ -39,7 +39,7 @@ export const PromptBanner = ({card, ...props}: PromptBannerProps) => {
     return <Container {...props} className={classNames( "icon-card-container px-3 my-3", props?.className ?? "")}>
         <Card className={classNames("icon-card prompt-banner", `bg-${color ?? "cyan-100"}`, card.className)}>
             <div className={"d-flex flex-column h-100 icon-card-main-content"}>
-                <CardTitle className={classNames("px-4 mt-4 d-flex flex-row align-items-start gap-2")}>
+                <CardTitle className={classNames("px-4 mt-4 d-flex flex-column flex-md-row align-items-start gap-2")}>
                     <img src={icon.src} alt={icon.altText ?? ""} className={icon.className ?? ""}/>
                     <h3 className="my-0">{title}</h3>
                 </CardTitle>
