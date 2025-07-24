@@ -28,13 +28,3 @@ ul {
   text-decoration-skip-ink: none;
 }
 
-@mixin dynamic-font-size($mobile, $tablet, $desktop) {
-  font-size: $mobile;
-  line-height: 1.14;
-  @include respond-above(sm) {
-    font-size: $tablet;
-  }
-  @include respond-above(md) {
-    font-size: $desktop;
-  }
-}
