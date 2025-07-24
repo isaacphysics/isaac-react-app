@@ -18,7 +18,6 @@ import {
     useGetStudentQuizAttemptWithFeedbackQuery
 } from "../state";
 import {
-    API_PATH,
     extractTeacherName,
     getValue,
     isDefined,
@@ -270,10 +269,6 @@ export function useCurrentQuizAttempt() {
     return {attempt: attemptWithQuizSubject, error, questions, sections};
 }
 
-export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {
-    return `${API_PATH}/quiz/assignment/${assignmentId}/download`;
-}
-
 // type QuizAttemptOrAssignment = (QuizAttemptDTO | QuizAssignmentDTO);
 
 // export function isAttempt(a: QuizAttemptOrAssignment): a is QuizAttemptDTO {
@@ -291,9 +286,9 @@ export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: Qu
 
 export enum QuizStatus {
     All = "All",
-    Overdue = "Overdue", 
-    NotStarted = "Not started", 
-    Started = "Started (incomplete)", 
+    Overdue = "Overdue",
+    NotStarted = "Not started",
+    Started = "Started (incomplete)",
     Complete = "Complete",
 }
 
@@ -323,7 +318,7 @@ export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): Displaya
     }
     const status = assignment.attempt?.completedDate ? QuizStatus.Complete
         : (assignment.dueDate && todaysDate > assignment.dueDate) ? QuizStatus.Overdue
-            : (assignment.attempt) ? QuizStatus.Started 
+            : (assignment.attempt) ? QuizStatus.Started
                 : QuizStatus.NotStarted;
 
     return {
