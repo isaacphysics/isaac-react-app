@@ -59,7 +59,7 @@ import {
     TODAY,
     UTC_MIDNIGHT_IN_SIX_DAYS
 } from "../../services";
-import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
+import {Loading} from "../handlers/IsaacSpinner";
 import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {BoardAssignee, AssignmentBoardOrder, Boards, ActiveModal} from "../../../IsaacAppTypes";
 import {BoardCard} from "../elements/cards/BoardCard";
@@ -70,7 +70,6 @@ import {SortItemHeader} from "../elements/SortableItemHeader";
 import {MainContent, SetAssignmentsSidebar, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
-import {IconCard} from "../elements/cards/IconCard";
 import {PromptBanner} from "../elements/cards/PromptBanner";
 
 interface AssignGroupProps {
