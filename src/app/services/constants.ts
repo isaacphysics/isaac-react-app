@@ -1202,31 +1202,35 @@ export const FEATURED_NEWS_TAG = "featured";
 
 export const NEWS_PODS_PER_PAGE = 12; // <= api.MAX_PODS_TO_RETURN (if lower, the backend will still return the maximum number of pods, but they won't be displayed in the frontend)
 
-export const PATHS = siteSpecific({
-    ASSIGNMENT_PROGRESS: "/assignment_progress",
-    MY_GAMEBOARDS: "/my_question_decks",
-    MY_ASSIGNMENTS: "/assignments",
-    QUESTION_FINDER: "/questions",
-    GAMEBOARD_FILTER: "/question_decks/new",
-    GAMEBOARD: "/question_decks",
-    SET_ASSIGNMENTS: "/set_assignments",
-    GAMEBOARD_BUILDER: "/question_deck_builder",
-    ADD_GAMEBOARD: "/add_question_deck",
-    PREVIEW_TEST: "/test/preview",
+export const PATHS = {
+    // Site-specific paths
+    ...siteSpecific({
+        ASSIGNMENT_PROGRESS: "/assignment_progress",
+        MY_GAMEBOARDS: "/my_question_decks",
+        MY_ASSIGNMENTS: "/assignments",
+        QUESTION_FINDER: "/questions",
+        GAMEBOARD_FILTER: "/question_decks/new",
+        GAMEBOARD: "/question_decks",
+        SET_ASSIGNMENTS: "/set_assignments",
+        GAMEBOARD_BUILDER: "/question_deck_builder",
+        ADD_GAMEBOARD: "/add_question_deck",
+    },
+    {
+        ASSIGNMENT_PROGRESS: "/my_markbook",
+        MY_GAMEBOARDS: "/quizzes",
+        MY_ASSIGNMENTS: "/assignments",
+        QUESTION_FINDER: "/questions",
+        GAMEBOARD_FILTER: "/quizzes/new",
+        GAMEBOARD: "/quizzes/view",
+        SET_ASSIGNMENTS: "/quizzes/set",
+        GAMEBOARD_BUILDER: "/quizzes/builder",
+        ADD_GAMEBOARD: "/quizzes/add",
+    }),
+    // Common paths
+    MANAGE_GROUPS: "/groups",
     TEST: "/test/assignment",
-}, {
-    ASSIGNMENT_PROGRESS: "/my_markbook",
-    MY_GAMEBOARDS: "/quizzes",
-    MY_ASSIGNMENTS: "/assignments",
-    QUESTION_FINDER: "/questions",
-    GAMEBOARD_FILTER: "/quizzes/new",
-    GAMEBOARD: "/quizzes/view",
-    SET_ASSIGNMENTS: "/quizzes/set",
-    GAMEBOARD_BUILDER: "/quizzes/builder",
-    ADD_GAMEBOARD: "/quizzes/add",
     PREVIEW_TEST: "/test/preview",
-    TEST: "/test/assignment",
-});
+};
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
