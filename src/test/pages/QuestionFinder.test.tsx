@@ -8,7 +8,7 @@ import userEvent from "@testing-library/user-event";
 import { PageContextState } from "../../IsaacAppTypes";
 import { expectPhyBreadCrumbs } from "../helpers/quiz";
 import { IsaacQuestionPageDTO } from "../../IsaacApiTypes";
-import { toggleFilter, SelectionState, Filters, setTestFilters } from "../../mocks/filters";
+import { toggleFilter, BoxSelectionState, Filters, setTestFilters } from "../../mocks/filters";
 
 type QuestionFinderResultsResponse = {
     results: IsaacQuestionPageDTO[];
@@ -157,7 +157,7 @@ describe("QuestionFinder", () => {
 
     if (isPhy) {
         describe('Filters: Parent reselection', () => {
-            const { Selected, Partial, Deselected, Hidden } = SelectionState;
+            const { Selected, Partial, Deselected, Hidden } = BoxSelectionState;
             const { Physics, Skills, Mechanics, SigFig, Maths, Number, Arithmetic, Geometry, Shapes } = Filters;
 
             it('reselects parent topic after unselecting subtopics', async () => {
