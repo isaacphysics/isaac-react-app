@@ -54,6 +54,8 @@ describe("Concepts", () => {
                     await renderConceptsPage({ context: {subject: "maths", stage: ["a_level"] }});
                     const toggleAssert = setTestHighlights([All, Number, Geometry]);
 
+                    // TODO: fix bug where "All" is initially deselected
+                    // await toggleAssert([], [Checked, Empty, Empty]);
                     await toggleAssert([Number, Geometry], [Empty, Checked, Checked]);
                     await toggleAssert([Number, Geometry], [Checked, Empty, Empty]);
                 });
