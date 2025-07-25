@@ -8,6 +8,7 @@ import userEvent from "@testing-library/user-event";
 import { PageContextState } from "../../IsaacAppTypes";
 import { expectPhyBreadCrumbs } from "../helpers/quiz";
 import { IsaacQuestionPageDTO } from "../../IsaacApiTypes";
+import { toggleFilter, SelectionState, Filters, setTestFilters } from "../../mocks/filters";
 
 type QuestionFinderResultsResponse = {
     results: IsaacQuestionPageDTO[];
@@ -26,6 +27,8 @@ const buildMockQuestionFinderResults = <T extends IsaacQuestionPageDTO[]>(questi
 });
 
 describe("QuestionFinder", () => {
+    const { GCSE } = Filters;
+
     const questions = buildMockQuestions(40, mockQuestionFinderResults as QuestionFinderResultsResponse);
     const resultsResponse = buildMockQuestionFinderResults(questions, 0);
 
@@ -43,7 +46,7 @@ describe("QuestionFinder", () => {
 
     it('should render results in alphabetical order', async () => {
         await renderQuestionFinderPage({ questionsSearchResponse: () => resultsResponse });
-        await toggleFilter("GCSE");
+        await toggleFilter(GCSE);
         await expectQuestions(questions.slice(0, 30));
     });
 
@@ -69,7 +72,7 @@ describe("QuestionFinder", () => {
                 randomSequence([1 * 10 ** -6]);
                 await renderQuestionFinderPage({ questionsSearchResponse });
                    
-                await toggleFilter("GCSE");
+                await toggleFilter(GCSE);
                 await expectQuestions(questions.slice(0, 30));
                     
                 await clickOn("Shuffle questions");
@@ -82,7 +85,7 @@ describe("QuestionFinder", () => {
                 randomSequence([1 * 10 ** -6]);
                    
                 await renderQuestionFinderPage({ questionsSearchResponse });
-                await toggleFilter("GCSE");
+                await toggleFilter(GCSE);
                 await clickOn("Shuffle questions");
                 await expectUrlParams("?randomSeed=1&stages=gcse");
             });
@@ -91,7 +94,7 @@ describe("QuestionFinder", () => {
         describe('returning to alphabetical order from a randomised screen', () => {                
             it('when applying filters', async () => {
                 await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
-                await toggleFilter("GCSE");
+                await toggleFilter(GCSE);
                 await expectUrlParams("?stages=gcse");
                 await expectQuestions(questions.slice(0, 30));
             });
@@ -137,7 +140,7 @@ describe("QuestionFinder", () => {
                         default: throw new Error('Unexpected seed');
                     }
                 }});
-                await toggleFilter("GCSE");
+                await toggleFilter(GCSE);
                 await expectQuestions(questions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
                     
@@ -153,18 +156,21 @@ describe("QuestionFinder", () => {
     });
 
     if (isPhy) {
-        describe('Parent reselection', () => {
+        describe('Filters: Parent reselection', () => {
+            const { Selected, Partial, Deselected, Hidden } = SelectionState;
+            const { Physics, Skills, Mechanics, SigFig, Maths, Number, Arithmetic, Geometry, Shapes } = Filters;
+
             it('reselects parent topic after unselecting subtopics', async () => {
                 await renderQuestionFinderPage({ questionsSearchResponse: () => resultsResponse });
                 // Physics -> Skills
                 //         -> Mechanics
                 const toggleAssert = setTestFilters([Physics, Skills, Mechanics]);
 
-                await toggleAssert([], [Deselected, Missing, Missing]);
+                await toggleAssert([], [Deselected, Hidden, Hidden]);
                 await toggleAssert([Physics], [Selected, Deselected, Deselected]);
                 await toggleAssert([Skills, Mechanics], [Partial, Selected, Selected]);
                 await toggleAssert([Skills, Mechanics], [Selected, Deselected, Deselected]);
-                await toggleAssert([Physics], [Deselected, Missing, Missing]);
+                await toggleAssert([Physics], [Deselected, Hidden, Hidden]);
             });
 
             it('works on nested topics', async () => {
@@ -172,26 +178,26 @@ describe("QuestionFinder", () => {
                 // Physics -> Skills -> Significant Figures
                 const toggleAssert = setTestFilters([Physics, Skills, SigFig]);
 
-                await toggleAssert([], [Deselected, Missing, Missing]);
-                await toggleAssert([Physics], [Selected, Deselected, Missing]);
+                await toggleAssert([], [Deselected, Hidden, Hidden]);
+                await toggleAssert([Physics], [Selected, Deselected, Hidden]);
                 await toggleAssert([Skills], [Partial, Selected, Deselected]);
                 await toggleAssert([SigFig], [Partial, Partial, Selected]);
                 await toggleAssert([SigFig], [Partial, Selected, Deselected]);
-                await toggleAssert([Skills], [Selected, Deselected, Missing]);
-                await toggleAssert([Physics], [Deselected, Missing, Missing]);
+                await toggleAssert([Skills], [Selected, Deselected, Hidden]);
+                await toggleAssert([Physics], [Deselected, Hidden, Hidden]);
             });
 
-            it('works when multiple parents are selected', async () => {
+            it('work when multiple parents are selected', async () => {
                 await renderQuestionFinderPage({ questionsSearchResponse: () => resultsResponse });
                 // Physics -> Skills
                 // Maths -> Number
                 const toggleAssert = setTestFilters([Physics, Skills, Maths, Number]);
                 
-                await toggleAssert([], [Deselected, Missing, Deselected, Missing]);
+                await toggleAssert([], [Deselected, Hidden, Deselected, Hidden]);
                 await toggleAssert([Physics, Maths], [Selected, Deselected, Selected, Deselected]);
                 await toggleAssert([Skills, Number], [Partial, Selected, Partial, Selected]);
                 await toggleAssert([Skills, Number], [Selected, Deselected, Selected, Deselected]);
-                await toggleAssert([Physics, Maths], [Deselected, Missing, Deselected, Missing]);
+                await toggleAssert([Physics, Maths], [Deselected, Hidden, Deselected, Hidden]);
             });
 
             describe('on a conxtext-specific question finder', () => {
@@ -204,11 +210,11 @@ describe("QuestionFinder", () => {
                     // Geometry -> Shapes
                     const toggleAssert = setTestFilters([Number, Arithmetic, Geometry, Shapes]);
                 
-                    await toggleAssert([], [Deselected, Missing, Deselected, Missing]);
+                    await toggleAssert([], [Deselected, Hidden, Deselected, Hidden]);
                     await toggleAssert([Number, Geometry], [Selected, Deselected, Selected, Deselected]);
                     await toggleAssert([Arithmetic, Shapes], [Partial, Selected, Partial, Selected]);
                     await toggleAssert([Arithmetic, Shapes], [Selected, Deselected, Selected, Deselected]);
-                    await toggleAssert([Number, Geometry], [Deselected, Missing, Deselected, Missing]);
+                    await toggleAssert([Number, Geometry], [Deselected, Hidden, Deselected, Hidden]);
                 });
             });
         });
@@ -268,7 +274,6 @@ type RenderParameters = {
     context?: NonNullable<PageContextState>;
 };
 
-const mainContainer = () => screen.findByTestId('main');
 
 const findQuestions = () => screen.findByTestId("question-finder-results").then(e => within(e).findAllByRole('listitem'));
 
@@ -284,61 +289,8 @@ const expectPageIndicator = (content: string) => screen.findByTestId("question-f
     expect(found.querySelectorAll('.col')[0].textContent).toBe(content);
 });
 
-const expectClassOn = (label: string, className: string) => {
-    if (className === 'hidden') {
-        return expect(screen.queryByLabelText(label)).not.toBeInTheDocument();
-    }
-    return expect(screen.getByLabelText(label)).toHaveClass(className);
-};
-
-const expectClassesOn = (labels: string[], classNames: string[]) => {
-    return _.zipWith(labels, classNames, (label, className) => expectClassOn(label, className));
-};
-
 const clearFilterTag = async (tagId: string) => {
     const tag = await screen.findByTestId(`filter-tag-${tagId}`);
     const button = await within(tag).findByRole('button');
     await userEvent.click(button);
 };
-
-const toggleFilter = async (filter: string) => {
-    if (isPhy) {
-        await clickOn(filter, mainContainer());
-    } else {
-        await clickOn(filter);
-        await clickOn("Apply filters");
-    }
-};
-
-const setTestFilters = (testedFilters: Filters[]) => async (toggle: Filters[], expectedStates: SelectionState[]) => {
-    await toggleFilters(toggle);
-    expectClassesOn(testedFilters, expectedStates);
-};
-
-
-const toggleFilters = (filters: string[]) => {
-    return Promise.all(filters.map(filter => toggleFilter(filter)));
-};
-
-enum SelectionState {
-    Selected = "icon-checkbox-selected",
-    Partial = "icon-checkbox-partial-alt",
-    Deselected = "icon-checkbox-off",
-    Hidden = 'hidden'
-};
-
-const { Selected, Partial, Deselected, Hidden: Missing } = SelectionState;
-
-enum Filters {
-    Physics = "Physics",
-    Skills = "Skills",
-    Mechanics = "Mechanics",
-    SigFig = "Significant Figures",
-    Maths = "Maths",
-    Number = "Number",
-    Arithmetic = "Arithmetic",
-    Geometry = "Geometry",
-    Shapes = "Shapes"
-}
-
-const { Physics, Skills, Mechanics, SigFig, Maths, Number, Arithmetic, Geometry, Shapes } = Filters;

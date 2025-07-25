@@ -153,7 +153,7 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     await userEvent.click(tabLink);
 };
 
-export const clickOn = async (text: string, container?: Promise<HTMLElement>) => {
+export const clickOn = async (text: string | RegExp, container?: Promise<HTMLElement>) => {
     const [target] = await (container ? within(await container).findAllByText(text).then(e => e) : screen.findAllByText(text));
     if (target.hasAttribute('disabled')) {
         throw new Error(`Can't click on disabled button ${target.textContent}`);
