@@ -106,8 +106,8 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                                 {/* <AssignmentProgressPageSettingsContext.Provider value={pageSettings}> */}
                                 {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} user={user} />)}
                                 {/* </AssignmentProgressPageSettingsContext.Provider> */}
-                                {sortedGroups.length === 0 && <Container>
-                                    <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
+                                {sortedGroups.length === 0 && <div>
+                                    <div className={classNames("d-flex flex-column my-2 py-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
                                         <span>
                                             You have no teaching groups yet.
                                         </span>
@@ -117,7 +117,7 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                                             </Link>
                                         </strong>
                                     </div>
-                                </Container>}
+                                </div>}
                             </div>;
                         }}
                     />
