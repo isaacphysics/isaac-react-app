@@ -98,6 +98,9 @@ export const api = {
         securePadPasswordReset({ password: params.password }),
       );
     },
+    updatePrivacyPolicyAcceptedTime: (params: { privacyPolicyAcceptedTime: EpochTimeStamp }) => {
+      return endpoint.post(`/users/accept-privacy-policy`, params);
+    },
     updateCurrent: (
       registeredUser: Immutable<ValidationUser>,
       userPreferences: UserPreferencesDTO,

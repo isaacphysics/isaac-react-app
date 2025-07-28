@@ -438,6 +438,26 @@ export const handlePasswordReset =
     }
   };
 
+export const updatePrivacyPolicyAcceptedTime =
+  (params: { privacyPolicyAcceptedTime: EpochTimeStamp }) => async (dispatch: Dispatch<Action>) => {
+    try {
+      dispatch({ type: ACTION_TYPE.USER_PRIVACY_POLICY_UPDATE_REQUEST });
+      await api.users.updatePrivacyPolicyAcceptedTime(params);
+      dispatch(requestCurrentUser() as any);
+      dispatch({ type: ACTION_TYPE.USER_PRIVACY_POLICY_UPDATE_RESPONSE_SUCCESS });
+      dispatch(
+        showToast({
+          color: "success",
+          title: "Privacy policy accepted",
+          body: "Your privacy policy acceptance has been recorded.",
+          timeout: 5000,
+        }) as any,
+      );
+    } catch (e: any) {
+      dispatch({ type: ACTION_TYPE.USER_PRIVACY_POLICY_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e) });
+    }
+  };
+
 export const handleProviderLoginRedirect = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
   dispatch({ type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT, provider });
   try {

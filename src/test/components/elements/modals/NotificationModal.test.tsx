@@ -83,7 +83,7 @@ describe("Notification Modal", () => {
     setupTest("STUDENT");
     const modal = await screen.findByTestId("active-modal");
     const buttons = within(modal).getAllByRole("button");
-    const expectedButtons = ["Close", "Yes, view questionnaire", "No thanks", "Ask me later"];
+    const expectedButtons = ["Yes, view questionnaire", "No thanks", "Ask me later"];
     buttons.map((each, index) => expect(each).toHaveTextContent(expectedButtons[index]));
     expect(buttons).toHaveLength(expectedButtons.length);
   });
@@ -94,7 +94,7 @@ describe("Notification Modal", () => {
     setupTest("STUDENT");
     const modal = await screen.findByTestId("active-modal");
     const buttons = within(modal).getAllByRole("button");
-    const surveyButton = buttons[1];
+    const surveyButton = buttons[0];
     await userEvent.click(surveyButton);
     expect(window.open).toHaveBeenCalledWith(expect.stringContaining(studentSurvey.externalReference.url), "_blank");
     expect(api.notifications.respond).toHaveBeenCalledWith(studentSurvey.id, "ACKNOWLEDGED");
@@ -105,7 +105,7 @@ describe("Notification Modal", () => {
     setupTest("STUDENT");
     const modal = await screen.findByTestId("active-modal");
     const buttons = within(modal).getAllByRole("button");
-    const surveyButton = buttons[2];
+    const surveyButton = buttons[1];
     await userEvent.click(surveyButton);
     expect(api.notifications.respond).toHaveBeenCalledWith(studentSurvey.id, "DISABLED");
   });
@@ -115,7 +115,7 @@ describe("Notification Modal", () => {
     setupTest("STUDENT");
     const modal = await screen.findByTestId("active-modal");
     const buttons = within(modal).getAllByRole("button");
-    const surveyButton = buttons[3];
+    const surveyButton = buttons[2];
     await userEvent.click(surveyButton);
     expect(api.notifications.respond).toHaveBeenCalledWith(studentSurvey.id, "POSTPONED");
   });

@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2025-06-11 15:44:03.
+// Generated using typescript-generator version 3.2.1263 on 2025-07-18 14:12:41.
 
 export interface AssignmentDTO extends IAssignmentLike {
   gameboardId?: string;
@@ -541,6 +541,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
   registeredContextsLastConfirmed?: EpochTimeStamp;
   firstLogin?: boolean;
   lastUpdated?: EpochTimeStamp;
+  privacyPolicyAcceptedTime?: EpochTimeStamp;
   lastSeen?: EpochTimeStamp;
   emailVerificationStatus?: EmailVerificationStatus;
   id?: number;
@@ -576,6 +577,7 @@ export interface UserSummaryDTO extends AbstractSegueUserDTO {
 
 export interface UserSummaryForAdminUsersDTO extends UserSummaryWithEmailAddressDTO {
   lastUpdated?: EpochTimeStamp;
+  privacyPolicyAcceptedTime?: EpochTimeStamp;
   lastSeen?: EpochTimeStamp;
   registrationDate?: EpochTimeStamp;
   schoolId?: string;
@@ -670,8 +672,8 @@ export interface Image extends Media {
 }
 
 export interface IHasQuizSummary {
-  quizId?: string;
   quizSummary?: ContentSummaryDTO;
+  quizId?: string;
 }
 
 export interface Mark {

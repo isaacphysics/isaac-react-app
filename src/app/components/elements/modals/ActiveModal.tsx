@@ -13,7 +13,9 @@ export const ActiveModal = ({ activeModal }: ActiveModalProps) => {
   const dispatch = useAppDispatch();
 
   const toggle = () => {
-    dispatch(closeActiveModal());
+    if (activeModal?.isCloseable !== false) {
+      dispatch(closeActiveModal());
+    }
   };
 
   return (
@@ -35,7 +37,7 @@ export const ActiveModal = ({ activeModal }: ActiveModalProps) => {
               )}
               style={activeModal.title ? {} : { top: 0, width: "100%", height: 0, zIndex: 1 }}
               close={
-                activeModal.closeAction ? (
+                activeModal.isCloseable && activeModal.closeAction ? (
                   <button className="close" onClick={activeModal.closeAction}>
                     {activeModal?.closeLabelOverride ?? "Close"}
                   </button>
