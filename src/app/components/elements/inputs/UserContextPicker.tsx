@@ -65,8 +65,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     }, [userContext.contexts]);
 
     if (isAda && !isLoggedIn(user) || isStaff(user)) {
-        return <div className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
-            <div className={classNames("d-flex m-0 p-0 justify-content-md-end", {"ms-2": above["md"](deviceSize)})}>
+        return <div className={classNames(`d-flex flex-column px-0 context-picker-container no-print ${className}`, {"w-100 mt-2": isAda})}>
+            <div className={classNames("d-flex m-0 p-0 justify-content-md-end", {"ms-md-2": isAda})}>
                 {/* Stage Selector */}
                 <div className={classNames("form-group w-100 d-flex justify-content-end m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}

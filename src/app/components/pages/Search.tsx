@@ -123,22 +123,19 @@ export const Search = withRouter((props: RouteComponentProps) => {
             <TitleAndBreadcrumb currentPageTitle="Search" icon={{type: "hex", icon: "icon-finder"}} />
             <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={urlQuery ?? ""} />
             <Card className="my-4">
-                <CardHeader className="search-header bg-transparent">
-                    <Col xs={12} md={5} lg={siteSpecific(5, 4)} xl={siteSpecific(5, 3)}>
+                <CardHeader className="search-header bg-transparent p-3">
+                    <Col xs={12}>
                         <h3 className="me-2">
                             Search Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
                         </h3>
                     </Col>
-                    <Col xs={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className="d-flex justify-content-end flex-grow-1">
-                        <Form className="form-inline search-filters w-100">
-                            <div className="w-100 align-items-center justify-content-end m-0 d-flex">
-                                <Label htmlFor="document-filter" className="d-none d-lg-inline-block">
-                                    {`Filter${siteSpecific("","s")}:`}
-                                </Label>
-                                <div className={classNames("flex-grow-1 w-100 w-md-75 w-lg-50 mb-2 mb-md-0", {"ms-2": above["md"](deviceSize)})}>
+                    <Col className="d-flex justify-content-end flex-grow-1">
+                        <Form className="form-inline search-filters w-100 gap-2">
+                            <div className="align-items-center m-0 d-flex flex-grow-1">
+                                <div className={classNames("flex-grow-1 w-100 w-md-75 w-lg-50")}>
                                     <StyledSelect
                                         inputId="document-filter" isMulti
-                                        placeholder="No page type filter"
+                                        placeholder="Select page type filter..."
                                         value={filtersState}
                                         options={
                                             ([DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.GENERIC] as SearchableDocumentType[])
