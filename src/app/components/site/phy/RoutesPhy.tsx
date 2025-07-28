@@ -176,6 +176,7 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/book/question" pageId="book_question" />,
     <StaticPageRoute key={key++} exact path="/exam_uni_help" />,
     <StaticPageRoute key={key++} exact path="/coronavirus" pageId="2020_03_coronavirus" />,
+    <StaticPageRoute key={key++} exact path="/gameboards/new" pageId="question_finder_redirect" />,
     <StaticPageRoute key={key++} exact path="/11_14" pageId="11_14" />,
     <StaticPageRoute key={key++} exact path="/gcse" pageId="gcse" />,
     <StaticPageRoute key={key++} exact path="/alevel" pageId="alevel" />,
