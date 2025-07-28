@@ -5,8 +5,6 @@ import {isPhy} from "../../services";
 
 export const BetaSiteBanner = () => {
 
-    // FIXME: post-launch cleanup
-
     return isPhy ? <Alert color="warning" className="mb-0 border-radius-0 mx-0 no-print" fade={false}>
         <Container className="text-center">
                  This site is still under construction.
