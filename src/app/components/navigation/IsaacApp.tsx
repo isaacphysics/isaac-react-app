@@ -76,7 +76,6 @@ import {ExternalRedirect} from "../handlers/ExternalRedirect";
 import {TutorRequest} from "../pages/TutorRequest";
 import {AssignmentProgress} from "../pages/AssignmentProgressWrapper";
 import {MyGameboards} from "../pages/MyGameboards";
-import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
 import {QuestionFinder} from "../pages/QuestionFinder";
 import {SessionCookieExpired} from "../pages/SessionCookieExpired";
@@ -191,7 +190,6 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path={PATHS.MY_GAMEBOARDS} ifUser={isLoggedIn} component={MyGameboards} />
-                        <TrackedRoute exact path={PATHS.GAMEBOARD_FILTER} ifUser={isLoggedIn} component={GameboardFilter} />
                         <TrackedRoute exact path={PATHS.QUESTION_FINDER} component={QuestionFinder} />
 
                         {/* Teacher pages */}
