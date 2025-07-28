@@ -58,7 +58,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                 {isAda && <EditContentButton doc={doc} />}
             </>
             : <>
-                {showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
+                {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
                 <div className="d-flex align-items-center mt-3 gap-3">
                     {isPhy && <div>
                         <div className="d-flex align-items-center gap-3">
