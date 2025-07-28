@@ -43,7 +43,10 @@ export const MainContent = (props: ColProps) => {
     const { className, ...rest } = props;
     
     const dispatch = useAppDispatch();
-    dispatch(mainContentIdSlice.actions.set("page-content"));
+
+    useEffect(() => {
+        dispatch(mainContentIdSlice.actions.set("page-content"));
+    }, [dispatch]);
 
     return siteSpecific(<Col id="page-content" xs={12} lg={8} xl={9} {...rest} className={classNames(className, "order-0 order-lg-1")} />, props.children);
 };
