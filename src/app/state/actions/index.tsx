@@ -132,6 +132,7 @@ export const linkAccount = (provider: AuthenticationProvider) => async (dispatch
         const redirectResponse = await api.authentication.linkAccount(provider);
         const redirectUrl = redirectResponse.data.redirectUrl;
         dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS, provider, redirectUrl: redirectUrl});
+        trackEvent("sign_in_attempt", { props: { provider: provider.toLowerCase(), fromLinkPage: true } });
         window.location.href = redirectUrl;
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
@@ -472,7 +473,7 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider, is
         const redirectResponse = await api.authentication.getRedirect(provider, isSignup);
         const redirectUrl = redirectResponse.data.redirectUrl;
         dispatch({type: ACTION_TYPE.AUTHENTICATION_REDIRECT, provider, redirectUrl: redirectUrl});
-        trackEvent("sign_in_attempt", { props: { provider } });
+        trackEvent("sign_in_attempt", { props: { provider: provider.toLowerCase(), fromLinkPage: false } });
         window.location.href = redirectUrl;
     } catch (e) {
         dispatch(showAxiosErrorToastIfNeeded("Login redirect failed", e));
@@ -490,7 +491,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             dispatch(getUserPreferences() as any)
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
-        trackEvent("sign_in_success", { props: { provider }});
+        trackEvent("sign_in_success", { props: { provider: provider.toLowerCase() }});
         if (providerResponse.data.firstLogin) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             trackEvent("registration", {
@@ -507,7 +508,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
         history.push(nextPage || defaultNextPage);
     } catch (error: any) {
-        trackEvent("sign_in_failure", { props: { provider, ...fetchErrorFromParameters(parameters) }});
+        trackEvent("sign_in_failure", { props: { provider: provider.toLowerCase(), ...fetchErrorFromParameters(parameters) }});
         history.push("/auth_error", { errorMessage: extractMessage(error) });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
