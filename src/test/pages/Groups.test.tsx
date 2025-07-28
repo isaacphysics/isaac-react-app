@@ -532,9 +532,16 @@ describe("Groups", () => {
     };
     const authTokenHandler = buildAuthTokenHandler(mockNewGroup, "G3N30M");
     const newGroupHandler = buildNewGroupHandler(mockNewGroup);
+    const mockUserWithPrivacyAccepted = {
+      ...mockUser,
+      privacyPolicyAcceptedTime: Date.now(),
+    };
     renderTestEnvironment({
       role: "TUTOR",
       extraEndpoints: [
+        rest.get(API_PATH + "/users/current", (req, res, ctx) => {
+          return res(ctx.json(mockUserWithPrivacyAccepted));
+        }),
         rest.post(API_PATH + "/groups", newGroupHandler),
         rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, authTokenHandler),
       ],

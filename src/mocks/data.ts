@@ -1007,6 +1007,7 @@ export const mockUser: RegisteredUserDTO = {
   registrationDate: DAYS_AGO(100),
   role: "ADMIN",
   schoolOther: "N/A",
+  privacyPolicyAcceptedTime: Date.now(),
   registeredContexts: [
     {
       stage: "all",
