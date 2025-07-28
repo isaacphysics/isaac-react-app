@@ -88,7 +88,9 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 <SidebarLayout>
                     {sidebar}
                     <MainContent>
-                        <PageMetadata doc={doc} title={doc.subtitle} noTitle={!doc.subtitle} />
+                        {/* on generic pages, the actual doc.title is used as the super-title, unlike e.g. questions which use "Question". 
+                            as such, we promote a generic page's subtitle to be the regular title. */}
+                        <PageMetadata doc={{...doc, subtitle: undefined}} title={doc.subtitle} noTitle={!doc.subtitle} />
 
                         <Row className="generic-content-container">
                             <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>
