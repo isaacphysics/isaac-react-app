@@ -11,7 +11,6 @@ import {
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    TAG_ID,
     trackEvent,
     siteSpecific,
     isAda,
@@ -35,7 +34,6 @@ import {
     GlossaryTermDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
-    RegisteredUserDTO,
     TestCaseDTO,
     UserContext, UserRole
 } from "../../../IsaacApiTypes";
