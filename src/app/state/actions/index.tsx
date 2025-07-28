@@ -67,6 +67,19 @@ export function extractMessage(e: Error) {
     return API_REQUEST_FAILURE_MESSAGE;
 }
 
+export function fetchErrorFromParameters(parameters: string): { error?: string, errorDescription?: string } {
+    try {
+        const parsed = new URLSearchParams(parameters);
+        const [error, errorDescription] = [parsed.get('error'), parsed.get('error_description')];
+        return {
+            ...(null !== error && { error }),
+            ...(null !== errorDescription && { errorDescription })
+        };
+    } catch {
+        return {};
+    }
+}
+
 export function showAxiosErrorToastIfNeeded(error: string, e: any) {
     if (e) {
         if (e.response) {
@@ -459,6 +472,7 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider, is
         const redirectResponse = await api.authentication.getRedirect(provider, isSignup);
         const redirectUrl = redirectResponse.data.redirectUrl;
         dispatch({type: ACTION_TYPE.AUTHENTICATION_REDIRECT, provider, redirectUrl: redirectUrl});
+        trackEvent("sign_in_attempt", { props: { provider } });
         window.location.href = redirectUrl;
     } catch (e) {
         dispatch(showAxiosErrorToastIfNeeded("Login redirect failed", e));
@@ -476,6 +490,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             dispatch(getUserPreferences() as any)
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
+        trackEvent("sign_in_success", { props: { provider }});
         if (providerResponse.data.firstLogin) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             trackEvent("registration", {
@@ -492,6 +507,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
         history.push(nextPage || defaultNextPage);
     } catch (error: any) {
+        trackEvent("sign_in_failure", { props: { provider, ...fetchErrorFromParameters(parameters) }});
         history.push("/auth_error", { errorMessage: extractMessage(error) });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
