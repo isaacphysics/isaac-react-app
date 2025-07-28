@@ -27,6 +27,7 @@ describe("Concepts", () => {
     
             it('reselects parent topic after unselecting subtopics', async () => {
                 await renderConceptsPage();
+                // Physics -> Skills
                 const toggleAssert = setTestFilters([Physics, Skills]);
 
                 await toggleAssert([], [Deselected, Hidden]);
@@ -38,6 +39,8 @@ describe("Concepts", () => {
 
             it('reselects parent topic after unselecting subtopics, multiple parents', async () => {
                 await renderConceptsPage();
+                // Physics -> Skills
+                // Maths -> Number
                 const toggleAssert = setTestFilters([Physics, Skills, Maths, Number]);
 
                 await toggleAssert([], [Deselected, Hidden, Deselected, Hidden]);
@@ -52,6 +55,9 @@ describe("Concepts", () => {
 
                 it('reselects all after all topics are unselected', async () => {
                     await renderConceptsPage({ context: {subject: "maths", stage: ["a_level"] }});
+                    // All
+                    // Number
+                    // Geometry
                     const toggleAssert = setTestHighlights([All, Number, Geometry]);
 
                     // TODO: fix bug where "All" is initially deselected
