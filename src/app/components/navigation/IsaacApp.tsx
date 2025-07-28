@@ -82,6 +82,7 @@ import {QuestionFinder} from "../pages/QuestionFinder";
 import {SessionCookieExpired} from "../pages/SessionCookieExpired";
 import { AccountDeletion } from '../pages/AccountDeletion';
 import { AccountDeletionSuccess } from '../pages/AccountDeletionSuccess';
+import { IsaacScienceMigrationBanner } from './IsaacScienceMigrationBanner';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -147,6 +148,7 @@ export const IsaacApp = () => {
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
+        <IsaacScienceMigrationBanner />
         <ResearchNotificationBanner />
         <UnsupportedBrowserBanner />
         <DowntimeWarningBanner />
