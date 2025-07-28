@@ -54,8 +54,8 @@ export const PageMetadata = (props: PageMetadataProps) => {
                         {children}
                     </div>
                     <ActionButtons location={location} isQuestion={isQuestion} doc={doc}/>
-                    {isAda && <EditContentButton doc={doc} />}
                 </div>
+                {isAda && <EditContentButton doc={doc} />}
             </>
             : <>
                 {showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
