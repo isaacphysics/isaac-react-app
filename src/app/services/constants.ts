@@ -942,6 +942,12 @@ export enum TAG_LEVEL {
     topic = "topic",
 }
 
+// A mapping used to define tags which should be treated as children of a subject, but only in that subject-specific context
+export const SUBJECT_SPECIFIC_CHILDREN_MAP: Record<SUBJECTS, Partial<Record<LearningStage, TAG_ID[]>>> = {
+    [SUBJECTS.MATHS]: {[LEARNING_STAGE.A_LEVEL]: [TAG_ID.mechanics]},
+    [SUBJECTS.PHYSICS]: {}, [SUBJECTS.CHEMISTRY]: {}, [SUBJECTS.BIOLOGY]: {}, [SUBJECTS.CS]: {}
+};
+
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
