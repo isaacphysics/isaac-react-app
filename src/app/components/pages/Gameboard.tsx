@@ -89,7 +89,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     const userViewingContext = useUserViewingContext();
     const deviceSize = useDeviceSize();
     const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
-    const uniqueStage = questionViewingContexts.find(context => context.stage === userViewingContext.stage);
+    const uniqueStage = questionViewingContexts.find(context => userViewingContext.contexts.map(c => c.stage).includes(context.stage));
     return <ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "justify-content-center": isAda})}>
             <span className={"question-progress-icon"}>
@@ -170,7 +170,7 @@ export const Gameboard = withRouter(({ location }) => {
     const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId)));
     const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
     const wildCard: ContentSummaryDTO = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT, tags: [], className: "wildcard-list-view"} as ContentSummaryDTO;
-    const displayQuestions = (wildCard && gameboard && showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
+    const displayQuestions = (gameboard?.wildCard && gameboard && showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {

@@ -48,18 +48,18 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
 
-    const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
+    const [currentStage, setCurrentStage] = useState<STAGE>(userContext.contexts[0].stage as STAGE ?? STAGE.ALL);
+    const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [currentStage], includeNullOptions: true});
     const allStages = getFilteredStageOptions({includeNullOptions: true});
 
     const onlyOneBoard : {label: string, value: EXAM_BOARD} | undefined = filteredExamBoardOptions.length === 2 && filteredExamBoardOptions.map(eb => eb.value).includes(EXAM_BOARD.ALL)
         ? filteredExamBoardOptions.filter(eb => eb.value !== EXAM_BOARD.ALL)[0]
         : undefined;
 
-    const [currentStage, setCurrentStage] = useState<STAGE>(userContext.stage);
 
     useEffect(() => {
-        setCurrentStage(userContext.stage);
-    }, [userContext.stage]);
+        setCurrentStage(userContext.contexts[0].stage as STAGE);
+    }, [userContext.contexts]);
 
     if (isAda && !isLoggedIn(user) || isStaff(user)) {
         return <Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
@@ -77,7 +77,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", { "mb-2 me-1": isAda })}
                         type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
-                        value={userContext.stage}
+                        value={currentStage}
                         disabled={userContext.isFixedContext}
                         onChange={e => {
                             const newParams: { [key: string]: unknown } = {...qParams, stage: e.target.value};
@@ -113,7 +113,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                                 className={`flex-grow-1 d-inline-block ps-2 pe-0 mb-2 ms-1`}
                                 type="select" id="uc-exam-board-select"
                                 aria-label={hideLabels ? "Exam Board" : undefined}
-                                value={userContext.examBoard}
+                                value={userContext.contexts[0].examBoard}
                                 onChange={e => {
                                     dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD));
                                 }}
@@ -130,7 +130,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     <div className="mt-2 ms-1">
                         <i id={`viewing-context-explanation`} className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help mx-1")}/>
                         <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
-                            You are seeing {stageLabelMap[userContext.stage]}{isAda ? ` - ${examBoardLabelMap[userContext.examBoard]}` : ""}
+                            You are seeing {stageLabelMap[currentStage]}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
                             &nbsp;content.&nbsp;
                             {formatContextExplanation(userContext.explanation.stage, userContext.explanation.examBoard)}&nbsp;
                             {isAda && !isLoggedIn(user) && !userContext.hasDefaultPreferences ?

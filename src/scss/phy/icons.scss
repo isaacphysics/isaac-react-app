@@ -121,7 +121,7 @@
 }
 
 .icon-arrow-down {
-  @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
+  @include svg-icon('/assets/common/icons/arrow-right.svg', 16px, 16px);
   transform: rotate(90deg);
 }
 

@@ -22,7 +22,8 @@
     background: $gray-103;
   }
   .card-body > .content-chunk > .content-value {
-    @extend .px-md-7;
+    padding-left: 1.625rem;
+    padding-right: 1.625rem;
     font-size: $question-font-size;
     line-height: $question-line-height;
   }

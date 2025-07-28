@@ -4,7 +4,7 @@ import { isPhy } from "./siteConstants";
 import { ChoiceTree } from "../components/elements/panels/QuestionFinderFilterPanel";
 import { itemiseTag } from "./filter";
 import { tags } from "./tags";
-import { TAG_ID, TAG_LEVEL } from "./constants";
+import { SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, TAG_LEVEL } from "./constants";
 import { PageContextState } from "../../IsaacAppTypes";
 
 export const sublistDelimiter = " >>> ";
@@ -87,14 +87,20 @@ export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_
         choices.push({});
         choices[0][pageContext.subject] = tags.getChildren(pageContext.subject as TAG_ID).map(itemiseTag);
     }
-    for (let tierIndex = 0; tierIndex < topicSelections.length && tierIndex < 2; tierIndex++)  {
+    for (let tierIndex = 0; tierIndex < topicSelections.length && tierIndex < 2; tierIndex++) {
         if (Object.keys(topicSelections[tierIndex]).length > 0) {
             choices[tierIndex+1] = {};
             for (const v of Object.values(topicSelections[tierIndex])) {
-                for (const v2 of v) 
+                for (const v2 of v) {
                     choices[tierIndex+1][v2.value] = tags.getChildren(v2.value).map(itemiseTag);
+                }
             }
         }
+    }
+    if (choices.length > 1 && pageContext?.subject && pageContext.stage?.length === 1) {
+        SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext.stage[0]]?.forEach(tag => 
+            pageContext.subject ? choices[1][pageContext?.subject]?.push(itemiseTag(tags.getById(tag))) : null
+        );
     }
     return choices;
 };

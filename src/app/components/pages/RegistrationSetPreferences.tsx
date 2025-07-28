@@ -3,7 +3,15 @@ import {Button, Card, CardBody, Col, Container, Form, Label, Row,} from "reactst
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Immutable} from "immer";
 import {BooleanNotation, DisplaySettings, ProgrammingLanguage, ValidationUser} from "../../../IsaacAppTypes";
-import {AppState, errorSlice, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
+import {
+    AppState,
+    errorSlice,
+    continueToAfterAuthPath,
+    selectors,
+    updateCurrentUser,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {UserContextAccountInput} from "../elements/inputs/UserContextAccountInput";
 import {
     allRequiredInformationIsPresent,
@@ -50,10 +58,6 @@ export const RegistrationSetPreferences = () => {
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
     const [programmingLanguage, setProgrammingLanguage] = useState<ProgrammingLanguage>({...userPreferences?.PROGRAMMING_LANGUAGE});
 
-    function continueToAfterAuthPath() {
-        history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
-    }
-
     const userPreferencesToUpdate = {
         EMAIL_PREFERENCE: emailPreferences, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings
     };
@@ -65,7 +69,7 @@ export const RegistrationSetPreferences = () => {
         if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
             dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, true));
-            if (isPhy) continueToAfterAuthPath();
+            if (isPhy) continueToAfterAuthPath(user);
         }
     }
 
@@ -116,7 +120,7 @@ export const RegistrationSetPreferences = () => {
                                 {siteSpecific(<div className="section-divider"/>, <hr/>)}
                                 <Row className="justify-content-end">
                                     <Col xs={12} sm={siteSpecific(4,5)} lg={6} className={classNames("d-flex justify-content-end", {"justify-content-lg-end": isAda})}>
-                                        <Button className={`my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`}  color={siteSpecific("solid", "keyline")} onClick={continueToAfterAuthPath}>I&apos;ll do this later</Button>
+                                        <Button className={`my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`}  color={siteSpecific("solid", "keyline")} onClick={() => {continueToAfterAuthPath(user);}}>I&apos;ll do this later</Button>
                                     </Col>
                                     <Col xs={12} sm={5} lg={6} className="d-flex">
                                         <Button type="submit" className={`btn my-2 px-2 w-100 ${siteSpecific("px-lg-0 btn-keyline", "px-lg-3 btn-solid")}`} disabled={!canSavePreferences}>Save preferences</Button>

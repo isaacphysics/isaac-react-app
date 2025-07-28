@@ -8,7 +8,7 @@ interface UseUserPreferencesReturnType {
 }
 
 export function useUserPreferences(): UseUserPreferencesReturnType {
-    const {examBoard} = useUserViewingContext();
+    const examBoard = useUserViewingContext().contexts[0].examBoard;
 
     const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} =
         useAppSelector((state: AppState) => state?.userPreferences) || {};
@@ -24,8 +24,8 @@ export function useUserPreferences(): UseUserPreferencesReturnType {
     if (booleanNotation) {
         preferredBooleanNotation = Object.values(BOOLEAN_NOTATION).find(key => booleanNotation[key] === true);
     }
-    // if we don't have a boolean notation preference for the user, then set it based on the exam board
-    if (preferredBooleanNotation === undefined) {
+    // if we don't have a boolean notation preference for the user, then set it based on the (first) exam board
+    if (preferredBooleanNotation === undefined && examBoard) {
         preferredBooleanNotation = examBoardBooleanNotationMap[examBoard];
     }
 

@@ -3,7 +3,7 @@ import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
-import {above, below, getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags, useDeviceSize} from "../../services";
+import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, tags} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -15,8 +15,6 @@ import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { ContentSummaryDTO, Stage } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { AffixButton } from "../elements/AffixButton";
-import classNames from "classnames";
 import { PageMetadata } from "../elements/PageMetadata";
 
 const subjectToTagMap = {
@@ -31,7 +29,6 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
     const user = useAppSelector(selectors.user.orNull);
     const pageContext = useUrlPageTheme();
-    const deviceSize = useDeviceSize();
 
     const searchParsed = queryString.parse(location.search, {arrayFormat: "comma"});
 
@@ -48,8 +45,11 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         return [query, filters, stages];
     }, [searchParsed]);
 
-    const applicableTags = pageContext?.subject
-        ? tags.getDirectDescendents(subjectToTagMap[pageContext.subject])
+    const applicableTags = pageContext?.subject && pageContext?.stage?.length === 1
+        ? [
+            ...tags.getChildren(subjectToTagMap[pageContext.subject]), 
+            ...((SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject][pageContext.stage[0]]?.map(tag => tags.getById(tag))) || [])
+        ]
         : [...tags.allSubjectTags, ...tags.allFieldTags];
 
     const [searchText, setSearchText] = useState(query);
@@ -59,8 +59,13 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const [searchStages, setSearchStages] = useState<Stage[]>(getFilteredStageOptions().filter(s => stages.includes(s.value)).map(s => s.value));
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
+    const tagIds = useMemo(() => (pageContext?.subject && pageContext?.stage?.length === 1
+        ? [pageContext?.subject, ...(SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject][pageContext.stage[0]] ?? [])]
+        : tags.allSubjectTags.map(t => t.id)).join(","), [pageContext]
+    );
+
     const listConceptsQuery = useListConceptsQuery(pageContext 
-        ? {conceptIds: undefined, tagIds: pageContext?.subject ?? tags.allSubjectTags.map(t => t.id).join(",")}
+        ? {conceptIds: undefined, tagIds}
         : skipToken
     );
 
@@ -68,7 +73,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         const searchResults = concepts?.filter(c =>
             (matchesAllWordsInAnyOrder(c.title, searchText || "") || matchesAllWordsInAnyOrder(c.summary, searchText || ""))
         );
-        
+
         const filteredSearchResults = searchResults
             ?.filter((result) => excludeTopicFiltering || !filters.length || result?.tags?.some(t => filters.includes(t)))
             .filter((result) => excludeStageFiltering || !searchStages.length || searchStages.some(s => result.audience?.some(a => a.stage?.includes(s))))

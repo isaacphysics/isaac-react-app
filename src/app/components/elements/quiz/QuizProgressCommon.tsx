@@ -191,7 +191,7 @@ export function ResultsTable<Q extends QuestionType>({
     }
 
     const sortBySelectedSortOrder = useCallback((item: AssignmentProgressDTO): string | number => {
-        if (!isAuthorisedFullAccess(item)) return -Infinity;
+        if (!isAuthorisedFullAccess(item)) return reverseOrder ? -Infinity : Infinity;
         switch (sortOrder) {
             case "name":
                 return sortByName(item);
@@ -208,7 +208,7 @@ export function ResultsTable<Q extends QuestionType>({
                     return (item.notAttemptedPartResults || [])[sortOrder];
                 }
         }
-    }, [pageSettings?.attemptedOrCorrect, sortOrder]);
+    }, [pageSettings?.attemptedOrCorrect, reverseOrder, sortOrder]);
 
     const sortedProgress = useMemo(() => orderBy(progress,
         typeof sortOrder === "number" 
@@ -407,7 +407,7 @@ export function ResultsTablePartBreakdown({
     }
 
     const sortBySelectedSortOrder = useCallback((item: AssignmentProgressDTO) => {
-        if (!isAuthorisedFullAccess(item)) return -1;
+        if (!isAuthorisedFullAccess(item)) return reverseOrder ? -Infinity : Infinity;
         switch (sortOrder) {
             case "name":
                 return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
@@ -418,7 +418,7 @@ export function ResultsTablePartBreakdown({
             default:
                 return -questionPartResultToNumber(item.questionPartResults?.[questionIndex][sortOrder]);
         }
-    }, [questionIndex, sortOrder]);
+    }, [questionIndex, reverseOrder, sortOrder]);
 
     const sortedProgress = useMemo(() => orderBy(progress,
         [sortBySelectedSortOrder, sortByName],

@@ -101,6 +101,7 @@ export const HeaderCS = () => {
                                 <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" />}</>}>
                                     {isTutorOrAbove(user) ?
                                         <>
+                                            <LinkItem to="/dashboard">Overview</LinkItem>
                                             <LinkItem to="/groups">Teaching groups</LinkItem>
                                             <LinkItem to={PATHS.SET_ASSIGNMENTS}>Manage assignments</LinkItem>
                                             <LinkItem to="/set_tests">Manage tests</LinkItem>
