@@ -70,6 +70,7 @@ import { SortItemHeader } from "../elements/SortableItemHeader";
 import { MainContent, SetAssignmentsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { HorizontalScroller } from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
+import { PageMetadata } from "../elements/PageMetadata";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -527,7 +528,7 @@ export const SetAssignments = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
-            modalId="help_modal_set_assignments" className={siteSpecific("mb-4", "")} />
+            modalId="help_modal_set_assignments" />
         <SidebarLayout>
             <SetAssignmentsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
@@ -537,8 +538,10 @@ export const SetAssignments = () => {
                 boardSubject={boardSubject} setBoardSubject={setBoardSubject}
                 boardCreator={boardCreator} setBoardCreator={setBoardCreator}
                 sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
+                hideButton
             />
             <MainContent>
+                <PageMetadata showSidebarButton sidebarInTitle />
                 <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
                 {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
                 {groups && groups.length === 0 && <Alert color="warning">
