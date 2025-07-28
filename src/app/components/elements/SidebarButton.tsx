@@ -6,19 +6,20 @@ import classNames from 'classnames';
 
 interface SidebarButtonProps extends ButtonProps {
     buttonTitle?: string;
+    absolute?: boolean; // if true, a 0-width wrapper performs the sticky behaviour, while the button is positioned absolutely; used to position button over the title
 }
 
-export const SidebarButton = ({ buttonTitle, ...rest }: SidebarButtonProps) => {
+export const SidebarButton = ({ buttonTitle, absolute, ...rest }: SidebarButtonProps) => {
     const dispatch = useAppDispatch();
     const [sticky, setSticky] = useState(false);
-    const buttonRef = useRef<HTMLButtonElement>(null);
+    const elementRef = useRef<HTMLElement>(null);
     const textRef = useRef<HTMLSpanElement>(null);
 
     const toggleMenu = () => dispatch(sidebarSlice.actions.toggle());
 
     const isSticky = useCallback(() => {
-        setSticky(!!buttonRef.current && window.scrollY >= buttonRef.current.offsetTop - 36);
-    }, [buttonRef]);
+        setSticky(!!elementRef.current && window.scrollY >= elementRef.current.offsetTop - 36);
+    }, [elementRef]);
 
     useEffect(() => {
         window.addEventListener('scroll', isSticky);
@@ -27,11 +28,11 @@ export const SidebarButton = ({ buttonTitle, ...rest }: SidebarButtonProps) => {
         };
     }, [isSticky]);
 
-    return <AffixButton 
+    const button = <AffixButton 
         {...rest} 
-        innerRef={buttonRef}
         data-testid="sidebar-toggle" 
-        className={classNames("sidebar-toggle", {"stuck": sticky}, rest.className)} 
+        innerRef={absolute ? undefined : elementRef as React.RefObject<HTMLButtonElement>}
+        className={classNames("sidebar-toggle", {"sidebar-toggle-top": !absolute, "stuck": sticky}, rest.className)} 
         color="keyline" 
         onClick={toggleMenu} 
         affix={{
@@ -43,4 +44,10 @@ export const SidebarButton = ({ buttonTitle, ...rest }: SidebarButtonProps) => {
     >
         <span ref={textRef}>{buttonTitle ?? "Search and filter"}</span>
     </AffixButton>;
+
+    return absolute
+        ? <div className="sidebar-toggle-top" ref={elementRef as React.RefObject<HTMLDivElement>}>
+            {button}
+        </div>
+        : button;
 };

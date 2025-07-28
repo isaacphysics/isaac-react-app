@@ -21,14 +21,16 @@ type PageMetadataProps = {
     {
         showSidebarButton: true;
         sidebarButtonText?: string;
+        sidebarInTitle?: boolean; // if true, the sidebar button will be rendered in the title area, otherwise it will be rendered below the title. incompatible with `noTitle`.
     } | {
         showSidebarButton?: never;
         sidebarButtonText?: never;
+        sidebarInTitle?: never;
     }
 );
 
 export const PageMetadata = (props: PageMetadataProps) => {
-    const { doc, title, subtitle, badges, children, noTitle, showSidebarButton, sidebarButtonText } = props;
+    const { doc, title, subtitle, badges, children, noTitle, showSidebarButton, sidebarButtonText, sidebarInTitle } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const location = useLocation();
     const deviceSize = useDeviceSize();
@@ -55,6 +57,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                 </div>
             </>
             : <>
+                {showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
                 <div className="d-flex align-items-center mt-3 gap-3">
                     {isPhy && <div>
                         <div className="d-flex align-items-center gap-3">
@@ -77,7 +80,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
             </>
         }
         {isPhy && <>
-            {showSidebarButton && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
+            {showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
             <div className="section-divider mt-3" />
             <EditContentButton doc={doc} />
             <TeacherNotes notes={doc?.teacherNotes} />
