@@ -8,7 +8,7 @@ import { EditContentButton } from './EditContentButton';
 import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
-import { below, isAda, isPhy, useDeviceSize } from '../../services';
+import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 
 type PageMetadataProps = {
@@ -29,10 +29,14 @@ type PageMetadataProps = {
 );
 
 const ActionButtons = ({location, isQuestion, doc}: {location: Location, isQuestion: boolean, doc?: SeguePageDTO}) => {
+    const deviceSize = useDeviceSize();
+
     return (
         <div className="d-flex no-print gap-2 ms-auto">
-            {<ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />}
-            <PrintButton questionPage={isQuestion} />
+            {above['sm'](deviceSize) && <>
+                <ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />
+                <PrintButton questionPage={isQuestion} />
+            </>}
             {doc?.id && <ReportButton pageId={doc.id} />}
         </div>
     );
