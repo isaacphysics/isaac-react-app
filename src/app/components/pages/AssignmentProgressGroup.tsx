@@ -1,18 +1,33 @@
-import React, { useState } from 'react';
-import { openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments } from '../../state';
-import { AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment } from '../../../IsaacAppTypes';
-import { above, AssignmentOrder, getAssignmentCSVDownloadLink, getGroupProgressCSVDownloadLink, getGroupQuizProgressCSVDownloadLink, getQuizAssignmentCSVDownloadLink, isDefined, isPhy, isQuiz, isTeacherOrAbove, PATHS, siteSpecific, SortOrder, useDeviceSize } from '../../services';
-import { RegisteredUserDTO } from '../../../IsaacApiTypes';
-import { Link } from 'react-router-dom';
-import { Spacer } from '../elements/Spacer';
-import { formatDate } from '../elements/DateString';
-import { Badge, Button, Card, CardBody, Col, Container, Input, Label, Row } from 'reactstrap';
-import { TitleAndBreadcrumb } from '../elements/TitleAndBreadcrumb';
-import { downloadLinkModal } from '../elements/modals/AssignmentProgressModalCreators';
-import { InlineTabs } from '../elements/InlineTabs';
-import { StyledDropdown } from '../elements/inputs/DropdownInput';
-import { Loading } from '../handlers/IsaacSpinner';
-import { skipToken } from '@reduxjs/toolkit/query';
+import React, {useState} from 'react';
+import {openActiveModal, useAppDispatch, useGetGroupMembersQuery, useGroupAssignments} from '../../state';
+import {AppGroup, AppQuizAssignment, AssignmentOrderSpec, EnhancedAssignment} from '../../../IsaacAppTypes';
+import {
+    above,
+    AssignmentOrder,
+    getAssignmentProgressCSVDownloadLink,
+    getGroupAssignmentProgressCSVDownloadLink,
+    getGroupQuizProgressCSVDownloadLink,
+    getQuizAssignmentCSVDownloadLink,
+    isDefined,
+    isPhy,
+    isQuiz,
+    isTeacherOrAbove,
+    PATHS,
+    siteSpecific,
+    SortOrder,
+    useDeviceSize
+} from '../../services';
+import {RegisteredUserDTO} from '../../../IsaacApiTypes';
+import {Link} from 'react-router-dom';
+import {Spacer} from '../elements/Spacer';
+import {formatDate} from '../elements/DateString';
+import {Badge, Button, Card, CardBody, Col, Container, Input, Label, Row} from 'reactstrap';
+import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
+import {downloadLinkModal} from '../elements/modals/AssignmentProgressModalCreators';
+import {InlineTabs} from '../elements/InlineTabs';
+import {StyledDropdown} from '../elements/inputs/DropdownInput';
+import {Loading} from '../handlers/IsaacSpinner';
+import {skipToken} from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
 
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
@@ -24,6 +39,10 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
         event.preventDefault();
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
+
+    const csvDownloadLink = quiz
+        ? getQuizAssignmentCSVDownloadLink(assignment.id as number)
+        : getAssignmentProgressCSVDownloadLink(assignment.id as number);
 
     return <Link to={quiz ? `/test/assignment/${assignment.id}/feedback` : `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} className="w-100 d-block no-underline mt-2">
         <div className="d-flex align-items-center assignment-progress-group w-100 p-3">
@@ -43,17 +62,14 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
             </div>
             <Spacer/>
             <strong className="align-content-center">
-                <a href={quiz
-                    ? getQuizAssignmentCSVDownloadLink(assignment.id as number)
-                    : getAssignmentCSVDownloadLink(assignment.id as number)
-                } target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
+                <a href={csvDownloadLink} target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
                     Download CSV
                 </a>
             </strong>
             <i className="icon icon-chevron-right ms-3" color="tertiary"/>
         </div>
     </Link>;
-};    
+};
 
 export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO, group?: AppGroup}) => {
 
@@ -90,7 +106,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             </Link>}
             {isDefined(group?.id) && <>
                 {above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
-                <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupProgressCSVDownloadLink(group.id as number))))}>
+                <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupAssignmentProgressCSVDownloadLink(group.id as number))))}>
                     Download assignments CSV
                     <i className="icon icon-download ms-2" color="white"/>
                 </Button>
@@ -118,7 +134,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                 </div>
             </CardBody>
         </Card>
-        
+
         {/* assignments and tests */}
         <Card>
             <CardBody>
@@ -171,7 +187,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                             </div>
                     }
                 </div>
-                
+
             </CardBody>
         </Card>
     </Container>;

@@ -9,6 +9,7 @@ import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { below, isAda, isPhy, useDeviceSize } from '../../services';
+import type { Location } from 'history';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -29,21 +30,21 @@ type PageMetadataProps = {
     }
 );
 
+const ActionButtons = ({location, isQuestion, doc}: {location: Location, isQuestion: boolean, doc?: SeguePageDTO}) => {
+    return (
+        <div className="d-flex no-print gap-2 ms-auto">
+            {<ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />}
+            <PrintButton questionPage={isQuestion} />
+            {doc?.id && <ReportButton pageId={doc.id} />}
+        </div>
+    );
+};
+
 export const PageMetadata = (props: PageMetadataProps) => {
     const { doc, title, subtitle, badges, children, noTitle, showSidebarButton, sidebarButtonText, sidebarInTitle } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const location = useLocation();
     const deviceSize = useDeviceSize();
-
-    const ActionButtons = () => {
-        return (
-            <div className="d-flex no-print gap-2 ms-auto">
-                {<ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />}
-                <PrintButton questionPage={isQuestion} />
-                {doc?.id && <ReportButton pageId={doc.id} />}
-            </div>
-        );
-    };
 
     return <>
         {noTitle 
@@ -52,7 +53,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                     <div className="w-100">
                         {children}
                     </div>
-                    <ActionButtons />
+                    <ActionButtons location={location} isQuestion={isQuestion} doc={doc}/>
                     {isAda && <EditContentButton doc={doc} />}
                 </div>
             </>
@@ -74,7 +75,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                         {doc?.subtitle && <h5><Markup encoding="latex">{subtitle ?? doc.subtitle}</Markup></h5>}
                     </div>}
                     {isAda && <EditContentButton doc={doc} />}
-                    <ActionButtons />
+                    <ActionButtons location={location} isQuestion={isQuestion} doc={doc}/>
                 </div>
                 {children}
             </>

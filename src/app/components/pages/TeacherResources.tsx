@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ColumnSlice } from "../elements/layout/ColumnSlice";
 import { Button, Container } from "reactstrap";
 import { IconCard } from "../elements/cards/IconCard";
@@ -6,11 +6,12 @@ import { selectors, useAppSelector, useGetNewsPodListQuery } from "../../state";
 import { TextBlock } from "../elements/layout/TextBlock";
 import { Link } from "react-router-dom";
 import { AdaCard } from "../elements/cards/AdaCard";
-import { isLoggedIn } from "../../services";
+import { isLoggedIn, SITE_TITLE } from "../../services";
 import { ImageBlock } from "../elements/layout/ImageBlock";
 import classNames from "classnames";
 
 export const TeacherResources = () => {
+    useEffect( () => {document.title = "Teachers — " + SITE_TITLE;}, []);
     const {data: teacherPods} = useGetNewsPodListQuery({subject: "news"});
     const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
     const featuredPod = teacherPods?.[0];

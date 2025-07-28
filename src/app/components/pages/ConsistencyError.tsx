@@ -4,7 +4,7 @@ import {Button, Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 export const ConsistencyError = () => {
-    return <Container>
+    return <Container className="mb-3">
         <TitleAndBreadcrumb breadcrumbTitleOverride="User consistency error" currentPageTitle={`Your ${SITE_TITLE} session has changed`} icon={{type: "hex", icon: "icon-error"}}/>
         <h3 className="my-4">This browser window / tab is out of sync.</h3>
         <p className="pb-2">This can happen if you have logged out or logged in as another user via another browser window. Please click continue to avoid any issues.</p>

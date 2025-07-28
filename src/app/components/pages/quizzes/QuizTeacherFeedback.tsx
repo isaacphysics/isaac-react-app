@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, {useContext, useState} from "react";
 import {
     getRTKQueryErrorMessage,
     useGetQuizAssignmentWithFeedbackQuery,
@@ -6,18 +6,32 @@ import {
 } from "../../../state";
 import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {AssignmentProgressDTO, ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
+import {
+    AssignmentProgressDTO,
+    ContentBaseDTO,
+    IsaacQuizDTO,
+    IsaacQuizSectionDTO,
+    QuizAssignmentDTO,
+    QuizFeedbackMode,
+    RegisteredUserDTO,
+    UserSummaryDTO
+} from "../../../../IsaacApiTypes";
 import {
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
-    siteSpecific,
-    nthHourOf,
-    TODAY,
-    useAssignmentProgressAccessibilitySettings,
-    isQuestion,
     isAuthorisedFullAccess,
-    isPhy} from "../../../services";
-import {AuthorisedAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
+    isPhy,
+    isQuestion,
+    nthHourOf,
+    siteSpecific,
+    TODAY,
+    useAssignmentProgressAccessibilitySettings
+} from "../../../services";
+import {
+    AssignmentProgressPageSettingsContext,
+    AuthorisedAssignmentProgress,
+    QuizFeedbackModes
+} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {formatDate} from "../../elements/DateString";
 import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
@@ -35,10 +49,10 @@ import {
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
-import { AssignmentProgressSettings, markClassesInternal } from "../AssignmentProgressIndividual";
+import {AssignmentProgressSettings, markClassesInternal} from "../AssignmentProgressIndividual";
 import classNames from "classnames";
-import { Spacer } from "../../elements/Spacer";
-import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
+import {Spacer} from "../../elements/Spacer";
+import {CollapsibleContainer} from "../../elements/CollapsibleContainer";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.
@@ -155,7 +169,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     </AssignmentProgressPageSettingsContext.Provider>
                 </div>
             </>}
-        /> 
+        />
     </Container>;
 };
 

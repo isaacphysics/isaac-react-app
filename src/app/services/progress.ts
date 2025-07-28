@@ -1,8 +1,13 @@
 import {useState} from "react";
 import {isTeacherOrAbove} from "./user";
-import {AssignmentOrderSpec, AssignmentOrderType, AssignmentProgressPageSettings, AuthorisedAssignmentProgress} from "../../IsaacAppTypes";
-import { API_PATH, SortOrder } from "./constants";
-import { RegisteredUserDTO, AssignmentProgressDTO } from "../../IsaacApiTypes";
+import {
+    AssignmentOrderSpec,
+    AssignmentOrderType,
+    AssignmentProgressPageSettings,
+    AuthorisedAssignmentProgress
+} from "../../IsaacAppTypes";
+import {API_PATH, SortOrder} from "./constants";
+import {AssignmentProgressDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 
 // TODO: move to app types without creating circular deps
 export enum GroupSortOrder {
@@ -27,8 +32,8 @@ export function useAssignmentProgressAccessibilitySettings({user}: {user: Regist
     const [groupSortOrder, setGroupSortOrder] = useState<GroupSortOrder>(GroupSortOrder.Alphabetical);
 
     return {
-        colourBlind, setColourBlind, 
-        formatAsPercentage, setFormatAsPercentage, 
+        colourBlind, setColourBlind,
+        formatAsPercentage, setFormatAsPercentage,
         attemptedOrCorrect, setAttemptedOrCorrect,
         assignmentOrder, setAssignmentOrder,
         groupSortOrder, setGroupSortOrder,
@@ -40,7 +45,15 @@ export function isAuthorisedFullAccess(progress: AssignmentProgressDTO): progres
     return !!progress.user?.authorisedFullAccess;
 }
 
-export function getGroupProgressCSVDownloadLink(groupId: number) {
+export function getAssignmentProgressCSVDownloadLink(assignmentId: number) {
+    return `${API_PATH}/assignments/assign/${assignmentId}/progress/download`;
+}
+
+export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {
+    return `${API_PATH}/quiz/assignment/${assignmentId}/download`;
+}
+
+export function getGroupAssignmentProgressCSVDownloadLink(groupId: number) {
     return API_PATH + "/assignments/assign/group/" + groupId + "/progress/download";
 }
 

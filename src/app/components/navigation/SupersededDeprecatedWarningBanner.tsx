@@ -26,7 +26,7 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: SeguePageDTO}) {
     // Tutors and teachers should see superseded/deprecated messages because they have to setting assignments etc. and
     // want up to date content.
     const teacherMessage = isTutorOrAbove(user) && <React.Fragment>
-        <i id="superseded-help" className={siteSpecific("icon icon-info icon-color-grey", "icon-help")} />
+        <i id="superseded-help" className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help")} />
         <UncontrolledTooltip placement="bottom" target="superseded-help">
             <div className="text-start">
                 {supersededBy && <>
@@ -47,20 +47,26 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: SeguePageDTO}) {
         {isTutorOrAbove(user) && <strong>
             Teacher note: {" "}
         </strong>}
-        {doc.deprecated ? <>
-            This {contentType} is no longer supported, and may contain errors. {" "}
-            {supersededBy && <>
-                It has been replaced by {" "} <Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
-                    this question
-                </Button>.
-            </>} {teacherMessage}
-        </> :
+        {doc.deprecated ? <div className="d-flex align-items-center">
+            <span>
+                This {contentType} is no longer supported, and may contain errors. {" "}
+                {supersededBy && <>
+                    It has been replaced by {" "} <Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
+                        this question
+                    </Button>.
+                </>} 
+            </span>
+            {teacherMessage}
+        </div> :
         // If question is superseded but not deprecated
-            (supersededBy && !isStudent(user) ? <>
-                This question has been replaced by {" "}
-                <Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
-                    this question
-                </Button>. {teacherMessage}
-            </> : RenderNothing)} {/* If neither deprecated or superseded, render nothing (although this should happen at the top of the component anyway) */}
+            (supersededBy && !isStudent(user) ? <div className="d-flex align-items-center">
+                <span>
+                    This question has been replaced by {" "}
+                    <Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
+                        this question
+                    </Button>.
+                </span>
+                {teacherMessage}
+            </div> : RenderNothing)} {/* If neither deprecated or superseded, render nothing (although this should happen at the top of the component anyway) */}
     </Alert>;
 }

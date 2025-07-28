@@ -1,13 +1,10 @@
 import {AssignmentDTO, IAssignmentLike} from "../../IsaacApiTypes";
 import orderBy from "lodash/orderBy";
 import {EnhancedAssignment} from "../../IsaacAppTypes";
-import {API_PATH, extractTeacherName, matchesAllWordsInAnyOrder} from "./";
+import {extractTeacherName, matchesAllWordsInAnyOrder} from "./";
 
 export function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedAssignment {
     return assignment.gameboard != undefined;
-}
-export function getAssignmentCSVDownloadLink(assignmentId: number) {
-    return `${API_PATH}/assignments/assign/${assignmentId}/progress/download`;
 }
 
 function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO & {startDate: Date | number} {

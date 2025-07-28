@@ -94,6 +94,12 @@
   }
 }
 
+[type='search'] {
+    &.search--filter-input {
+      max-width: 100% !important;
+  }
+}
+
 #content-sidebar-offcanvas {
   background-color: $color-neutral-50;
 

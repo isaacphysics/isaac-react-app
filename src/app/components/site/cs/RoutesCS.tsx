@@ -36,6 +36,7 @@ import { CSProjects } from "../../pages/CSProjects";
 import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
 import {StudentChallenges} from "../../pages/StudentChallenges";
 import { QuizView } from "../../pages/quizzes/QuizView";
+import {Overview} from "../../pages/Overview";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -44,6 +45,7 @@ let key = 0;
 export const RoutesCS = [
 
     // Registration flow
+    <TrackedRoute key={key++} exact path="/dashboard" ifUser={isTeacherOrAbove} component={Overview} />,
     <TrackedRoute key={key++} exact path="/register" component={RegistrationStart} />,
     <TrackedRoute key={key++} exact path="/register/role" component={RegistrationRoleSelect} />,
     <TrackedRoute key={key++} exact path="/register/student/age" component={RegistrationAgeCheck} />,

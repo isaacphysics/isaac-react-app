@@ -27,10 +27,10 @@ import {
     STAGE,
     STAGE_NULL_OPTIONS,
     stageLabelMap,
+    SUBJECT_SPECIFIC_CHILDREN_MAP,
     TAG_ID,
     tags,
     toSimpleCSV,
-    useDeviceSize,
     useQueryParams,
     useUrlPageTheme,
 } from "../../services";
@@ -125,7 +125,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
     const pageContext = useUrlPageTheme();
-    const deviceSize = useDeviceSize();
     const [isSolitaryStage, setIsSolitaryStage] = useState(false); // we can't calculate this until we have the page context
     const [selections, setSelections] = useState<ChoiceTree[]>([]); // we can't populate this until we have the page context
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
@@ -171,7 +170,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     tags,
                     solitary ? [pageContext.subject] : arrayFromPossibleCsv(params.subjects),
                     arrayFromPossibleCsv(params.fields),
-                    arrayFromPossibleCsv(params.topics)
+                    arrayFromPossibleCsv(params.topics),
+                    pageContext
                 )
             );
 
@@ -216,12 +216,26 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 return;
             }
 
+            const choiceTreeLeaves = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
+            if (hierarchySelections.length > 1 && pageContext?.subject && pageContext.stage?.length === 1) {
+                SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext.stage[0]]?.forEach(tag => {
+                    if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.length === 0) {
+                        choiceTreeLeaves.push(tag);
+                    } else if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.some((t: {value: TAG_ID}) => t.value === tag)) {
+                        const index = choiceTreeLeaves.indexOf(pageContext?.subject as TAG_ID);
+                        if (index > -1) {
+                            choiceTreeLeaves.splice(index, 1);
+                        }
+                    }
+                });
+            }
+
             setIsCurrentSearchEmpty(false);
 
             dispatch(searchQuestions({
                 querySource: "questionFinder",
                 searchString: searchString || undefined,
-                tags: getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value).join(",") || undefined,
+                tags: choiceTreeLeaves.join(",") || undefined,
                 topics: siteSpecific(undefined, [...topics].filter((query) => query != "").join(",") || undefined),
                 books: (!excludeBooks && book.join(",")) || undefined,
                 stages: stages.join(",") || undefined,
@@ -237,7 +251,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 randomSeed
             }));
         }, 250),
-    [dispatch]);
+    [dispatch, pageContext]);
 
 
     const filteringByStatus = Object.values(searchStatuses).some(v => v) && !Object.values(searchStatuses).every(v => v);
