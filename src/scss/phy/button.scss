@@ -133,6 +133,11 @@
   }
 }
 
+.icon-button-sm {
+  // Makes the size of <IconButton> consistent with the default padding on .btn buttons. Not the same as any existing .p-*, or even the .btn default.
+  padding: 0.75rem !important;
+}
+
 // TODO: plan removing all below button styling?
 
 .btn, input.btn {
@@ -363,6 +368,7 @@ a.btn {
   align-items: center;
   border: 1px solid $color-neutral-200;
   border-radius: 0.5rem;
+  border-right: none;
   padding: 0 1.5rem 0 1rem;
   z-index: 15;
   background: white;

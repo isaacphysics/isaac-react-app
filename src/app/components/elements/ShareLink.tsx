@@ -4,7 +4,18 @@ import {selectors, useAppSelector} from "../../state";
 import classNames from "classnames";
 import { IconButton, IconButtonProps } from "./AffixButton";
 
-export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className, buttonProps}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean; outline?: boolean; className?: string; buttonProps?: Partial<IconButtonProps>}) => {
+interface ShareLinkProps {
+    linkUrl: string;
+    reducedWidthLink?: boolean;
+    gameboardId?: string;
+    clickAwayClose?: boolean; 
+    outline?: boolean;
+    className?: string;
+    size?: "sm" | "md"; // "md" default (as used for PageMetadata buttons); "sm" aligns with regular .btn padding
+    buttonProps?: Partial<IconButtonProps>;
+}
+
+export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className, size, buttonProps}: ShareLinkProps) => {
     const [showShareLink, setShowShareLink] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
@@ -54,7 +65,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
         {siteSpecific(
             <IconButton
                 icon="icon-share"
-                className="w-max-content h-max-content"
+                className={classNames("w-max-content h-max-content", {"icon-button-sm": size == "sm"})}
                 affixClassName="icon-color-black-hoverable"
                 aria-label="Share page" 
                 title="Share page"

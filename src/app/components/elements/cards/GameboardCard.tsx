@@ -106,7 +106,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                 {isSetAssignments 
                     ? above['md'](deviceSize) && <div className="d-flex gap-3 align-items-center mb-2">
                         {isPhy && boardLink && <div className="card-share-link">
-                            <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose buttonProps={{color: "keyline"}} />
+                            <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
                         </div>}
                         <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
                             Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
