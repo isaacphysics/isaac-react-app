@@ -309,7 +309,8 @@ svg {
   }
 }
 
-.btn.btn-keyline:hover > i.icon:not(.icon-raw), .btn.btn-tint:hover > i.icon:not(.icon-raw) {
+.btn.btn-keyline:hover > i.icon:not(.icon-raw), .btn.btn-secondary:hover > i.icon:not(.icon-raw),
+.btn.btn-tint:hover > i.icon:not(.icon-raw), .btn.btn-tertiary:hover > i.icon:not(.icon-raw) {
   background-color: var(--layered-icon-parent-bg-override, var(--icon-hover));
 
   &::before {
