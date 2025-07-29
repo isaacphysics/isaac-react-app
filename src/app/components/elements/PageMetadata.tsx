@@ -45,7 +45,7 @@ const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}: Action
 
     return (
         <div {...rest} className={classNames("d-flex no-print gap-2", rest.className)}>
-            {helpModalId && <HelpButton modalId={helpModalId} />}
+            {isPhy && helpModalId && <HelpButton modalId={helpModalId} />}
             {above['sm'](deviceSize) && <>
                 <ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />
                 {doc && <PrintButton questionPage={isQuestion} />} {/* don't show print for internal (non content-driven) pages */}
