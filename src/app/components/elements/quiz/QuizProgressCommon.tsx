@@ -198,9 +198,10 @@ export function ResultsTable<Q extends QuestionType>({
             case "totalQuestionPartPercentage":
                 return -item.correctQuestionPartsCount;
             case "totalQuestionPercentage":
-                return -item.tickCount;
+                return -(item.correctPartResults?.reduce((acc, curr) => acc + curr, 0) || 0);
             case "totalAttemptedQuestionPercentage":
-                return -(item.questionResults || []).filter(r => r !== CompletionState.NOT_ATTEMPTED).length;
+                // note that this one is reversed – there is no negative as we want the ones with the fewest not attempted (i.e. most attempted) to be at the top
+                return item.notAttemptedPartResults?.reduce((acc, curr) => acc + curr, 0) || 0;
             default:
                 if (pageSettings?.attemptedOrCorrect === "CORRECT") {
                     return -(item.correctPartResults || [])[sortOrder];
@@ -215,14 +216,14 @@ export function ResultsTable<Q extends QuestionType>({
             ? [sortBySelectedSortOrder, sortByNotAttemptedParts.bind(null, sortOrder), sortByName]
             : [sortBySelectedSortOrder, sortByName],
         typeof sortOrder === "number" 
-            ? [(reverseOrder ? "desc" : "asc"), "asc", "asc"]
+            ? [(reverseOrder ? "desc" : "asc"), (reverseOrder ? "desc" : "asc"), "asc"]
             : [(reverseOrder ? "desc" : "asc"), "asc"]
     ), [progress, reverseOrder, sortBySelectedSortOrder, sortOrder]);
 
 
     const tableHeaderFooter = <tr className="progress-table-header-footer fw-bold">
         <SortItemHeader<ProgressSortOrder> 
-            className="student-name ps-3 py-3" 
+            className="student-name pointer-cursor ps-3 py-3" 
             defaultOrder={"name"} 
             reverseOrder={"name"} 
             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -233,7 +234,7 @@ export function ResultsTable<Q extends QuestionType>({
         </SortItemHeader>
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
-                className="ps-3 wf-10"
+                className="pointer-cursor ps-3 wf-10"
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -243,7 +244,7 @@ export function ResultsTable<Q extends QuestionType>({
                 Correct
             </SortItemHeader>
             : <SortItemHeader<ProgressSortOrder>
-                className="ps-3 wf-10"
+                className="pointer-cursor ps-3 wf-10"
                 defaultOrder={"totalAttemptedQuestionPercentage"}
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
