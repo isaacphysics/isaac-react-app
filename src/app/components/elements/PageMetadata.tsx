@@ -8,6 +8,7 @@ import { EditContentButton } from './EditContentButton';
 import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
+import { HelpButton } from './HelpButton';
 import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
@@ -19,6 +20,7 @@ type PageMetadataProps = {
     badges?: ReactNode;
     children?: ReactNode; // any content-type specific metadata that may require information outside of `doc`; e.g. question completion state, event info, etc.
     noTitle?: boolean; // if true, any children (usually text) will be rendered in place of the title, with any action buttons (e.g. share, print, report) rendered to the side
+    helpModalId?: string;
 } & (
     {
         showSidebarButton: true;
@@ -31,11 +33,19 @@ type PageMetadataProps = {
     }
 );
 
-const ActionButtons = ({location, isQuestion, doc}: {location: Location, isQuestion: boolean, doc?: SeguePageDTO}) => {
+interface ActionButtonsProps {
+    location: Location;
+    isQuestion: boolean;
+    helpModalId?: string;
+    doc?: SeguePageDTO;
+}
+
+const ActionButtons = ({location, isQuestion, helpModalId, doc}: ActionButtonsProps) => {
     const deviceSize = useDeviceSize();
 
     return (
         <div className="d-flex no-print gap-2 ms-auto">
+            {helpModalId && <HelpButton modalId={helpModalId} />}
             {above['sm'](deviceSize) && <>
                 <ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />
                 <PrintButton questionPage={isQuestion} />
@@ -46,7 +56,7 @@ const ActionButtons = ({location, isQuestion, doc}: {location: Location, isQuest
 };
 
 export const PageMetadata = (props: PageMetadataProps) => {
-    const { doc, title, subtitle, badges, children, noTitle, showSidebarButton, sidebarButtonText, sidebarInTitle } = props;
+    const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const location = useLocation();
     const deviceSize = useDeviceSize();
@@ -58,7 +68,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                     <div className="w-100">
                         {children}
                     </div>
-                    <ActionButtons location={location} isQuestion={isQuestion} doc={doc}/>
+                    <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}/>
                 </div>
                 {isAda && <EditContentButton doc={doc} />}
             </>
@@ -80,7 +90,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                         {doc?.subtitle && <h5><Markup encoding="latex">{subtitle ?? doc.subtitle}</Markup></h5>}
                     </div>}
                     {isAda && <EditContentButton doc={doc} />}
-                    <ActionButtons location={location} isQuestion={isQuestion} doc={doc}/>
+                    <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}/>
                 </div>
                 {children}
             </>
