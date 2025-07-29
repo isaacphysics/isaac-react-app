@@ -33,22 +33,22 @@ type PageMetadataProps = {
     }
 );
 
-interface ActionButtonsProps {
+interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
     location: Location;
     isQuestion: boolean;
     helpModalId?: string;
     doc?: SeguePageDTO;
 }
 
-const ActionButtons = ({location, isQuestion, helpModalId, doc}: ActionButtonsProps) => {
+const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}: ActionButtonsProps) => {
     const deviceSize = useDeviceSize();
 
     return (
-        <div className="d-flex no-print gap-2 ms-auto">
+        <div {...rest} className={classNames("d-flex no-print gap-2", rest.className)}>
             {helpModalId && <HelpButton modalId={helpModalId} />}
             {above['sm'](deviceSize) && <>
                 <ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />
-                <PrintButton questionPage={isQuestion} />
+                {doc && <PrintButton questionPage={isQuestion} />} {/* don't show print for internal (non content-driven) pages */}
             </>}
             {doc?.id && <ReportButton pageId={doc.id} />}
         </div>
@@ -66,9 +66,12 @@ export const PageMetadata = (props: PageMetadataProps) => {
             ? <>
                 <div className="d-flex align-items-start mt-3 gap-3 no-print">
                     <div className="w-100">
+                        <ActionButtons 
+                            location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}
+                            className="float-end ms-3 mb-3"
+                        />
                         {children}
                     </div>
-                    <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}/>
                 </div>
                 {isAda && <EditContentButton doc={doc} />}
             </>
@@ -90,14 +93,14 @@ export const PageMetadata = (props: PageMetadataProps) => {
                         {doc?.subtitle && <h5><Markup encoding="latex">{subtitle ?? doc.subtitle}</Markup></h5>}
                     </div>}
                     {isAda && <EditContentButton doc={doc} />}
-                    <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}/>
+                    <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>
                 </div>
                 {children}
             </>
         }
         {isPhy && <>
             {showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
-            <div className={classNames("section-divider mt-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
+            <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
             <EditContentButton doc={doc} />
             <TeacherNotes notes={doc?.teacherNotes} />
         </>}
