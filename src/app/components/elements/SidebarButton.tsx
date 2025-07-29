@@ -32,7 +32,7 @@ export const SidebarButton = ({ buttonTitle, absolute, ...rest }: SidebarButtonP
         {...rest} 
         data-testid="sidebar-toggle" 
         innerRef={absolute ? undefined : elementRef as React.RefObject<HTMLButtonElement>}
-        className={classNames("sidebar-toggle", {"sidebar-toggle-top": !absolute, "stuck": sticky}, rest.className)} 
+        className={classNames("sidebar-toggle no-print", {"sidebar-toggle-top": !absolute, "stuck": sticky}, rest.className)} 
         color="keyline" 
         onClick={toggleMenu} 
         affix={{

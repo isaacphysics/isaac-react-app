@@ -10,6 +10,7 @@ import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { below, isAda, isPhy, useDeviceSize } from '../../services';
 import type { Location } from 'history';
+import classNames from 'classnames';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -82,7 +83,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
         }
         {isPhy && <>
             {showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
-            <div className="section-divider mt-3" />
+            <div className={classNames("section-divider mt-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
             <EditContentButton doc={doc} />
             <TeacherNotes notes={doc?.teacherNotes} />
         </>}
