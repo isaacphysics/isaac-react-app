@@ -71,6 +71,7 @@ import {MainContent, SetAssignmentsSidebar, SidebarLayout} from "../elements/lay
 import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
+import { PageMetadata } from "../elements/PageMetadata";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -573,7 +574,8 @@ export const SetAssignments = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
             icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
-            modalId="help_modal_set_assignments" className={siteSpecific("mb-4", "")}/>
+            modalId="help_modal_set_assignments"
+        />
         <SidebarLayout>
             <SetAssignmentsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
@@ -583,8 +585,10 @@ export const SetAssignments = () => {
                 boardSubject={boardSubject} setBoardSubject={setBoardSubject}
                 boardCreator={boardCreator} setBoardCreator={setBoardCreator}
                 sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
+                hideButton
             />
             <MainContent>
+                <PageMetadata showSidebarButton sidebarInTitle />
                 <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")}
                     ifNotFound={RenderNothing}/>
                 {isPhy &&
@@ -611,46 +615,44 @@ export const SetAssignments = () => {
 
                     </>
                 }
-                {isAda &&
-                    <>
-                        {isGroupsEmptyState &&
-                                <PromptBanner
-                                    card={{
-                                        title: "You need a student group before you can assign a quiz to students.",
-                                        icon: {src: "/assets/cs/icons/group.svg"},
-                                        bodyText: "",
-                                        color: "yellow",
-                                        buttons: {
-                                            primary: {
-                                                text: "Create a group",
-                                                clickUrl: "/groups",
-                                                style: "outline"
-                                            }
-                                        }
-                                    }}
-                                />
-                        }
-                        <h3>Your quizzes</h3>
-                        <div
-                            className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
-                            {!(boards && boards.totalResults === 0) &&
-                                <div>
-                                    <p className={"d-none d-lg-block my-auto"}>{`You have ${boards?.boards.length} created quiz${boards && boards.boards?.length > 1 ? "zes" : ""}.`}</p>
-                                </div>
-                            }
-                            <div className={"w-100 w-lg-auto"}>
-                                <Button className={"w-100 w-lg-auto"} tag={Link} to={PATHS.GAMEBOARD_BUILDER}
-                                    onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="solid">
-                                    Create a quiz
-                                </Button>
-                                <Button className={"w-100 w-lg-auto mt-2 mt-lg-auto mx-auto mx-lg-2"} tag={Link}
-                                    to={"/pages/revision_quizzes"} color={"secondary"} outline>
-                                    View pre-made quizzes
-                                </Button>
+                {isAda && <>
+                    {isGroupsEmptyState &&
+                        <PromptBanner
+                            card={{
+                                title: "You need a student group before you can assign a quiz to students.",
+                                icon: {src: "/assets/cs/icons/group.svg"},
+                                bodyText: "",
+                                color: "yellow",
+                                buttons: {
+                                    primary: {
+                                        text: "Create a group",
+                                        clickUrl: "/groups",
+                                        style: "outline"
+                                    }
+                                }
+                            }}
+                        />
+                    }
+                    <h3>Your quizzes</h3>
+                    <div
+                        className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
+                        {!(boards && boards.totalResults === 0) &&
+                            <div>
+                                <p className={"d-none d-lg-block my-auto"}>{`You have ${boards?.boards.length} created quiz${boards && boards.boards?.length > 1 ? "zes" : ""}.`}</p>
                             </div>
+                        }
+                        <div className={"w-100 w-lg-auto"}>
+                            <Button className={"w-100 w-lg-auto"} tag={Link} to={PATHS.GAMEBOARD_BUILDER}
+                                onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="solid">
+                                Create a quiz
+                            </Button>
+                            <Button className={"w-100 w-lg-auto mt-2 mt-lg-auto mx-auto mx-lg-2"} tag={Link}
+                                to={"/pages/revision_quizzes"} color={"secondary"} outline>
+                                View pre-made quizzes
+                            </Button>
                         </div>
-                    </>
-                }
+                    </div>
+                </>}
                 {!isBoardsEmptyState && <>
                     {isAda && <>
                         <Row>

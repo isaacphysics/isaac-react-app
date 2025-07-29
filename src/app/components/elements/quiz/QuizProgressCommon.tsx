@@ -282,11 +282,16 @@ export function ResultsTable<Q extends QuestionType>({
                         {isPhy && selectedQuestionIndex !== undefined && <tr>
                             <th className="py-2" colSpan={2 + questions.length}>
                                 <div className="progress-table-question-link">
-                                    <a href={`/questions/${questions[selectedQuestionIndex]?.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
-                                        <Markup encoding="latex">
+                                    {isAssignment 
+                                        ? <a href={`/questions/${questions[selectedQuestionIndex]?.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
+                                            <Markup encoding="latex">
+                                                {`Q${selectedQuestionIndex + 1}: ${questions[selectedQuestionIndex]?.title}`}
+                                            </Markup>
+                                        </a>
+                                        : <Markup encoding="latex">
                                             {`Q${selectedQuestionIndex + 1}: ${questions[selectedQuestionIndex]?.title}`}
                                         </Markup>
-                                    </a>
+                                    }
                                 </div>
                                 &nbsp;
                             </th>

@@ -44,7 +44,7 @@ export const AffixButton = (props: AffixButtonProps) => {
     </Button>;
 };
 
-interface IconButtonProps extends ButtonProps {
+export interface IconButtonProps extends ButtonProps {
     icon: string;
     affixClassName?: string;
 }

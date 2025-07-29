@@ -5,7 +5,7 @@ import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Badge, Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
-import { below, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
+import { below, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
@@ -203,7 +203,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                                 href={`/questions/${typedProps.supersededBy}`}
                                 onClick={(e) => e.stopPropagation()}
                             >SUPERSEDED</a>}
-                            {tags?.includes("nofilter") && <span
+                            {tags?.includes("nofilter") && isStaff(user) && <span
                                 className="superseded-tag mx-1 ms-sm-3 align-self-end" 
                             >NO-FILTER</span>}
                         </div>}

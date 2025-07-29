@@ -886,7 +886,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
         </search>
     </ContentSidebar>;
 };
-interface SetAssignmentsSidebarProps extends SidebarProps {
+interface SetAssignmentsSidebarProps extends ContentSidebarProps {
     displayMode: BoardViews;
     setDisplayMode: React.Dispatch<React.SetStateAction<BoardViews>>;
     displayLimit: BoardLimit;

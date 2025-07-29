@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { GameboardDTO } from "../../../../IsaacApiTypes";
 import { Row, Col, Button, Label, Collapse } from "reactstrap";
-import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject } from "../../../services";
+import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, stageLabelMap, difficultyShortLabelMap, PATHS, tags, determineGameboardStagesAndDifficulties, determineGameboardSubjects, TAG_ID, useDeviceSize, Subject, isPhy } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
@@ -104,9 +104,14 @@ export const GameboardCard = (props: GameboardCardProps) => {
                     }
                 </div>
                 {isSetAssignments 
-                    ? above['md'](deviceSize) && <Button className="mb-2" color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
-                        Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
-                    </Button> 
+                    ? above['md'](deviceSize) && <div className="d-flex gap-3 align-items-center mb-2">
+                        {isPhy && boardLink && <div className="card-share-link">
+                            <ShareLink linkUrl={boardLink} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline"}} />
+                        </div>}
+                        <Button className="flex-grow-1" color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
+                            Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
+                        </Button> 
+                    </div>
                     : boardLink && <div className="d-flex justify-content-end card-share-link">
                         <ShareLink linkUrl={boardLink} gameboardId={gameboard.id} reducedWidthLink clickAwayClose />
                     </div>
