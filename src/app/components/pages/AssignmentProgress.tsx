@@ -82,7 +82,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
         const initialState = {
             ...p,
-            correctQuestionsCount: 0,
+            correctQuestionPagesCount: 0,
             correctQuestionPartsCount: 0,
             incorrectQuestionPartsCount: 0,
             notAttemptedPartResults: []
