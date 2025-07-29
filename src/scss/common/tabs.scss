@@ -48,10 +48,6 @@
     padding-left: 1rem;
     padding-right: 1rem;
 
-    &:first-child {
-      border-width: 0;
-    }
-
     &.active {
       .nav-link {
         font-family: $secondary-font-semi-bold;
