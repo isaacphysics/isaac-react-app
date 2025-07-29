@@ -150,7 +150,7 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
             <meta property="og:title" content={currentPageTitle} />
         </Helmet>
         {audienceViews && <AudienceViewer audienceViews={audienceViews} />}
-        {help && !showModal && <React.Fragment>
+        {isAda && help && !showModal && <React.Fragment>
             <div id="title-help" className="title-help">Help</div>
             <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>
         </React.Fragment>}
