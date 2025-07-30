@@ -79,6 +79,11 @@ $cards-per-line: (
   display: flex;
   flex-direction: column;
 
+  &.prompt-banner {
+    border: 1px solid $cs-silver;
+    box-shadow: none;
+  }
+
   > img {
     width: 25px;
     height: 25px;
@@ -132,7 +137,7 @@ a.icon-card, a.cs-card {
   }
 }
 
-.cs-card, .icon-card {
+.cs-card, .icon-card, .prompt-banner {
   .card-footer {
     .btn-link::after {
       content: "";
@@ -219,7 +224,7 @@ a.icon-card, a.cs-card {
   }
 }
 
-.cs-card, .cs-card-plain, .icon-card, .news-card, .board-card {
+.cs-card, .cs-card-plain, .icon-card, .news-card, .board-card, .prompt-banner {
   .card-footer {
     background-color: transparent !important;
   }

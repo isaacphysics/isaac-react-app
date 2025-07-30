@@ -102,15 +102,29 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                                 ? sortBy(groups, g => g.groupName && g.groupName.toLowerCase())
                                 : sortBy(groups, g => g.created).reverse()
                             ).filter(g => !groupSearch || g.groupName?.toLowerCase().includes(groupSearch.toLowerCase()));
+
+                            const isGroupsEmptyState = groups.length === 0;
+
                             return <div className="assignment-progress-container my-3">
                                 {/* <AssignmentProgressPageSettingsContext.Provider value={pageSettings}> */}
                                 {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} user={user} />)}
                                 {/* </AssignmentProgressPageSettingsContext.Provider> */}
-                                {sortedGroups.length === 0 && <Container className="py-5">
-                                    <h3 className="text-center">
-                                        You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
-                                    </h3>
-                                </Container>}
+                                {sortedGroups.length === 0 && <div>
+                                    <div className={classNames("d-flex flex-column my-2 py-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
+                                        <span>
+                                            { isGroupsEmptyState ?
+                                                "You have no teaching groups yet." : "No groups match your criteria."
+                                            }
+                                        </span>
+                                        { isGroupsEmptyState &&
+                                            <strong>
+                                                <Link to={PATHS.MANAGE_GROUPS} className={classNames("btn btn-link", {"fw-bold": isPhy})}>
+                                                    Create new group
+                                                </Link>
+                                            </strong>
+                                        }
+                                    </div>
+                                </div>}
                             </div>;
                         }}
                     />

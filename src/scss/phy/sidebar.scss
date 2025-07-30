@@ -113,12 +113,20 @@
   margin-bottom: 3px;
 }
 
-.sidebar-toggle {
+.sidebar-toggle-top {
   position: sticky;
   top: 1.5rem;
+  z-index: 19;
+  
+  & > .sidebar-toggle {
+    margin-top: calc(1rem + 5px);
+    position: absolute;
+  }
+}
+
+.sidebar-toggle {
   min-height: 41px;
   overflow: hidden;
-  z-index: 19;
   box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.2);
   transition: $btn-transition, max-width 0.3s ease-out;  
   

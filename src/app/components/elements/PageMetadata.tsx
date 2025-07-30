@@ -8,8 +8,9 @@ import { EditContentButton } from './EditContentButton';
 import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
-import { below, isAda, isPhy, useDeviceSize } from '../../services';
+import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
 import type { Location } from 'history';
+import classNames from 'classnames';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -22,24 +23,30 @@ type PageMetadataProps = {
     {
         showSidebarButton: true;
         sidebarButtonText?: string;
+        sidebarInTitle?: boolean; // if true, the sidebar button will be rendered in the title area, otherwise it will be rendered below the title. incompatible with `noTitle`.
     } | {
         showSidebarButton?: never;
         sidebarButtonText?: never;
+        sidebarInTitle?: never;
     }
 );
 
 const ActionButtons = ({location, isQuestion, doc}: {location: Location, isQuestion: boolean, doc?: SeguePageDTO}) => {
+    const deviceSize = useDeviceSize();
+
     return (
         <div className="d-flex no-print gap-2 ms-auto">
-            {<ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />}
-            <PrintButton questionPage={isQuestion} />
+            {above['sm'](deviceSize) && <>
+                <ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />
+                <PrintButton questionPage={isQuestion} />
+            </>}
             {doc?.id && <ReportButton pageId={doc.id} />}
         </div>
     );
 };
 
 export const PageMetadata = (props: PageMetadataProps) => {
-    const { doc, title, subtitle, badges, children, noTitle, showSidebarButton, sidebarButtonText } = props;
+    const { doc, title, subtitle, badges, children, noTitle, showSidebarButton, sidebarButtonText, sidebarInTitle } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const location = useLocation();
     const deviceSize = useDeviceSize();
@@ -52,10 +59,11 @@ export const PageMetadata = (props: PageMetadataProps) => {
                         {children}
                     </div>
                     <ActionButtons location={location} isQuestion={isQuestion} doc={doc}/>
-                    {isAda && <EditContentButton doc={doc} />}
                 </div>
+                {isAda && <EditContentButton doc={doc} />}
             </>
             : <>
+                {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
                 <div className="d-flex align-items-center mt-3 gap-3">
                     {isPhy && <div>
                         <div className="d-flex align-items-center gap-3">
@@ -78,8 +86,8 @@ export const PageMetadata = (props: PageMetadataProps) => {
             </>
         }
         {isPhy && <>
-            {showSidebarButton && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
-            <div className="section-divider mt-3" />
+            {showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
+            <div className={classNames("section-divider mt-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
             <EditContentButton doc={doc} />
             <TeacherNotes notes={doc?.teacherNotes} />
         </>}
