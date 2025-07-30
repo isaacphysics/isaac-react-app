@@ -72,7 +72,6 @@ import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
 import { PageMetadata } from "../elements/PageMetadata";
-import { filter } from "lodash";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -536,12 +535,19 @@ export const SetAssignments = () => {
 
     const forceAllBoards = !!boardTitleFilter || boardCreator !== BoardCreators.all || boardSubject !== BoardSubjects.all;
     useEffect(() => {
-        if (boardLimit !== BoardLimit.All) {
-            if (forceAllBoards) {
-                setBoardLimit(BoardLimit.All);
-            }
+        if (boardLimit !== BoardLimit.All && forceAllBoards) {
+            setBoardLimit(BoardLimit.All);
         }
     }, [boardLimit, forceAllBoards, setBoardLimit]);
+
+    useEffect(() => {
+        // On Ada, reset filters when switching between display modes
+        if (isAda) {
+            setBoardTitleFilter("");
+            setBoardCreator(BoardCreators.all);
+            setBoardSubject(BoardSubjects.all);
+        }
+    }, [boardView, setBoardTitleFilter]);
 
     const dispatch = useAppDispatch();
     const [unassignBoard] = useUnassignGameboardMutation();
@@ -584,19 +590,8 @@ export const SetAssignments = () => {
     const filteredBoards = useMemo(() => 
         boards?.boards.filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
             .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
-            .map(board =>
-                <Col key={board.id}>
-                    <BoardCard
-                        user={user}
-                        board={board}
-                        boardView={boardView}
-                        assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                        toggleAssignModal={() => openAssignModal(board)}
-                    />
-                </Col>
-            ), 
-    [boards, user, boardTitleFilter, boardCreator, boardSubject, boardView, groupsByGameboard, openAssignModal]);
+            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))), 
+    [boards, user, boardTitleFilter, boardCreator, boardSubject]);
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
@@ -721,7 +716,16 @@ export const SetAssignments = () => {
                                 <>
                                     <Row
                                         className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
-                                        {filteredBoards}
+                                        {filteredBoards?.map(board =>
+                                            <Col key={board.id}>
+                                                <BoardCard
+                                                    user={user}
+                                                    board={board}
+                                                    boardView={boardView}
+                                                    assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                                    toggleAssignModal={() => openAssignModal(board)}
+                                                />
+                                            </Col>)}
                                     </Row>
                                     <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
                                         <p>Showing <strong>{filteredBoards?.length}</strong> of <strong>{boards.totalResults}</strong>
