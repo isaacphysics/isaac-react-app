@@ -902,11 +902,12 @@ interface SetAssignmentsSidebarProps extends ContentSidebarProps {
     setBoardSubject: React.Dispatch<React.SetStateAction<BoardSubjects>>;
     boardCreator: BoardCreators;
     setBoardCreator: React.Dispatch<React.SetStateAction<BoardCreators>>;
+    forceAllBoards?: boolean;
     sortDisabled?: boolean;
 }
 
 export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
-    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, sortOrder, setSortOrder, sortDisabled, boardSubject, setBoardSubject, boardCreator, setBoardCreator, ...rest } = props;
+    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, sortOrder, setSortOrder, sortDisabled, boardSubject, setBoardSubject, boardCreator, setBoardCreator, forceAllBoards, ...rest } = props;
     const deviceSize = useDeviceSize();
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
@@ -936,7 +937,7 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
                 </Input>
                 {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
                 <div className="select-pretext me-2">Limit:</div>
-                <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                <Input disabled={forceAllBoards} className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </div>

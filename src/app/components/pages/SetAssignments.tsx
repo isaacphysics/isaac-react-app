@@ -534,13 +534,14 @@ export const SetAssignments = () => {
         setHashAnchor(hash.includes("#") ? hash.slice(1) : undefined);
     }, [hash]);
 
+    const forceAllBoards = !!boardTitleFilter || boardCreator !== BoardCreators.all || boardSubject !== BoardSubjects.all;
     useEffect(() => {
         if (boardLimit !== BoardLimit.All) {
-            if (boardTitleFilter || boardCreator !== BoardCreators.all || boardSubject !== BoardSubjects.all) {
+            if (forceAllBoards) {
                 setBoardLimit(BoardLimit.All);
             }
         }
-    }, [boardTitleFilter, boardCreator, boardSubject, setBoardLimit, boardLimit]);
+    }, [boardLimit, forceAllBoards, setBoardLimit]);
 
     const dispatch = useAppDispatch();
     const [unassignBoard] = useUnassignGameboardMutation();
@@ -611,6 +612,7 @@ export const SetAssignments = () => {
                 boardSubject={boardSubject} setBoardSubject={setBoardSubject}
                 boardCreator={boardCreator} setBoardCreator={setBoardCreator}
                 sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
+                forceAllBoards={forceAllBoards}
                 hideButton
             />
             <MainContent>
@@ -693,7 +695,7 @@ export const SetAssignments = () => {
                             {boardView === BoardViews.card && <>
                                 <Col xs={6} lg={{size: 2, offset: 3}}>
                                     <Label className="w-100">
-                                    Show <Input type="select" value={boardLimit}
+                                    Show <Input disabled={forceAllBoards} type="select" value={boardLimit}
                                             onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                             {Object.values(BoardLimit).map(limit => <option key={limit}
                                                 value={limit}>{limit}</option>)}
