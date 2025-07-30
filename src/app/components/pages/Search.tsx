@@ -8,12 +8,10 @@ import {
     Badge,
     Col,
     Form,
-    Label,
     Container,
 } from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {
-    above,
     DOCUMENT_TYPE,
     documentDescription,
     isAda,
@@ -26,7 +24,6 @@ import {
     selectOnChange,
     shortcuts,
     siteSpecific,
-    useDeviceSize
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
@@ -71,7 +68,6 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const user = useAppSelector(selectors.user.orNull);
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     const [queryState, setQueryState] = useState(urlQuery);
-    const deviceSize = useDeviceSize();
 
     let initialFilters = urlFilters;
     if (isAda && urlFilters.length === 0) {
