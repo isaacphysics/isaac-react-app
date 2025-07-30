@@ -123,7 +123,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
             <TitleAndBreadcrumb currentPageTitle="Search" icon={{type: "hex", icon: "icon-finder"}} />
             <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={urlQuery ?? ""} />
             <Card className="my-4">
-                <CardHeader className="search-header bg-transparent p-3">
+                <CardHeader className="search-header p-3">
                     <Col xs={12}>
                         <h3 className="me-2">
                             Search Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
