@@ -488,7 +488,7 @@ export const ContentSidebarContext = React.createContext<{ toggle: () => void; c
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
     completed?: boolean;
-    tickCount: number;
+    correctQuestionPagesCount: number;
     correctQuestionPartsCount: number;
     incorrectQuestionPartsCount: number;
     notAttemptedPartResults: number[];

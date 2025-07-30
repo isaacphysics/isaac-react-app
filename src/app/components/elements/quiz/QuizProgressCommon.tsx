@@ -198,9 +198,10 @@ export function ResultsTable<Q extends QuestionType>({
             case "totalQuestionPartPercentage":
                 return -item.correctQuestionPartsCount;
             case "totalQuestionPercentage":
-                return -item.tickCount;
+                return -item.correctQuestionPagesCount;
             case "totalAttemptedQuestionPercentage":
-                return -(item.questionResults || []).filter(r => r !== CompletionState.NOT_ATTEMPTED).length;
+                // note that this one is reversed – there is no negative as we want the ones with the fewest not attempted (i.e. most attempted) to be at the top
+                return item.notAttemptedPartResults?.reduce((acc, curr) => acc + curr, 0) || 0;
             default:
                 if (pageSettings?.attemptedOrCorrect === "CORRECT") {
                     return -(item.correctPartResults || [])[sortOrder];
@@ -211,20 +212,20 @@ export function ResultsTable<Q extends QuestionType>({
     }, [pageSettings?.attemptedOrCorrect, reverseOrder, sortOrder]);
 
     const sortedProgress = useMemo(() => orderBy(progress,
-        typeof sortOrder === "number" 
+        typeof sortOrder === "number"
             ? [sortBySelectedSortOrder, sortByNotAttemptedParts.bind(null, sortOrder), sortByName]
             : [sortBySelectedSortOrder, sortByName],
-        typeof sortOrder === "number" 
-            ? [(reverseOrder ? "desc" : "asc"), "asc", "asc"]
+        typeof sortOrder === "number"
+            ? [(reverseOrder ? "desc" : "asc"), (reverseOrder ? "desc" : "asc"), "asc"]
             : [(reverseOrder ? "desc" : "asc"), "asc"]
     ), [progress, reverseOrder, sortBySelectedSortOrder, sortOrder]);
 
 
     const tableHeaderFooter = <tr className="progress-table-header-footer fw-bold">
-        <SortItemHeader<ProgressSortOrder> 
-            className="student-name ps-3 py-3" 
-            defaultOrder={"name"} 
-            reverseOrder={"name"} 
+        <SortItemHeader<ProgressSortOrder>
+            className="student-name pointer-cursor ps-3 py-3"
+            defaultOrder={"name"}
+            reverseOrder={"name"}
             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
             onClick={() => setSelectedQuestionIndex(undefined)}
             label={"Name"}
@@ -233,7 +234,7 @@ export function ResultsTable<Q extends QuestionType>({
         </SortItemHeader>
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
-                className="ps-3 wf-10"
+                className="pointer-cursor ps-3 wf-10"
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -243,7 +244,7 @@ export function ResultsTable<Q extends QuestionType>({
                 Correct
             </SortItemHeader>
             : <SortItemHeader<ProgressSortOrder>
-                className="ps-3 wf-10"
+                className="pointer-cursor ps-3 wf-10"
                 defaultOrder={"totalAttemptedQuestionPercentage"}
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -254,7 +255,7 @@ export function ResultsTable<Q extends QuestionType>({
             </SortItemHeader>
         }
         {questions.map((_, index) =>
-            <SortItemHeader<ProgressSortOrder> 
+            <SortItemHeader<ProgressSortOrder>
                 defaultOrder={index}
                 reverseOrder={index}
                 currentOrder={sortOrder}
@@ -282,7 +283,7 @@ export function ResultsTable<Q extends QuestionType>({
                         {isPhy && selectedQuestionIndex !== undefined && <tr>
                             <th className="py-2" colSpan={2 + questions.length}>
                                 <div className="progress-table-question-link">
-                                    {isAssignment 
+                                    {isAssignment
                                         ? <a href={`/questions/${questions[selectedQuestionIndex]?.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
                                             <Markup encoding="latex">
                                                 {`Q${selectedQuestionIndex + 1}: ${questions[selectedQuestionIndex]?.title}`}
@@ -341,18 +342,18 @@ export function ResultsTable<Q extends QuestionType>({
                                     }
                                 </th>
                                 <th title={fullAccess ? undefined : "Not Sharing"}>
-                                    {fullAccess 
+                                    {fullAccess
                                         ? formatMark(
                                             isAssignment
                                                 ? pageSettings?.attemptedOrCorrect === "CORRECT"
-                                                    ? studentProgress.tickCount
+                                                    ? studentProgress.correctQuestionPagesCount
                                                     : studentProgress.questionResults?.filter(r => r !== CompletionState.NOT_ATTEMPTED).length ?? 0
                                                 : pageSettings?.attemptedOrCorrect === "CORRECT"
                                                     ? studentProgress.correctQuestionPartsCount
                                                     : studentProgress.correctQuestionPartsCount + studentProgress.incorrectQuestionPartsCount,
                                             questions.length,
                                             !!pageSettings?.formatAsPercentage
-                                        ) 
+                                        )
                                         : ""
                                     }
                                 </th>
@@ -361,22 +362,22 @@ export function ResultsTable<Q extends QuestionType>({
                                         {[markQuestionClasses(studentProgress, index)]: isPhy},
                                         {"selected": index === selectedQuestionIndex},
                                     )}>
-                                        {isAssignment 
-                                            ? (fullAccess 
+                                        {isAssignment
+                                            ? (fullAccess
                                                 ? isPhy
                                                     ? formatMark(
-                                                        pageSettings?.attemptedOrCorrect === "CORRECT" 
-                                                            ? (studentProgress.correctPartResults || [])[index] 
+                                                        pageSettings?.attemptedOrCorrect === "CORRECT"
+                                                            ? (studentProgress.correctPartResults || [])[index]
                                                             : (studentProgress.correctPartResults || [])[index] + (studentProgress.incorrectPartResults || [])[index],
-                                                        questions[index].questionPartsTotal as number, 
+                                                        questions[index].questionPartsTotal as number,
                                                         !!pageSettings?.formatAsPercentage
-                                                    ) 
+                                                    )
                                                     : getAssignmentQuestionCorrectnessIcon((studentProgress.questionResults || [])[index], pageSettings?.attemptedOrCorrect || "CORRECT")
                                                 : ""
                                             )
                                             : getQuizQuestionCorrectnessIcon(pageSettings?.attemptedOrCorrect || "CORRECT", studentProgress, index)
                                         }
-                                    </td> 
+                                    </td>
                                 )}
                             </tr>;
                         })}
@@ -432,15 +433,15 @@ export function ResultsTablePartBreakdown({
 
     return !!sortedProgress?.length && <table {...rest} className={classNames("progress-table border assignment-progress-progress w-100", rest.className)}>
         <thead className="progress-table-header-footer">
-            <SortItemHeader<ProgressSortOrder> 
-                className="student-name ps-3 py-3" 
-                defaultOrder={"name"} 
-                reverseOrder={"name"} 
+            <SortItemHeader<ProgressSortOrder>
+                className="student-name ps-3 py-3"
+                defaultOrder={"name"}
+                reverseOrder={"name"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
             >
                 Name
             </SortItemHeader>
-            {sortedProgress[0].questionPartResults?.[questionIndex]?.map((_, i) => 
+            {sortedProgress[0].questionPartResults?.[questionIndex]?.map((_, i) =>
                 // <th key={i} className="text-center">
                 <SortItemHeader<ProgressSortOrder>
                     defaultOrder={i}
@@ -467,7 +468,7 @@ export function ResultsTablePartBreakdown({
                             </span>
                         </Link>
                     </th>
-                    {studentProgress.questionPartResults && 
+                    {studentProgress.questionPartResults &&
                         studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
                             <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>
                         ))}
