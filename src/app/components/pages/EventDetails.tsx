@@ -166,7 +166,6 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             const checkTeacherStatus = isPhy && event.isATeacherEvent && !isTeacherOrAbove(user);
 
             const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
-            const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
 
             const firstColumnWidths = siteSpecific("col-4 col-sm-3 col-md-2", "col-4 col-xl-3");
 
@@ -384,9 +383,9 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                         <Badge color="primary" className="fs-6 rounded-pill">
                             {isTeacherEvent ? "Teacher event" : "Student event"}
                         </Badge>
-                        <Badge className="fs-6 rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>
+                        {hasExpired && <Badge className="fs-6 rounded-pill" color="" style={{backgroundColor: "#6f6f78"}}>
                             EXPIRED
-                        </Badge>
+                        </Badge>}
                     </>}
                 >
                     <MetadataContainer>
