@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Input, Label, UncontrolledTooltip} from "reactstrap";
 import {
-    above,
     CONTEXT_SOURCE,
     EXAM_BOARD,
     examBoardLabelMap,
@@ -15,7 +14,6 @@ import {
     siteSpecific,
     STAGE,
     stageLabelMap,
-    useDeviceSize,
     useQueryParams,
     useUserViewingContext
 } from "../../../services";
@@ -49,7 +47,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const qParams = useQueryParams();
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
-    const deviceSize = useDeviceSize();
     
     const [currentStage, setCurrentStage] = useState<STAGE>(userContext.contexts[0].stage as STAGE ?? STAGE.ALL);
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [currentStage], includeNullOptions: true});
