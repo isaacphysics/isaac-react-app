@@ -80,6 +80,13 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
     input {
       margin-top: 0.5rem;
     }
+    
+    &:has(.katex) {
+      align-items: center;
+      input {
+        margin-top: 0;
+      }
+    }
   }
 }
 
