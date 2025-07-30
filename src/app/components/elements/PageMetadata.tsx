@@ -64,7 +64,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
     return <>
         {noTitle 
             ? <>
-                <div className="d-flex align-items-start mt-3 gap-3 no-print">
+                <div className={classNames("d-flex align-items-start gap-3 no-print", {"mt-3": isPhy})}>
                     <div className="w-100">
                         <ActionButtons 
                             location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}
@@ -77,7 +77,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
             </>
             : <>
                 {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
-                <div className="d-flex align-items-center mt-3 gap-3">
+                <div className={classNames("d-flex align-items-center gap-3", {"mt-3": isPhy})}>
                     {isPhy && <div>
                         <div className="d-flex align-items-center gap-3">
                             <h3 className="text-theme-dark">
