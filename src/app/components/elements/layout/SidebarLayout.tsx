@@ -63,7 +63,8 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
         <Link to={link} className="py-2">
             {(isDefined(gameboardId) || question.state !== CompletionState.NOT_ATTEMPTED) 
-                ? <span className={classNames(getProgressIcon(question.state).icon, "mt-1 me-2", {"ms-2": isDefined(gameboardId)})} style={{minWidth: "16px"}}/> 
+                ? <i className={classNames(getProgressIcon(question.state).icon, {"ms-2": isDefined(gameboardId)})} style={{minWidth: "16px"}}/> 
+
                 : <i className="icon icon-question-thick"/>
             }
             <div className="d-flex flex-column w-100">
