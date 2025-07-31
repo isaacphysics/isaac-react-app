@@ -1,17 +1,18 @@
 import { act } from "@testing-library/react";
-import { expectH1, renderTestEnvironment, setUrl } from "../testUtils";
+import { expectH1, type PathString, renderTestEnvironment, setUrl } from "../testUtils";
 import { isAda } from "../../app/services";
-import { BoxSelectionState, CheckedState, Filters, setTestFilters, setTestHighlights } from "../../mocks/filters";
+import { BoxSelectionState, CheckedState, expectCheckedStates, expectClasses, Filters, toggleFilters } from "../../mocks/filters";
 import { PageContextState } from "../../IsaacAppTypes";
 
 describe("Concepts", () => {
     if (isAda) {
         it('has no such page', () => {});
     } else {
-        const renderConceptsPage = async ({context}: {context?: NonNullable<PageContextState>} = {}) => {
+        const renderConceptsPage = async ({context, query}: {context?: NonNullable<PageContextState>, query?: string} = {}) => {
             await act(async () => {
                 renderTestEnvironment();
-                setUrl({ pathname: context ? `${context.subject}/${context.stage?.[0]}/concepts` : '/concepts' });
+                const url: PathString = context ? `/${context.subject}/${context.stage?.[0]}/concepts` : '/concepts';
+                setUrl({ pathname: url, search: query });
             });
         };
 
@@ -20,48 +21,74 @@ describe("Concepts", () => {
             expectH1('Concepts');
         });
 
-        describe('Filters: Parent reselection', () => {
+        describe('Filters', () => {
             const { Selected, Partial, Deselected, Hidden } = BoxSelectionState;
             const { Physics, Skills, Maths, Number, Geometry, All } = Filters;
     
-            it('reselects parent topic after unselecting subtopics', async () => {
+            // Phsysics -> Skills
+            // Maths -> Number
+            it('unchecked root filters and no children initially', async () => {
                 await renderConceptsPage();
-                // Physics -> Skills
-                const toggleAssert = setTestFilters([Physics, Skills]);
-
-                await toggleAssert([], [Deselected, Hidden]);
-                await toggleAssert([Physics], [Selected, Deselected]);
-                await toggleAssert([Skills], [Partial, Selected]);
-                await toggleAssert([Skills], [Selected, Deselected]);
-                await toggleAssert([Physics], [Deselected, Hidden]);
+                expectClasses([Physics, Skills, Maths, Number], [Deselected, Hidden, Deselected, Hidden]);
             });
 
-            it('reselects parent topic after unselecting subtopics, multiple parents', async () => {
+            it('checks parents and shows children after selecting parents', async () => {
                 await renderConceptsPage();
-                // Physics -> Skills
-                // Maths -> Number
-                const toggleAssert = setTestFilters([Physics, Skills, Maths, Number]);
+                await toggleFilters([Physics, Maths]);
+                expectClasses([Physics, Skills, Maths, Number], [Selected, Deselected, Selected, Deselected]);
+            });
 
-                await toggleAssert([], [Deselected, Hidden, Deselected, Hidden]);
-                await toggleAssert([Physics, Maths], [Selected, Deselected, Selected, Deselected]);
-                await toggleAssert([Skills, Number], [Partial, Selected, Partial, Selected]);
-                await toggleAssert([Skills, Number], [Selected, Deselected, Selected, Deselected]);
-                await toggleAssert([Physics, Maths], [Deselected, Hidden, Deselected, Hidden]);
+            it('partial-checks parents, and checks children after selecting children', async () => {
+                await renderConceptsPage({query: "types=physics,maths"});
+                await toggleFilters([Skills, Number]);
+                expectClasses([Physics, Skills, Maths, Number], [Partial, Selected, Partial, Selected]);
+            });
+
+            it('checks parents after deselecting children', async () => {
+                await renderConceptsPage({ query: "types=skills,number"});
+                await toggleFilters([Skills, Number]);
+                expectClasses([Physics, Skills, Maths, Number], [Selected, Deselected, Selected, Deselected]);
+            });
+
+            it('hides children after deselecting parents', async () => {
+                await renderConceptsPage({ query: "types=physics,maths"});
+                await toggleFilters([Physics, Maths]);
+                expectClasses([Physics, Skills, Maths, Number], [Deselected, Hidden, Deselected, Hidden]);
             });
 
             describe("On a context-specific concept page", () => {
                 const { Checked, Empty } = CheckedState;
-
-                it('reselects all after all topics are unselected', async () => {
+                
+                // All
+                // Number
+                // Geometry
+                it('initially selects "All"', async () => {
                     await renderConceptsPage({ context: {subject: "maths", stage: ["a_level"] }});
-                    // All
-                    // Number
-                    // Geometry
-                    const toggleAssert = setTestHighlights([All, Number, Geometry]);
+                    expectCheckedStates([All, Number, Geometry], [Checked, Empty, Empty]);
+                });
 
-                    await toggleAssert([], [Checked, Empty, Empty]);
-                    await toggleAssert([Number, Geometry], [Empty, Checked, Checked]);
-                    await toggleAssert([Number, Geometry], [Checked, Empty, Empty]);
+                it('deselects "All" when other filters are selected', async () => {
+                    await renderConceptsPage({ context: {subject: "maths", stage: ["a_level"] }});
+                    await toggleFilters([Number]);
+                    expectCheckedStates([All, Number, Geometry], [Empty, Checked, Empty]);
+                });
+
+                it('reselects "All" when all other filters are deselected', async () => {
+                    await renderConceptsPage({
+                        context: {subject: "maths", stage: ["a_level"] },
+                        query: "types=number,geometry"
+                    });
+                    await toggleFilters([Number, Geometry]);
+                    expectCheckedStates([All, Number, Geometry], [Checked, Empty, Empty]);
+                });
+
+                it('deselects other filters when "All" is selected', async () => {
+                    await renderConceptsPage({
+                        context: {subject: "maths", stage: ["a_level"] },
+                        query: "types=number,geometry"
+                    });
+                    await toggleFilters([All]);
+                    expectCheckedStates([All, Number, Geometry], [Checked, Empty, Empty]);
                 });
             });
         });

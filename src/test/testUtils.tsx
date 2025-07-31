@@ -15,7 +15,6 @@ import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
 import { history } from "../app/services";
-import { LocationDescriptor } from "history";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -202,7 +201,13 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
     }
 };
 
-export const setUrl = (location: LocationDescriptor) => history.push(location);
+export type PathString = `/${string}`;
+export const setUrl = (location: { pathname: PathString, search?: string}) => {
+    if (location.pathname.includes('?')) {
+        throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
+    }
+    return history.push(location);
+};
 
 export const goBack = () => history.goBack();
 

@@ -3,23 +3,24 @@ import zipWith from "lodash/zipWith";
 import { isPhy } from "../app/services";
 import { clickOn } from "../test/testUtils";
 
-export const toggleFilter = async (filter: string | RegExp) => {
+export const toggleFilter = async (filter: string) => {
+    const regex = orWithCount(filter);
     if (isPhy) {
-        await clickOn(filter, mainContainer());
+        await clickOn(regex, mainContainer());
     } else {
-        await clickOn(filter);
+        await clickOn(regex);
         await clickOn("Apply filters");
     }
 };
 
 export const setTestFilters = (testedFilters: Filters[]) => async (toggle: Filters[], expectedStates: BoxSelectionState[]) => {
-    await toggleFilters(toggle.map(orWithCount));
-    expectClasses(testedFilters.map(orWithCount), expectedStates);
+    await toggleFilters(toggle);
+    expectClasses(testedFilters, expectedStates);
 };
 
 export const setTestHighlights = (testedFilters: Filters[]) => async (toggle: Filters[], expectedStates: CheckedState[]) => {
-    await toggleFilters(toggle.map(orWithCount));
-    expectCheckedStates(testedFilters.map(orWithCount), expectedStates);
+    await toggleFilters(toggle);
+    expectCheckedStates(testedFilters, expectedStates);
 
 };
 
@@ -53,27 +54,27 @@ const mainContainer = () => screen.findByTestId('main');
 
 const orWithCount = (str: string) => new RegExp(`^${str}$|^${str} \\([0-9]+\\)$|^${str}\\s*[0-9]+$`);
 
-const toggleFilters = (filters: Array<string | RegExp>) => {
+export const toggleFilters = (filters: string[]) => {
     return Promise.all(filters.map(filter => toggleFilter(filter)));
 };
 
-const expectClasses = (labels: Array<string | RegExp>, classNames: string[]) => {
+export const expectClasses = (labels: string[], classNames: string[]) => {
     return zipWith(labels, classNames, expectClass);
 };
 
-export const expectClass = (label: string | RegExp, className: string) => {
-    const element = screen.queryByLabelText(label);
+export const expectClass = (label: string, className: string) => {
+    const element = screen.queryByLabelText(orWithCount(label));
     if (className === 'hidden') {
         return expect(element).not.toBeInTheDocument();
     }
     return expect(element).toHaveClass(className);
 };
 
-export const expectCheckedState = (label: string | RegExp, checkedState: CheckedState) => {
-    const element = screen.queryByLabelText(label);
+export const expectCheckedState = (label: string, checkedState: CheckedState) => {
+    const element = screen.queryByLabelText(orWithCount(label));
     return checkedState == CheckedState.Checked ? expect(element).toBeChecked() : expect(element).not.toBeChecked();
 };
 
-export const expectCheckedStates = (labels: Array<string | RegExp>, checkedStates: CheckedState[]) => {
+export const expectCheckedStates = (labels: string[], checkedStates: CheckedState[]) => {
     return zipWith(labels, checkedStates, expectCheckedState);
 };
