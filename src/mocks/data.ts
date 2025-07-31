@@ -4808,7 +4808,9 @@ export const mockConceptsResults = {
         audience: [{ stage: ["a_level"]}],
         url: "/api/pages/concepts/gcse_maths_ch1_1_concept"
     }],
-    totalResults: 2
+    get totalResults() {
+        return this.results.length;
+    }
 };
 
 export const mockConceptPage =
