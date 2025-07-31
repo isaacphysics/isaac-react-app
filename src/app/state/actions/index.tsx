@@ -67,7 +67,7 @@ export function extractMessage(e: Error) {
     return API_REQUEST_FAILURE_MESSAGE;
 }
 
-export function fetchErrorFromParameters(parameters: string): { error?: string, errorDescription?: string } {
+export function fetchErrorFromParameters(parameters: string): { error?: string, errorDescription?: string, parseError?: string } {
     try {
         const parsed = new URLSearchParams(parameters);
         const [error, errorDescription] = [parsed.get('error'), parsed.get('error_description')];
@@ -75,8 +75,12 @@ export function fetchErrorFromParameters(parameters: string): { error?: string, 
             ...(null !== error && { error }),
             ...(null !== errorDescription && { errorDescription })
         };
-    } catch {
-        return {};
+    } catch (e) {
+        let parseError = `Failed to parse "${parameters}".`;
+        if (e !== null && typeof e === 'object' && 'message' in e) {
+            parseError += ` ${e.message}`;
+        }
+        return { parseError };
     }
 }
 
