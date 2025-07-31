@@ -11,7 +11,6 @@ import {
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    TAG_ID,
     trackEvent,
     siteSpecific,
     isAda,
@@ -35,7 +34,6 @@ import {
     GlossaryTermDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
-    RegisteredUserDTO,
     TestCaseDTO,
     UserContext, UserRole
 } from "../../../IsaacApiTypes";
@@ -67,6 +65,23 @@ export function extractMessage(e: Error) {
         return e.response.data.errorMessage;
     }
     return API_REQUEST_FAILURE_MESSAGE;
+}
+
+export function fetchErrorFromParameters(parameters: string): { error?: string, errorDescription?: string, parseError?: string } {
+    try {
+        const parsed = new URLSearchParams(parameters);
+        const [error, errorDescription] = [parsed.get('error'), parsed.get('error_description')];
+        return {
+            ...(null !== error && { error }),
+            ...(null !== errorDescription && { errorDescription })
+        };
+    } catch (e) {
+        let parseError = `Failed to parse "${parameters}".`;
+        if (e !== null && typeof e === 'object' && 'message' in e) {
+            parseError += ` ${e.message}`;
+        }
+        return { parseError };
+    }
 }
 
 export function showAxiosErrorToastIfNeeded(error: string, e: any) {
@@ -121,6 +136,7 @@ export const linkAccount = (provider: AuthenticationProvider) => async (dispatch
         const redirectResponse = await api.authentication.linkAccount(provider);
         const redirectUrl = redirectResponse.data.redirectUrl;
         dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS, provider, redirectUrl: redirectUrl});
+        trackEvent("sign_in_attempt", { props: { provider: provider.toLowerCase(), fromLinkPage: true } });
         window.location.href = redirectUrl;
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
@@ -461,6 +477,7 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider, is
         const redirectResponse = await api.authentication.getRedirect(provider, isSignup);
         const redirectUrl = redirectResponse.data.redirectUrl;
         dispatch({type: ACTION_TYPE.AUTHENTICATION_REDIRECT, provider, redirectUrl: redirectUrl});
+        trackEvent("sign_in_attempt", { props: { provider: provider.toLowerCase(), fromLinkPage: false } });
         window.location.href = redirectUrl;
     } catch (e) {
         dispatch(showAxiosErrorToastIfNeeded("Login redirect failed", e));
@@ -478,6 +495,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             dispatch(getUserPreferences() as any)
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
+        trackEvent("sign_in_success", { props: { provider: provider.toLowerCase() }});
         if (providerResponse.data.firstLogin) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             trackEvent("registration", {
@@ -494,6 +512,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
         history.push(nextPage || defaultNextPage);
     } catch (error: any) {
+        trackEvent("sign_in_failure", { props: { provider: provider.toLowerCase(), ...fetchErrorFromParameters(parameters) }});
         history.push("/auth_error", { errorMessage: extractMessage(error) });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
