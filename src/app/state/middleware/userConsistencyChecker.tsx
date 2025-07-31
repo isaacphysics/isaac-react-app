@@ -1,7 +1,7 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {ACTION_TYPE, isDefined, trackEvent} from "../../services";
-import {redirectTo, getUserId, logAction, setUserId, AppDispatch, changePage} from "../index";
+import {ACTION_TYPE, isDefined, KEY, persistence, trackEvent} from "../../services";
+import {AppDispatch, changePage, getUserId, logAction, redirectTo, setUserId} from "../index";
 
 let timeoutHandle: number | undefined;
 
@@ -48,6 +48,11 @@ function clearCurrentUser() {
     setUserId(undefined);
 }
 
+// Record what we were doing before the consistency error, so we can return them afterward
+function setAfterRenewPath() {
+    persistence.session.save(KEY.AFTER_SESSION_RENEW_PATH, window.location.pathname);
+}
+
 // This is where we handle clearing the store on logout and when the user is logged out elsewhere. We do this by
 // hard redirecting to the homepage (or the session expired page) which will cause the Redux store to be cleared.
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
@@ -58,10 +63,12 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
             clearCurrentUser();
             // Pushing this history item here causes the page to reload before the redirect below, but this prevents the
             // back button from using stale data:
+            setAfterRenewPath();
             changePage(redirect);
             break;
         case ACTION_TYPE.USER_SESSION_EXPIRED:
             redirect = "/error_expired";
+            setAfterRenewPath();
             break;
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
