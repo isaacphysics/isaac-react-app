@@ -1,7 +1,6 @@
 import { act } from "@testing-library/react";
 import { expectH1, renderTestEnvironment, setUrl } from "../testUtils";
 import { isAda } from "../../app/services";
-import _ from "lodash";
 import { BoxSelectionState, CheckedState, Filters, setTestFilters, setTestHighlights } from "../../mocks/filters";
 import { PageContextState } from "../../IsaacAppTypes";
 

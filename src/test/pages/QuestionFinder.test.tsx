@@ -1,7 +1,7 @@
 import {act, screen, waitFor, within} from "@testing-library/react";
 import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, setUrl, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults, mockQuestionFinderResultsWithMultipleStages } from "../../mocks/data";
-import _ from "lodash";
+import shuffle from "lodash/shuffle";
 import { buildFunctionHandler } from "../../mocks/handlers";
 import { isPhy, siteSpecific } from "../../app/services";
 import userEvent from "@testing-library/user-event";
@@ -51,7 +51,7 @@ describe("QuestionFinder", () => {
     });
 
     describe('Question shuffling', () => {
-        const shuffledQuestions = _.shuffle(questions);
+        const shuffledQuestions = shuffle(questions);
         const shuffledResultsResponse = buildMockQuestionFinderResults(shuffledQuestions, 0);
 
         const questionsSearchResponse: RenderParameters['questionsSearchResponse'] = ({randomSeed}) => {

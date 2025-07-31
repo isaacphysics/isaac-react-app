@@ -1,7 +1,7 @@
+import { screen } from "@testing-library/react";
+import zipWith from "lodash/zipWith";
 import { isPhy } from "../app/services";
 import { clickOn } from "../test/testUtils";
-import { screen } from "@testing-library/react";
-import _ from "lodash";
 
 export const toggleFilter = async (filter: string | RegExp) => {
     if (isPhy) {
@@ -58,7 +58,7 @@ const toggleFilters = (filters: Array<string | RegExp>) => {
 };
 
 const expectClasses = (labels: Array<string | RegExp>, classNames: string[]) => {
-    return _.zipWith(labels, classNames, expectClass);
+    return zipWith(labels, classNames, expectClass);
 };
 
 export const expectClass = (label: string | RegExp, className: string) => {
@@ -75,5 +75,5 @@ export const expectCheckedState = (label: string | RegExp, checkedState: Checked
 };
 
 export const expectCheckedStates = (labels: Array<string | RegExp>, checkedStates: CheckedState[]) => {
-    return _.zipWith(labels, checkedStates, expectCheckedState);
+    return zipWith(labels, checkedStates, expectCheckedState);
 };
