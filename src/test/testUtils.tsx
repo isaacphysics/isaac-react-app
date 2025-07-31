@@ -5,7 +5,7 @@ import {http, HttpResponse, HttpHandler} from "msw";
 import {ACCOUNT_TAB, ACCOUNT_TABS, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
 import {produce} from "immer";
 import {mockUser} from "../mocks/data";
-import {isaacApi, redirectTo, requestCurrentUser, store} from "../app/state";
+import {isaacApi, requestCurrentUser, store} from "../app/state";
 import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
@@ -16,7 +16,6 @@ import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
 import { history } from "../app/services";
 import { LocationDescriptor } from "history";
-import * as Actions from "../app/state/actions";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -48,11 +47,7 @@ interface RenderTestEnvironmentOptions {
 // Provider with the global store.
 // When called, the Redux store will be cleaned completely, and other the MSW server handlers will be reset to
 // defaults (those in handlers.ts).
-export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
-    // mock redirectTo action because jsdom does not support href updates
-    jest.spyOn(Actions, "redirectTo");
-    (redirectTo as jest.Mock).mockImplementation(() => true);
-    
+export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {    
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
