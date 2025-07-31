@@ -464,3 +464,15 @@ iframe.email-html {
     border-bottom: $baseline-height solid var(--tab-hover);
   }
 }
+
+.external-link {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.25rem;
+  padding: 0 0.25rem;
+  transition: all 0.15s ease-in-out;
+  
+  &:hover {
+    scale: 1.05;
+  }
+}
