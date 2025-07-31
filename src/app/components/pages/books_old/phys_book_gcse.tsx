@@ -15,7 +15,7 @@ export const PhysBookGcse = () => {
     return <Container className="physics">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-7" currentPageTitle="Mastering Essential GCSE Physics" help={pageHelp} modalId="help_modal_gcse_book" />
+                <TitleAndBreadcrumb className="mb-7" currentPageTitle="Mastering Essential GCSE Physics" help={pageHelp} /> {/* modalId="help_modal_gcse_book" /> */}
                 <img className="book-cover" src="/assets/phy/books/phys_book_gcse.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="phys_book_gcse_intro"/>
             </div>
