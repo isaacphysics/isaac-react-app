@@ -1,6 +1,6 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {ACTION_TYPE, isDefined, KEY, persistence, trackEvent} from "../../services";
+import {ACTION_TYPE, isDefined, trackEvent} from "../../services";
 import {AppDispatch, changePage, getUserId, logAction, redirectTo, setUserId} from "../index";
 import {setAfterRenewPath} from "../../services/useSessionExpired";
 
