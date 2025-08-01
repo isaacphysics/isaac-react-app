@@ -269,7 +269,7 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
     useEffect(() => {
         if (boardView == BoardViews.table) {
             setBoardLimit(BoardLimit.All);
-        } else if (boardView == BoardViews.card) {
+        } else if (boardView == BoardViews.card && !haveAllBoards) {
             setBoardLimit(BoardLimit.six);
         }
     }, [boardView]);

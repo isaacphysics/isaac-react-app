@@ -90,7 +90,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                             </h3>
                             {badges}
                         </div>
-                        {doc?.subtitle && <h5><Markup encoding="latex">{subtitle ?? doc.subtitle}</Markup></h5>}
+                        {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
                     </div>}
                     {isAda && <EditContentButton doc={doc} />}
                     <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>

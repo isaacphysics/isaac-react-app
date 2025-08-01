@@ -43,6 +43,9 @@ describe("SetAssignments", () => {
             // Change view to "Card View"
             const viewDropdown = await screen.findByLabelText("Display in");
             await userEvent.selectOptions(viewDropdown, "Card View");
+
+            const limitDropdown = await screen.findByLabelText("Show");
+            await userEvent.selectOptions(limitDropdown, "6");
             await waitFor(() => {
                 expect(screen.queryAllByText("Loading...")).toHaveLength(0);
             });
@@ -70,6 +73,9 @@ describe("SetAssignments", () => {
             // Phy persists the change to table view, so switch back to card view for subsequent tests
             const viewDropdown = await screen.findByLabelText("Set display mode");
             await userEvent.selectOptions(viewDropdown, "Card View");
+
+            const limitDropdown = await screen.findByLabelText("Set display limit");
+            await userEvent.selectOptions(limitDropdown, "6");
         }
     });
 

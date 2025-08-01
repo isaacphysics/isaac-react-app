@@ -167,9 +167,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         </Row>
         <Row>
             <Col className="pt-4 pb-7">
-                <Tabs
-                    activeTabOverride={categoryIndex} onActiveTabChange={activeTabChanged} tabContentClass="pt-4"
-                >
+                <Tabs activeTabOverride={categoryIndex} onActiveTabChange={activeTabChanged} tabContentClass="pt-4">
                     {fromPairs(Object.values(section.categories).map((category, index) => {
                         return [category.title, <PageFragment key={index} fragmentId={`support_${type}_${category.category}`} />];
                     }))}

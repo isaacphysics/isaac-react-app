@@ -18,6 +18,7 @@ describe("My Gameboards", () => {
         cy.mountWithStoreAndRouter(<MyGameboards user={mockUser}/>, [PATHS.MY_GAMEBOARDS]);
         if (isPhy) cy.openSidebar();
         cy.get('[data-testid="display-select"]').select("Card View");
+        cy.get('[data-testid="limit-select"]').select("6");
         if (isPhy) cy.closeSidebar();
         cy.get('[data-testid="loading"]').should('not.exist');
         cy.matchImage();

@@ -42,7 +42,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
     const [assignmentSetByFilter, setAssignmentSetByFilter] = useState<string>("All");
     const [assignmentGroupFilter, setAssignmentGroupFilter] = useState<string>("All");
-    const [sortOrder, setSortOrder] = useState<MyAssignmentsOrder>(MyAssignmentsOrder["dueDate"]);
+    const [sortOrder, setSortOrder] = useState<MyAssignmentsOrder>(MyAssignmentsOrder["-startDate"]);
 
     const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
 

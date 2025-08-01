@@ -52,7 +52,7 @@ const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, board
         </Col>
         <Col xs={6} md={2}>
             <Label className="w-100">
-                Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                Show <Input type="select" data-testid={"limit-select"} value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </Label>
@@ -136,7 +136,7 @@ export const MyGameboards = () => {
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(
         siteSpecific(BoardViews.card, BoardViews.table),
-        isMobile() ? BoardLimit.six : BoardLimit.All
+        BoardLimit.six
     );
 
     function confirmDeleteMultipleBoards() {

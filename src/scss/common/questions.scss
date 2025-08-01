@@ -71,10 +71,22 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
 }
 
 .multichoice-question {
-  ul > li .multichoice-option div:nth-child(2) .content-value > div > p {
-    margin: 0;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+  ul > li .multichoice-option {
+    div:nth-child(2) .content-value > div > p {
+      margin: 0;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    input {
+      margin-top: 0.5rem;
+    }
+    
+    &:has(.katex) {
+      align-items: center;
+      input {
+        margin-top: 0;
+      }
+    }
   }
 }
 
@@ -109,6 +121,7 @@ $inline-feedback-padding: 2px;
   display: inline-flex;
   border-radius: $border-radius-lg;
   width: 100%;
+  background-color: white;
   
   .feedback-wrapper {
     // wraps around a SINGLE component that can be marked as valid/invalid/unanswered, to allow multiple parts of one question to have different feedback states

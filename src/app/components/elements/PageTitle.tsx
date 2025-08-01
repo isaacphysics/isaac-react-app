@@ -123,7 +123,8 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
             )}
             <div className="d-flex flex-column justify-content-center">
                 {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX)}
-                {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
+                {/* in the new isaac designs, subtitles should only ever exist in the page title, not alongside this super-title */}
+                {isAda && subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
             </div>
         </div>
         <Helmet>

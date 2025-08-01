@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import {Button, Col, Label, Row} from "reactstrap";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
-import {PATHS, siteSpecific, isAda} from "../../../services";
+import {PATHS, siteSpecific} from "../../../services";
 
 const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
     <Label className="mx-3 mb-2">

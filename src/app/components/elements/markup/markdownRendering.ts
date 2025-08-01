@@ -83,12 +83,6 @@ export const regexProcessMarkdown = (markdown: string) => {
     const regexRules = {
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
     };
-    if (isPhy) {
-        Object.assign(regexRules, {
-            "[**Glossary**](/glossary)": /\*\*Glossary\*\*/g,
-            "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,
-        });
-    }
     Object.entries(regexRules).forEach(([replacement, rule]) =>
         markdown = markdown.replace(rule, replacement)
     );
