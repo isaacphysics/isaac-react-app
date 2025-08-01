@@ -25,7 +25,7 @@ export const toggleFilter = async (filter: Filter | Filter[]): Promise<void> => 
     if (Array.isArray(filter)) {
         await Promise.all(filter.map(toggleFilter));
     } else {
-        const regex = orWithCount(filter);
+        const regex = allowMatchesWithCount(filter);
         if (isPhy) {
             await clickOn(regex, mainContainer());
         } else {
@@ -59,7 +59,7 @@ export enum SelectState {
 };
 
 export const expectSelect = toExpectation((filter: Filter, state: SelectState) => {
-    const element = screen.queryByLabelText(orWithCount(filter));
+    const element = findFilter(filter);
     return state == SelectState.Checked ? expect(element).toBeChecked() : expect(element).not.toBeChecked();
 });
 
@@ -71,7 +71,7 @@ export enum PartialCheckboxState {
 };
 
 export const expectPartialCheckBox = toExpectation((filter: Filter, state: PartialCheckboxState) => {
-    const element = screen.queryByLabelText(orWithCount(filter));
+    const element = findFilter(filter);
     if (state === PartialCheckboxState.Hidden) {
         return expect(element).not.toBeInTheDocument();
     }
@@ -80,4 +80,9 @@ export const expectPartialCheckBox = toExpectation((filter: Filter, state: Parti
 
 const mainContainer = () => screen.findByTestId('main');
 
-const orWithCount = (str: string) => new RegExp(`^${str}$|^${str} \\([0-9]+\\)$|^${str}\\s*[0-9]+$`);
+const findFilter = (label: string) => {
+    const regexp = allowMatchesWithCount(label);
+    return screen.queryByLabelText(regexp);
+};
+
+const allowMatchesWithCount = (str: string) => new RegExp(`^${str}$|^${str} \\([0-9]+\\)$|^${str}\\s*[0-9]+$`);
