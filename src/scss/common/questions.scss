@@ -240,7 +240,7 @@ $inline-feedback-padding: 2px;
     min-width: unset;
     font-family: $primary-font !important;
     background-color: transparent;
-    border-radius: 0.35rem;
+    border-radius: $border-radius-lg;
 
     &:not(.is-valid):not(.is-invalid):not(.is-unanswered) {
       border: $gray-136 solid 1px;
