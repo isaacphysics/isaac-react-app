@@ -3,21 +3,48 @@ import {ImageDTO} from "../../../IsaacApiTypes";
 import {apiHelper} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {Markup} from "../elements/markup";
+import { closeActiveModal, openActiveModal, useAppDispatch } from '../../state';
+import { ActiveModal } from '../../../IsaacAppTypes';
+
+interface FigureModalProps {
+    doc: ImageDTO;
+    path?: string;
+    toggle: () => void;
+}
+
+const FigureModal = ({doc, path, toggle}: FigureModalProps) : ActiveModal => {
+    return {
+        closeAction: toggle,
+        size: "xxl",
+        title: "Image preview",
+        body: <div className="figure-panel">
+            <figure className="text-center">
+                <img src={path} alt={doc.altText} />
+            </figure>
+        </div>
+    };
+};
 
 interface IsaacImageProps {
     doc: ImageDTO;
 }
 
 export const IsaacImage = ({doc}: IsaacImageProps) => {
+    const dispatch = useAppDispatch();
     const path = doc.src && apiHelper.determineImageUrl(doc.src);
 
     return <div className="figure-panel">
         <figure>
-            <div className="text-center">
+            <div className="text-center position-relative">
+                <button className="figure-fullscreen" onClick={() => {
+                    dispatch(openActiveModal(FigureModal({doc, path, toggle: () => dispatch(closeActiveModal())})));
+                }}>
+                    <i className="icon icon-fullscreen icon-md" />
+                </button>
                 {!doc.clickUrl && <img src={path} alt={doc.altText} />}
                 {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} /></a>}
             </div>
-            <div className="text-center figure-caption">
+            {React.isValidElement(doc.children) || React.isValidElement(doc.attribution) && <div className="text-center figure-caption">
                 <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
@@ -26,7 +53,7 @@ export const IsaacImage = ({doc}: IsaacImageProps) => {
                         {doc.attribution}
                     </Markup>
                 </span>}
-            </div>
+            </div>}
         </figure>
     </div>;
 };

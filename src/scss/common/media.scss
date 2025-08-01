@@ -64,4 +64,18 @@ figure {
     font-size: .8125rem;
     padding: .5rem;
   }
+
+  .figure-fullscreen {
+    position: absolute;
+    right: 0.25rem;
+    bottom: 0.25rem;
+    opacity: 0.5;
+    background-color: transparent;
+    transition: all 0.15s ease-in-out;
+
+    &:hover {
+      opacity: 1;
+      scale: 1.1;
+    }
+  }
 }
