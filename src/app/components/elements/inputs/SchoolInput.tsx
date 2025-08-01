@@ -56,11 +56,13 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     // Get school associated with urn
     function fetchSchool(urn: string) {
         if (urn !== "") {
-            getSchoolByUrn(urn).then(({data}) => {
-                if (data && data.length > 0) {
-                    setSelectedSchoolObject(data[0]);
-                }
-            });
+            if (selectedSchoolObject?.urn !== urn) {
+                getSchoolByUrn(urn).then(({data}) => {
+                    if (data && data.length > 0) {
+                        setSelectedSchoolObject(data[0]);
+                    }
+                });
+            }
         } else {
             setSelectedSchoolObject(null);
         }

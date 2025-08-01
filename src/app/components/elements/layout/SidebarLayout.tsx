@@ -761,7 +761,7 @@ const AssignmentStatusAllCheckbox = (props: Omit<AssignmentStatusCheckboxProps, 
     />;
 };
 
-interface MyAssignmentsSidebarProps extends SidebarProps {
+interface MyAssignmentsSidebarProps extends ContentSidebarProps {
     statusFilter: AssignmentState[];
     setStatusFilter: React.Dispatch<React.SetStateAction<AssignmentState[]>>;
     titleFilter: string;
@@ -1092,7 +1092,7 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface GroupsSidebarProps extends SidebarProps {
+interface GroupsSidebarProps extends ContentSidebarProps {
     user: RegisteredUserDTO;
     groups: AppGroup[] | undefined;
     allGroups: AppGroup[];
@@ -1134,16 +1134,16 @@ export const SignupSidebar = ({activeTab} : {activeTab: number}) => {
     </ContentSidebar>;
 };
 
-interface SetQuizzesSidebarProps extends SidebarProps {
+interface SetQuizzesSidebarProps extends ContentSidebarProps {
     titleFilter?: string;
     setTitleFilter: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
-    const { titleFilter, setTitleFilter } = props;
+    const { titleFilter, setTitleFilter, ...rest } = props;
     const deviceSize = useDeviceSize();
 
-    return <ContentSidebar buttonTitle="Search tests">
+    return <ContentSidebar buttonTitle="Search tests" {...rest}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
             <h5>Search tests</h5>
@@ -1157,7 +1157,7 @@ export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface ManageQuizzesSidebarProps extends SidebarProps {
+interface ManageQuizzesSidebarProps extends ContentSidebarProps {
     manageQuizzesTitleFilter: string;
     setManageQuizzesTitleFilter: React.Dispatch<React.SetStateAction<string>>;
     quizStartDate: Date | undefined;
@@ -1175,7 +1175,7 @@ interface ManageQuizzesSidebarProps extends SidebarProps {
 export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
     const { manageQuizzesTitleFilter, setManageQuizzesTitleFilter, quizStartDate, setQuizStartDate,
         quizSetDateFilterType, setQuizSetDateFilterType, quizDueDate, setQuizDueDate, quizDueDateFilterType,
-        setQuizDueDateFilterType, manageQuizzesGroupNameFilter, setManageQuizzesGroupNameFilter} = props;
+        setQuizDueDateFilterType, manageQuizzesGroupNameFilter, setManageQuizzesGroupNameFilter, ...rest} = props;
 
     const deviceSize = useDeviceSize();
 
@@ -1194,7 +1194,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
         </DropdownMenu>
     </UncontrolledDropdown>;
 
-    return <ContentSidebar buttonTitle="Search & Filter">
+    return <ContentSidebar buttonTitle="Search & Filter" {...rest}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
             <h5>Search tests</h5>
@@ -1347,7 +1347,7 @@ const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status">) =
     />;
 };
 
-interface MyQuizzesSidebarProps extends SidebarProps {
+interface MyQuizzesSidebarProps extends ContentSidebarProps {
     setQuizTitleFilter: (title: string) => void;
     setQuizCreatorFilter: (creator: string) => void;
     quizStatusFilter: QuizStatus[];
@@ -1358,14 +1358,14 @@ interface MyQuizzesSidebarProps extends SidebarProps {
 };
 
 export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
-    const { setQuizTitleFilter,setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, activeTab, displayMode, setDisplayMode } = props;
+    const { setQuizTitleFilter,setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, activeTab, displayMode, setDisplayMode, ...rest } = props;
     const deviceSize = useDeviceSize();
     const quizQuery = useGetQuizAssignmentsAssignedToMeQuery();
 
     const statusOptions = activeTab === 1 ? Object.values(QuizStatus).filter(s => s !== QuizStatus.All)
         : [QuizStatus.Started, QuizStatus.Complete];
 
-    return <ContentSidebar buttonTitle="Search & Filter">
+    return <ContentSidebar buttonTitle="Search & Filter" {...rest}>
         <ShowLoadingQuery query={quizQuery} defaultErrorTitle="" thenRender={(quizzes: QuizAssignmentDTO[]) => {
             return <>
                 {above["lg"](deviceSize) && <div className="section-divider"/>}

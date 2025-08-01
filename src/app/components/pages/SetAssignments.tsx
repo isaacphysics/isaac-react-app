@@ -596,7 +596,6 @@ export const SetAssignments = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
             icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
-            modalId="help_modal_set_assignments"
         />
         <SidebarLayout>
             <SetAssignmentsSidebar
@@ -611,9 +610,9 @@ export const SetAssignments = () => {
                 hideButton
             />
             <MainContent>
-                <PageMetadata showSidebarButton sidebarInTitle />
-                <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")}
-                    ifNotFound={RenderNothing}/>
+                <PageMetadata showSidebarButton noTitle helpModalId="help_modal_set_assignments">
+                    <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
+                </PageMetadata>
                 {isPhy &&
                     <>
                         <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>
