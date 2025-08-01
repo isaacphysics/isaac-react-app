@@ -1,6 +1,6 @@
-import { ContentBaseDTO, UserContext } from "../../IsaacApiTypes";
+import { ContentBaseDTO, Stage, UserContext } from "../../IsaacApiTypes";
 import { PageContextState } from "../../IsaacAppTypes";
-import { LearningStage, LearningStages, PHY_NAV_SUBJECTS, SiteTheme, STAGE_TO_LEARNING_STAGE, Subject, Subjects, TAG_ID } from "./constants";
+import { LearningStage, LearningStages, PHY_NAV_SUBJECTS, SiteTheme, STAGE, STAGE_TO_LEARNING_STAGE, Subject, Subjects, TAG_ID } from "./constants";
 import { isDefined } from "./miscUtils";
 import { useLocation } from "react-router";
 import { HUMAN_STAGES, HUMAN_SUBJECTS } from "./constants";
@@ -161,8 +161,6 @@ export const usePreviousPageContext = (userContexts: readonly UserContext[] | un
         };
     }, [dispatch, doc, previousContext, userContexts]);
 
-    console.log("previousPageContext", previousPageContext);
-
     return previousPageContext;
 };
 
@@ -241,4 +239,12 @@ export function isSingleStageContext(context?: PageContextState): boolean {
 
 export function isValidStageSubjectPair(subject: Subject, stage: LearningStage): boolean {
     return (PHY_NAV_SUBJECTS[subject] as readonly LearningStage[]).includes(stage);
+}
+
+export function sortStages(stages: Stage[]): Stage[] {
+    return stages.toSorted((a, b) => {
+        const aIndex = isDefined(a) ? Object.values(STAGE).indexOf(a as STAGE) : -1;
+        const bIndex = isDefined(b) ? Object.values(STAGE).indexOf(b as STAGE) : -1;
+        return aIndex - bIndex;
+    });
 }
