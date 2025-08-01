@@ -2,17 +2,12 @@ import {KEY, persistence, SITE_TITLE} from "../../services";
 import React, {useEffect, useState} from "react";
 import {Button, Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {changePage, getUserId, redirectTo, selectors, useAppSelector} from "../../state";
+import {useSessionExpired} from "../../services/useSessionExpired";
 
 export const ConsistencyError = () => {
 
-    const [target, setTarget] = useState<string>("/login");
-
-    useEffect(() => {
-        const targetFromSessionStorage = persistence.session.load(KEY.AFTER_SESSION_RENEW_PATH);
-
-        // Set the target of the Continue button
-        if(targetFromSessionStorage) setTarget(targetFromSessionStorage);
-    }, []);
+    const [target, clearRenewPath] = useSessionExpired();
 
     return <Container className="mb-3">
         <TitleAndBreadcrumb breadcrumbTitleOverride="User consistency error" currentPageTitle={`Your ${SITE_TITLE} session has changed`} icon={{type: "hex", icon: "icon-error"}}/>
@@ -25,6 +20,6 @@ export const ConsistencyError = () => {
             </a>
             {" feature."}
         </p>
-        <Button color="secondary" href={target}>Continue</Button>
+        <Button color="secondary" onClick={clearRenewPath} href={target}>Continue</Button>
     </Container>;
 };
