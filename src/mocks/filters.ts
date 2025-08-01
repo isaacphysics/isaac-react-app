@@ -1,5 +1,6 @@
 import { screen } from "@testing-library/react";
 import zipWith from "lodash/zipWith";
+import flatten from "lodash/flatten";
 import { isPhy } from "../app/services";
 import { clickOn } from "../test/testUtils";
 
@@ -9,12 +10,15 @@ export enum Filter {
     Physics = "Physics",
     Skills = "Skills",
     Mechanics = "Mechanics",
-    SigFig = "Significant Figures",
+    SigFigs = "Significant Figures",
     Maths = "Maths",
     Number = "Number",
     Arithmetic = "Arithmetic",
     Geometry = "Geometry",
-    Shapes = "Shapes"
+    Shapes = "Shapes",
+    Statics = "Statics",
+    Units = "Units",
+    Kinematics = "Kinematics"
 }
 
 export const toggleFilter = async (filter: Filter | Filter[]): Promise<void> => {
@@ -32,14 +36,17 @@ export const toggleFilter = async (filter: Filter | Filter[]): Promise<void> => 
 };
 
 export const toExpectation: <T, U>(expect: (subject: T, expected: U) => void) => {
-    (filters: T[]): {toBe: (states: U[]) => void};
+    (filters: T[]): {toBe: (states: U[] | U[][]) => void};
     (filter: T): {toBe: (states: U) => void};
-} = expect => filters => ({
-    toBe: states => {
-        if (Array.isArray(filters) && Array.isArray(states)) {
-            return zipWith(filters, states, expect);
-        } else if (!Array.isArray(filters) && !Array.isArray(states)) {
-            const [filter, state] = [filters, states];
+} = expect => subjects => ({
+    toBe: expected => {
+        if (Array.isArray(subjects) && Array.isArray(expected)) {
+            if (flatten(subjects).length !== flatten(expected).length) {
+                throw new Error("There must be as many subjects as there are expectations");
+            }
+            return zipWith(flatten(subjects), flatten(expected), expect);
+        } else if (!Array.isArray(subjects) && !Array.isArray(expected)) {
+            const [filter, state] = [subjects, expected];
             expect(filter, state);
         }
         throw new Error('Either call this function with two arrays or two non-arrays');

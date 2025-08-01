@@ -2,13 +2,15 @@ import {act, screen, waitFor, within} from "@testing-library/react";
 import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, setUrl, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults, mockQuestionFinderResultsWithMultipleStages } from "../../mocks/data";
 import shuffle from "lodash/shuffle";
+import times from "lodash/times";
+import flatten from "lodash/flatten";
 import { buildFunctionHandler } from "../../mocks/handlers";
 import { isPhy, siteSpecific } from "../../app/services";
 import userEvent from "@testing-library/user-event";
 import { PageContextState } from "../../IsaacAppTypes";
 import { expectPhyBreadCrumbs } from "../helpers/quiz";
 import { IsaacQuestionPageDTO } from "../../IsaacApiTypes";
-import { toggleFilter, BoxSelectionState, Filters, setTestFilters } from "../../mocks/filters";
+import { toggleFilter, PartialCheckboxState, Filter, expectPartialCheckBox } from "../../mocks/filters";
 
 type QuestionFinderResultsResponse = {
     results: IsaacQuestionPageDTO[];
@@ -27,26 +29,24 @@ const buildMockQuestionFinderResults = <T extends IsaacQuestionPageDTO[]>(questi
 });
 
 describe("QuestionFinder", () => {
-    const { GCSE } = Filters;
-
     const questions = buildMockQuestions(40, mockQuestionFinderResults as QuestionFinderResultsResponse);
     const resultsResponse = buildMockQuestionFinderResults(questions, 0);
 
     const questionsWithMultipleStages = buildMockQuestions(40, mockQuestionFinderResultsWithMultipleStages as QuestionFinderResultsResponse);
     const resultsResponseWithMultipleStages = buildMockQuestionFinderResults(questionsWithMultipleStages, 0);
 
-    const renderQuestionFinderPage = async ({questionsSearchResponse, queryParams, context} : RenderParameters) => {
+    const renderQuestionFinderPage = async ({response, queryParams, context} : RenderParameters) => {
         await act(async () => {
             renderTestEnvironment({
-                extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], questionsSearchResponse)]
+                extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], response)]
             });
             setUrl({ pathname: context ? `/${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
         });
     };
 
     it('should render results in alphabetical order', async () => {
-        await renderQuestionFinderPage({ questionsSearchResponse: () => resultsResponse });
-        await toggleFilter(GCSE);
+        await renderQuestionFinderPage({ response: () => resultsResponse });
+        await toggleFilter(Filter.GCSE);
         await expectQuestions(questions.slice(0, 30));
     });
 
@@ -54,7 +54,7 @@ describe("QuestionFinder", () => {
         const shuffledQuestions = shuffle(questions);
         const shuffledResultsResponse = buildMockQuestionFinderResults(shuffledQuestions, 0);
 
-        const questionsSearchResponse: RenderParameters['questionsSearchResponse'] = ({randomSeed}) => {
+        const response: RenderParameters['response'] = ({randomSeed}) => {
             switch (randomSeed) {
                 case null: return resultsResponse;
                 case '1': return shuffledResultsResponse;
@@ -63,16 +63,16 @@ describe("QuestionFinder", () => {
         };
 
         it('query parameter should shuffle results', async () => {
-            await renderQuestionFinderPage({ questionsSearchResponse, queryParams: '?randomSeed=1&stages=gcse' });
+            await renderQuestionFinderPage({ response, queryParams: '?randomSeed=1&stages=gcse' });
             await expectQuestions(shuffledQuestions.slice(0, 30));
         });
             
         it('button should shuffle questions', async () => {
             await withMockedRandom(async (randomSequence) => {
                 randomSequence([1 * 10 ** -6]);
-                await renderQuestionFinderPage({ questionsSearchResponse });
+                await renderQuestionFinderPage({ response });
                    
-                await toggleFilter(GCSE);
+                await toggleFilter(Filter.GCSE);
                 await expectQuestions(questions.slice(0, 30));
                     
                 await clickOn("Shuffle questions");
@@ -84,8 +84,8 @@ describe("QuestionFinder", () => {
             return withMockedRandom(async (randomSequence) => {
                 randomSequence([1 * 10 ** -6]);
                    
-                await renderQuestionFinderPage({ questionsSearchResponse });
-                await toggleFilter(GCSE);
+                await renderQuestionFinderPage({ response });
+                await toggleFilter(Filter.GCSE);
                 await clickOn("Shuffle questions");
                 await expectUrlParams("?randomSeed=1&stages=gcse");
             });
@@ -93,14 +93,14 @@ describe("QuestionFinder", () => {
 
         describe('returning to alphabetical order from a randomised screen', () => {                
             it('when applying filters', async () => {
-                await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
-                await toggleFilter(GCSE);
+                await renderQuestionFinderPage({ response, queryParams: "?randomSeed=1" });
+                await toggleFilter(Filter.GCSE);
                 await expectUrlParams("?stages=gcse");
                 await expectQuestions(questions.slice(0, 30));
             });
     
             it('when searching for a question', async () => {
-                await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1" });
+                await renderQuestionFinderPage({ response, queryParams: "?randomSeed=1" });
                 await enterInput(siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST"), "A bag");
                 await expectUrlParams("?query=A%20bag");
                 await expectQuestions(questions.slice(0, 30));
@@ -109,7 +109,7 @@ describe("QuestionFinder", () => {
             if (isPhy) {
                 // On Ada, clearing filters only has an affect after clicking the "Apply" button, so same case as above 
                 it.skip('when clearing all filters', async () => {
-                    await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=gcse" });
+                    await renderQuestionFinderPage({ response, queryParams: "?randomSeed=1&stages=gcse" });
                     await clickOn(siteSpecific("Clear all filters", "Clear all"));
                     await expectUrlParams('');
                 });
@@ -119,7 +119,7 @@ describe("QuestionFinder", () => {
                 // for FilterTag and FilterSummary. The React docs advise against this, see:
                 // https://react.dev/learn/preserving-and-resetting-state  
                 it.skip('when clearing a filter tag', async () => {
-                    await renderQuestionFinderPage({ questionsSearchResponse, queryParams: "?randomSeed=1&stages=gcse" });
+                    await renderQuestionFinderPage({ response, queryParams: "?randomSeed=1&stages=gcse" });
                     await clearFilterTag('gcse');
                     await expectUrlParams('');
                 });
@@ -133,14 +133,14 @@ describe("QuestionFinder", () => {
             return withMockedRandom(async (randomSequence) => {
                 randomSequence([1 * 10 ** -6]);
                    
-                await renderQuestionFinderPage({ questionsSearchResponse: ({ randomSeed, startIndex }) => {
+                await renderQuestionFinderPage({ response: ({ randomSeed, startIndex }) => {
                     switch (randomSeed) {
                         case null: return startIndex === '0' ? resultsResponse : resultsResponsePage2;;
                         case '1': return startIndex === '0' ? shuffledResultsResponse : shuffledResultsResponsePage2;
                         default: throw new Error('Unexpected seed');
                     }
                 }});
-                await toggleFilter(GCSE);
+                await toggleFilter(Filter.GCSE);
                 await expectQuestions(questions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
                     
@@ -156,65 +156,177 @@ describe("QuestionFinder", () => {
     });
 
     if (isPhy) {
-        describe('Filters: Parent reselection', () => {
-            const { Selected, Partial, Deselected, Hidden } = BoxSelectionState;
-            const { Physics, Skills, Mechanics, SigFig, Maths, Number, Arithmetic, Geometry, Shapes } = Filters;
+        describe('Filters', () => {
+            // subject     field        topic
+            // Phsysics -> Skills    -> Significant Figures
+            //          -> Mechanics -> Statics
+            // Maths    -> Number    -> Arithmetic
+            //          -> Geometry  -> Shapes
+            const [subjectFilters, fieldFilters, topicFilters] = [
+                [Filter.Physics, Filter.Maths],
+                [Filter.Skills, Filter.Mechanics, Filter.Number, Filter.Geometry],
+                [Filter.SigFigs, Filter.Statics, Filter.Arithmetic, Filter.Shapes]
+            ];
+            const testedFilters = flatten([subjectFilters, fieldFilters, topicFilters]);
+            const checkboxStates = (n: number) => (state: PartialCheckboxState) => times(n, () => state);
+            const [subjects, fields, topics] = [checkboxStates(2), checkboxStates(4), checkboxStates(4)];
+            const response = () => resultsResponse;
+            const { Selected, Partial, Deselected, Hidden } = PartialCheckboxState;
+            
+            describe('initial state: no selections', () => {
+                it('show unchecked subjects, hides others', async () => {
+                    await renderQuestionFinderPage({ response });
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Deselected), fields(Hidden), topics(Hidden)]);
 
-            it('reselects parent topic after unselecting subtopics', async () => {
-                await renderQuestionFinderPage({ questionsSearchResponse: () => resultsResponse });
-                // Physics -> Skills
-                //         -> Mechanics
-                const toggleAssert = setTestFilters([Physics, Skills, Mechanics]);
-
-                await toggleAssert([], [Deselected, Hidden, Hidden]);
-                await toggleAssert([Physics], [Selected, Deselected, Deselected]);
-                await toggleAssert([Skills, Mechanics], [Partial, Selected, Selected]);
-                await toggleAssert([Skills, Mechanics], [Selected, Deselected, Deselected]);
-                await toggleAssert([Physics], [Deselected, Hidden, Hidden]);
+                });
+                it('SELECT: fields', async () => {
+                    await renderQuestionFinderPage({ response });
+                    await toggleFilter(subjectFilters);
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Selected), fields(Deselected), topics(Hidden)]);
+                });
             });
 
-            it('works on nested topics', async () => {
-                await renderQuestionFinderPage({ questionsSearchResponse: () => resultsResponse });
-                // Physics -> Skills -> Significant Figures
-                const toggleAssert = setTestFilters([Physics, Skills, SigFig]);
+            describe('initial state: subject selected', () => {
+                const queryParams = '?subjects=physics,maths';
 
-                await toggleAssert([], [Deselected, Hidden, Hidden]);
-                await toggleAssert([Physics], [Selected, Deselected, Hidden]);
-                await toggleAssert([Skills], [Partial, Selected, Deselected]);
-                await toggleAssert([SigFig], [Partial, Partial, Selected]);
-                await toggleAssert([SigFig], [Partial, Selected, Deselected]);
-                await toggleAssert([Skills], [Selected, Deselected, Hidden]);
-                await toggleAssert([Physics], [Deselected, Hidden, Hidden]);
-            });
+                it('shows checked subjects, unchecked fields and no topics', async () => {
+                    await renderQuestionFinderPage({ response, queryParams });
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Selected), fields(Deselected), topics(Hidden)]);
+                });
 
-            it('work when multiple parents are selected', async () => {
-                await renderQuestionFinderPage({ questionsSearchResponse: () => resultsResponse });
-                // Physics -> Skills
-                // Maths -> Number
-                const toggleAssert = setTestFilters([Physics, Skills, Maths, Number]);
+                it('SELECT: fields', async () => {
+                    await renderQuestionFinderPage({ response, queryParams });
+                    await toggleFilter(fieldFilters);
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Partial), fields(Selected), topics(Deselected)]);
+                });
                 
-                await toggleAssert([], [Deselected, Hidden, Deselected, Hidden]);
-                await toggleAssert([Physics, Maths], [Selected, Deselected, Selected, Deselected]);
-                await toggleAssert([Skills, Number], [Partial, Selected, Partial, Selected]);
-                await toggleAssert([Skills, Number], [Selected, Deselected, Selected, Deselected]);
-                await toggleAssert([Physics, Maths], [Deselected, Hidden, Deselected, Hidden]);
+                it('DESELECT: subjects', async () => {
+                    await renderQuestionFinderPage({ response, queryParams });
+                    await toggleFilter(subjectFilters);
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Deselected), fields(Hidden), topics(Hidden)]);
+                });  
+            });
+
+            describe('initial state: subject and fields selected', () => {
+                const queryParams = '?subjects=physics,maths&fields=skills,mechanics,number,geometry';
+
+                it('shows partial subject, checked fields and deselected topics', async () => {
+                    await renderQuestionFinderPage({ response, queryParams });
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Partial), fields(Selected), topics(Deselected)]);
+                });
+
+                it('SELECT: topics', async () => {
+                    await renderQuestionFinderPage({ response, queryParams });
+                    await toggleFilter(topicFilters);
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Partial), fields(Partial), topics(Selected)]);
+                });
+
+                it('DESELECT: fields', async () => {
+                    await renderQuestionFinderPage({ response, queryParams });
+                    await toggleFilter(fieldFilters);
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Selected), fields(Deselected), topics(Hidden)]);
+                });
+
+                it('DESELECT: subjects', async () => {
+                    await renderQuestionFinderPage({ response, queryParams });
+                    await toggleFilter(subjectFilters);
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Deselected), fields(Hidden), topics(Hidden)]);
+                });
+            });
+
+            describe('initial state: subject, fields and topics selected', () => {
+                const queryParams = '?subjects=physics,maths&fields=skills,mechanics,number,geometry' +
+                    '&topics=sig_figs,statics,arithmetic,shapes';
+
+                it('shows partial subject, partial fields and selected topics', async () => {
+                    await renderQuestionFinderPage({ response, queryParams });
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Partial), fields(Partial), topics(Selected)]);
+                });
+
+                it('DESELECT: topics', async () => {
+                    await renderQuestionFinderPage({ response, queryParams });
+                    await toggleFilter(topicFilters);
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Partial), fields(Selected), topics(Deselected)]);
+                });
+
+                it('DESELECT: fields', async () => {
+                    await renderQuestionFinderPage({ response, queryParams });
+                    await toggleFilter(fieldFilters);
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Selected), fields(Deselected), topics(Hidden)]);
+                });
+
+                it('DESELECT: subjects', async () => {
+                    await renderQuestionFinderPage({ response, queryParams });
+                    await toggleFilter(subjectFilters);
+                    expectPartialCheckBox(testedFilters).toBe([subjects(Deselected), fields(Hidden), topics(Hidden)]);
+                });
             });
 
             describe('on a conxtext-specific question finder', () => {
-                it('reselects parent topic after unselecting subtopics, multiple parents', async () => {
-                    await renderQuestionFinderPage({ 
-                        questionsSearchResponse: () => resultsResponse, 
-                        context: { subject: "maths", stage: ["a_level"] },
+                // field        topic
+                // Number    -> Arithmetic
+                // Geometry  -> Shapes
+                const context = { subject: "maths", stage: ["a_level"] } as RenderParameters['context'];
+                const [fieldFilters, topicFilters] = [
+                    [Filter.Number, Filter.Geometry],
+                    [Filter.Arithmetic, Filter.Shapes]
+                ];
+                const testedFilters = [...fieldFilters, ...topicFilters];
+                const [fields, topics] = [checkboxStates(2), checkboxStates(2)];
+
+                describe('initial state: no selections', () => {
+                    it('shows fields and hides topics', async () => {
+                        await renderQuestionFinderPage({ response, context });
+                        expectPartialCheckBox(testedFilters).toBe([fields(Deselected), topics(Hidden)]);
                     });
-                    // Number -> Arithmetic
-                    // Geometry -> Shapes
-                    const toggleAssert = setTestFilters([Number, Arithmetic, Geometry, Shapes]);
-                
-                    await toggleAssert([], [Deselected, Hidden, Deselected, Hidden]);
-                    await toggleAssert([Number, Geometry], [Selected, Deselected, Selected, Deselected]);
-                    await toggleAssert([Arithmetic, Shapes], [Partial, Selected, Partial, Selected]);
-                    await toggleAssert([Arithmetic, Shapes], [Selected, Deselected, Selected, Deselected]);
-                    await toggleAssert([Number, Geometry], [Deselected, Hidden, Deselected, Hidden]);
+
+                    it('SELECT: fields', async () => {
+                        await renderQuestionFinderPage({ response, context });
+                        await toggleFilter(fieldFilters);
+                        expectPartialCheckBox(testedFilters).toBe([fields(Selected), topics(Deselected)]);
+                    });
+                });
+
+                describe('initial state: fields selected', () => {
+                    const queryParams = '?fields=number,geometry';
+
+                    it('shows selected fields, deselected topics', async () => {
+                        await renderQuestionFinderPage({ response, context, queryParams });
+                        expectPartialCheckBox(testedFilters).toBe([fields(Selected), topics(Deselected)]);
+                    });
+
+                    it('SELECT: topics', async () => {
+                        await renderQuestionFinderPage({ response, context, queryParams });
+                        await toggleFilter(topicFilters);
+                        expectPartialCheckBox(testedFilters).toBe([fields(Partial), topics(Selected)]);
+                    });
+
+                    it('DESELECT: fields', async () => {
+                        await renderQuestionFinderPage({ response, context, queryParams });
+                        await toggleFilter(fieldFilters);
+                        expectPartialCheckBox(testedFilters).toBe([fields(Deselected), topics(Hidden)]);
+                    });
+                });
+
+                describe('initial state: fields and topics selected', () => {
+                    const queryParams = '?fields=number,geometry&topics=arithmetic,shapes';
+
+                    it('shows partial fields, selected topics', async () => {
+                        await renderQuestionFinderPage({ response, context, queryParams });
+                        expectPartialCheckBox(testedFilters).toBe([fields(Partial), topics(Selected)]);
+                    });
+
+                    it('DESELECT: topics', async () => {
+                        await renderQuestionFinderPage({ response, context, queryParams });
+                        await toggleFilter(topicFilters);
+                        expectPartialCheckBox(testedFilters).toBe([fields(Selected), topics(Deselected)]);
+                    });
+
+                    it('DESELECT: fields', async () => {
+                        await renderQuestionFinderPage({ response, context, queryParams });
+                        await toggleFilter(fieldFilters);
+                        expectPartialCheckBox(testedFilters).toBe([fields(Deselected), topics(Hidden)]);
+                    });
                 });
             });
         });
@@ -224,7 +336,7 @@ describe("QuestionFinder", () => {
         if (isPhy) {
             it('Context-specific question finders should lead back to the relevant landing page in the breadcrumb', async () => {
                 await renderQuestionFinderPage({ 
-                    questionsSearchResponse: () => resultsResponse, 
+                    response: () => resultsResponse, 
                     context: { subject: "physics", stage: ["gcse"] },
                 });
                 expectPhyBreadCrumbs({href: "/physics/gcse", text: "GCSE Physics"});
@@ -234,7 +346,7 @@ describe("QuestionFinder", () => {
                 const getQuestionsWithMultipleStages = jest.fn(() => resultsResponseWithMultipleStages);
 
                 await renderQuestionFinderPage({ 
-                    questionsSearchResponse: getQuestionsWithMultipleStages, 
+                    response: getQuestionsWithMultipleStages, 
                     context: { subject: "physics", stage: ["a_level"] },
                 });
 
@@ -248,7 +360,7 @@ describe("QuestionFinder", () => {
                 const getQuestionsWithMultipleStages = jest.fn(() => resultsResponseWithMultipleStages);
 
                 await renderQuestionFinderPage({ 
-                    questionsSearchResponse: getQuestionsWithMultipleStages, 
+                    response: getQuestionsWithMultipleStages, 
                     context: { subject: "physics", stage: ["a_level"] },
                 });
 
@@ -264,7 +376,7 @@ describe("QuestionFinder", () => {
 });
 
 type RenderParameters = {
-    questionsSearchResponse: (options: {
+    response: (options: {
         tags: string | null;
         stages: string | null;
         randomSeed: string | null;
