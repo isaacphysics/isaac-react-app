@@ -23,7 +23,7 @@ interface StatusDisplayProps extends React.HTMLAttributes<HTMLSpanElement> {
     showText?: boolean;
 }
 
-const StatusDisplay = (props: StatusDisplayProps) => {
+export const StatusDisplay = (props: StatusDisplayProps) => {
     const { status, showText, className, ...rest } = props;
     switch (status) {
         case CompletionState.IN_PROGRESS:

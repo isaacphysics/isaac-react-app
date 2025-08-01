@@ -1,6 +1,6 @@
 import React, {ContextType, lazy} from "react";
 import {AppQuestionDTO, InlineContext, IsaacQuestionProps, PageContextState, ValidatedChoice} from "../../IsaacAppTypes";
-import {ChoiceDTO, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
+import {ChoiceDTO, CompletionState, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
 import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isNotPartiallyLoggedIn, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
 import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
@@ -238,4 +238,31 @@ const questionPlaceholdersByContext: {[subject in keyof typeof PHY_NAV_SUBJECTS]
 export const getQuestionPlaceholder = (context: PageContextState): string => {
     if (!isFullyDefinedContext(context) || !isSingleStageContext(context)) return questionPlaceholdersByContext["physics"]["a_level"];
     return questionPlaceholdersByContext[context.subject][context.stage[0] as keyof typeof questionPlaceholdersByContext[typeof context.subject]];
+};
+
+export const calculateQuestionSetCompletionState = (questions?: AppQuestionDTO[]) : CompletionState | undefined => {
+    if (questions && questions.length > 0) {
+        let allCorrect = true;
+        let allWrong = true;
+        let allValidated = true;
+        let anyValidated = false;
+        questions.forEach(question => {
+            if (question.validationResponse) {
+                const correct = question.validationResponse.correct;
+                if (correct) {
+                    allWrong = false;
+                } else {
+                    allCorrect = false;
+                }
+                anyValidated = true;
+            } else {
+                allValidated = false;
+            }
+        });
+        if (allValidated && allCorrect) return CompletionState.ALL_CORRECT;
+        else if (allValidated && allWrong) return CompletionState.ALL_INCORRECT;
+        else if (allValidated) return CompletionState.ALL_ATTEMPTED;
+        else if (anyValidated) return CompletionState.IN_PROGRESS;
+        else return CompletionState.NOT_ATTEMPTED;
+    }
 };
