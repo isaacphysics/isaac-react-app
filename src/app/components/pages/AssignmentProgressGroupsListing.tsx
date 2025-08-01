@@ -23,6 +23,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {SearchInputWithIcon} from "../elements/SearchInputs";
 import {StyledDropdown} from "../elements/inputs/DropdownInput";
 import classNames from "classnames";
+import { PageMetadata } from "../elements/PageMetadata";
 
 export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
@@ -68,12 +69,11 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
         <Container className="mb-5">
             <TitleAndBreadcrumb
                 currentPageTitle={siteSpecific("Assignment Progress", "Markbook")}
-                modalId="help_modal_assignment_progress"
                 icon={{type: "hex", icon: "icon-revision"}}
             />
-            <div className="mt-3">
+            <PageMetadata noTitle helpModalId="help_modal_assignment_progress">
                 <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_landing_toptext")} ifNotFound={RenderNothing} />
-            </div>
+            </PageMetadata>
             <Card>
                 <CardBody>
                     <Row className="row-gap-2">

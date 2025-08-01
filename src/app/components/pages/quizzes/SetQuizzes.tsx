@@ -43,6 +43,7 @@ import { ListView } from "../../elements/list-groups/ListView";
 import { MainContent, ManageQuizzesSidebar, SetQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
 import { AffixButton } from "../../elements/AffixButton";
+import { PageMetadata } from "../../elements/PageMetadata";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -385,17 +386,21 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </div>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} className={siteSpecific("mb-4", "")} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
         <SidebarLayout>
             {activeTab === MANAGE_QUIZ_TAB.set
-                ? <SetQuizzesSidebar titleFilter={titleFilter} setTitleFilter={setTitleFilter} />
+                ? <SetQuizzesSidebar titleFilter={titleFilter} setTitleFilter={setTitleFilter} hideButton />
                 : <ManageQuizzesSidebar manageQuizzesTitleFilter={manageQuizzesTitleFilter} setManageQuizzesTitleFilter={setManageQuizzesTitleFilter}
                     quizStartDate={quizStartDate} setQuizStartDate={setQuizStartDate} quizSetDateFilterType={quizSetDateFilterType}
                     setQuizSetDateFilterType={setQuizSetDateFilterType} quizDueDate={quizDueDate} setQuizDueDate={setQuizDueDate}
                     quizDueDateFilterType={quizDueDateFilterType} setQuizDueDateFilterType={setQuizDueDateFilterType}
-                    manageQuizzesGroupNameFilter={manageQuizzesGroupNameFilter} setManageQuizzesGroupNameFilter={setManageQuizzesGroupNameFilter}/>}
+                    manageQuizzesGroupNameFilter={manageQuizzesGroupNameFilter} setManageQuizzesGroupNameFilter={setManageQuizzesGroupNameFilter}
+                    hideButton />
+            }
             <MainContent>
-                <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
+                <PageMetadata noTitle showSidebarButton sidebarButtonText="Search tests" helpModalId="help_modal_set_tests">
+                    <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
+                </PageMetadata>
                 <Tabs style="tabs" className="my-4 mb-7" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
                     {{
                         [siteSpecific("Set tests", "Available tests")]:

@@ -36,7 +36,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
                 style={activeModal.title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
                 close={
                     activeModal.closeAction ?
-                        <button className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy})} onClick={activeModal.closeAction}>
+                        <button className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy, "mt-5": activeModal.title})} onClick={activeModal.closeAction}>
                             {activeModal?.closeLabelOverride || "Close"}
                         </button>
                         :
