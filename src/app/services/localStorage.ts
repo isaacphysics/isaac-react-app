@@ -1,6 +1,6 @@
-/* eslint-disable no-console */
 export enum KEY {
     AFTER_AUTH_PATH = "afterAuthPath",
+    AFTER_SESSION_RENEW_PATH = "afterSessionRenewPath",
     CURRENT_USER_ID = "currentUserId",
     FIRST_LOGIN = "firstLogin",
     REQUIRED_MODAL_SHOWN_TIME = "requiredModalShownTime",
