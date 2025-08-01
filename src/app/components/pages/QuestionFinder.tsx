@@ -15,7 +15,6 @@ import {
     isFullyDefinedContext,
     isLoggedIn,
     isPhy,
-    isSingleStageContext,
     Item,
     itemiseTag,
     LearningStage,
@@ -117,6 +116,26 @@ export function pageStageToSearchStage(stage?: LearningStage[]): STAGE[] {
         case "university": return [STAGE.UNIVERSITY];
         default: return [];
     }
+}
+
+const FilterTag = ({tag, removeFilterTag}: {tag: {value: string, label: string}, removeFilterTag: (value: string) => void}) => {
+    return (
+        <div data-bs-theme="neutral" data-testid={`filter-tag-${tag.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
+            {tag.label}
+            <button className="icon icon-close" onClick={() => removeFilterTag(tag.value)} aria-label="Close"/>
+        </div>
+    );
+};
+
+const FilterSummary2 = ({categories, clearFilters, removeFilterTag}: {categories: { value: string; label: string; }[], clearFilters: () => void, removeFilterTag: (value: string) => void}) => {
+    return <div className="d-flex flex-wrap mt-2">
+        {categories.map(c => <FilterTag key={c.value} tag={c} removeFilterTag={removeFilterTag}/>)}
+        {categories.length > 0 ?
+            <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
+                Clear all filters
+            </button>
+            : <div/>}
+    </div>;
 }
 
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
@@ -419,15 +438,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         } else if (excludeBooks && filter === "excludeBooks") {
             setExcludeBooks(false);
         }
-    };
-
-    const FilterTag = ({tag}: {tag: {value: string, label: string}}) => {
-        return (
-            <div data-bs-theme="neutral" data-testid={`filter-tag-${tag.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
-                {tag.label}
-                <button className="icon icon-close" onClick={() => removeFilterTag(tag.value)} aria-label="Close"/>
-            </div>
-        );
     };
 
     const FilterSummary = () => {
