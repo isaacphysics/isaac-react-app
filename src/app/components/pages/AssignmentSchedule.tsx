@@ -246,8 +246,8 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                 {assignment.gameboard && <div className={"mt-2 border-top pt-2"}>
                     <Row>
                         <Col xs={12} md={boardStagesAndDifficulties.length === 0 ? 12 : 6}>
-                            <div>Question Deck: <strong><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle} <span className={"visually-hidden"}>(opens in new tab)</span></a></strong></div>
-                            <div>Question Deck created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>
+                            <div>Question deck: <strong><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle} <span className={"visually-hidden"}>(opens in new tab)</span></a></strong></div>
+                            <div>Question deck created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>
                             <div className={"mb-1"}>Subject(s): <strong>{boardSubjects.map(subj => tags.getSpecifiedTag(TAG_LEVEL.subject, [subj as TAG_ID])?.title).join(", ")}</strong></div>
                         </Col>
                         {boardStagesAndDifficulties.length > 0 && <Col xs={12} md={6}>

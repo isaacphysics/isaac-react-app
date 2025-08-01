@@ -2,7 +2,7 @@ import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, use
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacConceptPageDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, Stage } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
@@ -51,7 +51,7 @@ export const MainContent = (props: ColProps) => {
 };
 
 interface QuestionLinkProps {
-    question: QuestionDTO;
+    question: ContentSummaryDTO | GameboardItem;
     gameboardId?: string;
 }
 
@@ -63,7 +63,11 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
 
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
         <Link to={link} className="py-2">
-            {isDefined(gameboardId) ? <span className={classNames(getProgressIcon(question).icon, "mt-1 mx-2")} style={{minWidth: "16px"}}/> : <i className="icon icon-question-thick"/>}
+            {(isDefined(gameboardId) || question.state !== CompletionState.NOT_ATTEMPTED) 
+                ? <i className={classNames(getProgressIcon(question.state).icon, {"ms-2": isDefined(gameboardId)})} style={{minWidth: "16px"}}/> 
+
+                : <i className="icon icon-question-thick"/>
+            }
             <div className="d-flex flex-column w-100">
                 <span className="hover-underline link-title"><Markup encoding="latex">{question.title}</Markup></span>
                 <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
@@ -72,7 +76,7 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
     </li>;
 };
 
-const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: IsaacConceptPageDTO}) => {
+const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: ContentSummaryDTO}) => {
     const { concept, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
 
@@ -171,8 +175,8 @@ interface RelatedContentSidebarProps extends SidebarProps {
 }
 
 const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "concept" | "question" | "page"}) => {
-    const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage").sort(sortByStringValue("title")) as IsaacConceptPageDTO[] | undefined;
-    const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage").sort(sortByStringValue("title")) as QuestionDTO[] | undefined;
+    const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage").sort(sortByStringValue("title"));
+    const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage").sort(sortByStringValue("title"));
 
     const pageContext = useAppSelector(selectors.pageContext.context);
     const pageContextStage = useAppSelector(selectors.pageContext.stage);
@@ -758,7 +762,7 @@ const AssignmentStatusAllCheckbox = (props: Omit<AssignmentStatusCheckboxProps, 
     />;
 };
 
-interface MyAssignmentsSidebarProps extends SidebarProps {
+interface MyAssignmentsSidebarProps extends ContentSidebarProps {
     statusFilter: AssignmentState[];
     setStatusFilter: React.Dispatch<React.SetStateAction<AssignmentState[]>>;
     titleFilter: string;
@@ -880,7 +884,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
                 </Input>
                 {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
                 <div className="select-pretext me-2">Limit:</div>
-                <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                <Input className="w-auto" type="select" aria-label="Set display limit" data-testid="limit-select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </div>
@@ -900,11 +904,12 @@ interface SetAssignmentsSidebarProps extends ContentSidebarProps {
     setBoardSubject: React.Dispatch<React.SetStateAction<BoardSubjects>>;
     boardCreator: BoardCreators;
     setBoardCreator: React.Dispatch<React.SetStateAction<BoardCreators>>;
+    forceAllBoards?: boolean;
     sortDisabled?: boolean;
 }
 
 export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
-    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, sortOrder, setSortOrder, sortDisabled, boardSubject, setBoardSubject, boardCreator, setBoardCreator, ...rest } = props;
+    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, sortOrder, setSortOrder, sortDisabled, boardSubject, setBoardSubject, boardCreator, setBoardCreator, forceAllBoards, ...rest } = props;
     const deviceSize = useDeviceSize();
 
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
@@ -934,7 +939,7 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
                 </Input>
                 {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
                 <div className="select-pretext me-2">Limit:</div>
-                <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                <Input disabled={forceAllBoards} className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </div>
@@ -1088,7 +1093,7 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface GroupsSidebarProps extends SidebarProps {
+interface GroupsSidebarProps extends ContentSidebarProps {
     user: RegisteredUserDTO;
     groups: AppGroup[] | undefined;
     allGroups: AppGroup[];
@@ -1130,16 +1135,16 @@ export const SignupSidebar = ({activeTab} : {activeTab: number}) => {
     </ContentSidebar>;
 };
 
-interface SetQuizzesSidebarProps extends SidebarProps {
+interface SetQuizzesSidebarProps extends ContentSidebarProps {
     titleFilter?: string;
     setTitleFilter: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
-    const { titleFilter, setTitleFilter } = props;
+    const { titleFilter, setTitleFilter, ...rest } = props;
     const deviceSize = useDeviceSize();
 
-    return <ContentSidebar buttonTitle="Search tests">
+    return <ContentSidebar buttonTitle="Search tests" {...rest}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
             <h5>Search tests</h5>
@@ -1153,7 +1158,7 @@ export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
     </ContentSidebar>;
 };
 
-interface ManageQuizzesSidebarProps extends SidebarProps {
+interface ManageQuizzesSidebarProps extends ContentSidebarProps {
     manageQuizzesTitleFilter: string;
     setManageQuizzesTitleFilter: React.Dispatch<React.SetStateAction<string>>;
     quizStartDate: Date | undefined;
@@ -1171,7 +1176,7 @@ interface ManageQuizzesSidebarProps extends SidebarProps {
 export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
     const { manageQuizzesTitleFilter, setManageQuizzesTitleFilter, quizStartDate, setQuizStartDate,
         quizSetDateFilterType, setQuizSetDateFilterType, quizDueDate, setQuizDueDate, quizDueDateFilterType,
-        setQuizDueDateFilterType, manageQuizzesGroupNameFilter, setManageQuizzesGroupNameFilter} = props;
+        setQuizDueDateFilterType, manageQuizzesGroupNameFilter, setManageQuizzesGroupNameFilter, ...rest} = props;
 
     const deviceSize = useDeviceSize();
 
@@ -1190,7 +1195,7 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
         </DropdownMenu>
     </UncontrolledDropdown>;
 
-    return <ContentSidebar buttonTitle="Search & Filter">
+    return <ContentSidebar buttonTitle="Search & Filter" {...rest}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
             <h5>Search tests</h5>
@@ -1343,7 +1348,7 @@ const QuizStatusAllCheckbox = (props: Omit<QuizStatusCheckboxProps, "status">) =
     />;
 };
 
-interface MyQuizzesSidebarProps extends SidebarProps {
+interface MyQuizzesSidebarProps extends ContentSidebarProps {
     setQuizTitleFilter: (title: string) => void;
     setQuizCreatorFilter: (creator: string) => void;
     quizStatusFilter: QuizStatus[];
@@ -1354,14 +1359,14 @@ interface MyQuizzesSidebarProps extends SidebarProps {
 };
 
 export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
-    const { setQuizTitleFilter,setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, activeTab, displayMode, setDisplayMode } = props;
+    const { setQuizTitleFilter,setQuizCreatorFilter, quizStatusFilter, setQuizStatusFilter, activeTab, displayMode, setDisplayMode, ...rest } = props;
     const deviceSize = useDeviceSize();
     const quizQuery = useGetQuizAssignmentsAssignedToMeQuery();
 
     const statusOptions = activeTab === 1 ? Object.values(QuizStatus).filter(s => s !== QuizStatus.All)
         : [QuizStatus.Started, QuizStatus.Complete];
 
-    return <ContentSidebar buttonTitle="Search & Filter">
+    return <ContentSidebar buttonTitle="Search & Filter" {...rest}>
         <ShowLoadingQuery query={quizQuery} defaultErrorTitle="" thenRender={(quizzes: QuizAssignmentDTO[]) => {
             return <>
                 {above["lg"](deviceSize) && <div className="section-divider"/>}

@@ -230,6 +230,13 @@ a.icon-card, a.cs-card {
   }
 }
 
+.card {
+  .card-header {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+  }
+}
+
 .featured-news-item {
   color: $cs-black;
 }

@@ -64,6 +64,7 @@ import {RenderNothing} from "../elements/RenderNothing";
 import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
 import { MainContent, GroupsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
+import { PageMetadata } from "../elements/PageMetadata";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -665,14 +666,17 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
     </span>;
 
     const GroupsPhy = <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="help_modal_groups" icon={{type: "hex", icon: "icon-group"}}/>
-        <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
+        <TitleAndBreadcrumb currentPageTitle="Manage groups" icon={{type: "hex", icon: "icon-group"}}/>
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <SidebarLayout>
                 <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                    showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup}/>
-                <MainContent className="mt-3 mt-lg-0">
-                    <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
+                    showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup}
+                    hideButton
+                />
+                <MainContent>
+                    <PageMetadata noTitle showSidebarButton sidebarButtonText="Select or create a group" helpModalId="help_modal_groups">
+                        <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
+                    </PageMetadata>
                     <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} data-testid="group-editor"/>
                     {/* On small screens, the groups list should initially be accessible without needing to open the sidebar drawer */}
                     {below["md"](deviceSize) && !isDefined(selectedGroup) && <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
@@ -684,7 +688,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
 
     // Site-specific component to preserve column layout on Ada
     const GroupsAda = <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="help_modal_groups" />
+        <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />
         <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <Row className="mb-7">

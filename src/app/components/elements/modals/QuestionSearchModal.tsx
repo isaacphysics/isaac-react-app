@@ -172,10 +172,7 @@ export const QuestionSearchModal = (
     const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center">
         <div className="flex-grow-1 mb-1">
             <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
-                {siteSpecific(
-                    `${selectedQuestions.size} Question${selectedQuestions.size !== 1 ? "s" : ""} Selected`,
-                    `${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`
-                )}
+                {`${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`}
             </strong>
         </div>
         <div>

@@ -533,10 +533,26 @@ export const SetAssignments = () => {
         setHashAnchor(hash.includes("#") ? hash.slice(1) : undefined);
     }, [hash]);
 
+    const forceAllBoards = !!boardTitleFilter || boardCreator !== BoardCreators.all || boardSubject !== BoardSubjects.all;
+    useEffect(() => {
+        if (boardLimit !== BoardLimit.All && forceAllBoards) {
+            setBoardLimit(BoardLimit.All);
+        }
+    }, [boardLimit, forceAllBoards, setBoardLimit]);
+
+    useEffect(() => {
+        // On Ada, reset filters when switching between display modes
+        if (isAda) {
+            setBoardTitleFilter("");
+            setBoardCreator(BoardCreators.all);
+            setBoardSubject(BoardSubjects.all);
+        }
+    }, [boardView, setBoardTitleFilter]);
+
     const dispatch = useAppDispatch();
     const [unassignBoard] = useUnassignGameboardMutation();
 
-    const openAssignModal = (board: GameboardDTO) => {
+    const openAssignModal = useCallback((board: GameboardDTO) => {
         dispatch(openActiveModal(SetAssignmentsModal({
             board,
             groups: groups ?? [],
@@ -544,7 +560,7 @@ export const SetAssignments = () => {
             toggle: () => dispatch(closeActiveModal()),
             unassignBoard
         })));
-    };
+    }, [dispatch, groups, groupsByGameboard, unassignBoard]);
 
     useEffect(() => {
         if (boards && hashAnchor) {
@@ -554,7 +570,7 @@ export const SetAssignments = () => {
                 openAssignModal(board);
             }
         }
-    }, [boards, hashAnchor]);
+    }, [boards, hashAnchor, openAssignModal]);
 
     // Page help
     const pageHelp = <span>
@@ -571,10 +587,15 @@ export const SetAssignments = () => {
         groupsByGameboard, openAssignModal
     };
 
+    const filteredBoards = useMemo(() => 
+        boards?.boards.filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+            .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))), 
+    [boards, user, boardTitleFilter, boardCreator, boardSubject]);
+
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
             icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
-            modalId="help_modal_set_assignments"
         />
         <SidebarLayout>
             <SetAssignmentsSidebar
@@ -585,12 +606,13 @@ export const SetAssignments = () => {
                 boardSubject={boardSubject} setBoardSubject={setBoardSubject}
                 boardCreator={boardCreator} setBoardCreator={setBoardCreator}
                 sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
+                forceAllBoards={forceAllBoards}
                 hideButton
             />
             <MainContent>
-                <PageMetadata showSidebarButton sidebarInTitle />
-                <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")}
-                    ifNotFound={RenderNothing}/>
+                <PageMetadata showSidebarButton noTitle helpModalId="help_modal_set_assignments">
+                    <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
+                </PageMetadata>
                 {isPhy &&
                     <>
                         <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>
@@ -667,7 +689,7 @@ export const SetAssignments = () => {
                             {boardView === BoardViews.card && <>
                                 <Col xs={6} lg={{size: 2, offset: 3}}>
                                     <Label className="w-100">
-                                    Show <Input type="select" value={boardLimit}
+                                    Show <Input disabled={forceAllBoards} type="select" value={boardLimit}
                                             onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                             {Object.values(BoardLimit).map(limit => <option key={limit}
                                                 value={limit}>{limit}</option>)}
@@ -693,25 +715,19 @@ export const SetAssignments = () => {
                                 <>
                                     <Row
                                         className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
-                                        {boards.boards && boards.boards
-                                            .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
-                                            .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                                            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
-                                            .map(board =>
-                                                <Col key={board.id}>
-                                                    <BoardCard
-                                                        user={user}
-                                                        board={board}
-                                                        boardView={boardView}
-                                                        assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                                                        toggleAssignModal={() => openAssignModal(board)}
-                                                    />
-                                                </Col>
-                                            )
-                                        }
+                                        {filteredBoards?.map(board =>
+                                            <Col key={board.id}>
+                                                <BoardCard
+                                                    user={user}
+                                                    board={board}
+                                                    boardView={boardView}
+                                                    assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                                    toggleAssignModal={() => openAssignModal(board)}
+                                                />
+                                            </Col>)}
                                     </Row>
                                     <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
-                                        <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong>
+                                        <p>Showing <strong>{filteredBoards?.length}</strong> of <strong>{boards.totalResults}</strong>
                                         </p>
                                         {boards.boards.length < boards.totalResults &&
                                             <Button onClick={viewMore} disabled={loading}>{loading ?

@@ -33,8 +33,10 @@
 
 .search--main-group {
   &.form-group {
-    @media (min-width: 768px) and (max-width: 1199px) {
-      width: 130px;
+    &:has(#header-search) {
+      @media (min-width: 768px) and (max-width: 1199px) {
+        width: 130px;
+      }
     }
     input.form-control {
       border: 1px solid $color-neutral-300;

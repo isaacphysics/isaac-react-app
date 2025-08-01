@@ -8,6 +8,7 @@ import { EditContentButton } from './EditContentButton';
 import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
+import { HelpButton } from './HelpButton';
 import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
@@ -19,6 +20,7 @@ type PageMetadataProps = {
     badges?: ReactNode;
     children?: ReactNode; // any content-type specific metadata that may require information outside of `doc`; e.g. question completion state, event info, etc.
     noTitle?: boolean; // if true, any children (usually text) will be rendered in place of the title, with any action buttons (e.g. share, print, report) rendered to the side
+    helpModalId?: string;
 } & (
     {
         showSidebarButton: true;
@@ -31,22 +33,30 @@ type PageMetadataProps = {
     }
 );
 
-const ActionButtons = ({location, isQuestion, doc}: {location: Location, isQuestion: boolean, doc?: SeguePageDTO}) => {
+interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
+    location: Location;
+    isQuestion: boolean;
+    helpModalId?: string;
+    doc?: SeguePageDTO;
+}
+
+const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}: ActionButtonsProps) => {
     const deviceSize = useDeviceSize();
 
-    return (
-        <div className="d-flex no-print gap-2 ms-auto">
-            {above['sm'](deviceSize) && <>
-                <ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />
-                <PrintButton questionPage={isQuestion} />
-            </>}
-            {doc?.id && <ReportButton pageId={doc.id} />}
-        </div>
-    );
+    const anyActionButtonShown = isPhy && helpModalId || above['sm'](deviceSize) || doc?.id;
+
+    return anyActionButtonShown && <div {...rest} className={classNames("d-flex no-print gap-2", rest.className)}>
+        {isPhy && helpModalId && <HelpButton modalId={helpModalId} />}
+        {above['sm'](deviceSize) && <>
+            <ShareLink linkUrl={location.pathname + location.hash} clickAwayClose />
+            {doc && <PrintButton questionPage={isQuestion} />} {/* don't show print for internal (non content-driven) pages */}
+        </>}
+        {doc?.id && <ReportButton pageId={doc.id} />}
+    </div>;
 };
 
 export const PageMetadata = (props: PageMetadataProps) => {
-    const { doc, title, subtitle, badges, children, noTitle, showSidebarButton, sidebarButtonText, sidebarInTitle } = props;
+    const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const location = useLocation();
     const deviceSize = useDeviceSize();
@@ -54,17 +64,20 @@ export const PageMetadata = (props: PageMetadataProps) => {
     return <>
         {noTitle 
             ? <>
-                <div className="d-flex align-items-start mt-3 gap-3 no-print">
+                <div className={classNames("d-flex align-items-start gap-3 no-print", {"mt-3": isPhy})}>
                     <div className="w-100">
+                        <ActionButtons 
+                            location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}
+                            className="float-end ms-3 mb-3"
+                        />
                         {children}
                     </div>
-                    <ActionButtons location={location} isQuestion={isQuestion} doc={doc}/>
                 </div>
                 {isAda && <EditContentButton doc={doc} />}
             </>
             : <>
                 {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
-                <div className="d-flex align-items-center mt-3 gap-3">
+                <div className={classNames("d-flex align-items-center gap-3", {"mt-3": isPhy})}>
                     {isPhy && <div>
                         <div className="d-flex align-items-center gap-3">
                             <h3 className="text-theme-dark">
@@ -77,17 +90,17 @@ export const PageMetadata = (props: PageMetadataProps) => {
                             </h3>
                             {badges}
                         </div>
-                        {doc?.subtitle && <h5><Markup encoding="latex">{subtitle ?? doc.subtitle}</Markup></h5>}
+                        {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
                     </div>}
                     {isAda && <EditContentButton doc={doc} />}
-                    <ActionButtons location={location} isQuestion={isQuestion} doc={doc}/>
+                    <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>
                 </div>
                 {children}
             </>
         }
         {isPhy && <>
             {showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
-            <div className={classNames("section-divider mt-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
+            <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
             <EditContentButton doc={doc} />
             <TeacherNotes notes={doc?.teacherNotes} />
         </>}

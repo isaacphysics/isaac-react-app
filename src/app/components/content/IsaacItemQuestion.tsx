@@ -37,7 +37,7 @@ const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaac
 
             <ul>{doc.items && doc.items.map((item) =>
                 <li key={item.value} className="list-unstyled">
-                    <Label className="label-radio multichoice-option d-flex align-items-center">
+                    <Label className="label-radio multichoice-option d-flex">
                         <Input
                             id={`${questionId}|${item.id}`}
                             color="secondary"
@@ -45,7 +45,6 @@ const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaac
                             checked={!!(currentAttempt && currentAttempt.items && currentAttempt.items.filter(i => i.id == item.id).length == 1)}
                             onChange={(changeEvent: ChangeEvent<HTMLInputElement>) => updateItems(changeEvent, item)}
                             disabled={readonly}
-                            className={classNames({"mt-1": isAda})}
                         />
                         <div className="flex-fill overflow-x-auto">
                             <IsaacContentValueOrChildren value={item.value} encoding={doc.encoding} />
