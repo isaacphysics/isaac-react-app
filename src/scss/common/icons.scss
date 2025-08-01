@@ -199,6 +199,13 @@ i.icon:not(.icon-raw) {
         transition: all 0.15s ease-in-out;
       }
     }
+
+    // however, the ::before is also able to change colour, e.g. during hover inversions on keyline or tint buttons
+    &::before {
+      @include not-reduced-motion {
+        transition: all 0.15s ease-in-out;
+      }
+    }
   }
 
   &[color="secondary"] {

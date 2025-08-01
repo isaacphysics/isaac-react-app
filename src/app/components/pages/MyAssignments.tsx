@@ -17,6 +17,7 @@ import {PageFragment} from "../elements/PageFragment";
 import { MainContent, MyAssignmentsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { MyAssignmentsOrder } from "../../../IsaacAppTypes";
 import sortBy from "lodash/sortBy";
+import { PageMetadata } from "../elements/PageMetadata";
 
 
 const INITIAL_NO_ASSIGNMENTS = 10;
@@ -41,7 +42,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
     const [assignmentSetByFilter, setAssignmentSetByFilter] = useState<string>("All");
     const [assignmentGroupFilter, setAssignmentGroupFilter] = useState<string>("All");
-    const [sortOrder, setSortOrder] = useState<MyAssignmentsOrder>(MyAssignmentsOrder["dueDate"]);
+    const [sortOrder, setSortOrder] = useState<MyAssignmentsOrder>(MyAssignmentsOrder["-startDate"]);
 
     const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
 
@@ -59,7 +60,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_my_assignments" className="mb-4" />
+        <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
         <SidebarLayout>
             <MyAssignmentsSidebar
                 statusFilter={assignmentStateFilter} setStatusFilter={setAssignmentStateFilter}
@@ -67,10 +68,12 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                 groupFilter={assignmentGroupFilter} setGroupFilter={setAssignmentGroupFilter}
                 setByFilter={assignmentSetByFilter} setSetByFilter={setAssignmentSetByFilter}
                 sortOrder={sortOrder} setSortOrder={setSortOrder}
-                assignmentQuery={assignmentQuery}
+                assignmentQuery={assignmentQuery} hideButton
             />
             <MainContent>
-                <PageFragment fragmentId={`${siteSpecific("help_toptext_assignments", "assignments_help")}_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-7"}/>} />
+                <PageMetadata noTitle showSidebarButton helpModalId="help_modal_my_assignments">
+                    <PageFragment fragmentId={`${siteSpecific("help_toptext_assignments", "assignments_help")}_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-7"}/>} />
+                </PageMetadata>
                 <ShowLoadingQuery
                     query={assignmentQuery}
                     defaultErrorTitle={"Error fetching your assignments"}
@@ -136,7 +139,7 @@ const AdaMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} modalId="help_modal_my_assignments" />
+        <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} />
         <PageFragment fragmentId={`${siteSpecific("help_toptext_assignments", "assignments_help")}_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-7"}/>} />
         <Card className={siteSpecific("my-7", "my-assignments-card")}>
             <CardBody className="pt-2">

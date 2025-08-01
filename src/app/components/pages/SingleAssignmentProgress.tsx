@@ -12,6 +12,7 @@ import {
 } from "../../../IsaacAppTypes";
 import {
     ASSIGNMENT_PROGRESS_CRUMB,
+    siteSpecific,
     useAssignmentProgressAccessibilitySettings} from "../../services";
 import {ProgressDetails} from "./AssignmentProgressIndividual";
 import {skipToken} from "@reduxjs/toolkit/query";
@@ -42,7 +43,7 @@ export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
         <Container>
             <TitleAndBreadcrumb
                 intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
-                currentPageTitle={`Assignment Progress${(assignment?.gameboard?.title && (": " + assignment?.gameboard?.title)) ?? ""}`}
+                currentPageTitle={assignment?.gameboard?.title ?? siteSpecific("Assignment progress", "Markbook")}
                 className="mb-4"
                 icon={{type: "hex", icon: "icon-revision"}}
             />

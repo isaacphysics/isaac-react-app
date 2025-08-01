@@ -44,6 +44,7 @@ import { MainContent, MyQuizzesSidebar, SidebarLayout } from "../../elements/lay
 import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
 import { CardGrid } from "../../elements/CardGrid";
 import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
+import { PageMetadata } from "../../elements/PageMetadata";
 
 export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -457,12 +458,16 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     }</span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My tests" icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} className={siteSpecific("mb-4", "")} />
+        <TitleAndBreadcrumb currentPageTitle="My tests" icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
         <SidebarLayout>
             <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter}
-                setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}/>
+                setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}
+                hideButton
+            />
             <MainContent>
-                <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-7"}/>} />
+                <PageMetadata noTitle showSidebarButton>
+                    <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-7"}/>} />
+                </PageMetadata>
                 <Tabs style="tabs" className="mb-7 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
                     history.replace({...history.location, hash: tabAnchors[index - 1]});
                     setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);

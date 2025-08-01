@@ -42,6 +42,9 @@ describe("MyGameboards", () => {
             // Phy persists the change to table view, so switch back to card view for subsequent tests
             const viewDropdown = await screen.findByLabelText("Set display mode");
             await userEvent.selectOptions(viewDropdown, "Card View");
+
+            const limitDropdown = await screen.findByLabelText("Set display limit");
+            await userEvent.selectOptions(limitDropdown, "6");
         }
     });
 
@@ -51,6 +54,9 @@ describe("MyGameboards", () => {
             // Change view to "Card View" on Ada
             const viewDropdown = await screen.findByLabelText("Display in");
             await userEvent.selectOptions(viewDropdown, "Card View");
+
+            const limitDropdown = await screen.findByLabelText("Show");
+            await userEvent.selectOptions(limitDropdown, "6");
         }
         // Make sure that 6 gameboards in the response ---> 6 gameboards displayed
         const gameboardCards = await screen.findAllByTestId("gameboard-card");

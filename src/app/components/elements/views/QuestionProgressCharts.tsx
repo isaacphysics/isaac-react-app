@@ -179,15 +179,15 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         {isAda && <Col md={3}/>}
         <Col xl={12/numberOfCharts} md={4} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
-                <StyledSelect
-                    inputId={`${subId}-subcategory-select`}
-                    name="subcategory"
-                    className="d-inline-block text-start pe-2 w-50"
-                    classNamePrefix="select"
-                    defaultValue={{value: defaultSearchChoiceTag.id, label: defaultSearchChoiceTag.title}}
-                    options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title};})}
-                    onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
-                />
+                <div className="d-inline-block text-start pe-2 w-50">
+                    <StyledSelect
+                        inputId={`${subId}-subcategory-select`}
+                        name="subcategory"
+                        defaultValue={{value: defaultSearchChoiceTag.id, label: defaultSearchChoiceTag.title}}
+                        options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title};})}
+                        onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
+                    />
+                </div>
                 <span className={siteSpecific("ms-2", "d-inline-block ms-2")}>questions</span>
             </div>
             <div className="d-flex flex-grow-1">
@@ -221,15 +221,15 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         {isAda && <Col md={3}/>}
         {isPhy && <Col xl={12/numberOfCharts} md={12/numberOfCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
-                <StyledSelect
-                    inputId={`${subId}-stage-select`}
-                    name="stage"
-                    className="d-inline-block text-start pe-2 w-50"
-                    classNamePrefix="select"
-                    defaultValue={{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}}
-                    options={getFilteredStageOptions()}
-                    onChange={selectOnChange(setStageChoices, false)}
-                />
+                <div className="d-inline-block text-start pe-2 w-50">
+                    <StyledSelect
+                        inputId={`${subId}-stage-select`}
+                        name="stage"
+                        defaultValue={{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}}
+                        options={getFilteredStageOptions()}
+                        onChange={selectOnChange(setStageChoices, false)}
+                    />  
+                </div>
                 <span className="ms-2">questions</span>
             </div>
             <div className="d-flex flex-grow-1">

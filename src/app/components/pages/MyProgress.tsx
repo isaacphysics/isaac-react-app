@@ -152,7 +152,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                     </Card>
 
                     <div className="mt-4">
-                        <h4>Question parts correct by Type</h4>
+                        <h4>Question parts correct by type</h4>
                         <Row>
                             {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
                                 const correct = progress?.correctByType?.[qType] || null;

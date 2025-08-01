@@ -60,6 +60,7 @@ import {skipToken} from "@reduxjs/toolkit/query";
 import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ExigentAlert} from "../elements/ExigentAlert";
+import { PageMetadata } from '../elements/PageMetadata';
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
@@ -204,7 +205,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
             dispatch(openActiveModal({
                 closeAction: () => dispatch(closeActiveModal()),
-                title: `${siteSpecific("Question Deck", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
+                title: `${siteSpecific("Question deck", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
                 body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
             }));
             if (gameboardId) setSubmissionAttempted(false);
@@ -294,12 +295,13 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="gameboard-builder">
         <div ref={sentinel}/>
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question Deck", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} modalId="help_modal_gameboard_builder"/>
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question deck", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
+        <PageMetadata helpModalId="help_modal_gameboard_builder" />
         <Card className="p-3 mt-4 mb-7">
             <CardBody>
                 {submissionAttempted && !allInputIsValid  &&
                     <ExigentAlert color={"warning"}>
-                        <p className={"fw-bold alert-heading"}>Unable to create {siteSpecific("Question Deck", "Quiz")}</p>
+                        <p className={"fw-bold alert-heading"}>Unable to create {siteSpecific("question deck", "quiz")}</p>
                         <p>Please correct the problems below.</p>
                     </ExigentAlert>
                 }
@@ -340,8 +342,6 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 ])}
                                 name="colors"
                                 value={gameboardTags}
-                                className="basic-multi-select"
-                                classNamePrefix="select"
                                 placeholder="None"
                                 onChange={selectOnChange(setGameboardTags, false)}
                             />
@@ -349,7 +349,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <Col>
                             <FormGroup>
                                 <Label htmlFor="gameboard-builder-url"
-                                    className={"fw-bold form-optional"}>{siteSpecific("Question Deck", "Quiz")} ID</Label>
+                                    className={"fw-bold form-optional"}>{siteSpecific("Question deck", "Quiz")} ID</Label>
                                 <Input id="gameboard-builder-url"
                                     type="text"
                                     placeholder="Optional"

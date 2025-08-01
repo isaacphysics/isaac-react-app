@@ -27,7 +27,7 @@ import {skipToken} from "@reduxjs/toolkit/query";
 
 const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
-    Assignment Progress page or on the Manage Groups page.  You will still have student connections with the
+    &apos;Assignment progress&apos; page or on the &apos;Manage groups&apos; page.  You will still have student connections with the
     students who agreed to share data with you.  The group owner will <strong>not</strong> be notified.
 </p>;
 export const additionalManagerSelfRemovalModal = (group: AppGroup, user: RegisteredUserDTO) => ({

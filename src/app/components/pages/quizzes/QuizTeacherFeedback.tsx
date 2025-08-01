@@ -223,17 +223,21 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
     const totalParts = questions.length;
 
     const progress : AuthorisedAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
+        const partsCorrect = questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? -1]?.correct ?? 0), 0);
         return {
             user: user.user as UserSummaryDTO,
             completed: user.feedback?.complete ?? false,
             // a list of the correct parts of an answer, one list for each question
-            correctPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.correct ?? 0),
-            incorrectPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0),
-            notAttemptedPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.notAttempted ?? 0),
+            correctPartResults:      questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.correct ?? 0),
+            incorrectPartResults:    questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0),
+            notAttemptedPartResults: user.feedback?.complete || user.feedback?.questionMarks !== undefined
+                ? questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.notAttempted ?? 0)
+                // if the quiz has not been completed (i.e. submitted), then all parts are not attempted
+                : questions.map(q => q.questionPartsTotal ?? 0),
             questionResults: [],
-            tickCount: user.feedback?.questionMarks?.[0]?.correct ?? 0,
-            correctQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? 0]?.correct ?? 0), 0),
-            incorrectQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0), 0),
+            correctQuestionPagesCount: partsCorrect,  // quizzes don't have pages, but QuizProgressCommon expects this key to be the "Correct" column value for sorting
+            correctQuestionPartsCount: partsCorrect,
+            incorrectQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0), 0),
         };
     });
 

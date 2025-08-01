@@ -170,3 +170,9 @@
     width: 2rem;
   }
 }
+
+.multichoice-question {
+  ul > li .multichoice-option input {
+    margin-top: 0.7rem;
+  }
+}

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Col, Input, Label, Row, UncontrolledTooltip} from "reactstrap";
+import {Input, Label, UncontrolledTooltip} from "reactstrap";
 import {
     CONTEXT_SOURCE,
     EXAM_BOARD,
@@ -66,8 +66,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
 
 
     if (isAda && !isLoggedIn(user) || isStaff(user)) {
-        return <Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
-            <Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}>
+        return <div className={classNames(`d-flex flex-column px-0 context-picker-container no-print ${className}`, {"w-100 mt-2": isAda})}>
+            <div className={classNames("d-flex m-0 p-0 justify-content-md-end", {"ms-md-2": isAda})}>
                 {/* Stage Selector */}
                 <div className={classNames("form-group w-100 d-flex justify-content-end m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}
@@ -78,7 +78,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         }}/>
                     }
                     <Input
-                        className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", { "mb-2 me-1": isAda })}
+                        className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", {"mb-2 me-1": isAda})}
                         type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
                         value={currentStages.length === 1 ? currentStages : currentStages.map(s => stageLabelMap[s]).join(", ")}
@@ -116,7 +116,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                             {/* Exam Board Selector */}
                             {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
                             <Input
-                                className={`flex-grow-1 d-inline-block ps-2 pe-0 mb-2 ms-1`}
+                                className={`flex-grow-1 d-inline-block ps-2 pe-0 mb-2 ms-2`}
                                 type="select" id="uc-exam-board-select"
                                 aria-label={hideLabels ? "Exam Board" : undefined}
                                 value={userContext.contexts[0].examBoard}
@@ -134,7 +134,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     }
 
                     <div className="mt-2 ms-1">
-                        <i id={`viewing-context-explanation`} className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help mx-1")}/>
+                        <i id={`viewing-context-explanation`} className={siteSpecific("icon icon-info icon-color-grey mx-1", "icon-help mx-1")}/>
                         <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
                             You are seeing {currentStages.map(s => stageLabelMap[s]).join(", ")}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
                             &nbsp;content.&nbsp;
@@ -145,7 +145,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         </UncontrolledTooltip>
                     </div>
                 </div>
-            </Row>
-        </Col>;
+            </div>
+        </div>;
     }
 };

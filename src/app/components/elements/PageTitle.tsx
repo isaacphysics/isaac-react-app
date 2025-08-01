@@ -92,16 +92,13 @@ export interface PageTitleProps {
     help?: ReactElement;
     className?: string;
     audienceViews?: ViewingContext[];
-    modalId?: string;
     preview?: boolean;
     icon?: TitleIconProps;
 }
-export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, help, className, audienceViews, modalId, preview, icon}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, help, className, audienceViews, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
     const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
-
-    const showModal = modalId && isPhy;
 
     useEffect(() => {
         if (preview) return; // Don't set the main content ID if we're in preview mode
@@ -116,23 +113,6 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
         }
     }, [currentPageTitle, preview]);
 
-    interface HelpModalProps {
-        modalId: string;
-    }
-
-    const HelpModal = (props: HelpModalProps) => {
-        return <PageFragment fragmentId={props.modalId} ifNotFound={help}/>;
-    };
-
-    function openHelpModal(modalId: string) {
-        dispatch(openActiveModal({
-            closeAction: () => {dispatch(closeActiveModal());},
-            size: "xl",
-            title: "Help",
-            body: <HelpModal modalId={modalId}/>
-        }));
-    }
-
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-2 mb-0": isPhy}, className)}>
         <div className="d-flex w-100" data-testid={"main-heading"}>
             {isPhy && icon && (
@@ -143,19 +123,17 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
             )}
             <div className="d-flex flex-column justify-content-center">
                 {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX)}
-                {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
+                {/* in the new isaac designs, subtitles should only ever exist in the page title, not alongside this super-title */}
+                {isAda && subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
             </div>
         </div>
         <Helmet>
             <meta property="og:title" content={currentPageTitle} />
         </Helmet>
         {audienceViews && <AudienceViewer audienceViews={audienceViews} />}
-        {help && !showModal && <React.Fragment>
+        {isAda && help && <React.Fragment>
             <div id="title-help" className="title-help">Help</div>
             <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>
-        </React.Fragment>}
-        {modalId && showModal && <React.Fragment>
-            <Button color="link" className="title-help title-help-modal" onClick={() => openHelpModal(modalId)}>Help</Button>
         </React.Fragment>}
     </h1>;
 };
