@@ -17,7 +17,7 @@
     "@hello-pangea/dnd": "^18.0.1",
     "@popperjs/core": "^2.11.8",
     "@reduxjs/toolkit": "^1.9.7",
-    "axios": "^1.8.3",
+    "axios": "^1.11.0",
     "billboard.js": "^1.12.12",
     "core-js": "^3.38.1",
     "dayjs": "^1.11.13",
