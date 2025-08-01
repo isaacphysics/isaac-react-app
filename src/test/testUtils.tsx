@@ -15,7 +15,6 @@ import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
 import { history } from "../app/services";
-import { LocationDescriptor } from "history";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -47,7 +46,7 @@ interface RenderTestEnvironmentOptions {
 // Provider with the global store.
 // When called, the Redux store will be cleaned completely, and other the MSW server handlers will be reset to
 // defaults (those in handlers.ts).
-export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
+export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {    
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
@@ -153,7 +152,7 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     await userEvent.click(tabLink);
 };
 
-export const clickOn = async (text: string, container?: Promise<HTMLElement>) => {
+export const clickOn = async (text: string | RegExp, container?: Promise<HTMLElement>) => {
     const [target] = await (container ? within(await container).findAllByText(text).then(e => e) : screen.findAllByText(text));
     if (target.hasAttribute('disabled')) {
         throw new Error(`Can't click on disabled button ${target.textContent}`);
@@ -202,7 +201,13 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
     }
 };
 
-export const setUrl = (location: LocationDescriptor) => history.push(location);
+export type PathString = `/${string}`;
+export const setUrl = (location: { pathname: PathString, search?: string}) => {
+    if (location.pathname.includes('?')) {
+        throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
+    }
+    return history.push(location);
+};
 
 export const goBack = () => history.goBack();
 
