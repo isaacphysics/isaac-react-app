@@ -1,8 +1,7 @@
-import {KEY, persistence, SITE_TITLE} from "../../services";
-import React, {useEffect, useState} from "react";
+import {SITE_TITLE} from "../../services";
+import React from "react";
 import {Button, Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {changePage, getUserId, redirectTo, selectors, useAppSelector} from "../../state";
 import {useSessionExpired} from "../../services/useSessionExpired";
 
 export const ConsistencyError = () => {
