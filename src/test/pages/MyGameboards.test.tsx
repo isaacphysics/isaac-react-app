@@ -42,6 +42,9 @@ describe("MyGameboards", () => {
             // Phy persists the change to table view, so switch back to card view for subsequent tests
             const viewDropdown = await screen.findByLabelText("Set display mode");
             await userEvent.selectOptions(viewDropdown, "Card View");
+
+            const limitDropdown = await screen.findByLabelText("Set display limit");
+            await userEvent.selectOptions(limitDropdown, "6");
         }
     });
 
