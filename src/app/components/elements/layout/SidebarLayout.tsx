@@ -883,7 +883,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
                 </Input>
                 {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
                 <div className="select-pretext me-2">Limit:</div>
-                <Input className="w-auto" type="select" aria-label="Set display limit" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                <Input className="w-auto" type="select" aria-label="Set display limit" data-testid="limit-select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </div>
