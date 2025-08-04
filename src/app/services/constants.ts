@@ -830,7 +830,7 @@ export enum EventTypeFilter {
 export enum EventStageFilter {
   "All stages" = "all",
   "GCSE" = "gcse",
-  "A-Level" = "a_level",
+  "A level" = "a_level",
 }
 
 export const GREEK_LETTERS_MAP: { [letter: string]: string } = {
