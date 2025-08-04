@@ -3,7 +3,7 @@ import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
-import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, tags} from "../../services";
+import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, stageLabelMap, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, tags} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -16,6 +16,8 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { ContentSummaryDTO, Stage } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { PageMetadata } from "../elements/PageMetadata";
+import { FilterSummary } from "./QuestionFinder";
+import { set } from "lodash";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
@@ -53,9 +55,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         : [...tags.allSubjectTags, ...tags.allFieldTags];
 
     const [searchText, setSearchText] = useState(query);
-    const [conceptFilters, setConceptFilters] = useState<Tag[]>(
-        applicableTags.filter(f => filters.includes(f.id))
-    );
+    const [conceptFilters, setConceptFilters] = useState<Tag[]>(applicableTags.filter(f => filters.includes(f.id)));
     const [searchStages, setSearchStages] = useState<Stage[]>(getFilteredStageOptions().filter(s => stages.includes(s.value)).map(s => s.value));
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
@@ -83,6 +83,22 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
 
         return shortcutAndFilteredSearchResults;
+    };
+    
+    const filterTags = useMemo(() => [
+        conceptFilters.map(t => ({ value: t.id, label: t.title })), 
+        searchStages.map(s => ({ value: s, label: stageLabelMap[s] }))
+    ].flat()
+    , [conceptFilters, searchStages]);
+
+    const removeFilterTag = (value: string) => {
+        setConceptFilters(conceptFilters.filter(f => f.id !== value));
+        setSearchStages(searchStages.filter(s => s !== value));
+    };
+    
+    const clearFilters = () => {
+        setConceptFilters([]);
+        setSearchStages([]);
     };
     
     const tagCounts : Record<string, number> = [
@@ -121,7 +137,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         };
     }, [searchText]);
 
-    useEffect(() => {doSearch();}, [conceptFilters, searchStages]);
+    useEffect(() => doSearch(), [conceptFilters, searchStages]);
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
     const sidebarProps = {searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts};
@@ -150,6 +166,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                             : <p>Use our concept finder to explore all concepts on the Isaac platform.</p>
                         }
                     </PageMetadata>
+                    {isPhy && !pageContext?.subject && !pageContext?.stage && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
                     {isPhy && <div className="list-results-container p-2 my-4">
                         <ShowLoadingQuery
                             query={listConceptsQuery}

@@ -119,18 +119,18 @@ export function pageStageToSearchStage(stage?: LearningStage[]): STAGE[] {
 }
 
 interface FilterSummaryProps {
-    categories: { value: string; label: string; }[],
+    filterTags: { value: string; label: string; }[],
     clearFilters: () => void,
     removeFilterTag: (value: string) => void
 }
 
-const FilterSummary = ({categories, clearFilters, removeFilterTag}: FilterSummaryProps) => {
+export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: FilterSummaryProps) => {
     return <div className="d-flex flex-wrap mt-2">
-        {categories.map(c => <div key={c.value} data-bs-theme="neutral" data-testid={`filter-tag-${c.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
-            {c.label}
-            <button className="icon icon-close" onClick={() => removeFilterTag(c.value)} aria-label="Close"/>
+        {filterTags.map(t => <div key={t.value} data-bs-theme="neutral" data-testid={`filter-tag-${t.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
+            {t.label}
+            <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label="Close"/>
         </div>)}
-        {categories.length > 0 && <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
+        {filterTags.length > 0 && <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
             Clear all filters
         </button>}
     </div>;
@@ -442,13 +442,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
     const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.tag));
 
-    const categories = [
+    const filterTags = useMemo(() => [
         searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
         searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
         statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
         excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
         selectionList,
-    ].flat();
+    ].flat(), [searchDifficulties, searchStages, statusList, excludeBooks, booksList, selectionList]);
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
@@ -513,7 +513,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     </Col>
                 </Row>}
 
-                {isPhy && <FilterSummary categories={categories} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
+                {isPhy && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
 
                 <Row className={classNames(siteSpecific("mt-2", "mt-4"), "position-relative finder-panel")}>
                     {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")}>
