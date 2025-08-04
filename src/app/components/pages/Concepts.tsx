@@ -17,7 +17,6 @@ import { ContentSummaryDTO, Stage } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { PageMetadata } from "../elements/PageMetadata";
 import { FilterSummary } from "./QuestionFinder";
-import { set } from "lodash";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
