@@ -378,9 +378,6 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
         // If stages are specified do we have any of them in our context
         if (audienceClause.stage) {
             const userStages = userContext.contexts.map(c => c.stage);
-            if (isPhy && userStages.includes(STAGE.A_LEVEL)) {
-                userStages.push(STAGE.FURTHER_A);
-            }
             const satisfiesStageCriteria = userStages.includes(STAGE.ALL) || userStages.some(s => s && audienceClause.stage?.includes(s));
             if (!satisfiesStageCriteria) {
                 return false;

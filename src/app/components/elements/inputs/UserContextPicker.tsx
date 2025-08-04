@@ -7,13 +7,11 @@ import {
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     isAda,
-    isDefined,
     isLoggedIn,
     isPhy,
     isStaff,
     SITE_TITLE_SHORT,
     siteSpecific,
-    sortStages,
     STAGE,
     stageLabelMap,
     useQueryParams,
@@ -50,8 +48,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
 
-    const [currentStages, setCurrentStages] = useState<STAGE[]>(userContext.contexts.map(c => c.stage) as STAGE[] ?? [STAGE.ALL]);
-    const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: currentStages, includeNullOptions: true});
+    const [currentStage, setCurrentStage] = useState<STAGE>(userContext.contexts[0].stage as STAGE ?? STAGE.ALL);
+    const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [currentStage], includeNullOptions: true});
     const allStages = getFilteredStageOptions({includeNullOptions: true});
 
     const onlyOneBoard : {label: string, value: EXAM_BOARD} | undefined = filteredExamBoardOptions.length === 2 && filteredExamBoardOptions.map(eb => eb.value).includes(EXAM_BOARD.ALL)
@@ -63,10 +61,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     };
 
     useEffect(() => {
-        const userContextStages = sortStages(userContext.contexts.map(c => c.stage).filter(isDefined));
-        setCurrentStages(userContextStages as STAGE[]);
-    }, [JSON.stringify(userContext.contexts)]);
-
+        setCurrentStage(userContext.contexts[0].stage as STAGE);
+    }, [userContext.contexts]);
 
     if (isAda && !isLoggedIn(user) || isStaff(user)) {
         return <div className={classNames(`d-flex flex-column px-0 context-picker-container no-print ${className}`, {"w-100 mt-2": isAda})}>
@@ -84,7 +80,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", {"mb-2 me-1": isAda})}
                         type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
-                        value={currentStages.length === 1 ? currentStages : stagesString(currentStages)}
+                        value={currentStage}
                         disabled={userContext.isFixedContext}
                         onChange={e => {
                             const newParams: { [key: string]: unknown } = {...qParams, stage: e.target.value};
@@ -111,8 +107,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         }}
                     >
                         {allStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
-                        {isLoggedIn(user) && !userContext.hasDefaultPreferences && userContext.contexts.length > 1 &&
-                            <option>{stagesString(currentStages)}</option>}
                     </Input>
                     {isAda &&
                         <>
@@ -129,7 +123,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                             >
                                 {onlyOneBoard
                                     ? <option value={onlyOneBoard.value}>{onlyOneBoard.label}</option>
-                                    : getFilteredExamBoardOptions({byStages: currentStages, includeNullOptions: true})
+                                    : getFilteredExamBoardOptions({byStages: [currentStage], includeNullOptions: true})
                                         .map(item => <option key={item.value} value={item.value}>{item.label}</option>)
                                 }
                             </Input>
@@ -139,7 +133,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     <div className="mt-2 ms-1">
                         <i id={`viewing-context-explanation`} className={siteSpecific("icon icon-info icon-color-grey mx-1", "icon-help mx-1")}/>
                         <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
-                            You are seeing {stagesString(currentStages)}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
+                            You are seeing {stageLabelMap[currentStage]}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
                             &nbsp;content.&nbsp;
                             {formatContextExplanation(userContext.explanation.stage, userContext.explanation.examBoard)}&nbsp;
                             {isAda && !isLoggedIn(user) && !userContext.hasDefaultPreferences ?
