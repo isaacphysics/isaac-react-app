@@ -90,10 +90,10 @@ function determinePageContextFromPreviousPageContext(userContexts: readonly User
     }
     // if we have changed stage...
     else if (userContexts && doc?.audience) {
-        // ...if there is exactly one match between the user's registered contexts and the audience stage(s), use that stage
-        const newStages = userContexts.map(c => c.stage).filter(s => doc.audience?.flatMap(a => a.stage).includes(s));
-        if (newStages.length === 1 && newStages[0]) {
-            newContext.stage = isDefined(STAGE_TO_LEARNING_STAGE[newStages[0]]) ? [STAGE_TO_LEARNING_STAGE[newStages[0]] as LearningStage] : undefined;
+        // ...if the user has a registered context for the new stage, use that stage (with precedence for earlier stages in the user context)
+        const newStage = userContexts.map(c => c.stage).find(s => doc.audience?.flatMap(a => a.stage).includes(s));
+        if (newStage) {
+            newContext.stage = isDefined(STAGE_TO_LEARNING_STAGE[newStage]) ? [STAGE_TO_LEARNING_STAGE[newStage] as LearningStage] : undefined;
         }
 
         // ...if the user has no registered context for that stage, if the question has only one stage, switch to that stage)
@@ -102,8 +102,8 @@ function determinePageContextFromPreviousPageContext(userContexts: readonly User
             newContext.stage = isDefined(STAGE_TO_LEARNING_STAGE[stages[0]]) ? [STAGE_TO_LEARNING_STAGE[stages[0]] as LearningStage] : undefined;
         }
     }
-    // otherwise we cannot infer a single stage to show (user not logged in OR no registered context for a question with multiple valid stages
-    // OR multiple matches between registered contexts and page audience), so the default of "all" is used (i.e. stage === undefined)
+    // otherwise we cannot infer a single stage to show (user not logged in OR no registered context for a question with multiple valid stages), so the default of "all" is used
+    // (i.e. stage === undefined)
 
 
     // repeat the process for subject
