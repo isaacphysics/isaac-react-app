@@ -281,7 +281,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
         const params: {[key: string]: string} = {};
         if (searchStages.length) {
-            params.stages = toSimpleCSV(searchStages)
+            params.stages = toSimpleCSV(searchStages);
             if (params.stages === "") delete params.stages;
         }
         if (searchDifficulties.length) params.difficulties = toSimpleCSV(searchDifficulties);
