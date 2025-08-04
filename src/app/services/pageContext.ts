@@ -81,7 +81,7 @@ export const useContextFromContentObjectTags = (doc: ContentBaseDTO | undefined)
     return useAppSelector(selectors.pageContext.context);
 };
 
-function determinePageContextFromPreviousPageContext(userContexts: readonly UserContext[] | undefined, previousContext: PageContextState, doc: ContentBaseDTO | undefined): PageContextState {
+export function determinePageContextFromPreviousPageContext(userContexts: readonly UserContext[] | undefined, previousContext: PageContextState, doc: ContentBaseDTO | undefined): PageContextState {
     const newContext = {stage: undefined, subject: undefined, previousContext} as NonNullable<PageContextState>;
 
     // if we haven't changed learning stage (GCSE => GCSE), use the learning stage from the old context
