@@ -7,19 +7,21 @@ import { closeActiveModal, openActiveModal, useAppDispatch } from '../../state';
 import { ActiveModal } from '../../../IsaacAppTypes';
 
 interface FigureModalProps {
-    doc: ImageDTO;
     path?: string;
+    altText?: string;
+    caption?: React.ReactNode;
     toggle: () => void;
 }
 
-const FigureModal = ({doc, path, toggle}: FigureModalProps) : ActiveModal => {
+export const FigureModal = ({path, altText, caption, toggle}: FigureModalProps) : ActiveModal => {
     return {
         closeAction: toggle,
         size: "xxl",
         title: "Image preview",
         body: <div className="figure-panel">
             <figure className="text-center">
-                <img src={path} alt={doc.altText} />
+                <img src={path} alt={altText} />
+                {caption}
             </figure>
         </div>
     };
@@ -29,6 +31,19 @@ interface IsaacImageProps {
     doc: ImageDTO;
 }
 
+const IsaacImageCaption = ({doc}: {doc: ImageDTO}) => {
+    return React.isValidElement(doc.children) || React.isValidElement(doc.attribution) && <figcaption className="text-center figure-caption">
+        <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
+            {doc.children}
+        </IsaacContentValueOrChildren>
+        {doc.attribution && <span className="text-muted">
+            <Markup trusted-markup-encoding={"markdown"}>
+                {doc.attribution}
+            </Markup>
+        </span>}
+    </figcaption>;
+};
+
 export const IsaacImage = ({doc}: IsaacImageProps) => {
     const dispatch = useAppDispatch();
     const path = doc.src && apiHelper.determineImageUrl(doc.src);
@@ -37,23 +52,19 @@ export const IsaacImage = ({doc}: IsaacImageProps) => {
         <figure>
             <div className="text-center position-relative">
                 <button className="figure-fullscreen" onClick={() => {
-                    dispatch(openActiveModal(FigureModal({doc, path, toggle: () => dispatch(closeActiveModal())})));
+                    dispatch(openActiveModal(FigureModal({
+                        path, 
+                        altText: doc.altText, 
+                        caption: <IsaacImageCaption doc={doc} />, 
+                        toggle: () => dispatch(closeActiveModal())
+                    })));
                 }}>
                     <i className="icon icon-fullscreen icon-md" />
                 </button>
                 {!doc.clickUrl && <img src={path} alt={doc.altText} />}
                 {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} /></a>}
             </div>
-            {React.isValidElement(doc.children) || React.isValidElement(doc.attribution) && <div className="text-center figure-caption">
-                <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
-                    {doc.children}
-                </IsaacContentValueOrChildren>
-                {doc.attribution && <span className="text-muted">
-                    <Markup trusted-markup-encoding={"markdown"}>
-                        {doc.attribution}
-                    </Markup>
-                </span>}
-            </div>}
+            <IsaacImageCaption doc={doc} />
         </figure>
     </div>;
 };
