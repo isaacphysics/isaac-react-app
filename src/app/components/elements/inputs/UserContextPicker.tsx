@@ -58,6 +58,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         ? filteredExamBoardOptions.filter(eb => eb.value !== EXAM_BOARD.ALL)[0]
         : undefined;
 
+    const stagesString = (stages: STAGE[]) => {
+        return stages.map(s => stageLabelMap[s]).join(", ");
+    };
 
     useEffect(() => {
         const userContextStages = sortStages(userContext.contexts.map(c => c.stage).filter(isDefined));
@@ -81,7 +84,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", {"mb-2 me-1": isAda})}
                         type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
-                        value={currentStages.length === 1 ? currentStages : currentStages.map(s => stageLabelMap[s]).join(", ")}
+                        value={currentStages.length === 1 ? currentStages : stagesString(currentStages)}
                         disabled={userContext.isFixedContext}
                         onChange={e => {
                             const newParams: { [key: string]: unknown } = {...qParams, stage: e.target.value};
@@ -109,7 +112,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     >
                         {allStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
                         {isLoggedIn(user) && !userContext.hasDefaultPreferences && userContext.contexts.length > 1 &&
-                            <option>{currentStages.map(s => stageLabelMap[s]).join(", ")}</option>}
+                            <option>{stagesString(currentStages)}</option>}
                     </Input>
                     {isAda &&
                         <>
@@ -136,7 +139,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     <div className="mt-2 ms-1">
                         <i id={`viewing-context-explanation`} className={siteSpecific("icon icon-info icon-color-grey mx-1", "icon-help mx-1")}/>
                         <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
-                            You are seeing {currentStages.map(s => stageLabelMap[s]).join(", ")}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
+                            You are seeing {stagesString(currentStages)}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
                             &nbsp;content.&nbsp;
                             {formatContextExplanation(userContext.explanation.stage, userContext.explanation.examBoard)}&nbsp;
                             {isAda && !isLoggedIn(user) && !userContext.hasDefaultPreferences ?
