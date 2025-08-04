@@ -161,8 +161,6 @@ export const usePreviousPageContext = (userContexts: readonly UserContext[] | un
         };
     }, [dispatch, doc, previousContext, userContexts]);
 
-    console.log("previousPageContext", previousPageContext);
-
     return previousPageContext;
 };
 
