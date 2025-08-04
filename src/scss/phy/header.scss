@@ -24,12 +24,16 @@
 }
 
 .navbar-nav.navbar-nav {
-  a:not(.btn), a.btn.btn-link {
+  a:not(.btn):not(.dropdown-item), a.btn.btn-link {
     text-decoration: none;
     &:hover {
       background-color: unset;
       text-decoration: underline;
     }
+  }
+
+  a.dropdown-item:hover {
+    text-decoration: underline;
   }
 }
 

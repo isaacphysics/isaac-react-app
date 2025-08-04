@@ -54,17 +54,20 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
       width: 100%;
       min-width: max-content;
     }
-    button.btn {
-      padding: 0.25rem 1.5rem;
+
+    .dropdown-item {
       min-width: 192px;
       width: 100%;
       &.selected {
         border-radius: 0;
       }
+    }
+
+    button.btn {
+      min-width: 192px;
       &.dropdown-toggle::after {
         position: absolute;
         right: 0.5rem;
-        top: 1rem;
       }
     }
   }
