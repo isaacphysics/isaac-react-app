@@ -1,11 +1,11 @@
 import {isDefined} from "./";
-import { Action, Location } from "history";
+import { Action } from "history";
 
-const hasPageGroupSpecificScroll = (prevPathname: string, pathname: string, reducedMotion: boolean): boolean => {
-    const prevPathnameParts = prevPathname.split("/");
+const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: string, reducedMotion: boolean): boolean => {
+    const prevPathnameParts = prevPathname?.split("/") || [];
     const pathnameParts = pathname.split("/");
 
-    // books
+    // books should only scroll to the page title, not the top of the page, when switching sections
     if (prevPathnameParts[1] === "books" && pathnameParts[1] === "books" && pathnameParts[2] && prevPathnameParts[2] === pathnameParts[2]) {
         if (reducedMotion) return true;
 
@@ -17,24 +17,19 @@ const hasPageGroupSpecificScroll = (prevPathname: string, pathname: string, redu
     return false;
 };
 
-let previousPathname = "";
-
-export const scrollTopOnPageLoad = (reducedMotion: boolean) => (location: Location, action: Action) => {
+export const scrollTopOnPageLoad = (reducedMotion: boolean) => (previousPathname: string | undefined, pathname: string, action: Action) => {
     if (["PUSH", "REPLACE"].includes(action)) {
             
-        if (hasPageGroupSpecificScroll(previousPathname, location.pathname, reducedMotion)) {
+        if (hasPageGroupSpecificScroll(previousPathname, pathname, reducedMotion)) {
             return;
         }
         
-        if (previousPathname !== location.pathname) {
-            previousPathname = location.pathname;
-            (window as any).followedAtLeastOneSoftLink = true;
-            try {
-                window.scrollTo({top: 0, left: 0, behavior: "auto"});
-            } catch (e) {
-                // Some older browsers, notably Safari, don't support the new spec used above!
-                window.scrollTo(0, 0);
-            }
+        (window as any).followedAtLeastOneSoftLink = true;
+        try {
+            window.scrollTo({top: 0, left: 0, behavior: reducedMotion ? "instant" : "auto"});
+        } catch {
+            // Some older browsers, notably Safari, don't support the new spec used above!
+            window.scrollTo(0, 0);
         }
     }
 };
