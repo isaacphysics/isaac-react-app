@@ -165,7 +165,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                             : <p>Use our concept finder to explore all concepts on the Isaac platform.</p>
                         }
                     </PageMetadata>
-                    {isPhy && !pageContext?.subject && !pageContext?.stage && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
+                    {isPhy && !pageContext?.subject && (!pageContext?.stage || pageContext.stage.length === 0) && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
                     {isPhy && <div className="list-results-container p-2 my-4">
                         <ShowLoadingQuery
                             query={listConceptsQuery}
