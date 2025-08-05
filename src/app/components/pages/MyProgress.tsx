@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     getMyAnsweredQuestionsByDate,
     getMyProgress,
@@ -86,7 +86,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
         }
     }, [dispatch, userIdOfInterest, viewingOwnData, user]);
 
-    const tabRefs: FlushableRef[] = [useRef(), useRef()];
+    const flushRef: FlushableRef = useRef();
 
     // Only teachers and above can see other users progress. The API checks if the other user has shared data with the
     // current user or not.
@@ -116,12 +116,15 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
                     <Card className="mt-4">
                         <CardBody>
-                            <Tabs style="tabs" tabContentClass="mt-4" onActiveTabChange={(tabIndex) => setChartTab(tabIndex === 1 ? "correct" : "attempted")}>
+                            <Tabs style="tabs" tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
+                                setChartTab(tabIndex === 1 ? "correct" : "attempted");
+                                if (flushRef.current) flushRef.current();
+                            }}>
                                 {{"Correct questions": undefined, "Attempted questions": undefined}}
                             </Tabs>
                             <QuestionProgressCharts
                                 subId={chartTab}
-                                flushRef={tabRefs[0]}
+                                flushRef={flushRef}
                                 userProgress={progress}
                             />
                         </CardBody>
