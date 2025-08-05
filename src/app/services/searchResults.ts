@@ -223,7 +223,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
     }, {
         id: "computer_science",
         title: "Ada Computer Science",
-        terms: ["ada", "computer science", "ada computer science", "computing"],
+        terms: ["ada", "computer science", "ada computer science", "computing", "cs", "ada cs"],
         summary: "Ada Computer Science, our partner platform",
         url: "/computer_science",
         type: SEARCH_RESULT_TYPE.SHORTCUT
