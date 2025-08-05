@@ -47,7 +47,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const qParams = useQueryParams();
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
-    
+
     const [currentStage, setCurrentStage] = useState<STAGE>(userContext.contexts[0].stage as STAGE ?? STAGE.ALL);
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [currentStage], includeNullOptions: true});
     const allStages = getFilteredStageOptions({includeNullOptions: true});

@@ -372,7 +372,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                     label={
                                         <div className="d-flex">
                                             All incorrect
-                                            <img className="ps-2" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt="All incorrect"/> 
+                                            <img className="ps-2 icon-status" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt="All incorrect"/> 
                                         </div>
                                     }
                                 />

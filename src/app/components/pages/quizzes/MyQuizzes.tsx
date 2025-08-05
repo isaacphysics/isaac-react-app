@@ -401,7 +401,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     const sortedAssignedQuizzes = sortQuizzesByOrder(assignedQuizzes);
     const sortedPracticeQuizzes = sortQuizzesByOrder(practiceQuizzes);
 
-    const tabAnchors = ["#in-progress", "#completed", "#practice"];
+    const tabAnchors = ["#assigned", "#practice"];
 
     const anchorMap = tabAnchors.reduce((acc, anchor, index) =>
         ({...acc, [anchor]: index + 1}), {} as Record<string, number>
