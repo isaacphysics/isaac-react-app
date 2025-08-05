@@ -558,7 +558,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
                         <ResultsListContainer>
                             <ResultsListHeader className="d-flex">
-                                <div className="flex-grow-1">
+                                <div className="flex-grow-1" data-testid="question-finder-results-header">
                                     {displayQuestions && displayQuestions.length > 0
                                         ? <>Showing <b>{displayQuestions.length}</b></>
                                         : isPhy && isCurrentSearchEmpty

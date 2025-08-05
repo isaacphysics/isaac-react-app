@@ -75,7 +75,7 @@ describe("QuestionFinder", () => {
                 await toggleFilter(Filter.GCSE);
                 await expectQuestions(questions.slice(0, 30));
                     
-                await clickOn("Shuffle questions");
+                await clickOn("Shuffle");
                 await expectQuestions(shuffledQuestions.slice(0, 30));
             });
         });
@@ -86,7 +86,7 @@ describe("QuestionFinder", () => {
                    
                 await renderQuestionFinderPage({ response });
                 await toggleFilter(Filter.GCSE);
-                await clickOn("Shuffle questions");
+                await clickOn("Shuffle");
                 await expectUrlParams("?randomSeed=1&stages=gcse");
             });
         });
@@ -144,7 +144,7 @@ describe("QuestionFinder", () => {
                 await expectQuestions(questions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
                     
-                await clickOn("Shuffle questions");
+                await clickOn("Shuffle");
                 await expectQuestions(shuffledQuestions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
 
@@ -398,7 +398,7 @@ const expectQuestions = (expectedQuestions: IsaacQuestionPageDTO[]) => waitFor(a
 }, { timeout: 5000 });
 
 const expectPageIndicator = (content: string) => screen.findByTestId("question-finder-results").then(found => {
-    expect(found.querySelectorAll('.col')[0].textContent).toBe(content);
+    expect(found.querySelector('[data-testid="question-finder-results-header"]')?.textContent).toBe(content);
 });
 
 const clearFilterTag = async (tagId: string) => {
