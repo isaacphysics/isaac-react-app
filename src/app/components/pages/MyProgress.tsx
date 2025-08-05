@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
     getMyAnsweredQuestionsByDate,
     getMyProgress,
@@ -73,6 +73,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const userProgress = useAppSelector(selectors.teacher.userProgress);
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
+    const [chartTab, setChartTab] = useState<"correct" | "attempted">("correct");
     const screenSize = useDeviceSize();
 
     useEffect(() => {
@@ -99,17 +100,6 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
-    const [big, setBig] = useState<React.JSX.Element>();
-    const [activeTab, setActiveTab] = useState<"correct" | "attempted">("correct");
-
-    useEffect(() => setBig(<QuestionProgressCharts
-        subId={activeTab}
-        questionsByTag={(activeTab === "correct" ? progress?.correctByTag : progress?.attemptsByTag) || {}}
-        questionsByLevel={(activeTab === "correct" ? progress?.correctByLevel : progress?.attemptsByLevel) || {}}
-        questionsByStageAndDifficulty={(activeTab === "correct" ? progress?.correctByStageAndDifficulty : progress?.attemptsByStageAndDifficulty) || {}}
-        flushRef={tabRefs[0]} 
-    />), [activeTab]); //, progress?.attemptsByLevel, progress?.attemptsByStageAndDifficulty, progress?.attemptsByTag, progress?.correctByLevel, progress?.correctByStageAndDifficulty, progress?.correctByTag, tabRefs]);
-
     return <Container id="my-progress" className="mb-7">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-progress"}} disallowLaTeX />
         <Card className="mt-4">
@@ -126,10 +116,14 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
                     <Card className="mt-4">
                         <CardBody>
-                            <Tabs style="tabs" tabContentClass="mt-4" onActiveTabChange={(tabIndex) => setActiveTab(tabIndex === 1 ? "correct" : "attempted")}>
-                                {{"Correct questions": <div/>, "Attempted questions": <div/>}}
+                            <Tabs style="tabs" tabContentClass="mt-4" onActiveTabChange={(tabIndex) => setChartTab(tabIndex === 1 ? "correct" : "attempted")}>
+                                {{"Correct questions": undefined, "Attempted questions": undefined}}
                             </Tabs>
-                            {big}
+                            <QuestionProgressCharts
+                                subId={chartTab}
+                                flushRef={tabRefs[0]}
+                                userProgress={progress}
+                            />
                         </CardBody>
                     </Card>
 

@@ -1,4 +1,4 @@
-import React, {MutableRefObject, useEffect, useState} from 'react';
+import React, {MutableRefObject, useEffect, useMemo, useState} from 'react';
 import {LevelAttempts} from "../../../../IsaacAppTypes";
 import {bb, Chart, donut, areaSpline} from "billboard.js";
 import {
@@ -22,13 +22,12 @@ import {SingleValue} from "react-select";
 import {Difficulty} from "../../../../IsaacApiTypes";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { Row, Col } from 'reactstrap';
+import { MyProgressState } from '../../../state';
 
 interface QuestionProgressChartsProps {
     subId: string;
-    questionsByTag: { [tag: string]: number };
-    questionsByLevel: LevelAttempts<number>;
-    questionsByStageAndDifficulty: { [stage: string]: {[difficulty: string]: number} };
     flushRef: FlushableRef;
+    userProgress?: MyProgressState;
 }
 
 export type FlushableRef = MutableRefObject<(() => void) | undefined>;
@@ -53,8 +52,14 @@ const colourPicker = (names: string[]): { [key: string]: string } => {
 };
 
 export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
-    const {subId, questionsByTag, questionsByLevel, questionsByStageAndDifficulty, flushRef} = props;
-
+    const {subId, flushRef, userProgress} = props;
+    const questionsByTag = useMemo(() => (subId === "correct" ? userProgress?.correctByTag : userProgress?.attemptsByTag) || {}, 
+        [subId, userProgress?.attemptsByTag, userProgress?.correctByTag]);
+    const questionsByLevel = useMemo(() => (subId === "correct" ? userProgress?.correctByLevel : userProgress?.attemptsByLevel) || {},
+        [subId, userProgress?.attemptsByLevel, userProgress?.correctByLevel]);
+    const questionsByStageAndDifficulty = useMemo(() => (subId === "correct" ? userProgress?.correctByStageAndDifficulty : userProgress?.attemptsByStageAndDifficulty) || {},
+        [subId, userProgress?.attemptsByStageAndDifficulty, userProgress?.correctByStageAndDifficulty]);
+        
     const topTagLevel = tags.getTagHierarchy()[0];
     const searchTagLevel = tags.getTagHierarchy()[1];
 
@@ -68,10 +73,12 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         ).length == 0;
     const categoryColumns = tags.getSpecifiedTags(topTagLevel, tags.allTagIds).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const topicColumns = tags.getRecursiveDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
-    const difficultyColumns = stageChoices && questionsByStageAndDifficulty[stageChoices[0].value] ?
-        Object.keys(questionsByStageAndDifficulty[stageChoices[0].value])
-            .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
-            .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoices[0].value][key]]) : [];
+    const difficultyColumns = useMemo(() => (
+        stageChoices && questionsByStageAndDifficulty[stageChoices[0].value] ?
+            Object.keys(questionsByStageAndDifficulty[stageChoices[0].value])
+                .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
+                .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoices[0].value][key]]) : []
+    ), [stageChoices, questionsByStageAndDifficulty]);
 
     donut();
     areaSpline();
@@ -134,7 +141,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         return () => {
             flushRef.current = undefined;
         };
-    }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns, subId]);
+    }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns, subId, flushRef, topTagLevel]);
 
     const numberOfCharts = siteSpecific(3, 2);
 
