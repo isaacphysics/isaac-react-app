@@ -31,7 +31,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
                 tag={siteSpecific(undefined, "h2")}
                 className={classNames({
                     "d-flex justify-content-between": activeModal.closeAction,
-                    "h-title mb-4": !!activeModal.title && isAda,
+                    "h-title": !!activeModal.title && isAda,
                     "position-absolute": !activeModal.title,
                 })}
                 style={activeModal.title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
