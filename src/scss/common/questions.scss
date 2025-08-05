@@ -65,6 +65,7 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
 
     button.btn {
       min-width: 192px;
+      width: 100%;
       &.dropdown-toggle::after {
         position: absolute;
         right: 0.5rem;
