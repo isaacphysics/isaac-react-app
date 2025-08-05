@@ -43,7 +43,7 @@ import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import {Button, Card, CardBody, CardHeader, Col, Container, Label, Row} from "reactstrap";
+import {Button, CardBody, Col, Container, Label, Row} from "reactstrap";
 import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
@@ -56,6 +56,7 @@ import { SearchInputWithIcon } from "../elements/SearchInputs";
 import { Link } from "react-router-dom";
 import { updateTopicChoices } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
+import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -555,17 +556,17 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         }} />
                     </Col>}
                     <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
-                        <Card>
-                            <CardHeader className="finder-header pl-3">
+                        <ResultsListContainer>
+                            <ResultsListHeader>
                                 <Row className="flex-grow-1">
-                                    <Col>
+                                    <Col xs={8}>
                                         {displayQuestions && displayQuestions.length > 0
                                             ? <>Showing <b>{displayQuestions.length}</b></>
                                             : <>No results</>}
                                         {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
                                         .
                                     </Col>
-                                    <Col>
+                                    <Col xs={4}>
                                         <button className={siteSpecific(
                                             "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end",
                                             "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
@@ -575,7 +576,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         </button>
                                     </Col>
                                 </Row>
-                            </CardHeader>
+                            </ResultsListHeader>
                             <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                                     {displayQuestions?.length
@@ -596,7 +597,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     }
                                 </ShowLoading>
                             </CardBody>
-                        </Card>
+                        </ResultsListContainer>
                         {(displayQuestions?.length ?? 0) > 0 &&
                             <Row className="pt-3">
                                 <Col className="d-flex justify-content-center mb-3">
