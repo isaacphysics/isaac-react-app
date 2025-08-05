@@ -77,9 +77,6 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoices[0].value][key]]) : []
     ), [stageChoices, questionsByStageAndDifficulty]);
 
-    donut();
-    areaSpline();
-
     useEffect(() => {
         const charts: Chart[] = [];
         if (isPhy && !isAllZero(categoryColumns)) {
@@ -87,7 +84,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 data: {
                     columns: categoryColumns,
                     colors: colourPicker(categoryColumns.map((column) => column[0]) as string[]),
-                    type: "donut",
+                    type: donut(),
                 },
                 donut: {
                     title: "By " + topTagLevel,
@@ -103,7 +100,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             data: {
                 columns: topicColumns,
                 colors: colourPicker(topicColumns.map((column) => column[0]) as string[]),
-                type: "donut"
+                type: donut()
             },
             donut: {
                 title: isAllZero(topicColumns) ? "No Data" : "By Topic",
@@ -118,7 +115,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 data: {
                     columns: difficultyColumns,
                     colors: colourPicker(difficultyColumns?.map((column) => column[0]) as string[]),
-                    type: "donut",
+                    type: donut(),
                     order: null
                 },
                 donut: {
