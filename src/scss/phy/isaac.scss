@@ -262,7 +262,7 @@ $tooltip-padding-y: 0.6rem;
 $tooltip-max-width: 370px;
 
 $dropdown-link-hover-bg: $color-neutral-50;
-$dropdown-link-active-bg: var(--subject-color-500, transparent);
+$dropdown-link-active-bg: var(--subject-color-200, $color-neutral-200);
 $dropdown-link-active-color: inherit;
 
 // Grid Customisation
