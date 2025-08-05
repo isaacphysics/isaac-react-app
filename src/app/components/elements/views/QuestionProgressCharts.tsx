@@ -1,5 +1,5 @@
 import React, {MutableRefObject, useEffect, useMemo, useState} from 'react';
-import {bb, Chart, donut, areaSpline} from "billboard.js";
+import {bb, Chart, donut} from "billboard.js";
 import {
     comparatorFromOrderedValues,
     difficultiesOrdered,
@@ -139,6 +139,14 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
     const numberOfCharts = siteSpecific(3, 2);
 
+    const questionTags = tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title};});
+    const labelledQuestionTags = siteSpecific([TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology].map(p => {
+        return {
+            label: p.charAt(0).toUpperCase() + p.slice(1),
+            options: questionTags.filter(t => tags.getChildren(p).map(t2 => t2.id).includes(t.value))
+        };
+    }), questionTags);
+
     return <Row>
         {isPhy && <Col xl={12/numberOfCharts} md={12/numberOfCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
@@ -180,7 +188,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         inputId={`${subId}-subcategory-select`}
                         name="subcategory"
                         defaultValue={{value: defaultSearchChoiceTag.id, label: defaultSearchChoiceTag.title}}
-                        options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title};})}
+                        options={labelledQuestionTags}
                         onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
                     />
                 </div>
