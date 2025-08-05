@@ -172,39 +172,6 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                         />
                     </div>
                     }
-                    
-                    {isAda && <Card>
-                        <CardHeader className="search-header">
-                            <h3>
-                                <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results 
-                                {query !== "" 
-                                    ? (listConceptsQuery?.data?.totalResults) 
-                                        ? <Badge color="primary">{listConceptsQuery?.data?.totalResults}</Badge> 
-                                        : <IsaacSpinner /> 
-                                    : null
-                                }
-                            </h3>
-                        </CardHeader>
-                        <CardBody className="px-2">
-                            <ShowLoadingQuery
-                                query={listConceptsQuery}
-                                thenRender={({results: concepts}) => {
-
-                                    const shortcutAndFilteredSearchResults = shortcutAndFilter(concepts);
-
-                                    return <>
-                                        {shortcutAndFilteredSearchResults ?
-                                            <LinkToContentSummaryList 
-                                                items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
-                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                            />
-                                            : <em>No results found</em>}
-                                    </>;
-                                }}
-                                defaultErrorTitle="Error fetching concepts"
-                            />
-                        </CardBody>
-                    </Card>}
                 </MainContent>
             </SidebarLayout>
         </Container>
