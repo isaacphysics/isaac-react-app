@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     getMyAnsweredQuestionsByDate,
     getMyProgress,
@@ -9,7 +9,7 @@ import {
     useAppSelector
 } from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Alert, Card, CardBody, Col, Container, Row} from "reactstrap";
+import {Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
     below,
     HUMAN_QUESTION_TAGS,
@@ -49,8 +49,6 @@ const siteSpecificStats = siteSpecific(
             "maths_book": 432,
             "chemistry_16": 338
         },
-        typeColWidth: "col-lg-6",
-        tagColWidth: "col-lg-12"
     },
     // Computer science
     {
@@ -59,8 +57,6 @@ const siteSpecificStats = siteSpecific(
             "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacLLMFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion"
         ],
         questionCountByTag: {},
-        typeColWidth: "col-lg-4",
-        tagColWidth: "col-lg-12"
     }
 );
 
@@ -75,7 +71,6 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const dispatch = useAppDispatch();
     const myProgress = useAppSelector(selectors.user.progress);
     const userProgress = useAppSelector(selectors.teacher.userProgress);
-    const achievements = useAppSelector(selectors.user.achievementsRecord);
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
     const screenSize = useDeviceSize();
@@ -104,6 +99,17 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
+    const [big, setBig] = useState<React.JSX.Element>();
+    const [activeTab, setActiveTab] = useState<"correct" | "attempted">("correct");
+
+    useEffect(() => setBig(<QuestionProgressCharts
+        subId={activeTab}
+        questionsByTag={(activeTab === "correct" ? progress?.correctByTag : progress?.attemptsByTag) || {}}
+        questionsByLevel={(activeTab === "correct" ? progress?.correctByLevel : progress?.attemptsByLevel) || {}}
+        questionsByStageAndDifficulty={(activeTab === "correct" ? progress?.correctByStageAndDifficulty : progress?.attemptsByStageAndDifficulty) || {}}
+        flushRef={tabRefs[0]} 
+    />), [activeTab]); //, progress?.attemptsByLevel, progress?.attemptsByStageAndDifficulty, progress?.attemptsByTag, progress?.correctByLevel, progress?.correctByStageAndDifficulty, progress?.correctByTag, tabRefs]);
+
     return <Container id="my-progress" className="mb-7">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-progress"}} disallowLaTeX />
         <Card className="mt-4">
@@ -120,34 +126,10 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
                     <Card className="mt-4">
                         <CardBody>
-                            <Tabs style="tabs" tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
-                                const flush = tabRefs[tabIndex - 1].current;
-                                if (flush) {
-                                    // Don't call the flush in an event handler that causes the render, that's too early.
-                                    // Call it once that's done.
-                                    requestAnimationFrame(() => {
-                                        flush();
-                                        // You'd think this wouldn't do anything, but it fixes the vertical position of the
-                                        // legend. I'm beginning to dislike this library.
-                                        flush();
-                                    });
-                                }
-                            }}>
-                                {{
-                                    "Correct questions": <QuestionProgressCharts
-                                        subId="correct"
-                                        questionsByTag={(progress?.correctByTag) || {}}
-                                        questionsByLevel={(progress?.correctByLevel) || {}}
-                                        questionsByStageAndDifficulty={(progress?.correctByStageAndDifficulty) || {}}
-                                        flushRef={tabRefs[0]} />,
-                                    "Attempted questions": <QuestionProgressCharts
-                                        subId="attempted"
-                                        questionsByTag={(progress?.attemptsByTag) || {}}
-                                        questionsByLevel={(progress?.attemptsByLevel) || {}}
-                                        questionsByStageAndDifficulty={(progress?.attemptsByStageAndDifficulty) || {}}
-                                        flushRef={tabRefs[1]}/>
-                                }}
+                            <Tabs style="tabs" tabContentClass="mt-4" onActiveTabChange={(tabIndex) => setActiveTab(tabIndex === 1 ? "correct" : "attempted")}>
+                                {{"Correct questions": <div/>, "Attempted questions": <div/>}}
                             </Tabs>
+                            {big}
                         </CardBody>
                     </Card>
 
@@ -158,7 +140,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                 const correct = progress?.correctByType?.[qType] || null;
                                 const attempts = progress?.attemptsByType?.[qType] || null;
                                 const percentage = safePercentage(correct, attempts);
-                                return <Col key={qType} className={`${siteSpecificStats.typeColWidth} mt-2 type-progress-bar`}>
+                                return <Col key={qType} lg={siteSpecific(6, 4)} className="mt-2 type-progress-bar">
                                     <div className={"px-2"}>
                                         {HUMAN_QUESTION_TYPES[qType]} questions correct
                                     </div>
@@ -181,7 +163,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                 const attempted = Math.min(progress?.attemptsByTag?.[qType] || 0, total);
                                 const correctPercentage = safePercentage(correct, total) || 0;
                                 const attemptedPercentage = safePercentage(attempted, total) || 0;
-                                return total > 0 && <Col key={qType} className={`${siteSpecificStats.tagColWidth} mt-2 type-progress-bar`}>
+                                return total > 0 && <Col key={qType} lg={12} className="mt-2 type-progress-bar">
                                     <div className={"px-2"}>
                                         {HUMAN_QUESTION_TAGS.get(qType)} questions
                                     </div>

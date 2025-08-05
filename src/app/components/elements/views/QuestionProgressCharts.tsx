@@ -1,6 +1,6 @@
 import React, {MutableRefObject, useEffect, useState} from 'react';
 import {LevelAttempts} from "../../../../IsaacAppTypes";
-import {bb, Chart} from "billboard.js";
+import {bb, Chart, donut, areaSpline} from "billboard.js";
 import {
     comparatorFromOrderedValues,
     difficultiesOrdered,
@@ -73,6 +73,8 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
             .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoices[0].value][key]]) : [];
 
+    donut();
+    areaSpline();
 
     useEffect(() => {
         const charts: Chart[] = [];
@@ -126,20 +128,13 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
         flushRef.current = () => {
             charts.forEach(chart => {
-                // N.B. This no-op actually clears the text size cache, which makes this flush actually work.
-                // (The relevant line in BB is this.internal.clearLegendItemTextBoxCache() )
-                chart.data.names();
-                // N.B. Of course, under the text size cache, is a more general cache, which also needs
-                // clearing, and is not exposed.
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (chart as any).internal.resetCache();
                 chart.flush();
             });
         };
         return () => {
             flushRef.current = undefined;
         };
-    }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns]);
+    }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns, subId]);
 
     const numberOfCharts = siteSpecific(3, 2);
 
