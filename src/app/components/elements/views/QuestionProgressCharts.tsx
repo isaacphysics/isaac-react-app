@@ -1,5 +1,4 @@
 import React, {MutableRefObject, useEffect, useMemo, useState} from 'react';
-import {LevelAttempts} from "../../../../IsaacAppTypes";
 import {bb, Chart, donut, areaSpline} from "billboard.js";
 import {
     comparatorFromOrderedValues,
@@ -55,8 +54,6 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const {subId, flushRef, userProgress} = props;
     const questionsByTag = useMemo(() => (subId === "correct" ? userProgress?.correctByTag : userProgress?.attemptsByTag) || {}, 
         [subId, userProgress?.attemptsByTag, userProgress?.correctByTag]);
-    const questionsByLevel = useMemo(() => (subId === "correct" ? userProgress?.correctByLevel : userProgress?.attemptsByLevel) || {},
-        [subId, userProgress?.attemptsByLevel, userProgress?.correctByLevel]);
     const questionsByStageAndDifficulty = useMemo(() => (subId === "correct" ? userProgress?.correctByStageAndDifficulty : userProgress?.attemptsByStageAndDifficulty) || {},
         [subId, userProgress?.attemptsByStageAndDifficulty, userProgress?.correctByStageAndDifficulty]);
         
@@ -141,7 +138,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         return () => {
             flushRef.current = undefined;
         };
-    }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns, subId, flushRef, topTagLevel]);
+    }, [questionsByTag, categoryColumns, topicColumns, difficultyColumns, subId, flushRef, topTagLevel]);
 
     const numberOfCharts = siteSpecific(3, 2);
 
