@@ -1419,8 +1419,8 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
         return (validStageSubjectPairs[context.subject] as LEARNING_STAGE[]).includes(stage);
     };
 
-    const isValidSubject = (subjectStages: LEARNING_STAGE[] | (LEARNING_STAGE.GCSE | LEARNING_STAGE.A_LEVEL | LEARNING_STAGE.UNIVERSITY)[] | LEARNING_STAGE.A_LEVEL[]) => {
-        return (subjectStages as LearningStage[]).includes(context.stage[0]);
+    const isValidSubject = (subjectStages: LEARNING_STAGE[]) => {
+        return subjectStages.includes(context.stage[0] as LEARNING_STAGE);
     };
 
     return <ContentSidebar buttonTitle="Switch stage/subject" {...rest}>
