@@ -4783,6 +4783,36 @@ export const mockQuestionFinderResultsWithMultipleStages = {
     "totalResults": 6
 };
 
+export const mockConceptsResults = {
+    results: [{
+        id: "phys_step_up_1_concept",
+        title: "1. Displacement",
+        subtitle: "Step Up to GCSE Physics",
+        type: "isaacConceptPage",
+        tags: ["physics", "skills"],
+        url: "/api/pages/concepts/phys_step_up_1_concept"
+    }, {
+        id: "gcse_maths_ch1_1_concept",
+        title: "1. Solving Maths Problems",
+        subtitle: "Using Essential GCSE Maths",
+        type: "isaacConceptPage",
+        tags: [ "maths", "number"],
+        audience: [{ stage: ["a_level"]}],
+        url: "/api/pages/concepts/gcse_maths_ch1_1_concept"
+    }, {
+        id: "gcse_maths_ch1_2_concept",
+        title: "2. Solving Maths Problems",
+        subtitle: "Using Essential GCSE Maths",
+        type: "isaacConceptPage",
+        tags: [ "maths", "geometry"],
+        audience: [{ stage: ["a_level"]}],
+        url: "/api/pages/concepts/gcse_maths_ch1_1_concept"
+    }],
+    get totalResults() {
+        return this.results.length;
+    }
+};
+
 export const mockConceptPage =
     {
         "type": "isaacConceptPage",
