@@ -144,7 +144,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                 {selectedUnits.map((unit) =>
                                     <DropdownItem key={wrapUnitForSelect(unit)}
                                         data-unit={unit || 'None'}
-                                        className={classNames({"bg-grey selected": unit === currentAttemptUnits})}
+                                        className={classNames({"bg-inline-question selected": unit === currentAttemptUnits})}
                                         onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
                                         <Markup encoding={"latex"}>
                                             {wrapUnitForSelect(unit)}

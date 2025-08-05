@@ -87,7 +87,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
 
     const draggableDropZone = <span
         style={{minHeight: height, minWidth: width}}
-        className={classNames("d-inline-block cloze-drop-zone", !item && `rounded bg-grey border ${isOver ? "border-dark" : "border-light"}`)}
+        className={classNames("d-inline-block cloze-drop-zone", !item && `rounded bg-inline-question border ${isOver ? "border-dark" : "border-light"}`)}
         ref={setNodeRef}
     >
         {item
