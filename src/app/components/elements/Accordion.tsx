@@ -4,6 +4,7 @@ import {
     above,
     ALPHABET,
     audienceStyle,
+    calculateQuestionSetCompletionState,
     DOCUMENT_TYPE,
     isAda,
     isAQuestionLikeDoc,
@@ -26,6 +27,8 @@ import debounce from "lodash/debounce";
 import { UncontrolledTooltip, Collapse, Card, CardBody } from "reactstrap";
 import { useReducedMotion } from "../../services/accessibility";
 import { Spacer } from "./Spacer";
+import { CompletionState } from "../../../IsaacApiTypes";
+import { StatusDisplay } from "./list-groups/AbstractListViewItem";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -128,31 +131,18 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     const clientId = useRef('c' + nextClientId++);
 
     // Check results of questions in this accordion
-    let accordionState : "correct" | "incorrect" | "in-progress" | undefined;
     const questionsOnPage = useAppSelector(selectors.questions.getQuestions) || [];
     const questionsInsideAccordionSection = questionsOnPage?.filter(q => q.accordionClientId === clientId.current);
-    if (questionsInsideAccordionSection.length > 0) {
-        let allCorrect = true;
-        let allWrong = true;
-        let allValidated = true;
-        let anyValidated = false;
-        questionsInsideAccordionSection.forEach(question => {
-            if (question.validationResponse) {
-                const correct = question.validationResponse.correct;
-                if (correct) {
-                    allWrong = false;
-                } else {
-                    allCorrect = false;
-                }
-                anyValidated = true;
-            } else {
-                allValidated = false;
-            }
-        });
-        if (allValidated && allCorrect) accordionState = "correct";
-        if (allValidated && allWrong) accordionState = "incorrect";
-        if (anyValidated && !accordionState) accordionState = "in-progress";
-    }
+    
+    const accordionState = calculateQuestionSetCompletionState(questionsInsideAccordionSection);
+
+    const accordionAltText = {
+        [CompletionState.ALL_CORRECT]: "All questions in this part are answered correctly.",
+        [CompletionState.ALL_INCORRECT]: "All questions in this part are answered incorrectly.",
+        [CompletionState.ALL_ATTEMPTED]: "Some questions in this part are answered incorrectly.",
+        [CompletionState.IN_PROGRESS]: "Some questions in this part are answered incorrectly.",
+        [CompletionState.NOT_ATTEMPTED]: "No questions in this part have been answered."
+    };
 
     const isConceptPage = page && page != NOT_FOUND && page.type === DOCUMENT_TYPE.CONCEPT;
 
@@ -218,21 +208,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             </div>
 
             {accordionState && isPhy && <span className={"accordion-icon d-flex align-items-center gap-2 w-max-content h-100 pb-1 pe-3 align-self-center"}>
-                {accordionState === "correct"
-                    ? <>
-                        <span className="d-flex gap-2 align-items-center">Correct <i className="icon icon-raw icon-correct"/></span>
-                        <span className="visually-hidden">All questions in this part are answered correctly.</span>
-                    </>
-                    : accordionState === "incorrect" 
-                        ? <>
-                            <span className="d-flex gap-2 align-items-center">Incorrect <i className="icon icon-raw icon-incorrect"/></span>
-                            <span className="visually-hidden">All questions in this part are answered incorrectly.</span>
-                        </>
-                        : <>
-                            <span className="d-flex gap-2 align-items-center">In progress <i className="icon icon-raw icon-in-progress"/></span>
-                            <span className="visually-hidden">Some questions in this part are answered incorrectly.</span>
-                        </>
-                }
+                <StatusDisplay status={accordionState} showText className="flex-row-reverse" aria-label={accordionAltText[accordionState]} />
             </span>}
             {isAda && <>
                 <Spacer />

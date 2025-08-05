@@ -2,7 +2,7 @@
   legend {
     margin-bottom: 0;
   }
-  label {
+  :not(.styled-checkbox-wrapper) > label {
     margin-top: 1rem; // this would ideally be more specific
   }
   .restrict-height {

@@ -8,7 +8,8 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
     stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS, getSearchPlaceholder,
     sortByStringValue,
-    SUBJECT_SPECIFIC_CHILDREN_MAP} from "../../../services";
+    SUBJECT_SPECIFIC_CHILDREN_MAP,
+    LEARNING_STAGE} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -34,6 +35,7 @@ import { Markup } from "../markup";
 import { History } from "history";
 import { calculateSidebarLink, containsActiveTab, isSidebarGroup } from "../../../services/sidebar";
 import { SidebarButton } from "../SidebarButton";
+import { GlossarySearch } from "../../pages/Glossary";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -44,7 +46,10 @@ export const MainContent = (props: ColProps) => {
     const { className, ...rest } = props;
 
     const dispatch = useAppDispatch();
-    dispatch(mainContentIdSlice.actions.set("page-content"));
+
+    useEffect(() => {
+        dispatch(mainContentIdSlice.actions.set("page-content"));
+    }, [dispatch]);
 
     return siteSpecific(<Col id="page-content" xs={12} lg={8} xl={9} {...rest} className={classNames(className, "order-0 order-lg-1")} />, props.children);
 };
@@ -1410,17 +1415,26 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
 
     const history = useHistory();
 
+    const isValidStage = (stage: LEARNING_STAGE) => {
+        return (validStageSubjectPairs[context.subject] as LEARNING_STAGE[]).includes(stage);
+    };
+
+    const isValidSubject = (subjectStages: LEARNING_STAGE[]) => {
+        return subjectStages.includes(context.stage[0] as LEARNING_STAGE);
+    };
+
     return <ContentSidebar buttonTitle="Switch stage/subject" {...rest}>
         <div className="section-divider"/>
         <search>
             <h5>Decks by stage</h5>
             <ul>
-                {validStageSubjectPairs[context.subject].map((stage, index) =>
+                {[...new Set(Object.values(validStageSubjectPairs).flat())].map((stage, index) =>
                     <li key={index}>
                         <StyledTabPicker
                             checkboxTitle={HUMAN_STAGES[stage]}
                             checked={context.stage.includes(stage)}
-                            onClick={() => history.push(`/${context.subject}/${stage}/question_decks`)}
+                            disabled={!isValidStage(stage)}
+                            onClick={() => isValidStage(stage) && history.push(`/${context.subject}/${stage}/question_decks`)}
                         />
                     </li>
                 )}
@@ -1429,13 +1443,13 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
             <h5>Decks by subject</h5>
             <ul>
                 {Object.entries(validStageSubjectPairs)
-                    .filter(([_subject, stages]) => (stages as LearningStage[]).includes(context.stage[0]))
-                    .map(([subject, _stages], index) =>
+                    .map(([subject, stages], index) =>
                         <li key={index}>
                             <StyledTabPicker
                                 checkboxTitle={HUMAN_SUBJECTS[subject]}
                                 checked={context.subject === subject}
-                                onClick={() => history.push(`/${subject}/${context.stage}/question_decks`)}
+                                disabled={!isValidSubject(stages)}
+                                onClick={() => isValidSubject(stages) && history.push(`/${subject}/${context.stage}/question_decks`)}
                             />
                         </li>
                     )
@@ -1480,8 +1494,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
         }
     };
 
-    // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
-    const [internalSearchText, setInternalSearchText] = useState(searchText);
+    
 
     // Deselect stage filters that no longer have results following a subject/search term change
     useEffect(() => {
@@ -1495,15 +1508,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
         <div className="section-divider"/>
         <search>
             <h5>Search glossary</h5>
-            <Input
-                className='search--filter-input my-4'
-                type="search" value={internalSearchText || ""}
-                placeholder={`e.g. ${getSearchPlaceholder(pageContext?.subject)}`}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
-                    setSearchText(e.target.value);
-                    setInternalSearchText(e.target.value);
-                }}
-            />
+            <GlossarySearch searchText={searchText} setSearchText={setSearchText} />
             <div className="section-divider"/>
 
             {!pageContext?.subject && <>

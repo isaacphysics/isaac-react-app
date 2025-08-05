@@ -115,7 +115,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     };
 
     return <div data-bs-theme="neutral" className={classNames({"card": isAda})} data-testid="question-finder-filters">
-        <CardHeader className="finder-header pl-3" onClick={(e) => {
+        <CardHeader className="finder-header" onClick={(e) => {
             // the filters panel can only be collapsed when it is not a sidebar
             // (changing screen size after collapsing does not re-expand it but the options become visible)
             if (below["md"](deviceSize)) handleFilterPanelExpansion(e);
@@ -372,7 +372,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                     label={
                                         <div className="d-flex">
                                             All incorrect
-                                            <img className="ps-2" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt="All incorrect"/> 
+                                            <img className="ps-2 icon-status" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt="All incorrect"/> 
                                         </div>
                                     }
                                 />
