@@ -562,7 +562,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     <Col xs={8}>
                                         {displayQuestions && displayQuestions.length > 0
                                             ? <>Showing <b>{displayQuestions.length}</b></>
-                                            : <>No results</>}
+                                            : isPhy && isCurrentSearchEmpty
+                                                ? <>Select {filteringByStatus ? "more" : "some"} filters to start searching</>
+                                                : <>No results</>
+                                        }
                                         {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
                                         .
                                     </Col>
@@ -587,13 +590,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                                 contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
                                                 ignoreIntendedAudience noCaret
                                             />
-                                        : isCurrentSearchEmpty
-                                            ? filteringByStatus
-                                                ? <em>Please select more filters</em>
-                                                : <em>Please select and apply filters</em>
-                                            : filteringByStatus
-                                                ? <em>Expecting results? Try narrowing down your filters</em>
-                                                : <em>No results match your criteria</em>
+                                        : isAda && <>{
+                                            isCurrentSearchEmpty
+                                                ? <span>Please select and apply filters.</span>
+                                                : filteringByStatus 
+                                                    ? <span>Could not load any results matching the requested filters.</span>
+                                                    : <span>No results match the requested filters.</span>
+                                        }</>
                                     }
                                 </ShowLoading>
                             </CardBody>
