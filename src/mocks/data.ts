@@ -4825,6 +4825,7 @@ export const mockConceptPage =
         "summary": "A mock concept page",
         "tags": [
             "physics",
+            "chemistry",
             "thermal"
         ],
         "published": false,
