@@ -557,28 +557,25 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     </Col>}
                     <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
                         <ResultsListContainer>
-                            <ResultsListHeader>
-                                <Row className="flex-grow-1">
-                                    <Col xs={8}>
-                                        {displayQuestions && displayQuestions.length > 0
-                                            ? <>Showing <b>{displayQuestions.length}</b></>
-                                            : isPhy && isCurrentSearchEmpty
-                                                ? <>Select {filteringByStatus ? "more" : "some"} filters to start searching</>
-                                                : <>No results</>
-                                        }
-                                        {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
-                                        .
-                                    </Col>
-                                    <Col xs={4}>
-                                        <button className={siteSpecific(
-                                            "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end",
-                                            "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
-                                        } onClick={() => setRandomSeed(nextSeed())}>
-                                                Shuffle questions
-                                            {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
-                                        </button>
-                                    </Col>
-                                </Row>
+                            <ResultsListHeader className="d-flex">
+                                <div className="flex-grow-1">
+                                    {displayQuestions && displayQuestions.length > 0
+                                        ? <>Showing <b>{displayQuestions.length}</b></>
+                                        : isPhy && isCurrentSearchEmpty
+                                            ? <>Select {filteringByStatus ? "more" : "some"} filters to start searching</>
+                                            : <>No results</>
+                                    }
+                                    {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
+                                    .
+                                </div>
+                                <button className={siteSpecific(
+                                    "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end ms-3 text-nowrap",
+                                    "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
+                                } onClick={() => setRandomSeed(nextSeed())}
+                                >
+                                    <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
+                                    {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
+                                </button>
                             </ResultsListHeader>
                             <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
