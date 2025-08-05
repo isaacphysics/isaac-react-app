@@ -1,6 +1,7 @@
 import React from "react";
 import {Button} from "reactstrap";
 import {handleProviderLoginRedirect, useAppDispatch} from "../../state";
+import { siteSpecific } from "../../services";
 
 // Button prompting the user to sign in via Microsoft
 export const MicrosoftSignInButton = () => {
@@ -10,7 +11,8 @@ export const MicrosoftSignInButton = () => {
         dispatch(handleProviderLoginRedirect("MICROSOFT"));
     };
 
-    return <Button className={"position-relative"} block outline color="primary" style={{borderColor: "#545461", borderWidth: "1.5px"}} onClick={logInWithMicrosoft}>
-        <img className="authenticator-logo" src={"/assets/common/logos/microsoft-logo.svg"} alt={"Microsoft logo"}/>Microsoft
+    return <Button color={siteSpecific("keyline-underline", "keyline")} className="w-100" onClick={logInWithMicrosoft}>
+        <img className="authenticator-logo" src={"/assets/common/logos/microsoft-logo.svg"} alt={"Microsoft logo"}/>
+        Microsoft
     </Button>;
 };

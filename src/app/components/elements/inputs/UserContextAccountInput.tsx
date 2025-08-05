@@ -141,6 +141,7 @@ export function UserContextAccountInput({
 }: UserContextAccountInputProps) {
     const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
+    const isAllStages = userContexts.length === 1 && userContexts[0].stage === STAGE.ALL;
 
     return <div className={className}>
         <Label htmlFor="user-context-selector" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
@@ -203,7 +204,7 @@ export function UserContextAccountInput({
                         </Button>
                     </Col>}
             </>}
-            {!isAda && tutorOrAbove && validateUserContexts(userContexts) && <div className="mb-3 ms-2 align-content-center remove-stage-container">
+            {isPhy && tutorOrAbove && validateUserContexts(userContexts) && !isAllStages && <div className="mb-3 ms-2 align-content-center remove-stage-container">
                 <Button
                     aria-label="Add stage"
                     className={`ms-2 align-middle btn-plus float-none pointer-cursor bg-transparent`}

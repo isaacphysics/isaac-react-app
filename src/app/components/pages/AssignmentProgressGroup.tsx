@@ -47,7 +47,12 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
     return <Link to={quiz ? `/test/assignment/${assignment.id}/feedback` : `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} className="w-100 d-block no-underline mt-2">
         <div className="d-flex align-items-center assignment-progress-group w-100 p-3">
             <div className="d-flex flex-column">
-                <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
+                <span className="d-flex">
+                    <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
+                    <a className="external-link" href={quiz ? assignment.quizSummary?.url : `/question_decks#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
+                        <i className="icon icon-new-tab" />
+                    </a>
+                </span>
                 <div className="d-flex">
                     {assignment.dueDate && <Badge className="d-flex align-items-center me-2 text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                         <i className="icon icon-event-upcoming me-2" color="primary"/>
@@ -62,7 +67,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
             </div>
             <Spacer/>
             <strong className="align-content-center">
-                <a href={csvDownloadLink} target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
+                <a href={csvDownloadLink} className="assignment-csv-download-link" target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
                     Download CSV
                 </a>
             </strong>

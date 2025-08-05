@@ -317,7 +317,7 @@ export interface ActiveModal {
     centered?: boolean;
     closeAction?: () => void;
     closeLabelOverride?: string;
-    size?: "sm" | "md" | "lg" | "xl";
+    size?: "sm" | "md" | "lg" | "xl" | "xxl";
     title?: string;
     body: ReactNode | (() => ReactNode);
     bodyContainerClassName?: string;

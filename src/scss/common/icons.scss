@@ -1,7 +1,3 @@
-.bg-grey {
-  background: rgba($gray-120, 0.6);
-}
-
 .icon-email-status {
   display: inline-block;
   width: 25px;
@@ -154,6 +150,14 @@ img[aria-disabled="true"] {
 
 .icon-task-complete {
   @include svg-icon('/assets/common/icons/task-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-new-tab {
+  @include svg-icon('/assets/common/icons/open-in-new.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-fullscreen {
+  @include svg-icon('/assets/common/icons/fullscreen.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 // Icon sizing

@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import * as AppTypes from "../../../../IsaacAppTypes";
-import {closeActiveModal, useAppDispatch} from "../../../state";
+import {closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import classNames from "classnames";
 import {isAda, isPhy, siteSpecific} from "../../../services";
 import { Modal, ModalHeader, ModalFooter, ModalBody } from "reactstrap";
@@ -11,6 +11,7 @@ interface ActiveModalProps {
 
 export const ActiveModal = ({activeModal}: ActiveModalProps) => {
     const dispatch = useAppDispatch();
+    const subject = useAppSelector(selectors.pageContext.subject);
 
     const toggle = () => {
         dispatch(closeActiveModal());
@@ -23,7 +24,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
         };
     });
 
-    return <Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={activeModal?.size ?? "lg"} centered={activeModal?.centered} data-bs-theme="neutral">
+    return <Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={activeModal?.size ?? "lg"} centered={activeModal?.centered} data-bs-theme={subject ?? "neutral"}>
         {activeModal && <React.Fragment>
             {<ModalHeader
                 data-testid={"modal-header"}

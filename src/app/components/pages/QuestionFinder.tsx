@@ -15,7 +15,6 @@ import {
     isFullyDefinedContext,
     isLoggedIn,
     isPhy,
-    isSingleStageContext,
     Item,
     itemiseTag,
     LearningStage,
@@ -43,7 +42,7 @@ import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import {Button, Card, CardBody, CardHeader, Col, Container, Label, Row} from "reactstrap";
+import {Button, CardBody, Col, Container, Label, Row} from "reactstrap";
 import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
@@ -56,6 +55,7 @@ import { SearchInputWithIcon } from "../elements/SearchInputs";
 import { Link } from "react-router-dom";
 import { updateTopicChoices } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
+import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -119,13 +119,30 @@ export function pageStageToSearchStage(stage?: LearningStage[]): STAGE[] {
     }
 }
 
+interface FilterSummaryProps {
+    filterTags: { value: string; label: string; }[],
+    clearFilters: () => void,
+    removeFilterTag: (value: string) => void
+}
+
+export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: FilterSummaryProps) => {
+    return <div className="d-flex flex-wrap mt-2">
+        {filterTags.map(t => <div key={t.value} data-bs-theme="neutral" data-testid={`filter-tag-${t.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
+            {t.label}
+            <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label="Close"/>
+        </div>)}
+        {filterTags.length > 0 && <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
+            Clear all filters
+        </button>}
+    </div>;
+};
+
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
     const pageContext = useUrlPageTheme();
-    const [isSolitaryStage, setIsSolitaryStage] = useState(false); // we can't calculate this until we have the page context
     const [selections, setSelections] = useState<ChoiceTree[]>([]); // we can't populate this until we have the page context
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
@@ -162,23 +179,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         if (pageContext) {
-            const solitary = isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext); 
-            
             // on subject-QFs, the url path (i.e. pageContext.subject) is the first tier of the hierarchy.
             setSelections(
                 processTagHierarchy(
                     tags,
-                    solitary ? [pageContext.subject] : arrayFromPossibleCsv(params.subjects),
+                    pageContext.subject ? [pageContext.subject] : arrayFromPossibleCsv(params.subjects),
                     arrayFromPossibleCsv(params.fields),
                     arrayFromPossibleCsv(params.topics),
                     pageContext
                 )
             );
-
-            setIsSolitaryStage(solitary);
-            if (solitary) {
-                setSearchStages(pageStageToSearchStage(pageContext?.stage) as STAGE[]);
-            }
         }
     }, [pageContext]);
 
@@ -272,8 +282,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
         const params: {[key: string]: string} = {};
         if (searchStages.length) {
-            params.stages = toSimpleCSV(searchStages
-                .filter(s => isSolitaryStage ? !pageStageToSearchStage(pageContext?.stage).includes(s) : true));
+            params.stages = toSimpleCSV(searchStages);
             if (params.stages === "") delete params.stages;
         }
         if (searchDifficulties.length) params.difficulties = toSimpleCSV(searchDifficulties);
@@ -304,7 +313,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (randomSeed !== undefined) params.randomSeed = randomSeed.toString();
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: history.location.state});
-    }, [searchStages, pageContext, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, filteringByStatus, history, isSolitaryStage, randomSeed]);
+    }, [searchStages, pageContext, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, filteringByStatus, history, randomSeed]);
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     useEffect(() => {
@@ -375,7 +384,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setSearchDifficulties([]);
         setSearchTopics([]);
         setSearchExamBoards([]);
-        setSearchStages(isSolitaryStage ? pageStageToSearchStage(pageContext?.stage) : []);
+        setSearchStages([]);
         setSearchBooks([]);
         setExcludeBooks(false);
         setSelections([pageContext?.subject ? {"subject": [itemiseTag(tags.getById(pageContext.subject as TAG_ID))]} : {}, {}, {}]);
@@ -388,7 +397,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 complete: false,
             });
         setSearchDisabled(!searchQuery);
-    }, [isSolitaryStage, pageContext, searchQuery]);
+    }, [pageContext, searchQuery]);
 
     const debouncedSearchHandler = useMemo(() =>
         debounce((searchTerm: string) => {
@@ -430,38 +439,17 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
     };
 
-    const FilterTag = ({tag}: {tag: {value: string, label: string}}) => {
-        return (
-            <div data-bs-theme="neutral" data-testid={`filter-tag-${tag.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
-                {tag.label}
-                <button className="icon icon-close" onClick={() => removeFilterTag(tag.value)} aria-label="Close"/>
-            </div>
-        );
-    };
+    const selectionList: Item<TAG_ID>[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext?.subject);
+    const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
+    const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.tag));
 
-    const FilterSummary = () => {
-        const stageList: STAGE[] = searchStages.filter(stage => isSolitaryStage ? !pageStageToSearchStage(pageContext?.stage).includes(stage) : true);
-        const selectionList: Item<TAG_ID>[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext?.subject);
-        const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
-        const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.tag));
-
-        const categories = [
-            searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
-            stageList.map(s => {return {value: s, label: stageLabelMap[s]};}),
-            statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
-            excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
-            selectionList,
-        ].flat();
-
-        return <div className="d-flex flex-wrap mt-2">
-            {categories.map(c => <FilterTag key={c.value} tag={c}/>)}
-            {categories.length > 0 ?
-                <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
-                    Clear all filters
-                </button>
-                : <div/>}
-        </div>;
-    };
+    const filterTags = useMemo(() => [
+        searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
+        searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
+        statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
+        excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
+        selectionList,
+    ].flat(), [searchDifficulties, searchStages, statusList, excludeBooks, booksList, selectionList]);
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
@@ -526,7 +514,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     </Col>
                 </Row>}
 
-                {isPhy && <FilterSummary/>}
+                {isPhy && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
 
                 <Row className={classNames(siteSpecific("mt-2", "mt-4"), "position-relative finder-panel")}>
                     {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")}>
@@ -555,27 +543,27 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         }} />
                     </Col>}
                     <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
-                        <Card>
-                            <CardHeader className="finder-header pl-3">
-                                <Row className="flex-grow-1">
-                                    <Col>
-                                        {displayQuestions && displayQuestions.length > 0
-                                            ? <>Showing <b>{displayQuestions.length}</b></>
-                                            : <>No results</>}
-                                        {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
-                                        .
-                                    </Col>
-                                    <Col>
-                                        <button className={siteSpecific(
-                                            "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end",
-                                            "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
-                                        } onClick={() => setRandomSeed(nextSeed())}>
-                                                Shuffle questions
-                                            {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
-                                        </button>
-                                    </Col>
-                                </Row>
-                            </CardHeader>
+                        <ResultsListContainer>
+                            <ResultsListHeader className="d-flex">
+                                <div className="flex-grow-1" data-testid="question-finder-results-header">
+                                    {displayQuestions && displayQuestions.length > 0
+                                        ? <>Showing <b>{displayQuestions.length}</b></>
+                                        : isPhy && isCurrentSearchEmpty
+                                            ? <>Select {filteringByStatus ? "more" : "some"} filters to start searching</>
+                                            : <>No results</>
+                                    }
+                                    {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
+                                    .
+                                </div>
+                                <button className={siteSpecific(
+                                    "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end ms-3 text-nowrap",
+                                    "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
+                                } onClick={() => setRandomSeed(nextSeed())}
+                                >
+                                    <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
+                                    {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
+                                </button>
+                            </ResultsListHeader>
                             <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                                     {displayQuestions?.length
@@ -586,17 +574,17 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                                 contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
                                                 ignoreIntendedAudience noCaret
                                             />
-                                        : isCurrentSearchEmpty
-                                            ? filteringByStatus
-                                                ? <em>Please select more filters</em>
-                                                : <em>Please select and apply filters</em>
-                                            : filteringByStatus
-                                                ? <em>Expecting results? Try narrowing down your filters</em>
-                                                : <em>No results match your criteria</em>
+                                        : isAda && <>{
+                                            isCurrentSearchEmpty
+                                                ? <span>Please select and apply filters.</span>
+                                                : filteringByStatus 
+                                                    ? <span>Could not load any results matching the requested filters.</span>
+                                                    : <span>No results match the requested filters.</span>
+                                        }</>
                                     }
                                 </ShowLoading>
                             </CardBody>
-                        </Card>
+                        </ResultsListContainer>
                         {(displayQuestions?.length ?? 0) > 0 &&
                             <Row className="pt-3">
                                 <Col className="d-flex justify-content-center mb-3">

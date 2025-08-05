@@ -1,7 +1,7 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useMemo, useRef, useState} from "react";
 import {Col, Container, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
-import {AppState, logAction, useAppDispatch, useAppSelector} from "../../state";
+import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
@@ -26,6 +26,7 @@ import {
     useQueryParams,
     ListParams,
     LEARNING_STAGE_TO_STAGES,
+    getSearchPlaceholder,
 } from "../../services";
 import {NOT_FOUND_TYPE, PageContextState, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
@@ -111,6 +112,37 @@ function processQueryString(query: ListParams<FilterParams>, pageContext?: PageC
 
 /* An offset applied when scrolling to a glossary term, so the term isn't hidden under the alphabet header */
 const ALPHABET_HEADER_OFFSET = -65;
+
+interface GlossarySearchProps {
+    searchText: string;
+    setSearchText: (searchText: string) => void;
+}
+
+export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps) => {
+    // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
+    const [internalSearchText, setInternalSearchText] = useState(searchText);
+
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
+    return siteSpecific(<Input
+        className='search--filter-input my-4'
+        type="search" value={internalSearchText || ""}
+        placeholder={`e.g. ${getSearchPlaceholder(pageContext?.subject)}`}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
+            setSearchText(e.target.value);
+            setInternalSearchText(e.target.value);
+        }}
+    />,
+    <Input
+        id="terms-search" name="query"
+        type="search" value={internalSearchText || ""}
+        placeholder="Search by term" aria-label="Search by term"
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
+            setSearchText(e.target.value);
+            setInternalSearchText(e.target.value);
+        }}
+    />);
+};
 
 export const Glossary = () => {
     const dispatch = useAppDispatch();
@@ -343,10 +375,7 @@ export const Glossary = () => {
                                 {isAda && <>
                                     <Col md={{size: 4}}>
                                         <Label for='terms-search' className='visually-hidden'>Search by term</Label>
-                                        <Input
-                                            id="terms-search" type="search" name="query" placeholder="Search by term" aria-label="Search by term"
-                                            value={searchText} onChange={e => debouncedSearchHandler(e.target.value)}
-                                        />
+                                        <GlossarySearch searchText={searchText} setSearchText={debouncedSearchHandler} />
                                     </Col>
                                     <Col className="mt-3 mt-md-0">
                                         <Label for='topic-select' className='visually-hidden'>Topic</Label>

@@ -177,9 +177,6 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/exam_uni_help" />,
     <StaticPageRoute key={key++} exact path="/coronavirus" pageId="2020_03_coronavirus" />,
     <StaticPageRoute key={key++} exact path="/gameboards/new" pageId="question_finder_redirect" />,
-    <StaticPageRoute key={key++} exact path="/11_14" pageId="11_14" />,
-    <StaticPageRoute key={key++} exact path="/gcse" pageId="gcse" />,
-    <StaticPageRoute key={key++} exact path="/alevel" pageId="alevel" />,
     <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
     <TrackedRoute key={key++} exact path="/tutor_features" component={TutorFeatures}/>,
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
@@ -205,6 +202,9 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/tutors" to="/support/tutor/general" />,
     <Redirect key={key++} exact from="/pages/isaac_embedded_schools" to="/support/teacher/partner#embedded_schools" />,
     <Redirect key={key++} exact from="/pages/questions_spreadsheet" to="/support/teacher/suggestions#spreadsheet" />,
+    <Redirect key={key++} exact from="/11_14" to="/" />,
+    <Redirect key={key++} exact from="/gcse" to="/" />,
+    <Redirect key={key++} exact from="/alevel" to="/" />,
 
     // Isaac Chemistry redirect
     // TODO: if chemistry is a separate site ever, should move to Chemistry routes.
