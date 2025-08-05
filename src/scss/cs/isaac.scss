@@ -400,7 +400,7 @@ $card-spacer-y: 1.5rem;
 // Pages
 @import "pages";
 @import "homepage";
-@import "login";
+@import "../common/login";
 @import "../common/registration";
 @import "../common/assignments";
 @import "my-account";

@@ -29,7 +29,7 @@ a:has(> .assignment-progress-group) {
 .assignment-progress-group {
   @extend .assignment-progress-card;
   
-  a {
+  a.assignment-csv-download-link {
     font-size: inherit;
     width: max-content;
     align-content: center;

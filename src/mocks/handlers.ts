@@ -17,7 +17,8 @@ import {
     mockConceptPage,
     mockRubrics,
     mockAttempts,
-    mockPreviews
+    mockPreviews,
+    mockConceptsResults
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -183,6 +184,11 @@ export const handlers = [
     }),
     http.get(API_PATH + "/pages/questions/", () => {
         return HttpResponse.json(mockQuestionFinderResults, {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/pages/concepts", () => {
+        return HttpResponse.json(mockConceptsResults, {
             status: 200,
         });
     }),

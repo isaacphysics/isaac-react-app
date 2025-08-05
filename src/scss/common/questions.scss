@@ -54,17 +54,21 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
       width: 100%;
       min-width: max-content;
     }
-    button.btn {
-      padding: 0.25rem 1.5rem;
+
+    .dropdown-item {
       min-width: 192px;
       width: 100%;
       &.selected {
         border-radius: 0;
       }
+    }
+
+    button.btn {
+      min-width: 192px;
+      width: 100%;
       &.dropdown-toggle::after {
         position: absolute;
         right: 0.5rem;
-        top: 1rem;
       }
     }
   }
@@ -240,7 +244,7 @@ $inline-feedback-padding: 2px;
     min-width: unset;
     font-family: $primary-font !important;
     background-color: transparent;
-    border-radius: 0.35rem;
+    border-radius: $border-radius-lg;
 
     &:not(.is-valid):not(.is-invalid):not(.is-unanswered) {
       border: $gray-136 solid 1px;

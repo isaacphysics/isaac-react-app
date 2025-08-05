@@ -7,8 +7,7 @@ export const getUserId = function(): any {
 export const setUserId = function(id: any): boolean {
     if (id === undefined) {
         const cleared = persistence.clear();
-        const clearedSession = persistence.session.clear();
-        return cleared && clearedSession;
+        return cleared;
     }
     return persistence.save(KEY.CURRENT_USER_ID, id);
 };

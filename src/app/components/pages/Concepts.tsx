@@ -1,12 +1,11 @@
 import React, {FormEvent, MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {selectors, useAppSelector} from "../../state";
-import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
+import {Container} from "reactstrap";
 import queryString from "query-string";
-import {getFilteredStageOptions, isAda, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, tags} from "../../services";
+import {getFilteredStageOptions, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, tags} from "../../services";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
-import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
@@ -16,6 +15,7 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { ContentSummaryDTO, Stage } from "../../../IsaacApiTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { PageMetadata } from "../elements/PageMetadata";
+import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
@@ -150,7 +150,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                             : <p>Use our concept finder to explore all concepts on the Isaac platform.</p>
                         }
                     </PageMetadata>
-                    {isPhy && <div className="list-results-container p-2 my-4">
+                    
+                    <ResultsListContainer>
                         <ShowLoadingQuery
                             query={listConceptsQuery}
                             thenRender={({results: concepts}) => {
@@ -158,53 +159,24 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                                 const shortcutAndFilteredSearchResults = shortcutAndFilter(concepts);
 
                                 return <>
-                                    {!!shortcutAndFilteredSearchResults.length && <div className="p-2 py-3">
+                                    {!!shortcutAndFilteredSearchResults.length && <ResultsListHeader>
                                         Showing <b>{shortcutAndFilteredSearchResults.length}</b> results
-                                    </div>}
-            
+                                    </ResultsListHeader>}
+
                                     {shortcutAndFilteredSearchResults.length
-                                        ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
+                                        ? isPhy
+                                            ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
+                                            : <LinkToContentSummaryList 
+                                                items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
+                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
+                                            />
                                         : <em>No results found</em>
                                     }
                                 </>;
                             }}
                             defaultErrorTitle="Error fetching concepts"
                         />
-                    </div>
-                    }
-                    
-                    {isAda && <Card>
-                        <CardHeader className="search-header">
-                            <h3>
-                                <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results 
-                                {query !== "" 
-                                    ? (listConceptsQuery?.data?.totalResults) 
-                                        ? <Badge color="primary">{listConceptsQuery?.data?.totalResults}</Badge> 
-                                        : <IsaacSpinner /> 
-                                    : null
-                                }
-                            </h3>
-                        </CardHeader>
-                        <CardBody className="px-2">
-                            <ShowLoadingQuery
-                                query={listConceptsQuery}
-                                thenRender={({results: concepts}) => {
-
-                                    const shortcutAndFilteredSearchResults = shortcutAndFilter(concepts);
-
-                                    return <>
-                                        {shortcutAndFilteredSearchResults ?
-                                            <LinkToContentSummaryList 
-                                                items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
-                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                            />
-                                            : <em>No results found</em>}
-                                    </>;
-                                }}
-                                defaultErrorTitle="Error fetching concepts"
-                            />
-                        </CardBody>
-                    </Card>}
+                    </ResultsListContainer>
                 </MainContent>
             </SidebarLayout>
         </Container>

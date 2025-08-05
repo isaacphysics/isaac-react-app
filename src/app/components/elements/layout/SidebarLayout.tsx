@@ -35,6 +35,7 @@ import { Markup } from "../markup";
 import { History } from "history";
 import { calculateSidebarLink, containsActiveTab, isSidebarGroup } from "../../../services/sidebar";
 import { SidebarButton } from "../SidebarButton";
+import { GlossarySearch } from "../../pages/Glossary";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -45,7 +46,10 @@ export const MainContent = (props: ColProps) => {
     const { className, ...rest } = props;
 
     const dispatch = useAppDispatch();
-    dispatch(mainContentIdSlice.actions.set("page-content"));
+
+    useEffect(() => {
+        dispatch(mainContentIdSlice.actions.set("page-content"));
+    }, [dispatch]);
 
     return siteSpecific(<Col id="page-content" xs={12} lg={8} xl={9} {...rest} className={classNames(className, "order-0 order-lg-1")} />, props.children);
 };
@@ -1490,8 +1494,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
         }
     };
 
-    // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
-    const [internalSearchText, setInternalSearchText] = useState(searchText);
+    
 
     // Deselect stage filters that no longer have results following a subject/search term change
     useEffect(() => {
@@ -1505,15 +1508,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
         <div className="section-divider"/>
         <search>
             <h5>Search glossary</h5>
-            <Input
-                className='search--filter-input my-4'
-                type="search" value={internalSearchText || ""}
-                placeholder={`e.g. ${getSearchPlaceholder(pageContext?.subject)}`}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
-                    setSearchText(e.target.value);
-                    setInternalSearchText(e.target.value);
-                }}
-            />
+            <GlossarySearch searchText={searchText} setSearchText={setSearchText} />
             <div className="section-divider"/>
 
             {!pageContext?.subject && <>

@@ -43,7 +43,7 @@ import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import {Button, Card, CardBody, CardHeader, Col, Container, Label, Row} from "reactstrap";
+import {Button, CardBody, Col, Container, Label, Row} from "reactstrap";
 import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
@@ -56,6 +56,7 @@ import { SearchInputWithIcon } from "../elements/SearchInputs";
 import { Link } from "react-router-dom";
 import { updateTopicChoices } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
+import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -555,27 +556,27 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         }} />
                     </Col>}
                     <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
-                        <Card>
-                            <CardHeader className="finder-header pl-3">
-                                <Row className="flex-grow-1">
-                                    <Col>
-                                        {displayQuestions && displayQuestions.length > 0
-                                            ? <>Showing <b>{displayQuestions.length}</b></>
-                                            : <>No results</>}
-                                        {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
-                                        .
-                                    </Col>
-                                    <Col>
-                                        <button className={siteSpecific(
-                                            "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end",
-                                            "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
-                                        } onClick={() => setRandomSeed(nextSeed())}>
-                                                Shuffle questions
-                                            {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
-                                        </button>
-                                    </Col>
-                                </Row>
-                            </CardHeader>
+                        <ResultsListContainer>
+                            <ResultsListHeader className="d-flex">
+                                <div className="flex-grow-1" data-testid="question-finder-results-header">
+                                    {displayQuestions && displayQuestions.length > 0
+                                        ? <>Showing <b>{displayQuestions.length}</b></>
+                                        : isPhy && isCurrentSearchEmpty
+                                            ? <>Select {filteringByStatus ? "more" : "some"} filters to start searching</>
+                                            : <>No results</>
+                                    }
+                                    {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
+                                    .
+                                </div>
+                                <button className={siteSpecific(
+                                    "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end ms-3 text-nowrap",
+                                    "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
+                                } onClick={() => setRandomSeed(nextSeed())}
+                                >
+                                    <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
+                                    {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
+                                </button>
+                            </ResultsListHeader>
                             <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                                     {displayQuestions?.length
@@ -586,17 +587,17 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                                 contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
                                                 ignoreIntendedAudience noCaret
                                             />
-                                        : isCurrentSearchEmpty
-                                            ? filteringByStatus
-                                                ? <em>Please select more filters</em>
-                                                : <em>Please select and apply filters</em>
-                                            : filteringByStatus
-                                                ? <em>Expecting results? Try narrowing down your filters</em>
-                                                : <em>No results match your criteria</em>
+                                        : isAda && <>{
+                                            isCurrentSearchEmpty
+                                                ? <span>Please select and apply filters.</span>
+                                                : filteringByStatus 
+                                                    ? <span>Could not load any results matching the requested filters.</span>
+                                                    : <span>No results match the requested filters.</span>
+                                        }</>
                                     }
                                 </ShowLoading>
                             </CardBody>
-                        </Card>
+                        </ResultsListContainer>
                         {(displayQuestions?.length ?? 0) > 0 &&
                             <Row className="pt-3">
                                 <Col className="d-flex justify-content-center mb-3">
