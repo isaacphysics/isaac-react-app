@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Input, Label, UncontrolledTooltip} from "reactstrap";
+import { CONTEXT_SOURCE } from "../../../services/userViewingContext";
 import {
-    CONTEXT_SOURCE,
     EXAM_BOARD,
     examBoardLabelMap,
     getFilteredExamBoardOptions,
