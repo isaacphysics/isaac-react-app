@@ -100,14 +100,12 @@ export const PageMetadata = (props: PageMetadataProps) => {
                 {children}
             </>
         }
-        {isPhy && <>
-            {showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
-            <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
-            <div className="d-flex">
-                <EditContentButton doc={doc} />
-                {isConcept && <UserContextPicker className="flex-grow-1"/>}
-            </div>
-            <TeacherNotes notes={doc?.teacherNotes} />
-        </>}
+        {isPhy && showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
+        <div className={classNames({"section-divider my-3": isPhy}, {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
+        <div className="d-flex">
+            {isPhy && <EditContentButton doc={doc} />}
+            {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
+        </div>
+        {isPhy && <TeacherNotes notes={doc?.teacherNotes} />}
     </>;
 };
