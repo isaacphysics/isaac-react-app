@@ -110,6 +110,10 @@
 
   .question-link-title {
     font-family: $secondary-font-medium;
+  }
+  
+  .question-link-title, .question-link-title + div {
+    // owing to whitespace at the top of a text span, move the text (and adjacent tags list) up
     margin-top: -5px;
   }
 

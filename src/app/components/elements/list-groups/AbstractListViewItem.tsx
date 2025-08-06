@@ -5,12 +5,13 @@ import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Badge, Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
-import { below, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
+import { below, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
 import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetGroupsQuery, useLazyGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
 import { getAssigneesByBoard, SetAssignmentsModal } from "../../pages/SetAssignments";
+import { QuestionPropertyTags } from "../ContentPropertyTags";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -114,6 +115,12 @@ const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
     </Button>;
 };
 
+const getSRText = (tags?: string[]) => {
+    if (tags?.includes("vi_inaccessible")) {
+        return "Note - this content may be difficult to access through non-visual means.";
+    }
+};
+
 export enum AbstractListViewItemState {
     COMING_SOON = "coming-soon",
     DISABLED = "disabled",
@@ -190,6 +197,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     {url && !isDisabled
                         ? <a href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                             <Markup encoding="latex">{title}</Markup>
+                            <span className="visually-hidden">
+                                {getSRText(tags)}
+                            </span>
                         </a>
                         : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                             <Markup encoding="latex">{title}</Markup>
@@ -197,16 +207,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     }
                     {isItem && <>
                         {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
-                        {isPhy && <div className="d-flex flex-column justify-self-end">
-                            {typedProps.supersededBy && <a 
-                                className="superseded-tag mx-1 ms-sm-3 align-self-end" 
-                                href={`/questions/${typedProps.supersededBy}`}
-                                onClick={(e) => e.stopPropagation()}
-                            >SUPERSEDED</a>}
-                            {tags?.includes("nofilter") && isStaff(user) && <span
-                                className="superseded-tag mx-1 ms-sm-3 align-self-end" 
-                            >NO-FILTER</span>}
-                        </div>}
+                        {isPhy && <QuestionPropertyTags className="justify-self-end" supersededBy={typedProps.supersededBy} tags={tags} />}
                     </>}
                 </div>
                 {subtitle && <div className="small text-muted text-wrap">
