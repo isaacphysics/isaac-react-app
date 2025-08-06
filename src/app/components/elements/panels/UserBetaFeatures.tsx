@@ -50,29 +50,6 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                     For more information, read our <Link to="/support/student/general" target="_blank">FAQs</Link>.
                 </p>
             </>}
-            <div className="section-divider"/>
-            <>
-                <b><StyledCheckbox checked={displaySettings.REDUCED_MOTION ?? false}
-                    onChange={e => {
-                        setDisplaySettings((oldDs) => ({...oldDs, REDUCED_MOTION: e.target.checked}));
-                    }}
-                    color={siteSpecific("primary", "")}
-                    label={<p>Prefer reduced motion</p>}
-                    id={"reduced-motion"}
-                /></b>
-                <p>{`Enabling this will reduce motion effects on the platform. Browser preference will take priority over this setting.`}</p>
-            </>
-            <>
-                <b><StyledCheckbox checked={displaySettings.PREFER_MATHML ?? false}
-                    onChange={e => {
-                        setDisplaySettings((oldDs) => ({...oldDs, PREFER_MATHML: e.target.checked}));
-                    }}
-                    color={siteSpecific("primary", "")}
-                    label={<p>Use MathML for accessible maths</p>}
-                    id={"prefer-mathml"}
-                /></b>
-                <p>{`With this setting you can toggle between using alternative text or MathML for mathematical equations.`}</p>
-            </>
         </>}
     />;
 };

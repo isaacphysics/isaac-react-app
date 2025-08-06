@@ -242,8 +242,12 @@ export interface BooleanNotation {
 
 export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
+}
+
+export interface AccessibilitySettings {
     PREFER_MATHML?: boolean;
     REDUCED_MOTION?: boolean;
+    SHOW_INACCESSIBLE_WARNING?: boolean;
 }
 
 export interface UserConsent {
@@ -257,6 +261,7 @@ export interface UserPreferencesDTO {
     PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
     BOOLEAN_NOTATION?: BooleanNotation;
     DISPLAY_SETTING?: DisplaySettings;
+    ACCESSIBILITY?: AccessibilitySettings;
     CONSENT?: UserConsent;
 }
 

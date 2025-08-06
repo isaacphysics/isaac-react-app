@@ -142,7 +142,7 @@ export const IsaacApp = () => {
         };
     }, []);
 
-    const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
+    const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
 
     // Render
     return <Router history={history}>
@@ -154,7 +154,7 @@ export const IsaacApp = () => {
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
         <OnPageLoad />
-        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-reduced-motion={displaySettings?.REDUCED_MOTION ? "true" : "false"}>
+        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-reduced-motion={accessibilitySettings?.REDUCED_MOTION ? "true" : "false"}>
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <Suspense fallback={<Loading/>}>
                     <Switch>
