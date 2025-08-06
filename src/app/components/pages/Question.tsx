@@ -42,6 +42,7 @@ import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
 import { MetadataContainer } from "../elements/panels/MetadataContainer";
+import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
 
 function getTags(docTags?: string[]) {
     if (!isPhy) {
@@ -72,6 +73,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
     const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
 
     const dispatch = useAppDispatch();
+    const accessibilitySettings = useAppSelector(state => state?.userPreferences?.ACCESSIBILITY) || {};
 
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
     const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
@@ -136,6 +138,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                             </PageMetadata>
 
                             {isAda && pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
+                            {doc.tags?.includes("vi_inaccessible") && accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && <InaccessibleContentWarningBanner />}
 
                             <Row className="question-content-container">
                                 <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
