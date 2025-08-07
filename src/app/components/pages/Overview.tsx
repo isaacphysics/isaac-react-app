@@ -4,10 +4,11 @@ import {Button, Container, Row} from "reactstrap";
 import {ColumnSlice} from "../elements/layout/ColumnSlice";
 import {IconCard} from "../elements/cards/IconCard";
 import {useDeviceSize} from "../../services";
-import {openActiveModal, selectors, useAppDispatch, useAppSelector, useGetNewsPodListQuery} from "../../state";
+import {closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useGetNewsPodListQuery} from "../../state";
 import {useLinkableSetting} from "../../services/linkableSetting";
 import {NewsCard} from "../elements/cards/NewsCard";
 import { adaTeacherOnboardingModal } from "../elements/modals/AdaTeacherOnboardingModal";
+
 
 export const Overview = () => {
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
@@ -16,11 +17,14 @@ export const Overview = () => {
     const deviceSize = useDeviceSize();
     const userPreferences = useAppSelector(selectors.user.preferences);
     const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
-    const {setLinkedSetting} = useLinkableSetting();
+    const { setLinkedSetting } = useLinkableSetting();
 
     useEffect(() => {
-        dispatch(openActiveModal(adaTeacherOnboardingModal));
-    });
+        dispatch(openActiveModal(adaTeacherOnboardingModal(dispatch)));
+        return () => {
+            dispatch(closeActiveModal());
+        };
+    }, [dispatch]);
     
     return <div id={"overview"}>
         <section id="browse">
