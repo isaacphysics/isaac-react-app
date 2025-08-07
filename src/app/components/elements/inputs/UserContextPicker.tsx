@@ -16,6 +16,7 @@ import {
     sortStages,
     STAGE,
     stageLabelMap,
+    stagesOrdered,
     useQueryParams,
     useUserViewingContext
 } from "../../../services";
@@ -64,8 +65,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
 
     const contextsDep = JSON.stringify(userContext.contexts); // avoids unnecessary re-renders
     useEffect(() => {
-        const userContextStages = sortStages(userContext.contexts.map(c => c.stage).filter(isDefined));
-        setCurrentStages(userContextStages as STAGE[]);
+        const userContextStages = sortStages(userContext.contexts.map(c => c.stage).filter(isDefined)) as STAGE[];
+        setCurrentStages(stagesOrdered.every(s => userContextStages.concat([STAGE.FURTHER_A, STAGE.ALL]).includes(s as STAGE)) ? [STAGE.ALL] : userContextStages);
     }, [contextsDep]);
 
 
@@ -112,7 +113,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         }}
                     >
                         {allStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
-                        {isPhy && isLoggedIn(user) && !userContext.hasDefaultPreferences && userContext.contexts.length > 1 &&
+                        {isPhy && isLoggedIn(user) && !userContext.hasDefaultPreferences && currentStages.length > 1 &&
                             <option>{stagesString(currentStages)}</option>}
                     </Input>
                     {isAda &&
