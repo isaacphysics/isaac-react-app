@@ -80,6 +80,10 @@ export function markClassesInternal(attemptedOrCorrect: "ATTEMPTED" | "CORRECT",
     }
 }
 
+const BoardLink = ({id}: {id?: string}) => <a className="new-tab-link" href={`/question_decks#${id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
+    <i className="icon icon-new-tab" />
+</a>;
+
 interface GroupAssignmentTabProps {
     assignment: EnhancedAssignmentWithProgress;
     progress: AssignmentProgressDTO[];
@@ -129,8 +133,8 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                 <div className="d-flex w-100 align-items-start justify-content-between">
                     <div>
                         {siteSpecific(
-                            <h4>Group assignment overview</h4>,
-                            <h3>Group assignment overview</h3>
+                            <h4>Group assignment overview <BoardLink id={assignment.gameboard?.id} /></h4>,
+                            <h3>Group assignment overview <BoardLink id={assignment.gameboard?.id} /></h3>
                         )}
                         <span>See who attempted the assignment and which questions they struggled with.</span>
                     </div>
