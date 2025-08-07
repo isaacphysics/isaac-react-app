@@ -65,8 +65,15 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
 
     const contextsDep = JSON.stringify(userContext.contexts); // avoids unnecessary re-renders
     useEffect(() => {
-        const userContextStages = sortStages(userContext.contexts.map(c => c.stage).filter(isDefined)) as STAGE[];
-        setCurrentStages(stagesOrdered.every(s => userContextStages.concat([STAGE.FURTHER_A, STAGE.ALL]).includes(s as STAGE)) ? [STAGE.ALL] : userContextStages);
+        if (isPhy) {
+            const userContextStages = sortStages(userContext.contexts.map(c => c.stage).filter(isDefined)) as STAGE[];
+            setCurrentStages(stagesOrdered.every(s => userContextStages.concat([STAGE.FURTHER_A, STAGE.ALL]).includes(s as STAGE)) ? [STAGE.ALL] : userContextStages);
+        }
+        else {
+            // Only show one stage on Ada to avoid complications with multiple stage/exam board combinations
+            const stage = userContext.contexts[0].stage as STAGE;
+            setCurrentStages(stage ? [stage] : [STAGE.ALL]);
+        }
     }, [contextsDep]);
 
 
