@@ -62,10 +62,11 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         return stages.map(s => stageLabelMap[s]).join(", ");
     };
 
+    const contextsDep = JSON.stringify(userContext.contexts); // avoids unnecessary re-renders
     useEffect(() => {
         const userContextStages = sortStages(userContext.contexts.map(c => c.stage).filter(isDefined));
         setCurrentStages(userContextStages as STAGE[]);
-    }, [JSON.stringify(userContext.contexts)]);
+    }, [contextsDep]);
 
 
     if (isAda && !isLoggedIn(user) || isStaff(user)) {
