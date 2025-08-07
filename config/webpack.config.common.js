@@ -93,7 +93,7 @@ module.exports = (env) => {
                             ].concat(isProd ? [removeTestPropsLoader] : []),
                         },
                         {
-                            test: /node_modules[\/\\](query-string|split-on-first|strict-uri-encode|d3.*)[\/\\].*\.js$/,
+                            test: /node_modules[\/\\](query-string|split-on-first|strict-uri-encode)[\/\\].*\.js$/,
                             use: [
                                 {
                                     loader: 'babel-loader',
