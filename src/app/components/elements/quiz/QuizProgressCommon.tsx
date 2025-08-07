@@ -10,6 +10,7 @@ import { SortItemHeader } from "../SortableItemHeader";
 import { AssignmentProgressDTO, CompletionState, QuestionPartState } from "../../../../IsaacApiTypes";
 import classNames from "classnames";
 import { Markup } from "../markup";
+import { HorizontalScroller } from "../inputs/HorizontalScroller";
 
 export const ICON = {
     correct: <i className="icon-md icon-correct"/>,
@@ -276,7 +277,7 @@ export function ResultsTable<Q extends QuestionType>({
 
     return <div className="assignment-progress-progress">
         {progress && progress.length > 0 && <>
-            <div className="assignment-progress-table-wrapper">
+            <HorizontalScroller enabled={sortedProgress.length > 20} className="assignment-progress-table-wrapper">
                 <table ref={tableRef} className="progress-table w-100 border">
                     <thead>
                         {tableHeaderFooter}
@@ -383,7 +384,7 @@ export function ResultsTable<Q extends QuestionType>({
                         })}
                     </tbody>
                 </table>
-            </div>
+            </HorizontalScroller>
         </>}
     </div>;
 }
@@ -431,49 +432,52 @@ export function ResultsTablePartBreakdown({
         [(reverseOrder ? "desc" : "asc"), "asc"]
     ), [progress, reverseOrder, sortBySelectedSortOrder]);
 
-    return !!sortedProgress?.length && <table {...rest} className={classNames("progress-table border assignment-progress-progress w-100", rest.className)}>
-        <thead className="progress-table-header-footer">
-            <SortItemHeader<ProgressSortOrder>
-                className="student-name ps-3 py-3"
-                defaultOrder={"name"}
-                reverseOrder={"name"}
-                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-            >
-                Name
-            </SortItemHeader>
-            {sortedProgress[0].questionPartResults?.[questionIndex]?.map((_, i) =>
-                // <th key={i} className="text-center">
+    return !!sortedProgress?.length && 
+    <HorizontalScroller enabled={sortedProgress.length > 20}>
+        <table {...rest} className={classNames("progress-table border assignment-progress-progress w-100", rest.className)}>
+            <thead className="progress-table-header-footer">
                 <SortItemHeader<ProgressSortOrder>
-                    defaultOrder={i}
-                    reverseOrder={i}
-                    currentOrder={sortOrder}
-                    setOrder={toggleSort}
-                    reversed={reverseOrder}
-                    key={i}
+                    className="student-name ps-3 py-3"
+                    defaultOrder={"name"}
+                    reverseOrder={"name"}
+                    currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                 >
-                    Part {i + 1}
+                    Name
                 </SortItemHeader>
-                // </th>
-            )}
-        </thead>
-        <tbody>
-            {sortedProgress.map((studentProgress, studentIndex) => (
-                <tr key={studentIndex}>
-                    <th className="student-name py-3 fw-bold">
-                        <Link className="d-flex justify-content-center align-items-center gap-2" to={`/progress/${studentProgress.user?.id}`} target="_blank">
-                            <i className="icon icon-person icon-md" color="tertiary"/>
-                            <span className="pe-3">
-                                {studentProgress.user?.givenName}
-                                <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
-                            </span>
-                        </Link>
-                    </th>
-                    {studentProgress.questionPartResults &&
-                        studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
-                            <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>
-                        ))}
-                </tr>
-            ))}
-        </tbody>
-    </table>;
+                {sortedProgress[0].questionPartResults?.[questionIndex]?.map((_, i) =>
+                    // <th key={i} className="text-center">
+                    <SortItemHeader<ProgressSortOrder>
+                        defaultOrder={i}
+                        reverseOrder={i}
+                        currentOrder={sortOrder}
+                        setOrder={toggleSort}
+                        reversed={reverseOrder}
+                        key={i}
+                    >
+                        Part {i + 1}
+                    </SortItemHeader>
+                    // </th>
+                )}
+            </thead>
+            <tbody>
+                {sortedProgress.map((studentProgress, studentIndex) => (
+                    <tr key={studentIndex}>
+                        <th className="student-name py-3 fw-bold">
+                            <Link className="d-flex justify-content-center align-items-center gap-2" to={`/progress/${studentProgress.user?.id}`} target="_blank">
+                                <i className="icon icon-person icon-md" color="tertiary"/>
+                                <span className="pe-3">
+                                    {studentProgress.user?.givenName}
+                                    <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
+                                </span>
+                            </Link>
+                        </th>
+                        {studentProgress.questionPartResults &&
+                            studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
+                                <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>
+                            ))}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </HorizontalScroller>;
 }
