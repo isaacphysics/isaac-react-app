@@ -12,7 +12,7 @@ export const QuestionPropertyTags = ({ supersededBy, tags, ...rest }: QuestionPr
     const user = useAppSelector(selectors.user.orNull);
     const accessibilitySettings = useAppSelector(state => state?.userPreferences?.ACCESSIBILITY) || {};
 
-    return <div {...rest} className={classNames("d-flex ms-2 gap-2", rest.className)}>
+    return <div {...rest} className={classNames("d-flex gap-2", rest.className)}>
         {supersededBy && isTeacherOrAbove(user) && <a 
             className="pill-tag-outline" 
             href={`/questions/${supersededBy}`}

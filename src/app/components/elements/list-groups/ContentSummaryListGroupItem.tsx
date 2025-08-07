@@ -174,7 +174,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                         {isPhy && typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ms-2 mb-1"}>
                             ({typeLabel})
                         </span>}
-                        {isPhy && <QuestionPropertyTags supersededBy={item.supersededBy} tags={item.tags} />}
+                        {isPhy && <QuestionPropertyTags className="ms-2" supersededBy={item.supersededBy} tags={item.tags} />}
                     </div>
                     {(isPhy && item.summary) && <div className="small text-muted d-none d-sm-block">
                         {item.summary}
