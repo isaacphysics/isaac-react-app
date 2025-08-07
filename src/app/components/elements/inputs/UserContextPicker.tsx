@@ -32,7 +32,7 @@ const contextExplanationMap: {[key in CONTEXT_SOURCE]: string} = {
     [CONTEXT_SOURCE.NOT_IMPLEMENTED]: "the site's settings"
 };
 
-const formatContextExplanation = (stageExplanation: CONTEXT_SOURCE, examBoardExplanation: CONTEXT_SOURCE) => {
+const formatContextExplanation = (stageExplanation: CONTEXT_SOURCE, examBoardExplanation: CONTEXT_SOURCE, isMultiStage?: boolean) => {
     if (isAda) {
         if (stageExplanation == examBoardExplanation) {
             return `The stage and exam board were specified by ${contextExplanationMap[stageExplanation]}.`;
@@ -41,7 +41,7 @@ const formatContextExplanation = (stageExplanation: CONTEXT_SOURCE, examBoardExp
             ${contextExplanationMap[examBoardExplanation]}.`;
         }
     } else {
-        return `The stage was specified by ${contextExplanationMap[stageExplanation]}.`;
+        return `${isMultiStage ? "These stages were" : "This stage was"} specified by ${contextExplanationMap[stageExplanation]}.`;
     }
 };
 
@@ -143,7 +143,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
                             You are seeing {stagesString(currentStages)}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
                             &nbsp;content.&nbsp;
-                            {formatContextExplanation(userContext.explanation.stage, userContext.explanation.examBoard)}&nbsp;
+                            {formatContextExplanation(userContext.explanation.stage, userContext.explanation.examBoard, currentStages.length > 1)}&nbsp;
                             {isAda && !isLoggedIn(user) && !userContext.hasDefaultPreferences ?
                                 "Log in or sign up to save your viewing preferences." : ""
                             }
