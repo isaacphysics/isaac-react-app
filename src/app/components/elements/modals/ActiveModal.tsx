@@ -26,7 +26,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
 
     return <Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={activeModal?.size ?? "lg"} centered={activeModal?.centered} data-bs-theme={subject ?? "neutral"}>
         {activeModal && <React.Fragment>
-            {<ModalHeader
+            {activeModal.header ? activeModal.header : <ModalHeader
                 data-testid={"modal-header"}
                 tag={siteSpecific(undefined, "h2")}
                 className={classNames({
