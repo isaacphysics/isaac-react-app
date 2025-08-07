@@ -228,22 +228,6 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         url: "/computer_science",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
-        id: "essential_pre_uni_physics",
-        title: "Mastering Essential Pre-University Physics",
-        terms: ["essential pre-uni physics", "essential pre uni physics", "pre-uni physics", "pre uni physics"],
-        summary: "The online version of our pre-uni physics book.",
-        url: "/books/physics_skills_19",
-        hash: "essential_pre_uni_physics",
-        type: SEARCH_RESULT_TYPE.SHORTCUT
-    }, {
-        id: "essential_gcse_physics",
-        title: "Mastering Essential GCSE Physics",
-        terms: ["essential gcse physics", "gcse physics"],
-        summary: "The online version of our GCSE physics book.",
-        url: "/books/phys_book_gcse",
-        hash: "essential_gcse_physics",
-        type: SEARCH_RESULT_TYPE.SHORTCUT
-    }, {
         id: "senior_physics_challenge",
         title: "Senior Physics Challenge (SPC)",
         terms: ["senior physics challenge", "spc"],
