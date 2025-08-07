@@ -348,14 +348,6 @@ iframe.email-html {
   }
 }
 
-.pill-tag-outline {
-  @include pill-tag($gray-160, white, $gray-194)
-}
-
-.warning-tag {
-  @include pill-tag($color-misc-orange-600, $color-misc-orange-50, $color-misc-orange-500);
-}
-
 // mirror of bootstrap's .dropdown-divider (+ equiv for the y-axis), using always-defined props
 
 .section-divider {

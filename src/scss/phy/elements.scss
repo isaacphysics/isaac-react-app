@@ -89,3 +89,11 @@ details.teacher-notes {
     list-style-image: unset;
   }
 }
+
+.pill-tag-outline {
+  @include pill-tag($color-neutral-600, white, $color-neutral-900);
+}
+
+.warning-tag {
+  @include pill-tag($color-misc-orange-600, $color-misc-orange-50, $color-misc-orange-500);
+}
