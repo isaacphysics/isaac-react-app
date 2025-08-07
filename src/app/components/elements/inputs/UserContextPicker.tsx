@@ -112,7 +112,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         }}
                     >
                         {allStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
-                        {isLoggedIn(user) && !userContext.hasDefaultPreferences && userContext.contexts.length > 1 &&
+                        {isPhy && isLoggedIn(user) && !userContext.hasDefaultPreferences && userContext.contexts.length > 1 &&
                             <option>{stagesString(currentStages)}</option>}
                     </Input>
                     {isAda &&
