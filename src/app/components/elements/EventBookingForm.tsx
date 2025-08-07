@@ -86,11 +86,9 @@ const SchoolYearGroup = ({
 export const AccessibilityAndDietaryRequirements = ({
   additionalInformation,
   updateAdditionalInformation,
-  required,
 }: {
   additionalInformation: AdditionalInformation;
   updateAdditionalInformation: (update: AdditionalInformation) => void;
-  required?: boolean;
 }) => {
   const requirementsList = [
     {
@@ -127,7 +125,6 @@ export const AccessibilityAndDietaryRequirements = ({
               type="text"
               value={String(additionalInformation[type] || "")}
               onChange={(event) => updateAdditionalInformation({ [`${type}`]: event.target.value })}
-              required={required}
             />
           </div>
         );
@@ -157,7 +154,7 @@ const InputWithLabel = ({
 
   return (
     <>
-      <Label htmlFor={id} className="form-required">
+      <Label htmlFor={id} className={required ? "form-required" : ""}>
         {label}
       </Label>
       <Input
@@ -355,7 +352,6 @@ export const EventBookingForm = ({
               <AccessibilityAndDietaryRequirements
                 additionalInformation={additionalInformation}
                 updateAdditionalInformation={updateAdditionalInformation}
-                required
               />
 
               {additionalInformation.yearGroup != "TEACHER" && additionalInformation.yearGroup != "OTHER" && (
@@ -368,7 +364,6 @@ export const EventBookingForm = ({
                       type="emergencyName"
                       additionalInformation={additionalInformation}
                       updateAdditionalInformation={updateAdditionalInformation}
-                      required
                     />
                   </Col>
                   <Col md={6}>
@@ -376,7 +371,6 @@ export const EventBookingForm = ({
                       type="emergencyNumber"
                       additionalInformation={additionalInformation}
                       updateAdditionalInformation={updateAdditionalInformation}
-                      required
                     />
                   </Col>
                 </Row>
