@@ -313,16 +313,24 @@ export interface Toast {
     showing?: boolean;
 }
 
-export interface ActiveModal {
+export type ActiveModal = ActiveModalWithoutState | ActiveModalWithState<never>
+
+export interface ActiveModalWithState<T> extends Omit<ActiveModalWithoutState, 'header' | 'body' | 'buttons'> {
+    header?: ReactNode | ((state: T) => ReactNode) 
+    body: ReactNode | ((state: T) => ReactNode);
+    buttons?: ReactNode[] | ((state: T) => ReactNode[]);
+    useInit: () => T;
+}
+export interface ActiveModalWithoutState {
     centered?: boolean;
     closeAction?: () => void;
     closeLabelOverride?: string;
     size?: "sm" | "md" | "lg" | "xl" | "xxl";
     title?: string;
-    header?: ReactNode 
+    header?: ReactNode;
     body: ReactNode | (() => ReactNode);
-    bodyContainerClassName?: string;
     buttons?: ReactNode[];
+    bodyContainerClassName?: string;
 }
 
 export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
