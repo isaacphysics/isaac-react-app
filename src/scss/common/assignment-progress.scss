@@ -524,6 +524,7 @@ $failed-bg-size: 25%;
 
   .student-name {
     min-width: 195px;
+    word-break: break-word;
 
     @include table-sticky;
     left: 0;

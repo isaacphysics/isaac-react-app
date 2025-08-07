@@ -308,13 +308,13 @@ export function ResultsTable<Q extends QuestionType>({
                                     {fullAccess && pageSettings?.isTeacher ?
                                         (
                                             isAssignment ?
-                                                <Link className="d-flex justify-content-center align-items-center gap-2" to={`/progress/${studentProgress.user?.id}`} target="_blank">
+                                                <div className="d-flex align-items-center gap-2">
                                                     <i className="icon icon-person icon-md" color="tertiary"/>
-                                                    <span className="pe-3">
+                                                    <Link className="w-100 text-center gap-2 pe-3" to={`/progress/${studentProgress.user?.id}`} target="_blank">
                                                         {studentProgress.user?.givenName}
                                                         <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
-                                                    </span>
-                                                </Link>
+                                                    </Link>
+                                                </div>
                                                 : <>
                                                     <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
                                                         <div

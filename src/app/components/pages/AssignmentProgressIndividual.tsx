@@ -290,7 +290,7 @@ const DetailedMarksTab = ({assignment, progress}: DetailedMarksTabProps) => {
                 <h4>Performance on questions</h4>,
                 <h3>Performance on questions</h3>
             )}
-            <span>See the questions your students answered and which parts they struggled with.</span>
+            <span>See the questions your students answered{isPhy && " and which parts they struggled with"}.</span>
 
             {questions.map((_, questionIndex) => (
                 <DetailedMarksCard
