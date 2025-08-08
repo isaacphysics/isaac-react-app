@@ -1,6 +1,6 @@
 import {getRTKQueryErrorMessage, AppDispatch} from "../index";
 import {Dispatch} from "react";
-import {Action, ActiveModal, ActiveModalWithoutState, ActiveModalWithState, Toast} from "../../../IsaacAppTypes";
+import {Action, ActiveModalWithoutState, ActiveModalWithState, Toast} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE, trackEvent} from "../../services";
 
 // Toasts
