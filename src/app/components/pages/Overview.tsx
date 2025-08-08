@@ -20,7 +20,7 @@ export const Overview = () => {
     const { setLinkedSetting } = useLinkableSetting();
 
     useEffect(() => {
-        dispatch(openActiveModal(adaTeacherOnboardingModal(dispatch)));
+        dispatch(openActiveModal(adaTeacherOnboardingModal));
         return () => {
             dispatch(closeActiveModal());
         };

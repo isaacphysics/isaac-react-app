@@ -1,35 +1,76 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
-import { AppDispatch, closeActiveModal } from "../../../state";
+import { closeActiveModal } from "../../../state";
 import { ActiveModalWithState } from "../../../../IsaacAppTypes";
+import { useDispatch } from "react-redux";
+import tap from "lodash/tap";
 
-type AdaTeacherOnboardingModalState = { 
-    page: number,
-    setPage: (p: number) => void
+type AdaTeacherOnboardingModalState = {
+    pageIndex: number,
+    setPage: (p: number) => void,
+    close: () => void
 };
 
-export const adaTeacherOnboardingModal = (dispatch: AppDispatch): ActiveModalWithState<AdaTeacherOnboardingModalState> => {
-    return {
-        size: 'md',
-        title: 'teacher_onboarding_modal_id',
-        useInit() {
-            const [page, setPage] = useState(1);
-            return { page, setPage };
-        },
-        header: ({ page }) => <div className="d-flex justify-content-between px-4 pt-3 pb-2 border-bottom">
-            <strong className="color-purple" data-testid='teacher-modal-pages'>{page} of 4</strong>
-            <button className="icon icon-close" aria-label="Close" onClick={() => dispatch(closeActiveModal())}
-                data-testid='teacher-modal-close'/>
-        </div>, 
-        body: <div className="text-center mx-4 my-3">
-            <img className="img-fluid w-md-50 mx-auto my-7" src="/assets/cs/decor/onboarding-welcome.svg" alt='' />
-            <h4>Welcome to Ada</h4>
-            <p>Ada supports your teaching to help your students succeed in computer science</p>
-        </div>,
-        buttons: ({ page, setPage }) => [
-            <Button key={0} block color="solid" onClick={() => setPage(page + 1)}>
-                Next
+export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardingModalState> = { 
+    size: 'md',
+    title: 'teacher_onboarding_modal_id',
+    useInit() {
+        useImagePreload();
+        const dispatch = useDispatch();
+        const close = () => dispatch(closeActiveModal());;
+        const [pageIndex, setPage] = useState(1);
+        return { pageIndex, setPage, close };
+    },
+    header: ({ pageIndex, close }) => <div className="d-flex justify-content-between px-4 pt-3 pb-2 border-bottom">
+        <strong className="color-purple" data-testid='teacher-modal-pages'>{pageIndex} of {pages.length}</strong>
+        <button className="icon icon-close" aria-label="Close" onClick={close} data-testid='teacher-modal-close' />
+    </div>,
+    body: ({ pageIndex }) => {
+        const page = pages[pageIndex - 1];
+        return <div className="text-center mx-4">
+            <img className="pb-5" width="330px" height="200px" src={`/assets/cs/decor/${page.image}`} alt='' data-testid='teacher-modal-image' />
+            <h4>{page.title}</h4>
+            <p>{page.message}</p>
+        </div>;
+    },
+    buttons: ({ pageIndex, setPage, close }) => {
+        const isLastPage = pageIndex == pages.length;
+        const increasePage = () => setPage(pageIndex + 1);
+        return [
+            <Button key={0} block color="solid" onClick={isLastPage ? close : increasePage} data-testid='teacher-modal-forward'>
+                {isLastPage ? "Go to My Ada" : "Next"}
             </Button>
-        ]
-    };
+        ];
+    }
 };
+
+const useImagePreload = () => {
+    const [, setImages] = useState<HTMLElement[]>([]);
+    useEffect(() => {
+        const images = pages.map(page => tap(new Image(), img => img.src = `/assets/cs/decor/${page.image}`));
+        setImages(images);
+    }, [setImages]);
+};
+
+const pages = [
+    {
+        title: "Welcome to Ada",
+        message: "Ada supports your teaching to help your students succeed in computer science.",
+        image: "onboarding-welcome.svg"
+    },
+    {
+        title: "Only see relevant learning materials",
+        message: "Set your student learning stages and exam boards and we'll only show content relevant to you.",
+        image: "onboarding-relevant-materials.svg"
+    },
+    { 
+        title: "Assign auto-marking quizzes",
+        message: "Choose a pre-made quiz or create your own and assign it to a whole group of stundents at once",
+        image: "onboarding-auto-marking-quizzes.svg"
+    },
+    {
+        title: "See your students progress",
+        message: "See how students perform across quizzes and identify learning opportunities in your markbook",
+        image: "onboarding-students-progress.svg"
+    }
+] as const;
