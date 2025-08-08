@@ -45,6 +45,9 @@ export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardin
 };
 
 const useImagePreload = () => {
+    // Save preloaded images to state so they don't get garbage-collected (a temporary solution that I see is 
+    // needed on Chrome). Preloading so text and image changes at the same time.
+    // TODO: once we've upgraded to React 19, use the new preload function that will work reliably across browsers 
     const [, setImages] = useState<HTMLElement[]>([]);
     useEffect(() => {
         const images = pages.map(page => tap(new Image(), img => img.src = `/assets/cs/decor/${page.image}`));
