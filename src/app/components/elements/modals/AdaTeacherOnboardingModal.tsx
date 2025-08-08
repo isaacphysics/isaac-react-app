@@ -35,9 +35,9 @@ export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardin
     },
     buttons: ({ pageIndex, setPage, close }) => {
         const isLastPage = pageIndex == pages.length;
-        const increasePage = () => setPage(pageIndex + 1);
+        const nextPage = () => setPage(pageIndex + 1);
         return [
-            <Button key={0} block color="solid" onClick={isLastPage ? close : increasePage} data-testid='teacher-modal-forward'>
+            <Button key={0} block color="solid" onClick={isLastPage ? close : nextPage} data-testid='teacher-modal-forward'>
                 {isLastPage ? "Go to My Ada" : "Next"}
             </Button>
         ];
@@ -48,7 +48,7 @@ const useImagePreload = () => {
     // Save preloaded images to state so they don't get garbage-collected (a temporary solution that I see is 
     // needed on Chrome). Preloading so text and image changes at the same time.
     // TODO: once we've upgraded to React 19, use the new preload function that will work reliably across browsers 
-    const [, setImages] = useState<HTMLElement[]>([]);
+    const [, setImages] = useState<HTMLImageElement[]>([]);
     useEffect(() => {
         const images = pages.map(page => tap(new Image(), img => img.src = `/assets/cs/decor/${page.image}`));
         setImages(images);
@@ -73,7 +73,7 @@ const pages = [
     },
     {
         title: "See your students progress",
-        message: "See how students perform across quizzes and identify learning opportunities in your markbook",
+        message: "See how students perform across quizzes and identify learning opportunities in your markbook.",
         image: "onboarding-students-progress.svg"
     }
 ] as const;
