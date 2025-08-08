@@ -3,6 +3,11 @@
 .has-tip {
   cursor: help;
 }
+
+.icon-close {
+  @include svg-icon('/assets/common/icons/cross.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 .icon-help {
   display: inline-block;
   cursor: help;

@@ -94,6 +94,11 @@ body {
 strong, b {
   @extend .fw-semi-bold;
 }
+
+.color-purple {
+  color: $purple
+}
+
 i, em {
   @extend .fst-italic;
 }
