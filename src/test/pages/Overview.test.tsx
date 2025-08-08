@@ -73,7 +73,7 @@ describe('Overview page', () => {
                     });
                 });
 
-                it ('shows a "Go to My Ada" button that dismisses the modal', async () => {
+                it('shows a "Go to My Ada" button that dismisses the modal', async () => {
                     await renderLastPage();
                     await waitFor(() => expect(modal.forwardButton).toHaveTextContent("Go to My Ada"));
                     userEvent.click(modal.forwardButton);
@@ -93,13 +93,13 @@ const modal = {
         return this.__getByIdWithin('teacher-modal-forward');
     },
     get body() {
-        return this.__getByIdWithin('modal-body');
+        return screen.getByRole('region', { name: 'Teacher onboarding modal page'});
     },
     get pages() {
         return this.__getByIdWithin('teacher-modal-pages');
     },
     get image() {
-        return this.__getByIdWithin('teacher-modal-image');
+        return screen.getByRole('presentation', { name: "Teacher onboarding modal image" });
     },
     get element() {
         const testId = 'active-modal'; 

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "reactstrap";
 import { closeActiveModal } from "../../../state";
 import { ActiveModalWithState } from "../../../../IsaacAppTypes";
 import { useDispatch } from "react-redux";
-import tap from "lodash/tap";
 
 type AdaTeacherOnboardingModalState = {
     pageIndex: number,
@@ -15,7 +14,6 @@ export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardin
     size: 'md',
     title: 'teacher_onboarding_modal_id',
     useInit() {
-        useImagePreload();
         const dispatch = useDispatch();
         const close = () => dispatch(closeActiveModal());;
         const [pageIndex, setPage] = useState(1);
@@ -25,14 +23,12 @@ export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardin
         <strong className="color-purple" data-testid='teacher-modal-pages'>{pageIndex} of {pages.length}</strong>
         <button className="icon icon-close" aria-label="Close" onClick={close} data-testid='teacher-modal-close' />
     </div>,
-    body: ({ pageIndex }) => {
-        const page = pages[pageIndex - 1];
-        return <div className="text-center mx-4">
-            <img className="pb-5" width="330px" height="200px" src={`/assets/cs/decor/${page.image}`} alt='' data-testid='teacher-modal-image' />
-            <h4>{page.title}</h4>
-            <p>{page.message}</p>
-        </div>;
-    },
+    body: ({ pageIndex }) => <>
+        <Page page={pages[0]} isCurrentPage={1 === pageIndex} />
+        <Page page={pages[1]} isCurrentPage={2 === pageIndex} />
+        <Page page={pages[2]} isCurrentPage={3 === pageIndex} />
+        <Page page={pages[3]} isCurrentPage={4 === pageIndex} />
+    </>,
     buttons: ({ pageIndex, setPage, close }) => {
         const isLastPage = pageIndex == pages.length;
         const nextPage = () => setPage(pageIndex + 1);
@@ -44,15 +40,12 @@ export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardin
     }
 };
 
-const useImagePreload = () => {
-    // Save preloaded images to state so they don't get garbage-collected (a temporary solution that I see is 
-    // needed on Chrome). Preloading so text and image changes at the same time.
-    // TODO: once we've upgraded to React 19, use the new preload function that will work reliably across browsers 
-    const [, setImages] = useState<HTMLImageElement[]>([]);
-    useEffect(() => {
-        const images = pages.map(page => tap(new Image(), img => img.src = `/assets/cs/decor/${page.image}`));
-        setImages(images);
-    }, [setImages]);
+const Page = ({ page, isCurrentPage }: { page: typeof pages[number], isCurrentPage: boolean}) => {
+    return <div role="region" aria-label="Teacher onboarding modal page" key={page.title} className="text-center mx-4" style={isCurrentPage ? {} : {display: 'none'}}>
+        <img aria-label="Teacher onboarding modal image" className="pb-5" width="330px" height="200px" src={`/assets/cs/decor/${page.image}`} alt='' />
+        <h4>{page.title}</h4>
+        <p>{page.message}</p>
+    </div>;
 };
 
 const pages = [
