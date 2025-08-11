@@ -93,6 +93,10 @@ input[type=text], input[type=search] {
   }
 }
 
+.is-invalid .basic-multi-select .select__control {
+  border-color: $red; // bootstrap red, so as to align with other invalid inputs
+}
+
 .custom-control {
   z-index: 0;
 }

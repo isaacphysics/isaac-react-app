@@ -39,7 +39,8 @@
 }
 
 .date-input .is-invalid, .date-input .is-valid {
-  background: white;
+  background-color: white;
+  --bs-form-select-bg-icon: none !important;
 }
 
 .date-input {
@@ -265,3 +266,9 @@ label {
   min-width: 20px;
   min-height: 20px;
 }
+
+// form.was-validated .invalid-feedback {
+//   // this is how BS validation is supposed to work – we don't have .was-validated conditions?
+//   // https://getbootstrap.com/docs/5.0/forms/validation/#how-it-works
+//   display: revert;
+// }
