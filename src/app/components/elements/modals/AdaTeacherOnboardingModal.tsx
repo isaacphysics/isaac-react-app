@@ -19,17 +19,21 @@ export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardin
         const [pageIndex, setPage] = useState(1);
         return { pageIndex, setPage, close };
     },
-    header: ({ pageIndex, close }) => <div className="d-flex justify-content-between px-4 pt-3 pb-2 border-bottom">
-        <strong className="color-purple" data-testid='teacher-modal-pages'>{pageIndex} of {pages.length}</strong>
-        <button className="icon icon-close" aria-label="Close" onClick={close} data-testid='teacher-modal-close' />
-    </div>,
-    body: ({ pageIndex }) => <>
-        <Page page={pages[0]} isCurrentPage={1 === pageIndex} />
-        <Page page={pages[1]} isCurrentPage={2 === pageIndex} />
-        <Page page={pages[2]} isCurrentPage={3 === pageIndex} />
-        <Page page={pages[3]} isCurrentPage={4 === pageIndex} />
-    </>,
-    buttons: ({ pageIndex, setPage, close }) => {
+    header({ pageIndex, close }) {
+        return <div className="d-flex justify-content-between px-4 pt-3 pb-2 border-bottom">
+            <strong className="color-purple" data-testid='teacher-modal-pages'>{pageIndex} of {pages.length}</strong>
+            <button className="icon icon-close" aria-label="Close" onClick={close} data-testid='teacher-modal-close' />
+        </div>;
+    },
+    body({ pageIndex }) {
+        return <>
+            <Page page={pages[0]} isCurrentPage={1 === pageIndex} />
+            <Page page={pages[1]} isCurrentPage={2 === pageIndex} />
+            <Page page={pages[2]} isCurrentPage={3 === pageIndex} />
+            <Page page={pages[3]} isCurrentPage={4 === pageIndex} />
+        </>;
+    },
+    buttons({ pageIndex, setPage, close }) {
         const isLastPage = pageIndex == pages.length;
         const nextPage = () => setPage(pageIndex + 1);
         return [
