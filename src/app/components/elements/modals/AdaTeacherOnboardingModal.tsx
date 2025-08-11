@@ -17,11 +17,11 @@ export const useTeacherOnboardingModal = () => {
     }, [dispatch]);
 };
 
-export const showTeacherOnboardingModalOnNextOverviewVisit = (): void => {
+export const scheduleTeacherOnboardingModalForNextOverviewVisit = (): void => {
     persistence.save(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT, "true");
 };
 
-const dontShowModalOnNextVisit = (): void => {
+const unscheduleTeacherOnboardingModal = (): void => {
     persistence.remove(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT);
 };
 
@@ -43,9 +43,9 @@ const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardingModalS
         const close = () => dispatch(closeActiveModal());;
         const [pageIndex, setPage] = useState(1);
         useEffect(() => {
-            const handle = setTimeout(dontShowModalOnNextVisit, 100);
+            const unschedule = setTimeout(unscheduleTeacherOnboardingModal, 100);
             return () => {
-                clearTimeout(handle);
+                clearTimeout(unschedule);
             };
         });
         return { pageIndex, setPage, close };
