@@ -1,8 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
-import { closeActiveModal } from "../../../state";
+import { closeActiveModal, openActiveModal, useAppDispatch } from "../../../state";
 import { ActiveModalWithState } from "../../../../IsaacAppTypes";
 import { useDispatch } from "react-redux";
+import { KEY, persistence } from "../../../services";
+
+export const useTeacherOnboardingModal = () => {
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        if (shouldModalShow()) {
+            dispatch(openActiveModal(adaTeacherOnboardingModal));
+            const handle = setTimeout(dontShowModalOnNextVisit, 100);
+            return () => {
+                clearTimeout(handle);
+                dispatch(closeActiveModal());
+            };
+        }
+    }, [dispatch]);
+};
+
+export const showTeacherOnboardingModalOnNextOverviewVisit = (): void => {
+    persistence.save(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT, "true");
+};
+
+const dontShowModalOnNextVisit = (): void => {
+    persistence.remove(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT);
+};
+
+const shouldModalShow = (): boolean => {
+    return persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT) === "true";
+};
 
 type AdaTeacherOnboardingModalState = {
     pageIndex: number,
@@ -10,7 +37,7 @@ type AdaTeacherOnboardingModalState = {
     close: () => void
 };
 
-export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardingModalState> = { 
+const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardingModalState> = { 
     size: 'md',
     title: 'teacher_onboarding_modal_id',
     useInit() {
