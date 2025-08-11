@@ -72,7 +72,10 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
             />
             <MainContent>
                 <PageMetadata noTitle showSidebarButton helpModalId="help_modal_my_assignments">
-                    <PageFragment fragmentId={`${siteSpecific("help_toptext_assignments", "assignments_help")}_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-7"}/>} />
+                    <PageFragment fragmentId={siteSpecific(
+                        isTutorOrAbove(user) ? "help_toptext_assignments_teacher" : "help_toptext_assignments_student", 
+                        isTutorOrAbove(user) ? "assignments_help_teacher" : "assignments_help_student"
+                    )} ifNotFound={<div className={"mt-7"}/>} />
                 </PageMetadata>
                 <ShowLoadingQuery
                     query={assignmentQuery}
@@ -140,7 +143,10 @@ const AdaMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} />
-        <PageFragment fragmentId={`${siteSpecific("help_toptext_assignments", "assignments_help")}_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-7"}/>} />
+        <PageFragment fragmentId={siteSpecific(
+            isTutorOrAbove(user) ? "help_toptext_assignments_teacher" : "help_toptext_assignments_student", 
+            isTutorOrAbove(user) ? "assignments_help_teacher" : "assignments_help_student"
+        )} ifNotFound={<div className={"mt-7"}/>} />
         <Card className={siteSpecific("my-7", "my-assignments-card")}>
             <CardBody className="pt-2">
                 <ShowLoadingQuery

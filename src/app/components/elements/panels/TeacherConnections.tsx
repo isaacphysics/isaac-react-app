@@ -185,7 +185,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     return <MyAccountTab
         leftColumn={<>
             <h3>Connect to your teacher</h3>
-            <PageFragment fragmentId={`teacher_connections_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
+            <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_teacher_connections_teacher" : "help_toptext_teacher_connections_student"} ifNotFound={RenderNothing} />
         </>}
         rightColumn={<>
             <h3>
