@@ -104,7 +104,8 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         className={classNames("mb-4")} 
         onSubmit={(e) => {e.preventDefault(); attemptAssign();}}>
         <FormGroup>
-            <Label className="w-100 form-required">Set test to the following group(s):<br/>
+            <Label className="w-100">
+                <span className="form-required">Set test to the following group(s):</span>
                 <ShowLoadingQuery
                     query={groupsQuery}
                     defaultErrorTitle={"Error fetching groups"}
@@ -121,7 +122,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                                 isSearchable
                                 menuPortalTarget={document.body}
                                 styles={{
-                                    control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
+                                    control: (styles) => ({...styles, ...(validationAttempted && groupInvalid ? {borderColor: '#dc3545'} : {})}),
                                     menuPortal: base => ({...base, zIndex: 9999}),
                                 }}
                             />
@@ -136,7 +137,8 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         </FormGroup>
 
         <FormGroup>
-            <Label className="w-100 form-required">What level of feedback should students get:<br/>
+            <Label className="w-100">
+                <span className="form-required">What level of feedback should students get:</span>
                 <div className={classNames({"is-invalid": validationAttempted && feedbackModeInvalid})}>
                     <StyledSelect
                         value={feedbackMode ? feedbackOptionsMap[feedbackMode] : null}
@@ -149,7 +151,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                         options={feedbackOptionsList}
                         menuPortalTarget={document.body}
                         styles={{
-                            control: (styles) => ({...styles, ...(feedbackModeInvalid ? {borderColor: '#dc3545'} : {})}),
+                            control: (styles) => ({...styles, ...(validationAttempted && feedbackModeInvalid ? {borderColor: '#dc3545'} : {})}),
                             menuPortal: base => ({...base, zIndex: 9999}),
                         }}
                     />
@@ -180,7 +182,8 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         </FormGroup>
 
         <FormGroup>
-            <Label className="w-100 form-required">Set a due date:<br/>
+            <Label className="w-100">
+                <span className="form-required">Set a due date:</span>
                 <DateInput 
                     invalid={validationAttempted && dueDateInvalid} 
                     value={dueDate ?? undefined} 
@@ -208,10 +211,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
             </Button>
             <Button
                 className={"float-end w-100 w-sm-auto"}
-                disabled={siteSpecific(
-                    groupInvalid || !feedbackMode || isAssigning || !dueDate || dueDateInvalid || scheduledStartDateInvalid,
-                    isAssigning
-                )}
+                disabled={isAssigning}
             >
                 {isAssigning ? <IsaacSpinner size={"sm"} /> : "Set test"}
             </Button>
