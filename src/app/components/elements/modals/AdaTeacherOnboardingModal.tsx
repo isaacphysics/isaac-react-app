@@ -10,9 +10,7 @@ export const useTeacherOnboardingModal = () => {
     useEffect(() => {
         if (shouldModalShow()) {
             dispatch(openActiveModal(adaTeacherOnboardingModal));
-            const handle = setTimeout(dontShowModalOnNextVisit, 100);
             return () => {
-                clearTimeout(handle);
                 dispatch(closeActiveModal());
             };
         }
@@ -44,6 +42,12 @@ const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardingModalS
         const dispatch = useDispatch();
         const close = () => dispatch(closeActiveModal());;
         const [pageIndex, setPage] = useState(1);
+        useEffect(() => {
+            const handle = setTimeout(dontShowModalOnNextVisit, 100);
+            return () => {
+                clearTimeout(handle);
+            };
+        });
         return { pageIndex, setPage, close };
     },
     header({ pageIndex, close }) {
