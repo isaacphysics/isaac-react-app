@@ -193,20 +193,39 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         hash: "events",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
-        id: "essential_pre_uni_physics",
-        title: "Mastering Essential Pre-University Physics",
-        terms: ["essential pre-uni physics", "essential pre uni physics", "pre-uni physics", "pre uni physics"],
-        summary: "The online version of our pre-uni physics book.",
-        url: "/books/physics_skills_19",
-        hash: "essential_pre_uni_physics",
+        id: "physics",
+        title: "Isaac Physics",
+        terms: ["physics", "isaac physics"],
+        summary: "Isaac Physics resources",
+        url: "/physics",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
-        id: "essential_gcse_physics",
-        title: "Mastering Essential GCSE Physics",
-        terms: ["essential gcse physics", "gcse physics"],
-        summary: "The online version of our GCSE physics book.",
-        url: "/books/phys_book_gcse",
-        hash: "essential_gcse_physics",
+        id: "maths",
+        title: "Isaac Maths",
+        terms: ["maths", "isaac maths", "math", "isaac math"],
+        summary: "Isaac Maths resources",
+        url: "/maths",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "chemistry",
+        title: "Isaac Chemistry",
+        terms: ["chemistry", "isaac chemistry"],
+        summary: "Isaac Chemistry resources",
+        url: "/chemistry",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "biology",
+        title: "Isaac Biology",
+        terms: ["biology", "isaac biology"],
+        summary: "Isaac Biology resources",
+        url: "/biology",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "computer_science",
+        title: "Ada Computer Science",
+        terms: ["ada", "computer science", "ada computer science", "computing", "cs", "ada cs"],
+        summary: "Ada Computer Science, our partner platform",
+        url: "/computer_science",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "senior_physics_challenge",

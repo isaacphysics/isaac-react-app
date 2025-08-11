@@ -10,7 +10,6 @@ import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {NavigationLinks} from "../elements/NavigationLinks";
-import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {Markup} from "../elements/markup";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
@@ -79,8 +78,6 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                         <ConceptSidebar relatedContent={doc.relatedContent} />
                         <MainContent>
                             <PageMetadata doc={doc} />
-                            <UserContextPicker />
-
 
                             <Row className="concept-content-container">
                                 <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>

@@ -15,7 +15,6 @@ import {
     isFullyDefinedContext,
     isLoggedIn,
     isPhy,
-    isSingleStageContext,
     Item,
     itemiseTag,
     LearningStage,
@@ -120,13 +119,30 @@ export function pageStageToSearchStage(stage?: LearningStage[]): STAGE[] {
     }
 }
 
+interface FilterSummaryProps {
+    filterTags: { value: string; label: string; }[],
+    clearFilters: () => void,
+    removeFilterTag: (value: string) => void
+}
+
+export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: FilterSummaryProps) => {
+    return <div className="d-flex flex-wrap mt-2">
+        {filterTags.map(t => <div key={t.value} data-bs-theme="neutral" data-testid={`filter-tag-${t.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
+            {t.label}
+            <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label="Close"/>
+        </div>)}
+        {filterTags.length > 0 && <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
+            Clear all filters
+        </button>}
+    </div>;
+};
+
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
     const pageContext = useUrlPageTheme();
-    const [isSolitaryStage, setIsSolitaryStage] = useState(false); // we can't calculate this until we have the page context
     const [selections, setSelections] = useState<ChoiceTree[]>([]); // we can't populate this until we have the page context
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
@@ -163,23 +179,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         if (pageContext) {
-            const solitary = isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext); 
-            
             // on subject-QFs, the url path (i.e. pageContext.subject) is the first tier of the hierarchy.
             setSelections(
                 processTagHierarchy(
                     tags,
-                    solitary ? [pageContext.subject] : arrayFromPossibleCsv(params.subjects),
+                    pageContext.subject ? [pageContext.subject] : arrayFromPossibleCsv(params.subjects),
                     arrayFromPossibleCsv(params.fields),
                     arrayFromPossibleCsv(params.topics),
                     pageContext
                 )
             );
-
-            setIsSolitaryStage(solitary);
-            if (solitary) {
-                setSearchStages(pageStageToSearchStage(pageContext?.stage) as STAGE[]);
-            }
         }
     }, [pageContext]);
 
@@ -273,8 +282,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
         const params: {[key: string]: string} = {};
         if (searchStages.length) {
-            params.stages = toSimpleCSV(searchStages
-                .filter(s => isSolitaryStage ? !pageStageToSearchStage(pageContext?.stage).includes(s) : true));
+            params.stages = toSimpleCSV(searchStages);
             if (params.stages === "") delete params.stages;
         }
         if (searchDifficulties.length) params.difficulties = toSimpleCSV(searchDifficulties);
@@ -305,7 +313,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (randomSeed !== undefined) params.randomSeed = randomSeed.toString();
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: history.location.state});
-    }, [searchStages, pageContext, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, filteringByStatus, history, isSolitaryStage, randomSeed]);
+    }, [searchStages, pageContext, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, filteringByStatus, history, randomSeed]);
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     useEffect(() => {
@@ -376,7 +384,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setSearchDifficulties([]);
         setSearchTopics([]);
         setSearchExamBoards([]);
-        setSearchStages(isSolitaryStage ? pageStageToSearchStage(pageContext?.stage) : []);
+        setSearchStages([]);
         setSearchBooks([]);
         setExcludeBooks(false);
         setSelections([pageContext?.subject ? {"subject": [itemiseTag(tags.getById(pageContext.subject as TAG_ID))]} : {}, {}, {}]);
@@ -389,7 +397,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 complete: false,
             });
         setSearchDisabled(!searchQuery);
-    }, [isSolitaryStage, pageContext, searchQuery]);
+    }, [pageContext, searchQuery]);
 
     const debouncedSearchHandler = useMemo(() =>
         debounce((searchTerm: string) => {
@@ -431,38 +439,17 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
     };
 
-    const FilterTag = ({tag}: {tag: {value: string, label: string}}) => {
-        return (
-            <div data-bs-theme="neutral" data-testid={`filter-tag-${tag.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
-                {tag.label}
-                <button className="icon icon-close" onClick={() => removeFilterTag(tag.value)} aria-label="Close"/>
-            </div>
-        );
-    };
+    const selectionList: Item<TAG_ID>[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext?.subject);
+    const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
+    const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.tag));
 
-    const FilterSummary = () => {
-        const stageList: STAGE[] = searchStages.filter(stage => isSolitaryStage ? !pageStageToSearchStage(pageContext?.stage).includes(stage) : true);
-        const selectionList: Item<TAG_ID>[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext?.subject);
-        const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
-        const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.tag));
-
-        const categories = [
-            searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
-            stageList.map(s => {return {value: s, label: stageLabelMap[s]};}),
-            statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
-            excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
-            selectionList,
-        ].flat();
-
-        return <div className="d-flex flex-wrap mt-2">
-            {categories.map(c => <FilterTag key={c.value} tag={c}/>)}
-            {categories.length > 0 ?
-                <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
-                    Clear all filters
-                </button>
-                : <div/>}
-        </div>;
-    };
+    const filterTags = useMemo(() => [
+        searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
+        searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
+        statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
+        excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
+        selectionList,
+    ].flat(), [searchDifficulties, searchStages, statusList, excludeBooks, booksList, selectionList]);
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
@@ -527,7 +514,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     </Col>
                 </Row>}
 
-                {isPhy && <FilterSummary/>}
+                {isPhy && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
 
                 <Row className={classNames(siteSpecific("mt-2", "mt-4"), "position-relative finder-panel")}>
                     {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")}>

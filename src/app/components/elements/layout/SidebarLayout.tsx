@@ -8,7 +8,8 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
     stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS, getSearchPlaceholder,
     sortByStringValue,
-    SUBJECT_SPECIFIC_CHILDREN_MAP} from "../../../services";
+    SUBJECT_SPECIFIC_CHILDREN_MAP,
+    LEARNING_STAGE} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -1414,17 +1415,26 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
 
     const history = useHistory();
 
+    const isValidStage = (stage: LEARNING_STAGE) => {
+        return (validStageSubjectPairs[context.subject] as LEARNING_STAGE[]).includes(stage);
+    };
+
+    const isValidSubject = (subjectStages: LEARNING_STAGE[]) => {
+        return subjectStages.includes(context.stage[0] as LEARNING_STAGE);
+    };
+
     return <ContentSidebar buttonTitle="Switch stage/subject" {...rest}>
         <div className="section-divider"/>
         <search>
             <h5>Decks by stage</h5>
             <ul>
-                {validStageSubjectPairs[context.subject].map((stage, index) =>
+                {[...new Set(Object.values(validStageSubjectPairs).flat())].map((stage, index) =>
                     <li key={index}>
                         <StyledTabPicker
                             checkboxTitle={HUMAN_STAGES[stage]}
                             checked={context.stage.includes(stage)}
-                            onClick={() => history.push(`/${context.subject}/${stage}/question_decks`)}
+                            disabled={!isValidStage(stage)}
+                            onClick={() => isValidStage(stage) && history.push(`/${context.subject}/${stage}/question_decks`)}
                         />
                     </li>
                 )}
@@ -1433,13 +1443,13 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
             <h5>Decks by subject</h5>
             <ul>
                 {Object.entries(validStageSubjectPairs)
-                    .filter(([_subject, stages]) => (stages as LearningStage[]).includes(context.stage[0]))
-                    .map(([subject, _stages], index) =>
+                    .map(([subject, stages], index) =>
                         <li key={index}>
                             <StyledTabPicker
                                 checkboxTitle={HUMAN_SUBJECTS[subject]}
                                 checked={context.subject === subject}
-                                onClick={() => history.push(`/${subject}/${context.stage}/question_decks`)}
+                                disabled={!isValidSubject(stages)}
+                                onClick={() => isValidSubject(stages) && history.push(`/${subject}/${context.stage}/question_decks`)}
                             />
                         </li>
                     )

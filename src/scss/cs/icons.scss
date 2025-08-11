@@ -105,13 +105,12 @@
   background: url(/assets/cs/icons/feedback-sent-tick.svg) no-repeat;
   margin-bottom: -7px;  
 }
-icon-status {
-  width: 23px;
-  margin: -1px;
+.icon-status {
+  width: 30px;
 }
 
 // This class is used in a number of non-icon-related places on both sites
-.bg-grey {
+.bg-grey, .bg-inline-question {
   background: $cs-silver;
 }
 .icon-group {
