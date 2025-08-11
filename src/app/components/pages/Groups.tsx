@@ -29,6 +29,7 @@ import {
     mutationSucceeded,
     resetMemberPassword,
     showAdditionalManagerSelfRemovalModal,
+    showCreateGroupModal,
     showErrorToast,
     showGroupEmailModal,
     showGroupInvitationModal,
@@ -53,6 +54,7 @@ import {
     isPhy,
     isStaff,
     isTeacherOrAbove,
+    SITE_TITLE_SHORT,
     siteSpecific,
     useDeviceSize
 } from "../../services";
@@ -72,7 +74,7 @@ enum SortOrder {
 }
 
 interface GroupCreatorProps {
-    createNewGroup: (newGroupName: string) => Promise<boolean>;
+    createNewGroup?: (newGroupName: string) => Promise<boolean>;
 }
 let tooltip = 0;
 const Tooltip = ({children, tipText, ...props}: any) => {
@@ -222,7 +224,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
         if (group) {
             const updatedGroup = {...group, groupName: newGroupName};
             updateGroup({updatedGroup});
-        } else {
+        } else if (createNewGroup) {
             createNewGroup(newGroupName);
         }
     }
@@ -431,11 +433,13 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
             dispatch(showErrorToast("Cannot create group", "The group name must be specified."));
             return;
         }
-        createNewGroup(newGroupName).then(success => {
-            if (success) {
-                setNewGroupName("");
-            }
-        });
+        if (createNewGroup) {
+            createNewGroup(newGroupName).then(success => {
+                if (success) {
+                    setNewGroupName("");
+                }
+            });
+        }
     }
 
     const existingGroupWithConflictingName = allGroups?.find(g => g.groupName == newGroupName);
@@ -536,18 +540,26 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
 
     return <Card className="group-selector">
         <CardBody>
-            {showCreateGroup && isDefined(createNewGroup) && <>
-                <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
-                <div className="d-none d-lg-block mb-3">
-                    <Button block color="keyline" onClick={() => {
-                        setSelectedGroupId(undefined);
-                        if (groupNameInputRef.current) {
-                            groupNameInputRef.current.focus();
+            {
+                siteSpecific(
+                    <>
+                        {showCreateGroup && isDefined(createNewGroup) &&
+                            <>
+                                <GroupCreatorPhy showArchived={showArchived} setShowArchived={setShowArchived}
+                                    showCreateGroup={showCreateGroup} setSelectedGroupId={setSelectedGroupId}
+                                    groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup}
+                                    allGroups={allGroups}
+                                />
+                                <div className="section-divider"/>
+                            </>
                         }
-                    }}>Create new group</Button>
-                </div>
-                {siteSpecific(<div className="section-divider"/>, <hr/>)}
-            </>}
+                    </>,
+                    <>
+                        <Button className={"d-block w-100"} onClick={() => {dispatch(showCreateGroupModal({user}));}}>Create a new group</Button>
+                        <hr />
+                    </>
+                )
+            }
             <div className={classNames("text-start", {"mt-3": showCreateGroup})}>
                 <strong className="me-2">Groups:</strong>
                 <UncontrolledButtonDropdown size="sm">
@@ -576,9 +588,9 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
             <ul className="mt-3 mt-lg-0 p-0 mb-0">
                 {sortedGroups && sortedGroups.length > 0
                     ? sortedGroups.map((g: AppGroup) =>
-                        sidebarStyle                         
+                        sidebarStyle
                             ? <li key={g.id} className="d-flex align-items-center group-item" data-testid={"group-item"}>
-                                <StyledTabPicker 
+                                <StyledTabPicker
                                     id={g.groupName} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}
                                     onInputChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)} data-testid={"select-group"}
                                     suffix={showArchived ? {icon: "icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(g);}, info: "Delete group"} : undefined}
@@ -594,7 +606,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                             aria-label="Delete group" className={classNames("ms-1", siteSpecific("icon-close", "bin-icon"))} title={"Delete group"}/>
                                     }
                                 </div>
-                                {isAda && isDefined(createNewGroup) && selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
+                                {isAda && selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
                                     <GroupEditor user={user} group={selectedGroup} allGroups={allGroups} createNewGroup={createNewGroup}/>
                                 </div>}
                             </div>
@@ -686,24 +698,70 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
         </ShowLoadingQuery>
     </Container>;
 
-    // Site-specific component to preserve column layout on Ada
     const GroupsAda = <Container>
         <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />
         <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
-            <Row className="mb-7">
-                <Col lg={4}>
-                    <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                        showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true}/>
-                </Col>
-                <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
-                    <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
-                </Col>
-            </Row>
+            {groups?.length ?
+                <>
+                    <p className={"mw-75"}>You can add other teachers to help you manage a group. You cannot directly add students, but you can invite them to join.</p>
+                    <Row className="mb-7">
+                        <Col lg={4}>
+                            <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
+                                showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} showCreateGroup={true} />
+                        </Col>
+
+                        <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
+                            {
+                                selectedGroup &&
+                                    <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} />
+                            }
+                        </Col>
+                    </Row>
+                </>
+                :
+                <div className={"mb-7"}>
+                    <p className={"mw-50"}>
+                        Organise your students into groups and set work appropriate for each group.
+                        You need a student group before you can assign quizzes and tests in {SITE_TITLE_SHORT}.
+                    </p>
+                    <Button onClick={() => {dispatch(showCreateGroupModal({user}));}}>
+                       Create a group
+                    </Button>
+                </div>
+            }
         </ShowLoadingQuery>
     </Container>;
 
     return siteSpecific(GroupsPhy, GroupsAda);
+};
+
+interface GroupCreatorPhyProps {
+    allGroups: AppGroup[];
+    selectedGroup?: AppGroup;
+    setSelectedGroupId: React.Dispatch<React.SetStateAction<number | undefined>>;
+    showArchived: boolean;
+    setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
+    groupNameInputRef: React.RefObject<HTMLInputElement>;
+    createNewGroup?: (newGroupName: string) => Promise<boolean>
+    showCreateGroup?: boolean;
+    sidebarStyle?: boolean;
+}
+
+const GroupCreatorPhy = ({ showCreateGroup, createNewGroup, setSelectedGroupId, allGroups, groupNameInputRef}: GroupCreatorPhyProps) => {
+    return <>
+        {showCreateGroup && isDefined(createNewGroup) && <>
+            <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
+            <div className="d-none d-lg-block mb-3">
+                <Button block color="keyline" onClick={() => {
+                    setSelectedGroupId(undefined);
+                    if (groupNameInputRef.current) {
+                        groupNameInputRef.current.focus();
+                    }
+                }}>Create new group</Button>
+            </div>
+        </>}
+    </>;
 };
 
 export const Groups = withRouter(connect(stateToProps)(GroupsComponent));

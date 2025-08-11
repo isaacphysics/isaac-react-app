@@ -13,17 +13,28 @@ import {
     usePromoteGroupManagerMutation,
     useGetGroupTokenQuery,
     groupsApi,
+    useCreateGroupMutation,
+    showGroupInvitationModal,
 } from "../../../state";
 import sortBy from "lodash/sortBy";
-import {history, isAda, isDefined, isTeacherOrAbove, PATHS, SITE_TITLE_SHORT, siteSpecific} from "../../../services";
-import {Row, Col, Form, Input, Table, Alert, Label} from "reactstrap";
+import {
+    history,
+    isAda,
+    isDefined, isPhy,
+    isTeacherOrAbove,
+    PATHS,
+    SITE_TITLE_SHORT,
+    siteSpecific
+} from "../../../services";
+import {Row, Col, Form, Input, Table, Alert, Label, FormFeedback, FormGroup} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
-import {AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
+import {ActiveModal, AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {Loading} from "../../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
+import {useDispatch} from "react-redux";
 
 const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
@@ -63,65 +74,59 @@ interface CurrentGroupInviteModalProps {
 }
 const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProps) => {
     const tokenQuery = useGetGroupTokenQuery(group.id as number);
-    return <>
-        {firstTime && <span className={siteSpecific("h3 mb-3", "h1")}>Invite users</span>}
-        <p>Use one of the following methods to add users to your group. Students joining your group will be shown your name and account email and asked to confirm sharing data.</p>
+    return <div>
         <ShowLoadingQuery
             query={tokenQuery}
             defaultErrorTitle={"Error fetching group joining token"}
-            thenRender={token => <>
-                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-7"))}>
-                    <span className={siteSpecific("h4", "h2 font-size-1-5")}>Option 1: Share link</span>
-                    <p>Share the following link with your students to have them join your group:</p>
-                    <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1" data-testid={"share-link"}>
-                        {location.origin}/account?authToken={token?.token}
-                    </span>
+            thenRender={token => <div className="d-flex flex-column gap-3">
+                <div>
+                    {firstTime && <h3>Invite members to join</h3>}
+                    <p>Share the link or code to invite people to your group.</p>
+                    <p className={"mb-0"}>Students will see the name and email address on your account when they join.</p>
                 </div>
-                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-7"))}>
-                    <span className={siteSpecific("h4", "h2 font-size-1-5")}>Option 2: Share code</span>
-                    <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
-                    <span className={classNames("text-center user-select-all d-block border bg-light p-1", siteSpecific("h4", "h3"))} data-testid={"share-code"}>{token?.token}</span>
+                <div>
+                    <h3>Share this link</h3>
+                    <p>Share this link with students so they can join your group:</p>
+                    <Input readOnly={true} onClick={(e) => {e.currentTarget.select();}} className="w-100 block" data-testid={"share-link"} value={`${location.origin}/account?authToken=${token?.token}`} />
                 </div>
-            </>}
+                <div>
+                    <h3>Or use this code</h3>
+                    <p>Students can enter this code in their {SITE_TITLE_SHORT} account. They’ll need to go to <b>My account</b>, then <b>Teacher Connections</b>.</p>
+                    <Input readOnly={true} onClick={(e) => {e.currentTarget.select();}} className="w-100 block" data-testid={"share-code"} value={token?.token} />
+                </div>
+                <div>
+                    <h3>What to do next</h3>
+                </div>
+            </div>}
         />
-        <p>
-            {firstTime ? "Now you've made a group, you may want to:" : "Once you have invited users to the group, you may want to:"}
-        </p>
-    </>;
+    </div>;
 };
 export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, firstTime: boolean, backToCreateGroup?: () => void) => ({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: firstTime ? "Group Created" : "Invite Users",
+    title: firstTime ? `Group ${isPhy ? 'C' : 'c'}reated` : `Invite ${isPhy ? 'U' : 'u'}sers`,
     body: <CurrentGroupInviteModal group={group} firstTime={firstTime} />,
     buttons: [
         <Row key={0} className="w-100">
-            {/* Only teachers are allowed to add additional managers to a group. */}
-            {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pd-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
-                    store.dispatch(closeActiveModal());
-                    store.dispatch(showGroupManagersModal({group, user}));
-                }}>
-                    Add group managers
-                </Button>
-            </Col>}
-            <Col className="pb-0 pb-md-2 pd-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
+            <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+                <Button block color="primary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
                     store.dispatch(closeActiveModal());
                     history.push(PATHS.SET_ASSIGNMENTS);
                 }}>
                     Set an assignment
                 </Button>
             </Col>
-            {firstTime && <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
+            {/* Only teachers are allowed to add additional managers to a group. */}
+            {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+                <Button outline block color="secondary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
                     store.dispatch(closeActiveModal());
-                    backToCreateGroup?.();
+                    store.dispatch(showGroupManagersModal({group, user}));
                 }}>
-                    Create another group
+                    Add group managers
                 </Button>
             </Col>}
         </Row>
-    ]
+    ],
+    bodyContainerClassName: "mb-0 pb-0"
 });
 
 const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {groupId: number, archived: boolean, userIsOwner: boolean, user: RegisteredUserDTO}) => {
@@ -344,4 +349,63 @@ export const groupEmailModal = (users?: number[]) => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: "Email Users",
     body: <CurrentGroupEmailModal users={users} />
+});
+
+interface GroupCreateModalProps {
+    user: RegisteredUserDTO
+}
+
+const GroupCreateModal = ({user}: GroupCreateModalProps) => {
+    const [newGroupName, setNewGroupName] = useState("");
+    const [submissionAttempted, setSubmissionAttempted] = useState(false);
+    const [createGroup] = useCreateGroupMutation();
+    const dispatch = useDispatch();
+
+    const validateGroupName = () => {
+        return !!newGroupName;
+    };
+
+    const submit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setSubmissionAttempted(true);
+
+        if (!validateGroupName()) {
+            return;
+        }
+
+        return createGroup(newGroupName).then(async (result) => {
+            if (mutationSucceeded(result) && result.data?.id) {
+                dispatch(closeActiveModal());
+                dispatch(showGroupInvitationModal({group: result.data, user: user, firstTime: true}));
+                return true;
+            }
+            return false;
+        });
+    };
+
+    return <>
+        <Form onSubmit={submit}>
+            <FormGroup className="form-group">
+                <Label className={classNames("fw-bold form-required")} htmlFor="group-name-input">
+                   Enter your group name
+                </Label>
+                {isAda && <p className="d-block input-description mb-2">Students will see this group name when they are invited to join.</p>}
+                <Input invalid={submissionAttempted && !validateGroupName()} id={"group-name-input"} onChange={event => setNewGroupName(event.target.value)} />
+                <FormFeedback id="givenNameValidationMessage">
+                    Please enter a valid name.
+                </FormFeedback>
+            </FormGroup>
+            <Button block type={"submit"} className={"mt-4"}>
+                Create Group
+            </Button>
+        </Form>
+    </>;
+};
+
+export const groupCreateModal = (user: RegisteredUserDTO): ActiveModal => ({
+    closeAction: () => store.dispatch(closeActiveModal()),
+    title: "Create a group",
+    body: <GroupCreateModal user={user}/>,
+    size: "md",
+    centered: true
 });
