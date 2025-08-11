@@ -3,7 +3,7 @@ import * as AppTypes from "../../../../IsaacAppTypes";
 import {closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import classNames from "classnames";
 import {isAda, isPhy, siteSpecific} from "../../../services";
-import { Modal, ModalHeader, ModalFooter, ModalBody } from "reactstrap";
+import {Modal, ModalHeader, ModalFooter, ModalBody, CloseButton} from "reactstrap";
 
 interface ActiveModalProps {
     activeModal?: AppTypes.ActiveModal | null;
@@ -37,20 +37,23 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
                 style={activeModal.title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
                 close={
                     activeModal.closeAction ?
-                        <button className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy, "mt-5": activeModal.title})} onClick={activeModal.closeAction}>
-                            {activeModal?.closeLabelOverride || "Close"}
-                        </button>
+                        siteSpecific(
+                            <button className="text-nowrap close" onClick={activeModal.closeAction}>
+                                {activeModal?.closeLabelOverride || "Close"}
+                            </button>,
+                            <CloseButton onClick={activeModal.closeAction}/>
+                        )
                         :
                         null
                 }
             >
                 {activeModal.title}
             </ModalHeader>}
-            <ModalBody className={classNames(activeModal.bodyContainerClassName, "pb-2", {"mx-4": ["lg", "xl", undefined].includes(activeModal.size), "pt-0": !activeModal.title})}>
+            <ModalBody className={classNames(activeModal.bodyContainerClassName, {"mx-4": ["lg", "xl", undefined].includes(activeModal.size), "pt-0": !activeModal.title})}>
                 {typeof activeModal?.body === "function" ? <activeModal.body /> : activeModal?.body}
             </ModalBody>
             {activeModal.buttons &&
-                <ModalFooter className="mb-4 mx-2">
+                <ModalFooter className="mb-2 mx-2">
                     {activeModal.buttons}
                 </ModalFooter>
             }
