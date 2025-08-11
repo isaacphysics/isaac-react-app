@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import {PageTitle} from "../elements/PageTitle";
-import {Button, Container, Row} from "reactstrap";
+import {Accordion, AccordionBody, AccordionHeader, AccordionItem, Button, Container, Row} from "reactstrap";
 import {ColumnSlice} from "../elements/layout/ColumnSlice";
 import {IconCard} from "../elements/cards/IconCard";
 import {useDeviceSize} from "../../services";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../state";
 import {useLinkableSetting} from "../../services/linkableSetting";
 import {NewsCard} from "../elements/cards/NewsCard";
+import { ProgressBar } from "../elements/views/ProgressBar";
+import { useAdaGetStartedTasks } from "../../services/adaOnboardingTasks";
+import { CompletableTask } from "../elements/CompletableTask";
 
 export const Overview = () => {
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
@@ -14,12 +17,61 @@ export const Overview = () => {
     const userPreferences = useAppSelector(selectors.user.preferences);
     const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
     const {setLinkedSetting} = useLinkableSetting();
+    const [getStartedOpen, setGetStartedOpen] = useState(true);
+
+    const getStartedTasks = useAdaGetStartedTasks();
+    const percentComplete = Math.round(100 * Object.values(getStartedTasks).filter(Boolean).length / Object.keys(getStartedTasks).length);
+
     return <div id={"overview"}>
-        <section id="browse">
+        <section id="get-started">
             <Container className="overview-padding mw-1600">
                 <div id={"page-title"} className={"py-3"}>
                     <PageTitle currentPageTitle={"Overview"} />
                 </div>
+                <Accordion open={getStartedOpen ? ["1"] : []} toggle={() => setGetStartedOpen(o => !o)} className="position-relative">
+                    <AccordionItem>
+                        <AccordionHeader targetId="1">
+                            Get started with Ada CS
+                        </AccordionHeader>
+                        <AccordionBody accordionId="1">
+                            Follow these steps to get started with your teacher account:
+
+                            <div className="d-flex align-items-center gap-4 mt-2">
+                                <span className="fw-bold">{percentComplete}%</span>
+                                <ProgressBar thin rounded percentage={percentComplete} type="ada-primary" />
+                            </div>
+
+                            <ul className="list-unstyled d-flex flex-column mt-3 gap-3">
+                                <CompletableTask tag={"li"} complete={getStartedTasks.createAccount}>
+                                    <strong>Create your account</strong>
+                                </CompletableTask>
+
+                                <CompletableTask tag={"li"} complete={getStartedTasks.personaliseContent}>
+                                    <div className="d-flex flex-column">
+                                        <strong>Personalise your content</strong>
+                                        <span>Pick a teaching level and exam board, or choose to see all content.</span>
+                                    </div>
+                                </CompletableTask>
+
+                                <CompletableTask tag={"li"} complete={getStartedTasks.createGroup}>
+                                    <strong>Create a student group</strong>
+                                </CompletableTask>
+
+                                <CompletableTask tag={"li"} complete={getStartedTasks.assignQuiz}>
+                                    <strong>Assign a quiz to students</strong>
+                                </CompletableTask>
+
+                                <CompletableTask tag={"li"} complete={getStartedTasks.viewMarkbook}>
+                                    <strong>View your markbook</strong>
+                                </CompletableTask>
+                            </ul>
+                        </AccordionBody>
+                    </AccordionItem>
+                </Accordion>
+            </Container>
+        </section>
+        <section id="browse">
+            <Container className="overview-padding mw-1600">
                 <h2>Browse Ada CS</h2>
                 <ColumnSlice className={"row-cols-lg-4 row-cols-md-2"}>
                     <IconCard className={"without-margin"} card={{

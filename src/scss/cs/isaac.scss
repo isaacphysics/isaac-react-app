@@ -263,6 +263,8 @@ $warning-border-subtle: #fffeee;
 $toast-padding-x: 1.5rem;
 $border-color: $cs-light-gray;
 
+$accordion-button-active-bg: $cs-white;
+
 // all Bootstrap !default overrides must appear before this; anything that uses the defaults must come after
 @import "~bootstrap/scss/variables"; 
 
@@ -441,14 +443,6 @@ a.disabled {
 
 p small {
     border: 0;
-}
-
-.bg-light-grey {
-    > div {
-        background: $cs-cultured;
-        position: relative;
-        z-index: 1;
-    }
 }
 
 // Double class to give this more specificity
