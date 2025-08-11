@@ -1,11 +1,11 @@
-import { screen, waitFor, act, within } from "@testing-library/react";
+import { act, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { times } from "lodash";
 
 import { isPhy } from "../../app/services";
-import { expectH1, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
+import { type UserRole } from "../../IsaacApiTypes";
 import { mockRedirects } from "../../mocks/utils";
-import { times } from "lodash";
-import { UserRole } from "../../IsaacApiTypes";
+import { expectH1, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
 
 describe('Overview page', () => {
     if (isPhy) {
@@ -42,9 +42,11 @@ describe('Overview page', () => {
                     expect(modal.image).toHaveAttribute('src', '/assets/cs/decor/onboarding-welcome.svg');
                 });
 
-                it('shows a "Next" button', async () => {
+                it('shows a "Next" button that takes to the following page', async () => {
                     await renderOverviewPage();
                     expect(modal.forwardButton).toHaveTextContent('Next');
+                    userEvent.click(modal.forwardButton);
+                    await waitFor(() => expect(modal.pages).toHaveTextContent('2 of 4'));
                 });
 
                 it('can be dismissed by closing the modal', async () => {
