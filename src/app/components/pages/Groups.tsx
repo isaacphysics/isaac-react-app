@@ -360,6 +360,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
                                     <p className={"fw-bold"}>Group members</p>
                                     <div className={"d-flex flex-column flex-md-row gap-1"}>
                                         <Button
+                                            disabled={group.archived}
                                             className={"d-inline-block text-nowrap w-100 w-sm-auto"}
                                             color="primary"
                                             onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
