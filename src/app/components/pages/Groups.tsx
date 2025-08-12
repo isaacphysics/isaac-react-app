@@ -652,6 +652,8 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
     
     const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
 
+    const isEmptyState = allGroups.length === 0;
+
     const createNewGroup: (newGroupName: string) => Promise<boolean> = async (newGroupName: string) => {
         setShowArchived(false);
         return createGroup(newGroupName).then(async (result) => {
@@ -707,7 +709,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
         <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />
         <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
-            {groups?.length ?
+            {!isEmptyState ?
                 <>
                     <p className={"mw-75"}>You can add other teachers to help you manage a group. You cannot directly add students, but you can invite them to join.</p>
                     <Row className="mb-7">
