@@ -37,7 +37,7 @@ type AdaTeacherOnboardingModalState = {
 
 export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardingModalState> = { 
     size: 'md',
-    title: 'teacher_onboarding_modal_id',
+    title: 'Teacher Onboarding modal',
     useInit() {
         const dispatch = useDispatch();
         const close = () => dispatch(closeActiveModal());;
@@ -52,7 +52,7 @@ export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardin
     },
     header({ pageIndex, close }) {
         return <div className="d-flex justify-content-between px-4 pt-3 pb-2 border-bottom">
-            <strong className="color-purple" data-testid='teacher-modal-pages'>{pageIndex} of {pages.length}</strong>
+            <strong role="region" aria-label="Modal page indicator" className="color-purple">{pageIndex} of {pages.length}</strong>
             <button aria-label="Close onboarding modal" className="icon icon-close" onClick={close} />
         </div>;
     },
@@ -68,7 +68,7 @@ export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardin
         const isLastPage = pageIndex == pages.length;
         const nextPage = () => setPage(pageIndex + 1);
         return [
-            <Button key={0} block color="solid" onClick={isLastPage ? close : nextPage} data-testid='teacher-modal-forward'>
+            <Button key={0} block color="solid" onClick={isLastPage ? close : nextPage} aria-label="Go to next page on modal">
                 {isLastPage ? "Go to My Ada" : "Next"}
             </Button>
         ];

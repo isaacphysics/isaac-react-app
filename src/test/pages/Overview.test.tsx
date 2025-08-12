@@ -1,4 +1,4 @@
-import { act, screen, waitFor, within } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { times } from "lodash";
 
@@ -34,7 +34,7 @@ describe('Overview page', () => {
             describe('when showOnboardingModalOnNextOverviewVisit is unset', () => {
                 it('does not appear', async() => {
                     await renderOverviewPage();
-                    expect(modal.element.maybe).toBeNull();
+                    expect(modal.element).toBeNull();
                 });
             });
 
@@ -63,7 +63,7 @@ describe('Overview page', () => {
                     it('can be dismissed by closing the modal', async () => {
                         await renderOverviewPage();
                         userEvent.click(modal.closeButton);
-                        await waitFor(() => expect(modal.element.maybe).toBeNull());
+                        await waitFor(() => expect(modal.element).toBeNull());
                     });
                 });
 
@@ -90,7 +90,7 @@ describe('Overview page', () => {
                         await renderLastPage();
                         await waitFor(() => expect(modal.forwardButton).toHaveTextContent("Go to My Ada"));
                         userEvent.click(modal.forwardButton);
-                        await waitFor(() => expect(modal.element.maybe).toBeNull());
+                        await waitFor(() => expect(modal.element).toBeNull());
                     });
                 });
 
@@ -102,7 +102,7 @@ describe('Overview page', () => {
                 it('leaves the flag when the modal is closed too quickly', async() => {
                     await renderOverviewPage();
                     userEvent.click(modal.closeButton);
-                    waitFor(() => expect(modal.element.maybe).toBeNull());
+                    waitFor(() => expect(modal.element).toBeNull());
                     expect(persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT)).toBe("true");
                 });
             });
@@ -115,29 +115,18 @@ const modal = {
         return screen.getByRole('button', { name: "Close onboarding modal" });
     },
     get forwardButton() {
-        return this.__getByIdWithin('teacher-modal-forward');
+        return screen.getByRole('button', { name: "Go to next page on modal" });
     },
     get body() {
         return screen.getByRole('region', { name: 'Teacher onboarding modal page'});
     },
     get pages() {
-        return this.__getByIdWithin('teacher-modal-pages');
+        return screen.getByRole('region', { name: 'Modal page indicator' });
     },
     get image() {
         return screen.getByRole('presentation', { name: "Teacher onboarding modal image" });
     },
     get element() {
-        const testId = 'active-modal'; 
-        return ({
-            get surely() {
-                return screen.getByTestId(testId);
-            },
-            get maybe() {
-                return screen.queryByTestId(testId);
-            }
-        });
-    },
-    __getByIdWithin(testId: string) {
-        return within(this.element.surely).getByTestId(testId);
+        return screen.queryByRole('dialog');
     }
 };
