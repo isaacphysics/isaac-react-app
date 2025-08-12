@@ -35,7 +35,7 @@ type AdaTeacherOnboardingModalState = {
     close: () => void
 };
 
-const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardingModalState> = { 
+export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardingModalState> = { 
     size: 'md',
     title: 'teacher_onboarding_modal_id',
     useInit() {
