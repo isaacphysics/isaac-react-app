@@ -11,6 +11,7 @@ import { ProgressBar } from "../elements/views/ProgressBar";
 import { useAdaGetStartedTasks } from "../../services/adaOnboardingTasks";
 import { CompletableTask } from "../elements/CompletableTask";
 import { ShowLoading } from "../handlers/ShowLoading";
+import { Spacer } from "../elements/Spacer";
 
 export const Overview = () => {
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
@@ -39,6 +40,7 @@ export const Overview = () => {
                     <AccordionItem>
                         <AccordionHeader targetId="1">
                             Get started with Ada CS
+                            {getStartedTasks && Object.values(getStartedTasks).every(Boolean) && <i className="icon icon-tick icon-md mx-3" />}
                         </AccordionHeader>
                         <AccordionBody accordionId="1">
                             <ShowLoading
