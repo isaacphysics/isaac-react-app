@@ -390,7 +390,7 @@ const GroupCreateModal = ({user}: GroupCreateModalProps) => {
                    Enter your group name
                 </Label>
                 {isAda && <p className="d-block input-description mb-2">Students will see this group name when they are invited to join.</p>}
-                <Input invalid={submissionAttempted && !validateGroupName()} id={"group-name-input"} onChange={event => setNewGroupName(event.target.value)} />
+                <Input invalid={submissionAttempted && !validateGroupName()} id={"group-name-input"} onChange={event => setNewGroupName(event.target.value)} data-testid={"group-name-input"} />
                 <FormFeedback id="givenNameValidationMessage">
                     Please enter a valid name.
                 </FormFeedback>

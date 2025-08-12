@@ -289,6 +289,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                 valid={isGroupNameValid}
                                 className={"w-100 w-md-auto flex-md-fill"}
                                 aria-describedby="groupNameFeedback"
+                                data-testid={"groupName"}
                             />
                             {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <Button
                                 color={siteSpecific("keyline", "solid")}
