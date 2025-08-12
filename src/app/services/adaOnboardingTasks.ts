@@ -19,13 +19,6 @@ export const useAdaGetStartedTasks = () : GetStartedTasks | undefined => {
     }
 
     return {
-        createAccount: true,
-        personaliseContent: false,
-        createGroup: false,
-        assignQuiz: false,
-    };
-
-    return {
         createAccount: !!user,
         personaliseContent: !!user?.registeredContexts?.length,
         createGroup: !!groups?.length,

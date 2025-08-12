@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {PageTitle} from "../elements/PageTitle";
 import {Accordion, AccordionBody, AccordionHeader, AccordionItem, Button, Container, Row} from "reactstrap";
 import {ColumnSlice} from "../elements/layout/ColumnSlice";
@@ -18,10 +18,16 @@ export const Overview = () => {
     const userPreferences = useAppSelector(selectors.user.preferences);
     const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
     const {setLinkedSetting} = useLinkableSetting();
-    const [getStartedOpen, setGetStartedOpen] = useState(true);
+    const [getStartedOpen, setGetStartedOpen] = useState(false);
 
     const getStartedTasks = useAdaGetStartedTasks();
     const percentComplete = getStartedTasks ? Math.round(100 * Object.values(getStartedTasks).filter(Boolean).length / Object.keys(getStartedTasks).length) : 0;
+
+    useEffect(() => {
+        if (getStartedTasks && !Object.values(getStartedTasks).every(Boolean)) {
+            setGetStartedOpen(true);
+        }
+    }, [getStartedTasks]);
 
     return <div id={"overview"}>
         <section id="get-started">
