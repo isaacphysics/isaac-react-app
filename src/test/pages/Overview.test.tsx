@@ -112,7 +112,7 @@ describe('Overview page', () => {
 
 const modal = {
     get closeButton() {
-        return screen.getByRole('button', { name: "Close onboarding modal" });
+        return screen.getByRole('button', { name: "Close modal" });
     },
     get forwardButton() {
         return screen.getByRole('button', { name: "Go to next page on modal" });
