@@ -70,7 +70,7 @@ export function markClassesInternal(attemptedOrCorrect: "ATTEMPTED" | "CORRECT",
             return "revoked";
         } else if (status && isQuestionFullyAttempted(status) || correctParts + incorrectParts === totalParts) {
             return "fully-attempted";
-        } else if (status === CompletionState.NOT_ATTEMPTED || (correctParts + incorrectParts) / totalParts < (1 - passMark)) {
+        } else if (status === CompletionState.NOT_ATTEMPTED || siteSpecific((correctParts + incorrectParts) / totalParts < (1 - passMark), correctParts + incorrectParts === 0)) {
             return "not-attempted";
         } else if ((correctParts + incorrectParts) / totalParts >= passMark) {
             return "passed";
