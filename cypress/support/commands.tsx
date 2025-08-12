@@ -59,11 +59,14 @@ import React, {ReactNode} from "react";
 import {Provider} from "react-redux";
 import {store} from "../../src/app/state";
 import {MemoryRouter} from "react-router";
+import { ActiveModals } from '../../src/app/components/elements/modals/ActiveModals';
 
 Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, mountOptions) => {
     mount(
         <Provider store={store}>
             <MemoryRouter initialEntries={routes}>
+                <ActiveModals />
+                
                 {component}
             </MemoryRouter>
         </Provider>
