@@ -1,18 +1,18 @@
 import { isPhy } from "../../app/services";
 import { UserRole } from "../../IsaacApiTypes";
-import { renderTestEnvironment, setUrl } from "../testUtils";
+import { renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
 import {act, screen, waitFor, within} from "@testing-library/react";
 
 describe('Navigation', () => {
     if (isPhy) {
         const renderHomepage = async (role : UserRole | 'ANONYMOUS' = 'ANONYMOUS') => {
-            await act(async () => {
-                renderTestEnvironment({
-                    role,
-                    // extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed', 'startIndex'], questionsSearchResponse)]    
-                });
-                setUrl({ pathname: '/' });
+            renderTestEnvironment({
+                role,
+                // extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed', 'startIndex'], questionsSearchResponse)]    
             });
+            await waitForLoaded();    
+            act(() => setUrl({ pathname: '/' }));
+            await waitForLoaded();    
         };
 
         const openMenu = async () => {
