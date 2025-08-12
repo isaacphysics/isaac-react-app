@@ -76,10 +76,12 @@ export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardin
 };
 
 const Page = ({ page, isCurrentPage }: { page: typeof pages[number], isCurrentPage: boolean}) => {
-    return <div role="region" aria-label="Teacher onboarding modal page" key={page.title} className="text-center mx-4" style={isCurrentPage ? {} : {display: 'none'}}>
-        <img aria-label="Teacher onboarding modal image" className="pb-5" width="330px" height="200px" src={`/assets/cs/decor/${page.image}`} alt='' />
-        <h4>{page.title}</h4>
-        <p>{page.message}</p>
+    return <div role="region" aria-label="Teacher onboarding modal page" key={page.title} className="text-center mx-2" style={isCurrentPage ? {} : {display: 'none'}}>
+        <img aria-label="Teacher onboarding modal image" src={`/assets/cs/decor/${page.image}`} alt='' className="pb-2" style={{aspectRatio: 400 / 242, width: "100%", maxWidth: "400px"}}/>
+        <div className="d-flex flex-column align-items-center justify-content-center" style={{minHeight: "128px"}}>
+            <h4>{page.title}</h4>
+            <p className="mb-0">{page.message}</p>
+        </div>
     </div>;
 };
 
