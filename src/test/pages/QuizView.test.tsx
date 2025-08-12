@@ -128,7 +128,7 @@ describe("QuizView", () => {
 
         it('sidebar toggle is called "Details"', async () => {
             await studentViewsQuiz();
-            await expectSidebarToggle("Details");
+            expectSidebarToggle("Details");
         });
     }
 });

@@ -3,8 +3,9 @@ import { expectTextInElementWithId, renderTestEnvironment, withSizedWindow, setU
 import { UserRole } from "../../IsaacApiTypes";
 
 export const renderQuizPage = (baseUrl: PathString) => async ({role, quizId}: {role: UserRole | "ANONYMOUS", quizId: string}) => {
-    await act(async () => renderTestEnvironment({ role }));
-    await act(async () => setUrl({ pathname: `${baseUrl}/${quizId}` }));
+    renderTestEnvironment({ role });
+    await waitForLoaded();
+    act(() => setUrl({ pathname: `${baseUrl}/${quizId}` }));
     await waitForLoaded();
 };
 
@@ -62,8 +63,8 @@ const topic = () => within(
 
 const sidebarToggle = () => screen.getByTestId('sidebar-toggle');
 
-export const expectSidebarToggle = async (text: string) => {
-    await withSizedWindow(400, 400, () => {
+export const expectSidebarToggle = (text: string) => {
+    withSizedWindow(400, 400, () => {
         expect(sidebarToggle()).toHaveTextContent(text);
     });
 };

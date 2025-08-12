@@ -108,7 +108,7 @@ describe("QuizAttempt", () => {
         
         it('sidebar toggle is called "Sections"', async () => {
             await studentAttemptsQuiz();
-            await expectSidebarToggle("Sections");
+            expectSidebarToggle("Sections");
         });
     }
 });

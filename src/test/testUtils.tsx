@@ -180,20 +180,20 @@ export const expectUrlParams = (text: string) => waitFor(() => {
     expect(history.location.search).toBe(text);
 });
 
-export const withSizedWindow = async (width: number, height: number, cb: () => void) => {
+export const withSizedWindow = (width: number, height: number, cb: () => void) => {
     const originalWindow = {
         width: window.innerWidth,
         height: window.innerHeight,
     };
     try {
-        await act(async () => {
+        act(() => {
             window.innerWidth = width;
             window.innerHeight = height;
         });
         fireEvent(window, new Event('resize'));
         cb();
     } finally {
-        await act(async () => {
+        act(() => {
             window.innerWidth = originalWindow.width;
             window.innerHeight = originalWindow.height;
         });
