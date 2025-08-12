@@ -264,6 +264,8 @@ $toast-padding-x: 1.5rem;
 $border-color: $cs-light-gray;
 
 $accordion-button-active-bg: $cs-white;
+$accordion-border-radius: 1rem;
+$accordion-inner-border-radius: 1rem;
 
 // all Bootstrap !default overrides must appear before this; anything that uses the defaults must come after
 @import "~bootstrap/scss/variables"; 

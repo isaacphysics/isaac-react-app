@@ -77,7 +77,7 @@ button.accordion-header {
 // BS accordions only, not Isaac
 
 .accordion:has(> .accordion-item) {
-  .accordion-header {
+  .accordion-header:not(:has(> .collapsed)) {
     border-bottom: 1px solid $cs-light-gray;
   }
 }
