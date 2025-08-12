@@ -60,7 +60,7 @@ export function markClassesInternal(attemptedOrCorrect: "ATTEMPTED" | "CORRECT",
             return "not-attempted";
         } else if ((correctParts / totalParts) >= passMark) {
             return "passed";
-        } else if ((incorrectParts / totalParts) > (1 - passMark)) {
+        } else if ((correctParts / totalParts) < (1 - passMark)) {
             return "failed";
         } else {
             return "in-progress";
