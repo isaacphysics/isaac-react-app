@@ -51,7 +51,7 @@ export const ActiveModal = <T,>({activeModal}: ActiveModalProps<T>) => {
             >
                 {activeModal.title}
             </ModalHeader>}
-            <ModalBody className={classNames(activeModal.bodyContainerClassName, "pb-2", {"mx-4": ["lg", "xl", undefined].includes(activeModal.size), "pt-0": !activeModal.title})} data-testid="modal-body">
+            <ModalBody className={classNames(activeModal.bodyContainerClassName, "pb-2", {"mx-4": ["lg", "xl", undefined].includes(activeModal.size), "pt-0": !activeModal.title})}>
                 {display(activeModal.body)}
             </ModalBody>
             {activeModal.buttons &&
