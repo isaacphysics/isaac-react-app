@@ -110,10 +110,9 @@ describe('Overview page', () => {
     }
 });
 
-
 const modal = {
     get closeButton() {
-        return this.__getByIdWithin('teacher-modal-close');
+        return screen.getByRole('button', { name: "Close onboarding modal" });
     },
     get forwardButton() {
         return this.__getByIdWithin('teacher-modal-forward');

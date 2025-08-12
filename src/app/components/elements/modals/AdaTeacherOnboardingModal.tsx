@@ -26,7 +26,7 @@ const unscheduleTeacherOnboardingModal = (): void => {
 };
 
 const shouldModalShow = (): boolean => {
-    return persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT) === "true" || true;
+    return persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT) === "true";
 };
 
 type AdaTeacherOnboardingModalState = {
@@ -53,7 +53,7 @@ export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardin
     header({ pageIndex, close }) {
         return <div className="d-flex justify-content-between px-4 pt-3 pb-2 border-bottom">
             <strong className="color-purple" data-testid='teacher-modal-pages'>{pageIndex} of {pages.length}</strong>
-            <button className="icon icon-close" aria-label="Close" onClick={close} data-testid='teacher-modal-close' />
+            <button aria-label="Close onboarding modal" className="icon icon-close" onClick={close} />
         </div>;
     },
     body({ pageIndex }) {
