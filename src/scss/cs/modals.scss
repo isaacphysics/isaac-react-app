@@ -1,0 +1,11 @@
+.modal-page-hero-image {
+    aspect-ratio: 400 / 242;
+    width: 100%;
+    max-width: 400px
+}
+
+@media(max-width: 450px) {
+    .modal-page-text {
+        min-height: 128px;
+    }
+}

@@ -26,7 +26,7 @@ const unscheduleTeacherOnboardingModal = (): void => {
 };
 
 const shouldModalShow = (): boolean => {
-    return persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT) === "true";
+    return persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT) === "true" || true;
 };
 
 type AdaTeacherOnboardingModalState = {
@@ -77,8 +77,8 @@ export const adaTeacherOnboardingModal: ActiveModalWithState<AdaTeacherOnboardin
 
 const Page = ({ page, isCurrentPage }: { page: typeof pages[number], isCurrentPage: boolean}) => {
     return <div role="region" aria-label="Teacher onboarding modal page" key={page.title} className="text-center mx-2" style={isCurrentPage ? {} : {display: 'none'}}>
-        <img aria-label="Teacher onboarding modal image" src={`/assets/cs/decor/${page.image}`} alt='' className="pb-2" style={{aspectRatio: 400 / 242, width: "100%", maxWidth: "400px"}}/>
-        <div className="d-flex flex-column align-items-center justify-content-center" style={{minHeight: "128px"}}>
+        <img aria-label="Teacher onboarding modal image" src={`/assets/cs/decor/${page.image}`} alt='' className="pb-3 modal-page-hero-image"/>
+        <div className="d-flex flex-column align-items-center justify-content-center modal-page-text">
             <h4>{page.title}</h4>
             <p className="mb-0">{page.message}</p>
         </div>
