@@ -46,22 +46,22 @@ export const Overview = () => {
                                     <strong>Create your account</strong>
                                 </CompletableTask>
 
-                                <CompletableTask tag={"li"} complete={getStartedTasks.personaliseContent}>
+                                <CompletableTask tag={"li"} complete={getStartedTasks.personaliseContent} disabled={!getStartedTasks.createAccount}>
                                     <div className="d-flex flex-column">
                                         <strong>Personalise your content</strong>
                                         <span>Pick a teaching level and exam board, or choose to see all content.</span>
                                     </div>
                                 </CompletableTask>
 
-                                <CompletableTask tag={"li"} complete={getStartedTasks.createGroup}>
+                                <CompletableTask tag={"li"} complete={getStartedTasks.createGroup} disabled={!getStartedTasks.createAccount}>
                                     <strong>Create a student group</strong>
                                 </CompletableTask>
 
-                                <CompletableTask tag={"li"} complete={getStartedTasks.assignQuiz}>
+                                <CompletableTask tag={"li"} complete={getStartedTasks.assignQuiz} disabled={!getStartedTasks.createGroup}>
                                     <strong>Assign a quiz to students</strong>
                                 </CompletableTask>
 
-                                <CompletableTask tag={"li"} complete={getStartedTasks.viewMarkbook}>
+                                <CompletableTask tag={"li"} complete={getStartedTasks.viewMarkbook} disabled={!getStartedTasks.assignQuiz}>
                                     <strong>View your markbook</strong>
                                 </CompletableTask>
                             </ul>

@@ -99,9 +99,8 @@
     border-color: $dark-pink-300;
   }
 
-  &:hover, &:disabled {
-    background: darken($dark-pink-300, 10%);
-    border-color: darken($dark-pink-300, 10%);
+  &:disabled:not(.checked) {
+    border-color: $cs-silver;
   }
 
   ~ .tick {
