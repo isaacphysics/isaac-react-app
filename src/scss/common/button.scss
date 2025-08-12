@@ -69,3 +69,11 @@ button {
     text-decoration: none;
   }
 }
+
+.invert-underline {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
