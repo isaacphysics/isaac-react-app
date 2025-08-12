@@ -9,6 +9,7 @@ it('Teacher Onboarding Modal should have no visual regressions', () => {
         const modal = adaTeacherOnboardingModal;
         cy.mountWithStoreAndRouter(<ActiveModal key={modal.title} activeModal={modal}/>, ["/dashboard"]);
         cy.get('[data-testid="active-modal"]').should('be.visible');
+        
         // Assert
         cy.matchImage();
     }

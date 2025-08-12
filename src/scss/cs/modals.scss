@@ -4,8 +4,6 @@
     max-width: 400px
 }
 
-@media(max-width: 450px) {
-    .modal-page-text {
-        min-height: 128px;
-    }
+.modal-page-text {
+    min-height: 128px;
 }

@@ -19,6 +19,7 @@ export interface PaginationState {
 export const activeModalWithPagination = ({ title, pages, buttons, useInit }: ActiveModalWithPagination): ActiveModalWithState<PaginationState> => {
     return {
         size: 'md',
+        centered: true,
         title,
         useInit() {
             useInit();
@@ -35,7 +36,7 @@ export const activeModalWithPagination = ({ title, pages, buttons, useInit }: Ac
         },
         body: ({ pageIndex }) => {
             return <>
-                {pages.map((page, idx) => <div key={idx} style={pageIndex === (idx + 1) ? {} : {display: "none"}}>{page}</div>)}
+                {pages.map((page, idx) => <div key={idx} style={pageIndex === (idx + 1) ? {} : {display: "none"}}>{ page }</div>)}
             </>;
         },
         buttons
