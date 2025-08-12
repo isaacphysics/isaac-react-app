@@ -1,4 +1,4 @@
-import React, {MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {
     Button,
@@ -35,7 +35,6 @@ import {
     showGroupInvitationModal,
     showGroupManagersModal,
     useAppDispatch,
-    useCreateGroupMutation,
     useDeleteGroupMemberMutation,
     useDeleteGroupMutation,
     useGetGroupsQuery,
@@ -197,36 +196,32 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
 
 interface GroupEditorProps extends CardProps {
     user: RegisteredUserDTO;
-    group?: AppGroup;
+    group: AppGroup;
     allGroups?: AppGroup[];
-    groupNameInputRef?: MutableRefObject<HTMLInputElement | null>;
 }
-const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef, ...rest}: GroupCreatorProps & GroupEditorProps) => {
+const GroupEditor = ({group, allGroups, user, ...rest}: GroupCreatorProps & GroupEditorProps) => {
     const dispatch = useAppDispatch();
 
     const [updateGroup] = useUpdateGroupMutation();
 
     const [isExpanded, setExpanded] = useState(false);
-    const [newGroupName, setNewGroupName] = useState(group ? group.groupName : "");
-    const isUserGroupOwner = group ? user.id === group.ownerId : false;
+    const [newGroupName, setNewGroupName] = useState(group.groupName);
+    const isUserGroupOwner = user.id === group.ownerId;
 
     useEffect(() => {
         setExpanded(false);
         setNewGroupName(group?.groupName ?? "");
-    }, [group?.id]);
+    }, [group.id]);
 
     function saveUpdatedGroup(event: React.FormEvent) {
         event?.preventDefault();
         if (!newGroupName || newGroupName.length === 0 || newGroupName.trim().length === 0) {
-            dispatch(showErrorToast(`Cannot ${group ? "rename" : "create"} group`, "The group name must be specified."));
+            dispatch(showErrorToast("Cannot rename group", "The group name must be specified."));
             return;
         }
-        if (group) {
-            const updatedGroup = {...group, groupName: newGroupName};
-            updateGroup({updatedGroup});
-        } else if (createNewGroup) {
-            createNewGroup(newGroupName);
-        }
+
+        const updatedGroup = {...group, groupName: newGroupName};
+        updateGroup({updatedGroup});
     }
 
     function toggleSelfRemoval() {
@@ -249,10 +244,10 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
         }
     }
 
-    function groupUserIds(group?: AppGroup) {
+    function groupUserIds(group: AppGroup) {
         const groupUserIdList: number[] = [];
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        group && group.members && group.members.map((member: AppGroupMembership) =>
+        group.members && group.members.map((member: AppGroupMembership) =>
             member.groupMembershipInformation.userId && member.authorisedFullAccess &&
             member.groupMembershipInformation.status == "ACTIVE" &&
             groupUserIdList.push(member.groupMembershipInformation.userId)
@@ -260,15 +255,15 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
         return groupUserIdList;
     }
 
-    const bigGroup = group && group.members && group.members.length > 100;
+    const bigGroup = group.members && group.members.length > 100;
 
     const usersInGroup = groupUserIds(group);
     const additionalManagers = useMemo(() => {
-        const additionalManagers = group && sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [];
-        return group?.ownerSummary ? [group.ownerSummary, ...additionalManagers] : additionalManagers;
+        const additionalManagers = sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [];
+        return group.ownerSummary ? [group.ownerSummary, ...additionalManagers] : additionalManagers;
     }, [group]);
 
-    const canArchive = group && (isUserGroupOwner || group.additionalManagerPrivileges);
+    const canArchive = (isUserGroupOwner || group.additionalManagerPrivileges);
     const canEmailUsers = isStaff(user) && usersInGroup.length > 0;
 
     const existingGroupWithConflictingName = allGroups?.find(g => g.groupName == newGroupName && (isDefined(group) ? group.id != g.id : true));
@@ -278,26 +273,21 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
     return <Card className={classNames({"mb-4": isPhy})} {...rest}>
         <CardBody>
             <h4 className={"mb-2"}>
-                {
-                    siteSpecific(
-                        group ? "Manage group" : "Create group",
-                        "Group details"
-                    )
-                }
+                {siteSpecific("Manage group", "Group details")}
             </h4>
 
             <div className={"d-flex flex-column gap-2"}>
                 <div>
                     <Form className="form-inline" onSubmit={saveUpdatedGroup}>
                         <Label htmlFor="groupName" className={"form-required fw-bold"}>
-                            {group && isUserGroupOwner ? "Rename group" : "Group name" }
+                            {isUserGroupOwner ? "Rename group" : "Group name" }
                         </Label>
                         <InputGroup className="flex-column flex-md-row align-items-center gap-2 stackable-input-group w-100">
                             <Input
                                 id="groupName"
                                 length={50}
-                                innerRef={groupNameInputRef} placeholder="Group name" value={newGroupName}
-                                onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !(isUserGroupOwner || group.additionalManagerPrivileges)}
+                                placeholder="Group name" value={newGroupName}
+                                onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={!(isUserGroupOwner || group.additionalManagerPrivileges)}
                                 invalid={isGroupNameInvalid}
                                 valid={isGroupNameValid}
                                 className={"w-100 w-md-auto flex-md-fill"}
@@ -305,69 +295,68 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
                             />
                             {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <Button
                                 color={siteSpecific("keyline", "solid")}
-                                className={classNames("w-100 w-md-auto")} disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
+                                className={classNames("w-100 w-md-auto")} disabled={newGroupName === "" || (newGroupName === group.groupName)}
                                 onClick={saveUpdatedGroup}
                             >
-                                {group ? "Update" : "Create"}
+                                Update
                             </Button>}
                             <FormFeedback id={"groupNameFeedback"}>A{existingGroupWithConflictingName?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
                         </InputGroup>
                     </Form>
                 </div>
-                {group && <>
 
-                    {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
+                {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
 
-                    <div>
-                        <div className={"d-flex flex-column flex-md-row justify-content-between"}>
-                            <div>
-                                <p className={"fw-bold"}>Group managers</p>
-                                {additionalManagers && <Table className={classNames("group-table", {"mt-1": isAda})}>
-                                    <tbody>
-                                        {additionalManagers.map((manager, i) =>
-                                            <tr key={manager.email} data-testid={"group-manager"} className={classNames({"border-0 bg-transparent": isAda})}>
-                                                <td className={classNames("align-middle p-0", {"border-top-0": i === 0, "border-0 bg-transparent": isAda})}>
-                                                    <div className="d-flex flex-fill">
-                                                        {siteSpecific(
-                                                            <i className="icon icon-my-isaac me-2 d-none d-md-inline-block"/>,
-                                                            <span className="icon-group-table-person d-none d-md-inline-block"/>
-                                                        )}
-                                                        {manager.givenName} {manager.familyName} {manager.id === group.ownerId && "(group owner)"} {user.id === manager.id && "(you)"}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </Table>}
-                            </div>
-                            {isTeacherOrAbove(user) &&
-                                <div>
-                                    <Button className="w-100 d-inline-block text-nowrap" color="keyline" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
-                                        {isUserGroupOwner ?
-                                            `${additionalManagers.length > 1 ? "Edit" : "Add"} group managers` : `More information`
-                                        }
-                                    </Button>
-                                </div>}
+                <div>
+                    <div className={"d-flex flex-column flex-md-row justify-content-between"}>
+                        <div>
+                            <p className={"fw-bold"}>Group managers</p>
+                            {additionalManagers && <Table className={classNames("group-table", {"mt-1": isAda})}>
+                                <tbody>
+                                    {additionalManagers.map((manager, i) =>
+                                        <tr key={manager.email} data-testid={"group-manager"} className={classNames({"border-0 bg-transparent": isAda})}>
+                                            <td className={classNames("align-middle p-0", {"border-top-0": i === 0, "border-0 bg-transparent": isAda})}>
+                                                <div className="d-flex flex-fill">
+                                                    {siteSpecific(
+                                                        <i className="icon icon-my-isaac me-2 d-none d-md-inline-block"/>,
+                                                        <span className="icon-group-table-person d-none d-md-inline-block"/>
+                                                    )}
+                                                    {manager.givenName} {manager.familyName} {manager.id === group.ownerId && "(group owner)"} {user.id === manager.id && "(you)"}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </Table>}
                         </div>
+                        {isTeacherOrAbove(user) &&
+                            <div>
+                                <Button className="w-100 d-inline-block text-nowrap" color="keyline" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
+                                    {isUserGroupOwner ?
+                                        `${additionalManagers.length > 1 ? "Edit" : "Add"} group managers` : `More information`
+                                    }
+                                </Button>
+                            </div>}
                     </div>
+                </div>
 
-                    {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
+                {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
 
-                    <div>
-                        <ShowLoading until={group.members}>
-                            {group.members && <div data-testid="group-members" className={"d-flex flex-column gap-3"}>
-                                <div className={"d-flex flex-column flex-md-row justify-content-between"}>
-                                    <p className={"fw-bold"}>Group members</p>
-                                    <div className={"d-flex flex-column flex-md-row gap-1"}>
-                                        <Button
-                                            disabled={group.archived}
-                                            className={"d-inline-block text-nowrap w-100 w-sm-auto"}
-                                            color="primary"
-                                            onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
-                                        >
+                <div>
+                    <ShowLoading until={group.members}>
+                        {group.members && <div data-testid="group-members" className={"d-flex flex-column gap-3"}>
+                            <div className={"d-flex flex-column flex-md-row justify-content-between"}>
+                                <p className={"fw-bold"}>Group members</p>
+                                <div className={"d-flex flex-column flex-md-row gap-1"}>
+                                    <Button
+                                        disabled={group.archived}
+                                        className={"d-inline-block text-nowrap w-100 w-sm-auto"}
+                                        color="primary"
+                                        onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
+                                    >
                                             Invite users
-                                        </Button>
-                                        {canEmailUsers && usersInGroup.length > 0 &&
+                                    </Button>
+                                    {canEmailUsers && usersInGroup.length > 0 &&
                                                 <Button
                                                     className={"d-inline-block text-nowrap w-100 w-sm-auto"}
                                                     color="secondary"
@@ -376,41 +365,39 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
                                                 >
                                                     Email users
                                                 </Button>
-                                        }
-                                    </div>
+                                    }
                                 </div>
-                                <div>
-                                    <StyledCheckbox
-                                        id="self-removal"
-                                        color={siteSpecific("primary", "")}
-                                        onChange={toggleSelfRemoval}
-                                        checked={!!group.selfRemoval}
-                                        label={<span>Allow students to remove themselves from this group</span>}
-                                    />
-                                </div>
-                                <div>
+                            </div>
+                            <div>
+                                <StyledCheckbox
+                                    id="self-removal"
+                                    color={siteSpecific("primary", "")}
+                                    onChange={toggleSelfRemoval}
+                                    checked={!!group.selfRemoval}
+                                    label={<span>Allow students to remove themselves from this group</span>}
+                                />
+                            </div>
+                            <div>
                                         This group has {group.members.length} member{group.members.length != 1 ? 's' : ''}.
-                                    {bigGroup && !isExpanded &&
+                                {bigGroup && !isExpanded &&
                                             <ButtonDropdown className="float-end" toggle={() => setExpanded(true)}>
                                                 <DropdownToggle caret>Show</DropdownToggle>
                                             </ButtonDropdown>
-                                    }
-                                </div>
-                                <div className={"d-flex flex-column gap-1"}>
-                                    {(!bigGroup || isExpanded) && group.members.map((member: AppGroupMembership) => (
-                                        <MemberInfo
-                                            key={member.groupMembershipInformation.userId}
-                                            member={member}
-                                            group={group}
-                                            user={user}
-                                        />
-                                    ))}
-                                </div>
-                            </div>}
-                        </ShowLoading>
-                    </div>
-                    
-                </>}
+                                }
+                            </div>
+                            <div className={"d-flex flex-column gap-1"}>
+                                {(!bigGroup || isExpanded) && group.members.map((member: AppGroupMembership) => (
+                                    <MemberInfo
+                                        key={member.groupMembershipInformation.userId}
+                                        member={member}
+                                        group={group}
+                                        user={user}
+                                    />
+                                ))}
+                            </div>
+                        </div>}
+                    </ShowLoading>
+                </div>
                 {
                     canArchive &&
                     <>
@@ -419,7 +406,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
 
                         <div>
                             <Button className={"w-100 w-md-auto"} color={siteSpecific("solid", "keyline")} onClick={toggleArchived}>
-                                {`${group?.archived ? "Unarchive" : "Archive"} group`}
+                                {`${group.archived ? "Unarchive" : "Archive"} group`}
                             </Button>
                         </div>
                     </>
@@ -427,52 +414,6 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef,
             </div>
         </CardBody>
     </Card>;
-};
-
-const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: GroupCreatorProps & {className: string, allGroups: AppGroup[]}) => {
-    const dispatch = useAppDispatch();
-    const [newGroupName, setNewGroupName] = useState("");
-
-    function saveUpdatedGroup() {
-        if (!newGroupName || newGroupName.length === 0 || newGroupName.trim().length === 0) {
-            dispatch(showErrorToast("Cannot create group", "The group name must be specified."));
-            return;
-        }
-        if (createNewGroup) {
-            createNewGroup(newGroupName).then(success => {
-                if (success) {
-                    setNewGroupName("");
-                }
-            });
-        }
-    }
-
-    const existingGroupWithConflictingName = allGroups?.find(g => g.groupName == newGroupName);
-    const isGroupNameInvalid = isDefined(newGroupName) && isDefined(existingGroupWithConflictingName);
-    const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName);
-
-    return <Row className={className}>
-        <Col size={12} className={siteSpecific("mt-2", "")}>
-            <h6 className={siteSpecific("", "fw-semi-bold")}>Create New Group</h6>
-        </Col>
-        <Col size={12} className="mb-2">
-            <Form>
-                <InputGroup>
-                    <Input length={50} placeholder="Enter the name of your group here" value={newGroupName}
-                        onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name"
-                        invalid={isGroupNameInvalid}
-                        valid={isGroupNameValid}
-                    />
-                    <FormFeedback>A{existingGroupWithConflictingName?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
-                </InputGroup>
-            </Form>
-        </Col>
-        <Col size={12} className={siteSpecific("", "mt-2")}>
-            <Button block color={siteSpecific("solid", "keyline")} onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
-                Create group
-            </Button>
-        </Col>
-    </Row>;
 };
 
 interface GroupSelectorProps {
@@ -483,13 +424,12 @@ interface GroupSelectorProps {
     setSelectedGroupId: React.Dispatch<React.SetStateAction<number | undefined>>;
     showArchived: boolean;
     setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
-    groupNameInputRef: React.RefObject<HTMLInputElement>;
     createNewGroup?: (newGroupName: string) => Promise<boolean>;
     showCreateGroup?: boolean; // Avoids having 2 'create group' panels when selector is full screen
     sidebarStyle?: boolean;
 }
 
-export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, showCreateGroup, sidebarStyle}: GroupSelectorProps) => {
+export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, createNewGroup, showCreateGroup, sidebarStyle}: GroupSelectorProps) => {
     const dispatch = useAppDispatch();
 
     // Clear the selected group when switching between tabs
@@ -545,26 +485,13 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
 
     return <Card className="group-selector">
         <CardBody>
-            {
-                siteSpecific(
-                    <>
-                        {showCreateGroup && isDefined(createNewGroup) &&
-                            <>
-                                <GroupCreatorPhy showArchived={showArchived} setShowArchived={setShowArchived}
-                                    showCreateGroup={showCreateGroup} setSelectedGroupId={setSelectedGroupId}
-                                    groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup}
-                                    allGroups={allGroups}
-                                />
-                                <div className="section-divider"/>
-                            </>
-                        }
-                    </>,
-                    <>
-                        <Button className={"d-block w-100"} onClick={() => {dispatch(showCreateGroupModal({user}));}}>Create a new group</Button>
-                        <hr />
-                    </>
-                )
+            { showCreateGroup &&
+                <>
+                    <Button className={"d-block w-100"} onClick={() => {dispatch(showCreateGroupModal({user}));}}>Create a new group</Button>
+                    {siteSpecific(<div className="section-divider"/>, <hr/>)}
+                </>
             }
+
             <div className={classNames("text-start", {"mt-3": showCreateGroup})}>
                 <strong className="me-2">Groups:</strong>
                 <UncontrolledButtonDropdown size="sm">
@@ -641,8 +568,6 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
 
     const allGroups = [...(groups ?? []) , ...(otherGroups.currentData ?? [])];
 
-    const [createGroup] = useCreateGroupMutation();
-
     const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>(window.location.hash ? parseInt(window.location.hash.slice(1)) : undefined);
 
     useEffect(() => {
@@ -653,20 +578,6 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
     const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
 
     const isEmptyState = allGroups.length === 0;
-
-    const createNewGroup: (newGroupName: string) => Promise<boolean> = async (newGroupName: string) => {
-        setShowArchived(false);
-        return createGroup(newGroupName).then(async (result) => {
-            if (mutationSucceeded(result)) {
-                const group = result.data;
-                if (!group.id) return false;
-                dispatch(showGroupInvitationModal({group, user, firstTime: true, backToCreateGroup: () => setSelectedGroupId(undefined)}));
-                setSelectedGroupId(group.id);
-                return true;
-            }
-            return false;
-        });
-    };
 
     // Get member data for selected group
     const [getGroupMembers] = useLazyGetGroupMembersQuery();
@@ -689,17 +600,19 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <SidebarLayout>
                 <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                    showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup}
+                    showArchived={showArchived} setShowArchived={setShowArchived}
                     hideButton
                 />
                 <MainContent>
                     <PageMetadata noTitle showSidebarButton sidebarButtonText="Select or create a group" helpModalId="help_modal_groups">
                         <PageFragment fragmentId={siteSpecific("help_toptext_groups", "groups_help")} ifNotFound={RenderNothing} />
                     </PageMetadata>
-                    <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} data-testid="group-editor"/>
+                    {selectedGroup &&
+                        <GroupEditor group={selectedGroup} allGroups={allGroups} user={user} data-testid="group-editor"/>
+                    }
                     {/* On small screens, the groups list should initially be accessible without needing to open the sidebar drawer */}
                     {below["md"](deviceSize) && !isDefined(selectedGroup) && <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                        showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} sidebarStyle={false}/>}
+                        showArchived={showArchived} setShowArchived={setShowArchived} sidebarStyle={false}/>}
                 </MainContent>
             </SidebarLayout>
         </ShowLoadingQuery>
@@ -715,7 +628,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
                     <Row className="mb-7">
                         <Col lg={4}>
                             <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                                showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} showCreateGroup={true} />
+                                showArchived={showArchived} setShowArchived={setShowArchived} showCreateGroup={true} />
                         </Col>
 
                         <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
@@ -741,34 +654,6 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
     </Container>;
 
     return siteSpecific(GroupsPhy, GroupsAda);
-};
-
-interface GroupCreatorPhyProps {
-    allGroups: AppGroup[];
-    selectedGroup?: AppGroup;
-    setSelectedGroupId: React.Dispatch<React.SetStateAction<number | undefined>>;
-    showArchived: boolean;
-    setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
-    groupNameInputRef: React.RefObject<HTMLInputElement>;
-    createNewGroup?: (newGroupName: string) => Promise<boolean>
-    showCreateGroup?: boolean;
-    sidebarStyle?: boolean;
-}
-
-const GroupCreatorPhy = ({ showCreateGroup, createNewGroup, setSelectedGroupId, allGroups, groupNameInputRef}: GroupCreatorPhyProps) => {
-    return <>
-        {showCreateGroup && isDefined(createNewGroup) && <>
-            <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
-            <div className="d-none d-lg-block mb-3">
-                <Button block color="keyline" onClick={() => {
-                    setSelectedGroupId(undefined);
-                    if (groupNameInputRef.current) {
-                        groupNameInputRef.current.focus();
-                    }
-                }}>Create new group</Button>
-            </div>
-        </>}
-    </>;
 };
 
 export const Groups = withRouter(connect(stateToProps)(GroupsComponent));
