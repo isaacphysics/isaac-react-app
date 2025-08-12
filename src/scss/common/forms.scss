@@ -39,7 +39,8 @@
 }
 
 .date-input .is-invalid, .date-input .is-valid {
-  background: white;
+  background-color: white;
+  --bs-form-select-bg-icon: none !important;
 }
 
 .date-input {
@@ -264,4 +265,8 @@ label {
   border: 2px solid black;
   min-width: 20px;
   min-height: 20px;
+}
+
+.is-invalid .basic-multi-select .select__control {
+  border-color: $red; // bootstrap red, so as to align with other invalid inputs
 }
