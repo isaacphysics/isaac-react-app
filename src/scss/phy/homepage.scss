@@ -1,17 +1,310 @@
 .physics-strapline {
-  //font-family: 'exo_2regular', sans-serif;
-  //font-size: 1.8rem;
-  h1 {
+  h2 {
+    font-family: $secondary-font-bold;
+    font-size: 40px;
   }
-  small {
-    font-family: "exo_2regular", sans-serif;
-    font-weight: 400;
-    line-height: 1;
+
+  .text-green {
+    color: $color-brand-700;
   }
 }
 
-.physics-site-intro {
-  @include respond-above(sm) {
-    font-size: large;
+.homepage {
+  h3 {
+    font-family: $secondary-font-bold;
+    font-size: 24px;
+    display: inline;
+    text-wrap: nowrap;
   }
+
+  .news-events-link {
+    text-wrap: nowrap;
+    margin: 7px 16px 0px;
+    color: $color-neutral-600;
+  }
+
+  .section-divider {
+    margin-top: 18px;
+  }
+
+  .homepage-hero {
+    background-color: #DCEBD7; // not in colour scheme
+    position: relative;
+
+    .homepage-hero-img {
+      position: absolute;
+      height: 100%;
+      aspect-ratio: 3 / 2;
+      background: url('/assets/phy/phy-homepage-image.jpg') no-repeat center center;
+      background-size: contain;
+      clip-path: polygon(28% 0, 100% 0, 100% 100%, 28% 100%, 14% 50%);
+
+      @include media-breakpoint-down(md) {
+        height: 50vh;
+        position: relative;
+        aspect-ratio: unset;
+        background-size: cover;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        margin-bottom: -20vh;
+      }
+
+      @include media-breakpoint-only(xs) {
+        margin-bottom: -25vh;
+      }
+
+      @include media-breakpoint-between(md, lg) {
+        left: 40%;
+        background-position: -30px 0;
+        max-height: 500px;
+      }
+
+      @include media-breakpoint-between(lg, xxl) {
+        left: 38%;
+      }
+
+      @include media-breakpoint-up(xxl) {
+        right: -50px;
+        background-position: -90px -120px;
+        background-size: 120%;
+      }
+    }
+
+    .homepage-hero-card {
+      height: 100%;
+      border-radius: 8px;
+
+      h4 {
+        font-family: $secondary-font-bold;
+        font-size: 24px;
+      }
+
+      .homepage-hero-card-tag {
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        > b {
+          font-family: $secondary-font-semi-bold;
+          color: white;
+          position: absolute;
+          font-size: 14px;
+          padding-top: 8px;
+          left: 30px;
+        }
+      }
+    }
+  }
+}
+
+.dashboard {
+  background-color: white;
+
+  &.dashboard-outer { // avoids double-padding for teachers viewing student dashboard
+    padding: 30px 30px 50px;
+  }
+}
+
+$dashboard-panel-size: 120px;
+$dashboard-panel-padding: 30px;
+
+@container streak-panel (min-width: 432px) {
+  div.dashboard-panel {
+    min-height: calc($dashboard-panel-size + 2 * $dashboard-panel-padding);
+    > * {
+      max-width: calc(100% - $dashboard-panel-size - $dashboard-panel-padding);
+    }
+
+    div.streak-panel-gauge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: $dashboard-panel-padding;
+    }
+  }
+}
+
+.panel-streak {
+  container: streak-panel / inline-size;
+}
+
+.dashboard-panel {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: $color-neutral-50;
+  border: 2px solid $color-neutral-200;
+  border-radius: 8px;
+  height: 100%;
+  max-height: 450px;
+  padding: $dashboard-panel-padding;
+
+  @include media-breakpoint-only(lg) {
+    max-height: 500px;
+  }
+
+  h4 {
+    color: $color-brand-700;
+    font-size: 18px;
+    font-family: $secondary-font-bold;
+    padding-bottom: 10px;
+  }
+
+  .streak-text {
+    color: $color-brand-700;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .panel-link {
+    color: $color-neutral-800;
+    width: max-content;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2pt black !important;
+      border-radius: 1px;
+    }
+  }
+
+  .panel-my-isaac-link {
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .streak-panel-gauge {
+    display: inline-block;
+    font-family: $secondary-font-semi-bold;
+    width: $dashboard-panel-size;
+    height: $dashboard-panel-size;
+    > b {
+      color: $color-brand-700;
+      font-size: 32px;
+      line-height: 32px;
+      font-weight: 700;
+    }
+  }
+}
+
+.book-panel {
+  overflow: hidden;
+
+  .dashboard-book {
+    font-size: 13px;
+    text-decoration: none;
+    text-align: center;
+    max-width: 105px;
+
+    img {
+      max-width: 85px;
+    }
+  }
+}
+
+a:has(.assignment-card) {
+  text-decoration: none;
+}
+
+.assignment-card {
+  border: 1.5px solid $color-neutral-300;
+  text-decoration: none;
+  border-radius: 8px;
+  background-color: white;
+  color: $color-neutral-700;
+  font-size: 13px;
+  padding: 10px;
+  transition: all 0.2s ease-out;
+
+  h5 {
+    font-size: 17px;
+    font-family: $secondary-font-semi-bold;
+
+    max-height: 5rem;
+    overflow: hidden;
+
+    // if below is not supported, it is still capped at 5rem
+    display: -webkit-box !important;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    
+  }
+
+  .overdue {
+    color: $color-misc-red;
+    font-weight: 600;
+  }
+
+  .group-name {
+    display: inline-block;
+    margin-inline-start: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:hover {
+    @include not-reduced-motion {
+      transform: scale(1.02);
+    }
+    border-color: $color-neutral-400;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .row-cols-lg-8 > *{
+    flex: 0 0 auto;
+    width: 12.5%;
+  }
+}
+
+.random-question-panel {
+  background-color: $color-neutral-100;
+
+  .content-summary-item {
+    min-height: 100px;
+    padding-top: 1.15rem;
+  }
+}
+
+.dashboard-scroll-shadow {
+  position: sticky;
+  overflow: hidden;
+  height: auto;
+  display: block;
+  z-index: 1;
+  width: 10%;
+  margin-right: -10%;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+
+  &.left {
+    left: 0;
+    background: linear-gradient(to right, $color-neutral-50 0%, color-mix(in srgb, $color-neutral-50, transparent 100%) 100%);
+  }
+
+  &.right {
+    left: 90%;
+    background: linear-gradient(to left, $color-neutral-50 0%, color-mix(in srgb, $color-neutral-50, transparent 100%) 100%);
+  }
+}
+
+.books-select {
+  border: none;
+  border-bottom: 1px solid $color-neutral-300;
+  background-color: transparent;
 }

@@ -1,28 +1,29 @@
 import React, {useCallback} from "react";
 import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {isDefined, useQuizAttemptFeedback} from "../../../services";
+import {getThemeFromTags, isDefined, useQuizAttemptFeedback} from "../../../services";
 import {
     myQuizzesCrumbs,
-    QuizAttemptComponent,
+    QuizContentsComponent,
     QuizAttemptProps,
     QuizPagination
-} from "../../elements/quiz/QuizAttemptComponent";
+} from "../../elements/quiz/QuizContentsComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {Alert, Button, Container} from "reactstrap";
+import {Alert, Button, Col, Container} from "reactstrap";
+import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
+import classNames from "classnames";
 
-function QuizFooter(props: QuizAttemptProps) {
+function QuizAttemptFeedbackFooter(props: QuizAttemptProps) {
     const {page, pageLink, studentUser} = props;
-
     let controls;
     let prequel = null;
     if (page === null) {
         prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {isDefined(studentUser) ? "their" : "your"} detailed feedback.</p>;
         controls = <>
             <Spacer/>
-            <Button tag={Link} replace to={pageLink(1)}>Next</Button>
+            <Button tag={Link} to={pageLink(1)}>Next</Button>
         </>;
     } else {
         controls = <QuizPagination {...props} page={page} finalLabel="Back to Overview" />;
@@ -62,14 +63,19 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber,
         questions, sections, pageLink, pageHelp, studentUser, user, quizAssignmentId};
 
-    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
+    return <Container className="mb-7" data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
         <ShowLoading until={attempt || error}>
             {isDefined(attempt) && <>
-                <QuizAttemptComponent {...subProps} />
-                {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizFooter {...subProps} />}
+                <QuizContentsComponent {...subProps} />
+                <SidebarLayout>
+                    <Col lg={4} xl={3} className={classNames("d-none d-lg-flex flex-column sidebar p-4 order-0")} />
+                    <MainContent>
+                        {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizAttemptFeedbackFooter {...subProps} />}
+                    </MainContent>
+                </SidebarLayout>
             </>}
             {isDefined(error) && <>
-                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} />
+                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "hex", icon: "icon-error"}} />
                 <Alert color="danger">
                     <h4 className="alert-heading">Error loading your feedback!</h4>
                     <p>{error}</p>

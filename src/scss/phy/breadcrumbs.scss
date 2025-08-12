@@ -1,0 +1,33 @@
+@import "../common/breadcrumbs";
+
+.bread {
+    position: relative;
+
+    background-color: color-mix(in srgb, var(--subject-color-900) 50%, transparent 50%);
+    border-bottom: 1px solid color-mix(in srgb, white 20%, transparent 80%);
+
+    .breadcrumb-item {
+        display: flex;
+        align-items: center;
+        color: white;
+    }
+    
+    .breadcrumb-item a {
+        text-decoration: none;
+        color: white;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before, .breadcrumb-item:last-child::after {
+        @include pseudo-icon('/assets/common/icons/chevron-right.svg', 16px, 16px, 100%);
+        background-color: $color-neutral-white;
+        padding: 0;
+        margin-right: 0.5rem;
+    }
+    
+    .breadcrumb-item:last-child::after {
+        margin-left: $breadcrumb-item-padding-x;
+    }
+}

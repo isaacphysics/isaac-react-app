@@ -1,11 +1,9 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useMemo, useRef, useState} from "react";
 import {Col, Container, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
-import {AppState, useAppSelector} from "../../state";
+import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ShareLink} from "../elements/ShareLink";
-import {PrintButton} from "../elements/PrintButton";
+import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
 import {GlossaryTermDTO, Stage} from "../../../IsaacApiTypes";
 import {
@@ -16,18 +14,31 @@ import {
     NOT_FOUND,
     scrollVerticallyIntoView,
     siteSpecific,
-    stageLabelMap,
     stagesOrdered,
     TAG_ID,
     tags,
     useUrlHashValue,
     arrayFromPossibleCsv,
+    useUrlPageTheme,
+    isFullyDefinedContext,
+    isSingleStageContext,
+    getHumanContext,
+    useQueryParams,
+    ListParams,
+    LEARNING_STAGE_TO_STAGES,
+    getSearchPlaceholder,
 } from "../../services";
-import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
+import {NOT_FOUND_TYPE, PageContextState, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
-import {useHistory, useLocation} from "react-router";
-import Select from "react-select";
+import {useHistory} from "react-router";
+import { GlossarySidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import classNames from "classnames";
+import debounce from "lodash/debounce";
+import { PageMetadata } from "../elements/PageMetadata";
+import { PageFragment } from "../elements/PageFragment";
+
+type FilterParams = "subjects" | "stages" | "query";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -75,19 +86,24 @@ export function formatGlossaryTermId(rawTermId: string) {
 function tagByValue(values: string[], tags: Tag[]): Tag | undefined {
     return tags.filter(option => values.includes(option.id)).at(0);
 }
-function stageByValue(values: string[], tags: Stage[]): Stage | undefined {
-    return tags.filter(option => values.includes(option)).at(0);
+function stagesByValue(values: string[], tags: Stage[]): Stage[] | undefined {
+    const stages = tags.filter(option => values.includes(option));
+    return stages.length === 0 ? undefined : stages;
 }
 
 interface QueryStringResponse {
-    queryStages: Stage | undefined;
+    queryStages: Stage[] | undefined;
     querySubjects: Tag | undefined;
 }
-function processQueryString(query: string): QueryStringResponse {
-    const {subjects, stages} = queryString.parse(query);
+function processQueryString(query: ListParams<FilterParams>, pageContext?: PageContextState): QueryStringResponse {
+    if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
+        return {
+            queryStages: stagesByValue(pageContext.stage.flatMap(x => LEARNING_STAGE_TO_STAGES[x]), stagesOrdered.slice(0,-1)), 
+            querySubjects: tags.getById(pageContext.subject as TAG_ID)};
+    }
 
-    const subjectItems = tagByValue(arrayFromPossibleCsv((subjects ?? []) as string[] | string), tags.allSubjectTags);
-    const stageItems = stageByValue(arrayFromPossibleCsv((stages ?? []) as string[] | string), stagesOrdered.slice(0,-1));
+    const subjectItems = tagByValue(arrayFromPossibleCsv((query.subjects ?? []) as string[] | string), tags.allSubjectTags);
+    const stageItems = stagesByValue(arrayFromPossibleCsv((query.stages ?? []) as string[] | string), stagesOrdered.slice(0,-1));
 
     return {
         queryStages: stageItems, querySubjects: subjectItems
@@ -97,18 +113,51 @@ function processQueryString(query: string): QueryStringResponse {
 /* An offset applied when scrolling to a glossary term, so the term isn't hidden under the alphabet header */
 const ALPHABET_HEADER_OFFSET = -65;
 
-export const Glossary = () => {
-    const location = useLocation();
-    const history = useHistory();
-    // query stages not used recently
-    const {queryStages, querySubjects} = processQueryString(location.search);
+interface GlossarySearchProps {
+    searchText: string;
+    setSearchText: (searchText: string) => void;
+}
 
-    const [searchText, setSearchText] = useState("");
+export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps) => {
+    // setSearchText is a debounced method that would not update on each keystroke, so we use this internal state to visually update the search text immediately
+    const [internalSearchText, setInternalSearchText] = useState(searchText);
+
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
+    return siteSpecific(<Input
+        className='search--filter-input my-4'
+        type="search" value={internalSearchText || ""}
+        placeholder={`e.g. ${getSearchPlaceholder(pageContext?.subject)}`}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
+            setSearchText(e.target.value);
+            setInternalSearchText(e.target.value);
+        }}
+    />,
+    <Input
+        id="terms-search" name="query"
+        type="search" value={internalSearchText || ""}
+        placeholder="Search by term" aria-label="Search by term"
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
+            setSearchText(e.target.value);
+            setInternalSearchText(e.target.value);
+        }}
+    />);
+};
+
+export const Glossary = () => {
+    const dispatch = useAppDispatch();
+    const history = useHistory();
+    const pageContext = useUrlPageTheme();
+    const params = useQueryParams<FilterParams, false>(false);
+    
+    const {queryStages, querySubjects} = processQueryString(params, pageContext);
+
+    const [searchText, setSearchText] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const subjects = tags.allSubjectTags.sort((a,b) => a.title.localeCompare(b.title));
     const stages: Stage[] = stagesOrdered.slice(0,-1);
     const [filterSubject, setFilterSubject] = useState<Tag | undefined>(querySubjects);
-    const [filterStage, setFilterStage] = useState<Stage | undefined>(queryStages);
+    const [filterStages, setFilterStages] = useState<Stage[] | undefined>(queryStages);
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useAppSelector(
         (state: AppState) => state && state.glossaryTerms?.map(
@@ -121,13 +170,39 @@ export const Glossary = () => {
         )
     );
 
+    const debouncedSearchHandler = useMemo(() =>
+        debounce((searchTerm: string) => {
+            setSearchText(searchTerm);
+        }, 500),
+    [setSearchText]);
+
+    // Log on initial page load
+    useEffect(() => {
+        dispatch(logAction({type: "VIEW_GLOSSARY_PAGE"}));
+    }, []);
+
+    useEffect(() => {
+        if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
+            setFilterSubject(tags.getById(pageContext.subject as TAG_ID));
+            const potentialStage = stagesByValue(pageContext.stage.flatMap(x => LEARNING_STAGE_TO_STAGES[x]), stagesOrdered.slice(0,-1));
+            setFilterStages(potentialStage);
+        }
+    }, [pageContext]);
+
     // Update url
     useEffect(() => {
         const params: {[key: string]: string} = {};
-        if (filterSubject) params.subjects = filterSubject.id;
-        if (filterStage) params.stages = filterStage;
-        history.replace({search: queryString.stringify(params, {encode: false}), state: location.state, hash: location.hash});
-    }, [filterSubject, filterStage]);
+        if (!pageContext?.subject || !pageContext?.stage?.length) {
+            if (filterSubject) params.subjects = filterSubject?.id;
+            if (filterStages) params.stages = filterStages.join(',');
+        }
+        if (searchText) params.query = searchText;
+        history.replace({search: queryString.stringify(params, {encode: false}), state: history.location.state, hash: history.location.hash});
+    }, [filterSubject, filterStages, searchText, pageContext]);
+
+    const searchTextFilteredTerms = useMemo(() => {
+        return searchText === '' ? rawGlossaryTerms : rawGlossaryTerms?.filter(e => searchText.split(' ').some(t => e.value?.toLowerCase().includes(t.toLowerCase())));
+    }, [rawGlossaryTerms, searchText]);
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } | undefined {
@@ -136,10 +211,9 @@ export const Glossary = () => {
                 for (const term of sortedTerms) {
                     // Only show physics glossary terms when a subject has been selected
                     if (isPhy && !isDefined(filterSubject)) continue;
-
                     if (isAda && isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
                     if (isPhy && isDefined(filterSubject) && !term.tags?.includes(filterSubject.id)) continue;
-                    if (isPhy && isDefined(filterStage) && !term.stages?.includes(filterStage)) continue;
+                    if (isPhy && isDefined(filterStages) && !(filterStages.some(s => term.stages?.includes(s)))) continue;
 
                     const value = term?.value?.[0] ?? '#';
                     const k = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.includes(value) ? value : '#';
@@ -149,15 +223,31 @@ export const Glossary = () => {
             }
             return undefined;
         }
-
-        const searchTerms = searchText.split(' ').map(t => t.toLowerCase());
-        const sortedAndFilteredTerms =
-            (searchText === ''
-                ? [...rawGlossaryTerms ?? []]
-                : rawGlossaryTerms?.filter(e => searchTerms.some(t => e.value?.toLowerCase().includes(t)))
-            )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
+        const sortedAndFilteredTerms = searchTextFilteredTerms?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
         return groupTerms(sortedAndFilteredTerms);
-    }, [rawGlossaryTerms, filterTopic, filterSubject, filterStage, searchText]);
+    }, [rawGlossaryTerms, filterTopic, filterSubject, filterStages, searchText]);
+
+    const subjectCounts = useMemo(() => {
+        const counts: { [key: string]: number } = {};
+        subjects.forEach(subject => {
+            counts[subject.id] = searchTextFilteredTerms?.filter(term => term.tags?.includes(subject.id)).length ?? 0;
+        });
+        return counts;
+    }, [rawGlossaryTerms, searchText]);
+
+    const stageCounts = useMemo(() => {
+        const counts: {[key: string]: number} = {};
+        if (filterSubject) {
+            const filteredTerms = searchTextFilteredTerms?.filter(term => term.tags?.includes(filterSubject.id));
+            filteredTerms?.forEach(term => {
+                term.stages?.forEach(stage => {
+                    counts[stage] = (counts[stage] ?? 0) + 1;
+                });
+            });
+            counts["all"] = filteredTerms?.length ?? 0;
+        }
+        return counts;
+    }, [rawGlossaryTerms, filterSubject, searchText]);
 
     /* Stores a reference to each glossary term component (specifically their inner paragraph tags) */
     const glossaryTermRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());
@@ -258,108 +348,93 @@ export const Glossary = () => {
         "A glossary of important words and phrases used in maths, physics, chemistry and biology.",
         "Confused about a computer science term? Look it up in our glossary. Get GCSE and A level support today!");
 
+    const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
+
     const thenRender = <div className="glossary-page">
-        <Container>
-            <TitleAndBreadcrumb currentPageTitle="Glossary" />
+        <Container data-bs-theme={pageContext?.subject}>
+            <TitleAndBreadcrumb 
+                currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? `${getHumanContext(pageContext)} Glossary` : "Glossary"}
+                icon={{type: "hex", subject: pageContext?.subject, icon: "icon-tests"}}
+                intermediateCrumbs={crumb ? [crumb] : []}
+            />
             <MetaDescription description={metaDescription} />
 
-            <div className="no-print d-flex align-items-center">
-                <div className="question-actions question-actions-leftmost mt-3">
-                    <ShareLink linkUrl={`/glossary`} clickAwayClose/>
-                </div>
-                <div className="question-actions mt-3 not-mobile">
-                    <PrintButton/>
-                </div>
-            </div>
-            <Row>
-                <Col md={{size: 9}} className="py-4">
-                    <Row className="no-print">
-                        {isPhy && <Col className="mt-3 mt-md-0">
-                            <Label for='subject-select' className='visually-hidden'>Subject</Label>
-                            <Select inputId="subject-select"
-                                options={subjects.map(s => ({ value: s.id, label: s.title}))}
-                                value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title}) : undefined}
-                                name="subject-select"
-                                placeholder="Select a subject"
-                                onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
-                                isClearable
-                                className={`basic-multi-select glossary-select ${filterSubject?.id ?? ""}`}
-                                classNamePrefix="select"
-                            />
-                        </Col>}
-                        <Col md={{size: 4}}>
-                            <Label for='terms-search' className='visually-hidden'>Search by term</Label>
-                            <Input
-                                id="terms-search" type="search" name="query" placeholder="Search by term" aria-label="Search by term"
-                                value={searchText} onChange={e => setSearchText(e.target.value)}
-                            />
-                        </Col>
-                        {isAda && <Col className="mt-3 mt-md-0">
-                            <Label for='topic-select' className='visually-hidden'>Topic</Label>
-                            <StyledSelect inputId="topic-select"
-                                options={ topics.map(t => ({ value: t.id, label: t.title}))}
-                                name="topic-select"
-                                placeholder="All topics"
-                                onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
-                                isClearable
-                            />
-                        </Col>}
-                        {isPhy && <Col className="mt-3 mt-md-0">
-                            <Label for='stage-select' className='visually-hidden'>Stage</Label>
-                            <StyledSelect inputId="stage-select"
-                                options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
-                                value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
-                                name="stage-select"
-                                placeholder="Select a stage"
-                                onChange={e => setFilterStage(stages.find(s => s === e?.value))}
-                                isClearable
-                            />
-                        </Col>}
-                    </Row>
-                    <Row className="only-print">
-                        <Col>
-                            {searchText !== "" && <span className="pe-4">Search: <strong>{searchText}</strong></span>}
-                            {isDefined(filterTopic) && <span className="pe-4">Topic: <strong>{filterTopic.title}</strong></span>}
+            <SidebarLayout>
+                <GlossarySidebar 
+                    searchText={searchText} setSearchText={debouncedSearchHandler} filterSubject={filterSubject} setFilterSubject={setFilterSubject}
+                    filterStages={filterStages} setFilterStages={setFilterStages} subjects={subjects} stages={stages} stageCounts={stageCounts}
+                    subjectCounts={subjectCounts} hideButton
+                />
+                <MainContent>
+                    <PageMetadata noTitle showSidebarButton sidebarButtonText="Search glossary">
+                        <PageFragment fragmentId="help_toptext_glossary" />
+                    </PageMetadata>
+                    <Row>
+                        <Col md={{size: 9}} className="py-4">
+                            <Row className="no-print">
+                                {isAda && <>
+                                    <Col md={{size: 4}}>
+                                        <Label for='terms-search' className='visually-hidden'>Search by term</Label>
+                                        <GlossarySearch searchText={searchText} setSearchText={debouncedSearchHandler} />
+                                    </Col>
+                                    <Col className="mt-3 mt-md-0">
+                                        <Label for='topic-select' className='visually-hidden'>Topic</Label>
+                                        <StyledSelect inputId="topic-select"
+                                            options={ topics.map(t => ({ value: t.id, label: t.title}))}
+                                            name="topic-select"
+                                            placeholder="All topics"
+                                            onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
+                                            isClearable
+                                        />
+                                    </Col>
+                                </>}
+                            </Row>
+                            <Row className="only-print">
+                                <Col>
+                                    {searchText !== "" && <span className="pe-4">Search: <strong>{searchText}</strong></span>}
+                                    {isDefined(filterTopic) && <span className="pe-4">Topic: <strong>{filterTopic.title}</strong></span>}
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
-                </Col>
-            </Row>
-            {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
-                <Col md={{size: 8, offset: 2}} className="py-4">
-                    {/* Let users know that they need to select a subject */}
-                    {isPhy && !isDefined(filterSubject) && <p>Please select a subject.</p>}
-                    {(isAda || isDefined(filterSubject)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
-                    {searchText !== "" && <p>We could not find glossary terms to match your search criteria.</p>}
-                </Col>
-            </Row>}
-            {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className="pt-2 pb-4">
-                <div className="no-print">
-                    <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
-                    <div ref={stickyAlphabetListContainer} id="stickyalphabetlist" className="alphabetlist pb-4">
-                        {alphabetList}
-                    </div>
-                    <div className="alphabetlist pb-4">
-                        {alphabetList}
-                    </div>
-                </div>
-                {Object.entries(glossaryTerms).map(([letter, terms]) => <div key={letter} className="row pb-5" ref={(el: HTMLDivElement) => alphabetHeaderRefs.current.set(letter, el)}>
-                    <Col md={{size: 1, offset: 1}}>
-                        <h2 style={{position: 'sticky', top: `calc(0px - ${ALPHABET_HEADER_OFFSET}px)`}}>
-                            {letter}
-                        </h2>
-                    </Col>
-                    <Col>
-                        {terms.map(term => <IsaacGlossaryTerm
-                            key={term.id}
-                            ref={(el: HTMLElement) => {
-                                glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
-                            }}
-                            doc={term}
-                            linkToGlossary={true}
-                        />)}
-                    </Col>
-                </div>)}
-            </Col>}
+                    {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
+                        <div className={siteSpecific("text-center", "col-md-8 offset-md-2 py-4")}>
+                            {/* Let users know that they need to select a subject */}
+                            {isPhy && !isDefined(filterSubject) && <p>Please select a subject.</p>}
+                            {(isAda || isDefined(filterSubject)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
+                            {(isAda || isDefined(filterSubject)) && searchText !== "" &&  <p>We could not find glossary terms to match your search criteria.</p>}
+                        </div>
+                    </Row>}
+                    {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className={classNames("p-2 pb-4", {"list-results-container border-radius-2 mb-4": isPhy})}>
+                        <div className="no-print">
+                            <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
+                            <div ref={stickyAlphabetListContainer} id="stickyalphabetlist" className="alphabetlist pb-4">
+                                {alphabetList}
+                            </div>
+                            <div className="alphabetlist pb-4">
+                                {alphabetList}
+                            </div>
+                        </div>
+                        {Object.entries(glossaryTerms).map(([letter, terms]) => <div key={letter} className="row pb-7" ref={(el: HTMLDivElement) => alphabetHeaderRefs.current.set(letter, el)}>
+                            <Col md={{size: 1, offset: 1}}>
+                                <h2 style={{position: 'sticky', top: `calc(0px - ${ALPHABET_HEADER_OFFSET}px)`}}>
+                                    {letter}
+                                </h2>
+                            </Col>
+                            <Col>
+                                {terms.map(term => <IsaacGlossaryTerm
+                                    key={term.id}
+                                    ref={(el: HTMLElement) => {
+                                        glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
+                                    }}
+                                    doc={term}
+                                    linkToGlossary={true}
+                                />)}
+                            </Col>
+                        </div>)}
+                    </Col>}
+                </MainContent>
+            </SidebarLayout>
         </Container>
     </div>;
 

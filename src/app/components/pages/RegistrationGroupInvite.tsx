@@ -37,11 +37,11 @@ export const RegistrationGroupInvite = ()  => {
 
     if(!isGroupValid){
         return <Container>
-            <TitleAndBreadcrumb currentPageTitle={`Group not found`} className="mb-4" />
-            <Card className="my-5">
+            <TitleAndBreadcrumb currentPageTitle={`Group not found`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
+            <Card className="my-7">
                 <CardBody>
                     <p>You came here via a group join link, but the group code is invalid.</p>
-                    <Button color="primary" outline onClick={() => {history.push("/account#teacherconnections");}}>
+                    <Button color="keyline" onClick={() => {history.push("/account#teacherconnections");}}>
                         Go to teacher connections
                     </Button>
                 </CardBody>
@@ -49,8 +49,8 @@ export const RegistrationGroupInvite = ()  => {
         </Container>;
     }
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Join group`} className="mb-4" />
-        <Card className="my-5">
+        <TitleAndBreadcrumb currentPageTitle={`Join group`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
+        <Card className="my-7">
             <CardBody>
                 <p>You came here via a group join link. Are you happy to join the group and allow
                 these teachers to see your work and progress?</p>
@@ -64,11 +64,11 @@ export const RegistrationGroupInvite = ()  => {
                         </tr>))}
                     </tbody>
                 </Table>
-                <Button color="primary" outline onClick={() => {history.push("/account");}}>
+                <Button color="keyline" onClick={() => {history.push("/account");}}>
                     No, skip this
                 </Button>
                 {" "}
-                <Button color="secondary" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
+                <Button color="solid" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
                     Yes, join the group
                 </Button>
             </CardBody>  

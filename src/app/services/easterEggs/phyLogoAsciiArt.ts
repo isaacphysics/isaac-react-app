@@ -1,30 +1,39 @@
-const logoAsciiArt: string = "\n" +
-    "  ▄▄▄█▄▄\n" +
-    " ▀██▀▀████▄        ▄██\n" +
-    "  ▀██▄▄ ▀███▄    ▄█▀\n" +
-    "    ▀███▄▄ ▀█▄  ▄█\n" +
-    "       ▀▀▀██   ▀▀\n" +
-    "           ▄▄███▄▄\n" +
-    "        ▄███████████▄\n" +
-    "     ▄█████████████████▄\n" +
-    "  ▄███████████████████████▄\n" +
-    "█████████████████████████████\n" +
-    "██  █████████████████████████     _____  _               _\n" +
-    "██▀▀█▀   ▀█    ▀█    ▀█▀   ██    |  __ \\| |             (_)\n" +
-    "██  █  ███████  ████  █  ████    | |__) | |__  _   _ ___ _  ___ ___\n" +
-    "██  █▄   ▀█     █     █  ████    |  ___/| '_ \\| | | / __| |/ __/ __|\n" +
-    "██  ████  █ ██  █ ██  █  ████    | |    | | | | |_| \\__ \\ | (__\\__ \\\n" +
-    "██  █▄   ▄█   ▄ █   ▄ █▄   ██    |_|    |_| |_|\\__, |___/_|\\___|___/\n" +
-    "█████████████████████████████                   __/ |\n" +
-    "  ▀███████████████████████▀                    |___/\n" +
-    "     ▀█████████████████▀\n" +
-    "        ▀███████████▀\n" +
-    "           ▀▀███▀▀" +
-    "\n\xA0";
+const logoAsciiArt: string = `%c                               \xA0
+   ▄▄▄█▄▄                      \xA0
+  ▀██▀▀████▄        %c▄██%c        \xA0
+   ▀██▄▄ ▀███▄    %c▄█▀%c          \xA0
+     ▀███▄▄ ▀█▄  %c▄█%c            \xA0
+        ▀▀▀██   %c▀▀%c             \xA0
+            ▄▄███▄▄            \xA0
+         ▄███████████▄         \xA0
+      ▄█████████████████▄      \xA0
+   ▄███████████████████████▄   \xA0
+ █████████████████████████████ \xA0
+ %c██%c  %c█████████████████████████ \xA0
+ %c██%c▀▀█▀   ▀█    ▀█    ▀█▀   %c██ \xA0
+ %c██%c  █  ███████  ████  █  %c████ \xA0
+ %c██%c  █▄   ▀█     █     █  %c████ \xA0
+ %c██%c  ████  █ ██  █ ██  █  %c████ \xA0
+ %c██%c  █▄   ▄█   ▄ █   ▄ █▄   %c██ \xA0
+ █████████████████████████████ \xA0
+   ▀███████████████████████▀   \xA0
+      ▀█████████████████▀      \xA0
+         ▀███████████▀         \xA0
+            ▀▀███▀▀            \xA0
+                               \xA0`;
+
+const font = `font: 10pt "Courier New", monospace;`;
+const styleBlack = font + 'color: black;';
+const styleGreen = font + 'color: #3A8621;';
+const styleGreenOnWhite = font + 'color: #3A8621; background: white;';
+
+const colours = [
+    styleGreen,
+    Array(4).fill([styleBlack, styleGreen]).flat(),
+    Array(6).fill([styleGreen, styleGreenOnWhite, styleGreen]).flat(),
+].flat();
 
 export function printAsciiArtLogoToConsolePhy() {
-    if (navigator.vendor.indexOf("Google") > -1 || navigator.userAgent.indexOf("Firefox") > -1) {
-        // eslint-disable-next-line no-console
-        console.log(logoAsciiArt);
-    }
+    // eslint-disable-next-line no-console
+    console.log(logoAsciiArt, ...colours);
 }

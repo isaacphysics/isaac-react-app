@@ -3,7 +3,7 @@ import {Alert, Button, Col, Row} from "reactstrap";
 import {ContentDTO, IsaacQuickQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {logAction, useAppDispatch} from "../../state";
-import {determineFastTrackSecondaryAction, isAda, siteSpecific, useFastTrackInformation} from "../../services";
+import {determineFastTrackSecondaryAction, isAda, isPhy, siteSpecific, useFastTrackInformation} from "../../services";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import classNames from "classnames";
 import {useLocation} from "react-router-dom";
@@ -87,7 +87,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     const Options = fastTrackInfo.isFastTrackPage ? FastTrackOptions : (recordConfidence ? ConfidenceOptions : DefaultOptions);
 
     return <form onSubmit={e => e.preventDefault()}>
-        <div className={`question-component ${siteSpecific("p-md-5", "p-md-4")}`}>
+        <div className={classNames("question-component", {"p-md-4": isAda})}>
             <div className={classNames({"quick-question": !fastTrackInfo.isFastTrackPage})}>
                 {isAda &&
                     <div className="quick-question-title">
@@ -100,7 +100,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
                 {<Options/>}
                 {isVisible && <Row>
                     <Col sm={12} md={!fastTrackInfo.isFastTrackPage ? siteSpecific({size: 10, offset: 1}, {size: 12}) : {}}>
-                        <Alert className={"quick-q-alert"} color={isAda ? "hide" : "secondary"}>
+                        <Alert className={classNames("quick-q-alert", {"pb-0": isPhy})} color={isAda ? "hide" : "secondary"}>
                             <IsaacContentValueOrChildren {...answer} />
                         </Alert>
                     </Col>

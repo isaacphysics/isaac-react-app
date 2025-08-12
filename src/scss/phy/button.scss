@@ -1,18 +1,177 @@
 @import "../common/button";
 
+// TODO: bootstrap colours other states in these buttons (:active, :focus-visible) that are not currently styled
+
+// Fluent buttons
+.btn.btn {
+  border-radius: 22.5rem;
+  font-size: var(--buttons-font-size-btn-lg);
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  opacity: 100%;
+
+  &:focus:not(:focus-visible) {
+    outline: none !important;
+    box-shadow: 0 0 0 3px var(--buttons-light), 0 0 0 4.5px var(--buttons-focus-ring) !important;
+  }
+
+  &.btn-sm {
+    padding: 0.4375rem 0.875rem;
+    min-width: 80px;
+  }
+
+  &.btn-md {
+    padding: 0.6875rem 1.375rem;
+    min-width: 100px;
+  }
+
+  &.btn-lg {
+    padding: 0.8125rem 1.625rem;
+    min-width: 120px;
+  }
+}
+
+// TODO: replace btn-primary with btn-solid
+.btn.btn-primary, .btn.btn-solid {
+  background-color: var(--buttons-dark);
+  border: none;
+  color: var(--buttons-dark-text);
+
+  &:hover, &.btn-dropdown.active {
+    background: var(--buttons-dark-hover);
+    color: var(--buttons-dark-hover-icon);
+    text-decoration: none;
+  }
+
+  &:disabled, &.disabled {
+    background-color: var(--buttons-dark-disabled);
+    color: var(--buttons-dark-text);
+  }
+
+  &:focus-visible {
+    --focus-outline-color: #{$a11y_blue};
+  }
+
+  i.icon {
+    background-color: var(--layered-icon-parent-bg-override, var(--buttons-dark-icon));
+  }
+
+  i.icon::after {
+    background-color: var(--buttons-dark-icon);
+  }
+}
+
+
+// TODO: replace btn-secondary with btn-keyline
+.btn.btn-secondary, .btn.btn-keyline {
+  background-color: transparent;
+  border: 1.5px solid var(--buttons-keyline-border);
+  color: var(--buttons-light-text);
+
+  &:hover, &.btn-dropdown.active {
+    background: var(--buttons-light-hover);
+    color: var(--buttons-dark-text);
+    text-decoration: none;
+  }
+
+  &:disabled, &.disabled {
+    color: var(--buttons-light-disabled-text);
+  }
+
+  i.icon {
+    background-color: var(--layered-icon-parent-bg-override, var(--buttons-light-icon));
+  }
+
+  i.icon::after {
+    background-color: var(--buttons-light-icon);
+  }
+}
+
+.btn.btn-tertiary, .btn.btn-tint {
+  background-color: var(--buttons-tint);
+  border: 1.5px solid var(--buttons-tint-border);
+  color: var(--buttons-light-text);
+
+  &:hover, &.btn-dropdown.active {
+    background-color: var(--buttons-light-hover);
+    color: var(--buttons-dark-text);
+    text-decoration: none;
+  }
+
+  &:disabled, &.disabled {
+    color: var(--buttons-light-disabled-text);
+  }
+
+  i.icon {
+    background-color: var(--layered-icon-parent-bg-override, var(--buttons-light-icon));
+  }
+
+  i.icon::after {
+    background-color: var(--buttons-light-icon);
+  }
+}
+
+.btn.btn-keyline-white {
+  background-color: var(--buttons-dark);
+  border: 1.5px solid var(--buttons-keyline-white-border);
+  color: var(--buttons-keyline-white-text);
+
+  &:hover, &.btn-dropdown.active {
+    background: var(--buttons-keyline-white-hover);
+    color: var(--buttons-dark-text);
+    text-decoration: none;
+  }
+
+  &:focus:not(:focus-visible) {
+    // TODO: depending on use case (colour of background this is used on), we may need to change how this offset border is generated
+    box-shadow: 0 0 0 3px var(--buttons-dark), 0 0 0 4.5px var(--buttons-focus-ring) !important;
+  }
+
+  &:disabled, &.disabled {
+    color: var(--buttons-dark-disabled-text);
+  }
+}
+
+.btn.btn-keyline-underline {
+  // an alternative keyline button that underlines the text on hover instead of changing background colour;
+  // prefer btn-keyline for most cases, but useful for buttons with non-themeable icons such as login authenticators
+  background-color: transparent;
+  border: 1.5px solid var(--buttons-keyline-border);
+  color: var(--buttons-light-text);
+
+  &:hover, &.btn-dropdown.active {
+    text-decoration: underline;
+  }
+
+  &:disabled, &.disabled {
+    color: var(--buttons-light-disabled-text);
+  }
+
+  i.icon {
+    background-color: var(--layered-icon-parent-bg-override, var(--buttons-light-icon));
+  }
+
+  i.icon::after {
+    background-color: var(--buttons-light-icon);
+  }
+}
+
+.icon-button-sm {
+  // Makes the size of <IconButton> consistent with the default padding on .btn buttons. Not the same as any existing .p-*, or even the .btn default.
+  padding: 0.75rem !important;
+}
+
+// TODO: plan removing all below button styling?
+
 .btn, input.btn {
-  border-radius: 0.25rem;
-  font-family: $secondary-font-bold;
-  font-size: 1.125rem;
-  letter-spacing: 0.5px;
-  min-width: 136px;
-  padding: 0.5rem 2.1rem;
+  border-radius: 22.5rem;
+  padding: 0.625rem 1.25rem;
   white-space: normal;
 
   &.btn-negative, &.btn-neutral, &.btn-positive, &.btn-negative-answer, &.btn-neutral-answer, &.btn-positive-answer {
     border: 1px solid transparent;
     color: $black;
-    min-width: 100px !important;
     padding: 0 !important;
     border-radius: 5px;
 
@@ -34,10 +193,6 @@
 
   &.question-actions-link {
     font-family: $secondary-font !important;
-  }
-
-  @include respond-above(sm) {
-    min-width: 180px;
   }
 
   &:hover {
@@ -63,20 +218,9 @@
       border-color: $gray-118;
     }
 
-    &.focus,
-    &:focus,
-    &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem $shadow-3;
-    }
-
     &.disabled,
     &:disabled {
       color: $gray-136;
-    }
-
-    &.btn-sm {
-      font-size: 1rem;
-      line-height: 1.5;
     }
 
     &.primary-font-link {
@@ -110,12 +254,6 @@
       border-color: $gray-118;
     }
 
-    &.focus,
-    &:focus,
-    &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem $shadow-3;
-    }
-
     &.disabled,
     &:disabled {
       border-color: $gray-136;
@@ -133,8 +271,14 @@
       width: auto;
     }
   }
-}
 
+  &.btn-dropdown {
+    color: black;
+    background-color: $color-neutral-100;
+    border: 1px solid $color-neutral-300;
+    border-radius: 6px;
+  }
+}
 
 // ISAAC
 .btn-underline {
@@ -154,17 +298,6 @@ a.btn {
     font-weight: initial;
   }
 
-  &.btn-sm {
-    padding: 0.25rem 0.75rem;
-    font-size: 1rem;
-    min-width: 80px;
-  }
-
-  &.btn-tertiary {
-    background: $gray-107;
-    color: $black;
-  }
-
   &.btn-outline-tertiary {
     border-color: $gray-118;
     border-width: 2px;
@@ -177,12 +310,6 @@ a.btn {
     &:not(:disabled):not(.disabled):active {
       background-color: $gray-136;
       border-color: $gray-136;
-    }
-
-    &.focus,
-    &:focus,
-    &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem $shadow-08;
     }
 
     &.disabled,
@@ -204,12 +331,6 @@ a.btn {
     background-color: $a11y_green;
   }
 
-  &.btn-secondary:not(:disabled):not(.disabled):active {
-    background-color: darken($secondary, 4);
-    border: 1px solid transparent;
-    text-decoration: underline;
-  }
-
   &.btn-outline-primary:not(:disabled):not(.disabled):active {
     color: black;
   }
@@ -226,12 +347,6 @@ a.btn {
       border-color: $gray-118;
     }
 
-    &.focus,
-    &:focus,
-    &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem $shadow-3;
-    }
-
     &.disabled,
     &:disabled {
       border-color: $gray-160;
@@ -245,7 +360,7 @@ a.btn {
 }
 
 .quick-question-options {
-  background: rgba($secondary, 0.5);
+  background: color-mix(in srgb, var(--subject-color-500) 50%, transparent);
   border: 1px solid transparent;
   transition: opacity 0.2s linear;
 }
@@ -266,49 +381,42 @@ a.btn {
   background-color: transparent;
 }
 
-.share-link-icon {
+.action-buttons-popup-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: max-content;
+  height: 100%;
+  right: 50%;
+  align-items: center;
+  border: 1px solid $color-neutral-200;
+  border-radius: 0.5rem;
+  border-right: none;
+  padding: 0 1.5rem 0 1rem;
+  z-index: 15;
+  background: white;
 
-  @extend .hex-icon;
-
-  button {
-    background-image: url(/assets/common/icons/share.svg);
-    background-repeat: no-repeat;
-    background-color: transparent;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
+  & ~ button {
     position: relative;
+    z-index: 15;
   }
 
-  .share-link {
-    z-index: 1;
-    font-family: $secondary-font !important;
-    display: none;
-    position: absolute;
-    padding: 4px 32px 4px 8px;
-    border: 1px solid gray;
-    transform: translate(calc(25px - 100%), -65px);
-    background: #fff;
-    height: 58px;
-    width: 70%;
+  input {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    user-select: all;
+    -webkit-user-select: all;
+    -moz-user-select: all;
+    -ms-user-select: all;
+    width: 100%;
+    height: max-content;
+    border: none;
+    border-bottom: 2px solid $color-neutral-200;
+  }
 
-    input {
-      position: relative;
-      top: 9px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      user-select: all;
-      -webkit-user-select: all;
-      -moz-user-select: all;
-      -ms-user-select: all;
-      width: 100%;
-      padding-left: 2px;
-      border-width: 1px;
-    }
-
-    &.double-height {
-      height: 118px;
-    }
+  &.double-height {
+    height: calc(100% + 38px);
   }
 }
 
@@ -327,59 +435,8 @@ button.close { // default <button class="close"/> components;
 
 .btn-plus.btn-plus { // need the specificity to be above bootstrap's .btn
   @extend .btn-close;
-  background-image: url(/assets/common/icons/plus.svg);
-}
-
-.print-icon {
-  @extend .hex-icon;
-  background-image: url(/assets/common/icons/print.svg);
-}
-
-.report-icon {
-  @extend .hex-icon;
-  background-image: url(/assets/common/icons/flag.svg);
-}
-
-// Button focus selectors
-
-.btn.btn-link:focus {
-  box-shadow: 0 0 0 0.2rem $focus-blue !important;
-  outline: none !important;
-  border-radius: 3px;
-}
-
-.btn-action:focus {
-  box-shadow: 0 0 0 2pt black !important;
-  border-radius: 2px;
-  outline: none !important;
-}
-
-.btn.btn-outline-primary:focus {
-  box-shadow: 0 0 0 2pt $secondary !important;
-  border-radius: 8px;
-  outline: none !important;
-}
-
-.btn-secondary:focus {
-  box-shadow: 0 0 0 2pt black !important;
-  border-radius: 8px;
-  outline: none !important;
-}
-
-.btn-danger:focus {
-  box-shadow: 0 0 0 2pt black !important;
-  border-radius: 8px;
-  outline: none !important;
-}
-
-.btn-outline-primary:focus {
-  border-color: $secondary !important;
-}
-
-.btn.btn-sm.a-alt:focus {
-  box-shadow: 0 0 0 0.2rem $focus-blue !important;
-  outline: none !important;
-  border-radius: 3px;
+  background-image: url(/assets/common/icons/plus.svg) !important;
+  border: none;
 }
 
 .bin-icon {
@@ -389,13 +446,4 @@ button.close { // default <button class="close"/> components;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-color: transparent;
-}
-
-.separate-input-group {
-  input {
-    border-radius: 0.25rem;
-  }
-  button {
-    border-radius: 0 0.25rem 0.25rem 0;
-  }
 }

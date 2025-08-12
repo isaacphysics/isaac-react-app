@@ -1,6 +1,7 @@
-.scroll-btn {
+button.scroll-btn.scroll-btn {
   position: fixed;
-  display: none; // If not in use hide
+  display: flex;
+  opacity: 0;
   height: 45px;
   width: 45px;
   justify-content: center;
@@ -8,17 +9,29 @@
   bottom: 10px;
   right: 10px;
   box-shadow: 2px 2px 10px 0 #0004;
-  background-color: #fff !important;
+  background-color: #fff;
   border-radius: 50%;
-  transition: opacity 0.1s linear;
   z-index: 101;
-  img {
+  
+  @include not-reduced-motion {
+    transition: opacity 0.1s linear, $btn-transition;
+  }
+
+  &.is-sticky {
+    opacity: 1;
+  }
+
+  &:not(.is-sticky) {
+    pointer-events: none;
+  }
+  
+  > img {
     margin-top: -4px;
     height: 80%;
     width: 80%;
   }
-}
 
-.is-sticky {
-  display: flex;
+  > i {
+    mask-size: 20px;
+  }
 }

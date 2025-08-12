@@ -1,0 +1,57 @@
+@import "../common/events";
+
+.event-type-hex {
+    color: white;
+    > b {
+      font-family: $secondary-font-semi-bold;
+      position: absolute;
+      text-align: center;
+      max-width: 75px;
+      font-size: 12px;
+      padding-top: 5px;
+      padding-left: 4px;
+    }
+}
+
+.event-bg-grey {
+  background-color: $color-neutral-100;
+  .event-key-info {
+    tr {
+      td {
+        padding: 0.3rem;
+        font-weight: 600;
+        &:last-child {
+          font-weight: 400;
+        }
+      }
+    }
+  }
+}
+
+.btn-more-events {
+  background-color: $color-neutral-100;
+  border: 1px solid $color-neutral-200;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  align-content: center;
+  padding: 24px 16px;
+
+  &:hover {
+    background-color: $color-neutral-200;
+  }
+}
+
+// Named class for event titles to avoid
+// styling headings encoded in the markdown
+.event-title {
+  font-family: $secondary-font-bold;
+  margin-bottom: 0;
+}
+
+.event-subtitle {
+  font-family: $primary-font;
+  font-size: 17px;
+  font-weight: 400;
+  color: $color-neutral-700;
+}

@@ -1,4 +1,4 @@
-import React, {ReactElement} from "react";
+import React, {ReactElement, ReactNode} from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
@@ -22,11 +22,14 @@ import {
     ACTION_TYPE,
     DOCUMENT_TYPE,
     EXAM_BOARD,
+    GroupSortOrder,
+    LearningStage,
     MEMBERSHIP_STATUS,
     PROGRAMMING_LANGUAGE,
     SEARCH_RESULT_TYPE,
     SortOrder,
     STAGE,
+    Subject,
     TAG_ID,
     TAG_LEVEL
 } from "./app/services";
@@ -121,7 +124,7 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>}
 
     | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questionResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questionResults: ApiTypes.SearchResultsWrapper<ApiTypes.ContentSummaryDTO>}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST}
@@ -157,10 +160,6 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
-
-    | {type: ACTION_TYPE.CONCEPTS_REQUEST}
-    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
 
     | {type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST; quizAssignmentId: number}
     | {type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST; quizId: string}
@@ -243,6 +242,8 @@ export interface BooleanNotation {
 
 export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
+    PREFER_MATHML?: boolean;
+    REDUCED_MOTION?: boolean;
 }
 
 export interface UserConsent {
@@ -314,17 +315,16 @@ export interface Toast {
 
 export interface ActiveModal {
     centered?: boolean;
-    noPadding?: boolean;
     closeAction?: () => void;
     closeLabelOverride?: string;
-    size?: string;
+    size?: "sm" | "md" | "lg" | "xl" | "xxl";
     title?: string;
-    body: any;
-    buttons?: any[];
-    overflowVisible?: boolean;
+    body: ReactNode | (() => ReactNode);
+    bodyContainerClassName?: string;
+    buttons?: ReactNode[];
 }
 
-export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
+export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
 
 export enum QuizzesBoardOrder {
     "title" = "title",
@@ -352,21 +352,23 @@ export enum AssignmentBoardOrder {
     "-correct" = "-correct",
 }
 
+export enum MyAssignmentsOrder {
+    "startDate" = "startDate",
+    "-startDate" = "-startDate",
+    "dueDate" = "dueDate",
+    "-dueDate" = "-dueDate",
+    "attempted" = "attempted",
+    "-attempted" = "-attempted",
+    "correct" = "correct",
+    "-correct" = "-correct",
+}
+
 export enum AssignmentOrderType {
     Title = "Title",
     StartDate = "Start date",
     DueDate = "Due date"
 }
 export type AssignmentOrderSpec = {type: AssignmentOrderType; order: SortOrder};
-
-export const AssignmentOrder = {
-    titleAscending: {type: AssignmentOrderType.Title, order: SortOrder.ASC},
-    titleDescending: {type: AssignmentOrderType.Title, order: SortOrder.DESC},
-    startDateAscending: {type: AssignmentOrderType.StartDate, order: SortOrder.ASC},
-    startDateDescending: {type: AssignmentOrderType.StartDate, order: SortOrder.DESC},
-    dueDateAscending: {type: AssignmentOrderType.DueDate, order: SortOrder.ASC},
-    dueDateDescending: {type: AssignmentOrderType.DueDate, order: SortOrder.DESC},
-};
 
 export type NumberOfBoards = number | "ALL";
 
@@ -415,7 +417,23 @@ export interface ValidAssignmentWithListingDate extends AssignmentDTO {
     listingDate: Date;
 }
 
+export interface AssignmentProgressPageSettings {
+    colourBlind: boolean;
+    setColourBlind: (colourBlind: boolean) => void;
+    formatAsPercentage: boolean;
+    setFormatAsPercentage: (formatAsPercentage: boolean) => void;
+    attemptedOrCorrect: "ATTEMPTED" | "CORRECT";
+    setAttemptedOrCorrect: (attemptedOrCorrect: "ATTEMPTED" | "CORRECT") => void;
+    assignmentOrder: AssignmentOrderSpec;
+    setAssignmentOrder: (assignmentOrder: AssignmentOrderSpec) => void;
+    groupSortOrder: GroupSortOrder;
+    setGroupSortOrder: (groupSortOrder: GroupSortOrder) => void;
+
+    isTeacher: boolean;
+}
+
 export interface FigureNumbersById {[figureId: string]: number}
+export const HoverableNavigationContext = React.createContext<{openId: React.MutableRefObject<number | undefined>} | undefined>(undefined);
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
 export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string, open: boolean | null}>(
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
@@ -431,7 +449,7 @@ export const ClozeDropRegionContext = React.createContext<{
     nonSelectedItems: Immutable<ClozeItemDTO>[],
     allItems: Immutable<ClozeItemDTO>[],
     zoneIds: Set<string>,
-} | undefined>(undefined);
+    } | undefined>(undefined);
 
 export const InlineContext = React.createContext<{
     docId?: string,
@@ -453,7 +471,7 @@ export const InlineContext = React.createContext<{
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
-export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}, isTeacher: false, assignmentOrder: AssignmentOrder.startDateDescending});
+export const AssignmentProgressPageSettingsContext = React.createContext<AssignmentProgressPageSettings | undefined>(undefined);
 export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
 export const AssignmentScheduleContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO | undefined};
@@ -466,11 +484,12 @@ export const AssignmentScheduleContext = React.createContext<{
     collapsed: boolean;
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
-}>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+    }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+export const ContentSidebarContext = React.createContext<{ toggle: () => void; close: () => void; } | undefined>(undefined);
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
     completed?: boolean;
-    tickCount: number;
+    correctQuestionPagesCount: number;
     correctQuestionPartsCount: number;
     incorrectQuestionPartsCount: number;
     notAttemptedPartResults: number[];
@@ -586,6 +605,8 @@ export interface QuestionSearchQuery {
     fasttrack?: boolean;
     startIndex?: number;
     limit?: number;
+    randomSeed?: number;
+    querySource: string;
 }
 
 export interface ContentSummary extends ContentSummaryDTO {
@@ -747,4 +768,10 @@ export interface SearchShortcut {
     hash?: string;
 }
 
-export type QuestionCorrectness = "CORRECT" | "INCORRECT" | "NOT_ANSWERED" | "NOT_SUBMITTED"; 
+export type QuestionCorrectness = "CORRECT" | "INCORRECT" | "NOT_ANSWERED" | "NOT_SUBMITTED";
+
+export type PageContextState = {
+    stage?: LearningStage[];
+    subject?: Subject;
+    previousContext?: Omit<PageContextState, "previousContext">;
+} | null | undefined;

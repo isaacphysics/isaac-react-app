@@ -45,8 +45,11 @@ export const AccountDeletion = () => {
     const [confirmDeletion, setConfirmDeletion] = useState(false);
     const [deleteAccount, {isLoading: isDeletingAccount}] = useDeleteAccountMutation();
 
-    return <Container className="pb-5">
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Account Deletion", "Account deletion")} className="mb-4" />
+    return <Container className="pb-7">
+        <TitleAndBreadcrumb 
+            currentPageTitle={siteSpecific("Account Deletion", "Account deletion")} className="mb-4"
+            icon={{"type": "hex", "icon": "icon-account"}}
+        />
         {!user ? <p>You must be logged in to delete your account.</p> :
             isTutorOrAbove(user) ? <p>Only student accounts can be deleted automatically. Please <Link to="/contact?preset=accountDeletion">contact us</Link> to request account deletion.</p> : 
                 !token ? <p>You must have a valid token to delete your account. Visit your <Link to="/account">account page</Link> to generate a new email with a token.</p> : 

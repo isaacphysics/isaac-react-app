@@ -1,18 +1,29 @@
-.google-button-logo {
-  padding-right: 1.5rem;
-  transform: translate(0, -15%);
+.authenticator-logo {
+  width: 20px;
+  margin-right: 1.5rem;
 }
 
-#login-modal-form {
-  max-height: 800px;
-  @media (min-height: 800px) {
-    max-height: 90vh;
+#login-page {
+  button.close {
+    font-family: "exo_2medium",sans-serif;
+    position: relative;
+    z-index: 1;
+    background: transparent;
   }
-  padding: 20vh 30px;
-  @include media-breakpoint-down(lg) {
-    max-height: unset;
-    padding-top: 20px;
-    padding-bottom: 30px;
+  #login-modal-form {
+    max-height: 800px;
+    @media (min-height: 800px) {
+      max-height: 90vh;
+    }
+    padding: 100px 30px 30px;
+    @include media-breakpoint-down(lg) {
+      max-height: unset;
+      padding-top: 20px;
+      padding-bottom: 30px;
+    }
+    .password-reset-col {
+      max-width: 8em;
+    }
   }
 }
 

@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Row,} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
+    confirmThen,
     EMAIL_PREFERENCE_DEFAULTS,
     FIRST_LOGIN_STATE,
     history,
@@ -34,12 +35,12 @@ import {ExigentAlert} from "../elements/ExigentAlert";
 import classNames from "classnames";
 import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
 import {DobInput} from "../elements/inputs/DobInput";
-
+import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
+import { SignupTab } from "../elements/panels/SignupTab";
 
 interface RegistrationSetDetailsProps {
     role: UserRole
 }
-
 
 export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     const dispatch = useAppDispatch();
@@ -99,114 +100,131 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         }
     };
 
+    const goBack = () => {
+        if (isPhy || role === "STUDENT") {
+            confirmThen(
+                "Are you sure you want go back? Any information you have entered will be lost.",
+                () => history.push("age"));
+        }
+        else { // teachers skip age check on Ada
+            confirmThen(
+                "Are you sure you want go back? Any information you have entered will be lost.",
+                () => history.push("/register"));
+        }
+    };
+
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
-        <Card className="my-5">
-            <CardBody>
-                {errorMessage &&
-                    <ExigentAlert color={"warning"}>
-                        <p className="alert-heading fw-bold">Unable to create your account</p>
-                        <p>{errorMessage}</p>
-                    </ExigentAlert>
-                }
-                <Row>
-                    <Col xs={12} lg={6}>
-                        <h3>Create your{siteSpecific("", ` ${role.toLowerCase()}`)} account</h3>
-                    </Col>
-                    <Col xs={12} lg={5}>
-                        <Form onSubmit={register}>
-                            <GivenNameInput
-                                className="mb-4"
-                                userToUpdate={registrationUser}
-                                setUserToUpdate={setRegistrationUser}
-                                nameValid={!!givenNameIsValid}
-                                submissionAttempted={attemptedSignUp}
-                                required={true}
-                            />
-                            <FamilyNameInput
-                                className="my-4"
-                                userToUpdate={registrationUser}
-                                setUserToUpdate={setRegistrationUser}
-                                nameValid={!!familyNameIsValid}
-                                submissionAttempted={attemptedSignUp}
-                                required={true}
-                            />
-                            <EmailInput
-                                className="my-4"
-                                userToUpdate={registrationUser}
-                                setUserToUpdate={setRegistrationUser}
-                                submissionAttempted={attemptedSignUp}
-                                emailIsValid={!!emailIsValid}
-                                required={true}
-                            />
-                            <SetPasswordInput
-                                className="my-4"
-                                userToUpdate={registrationUser}
-                                setUserToUpdate={setRegistrationUser}
-                                passwordValid={passwordIsValid}
-                                passwordsMatch={passwordsMatch}
-                                setConfirmedPassword={setConfirmedPassword}
-                                submissionAttempted={attemptedSignUp}
-                                required={true}
-                            />
-                            {isAda && <CountryInput
-                                className="my-4"
-                                userToUpdate={registrationUser}
-                                setUserToUpdate={setRegistrationUser}
-                                countryCodeValid={countryCodeIsValid}
-                                submissionAttempted={attemptedSignUp}
-                                required={true}
-                            />}
-                            <hr className={classNames({"d-none": role == 'TEACHER'}, "my-4 text-center")} />
-                            <SchoolInput
-                                className="my-4"
-                                userToUpdate={registrationUser}
-                                setUserToUpdate={setRegistrationUser}
-                                submissionAttempted={attemptedSignUp}
-                                required={role == 'TEACHER'}
-                            />
-                            {isPhy &&
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
+        <SidebarLayout>
+            <SignupSidebar activeTab={2}/>
+            <MainContent>
+                <Card className="my-7">
+                    <CardBody>
+                        {errorMessage &&
+                            <ExigentAlert color={"warning"}>
+                                <p className="alert-heading fw-bold">Unable to create your account</p>
+                                <p>{errorMessage}</p>
+                            </ExigentAlert>
+                        }
+                        <SignupTab
+                            leftColumn = {<div className={siteSpecific("h4", "h3")}>Create your{siteSpecific("", ` ${role.toLowerCase()}`)} account</div>}
+                            rightColumn = {<Form onSubmit={register}>
+                                <div className={siteSpecific("row row-cols-2", "")}>
+                                    <GivenNameInput
+                                        className={siteSpecific("my-4", "mb-4")}
+                                        userToUpdate={registrationUser}
+                                        setUserToUpdate={setRegistrationUser}
+                                        nameValid={!!givenNameIsValid}
+                                        submissionAttempted={attemptedSignUp}
+                                        required={true}
+                                    />
+                                    <FamilyNameInput
+                                        className="my-4"
+                                        userToUpdate={registrationUser}
+                                        setUserToUpdate={setRegistrationUser}
+                                        nameValid={!!familyNameIsValid}
+                                        submissionAttempted={attemptedSignUp}
+                                        required={true}
+                                    />
+                                </div>
+                                <EmailInput
+                                    className="my-4"
+                                    userToUpdate={registrationUser}
+                                    setUserToUpdate={setRegistrationUser}
+                                    submissionAttempted={attemptedSignUp}
+                                    emailIsValid={!!emailIsValid}
+                                    required={true}
+                                />
+                                <SetPasswordInput
+                                    className="my-4"
+                                    userToUpdate={registrationUser}
+                                    setUserToUpdate={setRegistrationUser}
+                                    passwordValid={passwordIsValid}
+                                    passwordsMatch={passwordsMatch}
+                                    setConfirmedPassword={setConfirmedPassword}
+                                    submissionAttempted={attemptedSignUp}
+                                    required={true}
+                                />
+                                {isAda && <CountryInput
+                                    className="my-4"
+                                    userToUpdate={registrationUser}
+                                    setUserToUpdate={setRegistrationUser}
+                                    countryCodeValid={countryCodeIsValid}
+                                    submissionAttempted={attemptedSignUp}
+                                    required={true}
+                                />}
+                                <hr className={classNames({"d-none": role == 'TEACHER'}, siteSpecific("section-divider", "my-4 text-center"))} />
+                                <SchoolInput
+                                    className="my-4"
+                                    userToUpdate={registrationUser}
+                                    setUserToUpdate={setRegistrationUser}
+                                    submissionAttempted={attemptedSignUp}
+                                    required={role == 'TEACHER'}
+                                />
+                                {isPhy &&
                                 <DobInput
                                     userToUpdate={registrationUser}
                                     setUserToUpdate={setRegistrationUser}
                                     submissionAttempted={attemptedSignUp}
                                 />
-                            }
-                            <hr className={classNames({"d-none": role != 'TEACHER'}, "my-4")} />
-                            <GenderInput
-                                className="mt-4 mb-5"
-                                userToUpdate={registrationUser}
-                                setUserToUpdate={setRegistrationUser}
-                                submissionAttempted={attemptedSignUp}
-                                required={false}
-                            />
-                            <hr className="text-center"/>
-                            <FormGroup className="form-group my-4">
-                                <StyledCheckbox
-                                    id="tos-confirmation"
-                                    name="tos-confirmation"
-                                    type="checkbox"
-                                    onChange={(e) => setTosAccepted(e?.target.checked)}
-                                    invalid={attemptedSignUp && !tosAccepted}
-                                    label={<span className={classNames({"form-required": isPhy})}>I accept the <a href="/terms" target="_blank">terms of use</a>.</span>}
+                                }
+                                <hr className={classNames({"d-none": role != 'TEACHER'}, siteSpecific("section-divider", "my-4"))} />
+                                <GenderInput
+                                    className="mt-4 mb-7"
+                                    userToUpdate={registrationUser}
+                                    setUserToUpdate={setRegistrationUser}
+                                    submissionAttempted={attemptedSignUp}
+                                    required={false}
                                 />
-                                <FormFeedback className="mt-0">
+                                <hr className={siteSpecific("section-divider", "text-center")}/>
+                                <FormGroup className="form-group my-4">
+                                    <StyledCheckbox
+                                        id="tos-confirmation"
+                                        name="tos-confirmation"
+                                        type="checkbox"
+                                        color={siteSpecific("primary", "")}
+                                        onChange={(e) => setTosAccepted(e?.target.checked)}
+                                        invalid={attemptedSignUp && !tosAccepted}
+                                        label={<span className={classNames({"form-required": isPhy})}>I accept the <a href="/terms" target="_blank">terms of use</a>.</span>}
+                                    />
+                                    <FormFeedback className="mt-0">
                                     You must accept the terms to continue.
-                                </FormFeedback>
-                            </FormGroup>
-                            <hr className="text-center"/>
-                            <Row className="justify-content-end">
-                                <Col className="d-flex justify-content-end" xs={12} sm={siteSpecific(3,4)} lg={6}>
-                                    <Button className="mt-2 w-100" outline color="secondary" onClick={history.goBack}>Back</Button>
-                                </Col>
-                                <Col xs={12} sm={siteSpecific(4,5)} lg={6}>
-                                    <Button type="submit" value="Continue" className="mt-2 w-100">Continue</Button>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Col>
-                </Row>
-            </CardBody>
-        </Card>
+                                    </FormFeedback>
+                                </FormGroup>
+                                {isAda && <hr className="text-center"/>}
+                                <Row className="justify-content-end">
+                                    <Col className="d-flex justify-content-end" xs={12} sm={siteSpecific(3,4)} lg={6}>
+                                        <Button className="mt-2 w-100" color={siteSpecific("solid", "keyline")} onClick={goBack}>Back</Button>
+                                    </Col>
+                                    <Col xs={12} sm={siteSpecific(4,5)} lg={6}>
+                                        <Button type="submit" value="Continue" className="mt-2 w-100">Continue</Button>
+                                    </Col>
+                                </Row>
+                            </Form>}
+                        />
+                    </CardBody>
+                </Card>
+            </MainContent>
+        </SidebarLayout>
     </Container>;
 };

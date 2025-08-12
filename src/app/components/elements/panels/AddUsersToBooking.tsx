@@ -83,7 +83,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
             </Row>
             <Row>
                 <Col>
-                    <Input type="submit" className="btn w-100 btn-secondary border-0 my-2" value="Find user" />
+                    <Button type="submit" color="secondary" className="w-100 my-2">Find user</Button>
                 </Col>
             </Row>
         </Form>
@@ -107,7 +107,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
                     {event && userSearchResults.map(result => <tr key={result.id}>
                         <td className="align-middle">
                             {!eventBookingUserIds.includes(result.id as number) &&
-                            <Button color="primary" outline className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, event, eventBookingUserIds)))}>
+                            <Button color="keyline" className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, event, eventBookingUserIds)))}>
                                 {formatManageBookingActionButtonMessage(event)}
                             </Button>
                             }

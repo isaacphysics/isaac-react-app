@@ -4,13 +4,20 @@ import {
 } from "../../state";
 import {Link} from "react-router-dom";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {EDITOR_COMPARE_URL, isAdmin, isDefined, isPhy, siteSpecific} from "../../services";
+import {
+    EDITOR_COMPARE_URL,
+    isAdmin,
+    isAdminOrEventManager,
+    isDefined,
+    isPhy,
+    SITE_TITLE_SHORT,
+    siteSpecific
+} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {AnonymisationCheckboxes} from "../elements/AnonymisationCheckboxes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {MisuseStats} from "../elements/MisuseStats";
-import classNames from "classnames";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { Container, Card, CardTitle, ListGroup, ListGroupItem, CardBody, Form, InputGroup, Input, Button, Alert } from 'reactstrap';
 
@@ -38,7 +45,10 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     };
 
     return <Container id="admin-page">
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Isaac", "Ada")} administration`} breadcrumbTitleOverride="Admin tools" />
+        <TitleAndBreadcrumb 
+            currentPageTitle={`${SITE_TITLE_SHORT} administration`} breadcrumbTitleOverride="Admin tools" 
+            icon={{"type": "hex", "icon": "icon-account"}}
+        />
 
         <div className="py-4">
 
@@ -46,12 +56,12 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
 
             <Card className="p-3 my-3">
                 <CardTitle tag="h2">Useful links</CardTitle>
-                <ListGroup className="flex-row">
-                    <ListGroupItem className="w-auto"><Link to="/admin/usermanager">User Manager</Link></ListGroupItem>
-                    <ListGroupItem className="w-auto"><Link to="/admin/emails">Admin emails</Link></ListGroupItem>
-                    <ListGroupItem className="w-auto"><Link to="/equality">Equation builder</Link></ListGroupItem>
-                    <ListGroupItem className="w-auto"><Link to="/free_text">Free-text builder</Link></ListGroupItem>
-                    <ListGroupItem className="w-auto"><Link to="/markdown">Markdown builder</Link></ListGroupItem>
+                <ListGroup className="flex-row border-0">
+                    <ListGroupItem className="w-auto border-0"><Link to="/admin/usermanager">User Manager</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto border-0"><Link to="/admin/emails">Admin emails</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto border-0"><Link to="/equality">Equation builder</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto border-0"><Link to="/free_text">Free-text builder</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto border-0"><Link to="/markdown">Markdown builder</Link></ListGroupItem>
                 </ListGroup>
             </Card>
 
@@ -74,9 +84,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                         thenRender={liveContentVersion => {
                             const displayVersion = newVersion || liveContentVersion || null;
                             return <>
-                                <div>
-                                    <strong>Live Content Version</strong>
-                                </div>
+                                <strong>Live Content Version</strong>
                                 {isDefined(displayVersion) && !contentVersionUpdateIsLoading &&
                                     <Form onSubmit={startVersionUpdate}>
                                         <InputGroup className={"separate-input-group"}>
@@ -85,10 +93,11 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                                 type="text" value={displayVersion}
                                                 onChange={e => setNewVersion(e.target.value)}
                                                 placeholder="Enter commit SHA"
+                                                className={siteSpecific("", "h-100")}
                                             />
                                             <a
                                                 className={classnames("btn btn-secondary", {
-                                                    "p-1 border-dark": isPhy,
+                                                    "px-2 d-flex align-items-center": isPhy,
                                                     "disabled": displayVersion === liveContentVersion
                                                 })}
                                                 href={`${EDITOR_COMPARE_URL}/${liveContentVersion}/${displayVersion}`}
@@ -97,9 +106,9 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                                 Preview Changes
                                             </a>
                                             <Button
-                                                type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
+                                                type="button"
                                                 onClick={startVersionUpdate}
-                                                disabled={!isAdmin(user) || displayVersion === liveContentVersion}
+                                                disabled={!isAdminOrEventManager(user) || displayVersion === liveContentVersion}
                                             >
                                                 Set Version
                                             </Button>
@@ -135,7 +144,6 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                     </>}
                 </CardBody>
             </Card>
-
         </div>
     </Container>;
 };

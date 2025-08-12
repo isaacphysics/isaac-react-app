@@ -1,19 +1,21 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {
     above,
     ALPHABET,
     audienceStyle,
+    calculateQuestionSetCompletionState,
     DOCUMENT_TYPE,
     isAda,
     isAQuestionLikeDoc,
+    isDefined,
     isPhy,
     NOT_FOUND,
     scrollVerticallyIntoView,
     siteSpecific,
     useDeviceSize,
 } from "../../services";
-import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {v4 as uuid_v4} from "uuid";
@@ -22,7 +24,11 @@ import {Markup} from "./markup";
 import {ReportAccordionButton} from "./ReportAccordionButton";
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import debounce from "lodash/debounce";
-import { Button, Row, UncontrolledTooltip, Collapse, Card, CardBody } from "reactstrap";
+import { UncontrolledTooltip, Collapse, Card, CardBody } from "reactstrap";
+import { useReducedMotion } from "../../services/accessibility";
+import { Spacer } from "./Spacer";
+import { CompletionState } from "../../../IsaacApiTypes";
+import { StatusDisplay } from "./list-groups/AbstractListViewItem";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -40,9 +46,11 @@ let nextClientId = 0;
 export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useAppDispatch();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
-    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
+    const page = useAppSelector(selectors.doc.get);
 
     const deviceSize = useDeviceSize();
+
+    const isReducedMotion = useReducedMotion();
 
     // Toggle
     const isFirst = index === 0;
@@ -83,6 +91,10 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         return null;
     }
 
+    const debouncedLogAccordion = useMemo(() =>
+        debounce((eventDetails) =>
+            dispatch(logAction(eventDetails)), 200, {leading: true, trailing: false}), [dispatch]);
+
     function logAccordionOpen() {
         const currentPage = getPage();
         if (currentPage) {
@@ -111,7 +123,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     accordionIndex: index
                 };
             }
-            debounce(() => dispatch(logAction(eventDetails)), 200, {leading: true, trailing: false});
+            debouncedLogAccordion(eventDetails);
         }
     }
 
@@ -119,99 +131,91 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     const clientId = useRef('c' + nextClientId++);
 
     // Check results of questions in this accordion
-    let accordionIcon;
     const questionsOnPage = useAppSelector(selectors.questions.getQuestions) || [];
     const questionsInsideAccordionSection = questionsOnPage?.filter(q => q.accordionClientId === clientId.current);
-    if (questionsInsideAccordionSection.length > 0) {
-        let allCorrect = true;
-        let allWrong = true;
-        let allValidated = true;
-        questionsInsideAccordionSection.forEach(question => {
-            if (question.validationResponse) {
-                const correct = question.validationResponse.correct;
-                if (correct) {
-                    allWrong = false;
-                } else {
-                    allCorrect = false;
-                }
-            } else {
-                allValidated = false;
-            }
-        });
-        if (allValidated && allCorrect) accordionIcon = "tick";
-        if (allValidated && allWrong) accordionIcon = "cross";
-    }
+    
+    const accordionState = calculateQuestionSetCompletionState(questionsInsideAccordionSection);
+
+    const accordionAltText = {
+        [CompletionState.ALL_CORRECT]: "All questions in this part are answered correctly.",
+        [CompletionState.ALL_INCORRECT]: "All questions in this part are answered incorrectly.",
+        [CompletionState.ALL_ATTEMPTED]: "Some questions in this part are answered incorrectly.",
+        [CompletionState.IN_PROGRESS]: "Some questions in this part are answered incorrectly.",
+        [CompletionState.NOT_ATTEMPTED]: "No questions in this part have been answered."
+    };
 
     const isConceptPage = page && page != NOT_FOUND && page.type === DOCUMENT_TYPE.CONCEPT;
 
     const isOpen = open && !disabled;
 
     return <div className="accordion">
-        <div className="accordion-header">
-            <Button
-                id={anchorId || ""} block color="link"
-                tabIndex={disabled ? -1 : 0}
-                onFocus={(e) => {
-                    if (disabled) {
-                        e.target.blur();
+        <button 
+            className={classNames(
+                "accordion-header d-flex w-100 p-0", 
+                {"de-emphasised": deEmphasised || disabled, "active": isOpen, "btn btn-link": isAda}
+            )}
+            id={anchorId || ""} type="button"
+            tabIndex={disabled ? -1 : 0}
+            onFocus={(e) => {
+                if (disabled) {
+                    e.target.blur();
+                }
+            }}
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                if (disabled) {
+                    return;
+                }
+                pauseAllVideos();
+                const nextState = !isOpen;
+                setOpen(nextState);
+                if (nextState) {
+                    logAccordionOpen();
+                    if (!isReducedMotion) {
+                        scrollVerticallyIntoView(event.target as HTMLElement, -50);
                     }
-                }}
-                className={"d-flex align-items-stretch " + classNames({"de-emphasised": deEmphasised || disabled, "active": isOpen})}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-                    if (disabled) {
-                        return;
-                    }
-                    pauseAllVideos();
-                    const nextState = !isOpen;
-                    setOpen(nextState);
-                    if (nextState) {
-                        logAccordionOpen();
-                        scrollVerticallyIntoView(event.target as HTMLElement);
-                    }
-                }}
-                aria-expanded={isOpen ? "true" : "false"}
-            >
-                {isConceptPage && audienceString && <span className={
-                    classNames("stage-label d-flex align-items-center p-2 justify-content-center ", {[audienceStyle(audienceString)]: isAda, "text-bg-secondary": isPhy})
-                }>
-                    {siteSpecific(
-                        audienceString,
-                        above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")
-                    ).split("\n").map(
-                        (line, i, arr) => <>
-                            {line}{i < arr.length && <br/>}
-                        </>
-                    )}
-                </span>}
-                <div className="accordion-title ps-3">
-                    <Row className="h-100">
-                        <div className="d-flex align-items-center p-0 h-100">
-                            {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
-                            <span className="accordion-part p-3 text-secondary text-nowrap">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
-                            {trustedTitle && <div className="p-3">
-                                <h2>
-                                    <Markup encoding={"latex"}>
-                                        {trustedTitle}
-                                    </Markup>
-                                </h2>
-                            </div>}
-                            {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
-                                <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
-                                <UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
-                                    modifiers={[preventOverflow]}>
-                                    {disabled}
-                                </UncontrolledTooltip>
-                            </div>}
-                        </div>
-                    </Row>
+                }
+            }}
+            aria-expanded={isOpen ? "true" : "false"}
+        >
+            {isConceptPage && audienceString && isAda && <span className={
+                classNames("stage-label d-flex align-self-stretch align-items-center p-2 justify-content-center ", audienceStyle(audienceString))
+            }>
+                {(above["sm"](deviceSize) 
+                    ? audienceString 
+                    : audienceString.replaceAll(",", "\n")
+                ).split("\n").map(
+                    (line, i, arr) => <>
+                        {line}{i < arr.length && <br/>}
+                    </>
+                )}
+            </span>}
+            <div className={classNames("d-flex flex-grow-1", siteSpecific(`flex-column ps-3 ${isConceptPage && audienceString ? "pt-1" : "pt-3"}`, "align-items-center ps-1"))}>
+                {isDefined(index) && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>}
+                <div className={classNames("accordion-title p-3 ps-1", siteSpecific("pt-0", ""))}>
+                    {isConceptPage && audienceString && isPhy && <span className="inline-stage-label">{audienceString}<br/></span>}
+                    <Markup encoding={"latex"}>
+                        {trustedTitle || (isAda ? "" : (isDefined(index) ? `(${ALPHABET[index % ALPHABET.length].toLowerCase()})` : "Untitled"))}
+                    </Markup>
+                    {isPhy && <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-black mx-2", {"active": isOpen})}/>}
                 </div>
+                {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
+                    <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
+                    <UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
+                        modifiers={[preventOverflow]}>
+                        {disabled}
+                    </UncontrolledTooltip>
+                </div>}
+            </div>
 
-                {accordionIcon && isPhy && <span className={"accordion-icon align-self-center accordion-icon-" + accordionIcon}>
-                    <span className="visually-hidden">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
-                </span>}
-            </Button>
-        </div>
-        <Collapse isOpen={isOpen} className="mt-1">
+            {accordionState && isPhy && <span className={"accordion-icon d-flex align-items-center gap-2 w-max-content h-100 pb-1 pe-3 align-self-center"}>
+                <StatusDisplay status={accordionState} showText className="flex-row-reverse" aria-label={accordionAltText[accordionState]} />
+            </span>}
+            {isAda && <>
+                <Spacer />
+                {<i className={classNames("icon icon-chevron-right icon-dropdown-90 me-3", {"active": isOpen})}/>}
+            </>}
+        </button>
+        <Collapse isOpen={isOpen} className={siteSpecific("accordion-body", "mt-1")}>
             <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open: isOpen}}>
                 <Card>
                     <CardBody>

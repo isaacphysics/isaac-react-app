@@ -1,6 +1,6 @@
 import {AbstractBaseTagService, subject, TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag} from "../../IsaacAppTypes";
-import {ContentDTO} from "../../IsaacApiTypes";
+import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 
 const softHyphen = "\u00AD";
 
@@ -42,6 +42,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.physiology, title: "Physiology", parent: TAG_ID.biology},
         {id: TAG_ID.ecology, title: "Ecology", parent: TAG_ID.biology},
         {id: TAG_ID.evolution, title: "Evolution", parent: TAG_ID.biology},
+        {id: TAG_ID.bioMathsSkills, title: "Maths Skills", parent: TAG_ID.biology},
 
         // --- Physics Topics ---
 
@@ -186,12 +187,14 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.variation, title: "Variation", parent: TAG_ID.evolution},
         {id: TAG_ID.theory, title: "Theory", parent: TAG_ID.evolution},
         {id: TAG_ID.phylogenetics, title: `Phylo${softHyphen}genetics`, parent: TAG_ID.evolution},
+        // Biology Maths Skills
+        {id: TAG_ID.bioStatisticalTests, title: "Statistical Tests", parent: TAG_ID.bioMathsSkills}
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}
-    public augmentDocWithSubject<T extends ContentDTO>(doc: T) {
+    public augmentDocWithSubject<T extends ContentDTO | ContentSummaryDTO>(doc: T) {
         const documentSubject = this.getPageSubjectTag((doc.tags || []) as TAG_ID[]);
-        return {...doc, subjectId: documentSubject ? documentSubject.id : TAG_ID.physics};
+        return {...doc, subjectId: documentSubject && documentSubject.id};
     }
 
     private getPageSubjectTag(tagArray: TAG_ID[]) {

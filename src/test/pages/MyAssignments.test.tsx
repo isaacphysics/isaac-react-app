@@ -1,15 +1,17 @@
 import {http, HttpResponse, HttpHandler} from "msw";
-import {API_PATH, PATHS, siteSpecific} from "../../app/services";
+import {API_PATH, getSearchPlaceholder, isAda, PATHS, siteSpecific} from "../../app/services";
 import {screen, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
 import {mockMyAssignments, mockUser} from "../../mocks/data";
 import {renderTestEnvironment} from "../testUtils";
-import {DDMMYYYY_REGEX, DAYS_AGO, dayMonthYearStringToDate, SOME_FIXED_FUTURE_DATE} from "../dateUtils";
+import {DDMMYYYY_REGEX, DAYS_AGO, dayMonthYearStringToDate, SOME_FIXED_FUTURE_DATE, TEXTUAL_DATE_REGEX} from "../dateUtils";
 import produce from "immer";
 
 
-const FILTER_LABEL_TEXT = siteSpecific("Filter assignments by name", "Filter quizzes by name");
+const FILTER_LABEL_TEXT = siteSpecific(`e.g. ${getSearchPlaceholder()}`, "Filter quizzes by name");
+const ASSIGNED_TEXT_PREFIX = siteSpecific("Assigned on ", "Assigned: ");
+const DATE_REGEX = siteSpecific(TEXTUAL_DATE_REGEX, DDMMYYYY_REGEX);
 
 describe("MyAssignments", () => {
 
@@ -29,8 +31,15 @@ describe("MyAssignments", () => {
 
     it('should render with "All" assignment filter selected by default', async () => {
         renderMyAssignments();
-        const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
-        expect(assignmentTypeFilter).toHaveValue("All");
+        if (isAda) {
+            const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
+            expect(assignmentTypeFilter).toHaveValue("All");
+        }
+        else {
+            const sidebar = await screen.findByTestId("my-assignments-sidebar");
+            const allFilter = within(sidebar).getByRole("checkbox", {name: "All"});
+            expect(allFilter).toHaveProperty("checked", true);
+        }
     });
 
     it('should allow users to filter assignments on gameboard title', async () => {
@@ -47,8 +56,15 @@ describe("MyAssignments", () => {
 
     it('should filter to only display "Older" assignments when that filter type is selected, this should not display any assignments', async () => {
         renderMyAssignments();
-        const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
-        await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
+        if (isAda) {
+            const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
+            await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
+        }
+        else {
+            const sidebar = await screen.findByTestId("my-assignments-sidebar");
+            const olderFilter = within(sidebar).getByRole("checkbox", {name: "To do (older)"});
+            await userEvent.click(olderFilter);
+        }
         expect(screen.queryAllByTestId("my-assignment")).toHaveLength(0);
     });
 
@@ -71,8 +87,15 @@ describe("MyAssignments", () => {
         // Wait for the default ("All") assignments to show up
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.length);
         // Select the "Older Assignments" filter
-        const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
-        await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
+        if (isAda) {
+            const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
+            await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
+        }
+        else {
+            const sidebar = await screen.findByTestId("my-assignments-sidebar");
+            const olderFilter = within(sidebar).getByRole("checkbox", {name: "To do (older)"});
+            await userEvent.click(olderFilter);
+        }
         // Wait for the one old assignment that we expect
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(1);
     });
@@ -109,9 +132,10 @@ describe("MyAssignments", () => {
         ]);
         const myAssignment = await screen.findByTestId("my-assignment");
         const assignedDateEl = within(myAssignment).getByTestId("gameboard-assigned");
-        const assignedDate = assignedDateEl?.textContent?.replace(/Assigned:\s?/, "");
-        expect(assignedDate).toMatch(DDMMYYYY_REGEX);
-        expect(dayMonthYearStringToDate(assignedDate)?.valueOf()).toEqual(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1, true));
+        const assignedDateText = assignedDateEl?.textContent?.replace(ASSIGNED_TEXT_PREFIX, "");
+        expect(assignedDateText).toMatch(DATE_REGEX);
+        const assignedDate = siteSpecific(Date.parse(assignedDateText!), dayMonthYearStringToDate(assignedDateText));
+        expect(assignedDate?.valueOf()).toEqual(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1, true));
     });
 
     it('should show the assignment creation date as the "Assigned" date if the scheduled start date does not exist', async () => {
@@ -145,9 +169,10 @@ describe("MyAssignments", () => {
         ]);
         const myAssignment = await screen.findByTestId("my-assignment");
         const assignedDateEl = within(myAssignment).getByTestId("gameboard-assigned");
-        const assignedDate = assignedDateEl?.textContent?.replace(/Assigned:\s?/, "");
-        expect(assignedDate).toMatch(DDMMYYYY_REGEX);
-        expect(dayMonthYearStringToDate(assignedDate)?.valueOf()).toEqual(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3, true));
+        const assignedDateText = assignedDateEl?.textContent?.replace(ASSIGNED_TEXT_PREFIX, "");
+        expect(assignedDateText).toMatch(DATE_REGEX);
+        const assignedDate = siteSpecific(Date.parse(assignedDateText!), dayMonthYearStringToDate(assignedDateText));
+        expect(assignedDate?.valueOf()).toEqual(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3, true));
     });
 
     it('should show the notes field for assignments with notes', async () => {

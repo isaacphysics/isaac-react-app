@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {AppState, selectors, useAppSelector, useSubmitContactFormMutation} from "../../state";
 import {
     Alert,
+    Button,
     Card,
     CardBody,
     CardFooter,
@@ -100,11 +101,14 @@ export const Contact = () => {
     const isValidEmail = validateEmail(email);
 
     const metaDescription = siteSpecific(
-        "Contact the Isaac Physics team with questions, comments or feedback about our resources.",
+        "Contact the Isaac team with questions, comments or feedback about our resources.",
         "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!");
 
-    return <Container id="contact-page" className="pb-5">
-        <TitleAndBreadcrumb currentPageTitle="Contact us" />
+    return <Container id="contact-page" className="pb-7">
+        <TitleAndBreadcrumb 
+            currentPageTitle="Contact us" 
+            icon={{type: "hex", "icon": "icon-contact"}}
+        />
         <MetaDescription description={metaDescription}/>
         <div className="pt-4">
             <Row>
@@ -209,7 +213,7 @@ export const Contact = () => {
                                             </span>}                                  
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
-                                            <Input type="submit" value="Submit" className="btn w-100 btn-secondary border-0" />
+                                            <Button type="submit" color="secondary" className="w-100">Submit</Button>
                                         </Col>
                                     </Row>
                                 </CardFooter>

@@ -3,30 +3,73 @@ import classnames from "classnames";
 import {Link} from "react-router-dom";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {DateString} from "../DateString";
-import {formatEventCardDate, isPhy, siteSpecific} from "../../../services";
-import { Card, CardImg, CardBody, CardTitle, Badge, CardText } from "reactstrap";
+import {formatEventCardDate, siteSpecific} from "../../../services";
+import { Card, CardImg, CardBody, CardTitle, Badge, CardText, CardProps } from "reactstrap";
+import { Spacer } from "../Spacer";
+import classNames from "classnames";
 
-export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
-    const {id, title, subtitle, eventThumbnail, location, hasExpired, date, numberOfPlaces, eventStatus, isCancelled, userBookingStatus}
-        = event;
+export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & CardProps) => {
+    const {id, title, subtitle, eventThumbnail, location, date, hasExpired} = event;
 
     const isVirtualEvent = event.tags?.includes("virtual");
-    const isTeacherEvent = event.tags?.includes("teacher");
-    const isStudentEvent = event.tags?.includes("student");
+    const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
+    const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
+
+    return <Card {...rest} className={classNames("pod", rest.className)}>
+        {eventThumbnail &&
+            <a className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} href={`/events/${id}`}>
+                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby="event-title" />
+                {hasExpired &&
+                    <div className="event-pod-badge">
+                        <Badge className="badge rounded-pill">EXPIRED</Badge>
+                    </div>}
+                {isVirtualEvent &&
+                    <div className="event-pod-badge align-self-end">
+                        <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>
+                    </div>}
+                {isTeacherEvent &&
+                    <div className="event-pod-hex">
+                        <b>TEACHER EVENT</b>
+                        <img src="/assets/phy/icons/redesign/teacher-event-hex.svg" alt={"teacher event icon"}/>
+                    </div>}
+                {isStudentEvent &&
+                    <div className="event-pod-hex">
+                        <b>STUDENT EVENT</b>
+                        <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
+                    </div>}
+            </a>}
+        <CardBody className="d-flex flex-column ps-0">
+            {title && <CardTitle className="mb-0 pod-title" id="event-title">{title}</CardTitle>}
+            {subtitle && <CardText className="mb-0">
+                {subtitle}
+            </CardText>}
+            <Spacer/>
+            <div className="section-divider"/>
+            <CardText>
+                <b>When: </b>{formatEventCardDate(event)}
+                {location && location.address &&
+                    <span className='d-block my-1'>
+                        <b>Location: </b>
+                        {!event.isVirtual ? <>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</> : "Online"}
+                    </span>}
+            </CardText>
+            <CardText>
+                <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`/events/${id}`}>
+                    Read more
+                    <span className='visually-hidden'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
+                </Link>
+            </CardText>
+        </CardBody>
+    </Card>;
+};
+
+const AdaEventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
+    const {id, title, subtitle, eventThumbnail, location, hasExpired, date, numberOfPlaces, eventStatus, isCancelled, userBookingStatus}
+        = event;
 
     return <Card data-testid="event-card" className={classnames("card-neat", {'disabled text-muted': hasExpired || isCancelled, 'm-4': pod, 'mb-4': !pod})}>
         {eventThumbnail && <div className={'event-card-image text-center'}>
             <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
-            {
-                isPhy && (hasExpired ? <div className={"event-card-image-banner disabled"}>This event has expired</div> :
-                    ((isVirtualEvent || isTeacherEvent || isStudentEvent) &&
-                        <div className={"event-card-image-banner"}>
-                            {isTeacherEvent && "Teacher "}
-                            {isStudentEvent && `${isTeacherEvent ? " and" : ""} Student `}
-                            event
-                            {isVirtualEvent && " (Virtual)"}
-                        </div>))
-            }
         </div>}
         <CardBody className="d-flex flex-column">
             {title && <CardTitle tag="h3">
@@ -62,12 +105,9 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
                     View details
                     <span className='visually-hidden'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
                 </Link>
-                {isPhy && <div className="event-card-icons">
-                    {isTeacherEvent && <img src="/assets/phy/icons/key_stage_sprite.svg#teacher-hat" alt="Teacher event" title="Teacher event"/>}
-                    {isStudentEvent && <img src="/assets/phy/icons/teacher_features_sprite.svg#groups" alt="Student event" title="Student event"/>}
-                    {isVirtualEvent && <img src="/assets/phy/icons/computer.svg" alt="Virtual event" title="Virtual event"/>}
-                </div>}
             </CardText>
         </CardBody>
     </Card>;
 };
+
+export const EventCard = siteSpecific(PhysicsEventCard, AdaEventCard);

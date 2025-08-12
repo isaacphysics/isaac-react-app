@@ -5,6 +5,8 @@ import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {EMAIL_PREFERENCE_DEFAULTS, isPhy, siteSpecific} from "../../../services";
 import {Dispatch} from "react";
 import { TrueFalseRadioInput } from "./TrueFalseRadioInput";
+import classNames from "classnames";
+import {WithLinkableSetting} from "../WithLinkableSetting";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences | null | undefined;
@@ -14,7 +16,6 @@ interface UserEmailPreferencesProps {
 }
 
 export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences, submissionAttempted, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
-
     const isaacEmailPreferenceDescriptions = {
         assignments: siteSpecific(
             "Get notified when your teacher gives your group a new assignment.",
@@ -22,15 +23,15 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
         ),
         news: siteSpecific(
             "New content and website feature updates, as well as interesting news about Isaac.",
-            "Be the first to know about new questions, topics, and platform features. You can expect one email a month."
+            "Be the first to hear about new features, challenges, topics, and improvements on the platform. Plus, get helpful tips on making the most of new tools."
         ),
         events: siteSpecific(
-            "Information about new virtual or real world physics events.",
-            "Find out about upcoming events."
+            "Information about new online or in-person events.",
+            "Find out about upcoming events designed to support your learning and professional development."
         )
     };
 
-    return <FormGroup className="form-group overflow-auto">
+    return <FormGroup className={classNames("form-group overflow-auto", {"pt-4": isPhy})}>
         {isPhy && submissionAttempted !== undefined ? <> {/* submissionAttempted should always exist on phy, just here for typing */}
             <Table className="mb-0">
                 <thead>
@@ -83,23 +84,32 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                 </tbody>
             </Table>
         </> : <>
-            <StyledCheckbox checked={emailPreferences?.ASSIGNMENTS ?? false} id={`${idPrefix}assignments`}
-                onChange={(e) => setEmailPreferences({...emailPreferences, ASSIGNMENTS: e.target.checked})}
-                label={<span><b>Assignments</b></span>}
-            />
-            <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.assignments}</span>
+            <WithLinkableSetting className={"email-preference"} id={"assignments-preference"}>
+                <StyledCheckbox checked={emailPreferences?.ASSIGNMENTS ?? false} id={`${idPrefix}assignments`}
+                    onChange={(e) => setEmailPreferences({...emailPreferences, ASSIGNMENTS: e.target.checked})}
+                    label={<span><b>Assignments</b></span>}
+                />
+                <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.assignments}</span>
+            </WithLinkableSetting>
 
-            <StyledCheckbox checked={emailPreferences?.NEWS_AND_UPDATES ?? false} id={`${idPrefix}news`}
-                onChange={(e) => setEmailPreferences({...emailPreferences, NEWS_AND_UPDATES: e.target.checked})}
-                label={<span><b>News</b></span>}
-            />
-            <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.news}</span>
+            <WithLinkableSetting className={"email-preference"} id={"news-preference"}>
+                <StyledCheckbox checked={emailPreferences?.NEWS_AND_UPDATES ?? false} id={`${idPrefix}news`}
+                    onChange={(e) => setEmailPreferences({
+                        ...emailPreferences,
+                        NEWS_AND_UPDATES: e.target.checked
+                    })}
+                    label={<span><b>News</b></span>}
+                />
+                <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.news}</span>
+            </WithLinkableSetting>
 
-            <StyledCheckbox checked={emailPreferences?.EVENTS ?? false} id={`${idPrefix}events`}
-                onChange={(e) => setEmailPreferences({...emailPreferences, EVENTS: e.target.checked})}
-                label={<span><b>Events</b></span>}
-            />
-            <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.events}</span>
+            <WithLinkableSetting className={"email-preference"} id={"events-preference"}>
+                <StyledCheckbox checked={emailPreferences?.EVENTS ?? false} id={`${idPrefix}events`}
+                    onChange={(e) => setEmailPreferences({...emailPreferences, EVENTS: e.target.checked})}
+                    label={<span><b>Events</b></span>}
+                />
+                <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.events}</span>
+            </WithLinkableSetting>
         </>}
     </FormGroup>;
 };

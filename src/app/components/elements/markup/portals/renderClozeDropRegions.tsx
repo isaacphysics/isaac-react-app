@@ -2,7 +2,7 @@ import {PortalInHtmlHook} from "./utils";
 import React, {lazy, useContext} from "react";
 import {ClozeDropRegionContext} from "../../../../../IsaacAppTypes";
 
-// This needs to be in a separate file and lazily imported, so that react-beautiful-dnd can be split off from the main bundle.
+// This needs to be in a separate file and lazily imported, so that @hello-pangea/dnd can be split off from the main bundle.
 const InlineDropRegion = lazy(() => import("./InlineDropZones"));
 
 // See the comment on `PORTAL_HOOKS` constant for an explanation of how this works

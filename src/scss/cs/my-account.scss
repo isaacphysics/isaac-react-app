@@ -30,6 +30,11 @@
     height: 45px;
     border-radius: 10px !important;
     border: solid 2px #666;
+
+    &:has(+ .inline-form-input-btn) {
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }  
   }
 
   select.form-select:not(.date-input-day) {
@@ -51,6 +56,29 @@
       border-radius: 0 10px 10px 0;
     }
   }
+
+  .my-account-left {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .my-account-right {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 1.5rem;
+  }
+}
+
+form:has(+ .tab-content) {
+  .tab-content .my-account-tab {
+    padding-bottom: 0;
+  }
+
+  + .tab-content {
+    .my-account-right {
+      padding-top: 0;
+    }
+  }
 }
 
 .connections-fixed-length-container {
@@ -59,4 +87,25 @@
   > .icon-person-active {
     min-width: 1.25rem;
   }
+}
+
+@keyframes highlight-pulse {
+  20% {
+    outline-color: $pink-400;
+  }
+  100% {
+    outline-color: transparent;
+  }
+}
+
+.highlight-target {
+  outline: 2px solid transparent;
+  animation: highlight-pulse 1.5s ease-in-out;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.1);
+}
+
+.email-preference {
+  margin: 5px;
+  padding: 10px;
+  border-radius: 10px;
 }

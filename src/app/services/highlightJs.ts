@@ -1,13 +1,17 @@
 import javascript from 'highlight.js/lib/languages/javascript';
 import python from 'highlight.js/lib/languages/python';
 import php from 'highlight.js/lib/languages/php';
+import phpTemplate from 'highlight.js/lib/languages/php-template';
+import xml from 'highlight.js/lib/languages/xml';
 import csharp from 'highlight.js/lib/languages/csharp';
 import plaintext from 'highlight.js/lib/languages/plaintext';
 import sql from 'highlight.js/lib/languages/pgsql';
 import java from 'highlight.js/lib/languages/java';
 import vbnet from 'highlight.js/lib/languages/vbnet';
 import haskell from 'highlight.js/lib/languages/haskell';
-import {LanguageFn} from "highlight.js";
+import xmlhtml from 'highlight.js/lib/languages/xml';
+import css from 'highlight.js/lib/languages/css';
+import {LanguageFn, Mode} from "highlight.js";
 
 const importHljsCore = import("highlight.js/lib/core");
 
@@ -18,11 +22,15 @@ function registerLanguages() {
         hljs.registerLanguage('javascript', javascript);
         hljs.registerLanguage('python', python);
         hljs.registerLanguage('php', php);
+        hljs.registerLanguage('phpfile', phpTemplate);
+        hljs.registerLanguage('xml', xml);
         hljs.registerLanguage('csharp', csharp);
         hljs.registerLanguage('haskell', haskell);
         hljs.registerLanguage('plaintext', plaintext);
-        hljs.registerLanguage('assembly', plaintext);
+        hljs.registerLanguage('assembly', assemblyHighlightDefinition);
         hljs.registerLanguage('sql', sql);
+        hljs.registerLanguage('html', xmlhtml);
+        hljs.registerLanguage('css', css);
         hljs.registerLanguage('pseudocode', isaacPseudocodeHighlightDefinition);
     });
 }
@@ -194,6 +202,189 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
             // Other nice things to highlight:
             hljsLib.NUMBER_MODE,
             FUNCTION_DEFINITION,
+        ]
+    };
+};
+
+const assemblyHighlightDefinition: LanguageFn = function(hljsLib) {
+
+    const KEYWORDS: string[] = [
+        // LMC:
+        "STA",
+        "LDA",
+        "ADD",
+        "SUB",
+        "BRA",
+        "BRZ",
+        "BRP",
+        "INP",
+        "OUT",
+        "HLT",
+        "DAT",
+        // AQA:
+        "LDR",
+        "STR",
+        "MOV",
+        "ADD",
+        "SUB",
+        "CMP",
+        "BEQ",
+        "BNE",
+        "BLT",
+        "BGT",
+        "B",
+        "AND",
+        "ORR",
+        "XOR",
+        "MVN",
+        "LSL",
+        "LSR",
+        "HALT",
+    ];
+
+    return {
+        name: 'assembly',
+        aliases: [],
+        keywords: KEYWORDS,
+        contains: [
+            // C-style comments:
+            hljsLib.C_LINE_COMMENT_MODE,
+            // Other nice things to highlight:
+            { // number literals
+                className: 'number',
+                variants: [
+                    { // literal
+                        begin: '[#$=]\\d+' },
+                    { // bare number
+                        begin: '\\b\\d+' }
+                ],
+                relevance: 0
+            },
+            {  // register names
+                className: 'variable',
+                variants: [
+                    {begin: 'R\\d+' },
+                ],
+                relevance: 0
+            },
+            { // 1 arg LMC instructions
+                begin: [
+                    /(ADD|SUB|STA|LDA)/,
+                    / +/,
+                    /[a-zA-Z0-9]+/,
+                ],
+                beginScope: {
+                    1: "keyword",
+                    3: "variable",
+                },
+                contains: []
+            } as Mode,
+            { // 2 arg instructions:
+                begin: [
+                    /LDR|STR|MOV|CMP|MVN/,
+                    / +/,
+                    /[a-zA-Z0-9]+/,
+                    / *, */,
+                    /[a-zA-Z0-9]+/,
+                ],
+                beginScope: {
+                    1: "keyword",
+                    3: "variable",
+                    5: "variable",
+                },
+                contains: []
+            } as Mode,
+            { // 2 arg instructions (static number):
+                begin: [
+                    /LDR|STR|MOV|CMP|MVN/,
+                    / +/,
+                    /[a-zA-Z0-9]+/,
+                    / *, */,
+                    /#[0-9]+/,
+                ],
+                beginScope: {
+                    1: "keyword",
+                    3: "variable",
+                    5: "number",
+                },
+                contains: []
+            } as Mode,
+            { // 3 arg instructions:
+                begin: [
+                    /ADD|SUB|AND|ORR|XOR|LSL|LSR/,
+                    / +/,
+                    /[a-zA-Z0-9]+/,
+                    / *, */,
+                    /[a-zA-Z0-9]+/,
+                    / *, */,
+                    /[a-zA-Z0-9]+/,
+                ],
+                beginScope: {
+                    1: "keyword",
+                    3: "variable",
+                    5: "variable",
+                    7: "variable",
+                },
+                contains: []
+            } as Mode,
+            { // 3 arg instructions (static number):
+                begin: [
+                    /ADD|SUB|AND|ORR|XOR|LSL|LSR/,
+                    / +/,
+                    /[a-zA-Z0-9]+/,
+                    / *, */,
+                    /[a-zA-Z0-9]+/,
+                    / *, */,
+                    /#[0-9]+/,
+                ],
+                beginScope: {
+                    1: "keyword",
+                    3: "variable",
+                    5: "variable",
+                    7: "number",
+                },
+                contains: []
+            } as Mode,
+            { // calls with labels
+                begin: [
+                    // LMC | AQA
+                    /(BR[APZ])|(BEQ|BNE|BLT|BGT|B)/,
+                    / +/,
+                    /[a-zA-Z][a-zA-Z0-9]+/,
+                ],
+                beginScope: {
+                    1: "keyword",
+                    3: "symbol",
+                },
+                contains: []
+            } as Mode,
+            { // AQA labelled blocks
+                begin: [
+                    /^[a-zA-Z][a-zA-Z0-9]*/,
+                    /:/
+                ],
+                beginScope: {
+                    1: "symbol"
+                }
+            } as Mode,
+            { // LMC variable declarations
+                begin: [
+                    /^[a-zA-Z][a-zA-Z0-9]*/,
+                    /(?= *(DAT))/
+                ],
+                beginScope: {
+                    1: "variable"
+                }
+            } as Mode,
+            { // LMC labelled blocks (symbols)
+                begin: [
+                    /^[a-zA-Z][a-zA-Z0-9]*/,
+                    /(?= +(INP|OUT|ADD|SUB|STA|LDA|HLT|BR[APZ]))/
+                ],
+                beginScope: {
+                    1: "symbol"
+                }
+            } as Mode,
         ]
     };
 };

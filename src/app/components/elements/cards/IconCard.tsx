@@ -10,6 +10,7 @@ export interface IconCardContentProps {
     bodyText: string;
     tag?: string;
     clickUrl?: string;
+    onButtonClick?: () => void;
     buttonText?: string;
     disabled?: boolean;
     buttonStyle?: "outline" | "link" | "card";
@@ -21,7 +22,7 @@ export interface IconCardProps extends ContainerProps {
 }
 
 export const IconCard = ({card, ...props}: IconCardProps) => {
-    const {title, icon, bodyText, tag, clickUrl, buttonText, disabled, buttonStyle} = card;
+    const {title, icon, bodyText, tag, clickUrl, onButtonClick, buttonText, disabled, buttonStyle} = card;
     return <Container {...props} className={classNames("icon-card-container px-3 my-3", props?.className ?? "")}>
         <Card className={classNames("icon-card border-0", card.className)} tag={buttonStyle === "card" ? Link : Card} to={clickUrl}>
             <img src={icon.src} alt={icon.altText ?? ""} className={icon.className ?? ""}/>
@@ -36,7 +37,7 @@ export const IconCard = ({card, ...props}: IconCardProps) => {
                     <p className="mb-0">{bodyText}</p>
                 </CardBody>}
                 {clickUrl && buttonStyle !== "card" && <CardFooter className={"border-top-0 p-4 pt-3"}>
-                    <Button className={classNames("text-start", {"d-flex align-items-center" : buttonStyle === "link"}, {"external-link": !isAppLink(clickUrl)})} disabled={disabled} outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} tag={Link} to={clickUrl}>
+                    <Button onClick={onButtonClick} className={classNames("text-start", {"d-flex align-items-center" : buttonStyle === "link"}, {"external-link": !isAppLink(clickUrl)})} disabled={disabled} outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} tag={Link} to={clickUrl}>
                         {buttonText || "See more"}
                     </Button>
                 </CardFooter>}

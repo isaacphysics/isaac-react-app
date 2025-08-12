@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 
 import thunk from "redux-thunk";
 import {
+    fetchErrorFromParameters,
     fetchSearch,
     middleware,
     registerQuestions,
@@ -24,7 +25,7 @@ import {jest} from "@jest/globals";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "../dateUtils";
 
 const mockStore = configureMockStore([thunk, ...middleware]);
-const axiosMock = new MockAdapter(endpoint);
+const axiosMock = new MockAdapter(endpoint as any);
 const middlewareRegistrationActions = [{type: 'isaacApi/config/middlewareRegistered', payload: 'some unique string'}];
 
 function expectActionsToStartWithMiddlewareRegistration(actualActions: Action[]): Action[] {
@@ -291,3 +292,39 @@ describe("toasts actions", () => {
 //     });
 //
 // });
+
+describe('helper: fetchErrorPromParameters', () => {
+    const parametersString = ({error, errorDescription} : { error?: string, errorDescription?: string} = {}) =>
+        (error ? `?error=${error}` : '') + 
+        (errorDescription ? "&error_description=The%20user%20has%20denied%20access.": '') + 
+        "&state=some_state";
+
+    it('parses error and description when both present, skips anything else', () => {
+        const url = parametersString({ error: 'access_denied', errorDescription: 'The%20user%20has%20denied%20access.'});
+        const result = fetchErrorFromParameters(url);
+        expect(result).toEqual({ error: 'access_denied', errorDescription: "The user has denied access."});
+    });
+
+    it('skips error when that\'s missing', () => {
+        const url = parametersString({ errorDescription: 'The%20user%20has%20denied%20access.'});
+        const result = fetchErrorFromParameters(url);
+        expect(result).toEqual({ errorDescription: "The user has denied access."});
+    });
+
+    it('skips description when that\'s missing', () => {
+        const url = parametersString({ error: 'access_denied'});
+        const result = fetchErrorFromParameters(url);
+        expect(result).toEqual({ error: "access_denied"});
+    });
+
+    it('returns object when both missing', () => {
+        const result = fetchErrorFromParameters(parametersString());
+        expect(result).toEqual({ });
+    });
+
+    it('returns parseError on parsing error', () => {
+        //@ts-ignore
+        const result = fetchErrorFromParameters(['a', 1, true]);
+        expect(result).toEqual({ parseError: 'Failed to parse "a,1,true". Each query pair must be an iterable [name, value] tuple'});
+    });
+});

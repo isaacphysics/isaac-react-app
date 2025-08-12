@@ -4,6 +4,7 @@ module.exports = {
         "!src/**/*.d.ts"
     ],
     "resolver": "jest-pnp-resolver",
+    globalSetup: "<rootDir>/src/test/globalSetup.ts",
     setupFiles: [
         "<rootDir>/config/jest/jest.polyfills.js"
     ],
@@ -15,7 +16,7 @@ module.exports = {
     "testMatch": [
         "<rootDir>src/**/*.test.(js|jsx|ts|tsx)"
     ],
-    "testEnvironment": "jsdom",
+    "testEnvironment": "jest-fixed-jsdom",
     "testEnvironmentOptions": {
         "url": "http://localhost",
         customExportConditions: [''],

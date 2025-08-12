@@ -1,27 +1,26 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import {withRouter} from "react-router-dom";
-import {AppState, fetchDoc, useAppDispatch, useAppSelector} from "../../state";
+import {selectors, useAppSelector} from "../../state";
 import {Col, Container, Row} from "reactstrap";
-import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, above, below, isAda, isPhy, useDeviceSize, useNavigation} from "../../services";
+import {Subject, usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {NavigationLinks} from "../elements/NavigationLinks";
-import {UserContextPicker} from "../elements/inputs/UserContextPicker";
-import {EditContentButton} from "../elements/EditContentButton";
-import {ShareLink} from "../elements/ShareLink";
-import {PrintButton} from "../elements/PrintButton";
 import {Markup} from "../elements/markup";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
-import {ReportButton} from "../elements/ReportButton";
 import classNames from "classnames";
+import { ConceptSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { useGetConceptQuery } from "../../state/slices/api/conceptsApi";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { NotFound } from "./NotFound";
+import { PageMetadata } from "../elements/PageMetadata";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -31,74 +30,81 @@ interface ConceptPageProps {
 }
 
 export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride, preview}: ConceptPageProps) => {
-    const dispatch = useAppDispatch();
     const conceptId = conceptIdOverride || params.conceptId;
-    useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
-    const doc = useAppSelector((state: AppState) => state?.doc || null);
-    const navigation = useNavigation(doc);
-    const deviceSize = useDeviceSize();
+    const user = useAppSelector(selectors.user.orNull);
+    const conceptQuery = useGetConceptQuery(conceptId);
+    const {data: doc, isLoading} = conceptQuery;
+    const navigation = useNavigation(doc ?? null);
+    
+    const userContext = useUserViewingContext();
+    const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
 
-    const ManageButtons = () => <div className="no-print d-flex justify-content-end mt-1 ms-2">
-        <div className="question-actions">
-            <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
-        </div>
-        <div className="question-actions not-mobile">
-            <PrintButton />
-        </div>
-        <div className="question-actions">
-            <ReportButton pageId={conceptId}/>
-        </div>
-    </div>;
+    useEffect(() => {
+        if (pageContext) {
+            // the page context, if single stage, overrides the user context
+            if (isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
+                const newStage = LEARNING_STAGE_TO_STAGES[pageContext.stage[0]];
+                if (newStage) {
+                    userContext.setStage(newStage[0]);
+                    userContext.setFixedContext(true);
+                }
+            }
+            // all other cases use the default behaviour
+        }
+    }, [pageContext]);
 
-    return <ShowLoading until={doc} thenRender={supertypedDoc => {
-        const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
-        return <GameboardContext.Provider value={navigation.currentGameboard}>
-            <Container className={classNames(doc.subjectId)}>
-                <TitleAndBreadcrumb
-                    intermediateCrumbs={navigation.breadcrumbHistory}
-                    currentPageTitle={doc.title as string}
-                    collectionType={navigation.collectionType}
-                    subTitle={doc.subtitle as string}
-                    preview={preview}
-                />
-                {!preview && <>
-                    <MetaDescription description={doc.summary} />
-                    <CanonicalHrefElement />
-                </>}
-                <EditContentButton doc={doc} />
+    return <ShowLoadingQuery
+        query={conceptQuery}
+        defaultErrorTitle="Unable to load concept"
+        ifNotFound={<NotFound />}
+        thenRender={supertypedDoc => {
+            const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
+            return <GameboardContext.Provider value={navigation.currentGameboard}>
+                <Container data-bs-theme={doc.subjectId ?? pageContext?.subject}>
+                    <TitleAndBreadcrumb
+                        intermediateCrumbs={navigation.breadcrumbHistory}
+                        currentPageTitle={doc.title as string}
+                        displayTitleOverride={siteSpecific("Concept", undefined)}
+                        collectionType={navigation.collectionType}
+                        subTitle={siteSpecific(undefined, doc.subtitle as string)}
+                        preview={preview}
+                        icon={{type: "hex", subject: doc.subjectId as Subject, icon: "icon-concept"}}
+                    />
+                    {!preview && <>
+                        <MetaDescription description={doc.summary} />
+                        <CanonicalHrefElement />
+                    </>}
+                    <SidebarLayout>
+                        <ConceptSidebar relatedContent={doc.relatedContent} />
+                        <MainContent>
+                            <PageMetadata doc={doc} />
 
-                {below["sm"](deviceSize) && <ManageButtons />}
+                            <Row className="concept-content-container">
+                                <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
 
-                <div className="d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
-                    <UserContextPicker />
-                    {above["md"](deviceSize) && <ManageButtons />}
-                </div>
+                                    <SupersededDeprecatedWarningBanner doc={doc} />
 
-                <Row className="concept-content-container">
-                    <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
+                                    {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
-                        <SupersededDeprecatedWarningBanner doc={doc} />
+                                    <WithFigureNumbering doc={doc}>
+                                        <IsaacContent doc={doc} />
+                                    </WithFigureNumbering>
 
-                        {isAda && <IntendedAudienceWarningBanner doc={doc} />}
+                                    {doc.attribution && <p className="text-muted">
+                                        <Markup trusted-markup-encoding={"markdown"}>
+                                            {doc.attribution}
+                                        </Markup>
+                                    </p>}
 
-                        <WithFigureNumbering doc={doc}>
-                            <IsaacContent doc={doc} />
-                        </WithFigureNumbering>
+                                    {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
-                        {doc.attribution && <p className="text-muted">
-                            <Markup trusted-markup-encoding={"markdown"}>
-                                {doc.attribution}
-                            </Markup>
-                        </p>}
-
-                        {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
-
-                        <NavigationLinks navigation={navigation} />
-
-                        {isPhy && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
-                    </Col>
-                </Row>
-            </Container>
-        </GameboardContext.Provider>;
-    }}/>;
+                                    <NavigationLinks navigation={navigation} />
+                                </Col>
+                            </Row>
+                        </MainContent>
+                    </SidebarLayout>
+                </Container>
+            </GameboardContext.Provider>;
+        }}
+    />; 
 });

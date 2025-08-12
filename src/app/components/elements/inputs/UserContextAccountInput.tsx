@@ -141,6 +141,7 @@ export function UserContextAccountInput({
 }: UserContextAccountInputProps) {
     const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
+    const isAllStages = userContexts.length === 1 && userContexts[0].stage === STAGE.ALL;
 
     return <div className={className}>
         <Label htmlFor="user-context-selector" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
@@ -152,7 +153,7 @@ export function UserContextAccountInput({
         {siteSpecific(
             // Physics
             <React.Fragment>
-                <span id={`show-me-content-${componentId}`} className="icon-help" />
+                <i id={`show-me-content-${componentId}`} className="mx-2 icon icon-info icon-color-grey" />
                 <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                     {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
                     {"You will be able to change this preference on relevant pages."}<br />
@@ -196,17 +197,17 @@ export function UserContextAccountInput({
             {isAda && <>
                 {tutorOrAbove &&
                     <Col lg={6} className="p-0 pe-4 pe-lg-0">
-                        <Button color="primary" outline className="mb-3 px-2 w-100"
+                        <Button color="keyline" className="mb-3 px-2 w-100"
                             onClick={() => setUserContexts([...userContexts, {}])}
                             disabled={!validateUserContexts(userContexts)}>
                             Add more content
                         </Button>
                     </Col>}
             </>}
-            {!isAda && tutorOrAbove && validateUserContexts(userContexts) && <div className="mb-3 ms-2 align-content-center remove-stage-container">
+            {isPhy && tutorOrAbove && validateUserContexts(userContexts) && !isAllStages && <div className="mb-3 ms-2 align-content-center remove-stage-container">
                 <Button
                     aria-label="Add stage"
-                    className={`ms-2 align-middle btn-plus float-none pointer-cursor bg-white`}
+                    className={`ms-2 align-middle btn-plus float-none pointer-cursor bg-transparent`}
                     onClick={() => setUserContexts([...userContexts, {}])}
                 />
             </div>}

@@ -37,19 +37,18 @@
   outline: none !important;
   border: none !important;
   &:focus-visible {
-    outline: 2px solid $focus-blue !important;
     border-radius: 50px !important;
   }
 }
 
 .question-progress-icon {
-  min-width: 58px !important;
+  min-width: 72px !important;
   display: block;
   padding: 14px 0 !important;
   position: relative;
   align-content: center;
   @include media-breakpoint-up(sm) {
-    min-width: 86px !important;
+    min-width: 90px !important;
   }
 
   .inner-progress-icon {

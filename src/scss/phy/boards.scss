@@ -1,9 +1,8 @@
 @import "../common/boards";
 
 .board-subject-hexagon-size {
-  width: 63px;
-  min-width: 63px;
-  height: 74px;
+  width: 72px;
+  height: 72px;
 }
 
 // Subject hexagons:
@@ -14,7 +13,7 @@
 
   &.table-view {
     position: relative;
-    top: -5px;
+    top: 5px;
   }
 }
 .board-subject-hexagon {
@@ -40,18 +39,30 @@
     left: 0;
   }
 }
-.board-percent-completed {
+
+.board-bubble-info {
   width: 100%;
+  height: 39px;
+  position: relative;
+  z-index: 5;
+  align-content: center;
   font-size: 30px;
   line-height: 110%;
   font-family: $secondary-font-semi-bold;
-  color: #fff;
-  z-index: 10;
-  position: absolute;
-  top: 20px;
-  left: 5px;
+  color: $color-neutral-900;
   text-align: center;
-  &:after {
+}
+
+.board-bubble-info-sm {
+  @extend .board-bubble-info;
+  height: 28px;
+  font-size: 22px;
+}
+
+.board-percent-completed {
+  @extend .board-bubble-info;
+
+  &::after {
     font-size: 0.5em;
     content: '%';
     position: relative;
@@ -59,22 +70,32 @@
   }
 }
 
+label:has(> .board-percent-completed) {
+  cursor: inherit;
+}
+
+// old style; board percent displayed on top of subject hexagons
+.board-subject-hexagon-container > .board-percent-completed {
+  height: 100%;
+  color: white;
+}
+
 .board-subject-hexagon {
-  background: url(/assets/phy/icons/hexagons_sprite.png) no-repeat -256px 0;
-  left: 0;
-}
-.subject-physics {
-  background-position: 0 0;
-}
-.subject-maths {
-  background-position: -64px 0;
-}
-.subject-chemistry {
-  background-position: -128px 0;
-}
-.subject-biology {
-  background-position: -192px 0;
-}
-.subject-complete {
-  background-position: -320px 0;
+  mask: url(/assets/phy/icons/redesign/hexagon.svg) no-repeat center center;
+  mask-size: contain;
+  width: 72px;
+  height: 72px;
+
+  &.subject-physics {
+    background-color: $color-physics-500;
+  }
+  &.subject-maths {
+    background-color: $color-maths-500;
+  }
+  &.subject-chemistry {
+    background-color: $color-chemistry-500;
+  }
+  &.subject-biology {
+    background-color: $color-biology-500;
+  }
 }

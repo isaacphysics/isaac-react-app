@@ -36,7 +36,7 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
                     ["activity", ...selectedDates.map((date) => answeredQuestionsByDate ? answeredQuestionsByDate[date] || 0 : 0)]
                 ],
                 types: {activity: "area-spline"},
-                colors: {activity: siteSpecific("#FFB53F", "#FF4DC9")},
+                colors: {activity: siteSpecific("#FEA102", "#FF4DC9")},
                 xFormat: "%Y-%m-%d"
             },
             axis: {

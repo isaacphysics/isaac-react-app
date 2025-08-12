@@ -23,18 +23,6 @@
       flex-grow: 1;
     }
 
-    &:after {
-      content: "";
-      background-image: url('/assets/common/icons/chevron_right.svg');
-      background-repeat: no-repeat;
-      background-position: right;
-      width: 20px;
-      height: 10px;
-      margin-right: 1rem;
-      margin-top: auto;
-      margin-bottom: auto;
-    }
-
     &.de-emphasised, &.de-emphasised:hover {
       background: darken(#fff, 9%);
       color: lighten(black, 10%);

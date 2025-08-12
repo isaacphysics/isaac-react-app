@@ -47,6 +47,10 @@ declare global {
     namespace Cypress {
         interface Chainable {
             mountWithStoreAndRouter(component: ReactNode, routes: string[], mountOptions?: MountOptions): Chainable<Element>;
+
+            openSidebar(): Chainable<JQuery<HTMLElement>>;
+            closeSidebar(): Chainable<JQuery<HTMLElement>>;
+            getComponent(component: keyof typeof components): Chainable<JQuery<HTMLElement>>;
         }
     }
 }
@@ -69,6 +73,12 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, mountOptions
 
 import "@frsource/cypress-plugin-visual-regression-diff/dist/support";
 
+// Add a delay to all matchImage calls. Shouldn't be required, but is.
+Cypress.Commands.overwrite('matchImage', (matchImage) => {
+    cy.wait(2000);
+    matchImage();
+});
+
 // Skip visual regression tests in interactive mode - the results are not consistent with headless.
 // It may be useful to comment this out when debugging tests locally, but don't commit the snapshots.
 if (Cypress.config('isInteractive')) {
@@ -76,3 +86,19 @@ if (Cypress.config('isInteractive')) {
         cy.log('Skipping snapshot 👀');
     });
 }
+
+Cypress.Commands.add('openSidebar', () => {
+    return cy.get('[data-testid="sidebar-toggle"]').click();
+});
+
+Cypress.Commands.add('closeSidebar', () => {
+    return cy.get('[data-testid="close-sidebar-button"]').click();
+});
+
+const components = {
+    "sidebar": () => cy.get('#content-sidebar-offcanvas'),
+};
+
+Cypress.Commands.add('getComponent', (component) => {
+    return components[component]() || null;
+});

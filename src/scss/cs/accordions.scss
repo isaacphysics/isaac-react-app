@@ -28,17 +28,29 @@
   background-image: url(/assets/cs/icons/flag-black.svg);
 }
 
-.accordion .accordion-header {
+.accordion button.accordion-header {
   span, button, button:hover {
     color: black !important;
-
-    &.stage-label-higher, &.de-emphasised > span {
+    &.stage-label-higher {
       color: white !important;
     }
   }
+  &.de-emphasised > span {
+    color: white !important;
+  }
 
-  h2 {
-    font-size: inherit !important;
+
+  &::after {
+    width: 30px;
+    height: 10px;
+    background-position: right;
+    margin: auto 1rem auto 0;
+  }
+}
+
+button.accordion-header {
+  &.active {
+    border-bottom: 1px solid $shadow-08 !important;
   }
 }
 
@@ -49,6 +61,10 @@
   margin-top: 2px;
   &:first-of-type {
     margin-top: 0;
+    border-top: 0;
+  }
+  &:last-of-type {
+    margin-bottom: 1rem;
   }
 
   .content-value h4 {

@@ -1,29 +1,29 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Button, Col, Container, Row} from "reactstrap";
 import {match, RouteComponentProps, withRouter} from "react-router-dom";
-import {fetchDoc, goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {ShowLoading} from "../handlers/ShowLoading";
+import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetQuestionQuery} from "../../state";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {
     determineAudienceViews,
     DOCUMENT_TYPE,
     fastTrackProgressEnabledBoards,
     generateQuestionTitle,
+    usePreviousPageContext,
     isAda,
     isPhy,
     isStudent,
+    siteSpecific,
+    Subject,
     TAG_ID,
     tags,
-    useNavigation
+    useNavigation,
+    isDefined
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {EditContentButton} from "../elements/EditContentButton";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
-import {ShareLink} from "../elements/ShareLink";
-import {PrintButton} from "../elements/PrintButton";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
@@ -31,19 +31,17 @@ import queryString from "query-string";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
-import {ReportButton} from "../elements/ReportButton";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
 import { LLMFreeTextQuestionIndicator } from "../elements/LLMFreeTextQuestionIndicator";
-
-interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
-    questionIdOverride?: string;
-    match: match & { params: { questionId: string } };
-    preview?: boolean;
-}
-
-
+import { GameboardQuestionSidebar, MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { StageAndDifficultySummaryIcons } from "../elements/StageAndDifficultySummaryIcons";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { NotFound } from "./NotFound";
+import { PageMetadata } from "../elements/PageMetadata";
+import { MetadataContainer } from "../elements/panels/MetadataContainer";
 
 function getTags(docTags?: string[]) {
     if (!isPhy) {
@@ -54,88 +52,129 @@ function getTags(docTags?: string[]) {
     return tags.getByIdsAsHierarchy(docTags as TAG_ID[])
         .map(tag => ({title: tag.title}));
 }
+interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
+    questionIdOverride?: string;
+    match: match & { params: { questionId: string } };
+    preview?: boolean;
+}
 
 export const Question = withRouter(({questionIdOverride, match, location, preview}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
-    const doc = useAppSelector(selectors.doc.get);
+    const questionQuery = useGetQuestionQuery(questionId);
+    const {data: doc, isLoading} = questionQuery;
     const user = useAppSelector(selectors.user.orNull);
-    const navigation = useNavigation(doc);
+    const allQuestionsCorrect = useAppSelector(selectors.questions.allQuestionsCorrect);
+    const allQuestionsAttempted = useAppSelector(selectors.questions.allQuestionsAttempted);
+    const anyQuestionAttempted = useAppSelector(selectors.questions.anyQuestionPreviouslyAttempted);
+    const navigation = useNavigation(doc ?? null);
     const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
     const query = queryString.parse(location.search);
     const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
 
     const dispatch = useAppDispatch();
-    useEffect(() => {
-        dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, questionId));
-    }, [dispatch, questionId]);
 
-    return <ShowLoading until={doc} thenRender={supertypedDoc => {
-        const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+    const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
+    const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
 
-        const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
+    return <ShowLoadingQuery
+        query={questionQuery}
+        defaultErrorTitle="Unable to load question"
+        ifNotFound={<NotFound />}
+        thenRender={supertypedDoc => {
+            const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+            const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
-        return <GameboardContext.Provider value={navigation.currentGameboard}>
-            <Container className={classNames(doc.subjectId, "no-shadow")}>
-                {/*High contrast option*/}
-                <TitleAndBreadcrumb
-                    currentPageTitle={generateQuestionTitle(doc)}
-                    subTitle={doc.subtitle}
-                    intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
-                    collectionType={navigation.collectionType}
-                    audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
-                    preview={preview}
-                >
+            return <GameboardContext.Provider value={navigation.currentGameboard}>
+                <Container className={classNames("no-shadow")} data-bs-theme={pageContext?.subject ?? doc.subjectId}>
+                    <TitleAndBreadcrumb
+                        currentPageTitle={generateQuestionTitle(doc)}
+                        displayTitleOverride={siteSpecific("Question", undefined)}
+                        subTitle={siteSpecific(undefined, doc.subtitle)}
+                        intermediateCrumbs={navigation.breadcrumbHistory}
+                        collectionType={navigation.collectionType}
+                        audienceViews={siteSpecific(undefined, determineAudienceViews(doc.audience, navigation.creationContext))}
+                        preview={preview} icon={{type: "hex", subject: doc.subjectId as Subject, icon: "icon-question"}}
+                    />
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
-                </TitleAndBreadcrumb>
-                {!preview && <CanonicalHrefElement />}
-                <div className="no-print d-flex flex-wrap align-items-center mt-3">
-                    {pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
-                    <EditContentButton doc={doc} />
-                    <div className="question-actions ms-auto">
-                        <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
-                    </div>
-                    <div className="question-actions not-mobile">
-                        <PrintButton questionPage />
-                    </div>
-                    <div className="question-actions">
-                        <ReportButton pageId={questionId}/>
-                    </div>
-                </div>
-                <Row className="question-content-container">
-                    <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
+                    <SidebarLayout>
+                        {isDefined(gameboardId) ? <GameboardQuestionSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} currentQuestionId={questionId}/>
+                            : <QuestionSidebar relatedContent={doc.relatedContent} />}
+                        <MainContent>
+                            {!preview && <CanonicalHrefElement />}
 
-                        <SupersededDeprecatedWarningBanner doc={doc} />
+                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
+                                {isPhy && <MetadataContainer className="d-flex row">
+                                    <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
+                                        <span>Subject & topics</span>
+                                        <div className="d-flex align-items-center">
+                                            <i className="icon icon-hexagon me-2"/>
+                                            {getTags(doc.tags).map((tag, index, arr) => <>
+                                                <span key={tag.title} className="text-theme">{tag.title}</span>
+                                                {index !== arr.length - 1 && <span className="mx-2">|</span>}
+                                            </>)}
+                                        </div>
+                                    </Col>
+                                    <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0">
+                                        <span>Status</span>
+                                        {allQuestionsCorrect
+                                            ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-correct me-2"/> Correct</div>
+                                            : allQuestionsAttempted
+                                                // uncomment the lines below if reusing this logic elsewhere!
+                                                // ? isPhy
+                                                ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-attempted me-2"/> All attempted (some errors)</div>
+                                                // : <div className="d-flex align-items-center"><span className="icon icon-raw icon-incorrect me-2"/> Incorrect</div>
+                                                : anyQuestionAttempted
+                                                    ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-in-progress me-2"/> In progress</div>
+                                                    : <div className="d-flex align-items-center"><span className="icon icon-raw icon-not-started me-2"/> Not started</div>
+                                        }
+                                    </Col>
+                                    <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0 pb-sm-0">
+                                        <span>Stage & difficulty</span>
+                                        <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/>
+                                    </Col>
+                                </MetadataContainer>}
+                            </PageMetadata>
 
-                        {isAda && <IntendedAudienceWarningBanner doc={doc} />}
+                            {isAda && pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
 
-                        {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionInfoBanner doc={doc} />}
+                            <Row className="question-content-container">
+                                <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
 
-                        <RevisionWarningBanner />
+                                    <SupersededDeprecatedWarningBanner doc={doc} />
 
-                        <WithFigureNumbering doc={doc}>
-                            <IsaacContent doc={doc}/>
-                        </WithFigureNumbering>
+                                    {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
-                        {doc.supersededBy && isStudent(user) && <div className="alert alert-warning">
-                            This question {" "}
-                            <Button color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
-                                has been replaced
-                            </Button>.<br />
-                            However, if you were assigned this version, you should complete it.
-                        </div>}
+                                    {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionInfoBanner doc={doc} />}
 
-                        {doc.attribution && <p className="text-muted">
-                            <Markup trusted-markup-encoding={"markdown"}>
-                                {doc.attribution}
-                            </Markup>
-                        </p>}
+                                    <RevisionWarningBanner />
 
-                        <NavigationLinks navigation={navigation}/>
+                                    <WithFigureNumbering doc={doc}>
+                                        <IsaacContent doc={doc}/>
+                                    </WithFigureNumbering>
 
-                        {doc.relatedContent && !isFastTrack && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
-                    </Col>
-                </Row>
-            </Container>
-        </GameboardContext.Provider>;}
-    } />;
+                                    {doc.supersededBy && isStudent(user) && <div className="alert alert-warning">
+                                        This question {" "}
+                                        <Button color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
+                                            has been replaced
+                                        </Button>.<br />
+                                        However, if you were assigned this version, you should complete it.
+                                    </div>}
+
+                                    {doc.attribution && <p className="text-muted">
+                                        <Markup trusted-markup-encoding={"markdown"}>
+                                            {doc.attribution}
+                                        </Markup>
+                                    </p>}
+
+                                    <NavigationLinks navigation={navigation}/>
+
+                                    {isAda && doc.relatedContent && !isFastTrack && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                                </Col>
+                            </Row>
+                        </MainContent>
+                    </SidebarLayout>
+                </Container>
+            </GameboardContext.Provider>;}
+        }
+    />;
 });

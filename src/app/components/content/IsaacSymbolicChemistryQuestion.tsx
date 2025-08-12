@@ -176,6 +176,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             0,
             _flattenDeep((currentAttemptValue || { symbols: [] }).symbols),
             {
+                editorMode: doc.isNuclear ? "nuclear" : "chemistry",
                 textEntry: true,
                 fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
                 fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
@@ -231,7 +232,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
 
     // Automatically filters out state symbols/brackets/etc from Nuclear Physics questions
-    const modifiedAvailableSymbols = doc.availableSymbols ? doc.availableSymbols : [];
+    const modifiedAvailableSymbols = doc.availableSymbols ? [...doc.availableSymbols] : [];
     if (doc.isNuclear && !hasMetaSymbols) {
         modifiedAvailableSymbols.push("_plus", "_minus", "_fraction", "_right_arrow");
     }
@@ -241,7 +242,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     let symbolList = parsePseudoSymbolicAvailableSymbols(modifiedAvailableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
     symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')//
-    .replace('proton', '\\proton').replace('neutrino', '\\neutrino').replace('antineutrino', '\\antineutrino');
+    .replace('proton', '\\proton').replace(/(?<!anti)neutrino/, '\\neutrino').replace('antineutrino', '\\antineutrino');
 
     return (
         <div className="symbolic-question">

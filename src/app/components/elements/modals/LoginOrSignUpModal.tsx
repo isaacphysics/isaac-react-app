@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
-import {Button, Col, Form, Input, Label, Row} from "reactstrap";
-import {closeActiveModal, selectors, store, useAppDispatch, useAppSelector} from "../../../state";
+import {Button, Col, Form, Row} from "reactstrap";
+import {closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import {useLocation} from "react-router-dom";
 import {
     EmailPasswordInputs,
@@ -8,10 +8,11 @@ import {
     TFAInput,
     useLoginLogic
 } from "../../pages/LogIn";
-import {isAda, KEY, persistence, siteSpecific} from "../../../services";
+import {isAda, isPhy, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
 import {RaspberryPiSignInButton} from "../RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../GoogleSignInButton";
+import { StyledCheckbox } from "../inputs/StyledCheckbox";
 
 const LoginOrSignUpBody = () => {
 
@@ -37,11 +38,16 @@ const LoginOrSignUpBody = () => {
     }
 
     return <Row id={"login-page"}>
+        <div className="position-absolute w-fit-content end-0">
+            <button className="close mt-3 me-1 btn-link" onClick={closeModal}>{siteSpecific("CLOSE", "Close")}</button>
+        </div>
         <Col lg={6} className={classNames("content-body", {"pattern-ada-dots": isAda})}>
-            {siteSpecific(
-                <img src={"/assets/phy/logo.svg"} alt={"Isaac Physics Logo"} />,
-                <img src={"/assets/common/logos/ada_logo_3-stack_aqua.svg"} className={"mt-5 mb-4 pb-2 ms-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
-            )}
+            <div className={classNames({"ps-3 pt-3": isPhy})}>
+                {siteSpecific(
+                    <img src={"/assets/phy/logo.svg"} alt={"Isaac Science Logo"} />,
+                    <img src={"/assets/common/logos/ada_logo_3-stack_aqua.svg"} className={"mt-7 mb-4 pb-2 ms-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
+                )}
+            </div>
             <div className={"px-3 mb-4"}>
                 <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>
                     Log in or sign up<br/>
@@ -49,7 +55,7 @@ const LoginOrSignUpBody = () => {
                 <p>You need to be logged in to your account to <b>save your answers and progress</b>. If you don&apos;t have an account, you can <b>sign up today for free</b>.</p>
                 <br/>
                 <p>Alternatively, you can</p>
-                <Button size={"sm"} color={"primary"} style={{backgroundColor: siteSpecific("#ffffff66","#ffffff99")}} outline onClick={closeModal} block>
+                <Button size={"sm"} color="keyline" onClick={closeModal} block>
                     Continue without an account
                 </Button>
             </div>
@@ -67,40 +73,42 @@ const LoginOrSignUpBody = () => {
                             passwordResetAttempted={passwordResetAttempted} validPassword={isValidPassword}
                             errorMessage={errorMessage} displayLabels={false} />
 
-                        <PasswordResetButton email={email} isValidEmail={isValidEmail} setPasswordResetAttempted={setPasswordResetAttempted} small />
-
-                        <div>
-                            <Input
-                                id="login-remember-me"
-                                className={classNames("mb-2", {"mt-1": isAda})}
-                                type="checkbox"
-                                onChange={e => setRememberMe(e.target.checked)}
-                            />
-                            <Label for="login-remember-me" className="ms-2">Remember me</Label>
-                        </div>
-                        
-                        <div className="text-end">
-                            <h4 role="alert" className="text-danger text-end mb-0">
-                                {errorMessage}
-                            </h4>
-                        </div>
+                        <h5 role="alert" className="text-danger text-end mb-0 py-1">
+                            {errorMessage}
+                        </h5>
+                        <Row className={classNames("mb-4", {"mt-2": isAda})}>
+                            <Col className={"col-6 mt-1 d-flex"}>
+                                <StyledCheckbox
+                                    id="rememberMe" 
+                                    checked={rememberMe} 
+                                    onChange={e => setRememberMe(e.target.checked)}
+                                    label={<p>Remember me</p>} className='mb-4'
+                                />
+                            </Col>
+                            <Col className="align-content-center">
+                                <PasswordResetButton 
+                                    email={email} isValidEmail={isValidEmail} 
+                                    setPasswordResetAttempted={setPasswordResetAttempted}
+                                />
+                            </Col>
+                        </Row>
 
                         <Button
                             id="log-in"
                             tag="input" value="Log in"
-                            color="secondary" type="submit" block
+                            color="solid" type="submit" block
                             className="mb-2"
                             onClick={attemptLogIn}
                             disabled={!!user?.requesting}
                         />
 
-                        <Button id="sign-up" color="primary" onClick={(e) => {
+                        <Button id="sign-up" color="keyline" onClick={(e) => {
                             closeModal(); signUp(e);
-                        }} outline block>
+                        }} block>
                             Sign up
                         </Button>
 
-                        <hr className="text-center hr-or" />
+                        {siteSpecific(<div className="section-divider"/>, <hr className="text-center hr-or"/>)}
                         {isAda && <div className="mb-2">
                             <RaspberryPiSignInButton concise={true} />
                         </div>}
@@ -114,6 +122,5 @@ const LoginOrSignUpBody = () => {
 export const loginOrSignUpModal = {
     centered: true,
     noPadding: true,
-    closeAction: () => {store.dispatch(closeActiveModal());},
     body: LoginOrSignUpBody
 };

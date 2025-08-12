@@ -1,4 +1,4 @@
-import {GameboardItem, IsaacFastTrackQuestionPageDTO} from "../../../IsaacApiTypes";
+import {CompletionState, GameboardItem, IsaacFastTrackQuestionPageDTO} from "../../../IsaacApiTypes";
 import queryString from "query-string";
 import {
     useAppSelector,
@@ -71,8 +71,8 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     }, [search]);
 
     const deviceSize = useDeviceSize();
-    const hexagonUnitLength = {xl: 28, lg: 26, md: 22, sm: 22, xs: 12.5}[deviceSize];
-    const hexagonPadding = {xl: 4, lg: 4, md: 3, sm: 3, xs: 2}[deviceSize];
+    const hexagonUnitLength = {xxl: 28, xl: 28, lg: 26, md: 22, sm: 22, xs: 12.5}[deviceSize];
+    const hexagonPadding = {xxl: 4, xl: 4, lg: 4, md: 3, sm: 3, xs: 2}[deviceSize];
     const hexagonHalfWidth = hexagonUnitLength;
     const hexagonQuarterHeight = hexagonUnitLength / Math.sqrt(3);
     const progressBarPadding = ["xs"].includes(deviceSize) ? 1 : 5;
@@ -115,7 +115,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         quarterHeight: hexagonQuarterHeight,
         base: {
             stroke: {
-                width: {xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
+                width: {xxl: 3, xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
                 colour: '#ddd'
             },
             fill: {
@@ -127,7 +127,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         },
         questionPartProgress: {
             stroke: {
-                width: {xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
+                width: {xxl: 3, xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
                 colour: '#009acd'
             },
             fill: {colour: 'none'},
@@ -137,7 +137,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     const conceptConnectionProperties = {
         fill: 'none',
         stroke: '#fea100',
-        strokeWidth: {xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
+        strokeWidth: {xxl: 3, xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
         strokeDasharray: 4
     };
 
@@ -163,7 +163,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             isConcept: false,
             fastTrackLevel,
             isCurrentQuestion: question.id == currentlyWorkingOn.id,
-            isCompleted: question.state === 'PERFECT',
+            isCompleted: question.state === CompletionState.ALL_CORRECT,
             hexagonTitle: "" + (index + 1),
             href,
             id: question.id as string,
@@ -228,7 +228,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                 const correctQuestionParts = pageQuestionParts?.filter(q => q.bestAttempt?.correct) || [];
                 progress.questions.topTen.push(augmentQuestion({
                     ...question,
-                    state: correctQuestionParts.length === pageQuestionParts?.length ? "PERFECT" : question.state,
+                    state: correctQuestionParts.length === pageQuestionParts?.length ? CompletionState.ALL_CORRECT : question.state,
                     questionPartsCorrect: correctQuestionParts.length || 0,
                     questionPartStates: pageQuestionParts?.map(qp => qp.bestAttempt ? qp.bestAttempt.correct ? "CORRECT" : "INCORRECT" : "NOT_ATTEMPTED") || []
                 }, gameboard.id as string, questionHistory, index));
@@ -246,7 +246,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                         const correctQuestionParts = pageQuestionParts?.filter(q => q.bestAttempt?.correct) || [];
                         progress.questions[conceptQuestionType].push(augmentQuestion({
                             ...question,
-                            state: correctQuestionParts.length === pageQuestionParts?.length ? "PERFECT" : question.state,
+                            state: correctQuestionParts.length === pageQuestionParts?.length ? CompletionState.ALL_CORRECT : question.state,
                             questionPartsCorrect: correctQuestionParts.length || 0,
                             questionPartStates: pageQuestionParts?.map(qp => qp.bestAttempt ? qp.bestAttempt.correct ? "CORRECT" : "INCORRECT" : "NOT_ATTEMPTED") || []
                         }, gameboard?.id as string, questionHistory, index));
@@ -289,12 +289,12 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
     function generateHexagonTitle(title: string, isCurrentQuestion: boolean) {
         const isTwoCharLength = ("" + title).length > 1;
-        const xSingleCharPosition = hexagon.halfWidth - {xl: 8, lg: 8, md: 6, sm: 6, xs: 5}[deviceSize];
-        const xTwoCharPosition = hexagon.halfWidth - {xl: 14, lg: 14, md: 11, sm: 11, xs: 10}[deviceSize];
-        const yPosition = hexagon.quarterHeight * 2 + {xl: 9, lg: 9, md: 7, sm: 7, xs: 6}[deviceSize];
+        const xSingleCharPosition = hexagon.halfWidth - {xxl: 8, xl: 8, lg: 8, md: 6, sm: 6, xs: 5}[deviceSize];
+        const xTwoCharPosition = hexagon.halfWidth - {xxl: 14, xl: 14, lg: 14, md: 11, sm: 11, xs: 10}[deviceSize];
+        const yPosition = hexagon.quarterHeight * 2 + {xxl: 9, xl: 9, lg: 9, md: 7, sm: 7, xs: 6}[deviceSize];
         return <text
             fontFamily="Exo 2"
-            fontSize={{xl: 26, lg: 26, md: 18, sm: 18, xs: 18}[deviceSize]}
+            fontSize={{xxl: 26, xl: 26, lg: 26, md: 18, sm: 18, xs: 18}[deviceSize]}
             fontStyle="italic"
             fontWeight={["xs"].includes(deviceSize) ? 500 : 600}
             fill={isCurrentQuestion ? '#333' : '#ccc'}
@@ -310,10 +310,10 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     function generateCompletionTick(isCurrentQuestion: boolean) {
         return <image
             href="/assets/common/icons/tick-bg.png"
-            height={{xl: 36, lg: 34, md: 29, sm: 29, xs: 18}[deviceSize]}
-            width={{xl: 36, lg: 34, md: 29, sm: 29, xs: 18}[deviceSize]}
-            x={hexagon.halfWidth - {xl: 18, lg: 17, md: 15, sm: 15, xs: 9}[deviceSize]}
-            y={hexagon.quarterHeight - {xl: 2, lg: 2, md: 2, sm: 2, xs: 2}[deviceSize]}
+            height={{xxl: 36, xl: 36, lg: 34, md: 29, sm: 29, xs: 18}[deviceSize]}
+            width={{xxl: 36, xl: 36, lg: 34, md: 29, sm: 29, xs: 18}[deviceSize]}
+            x={hexagon.halfWidth - {xxl: 18, xl: 18, lg: 17, md: 15, sm: 15, xs: 9}[deviceSize]}
+            y={hexagon.quarterHeight - {xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 2}[deviceSize]}
             opacity={isCurrentQuestion ? 1 : 0.3}
         />;
     }

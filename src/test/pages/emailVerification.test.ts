@@ -6,6 +6,7 @@ import {handlerThatReturns} from "../../mocks/handlers";
 import {buildMockEvent, mockUser} from "../../mocks/data";
 import userEvent from "@testing-library/user-event";
 import {EmailAlterHandler} from "../../app/components/handlers/EmailAlterHandler";
+import * as reactRouterExtension from '../../app/services/reactRouterExtension';
 
 // TODO the below should be moved into a separate event test file once other event tests are added
 if (isPhy) {
@@ -96,6 +97,15 @@ if (isPhy) {
 }
 
 describe("EmailAlterHandler", () => {
+    let mock: jest.SpyInstance;
+    beforeEach(() => {
+        mock = jest.spyOn(reactRouterExtension, 'useQueryParams').mockImplementation(() => ({}));
+    });
+
+    afterEach(() => {
+        mock.mockRestore();
+    });
+
     it("allows the current user to verify their email if the token is valid", async () => {
         const verifyEmailHandler = handlerThatReturns();
         // @ts-ignore Mock useQueryParams to return a valid token
@@ -104,7 +114,7 @@ describe("EmailAlterHandler", () => {
             PageComponent: EmailAlterHandler,
             modifyUser: (user) => ({...user, emailVerificationStatus: "NOT_VERIFIED", role: "STUDENT"}),
             extraEndpoints: [
-                http.get(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
+                http.post(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
             ],
             initalRouteEntries: ["/verifyemail"]
         });
@@ -129,7 +139,7 @@ describe("EmailAlterHandler", () => {
             PageComponent: EmailAlterHandler,
             modifyUser: (user) => ({...user, id: 1, emailVerificationStatus: "VERIFIED", role: "STUDENT"}),
             extraEndpoints: [
-                http.get(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
+                http.post(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
             ],
             initalRouteEntries: ["/verifyemail"]
         });

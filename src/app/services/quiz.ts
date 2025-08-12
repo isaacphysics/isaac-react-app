@@ -18,7 +18,7 @@ import {
     useGetStudentQuizAttemptWithFeedbackQuery
 } from "../state";
 import {
-    API_PATH,
+    extractTeacherName,
     getValue,
     isDefined,
     isEventLeaderOrStaff,
@@ -31,6 +31,7 @@ import {
 } from "./";
 import {
     ContentDTO,
+    IAssignmentLike,
     IsaacQuizSectionDTO,
     QuestionDTO,
     QuizAssignmentDTO,
@@ -268,10 +269,6 @@ export function useCurrentQuizAttempt() {
     return {attempt: attemptWithQuizSubject, error, questions, sections};
 }
 
-export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {
-    return `${API_PATH}/quiz/assignment/${assignmentId}/download`;
-}
-
 // type QuizAttemptOrAssignment = (QuizAttemptDTO | QuizAssignmentDTO);
 
 // export function isAttempt(a: QuizAttemptOrAssignment): a is QuizAttemptDTO {
@@ -288,9 +285,10 @@ export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: Qu
 }
 
 export enum QuizStatus {
-    Overdue = "Overdue", 
-    NotStarted = "Not started", 
-    Started = "Started", 
+    All = "All",
+    Overdue = "Overdue",
+    NotStarted = "Not started",
+    Started = "Started (incomplete)",
     Complete = "Complete",
 }
 
@@ -301,16 +299,17 @@ export interface DisplayableQuiz {
     id: string | number;
     isAssigned: boolean;
     title?: string;
-    creationDate?: Date;
-    startDate?: Date;
-    setDate?: Date;
-    dueDate?: Date;
-    completedDate?: Date;
+    creationDate?: Date | number;
+    startDate?: Date | number;
+    setDate?: Date | number;
+    dueDate?: Date | number;
+    completedDate?: Date | number;
     attempt?: QuizAttemptDTO;
     assignerSummary?: UserSummaryDTO;
     quizFeedbackMode?: QuizFeedbackMode;
     link?: string;
     status?: QuizStatus;
+    tags?: string[];
 };
 
 export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): DisplayableQuiz | undefined {
@@ -319,7 +318,7 @@ export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): Displaya
     }
     const status = assignment.attempt?.completedDate ? QuizStatus.Complete
         : (assignment.dueDate && todaysDate > assignment.dueDate) ? QuizStatus.Overdue
-            : (assignment.attempt) ? QuizStatus.Started 
+            : (assignment.attempt) ? QuizStatus.Started
                 : QuizStatus.NotStarted;
 
     return {
@@ -337,7 +336,8 @@ export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): Displaya
         link: status === QuizStatus.Complete ? (assignment.quizFeedbackMode !== "NONE" ? `/test/attempt/${assignment.attempt?.id}/feedback` : undefined)
             : status === QuizStatus.Overdue ? undefined
                 : `/test/assignment/${assignment.id}`,
-        status: status
+        status: status,
+        tags: assignment.quizSummary?.tags
     };
 }
 
@@ -355,5 +355,23 @@ export function convertAttemptToQuiz(attempt: QuizAttemptDTO): DisplayableQuiz |
         quizFeedbackMode: attempt.feedbackMode,
         link: attempt.completedDate ? `/test/attempt/${attempt.id}/feedback` : `/test/attempt/${attempt.quizId}`,
         status: attempt.completedDate ? QuizStatus.Complete : QuizStatus.Started,
+        tags: attempt.quizSummary?.tags
     };
+}
+
+export const getDistinctQuizSetters = (quizzes: DisplayableQuiz[] | undefined | null): Set<string> => {
+    const distinctFormattedQuizSetters = new Set<string>();
+
+    if (quizzes) {
+        quizzes.forEach(quiz => {
+            const teacherName = extractTeacherName(quiz.assignerSummary);
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            teacherName && distinctFormattedQuizSetters.add(teacherName);
+        });
+    }
+    return distinctFormattedQuizSetters;
+};
+
+export function isQuiz(assignment: IAssignmentLike): assignment is QuizAssignmentDTO {
+    return (assignment as QuizAssignmentDTO).quizId !== undefined;
 }

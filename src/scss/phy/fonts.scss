@@ -430,3 +430,13 @@
   url('/assets/phy/fonts/arcon-rounded-regular-webfont.svg#arconrounded-regular')
   format('svg');
 }
+
+@font-face {
+  font-family: 'hanken-grotesk';
+  src: url('/assets/phy/fonts/hanken-grotesk-variable-wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'hanken-grotsek-italic';
+  src: url('/assets/phy/fonts/hanken-grotesk-italic-variable-wght.ttf') format('truetype');
+}

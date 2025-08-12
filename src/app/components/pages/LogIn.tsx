@@ -9,6 +9,7 @@ import {
     useAppSelector
 } from "../../state";
 import {
+    Alert,
     Button,
     Card,
     CardBody,
@@ -21,7 +22,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history, isAda, MINIMUM_PASSWORD_LENGTH, SITE_TITLE, siteSpecific} from "../../services";
+import {history, isAda, isPhy, MINIMUM_PASSWORD_LENGTH, SITE_TITLE, siteSpecific} from "../../services";
 import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Loading} from "../handlers/IsaacSpinner";
@@ -30,6 +31,7 @@ import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {extractErrorMessage} from '../../services/errors';
 import { StyledCheckbox } from '../elements/inputs/StyledCheckbox';
+import { MicrosoftSignInButton } from '../elements/MicrosoftSignInButton';
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -218,10 +220,10 @@ export const LogIn = () => {
     }
 
     const metaDescription = siteSpecific(
-        "Log in to Isaac Physics to learn and track your progress.",
+        "Log in to Isaac to learn and track your progress.",
         "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.");
 
-    return <Container id="login-page" className="my-4 mb-5">
+    return <Container id="login-page" className="my-4 mb-7">
         <MetaDescription description={metaDescription} />
         <Row>
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
@@ -229,9 +231,15 @@ export const LogIn = () => {
                     <CardBody>
                         <Form name="login" onSubmit={validateAndLogIn} noValidate>
 
-                            <h2 className="h-title mb-4"  ref={headingRef} tabIndex={-1}>
+                            <h2 className={classNames("h-title", {"mb-4": isAda})}  ref={headingRef} tabIndex={-1}>
                                 Log&nbsp;in or sign&nbsp;up:
                             </h2>
+                            {isPhy &&  // FIXME: post-launch cleanup
+                                <Alert color="info">
+                                    Already use Isaac Physics? <a href="/pages/isaacscience">Your login details and account
+                                    are the same here<span className="visually-hidden"> as on Isaac Physics</span>!</a>
+                                </Alert>
+                            }
                             {totpChallengePending ?
                                 <TFAInput ref={subHeadingRef} rememberMe={rememberMe} />
                                 :
@@ -245,8 +253,8 @@ export const LogIn = () => {
                                     <Row className={classNames("mb-4", {"mt-2": isAda})}>
                                         <Col className={"col-5 mt-1 d-flex"}>
                                             <StyledCheckbox
-                                                id="rememberMe" 
-                                                checked={rememberMe} 
+                                                id="rememberMe"
+                                                checked={rememberMe}
                                                 onChange={e => setRememberMe(e.target.checked)}
                                                 label={<p>Remember me</p>} className='mb-4'
                                             />
@@ -265,32 +273,37 @@ export const LogIn = () => {
                                             <Button
                                                 id="log-in"
                                                 tag="input" value="Log in"
-                                                color="secondary" type="submit" className="mb-2" block
+                                                color="solid"
+                                                type="submit" className="mb-2" block
                                                 onClick={attemptLogIn}
                                                 disabled={!!user?.requesting}
                                             />
                                         </Col>
                                         <Col sm={6}>
-                                            <Button id="sign-up" color="primary" className="mb-2" onClick={signUp}
-                                                outline block>
+                                            <Button id="sign-up" color="keyline" className="mb-2" onClick={signUp} block>
                                                 Sign up
                                             </Button>
                                         </Col>
                                     </Row>
 
-                                    <hr className="text-center mb-4"/>
-                                    <h3 className="text-start mb-3">Log in with:</h3>
+                                    {siteSpecific(<div className="section-divider"/>, <hr className="text-center mb-4"/>)}
+                                    <div className={classNames("text-start mb-3", siteSpecific("h4", "h3"))}>Log in with:</div>
                                     {isAda &&
                                         <Row className="mb-2 justify-content-center">
                                             <Col sm={9}>
                                                 <RaspberryPiSignInButton/>
                                             </Col>
                                         </Row>}
-                                    <Row className="mb-3 justify-content-center">
+                                    <Row className={classNames("justify-content-center", siteSpecific("mb-2", "mb-3"))} >
                                         <Col sm={9}>
                                             <GoogleSignInButton/>
                                         </Col>
                                     </Row>
+                                    {isPhy && <Row className="mb-2 justify-content-center">
+                                        <Col sm={9}>
+                                            <MicrosoftSignInButton/>
+                                        </Col>
+                                    </Row>}
                                 </React.Fragment>
                             }
                         </Form>

@@ -19,12 +19,6 @@
     background-color: $active-color !important;
     box-shadow: none !important;
   }
-  &:focus:not(.disabled) {
-    box-shadow: none;
-  }
-  &:focus-visible {
-    box-shadow: 0 0 0 3px $focus-blue !important;
-  }
   &.disabled, &:disabled {
     color: $cs-jet;
     background-color: $cs-silver;
@@ -32,35 +26,23 @@
   }
 }
 
-.btn.btn-link:focus {
-  box-shadow: 0 0 0 0.2rem $focus-blue !important;
-  outline: none !important;
-  border-radius: 3px;
-}
-
-@mixin ada-button-outline($color, $hover-color, $active-color) {
-  background-color: transparent;
-  border: 3px solid $color;
+@mixin ada-button-outline($text-color, $color, $hover-color, $active-color) {
+  background-color: $color;
+  border: 3px solid $text-color;
   box-shadow: none;
-  color: $color;
+  color: $text-color;
   overflow: hidden;  // To stop margin collapse from hiding the focus outline
   text-decoration: none;
   &:hover {
     color: $hover-color;
     text-decoration: underline;
-    background-color: transparent;
+    background-color: $color;
   }
   &:active {
     color: $active-color !important;
     border-color: $active-color !important;
-    background-color: transparent !important;
+    background-color: $color !important;
     box-shadow: none !important;
-  }
-  &:focus:not(.disabled) {
-    box-shadow: none;
-  }
-  &:focus-visible {
-    box-shadow: 0 0 0 3px $focus-blue !important;
   }
   &.disabled, &:disabled {
     color: $cs-jet;
@@ -73,7 +55,7 @@
   @extend .btn;
 
   @if $outlined {
-    @include ada-button-outline($dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
+    @include ada-button-outline($dark-pink-300, transparent, $light-hover-dark-pink, $light-active-dark-pink);
   } @else {
     @include ada-button($cs-white, $dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
     background-color: $dark-pink-300;
@@ -96,13 +78,13 @@
 
   font-size: 1.111rem;
   &:not(.btn-sm):not(.btn-link) {
-    padding: 0.5rem 2.1rem 0.4rem 2.1rem;
+    padding: 0.5rem 2.1rem;
   }
   @extend .fw-semi-bold;
   &.btn-sm {
-    padding: 0.2rem 0.7rem 0.16rem 0.7rem;
+    padding: 0.2rem 0.7rem;
   }
-  min-width: 25px !important;
+  min-width: 25px;
 
   // Primary buttons (for dark background)
   &.btn-dark-primary {
@@ -112,18 +94,18 @@
   // Secondary buttons (for dark background)
   // Secondary Button components are expected to use the 'outline' prop!
   &.btn-outline-dark-secondary {
-    @include ada-button-outline($pink-300, $dark-hover-pink, $dark-active-pink);
+    @include ada-button-outline($pink-300, transparent, $dark-hover-pink, $dark-active-pink);
   }
 
   // Primary buttons (light background)
-  &.btn-primary, &.btn-secondary {
+  &.btn-primary, &.btn-secondary, &.btn-solid {
     @include ada-button($cs-white, $dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
   // Secondary buttons (for light background)
   // Secondary Button components are expected to use the 'outline' prop!
-  &.btn-outline-secondary, &.btn-outline-primary {
-    @include ada-button-outline($dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
+  &.btn-outline-secondary, &.btn-outline-primary, &.btn-keyline {
+    @include ada-button-outline($dark-pink-300, $cs-white, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
   &.btn-link {
@@ -132,7 +114,6 @@
     background: none !important;
     border: none !important;
     border-radius: 0 !important;
-    box-shadow: none !important;
   }
 }
 
@@ -147,7 +128,6 @@
     color: $light-active-dark-pink;
   }
   &:focus-visible {
-    outline: 2px solid $focus-blue !important;
     border-radius: 0 !important;
     z-index: 10;
   }
@@ -173,60 +153,20 @@
       background-color: $cs-white !important;
       background-image: url("/assets/cs/icons/share-pink.svg");
     }
-    margin-right: 7.5px;
-    margin-left: 7.5px;
     position: relative;
     z-index: 2;
-  }
-  .share-link {
-    z-index: 1;
-    top: 3px;
-    font-family: $secondary-font !important;
-    display: none;
-    position: absolute;
-    border: 1px solid gray;
-    transform: translate(calc(30px - 100%));
-    height: 42px;
-    width: 70%;
-
-    input {
-      z-index: 1;
-      padding-right: 40px;
-      padding-left: 10px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      user-select: all;
-      -webkit-user-select: all;
-      -moz-user-select: all;
-      -ms-user-select: all;
-      width: 100%;
-      height: 100%;
-    }
-
-    &.double-height {
-      height: auto;
-      padding-bottom: 10px;
-      background: #fff;
-      text-align: center;
-      input {
-        height: 42px;
-        margin-bottom: 8px;
-      }
-    }
   }
 }
 
 .print-icon {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   &:not(.outline) {
     @include ada-icon-button-base(48px, 48px, false);
   }
   &.outline {
     @include ada-icon-button-base(48px, 48px, true);
   }
-  margin-right: 7.5px;
-  margin-left: 7.5px;
   background-image: url("/assets/cs/icons/print.svg");
 }
 
@@ -237,8 +177,6 @@
   &.outline {
     @include ada-icon-button-base(48px, 48px, true);
   }
-  margin-right: 7.5px;
-  margin-left: 7.5px;
   background-image: url("/assets/cs/icons/flag.svg");
 }
 
@@ -255,6 +193,17 @@
   margin-left: 7.5px;
 }
 
+.bin-icon-small {
+  &:not(.outline) {
+    @include ada-icon-button-base(30px, 30px, false);
+    background-image: url("/assets/cs/icons/bin.svg");
+  }
+  &.outline {
+    @include ada-icon-button-base(30px, 30px, true);
+    background-image: url("/assets/cs/icons/bin-pink.svg");
+  }
+}
+
 .btn.plus-button {
   position: relative;
   &::after {
@@ -269,17 +218,6 @@
 .btn.confidence-help {
   @include ada-icon-button-base(2rem, 2rem, false);
   background-image: url("/assets/cs/icons/info-white.svg");
-}
-
-// Used to visually separate the button from the input in an input group (see groups page for example)
-.separate-input-group {
-  input {
-    border-radius: 0.25rem !important;
-  }
-  button {
-    margin-left: 1rem !important;
-    border-radius: 50px !important;
-  }
 }
 
 .selector-tabs {
@@ -320,24 +258,13 @@
   }
 }
 
-// --- Styling of links ---
-// This is really hard to do in general...
-
-div.isaac-nav-link {
-  display: inline-block;
-  text-decoration: underline;
-  &:hover {
-    text-decoration: none;
-  }
-}
-
 .nav-link {
   color: $cs-jet;
 }
 
 a:not(.btn):not(.nav-link) {
   // FIXME this breaks tables with links
-  &:not(.link-light):not(.footer-link):not(.a-link) {
+  &:not(.link-light):not(.footer-link):not(.a-link):not(.breadcrumb-link) {
     color: $cs-jet;
     &:hover {
       @extend .btn-link;
@@ -350,7 +277,6 @@ a:not(.btn):not(.nav-link) {
     outline: none;
   }
   &:focus-visible {
-    outline: 2px solid $focus-blue;
     border-radius: 0 !important;
     z-index: 10;
   }
@@ -370,5 +296,5 @@ a:not(.btn):not(.nav-link) {
 }
 
 .google-button:not(.linked-account-button) {
-  @include ada-button-outline($cs-black, $cs-jet, lighten($cs-jet, 20%));
+  @include ada-button-outline($cs-black, transparent, $cs-jet, lighten($cs-jet, 20%));
 }

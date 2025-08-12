@@ -25,8 +25,7 @@ import {
     isPhy,
     isTutorOrAbove,
     selectOnChange,
-    SITE_TITLE,
-    siteSpecific,
+    SITE_TITLE, SITE_TITLE_SHORT,
     tags,
     validateEmail,
     WEBMASTER_EMAIL
@@ -63,7 +62,7 @@ export const TutorRequest = () => {
 
     const subject = "Tutor Account Request";
     const message = "Hello,\n\n" +
-        `Please could you convert my ${siteSpecific("Isaac", "Ada")} account into a tutor account.` + "\n\n" +
+        `Please could you convert my ${SITE_TITLE_SHORT} account into a tutor account.` + "\n\n" +
         (subjects.length > 0 ? ("I would like to teach subjects: " + subjects.join(", ") + "\n\n") : "") +
         (reason ? "I would like to upgrade because: " + reason + "\n\n" : "") +
         "Thanks, \n\n" + firstName + " " + lastName;
@@ -76,8 +75,8 @@ export const TutorRequest = () => {
         setEmailVerified(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
     }, [user]);
 
-    return <Container id="contact-page" className="pb-5">
-        <TitleAndBreadcrumb currentPageTitle="Tutor Account request" />
+    return <Container id="contact-page" className="pb-7">
+        <TitleAndBreadcrumb currentPageTitle="Tutor Account request" icon={{type: "hex", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>
                 <Col size={9}>
@@ -200,7 +199,7 @@ export const TutorRequest = () => {
                                             </span>
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
-                                            <Input type="submit" value="Submit" disabled={!emailVerified} className="btn w-100 btn-secondary border-0" />
+                                            <Button type="submit" color="keyline" disabled={!emailVerified} className='w-100'>Submit</Button>
                                         </Col>
                                     </Row>
                                 </CardFooter>

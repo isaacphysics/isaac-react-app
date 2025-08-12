@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ColumnSlice } from "../elements/layout/ColumnSlice";
 import { Button, Container } from "reactstrap";
 import { IconCard } from "../elements/cards/IconCard";
@@ -6,11 +6,12 @@ import { selectors, useAppSelector, useGetNewsPodListQuery } from "../../state";
 import { TextBlock } from "../elements/layout/TextBlock";
 import { Link } from "react-router-dom";
 import { AdaCard } from "../elements/cards/AdaCard";
-import { isLoggedIn } from "../../services";
+import { isLoggedIn, SITE_TITLE } from "../../services";
 import { ImageBlock } from "../elements/layout/ImageBlock";
 import classNames from "classnames";
 
 export const TeacherResources = () => {
+    useEffect( () => {document.title = "Teachers — " + SITE_TITLE;}, []);
     const {data: teacherPods} = useGetNewsPodListQuery({subject: "news"});
     const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
     const featuredPod = teacherPods?.[0];
@@ -25,7 +26,7 @@ export const TeacherResources = () => {
                     <TextBlock className="text-white">
                         <h1 className="font-size-1-75 font-size-md-2-5">
                             <span className="text-pink">/</span><br/>
-                            Ada for teachers
+                            Ada CS for teachers
                         </h1>
                         <p>Classwork, homework, and exam prep to help you teach computer science. All available for free.</p>
                     </TextBlock>
@@ -39,7 +40,7 @@ export const TeacherResources = () => {
             <Container className="homepage-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <ColumnSlice>
-                    <TextBlock className="pe-5">
+                    <TextBlock className="pe-7">
                         <h2>Our latest updates</h2>
                         <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read the latest news and updates from the team.</p>
                     </TextBlock>
@@ -63,7 +64,7 @@ export const TeacherResources = () => {
                     </ImageBlock>
                     <TextBlock>
                         <h2>A full curriculum of topics</h2>
-                        <p>We have over 65 learning topics that cover everything you need to teach computer science. From computing systems and networks, to AI, machine learning, and much more.</p>
+                        <p>We have over 50 learning topics that cover everything you need to teach computer science. From computing systems and networks, to AI, machine learning, and much more.</p>
                         <p>They&apos;re created by expert educators and are regularly updated. You can even filter content for different age groups and exams.</p>
                         <Button tag={Link} to={"/topics"}>Explore all topics</Button>
                     </TextBlock>
@@ -75,10 +76,10 @@ export const TeacherResources = () => {
                 <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <TextBlock md={8} className={classNames({"mb-3": !isLoggedIn(user)})}>
                     <h2>Tools to help you teach</h2>
-                    <p>An Ada account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.</p>
+                    <p>An Ada CS account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.</p>
                     {!isLoggedIn(user) && <div className="pb-2 mb-3">
                         <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
-                        <Button outline to={"/login"} tag={Link}>Log in</Button>
+                        <Button color="keyline" to={"/login"} tag={Link}>Log in</Button>
                     </div>}
                 </TextBlock>
                 <ColumnSlice>
@@ -219,7 +220,7 @@ export const TeacherResources = () => {
                     <TextBlock className="py-3 text-center text-white">
                         <h3>Need help?</h3>
                         <p>Our teacher support page has lots of information for common questions and issues.</p>
-                        <Button outline className="bg-white" to="/support/teacher/general" tag={Link}>Teacher support</Button>
+                        <Button color="keyline" className="bg-white" to="/support/teacher/general" tag={Link}>Teacher support</Button>
                     </TextBlock>
                 </div>
             </Container>

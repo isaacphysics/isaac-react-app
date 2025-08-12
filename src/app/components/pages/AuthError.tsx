@@ -6,7 +6,7 @@ import { Container, Row, Col } from "reactstrap";
 export const AuthError = ({location: {state}}: {location: {state?: {errorMessage?: string}}}) => {
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Authentication error" breadcrumbTitleOverride="Authentication error" />
+        <TitleAndBreadcrumb currentPageTitle="Authentication error" breadcrumbTitleOverride="Authentication error" icon={{type: "hex", icon: "icon-error"}}/>
         <Row className="pt-4">
             <Col md={{size: 8, offset: 2}}>
                 <h3>

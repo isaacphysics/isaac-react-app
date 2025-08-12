@@ -10,7 +10,7 @@ export const AccountDeletionSuccess = () => {
     };
 
     return <Container className="text-center">
-        <Card className="my-5">
+        <Card className="my-7">
             <CardBody>
                 <Row className="justify-content-center">
                     <Col>
@@ -21,13 +21,13 @@ export const AccountDeletionSuccess = () => {
                     <Col>
                         {siteSpecific(
                             <img className="img-fluid mx-auto mt-3 mb-4" src="/assets/common/icons/tick.svg" alt="" id="account-deletion-tick" />,
-                            <img className="img-fluid mx-auto my-5" src="/assets/cs/decor/verify_done.svg" alt="" />
+                            <img className="img-fluid mx-auto my-7" src="/assets/cs/decor/verify_done.svg" alt="" />
                         )}
                     </Col>
                 </Row>
                 <Row className="justify-content-center">
                     <Col xs={12} sm={6} lg={4}>
-                        <Button className={"my-2 w-100"} color="primary" onClick={returnToHomepage}>Home</Button>
+                        <Button className={"my-2 w-100"} color="solid" onClick={returnToHomepage}>Home</Button>
                     </Col>
                 </Row>
             </CardBody>

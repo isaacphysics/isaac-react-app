@@ -1,7 +1,7 @@
 import React, {ContextType, lazy} from "react";
-import {AppQuestionDTO, InlineContext, IsaacQuestionProps, ValidatedChoice} from "../../IsaacAppTypes";
-import {ChoiceDTO, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isNotPartiallyLoggedIn, wasTodayUTC} from './';
+import {AppQuestionDTO, InlineContext, IsaacQuestionProps, PageContextState, ValidatedChoice} from "../../IsaacAppTypes";
+import {ChoiceDTO, CompletionState, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
+import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isNotPartiallyLoggedIn, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
 import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
@@ -66,7 +66,7 @@ export function isQuestion(doc: ContentDTO) {
 }
 
 export const HUMAN_QUESTION_TAGS = new Map([
-    ["phys_book_step_up", "Step up to GCSE Physics"],
+    ["phys_book_step_up", "Step Up to GCSE Physics"],
     ["phys_book_gcse", "Mastering Essential GCSE Physics"],
     ["physics_skills_14", "Mastering Essential Pre-University Physics (2nd Edition)"],
     ["physics_skills_19", "Mastering Essential Pre-University Physics (3rd Edition)"],
@@ -182,7 +182,7 @@ export function useCurrentQuestionAttempt<T extends ChoiceDTO>(questionId: strin
     };
 }
 
-export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, questionType: string, currentGameboard: GameboardDTO | undefined, currentUser: any, dispatch: any, inlineContext?: ContextType<typeof InlineContext>) => {
+export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, questionType: string, currentGameboard: GameboardDTO | undefined, currentUser: any, dispatch: any, inlineContext?: ContextType<typeof InlineContext>): Promise<void> => {
     if (questionPart?.currentAttempt) {
         // Notify Plausible that at least one question attempt has taken place today
         if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {
@@ -190,7 +190,7 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
             trackEvent("question_attempted");
         }
 
-        dispatch(attemptQuestion(docId, questionPart?.currentAttempt, questionType, currentGameboard?.id, inlineContext));
+        const attempt = dispatch(attemptQuestion(docId, questionPart?.currentAttempt, questionType, currentGameboard?.id, inlineContext));
 
         if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
             dispatch(saveGameboard({
@@ -199,7 +199,10 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
                 redirectOnSuccess: false
             }));
         }
+        
+        return attempt;
     }
+    return Promise.resolve();
 };
 
 export const getMostRecentCorrectAttemptDate = (questions: AppQuestionDTO[] | undefined) => {
@@ -208,4 +211,58 @@ export const getMostRecentCorrectAttemptDate = (questions: AppQuestionDTO[] | un
         if (!current) return prev;
         return prev > current ? prev : current;
     }, undefined);
+};
+
+const questionPlaceholdersByContext: {[subject in keyof typeof PHY_NAV_SUBJECTS]: {[stage in typeof PHY_NAV_SUBJECTS[subject][number]]: string}} = {
+    "physics": {
+        "11_14": "New Planet",
+        "gcse": "Momentum of a Whale",
+        "a_level": "Man vs. Horse",
+        "university": "Light Clock",
+    },
+    "chemistry": {
+        "gcse": "Catalyser",
+        "a_level": "Keep Hydrated",
+        "university": "Propanal Problem",
+    },
+    "maths": {
+        "gcse": "Density of Air",
+        "a_level": "Crossing Paths",
+        "university": "Hyperbolic Integrals",
+    },
+    "biology": {
+        "a_level": "Adrenaline",
+    },
+};
+
+export const getQuestionPlaceholder = (context: PageContextState): string => {
+    if (!isFullyDefinedContext(context) || !isSingleStageContext(context)) return questionPlaceholdersByContext["physics"]["a_level"];
+    return questionPlaceholdersByContext[context.subject][context.stage[0] as keyof typeof questionPlaceholdersByContext[typeof context.subject]];
+};
+
+export const calculateQuestionSetCompletionState = (questions?: AppQuestionDTO[]) : CompletionState | undefined => {
+    if (questions && questions.length > 0) {
+        let allCorrect = true;
+        let allWrong = true;
+        let allValidated = true;
+        let anyValidated = false;
+        questions.forEach(question => {
+            if (question.validationResponse) {
+                const correct = question.validationResponse.correct;
+                if (correct) {
+                    allWrong = false;
+                } else {
+                    allCorrect = false;
+                }
+                anyValidated = true;
+            } else {
+                allValidated = false;
+            }
+        });
+        if (allValidated && allCorrect) return CompletionState.ALL_CORRECT;
+        else if (allValidated && allWrong) return CompletionState.ALL_INCORRECT;
+        else if (allValidated) return CompletionState.ALL_ATTEMPTED;
+        else if (anyValidated) return CompletionState.IN_PROGRESS;
+        else return CompletionState.NOT_ATTEMPTED;
+    }
 };

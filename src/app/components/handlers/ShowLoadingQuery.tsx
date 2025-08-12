@@ -8,17 +8,17 @@ import {Alert} from "reactstrap";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 
 const loadingPlaceholder = <div className="w-100 text-center pb-2">
-    <h2 aria-hidden="true" className="pt-5">Loading...</h2>
+    <h2 aria-hidden="true" className="pt-7">Loading...</h2>
     <IsaacSpinner />
 </div>;
 
 export const DefaultQueryError = ({error, title}: {error?: FetchBaseQueryError | SerializedError, title: string}) => {
     const errorDetails = getRTKQueryErrorMessage(error);
     return <Alert color={"warning"} className={"my-2"}>
-        {title ?? "Error fetching data from server"}: {errorDetails.message}
+        {title ?? "Error fetching data from server"}: {window.navigator.onLine ? errorDetails.message : "You appear to be offline."}
         {errorDetails.status ? <><br/>Status code: {errorDetails.status}</> : ""}
         <br/>
-        You may want to refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
+        You may want to{!window.navigator.onLine && " check your internet connection,"} refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
         this continues to happen.
         Please include in your email the name and email associated with this{" "}
         {SITE_TITLE} account, alongside the details of the error given above.
@@ -28,6 +28,7 @@ export const DefaultQueryError = ({error, title}: {error?: FetchBaseQueryError |
 interface ShowLoadingQueryInfo<T> {
     data?: T | NOT_FOUND_TYPE;
     isLoading: boolean;
+    isFetching: boolean;
     isError: boolean;
     error?: FetchBaseQueryError | SerializedError;
 }
@@ -36,6 +37,7 @@ export function combineQueries<T, R, S>(firstQuery: ShowLoadingQueryInfo<T>, sec
     return {
         data: isFound<T>(firstQuery.data) && isFound<R>(secondQuery.data) ? combineResult(firstQuery.data, secondQuery.data) : undefined,
         isLoading: firstQuery.isLoading || secondQuery.isLoading,
+        isFetching: firstQuery.isFetching || secondQuery.isFetching,
         isError: firstQuery.isError || secondQuery.isError,
         error: firstQuery.error ?? secondQuery.error,
     };
@@ -71,12 +73,12 @@ type ShowLoadingQueryProps<T> = ShowLoadingQueryErrorProps<T> & ({
 //  - `placeholder` (React element to show while loading)
 //  - `query` (the object returned by a RTKQ useQuery hook)
 export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, ifError, ifNotFound, defaultErrorTitle}: ShowLoadingQueryProps<T>) {
-    const {data, isLoading, isError, error} = query;
+    const {data, isLoading, isFetching, isError, error} = query;
     const renderError = () => ifError ? <>{ifError(error)}</> : <DefaultQueryError error={error} title={defaultErrorTitle}/>;
     if (isError && error) {
         return "status" in error && typeof error.status === "number" && [NOT_FOUND, NO_CONTENT].includes(error.status) && ifNotFound ? <>{ifNotFound}</> : renderError();
     }
-    if (isLoading) {
+    if (isLoading || isFetching) {
         return placeholder ? <>{placeholder}</> : loadingPlaceholder;
     }
     return isDefined(data)

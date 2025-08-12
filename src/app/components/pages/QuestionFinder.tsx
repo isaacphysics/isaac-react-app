@@ -1,51 +1,72 @@
-import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {AppState, clearQuestionSearch, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
 import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
+    BookInfo,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
+    getHumanContext,
+    getQuestionPlaceholder,
+    ISAAC_BOOKS,
     isAda,
+    isDefined,
+    isFullyDefinedContext,
     isLoggedIn,
     isPhy,
     Item,
     itemiseTag,
+    LearningStage,
     ListParams,
-    SEARCH_CHAR_LENGTH_LIMIT,
+    nextSeed,
     SEARCH_RESULTS_PER_PAGE,
+    simpleDifficultyLabelMap,
     siteSpecific,
     STAGE,
     STAGE_NULL_OPTIONS,
+    stageLabelMap,
+    SUBJECT_SPECIFIC_CHILDREN_MAP,
     TAG_ID,
     tags,
     toSimpleCSV,
     useQueryParams,
+    useUrlPageTheme,
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {RouteComponentProps, useHistory, withRouter} from "react-router";
-import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import {PageFragment} from "../elements/PageFragment";
-import {RenderNothing} from "../elements/RenderNothing";
-import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
-import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
-import {Tier, TierID} from "../elements/svg/HierarchyFilter";
+import {Button, CardBody, Col, Container, Label, Row} from "reactstrap";
+import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
+import {TierID} from "../elements/svg/HierarchyFilter";
+import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { ListView } from "../elements/list-groups/ListView";
+import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
+import { PageFragment } from "../elements/PageFragment";
+import { RenderNothing } from "../elements/RenderNothing";
+import { processTagHierarchy, pruneTreeNode } from "../../services/questionHierarchy";
+import { SearchInputWithIcon } from "../elements/SearchInputs";
+import { Link } from "react-router-dom";
+import { updateTopicChoices } from "../../services";
+import { PageMetadata } from "../elements/PageMetadata";
+import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
-const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
+const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
 type FilterParams = typeof FILTER_PARAMS[number];
 
 export interface QuestionStatus {
     notAttempted: boolean;
-    complete: boolean;
     tryAgain: boolean;
+    allIncorrect: boolean; // Ada only
+    allAttempted: boolean; // Phy only
+    complete: boolean;
 }
 
 function questionStatusToURIComponent(statuses: QuestionStatus): string {
@@ -54,29 +75,13 @@ function questionStatusToURIComponent(statuses: QuestionStatus): string {
         .map(e => {
             switch(e[0]) {
                 case "notAttempted": return "NOT_ATTEMPTED";
-                case "complete": return "ALL_CORRECT";
                 case "tryAgain": return "IN_PROGRESS";
+                case "allIncorrect": return "ALL_INCORRECT"; 
+                case "allAttempted": return "ALL_ATTEMPTED";
+                case "complete": return "ALL_CORRECT";
             }
         })
         .join(",");
-}
-
-function processTagHierarchy(subjects: string[], fields: string[], topics: string[]): Item<TAG_ID>[][] {
-    const tagHierarchy = tags.getTagHierarchy();
-    const selectionItems: Item<TAG_ID>[][] = [];
-
-    let plausibleParentHeirarchy = true;
-    [subjects, fields, topics].forEach((tier, index) => {
-        if (tier && plausibleParentHeirarchy) {
-            const validTierTags = tags.getSpecifiedTags(
-                tagHierarchy[index], tier as TAG_ID[]
-            );
-            plausibleParentHeirarchy = validTierTags.length === 1;
-            selectionItems.push(validTierTags.map(itemiseTag));
-        }
-    });
-
-    return selectionItems;
 }
 
 function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionStatus {
@@ -85,193 +90,204 @@ function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionS
         // If no statuses set use default
         return {
             notAttempted: false,
-            complete: false,
             tryAgain: false,
+            allIncorrect: false,
+            allAttempted: false,
+            complete: false,
         };
     }
     else {
         // otherwise set use the URI components
         return {
             notAttempted: statuses.includes("notAttempted"),
-            complete: statuses.includes("complete"),
             tryAgain: statuses.includes("tryAgain"),
+            allIncorrect: statuses.includes("allIncorrect"),
+            allAttempted: statuses.includes("allAttempted"),
+            complete: statuses.includes("complete"),
         };
     }
 }
+
+export function pageStageToSearchStage(stage?: LearningStage[]): STAGE[] {
+    if (!stage || stage.length === 0) return [];
+    switch (stage[0]) {
+        case "11_14": return [STAGE.YEAR_7_AND_8, STAGE.YEAR_9];
+        case "gcse": return [STAGE.GCSE];
+        case "a_level": return [STAGE.A_LEVEL, STAGE.FURTHER_A];
+        case "university": return [STAGE.UNIVERSITY];
+        default: return [];
+    }
+}
+
+interface FilterSummaryProps {
+    filterTags: { value: string; label: string; }[],
+    clearFilters: () => void,
+    removeFilterTag: (value: string) => void
+}
+
+export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: FilterSummaryProps) => {
+    return <div className="d-flex flex-wrap mt-2">
+        {filterTags.map(t => <div key={t.value} data-bs-theme="neutral" data-testid={`filter-tag-${t.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
+            {t.label}
+            <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label="Close"/>
+        </div>)}
+        {filterTags.length > 0 && <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
+            Clear all filters
+        </button>}
+    </div>;
+};
 
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
-
+    const pageContext = useUrlPageTheme();
+    const [selections, setSelections] = useState<ChoiceTree[]>([]); // we can't populate this until we have the page context
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]);
+    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the page context
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
     const [searchDisabled, setSearchDisabled] = useState(true);
+    const [randomSeed, setRandomSeed] = useState<number | undefined>(params.randomSeed === undefined ? undefined : parseInt(params.randomSeed.toString()));
 
-    const [populatedFromAccountSettings, setPopulatedFromAccountSettings] = useState(false);
+    const [readingFromUrlParams, setReadingFromUrlParams] = useState(FILTER_PARAMS.some(p => params[p]));
+
     useEffect(function populateFiltersFromAccountSettings() {
-        if (isLoggedIn(user)) {
+        // on isaac, we should only do this if we are not on a subject-specific QF
+        if (isLoggedIn(user) && (!isPhy || (pageContext && !pageContext.subject))) {
             const filtersHaveNotBeenSpecifiedByQueryParams = FILTER_PARAMS.every(p => !params[p]);
             if (filtersHaveNotBeenSpecifiedByQueryParams) {
                 const accountStages = user.registeredContexts?.map(c => c.stage).filter(s => s) as STAGE[];
                 const allStagesSelected = accountStages?.some(stage => STAGE_NULL_OPTIONS.includes(stage));
-                if (!allStagesSelected && (isPhy || accountStages.length === 1)) { // Ada only want to apply stages filter if there is only one
+                if (!allStagesSelected && (isPhy ? !pageContext?.stage?.length : accountStages.length === 1)) { // Ada only want to apply stages filter if there is only one
                     setSearchStages(accountStages);
-                    setPopulatedFromAccountSettings(true);
                 }
                 const examBoardStages = user.registeredContexts?.map(c => c.examBoard).filter(e => e) as EXAM_BOARD[];
                 const allExamBoardsSelected = examBoardStages?.some(examBoard => EXAM_BOARD_NULL_OPTIONS.includes(examBoard));
                 if (isAda && !allExamBoardsSelected && examBoardStages.length === 1) { // Phy does not have exam boards
                     setSearchExamBoards(examBoardStages);
-                    setPopulatedFromAccountSettings(true);
                 }
             }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- we don't want this to re-run on params change.
-    }, [user]);
+    }, [user, pageContext]);
 
-    // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates
     useEffect(() => {
-        searchAndUpdateURL();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [populatedFromAccountSettings]);
+        if (pageContext) {
+            // on subject-QFs, the url path (i.e. pageContext.subject) is the first tier of the hierarchy.
+            setSelections(
+                processTagHierarchy(
+                    tags,
+                    pageContext.subject ? [pageContext.subject] : arrayFromPossibleCsv(params.subjects),
+                    arrayFromPossibleCsv(params.fields),
+                    arrayFromPossibleCsv(params.topics),
+                    pageContext
+                )
+            );
+        }
+    }, [pageContext]);
 
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
-    const [selections, setSelections] = useState<Item<TAG_ID>[][]>(
-        processTagHierarchy(
-            arrayFromPossibleCsv(params.subjects), 
-            arrayFromPossibleCsv(params.fields), 
-            arrayFromPossibleCsv(params.topics)
-        )
-    );
+    const choices = useMemo(() => {
+        return updateTopicChoices(selections, pageContext);
+    }, [selections, pageContext]);
 
-    const choices = [tags.allSubjectTags.map(itemiseTag)];
-    let tierIndex;
-    for (tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
-        const selection = selections[tierIndex];
-        if (selection.length !== 1) break;
-        choices.push(tags.getChildren(selection[0].value).map(itemiseTag));
-    }
-
-    const tiers: Tier[] = [
-        {id: "subjects" as TierID, name: "Subject"},
-        {id: "fields" as TierID, name: "Field"},
-        {id: "topics" as TierID, name: "Topic"}
-    ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, tierIndex + 1);
-
-    const setTierSelection = (tierIndex: number) => {
-        return ((values: Item<TAG_ID>[]) => {
-            const newSelections = selections.slice(0, tierIndex);
-            newSelections.push(values);
-            setSelections(newSelections);
-        }) as React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
+    const isEmptySearch = (query: string, topics: string[], books: string[], stages: string[], difficulties: string[], examBoards: string[], selections: ChoiceTree[]) => {
+        return [query, topics, books, stages, difficulties, examBoards].every(v => v.length === 0) && selections.every(v => Object.keys(v).length === 0);
     };
 
-    const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
-    const nothingToSearchFor =
-        [searchQuery, searchTopics, searchBooks, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
-        selections.every(v => v.length === 0);
+    // this should only update when a new search is triggered, not (necessarily) when the filters change
+    const [isCurrentSearchEmpty, setIsCurrentSearchEmpty] = useState(isEmptySearch(searchQuery, searchTopics, searchBooks, searchStages, searchDifficulties, searchExamBoards, selections));
 
-    const searchDebounce = useCallback(
-        debounce((searchString: string, topics: string[], examBoards: string[],
-            book: string[], stages: string[], difficulties: string[],
-            hierarchySelections: Item<TAG_ID>[][], tiers: Tier[],
-            excludeBooks: boolean, questionStatuses: QuestionStatus,
-            startIndex: number) => {
-            if (nothingToSearchFor) {
+    const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
+
+    const debouncedSearch = useMemo(() =>
+        debounce(({
+            searchQuery: searchString,
+            searchTopics: topics,
+            searchExamBoards: examBoards,
+            searchBooks: book,
+            searchStages: stages,
+            searchDifficulties: difficulties,
+            selections: hierarchySelections,
+            excludeBooks,
+            searchStatuses: questionStatuses,
+            startIndex, randomSeed
+        }) => {
+            if (isEmptySearch(searchString, topics, book, stages, difficulties, examBoards, hierarchySelections)) {
+                setIsCurrentSearchEmpty(true);
                 dispatch(clearQuestionSearch);
                 return;
             }
 
-            const filterParams: Record<TierID, string[] | undefined> = {} as Record<TierID, string[] | undefined>;
-            if (isPhy) {
-                const allTags: TAG_ID[] = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
-                tiers.forEach((tier, i) => {
-                    if (!hierarchySelections[i] || hierarchySelections[i].length === 0) {
-                        if (i === 0) {
-                            filterParams[tier.id] = allTags;
+            const choiceTreeLeaves = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
+            if (hierarchySelections.length > 1 && pageContext?.subject && pageContext.stage?.length === 1) {
+                SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext.stage[0]]?.forEach(tag => {
+                    if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.length === 0) {
+                        choiceTreeLeaves.push(tag);
+                    } else if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.some((t: {value: TAG_ID}) => t.value === tag)) {
+                        const index = choiceTreeLeaves.indexOf(pageContext?.subject as TAG_ID);
+                        if (index > -1) {
+                            choiceTreeLeaves.splice(index, 1);
                         }
-                        return;
                     }
-                    filterParams[tier.id] = hierarchySelections[i].map(item => item.value);
                 });
-            } else {
-                filterParams["topics"] = [...topics].filter((query) => query != "");
             }
-            const examBoardString = examBoards.join(",");
+
+            setIsCurrentSearchEmpty(false);
 
             dispatch(searchQuestions({
-                searchString: searchString,
-                tags: "", // Tags currently not used
-                fields: filterParams.fields?.join(",") || undefined,
-                subjects: filterParams.subjects?.join(",") || undefined,
-                topics: filterParams.topics?.join(",") || undefined,
+                querySource: "questionFinder",
+                searchString: searchString || undefined,
+                tags: choiceTreeLeaves.join(",") || undefined,
+                topics: siteSpecific(undefined, [...topics].filter((query) => query != "").join(",") || undefined),
                 books: (!excludeBooks && book.join(",")) || undefined,
                 stages: stages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
-                examBoards: examBoardString,
+                examBoards: examBoards.join(",") || undefined,
                 questionCategories: isPhy
                     ? (excludeBooks ? "problem_solving" : "problem_solving,book")
                     : undefined,
                 statuses: questionStatusToURIComponent(questionStatuses),
                 fasttrack: false,
                 startIndex,
-                limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need to know if there are more results
+                limit: SEARCH_RESULTS_PER_PAGE + 1, // request one more than we need to know if there are more results
+                randomSeed
             }));
         }, 250),
-        [nothingToSearchFor]
-    );
+    [dispatch, pageContext]);
 
-    const [filteringByStatus, setFilteringByStatus] = useState<boolean>(
-        !( Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v) )
-    );
 
-    const [noResultsMessage, setNoResultsMessage] = useState<ReactNode>(<em>Please select and apply filters</em>);
-
-    const applyFilters = () => {
-        // Have to use a local variable as React won't update state in time
-        const isFilteringByStatus = !(
-            Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v)
-        );
-
-        if (nothingToSearchFor) {
-            if (isFilteringByStatus) {
-                setNoResultsMessage(<em>Please select more filters</em>);
-            } else {
-                setNoResultsMessage(<em>Please select and apply filters</em>);
-            }
-        } else if (isFilteringByStatus) {
-            setNoResultsMessage(<em>Expecting results? Try narrowing down your filters</em>);
-        } else {
-            setNoResultsMessage(<em>No results match your criteria</em>);
-        }
-
-        setFilteringByStatus(isFilteringByStatus);
-        searchAndUpdateURL();
-    };
+    const filteringByStatus = Object.values(searchStatuses).some(v => v) && !Object.values(searchStatuses).every(v => v);
 
     const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
         setDisableLoadMore(false);
         setDisplayQuestions(undefined);
-        searchDebounce(
-            searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages,
-            searchDifficulties, selections, tiers, excludeBooks, searchStatuses, 0
-        );
+
+        const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
+        debouncedSearch({
+            searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages: filteredStages,
+            searchDifficulties, selections, excludeBooks, searchStatuses, startIndex: 0, randomSeed
+        });
+
+        if (!selections.length) return;
+        setReadingFromUrlParams(false);
 
         const params: {[key: string]: string} = {};
-        if (searchStages.length) params.stages = toSimpleCSV(searchStages);
+        if (searchStages.length) {
+            params.stages = toSimpleCSV(searchStages);
+            if (params.stages === "") delete params.stages;
+        }
         if (searchDifficulties.length) params.difficulties = toSimpleCSV(searchDifficulties);
         if (searchQuery.length) params.query = encodeURIComponent(searchQuery);
-        if (isAda && searchTopics.length) params.topics = toSimpleCSV(searchTopics);
+        if (searchTopics.length) params.topics = toSimpleCSV(searchTopics);
         if (isAda && searchExamBoards.length) params.examBoards = toSimpleCSV(searchExamBoards);
         if (isPhy && !excludeBooks && searchBooks.length) {
             params.book = toSimpleCSV(searchBooks);
@@ -284,20 +300,26 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
 
         if (isPhy) {
-            tiers.forEach((tier, i) => {
-                if (!selections[i] || selections[i].length === 0) {
+            (["subjects", "fields", "topics"] as TierID[]).forEach((tier, i) => {
+                if (!selections[i] || Object.keys(selections[i]).length === 0) {
                     return;
                 }
-                params[tier.id] = selections[i].map(item => item.value).join(",");
+                params[tier] = Object.values(selections[i])
+                    .flat().map(item => item.value)
+                    .filter(v => v !== pageContext?.subject).join(",");
+                if (params[tier] === "") delete params[tier];
             });
         }
+        if (randomSeed !== undefined) params.randomSeed = randomSeed.toString();
 
-        history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
-    }, [searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages, searchDifficulties, selections, tiers, excludeBooks, searchStatuses, filteringByStatus]);
+        history.replace({search: queryString.stringify(params, {encode: false}), state: history.location.state});
+    }, [searchStages, pageContext, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, filteringByStatus, history, randomSeed]);
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
+    useEffect(() => {
+        searchAndUpdateURL();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(searchAndUpdateURL, [searchQuery]);
+    }, [searchQuery, randomSeed]);
 
     // If the stages filter changes, update the exam board filter selections to remove now-incompatible ones
     useEffect(() => {
@@ -336,7 +358,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [questionList]);
 
-    useEffect(() => {
+    useEffect(function onFiltersChanged() {
         setSearchDisabled(false);
         setValidFiltersSelected(searchDifficulties.length > 0
             || searchTopics.length > 0
@@ -344,9 +366,19 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || searchStages.length > 0
             || searchBooks.length > 0
             || excludeBooks
-            || selections.some(tier => tier.length > 0)
+            || selections.some(tier => Object.values(tier).flat().length > 0)
             || Object.entries(searchStatuses).some(e => e[1]));
-    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
+
+        if (isPhy) {
+            if (!readingFromUrlParams) {
+                setRandomSeed(undefined);
+            }
+
+            // on physics, we immediately update the search if filters change; on ada, we wait until "Apply filters" is clicked
+            searchAndUpdateURL();
+        }
+
+    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses, searchQuery]);
 
     const clearFilters = useCallback(() => {
         setSearchDifficulties([]);
@@ -355,23 +387,23 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setSearchStages([]);
         setSearchBooks([]);
         setExcludeBooks(false);
-        setSelections([[], [], []]);
+        setSelections([pageContext?.subject ? {"subject": [itemiseTag(tags.getById(pageContext.subject as TAG_ID))]} : {}, {}, {}]);
         setSearchStatuses(
             {
-                notAttempted: false,
-                complete: false,
                 tryAgain: false,
+                notAttempted: false,
+                allIncorrect: false,
+                allAttempted: false,
+                complete: false,
             });
         setSearchDisabled(!searchQuery);
-    }, []);
+    }, [pageContext, searchQuery]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const handleSearch = useCallback(
+    const debouncedSearchHandler = useMemo(() =>
         debounce((searchTerm: string) => {
             setSearchQuery(searchTerm);
         }, 500),
-        [setSearchQuery]
-    );
+    [setSearchQuery]);
 
     const pageHelp = siteSpecific(<span>
         You can find a question by selecting the areas of interest, stage and difficulties.
@@ -385,35 +417,54 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     );
 
     const loadingPlaceholder = <div className="w-100 text-center pb-2">
-        <h2 aria-hidden="true" className="pt-5">Searching...</h2>
+        <h2 aria-hidden="true" className="pt-7">Searching...</h2>
         <IsaacSpinner />
     </div>;
 
-    return <Container id="finder-page" className={classNames("mb-5", {"question-finder-container": isPhy})}>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Question Finder", "Questions")} help={pageHelp}/>
-        <MetaDescription description={metaDescription}/>
-        <CanonicalHrefElement/>
-        <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
+    function removeFilterTag(filter: string) {
+        if (searchStages.includes(filter as STAGE)) {
+            setSearchStages(searchStages.filter(f => f !== filter));
+        } else if (getChoiceTreeLeaves(selections).some(leaf => leaf.value === filter)) {
+            setSelections(pruneTreeNode(selections, filter, true, pageContext));
+        } else if (searchDifficulties.includes(filter as Difficulty)) {
+            setSearchDifficulties(searchDifficulties.filter(f => f !== filter));
+        } else if (searchExamBoards.includes(filter as ExamBoard)) {
+            setSearchExamBoards(searchExamBoards.filter(f => f !== filter));
+        } else if (searchBooks.includes(filter)) {
+            setSearchBooks(searchBooks.filter(f => f !== filter));
+        } else if (searchStatuses[filter as keyof QuestionStatus]) {
+            setSearchStatuses({...searchStatuses, [filter as keyof QuestionStatus]: false});
+        } else if (excludeBooks && filter === "excludeBooks") {
+            setExcludeBooks(false);
+        }
+    };
 
-        <Row>
-            <Col lg={6} md={12} xs={12} className="finder-search">
-                <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
-                <InputGroup>
-                    <Input id="question-search-title"
-                        type="text"
-                        maxLength={SEARCH_CHAR_LENGTH_LIMIT}
-                        defaultValue={searchQuery}
-                        placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                        onChange={(e) => handleSearch(e.target.value)}
-                    />
-                    <Button className="question-search-button" onClick={searchAndUpdateURL}/>
-                </InputGroup>
-            </Col>
-        </Row>
+    const selectionList: Item<TAG_ID>[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext?.subject);
+    const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
+    const booksList: BookInfo[] = ISAAC_BOOKS.filter(book => searchBooks.includes(book.tag));
 
-        <Row className="mt-4 position-relative finder-panel">
-            <Col lg={siteSpecific(4, 3)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-filters">
-                <QuestionFinderFilterPanel {...{
+    const filterTags = useMemo(() => [
+        searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
+        searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
+        statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
+        excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
+        selectionList,
+    ].flat(), [searchDifficulties, searchStages, statusList, excludeBooks, booksList, selectionList]);
+
+    const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
+
+    return <Container id="finder-page" className={classNames("mb-7")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
+        <TitleAndBreadcrumb 
+            currentPageTitle={siteSpecific("Question finder", "Questions")} 
+            help={pageHelp}
+            intermediateCrumbs={crumb ? [crumb] : []}
+            icon={{type: "hex", icon: "icon-finder"}}
+        />
+
+        <SidebarLayout>
+            <QuestionFinderSidebar
+                searchText={searchQuery} setSearchText={debouncedSearchHandler}
+                questionFinderFilterPanelProps={{
                     searchDifficulties, setSearchDifficulties,
                     searchTopics, setSearchTopics,
                     searchStages, setSearchStages,
@@ -421,63 +472,152 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     searchStatuses, setSearchStatuses,
                     searchBooks, setSearchBooks,
                     excludeBooks, setExcludeBooks,
-                    tiers, choices, selections, setTierSelection,
-                    applyFilters, clearFilters,
+                    choices,
+                    selections, setSelections,
+                    applyFilters: searchAndUpdateURL, clearFilters,
                     validFiltersSelected, searchDisabled, setSearchDisabled
-                }} />
-            </Col>
-            <Col lg={siteSpecific(8, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
-                <Card>
-                    <CardHeader className="finder-header pl-3">
-                        <Col className={"px-0"}>
-                            {displayQuestions && displayQuestions.length > 0
-                                ? <>Showing <b>{displayQuestions.length}</b></>
-                                : <>No results</>}
-                            {(totalQuestions ?? 0) > 0
-                            && !filteringByStatus
-                            && <>{" "}of <b>{totalQuestions}</b></>}
-                            .
-                        </Col>
-                    </CardHeader>
-                    <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
-                        <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
-                            {displayQuestions?.length
-                                ? <LinkToContentSummaryList 
-                                    items={displayQuestions} className="m-0" 
-                                    contentTypeVisibility={ContentTypeVisibility.ICON_ONLY} 
-                                    ignoreIntendedAudience noCaret 
-                                />
-                                : noResultsMessage }
-                        </ShowLoading>
-                    </CardBody>
-                </Card>
-                {(displayQuestions?.length ?? 0) > 0 &&
-                    <Row className="pt-3">
-                        <Col className="d-flex justify-content-center mb-3">
-                            <Button
-                                onClick={() => {
-                                    searchDebounce(
-                                        searchQuery, searchTopics,
-                                        searchExamBoards,
-                                        searchBooks, searchStages,
-                                        searchDifficulties,
-                                        selections, tiers,
-                                        excludeBooks,
-                                        searchStatuses,
-                                        nextSearchOffset
-                                            ? nextSearchOffset - 1
-                                            : 0);
-                                    setPageCount(c => c + 1);
-                                    setDisableLoadMore(true);
-                                }}
-                                disabled={disableLoadMore}
-                                outline={isAda}
-                            >
-                                Load more
-                            </Button>
-                        </Col>
-                    </Row>}
-            </Col>
-        </Row>
+                }} hideButton/>
+            <MainContent>
+                <MetaDescription description={metaDescription}/>
+                <CanonicalHrefElement/>
+
+                <PageMetadata noTitle showSidebarButton>
+                    {siteSpecific(
+                        <div>
+                            {(pageContext?.subject && pageContext.stage)
+                                ? <div className="d-flex align-items-start flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap">
+                                    <p className="me-0 me-lg-3">
+                                        The questions shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
+                                        You can browse all questions <Link to="/questions">here</Link>.
+                                    </p>
+                                </div>
+                                : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
+                                Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
+                        </div>,
+                        <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
+                    )}
+                </PageMetadata>
+
+
+                {isAda && <Row>
+                    <Col lg={6} md={12} xs={12} className="finder-search">
+                        <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
+                        <SearchInputWithIcon
+                            defaultValue={searchQuery}
+                            placeholder={siteSpecific(`e.g. ${getQuestionPlaceholder(pageContext)}`, "e.g. Creating an AST")}
+                            onChange={(e) => {
+                                debouncedSearchHandler(e.target.value);
+                                setRandomSeed(undefined); // This random seed reset is for Ada only! This is managed in the filtersChanged useEffect for Phy
+                            }}
+                            onSearch={searchAndUpdateURL}
+                        />
+                    </Col>
+                </Row>}
+
+                {isPhy && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
+
+                <Row className={classNames(siteSpecific("mt-2", "mt-4"), "position-relative finder-panel")}>
+                    {isAda && <Col lg={3} md={12} xs={12} className={classNames("text-wrap my-2")}>
+                        <QuestionFinderFilterPanel {...{
+                            searchDifficulties, setSearchDifficulties,
+                            searchTopics, setSearchTopics,
+                            searchStages, setSearchStages,
+                            searchExamBoards, setSearchExamBoards,
+                            searchStatuses, setSearchStatuses,
+                            searchBooks, setSearchBooks,
+                            excludeBooks, setExcludeBooks,
+                            choices,
+                            selections, setSelections,
+                            applyFilters: () => {
+                                if (isDefined(randomSeed)) {
+                                    // on Ada, if randomSeed is defined, we need to unset it before running the search.
+                                    // since it is state, running this first won't necessarily have it updated when searchAndUpdateURL is called.
+                                    // as such, a useEffect above with randomSeed as a dep will run searchAndUpdateURL for us, instead of here.
+                                    setRandomSeed(undefined);
+                                } else {
+                                    searchAndUpdateURL();
+                                }
+                            },
+                            clearFilters,
+                            validFiltersSelected, searchDisabled, setSearchDisabled
+                        }} />
+                    </Col>}
+                    <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
+                        <ResultsListContainer>
+                            <ResultsListHeader className="d-flex">
+                                <div className="flex-grow-1" data-testid="question-finder-results-header">
+                                    {displayQuestions && displayQuestions.length > 0
+                                        ? <>Showing <b>{displayQuestions.length}</b></>
+                                        : isPhy && isCurrentSearchEmpty
+                                            ? <>Select {filteringByStatus ? "more" : "some"} filters to start searching</>
+                                            : <>No results</>
+                                    }
+                                    {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
+                                    .
+                                </div>
+                                <button className={siteSpecific(
+                                    "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end ms-3 text-nowrap",
+                                    "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
+                                } onClick={() => setRandomSeed(nextSeed())}
+                                >
+                                    <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
+                                    {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
+                                </button>
+                            </ResultsListHeader>
+                            <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
+                                <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
+                                    {displayQuestions?.length
+                                        ? isPhy
+                                            ? <ListView type="item" items={displayQuestions} />
+                                            : <LinkToContentSummaryList
+                                                items={displayQuestions} className="m-0"
+                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
+                                                ignoreIntendedAudience noCaret
+                                            />
+                                        : isAda && <>{
+                                            isCurrentSearchEmpty
+                                                ? <span>Please select and apply filters.</span>
+                                                : filteringByStatus 
+                                                    ? <span>Could not load any results matching the requested filters.</span>
+                                                    : <span>No results match the requested filters.</span>
+                                        }</>
+                                    }
+                                </ShowLoading>
+                            </CardBody>
+                        </ResultsListContainer>
+                        {(displayQuestions?.length ?? 0) > 0 &&
+                            <Row className="pt-3">
+                                <Col className="d-flex justify-content-center mb-3">
+                                    <Button
+                                        onClick={() => {
+                                            debouncedSearch({
+                                                searchQuery,
+                                                searchTopics,
+                                                searchExamBoards,
+                                                searchBooks,
+                                                searchStages,
+                                                searchDifficulties,
+                                                selections,
+                                                excludeBooks,
+                                                searchStatuses,
+                                                startIndex: nextSearchOffset
+                                                    ? nextSearchOffset - 1
+                                                    : 0,
+                                                randomSeed
+                                            });
+                                            setPageCount(c => c + 1);
+                                            setDisableLoadMore(true);
+                                        }}
+                                        disabled={disableLoadMore}
+                                        outline={isAda}
+                                    >
+                                        Load more
+                                    </Button>
+                                </Col>
+                            </Row>}
+                    </Col>
+                </Row>
+            </MainContent>
+        </SidebarLayout>
     </Container>;
 });

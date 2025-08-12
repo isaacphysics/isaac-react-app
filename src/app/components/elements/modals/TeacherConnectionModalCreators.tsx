@@ -5,7 +5,7 @@ import {
     closeActiveModal,
     store
 } from "../../../state";
-import {extractTeacherName, siteSpecific} from "../../../services";
+import {extractTeacherName, SITE_TITLE_SHORT, siteSpecific} from "../../../services";
 import { Table, Button } from "reactstrap";
 
 export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
@@ -13,7 +13,7 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
         closeAction: () => {store.dispatch(closeActiveModal());},
         title: "Sharing your data",
         body: <React.Fragment>
-            <p>Are you sure you would like to give the following {siteSpecific("Isaac", "Ada")} users access to your data?</p>
+            <p>Are you sure you would like to give the following {SITE_TITLE_SHORT} users access to your data?</p>
             <Table bordered>
                 <tbody>
                     {usersToGrantAccess.map((member) => (<tr key={member.id}>
@@ -46,10 +46,10 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
             </p>
         </React.Fragment>,
         buttons: [
-            <Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal());}}>
+            <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {
+            <Button key={0} color={siteSpecific("keyline", "solid")} onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authToken))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
@@ -73,10 +73,10 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
             </p>
         </React.Fragment>,
         buttons: [
-            <Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal());}}>
+            <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {
+            <Button key={0} color={siteSpecific("keyline", "solid")} onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.revokeAuthorisation.initiate(userToRevoke.id as number))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
@@ -99,10 +99,10 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
             </p>
         </React.Fragment>,
         buttons: [
-            <Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal());}}>
+            <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {
+            <Button key={0} color={siteSpecific("keyline", "solid")} onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.releaseAuthorisation.initiate(otherUser.id as number))
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
@@ -124,10 +124,10 @@ export const releaseAllConfirmationModal = () => {
             </p>
         </React.Fragment>,
         buttons: [
-            <Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal());}}>
+            <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {
+            <Button key={0} color={siteSpecific("keyline", "solid")} onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.releaseAllAuthorisations.initiate())
                     .then(() => store.dispatch(closeActiveModal()));
             }}>
@@ -153,10 +153,10 @@ export const confirmSelfRemovalModal = (userId: number, groupId: number) => {
             </p>
         </>,
         buttons: [
-            <Button key={1} color="primary" outline onClick={() => store.dispatch(closeActiveModal())}>
+            <Button key={1} color={siteSpecific("solid", "keyline")} onClick={() => store.dispatch(closeActiveModal())}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {
+            <Button key={0} color={siteSpecific("keyline", "solid")} onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.deleteGroupMember.initiate({groupId, userId})).then(() => {
                     store.dispatch(closeActiveModal());
                 });

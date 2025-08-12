@@ -1,12 +1,8 @@
 .events {
-  button, a.btn {
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
   legend {
     margin-bottom: 0;
   }
-  label {
+  :not(.styled-checkbox-wrapper) > label {
     margin-top: 1rem; // this would ideally be more specific
   }
   .restrict-height {
@@ -16,13 +12,12 @@
   }
 }
 .event-key-info {
-  tr {
-    td {
+  .row {
+    .col {
       padding: 0.5rem 0.5rem 0.5rem 0;
-      &:last-child {
+      &:first-child {
+        font-weight: bold;
         padding-left: 0.5rem;
-        font-weight: 600;
-        padding-right: 64px;
       }
     }
   }

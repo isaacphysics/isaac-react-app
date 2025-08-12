@@ -40,7 +40,7 @@ const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GC
             // Overwrite subcategory with stage properties
             .map(subcategory => ({...subcategory, ...subcategory.stageOverride?.[stage]}))
             .map(subcategory => {
-                const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
+                const subcategoryDescendentIds = tags.getRecursiveDescendents(subcategory.id).map(t => t.id);
                 const topicTags = tags.getTopicTags(subcategoryDescendentIds);
                 const topicComponents = topicTags
                     // Overwrite subcategory with stage properties
@@ -87,7 +87,7 @@ export const AllTopics = () => {
             </Row>
         </Container>
         <section id={'topics-question-finder'}>
-            <Container className={"mb-5 p-5 mx-auto"}>
+            <Container className={"mb-7 p-7 mx-auto"}>
                 <Row className={"align-items-center justify-content-center"}>
                     <Col xs={12} lg={6}>
                         <h2 className={"font-size-1-75 mb-4"}>Check your understanding</h2>

@@ -20,11 +20,13 @@
 }
 
 .connect-list {
-  .connect-list-header {
-    .icon-person-active {
-      margin-top: 7px;
-    }
+  border-radius: 8px;
   
+  .connect-list-header {
+    border-radius: 7px 7px 0 0; // avoids clashing with 8px on border
+    background-color: $color-brand-500;
+    height: 3rem;
+
     h4 {
       padding: 0rem 1rem;
     }
@@ -32,7 +34,6 @@
 }
 
 .teachers-connected {
-  .icon-person,
   .icon-person-active {
     margin-top: 2px;
   }
@@ -40,4 +41,13 @@
   .connections-fixed-length-container {
     max-width: calc(100% - 91.8px);
   }
+}
+
+p .btn-link {
+  font-size: 1rem;
+  margin-top: 3px;
+}
+
+.section-divider-bold {
+  margin: 2rem 0;
 }

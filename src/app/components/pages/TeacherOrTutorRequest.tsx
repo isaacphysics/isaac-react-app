@@ -18,8 +18,8 @@ import {Link} from "react-router-dom";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 
 export const TeacherOrTutorRequest = ({user}: {user: RegisteredUserDTO}) => {
-    return <Container id="contact-page" className="pb-5">
-        <TitleAndBreadcrumb currentPageTitle="Request Account Upgrade" />
+    return <Container id="contact-page" className="pb-7">
+        <TitleAndBreadcrumb currentPageTitle="Request Account Upgrade" icon={{type: "hex", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>
                 <Col size={9}>

@@ -4,8 +4,10 @@
   border: 0;
   border-radius: 0;
   .list-group-item {
-    .question-link-title {
+    .link-title {
       @extend .font-size-1-25;
+    }
+    .question-link-title {
       @extend .fw-semi-bold;
     }
     border-color: $cs-list-outline-gray;
@@ -18,5 +20,25 @@
     width: 50px;
     min-width: 50px !important;
     border-left: 1px solid $cs-list-outline-gray;
+  }
+
+  li {
+    border-bottom: 1px solid $gray-107;
+    &:last-of-type {
+      border-width: 0;
+    }
+
+    a {
+      font-size: 1.25rem;
+
+      > span:first-of-type {
+        display: inline-block;
+        border-right: 1px solid $gray-107;
+        margin-right: 1rem;
+        padding-right: 1rem;
+        text-align: center;
+        min-width: 3.4rem;
+      }
+    }
   }
 }

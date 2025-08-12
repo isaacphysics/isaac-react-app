@@ -1,11 +1,11 @@
 import {TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag, Tag} from "../../IsaacAppTypes";
-import {ContentDTO} from "../../IsaacApiTypes";
+import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 
 export abstract class AbstractBaseTagService {
     abstract getTagHierarchy(): TAG_LEVEL[];
     abstract getBaseTags(): BaseTag[];
-    abstract augmentDocWithSubject<T extends ContentDTO>(doc: T): T & {subjectId: string};
+    abstract augmentDocWithSubject<T extends ContentDTO | ContentSummaryDTO>(doc: T): T & {subjectId: string};
 
     // Augment base allTags
     public allTags: Tag[] = this.getBaseTags().map((baseTag) => {
@@ -75,12 +75,12 @@ export abstract class AbstractBaseTagService {
         return children;
     }
 
-    public getDescendents(tagId: TAG_ID) {
+    public getRecursiveDescendents(tagId: TAG_ID) {
         let descendents: Tag[] = [];
         for (const i in this.allTags) {
             if (this.allTags[i].parent == tagId) {
                 descendents.push(this.allTags[i]);
-                descendents = descendents.concat(this.getDescendents(this.allTags[i].id));
+                descendents = descendents.concat(this.getRecursiveDescendents(this.allTags[i].id));
             }
         }
         return descendents;

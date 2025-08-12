@@ -24,12 +24,12 @@ $cloze-scrollbar-height: 4px;
   min-width: auto;
 }
 
-.question-component {
+form:has(> .question-component), div.quiz-question-container:has(> .question-component) {
   margin-bottom: 2rem;
   clear: both;
 
   .question-content {
-    font-family: $secondary-font;
+    font-family: $primary-font;
     font-size:  $question-font-size;
     font-weight: 400;
     line-height: $question-line-height;
@@ -54,17 +54,41 @@ $cloze-scrollbar-height: 4px;
       width: 100%;
       min-width: max-content;
     }
-    button.btn {
-      padding: 0.25rem 1.5rem;
+
+    .dropdown-item {
       min-width: 192px;
       width: 100%;
       &.selected {
         border-radius: 0;
       }
+    }
+
+    button.btn {
+      min-width: 192px;
+      width: 100%;
       &.dropdown-toggle::after {
         position: absolute;
         right: 0.5rem;
-        top: 1rem;
+      }
+    }
+  }
+}
+
+.multichoice-question {
+  ul > li .multichoice-option {
+    div:nth-child(2) .content-value > div > p {
+      margin: 0;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    input {
+      margin-top: 0.5rem;
+    }
+    
+    &:has(.katex) {
+      align-items: center;
+      input {
+        margin-top: 0;
       }
     }
   }
@@ -99,8 +123,9 @@ $inline-feedback-padding: 2px;
 
 .inline-container {
   display: inline-flex;
-  border-radius: var(--bs-border-radius);
+  border-radius: $border-radius-lg;
   width: 100%;
+  background-color: white;
   
   .feedback-wrapper {
     // wraps around a SINGLE component that can be marked as valid/invalid/unanswered, to allow multiple parts of one question to have different feedback states
@@ -184,7 +209,7 @@ $inline-feedback-padding: 2px;
 
   @media screen {
     .units-shown {
-      border-radius: 5px 0 0 5px !important;
+      border-radius: $border-radius-lg 0 0 $border-radius-lg !important;
     }
   }
 
@@ -193,11 +218,7 @@ $inline-feedback-padding: 2px;
       display: block;
       height: 100%;
       min-width: 36px !important;
-      border-radius: 0 5px 5px 0;
-      border: none;
-      &:active {
-        border: none !important;
-      }
+      border-radius: 0 $border-radius-lg $border-radius-lg 0;
       &.feedback-shown {
         padding-right: 36px !important;
       }
@@ -205,7 +226,6 @@ $inline-feedback-padding: 2px;
       > div {
         // force contents of button to fit in $inline-feedback-size, so we can use it at all sizes
         height: $inline-feedback-size;
-        margin-top: -9.5px; 
       }
     }
     &.display-unit {
@@ -224,7 +244,7 @@ $inline-feedback-padding: 2px;
     min-width: unset;
     font-family: $primary-font !important;
     background-color: transparent;
-    border-radius: 0.35rem;
+    border-radius: $border-radius-lg;
 
     &:not(.is-valid):not(.is-invalid):not(.is-unanswered) {
       border: $gray-136 solid 1px;
@@ -245,10 +265,8 @@ $inline-feedback-padding: 2px;
     }
   }
 
-  .equality-page {
-    .eqn-editor-preview {
-      background: $white !important;
-    }
+  .eqn-editor-preview {
+    background: $white;
   }
 
   .eqn-editor-input input {
@@ -332,11 +350,12 @@ $inline-feedback-padding: 2px;
           top: 0.5rem;
           display: block;
 
-          span {
+          button {
             display: inline-block;
             width: 20px;
             height: 20px;
-            cursor: pointer;
+            padding: 0;
+            background: $gray-120;
 
             &.show:hover {
               background-color: $primary !important;
@@ -349,15 +368,6 @@ $inline-feedback-padding: 2px;
 
             &.show {
               opacity: 1.0;
-            }
-
-            &.reduce {
-              background: $gray-120 url('/assets/common/icons/chevron_left.svg') no-repeat center;
-              margin-right: 4px;
-            }
-
-            &.increase {
-              background: $gray-120 url('/assets/common/icons/chevron_right.svg') no-repeat center;
             }
           }
         }
@@ -389,9 +399,6 @@ $inline-feedback-padding: 2px;
 }
 
 .quick-question {
-  button {
-      box-shadow: none !important; // How horrible...
-  }
   .alert {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -400,34 +407,9 @@ $inline-feedback-padding: 2px;
 
 .validation-response-panel {
   text-align: center;
-  border-top: solid 1px $gray-107;
-  border-bottom: solid 1px $gray-107;
-  &.correct, &.almost {
-    background: $primary;
-    color: black;
-    margin-left: -3rem;
-    margin-right: -3rem;
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
-    @include media-breakpoint-down(md) {
-      margin-left: -1rem;
-      margin-right: -1rem;
-      margin-bottom: -1rem;
-    }
-  }
-  &.correct {
-    margin-bottom: -3rem;
-  }
   p {
     margin-bottom: 0;
   }
-}
-
-// NOMENSA question.scss
-.question-component {
-  background-color: white;
-  box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
-  padding: 1rem;
 }
 
 .cloze-question {
@@ -505,18 +487,20 @@ $inline-feedback-padding: 2px;
   white-space: nowrap !important;
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
-  display: inline-table;
+  display: inline;
 }
 
-// cloze dropdowns inside katex are normally cut off due to content-driven overflows we cannot control easily. this:
-//    a) enforces that dropdowns are provided $cloze-dropdown-height of space (maximum height before scrolling);
-//    b) sets the correct overflow behaviour for the parent of the katex containing the dropdown;
-//    c) if webkit exists, recreates the scrollbar to forcibly display it on OSX.
+// outer katex display elements by default have a large margin, which clips overflowing content (e.g. cloze entries).
+// this reduces the outer margin by 0.5rem and "gives it" to the inner katex element's padding, which allows this content more space to overflow visibly. 
+.katex-display:has(> .katex) {
+  margin: 0.5rem 0;
 
-p > .katex:has(.cloze-dropdown.show), .katex-display:has(.cloze-dropdown.show) {
-  padding-bottom: calc(0.25rem + $cloze-dropdown-height) !important;
-  margin-bottom: -$cloze-dropdown-height !important;
-  overflow-x: hidden !important;
+  & > .katex {
+    // .katex deeper down the tree than this must remain unchanged
+    display: inline-block;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
 }
 
 p > .katex, .katex-display { 
@@ -583,6 +567,10 @@ p > .katex, .katex-display {
       right: 75px;
     }
   }
+}
+
+.unit-selection .dropdown button.feedback-zone.feedback-showing {
+  border-color: $form-invalid-border-color;
 }
 
 .question-actions {

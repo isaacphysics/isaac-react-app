@@ -150,7 +150,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
             return null;
     }
 
-    return <ListGroupItem className={classNames(itemClasses, {"p-3 d-md-flex flex-column justify-content-center content-summary-item": isPhy})} key={linkDestination}>
+    return <ListGroupItem className={classNames(itemClasses, {"p-3 d-md-flex flex-column justify-content-center content-summary-item": isPhy})} data-bs-theme={itemSubject?.id} key={linkDestination}>
         <Link className={classNames({"position-relative justify-content-center": isAda})} to={{pathname: linkDestination, search: search, hash: hash}}>
             {contentTypeVisibility !== ContentTypeVisibility.FULLY_HIDDEN && <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
                 {siteSpecific(
@@ -167,7 +167,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
             <div className={classNames("flex-fill", {"py-3 pe-3 align-content-center": isAda, "d-flex": isAda && !stack, "d-md-flex": isPhy})}>
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
-                        <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-secondary": isPhy})}>
+                        <Markup encoding={"latex"} className={classNames( "link-title question-link-title", {"text-theme": isPhy})}>
                             {title ?? ""}
                         </Markup>
                         {isPhy && typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ms-2 mb-1"}>
@@ -197,7 +197,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                 </div>
 
                 {isPhy && !isContentsIntendedAudience && <div className="ms-auto me-3 d-flex align-items-center">
-                    <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
+                    <i id={`audience-help-${componentId}`} className="icon icon-info icon-color-grey" />
                     <UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
                         {`This content has ${notRelevantMessage(userContext)}.`}
                     </UncontrolledTooltip>
@@ -206,7 +206,9 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                     {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={stack}/>}
                 </div>
             </div>
-            {isAda && !noCaret && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to page"}/></div>}
+            {isAda && !noCaret && <div className="list-caret align-content-center" aria-hidden="true">
+                <i className="icon icon-chevron-right" aria-hidden="true"/>
+            </div>}
         </Link>
     </ListGroupItem>;
 };

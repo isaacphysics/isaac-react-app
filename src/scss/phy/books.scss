@@ -75,3 +75,54 @@ svg.book-page-icon {
     }
   }
 }
+
+.book-listing-container {
+  @include no-print {
+    max-height: 462px;
+    overflow-y: auto;
+    @include vertical-scroll-shadow($color-neutral-50, rgba(0, 0, 0, 0.2));
+  }
+  border-radius: 4px;
+  flex: 1 0 content;
+}
+
+.book-container {
+  border-radius: 8px;
+  text-decoration: none;
+
+  &:hover {
+    .book-image-container {
+      @include not-reduced-motion {
+        transform: scale(1.02);
+      }
+    }
+
+    h5 {
+      text-decoration: underline;
+    }
+  }
+}
+
+.book-image-container {
+  position: relative;
+  width: max-content;
+  height: max-content;
+  box-shadow: 0px 6px 12px rgba(0,0,0,0.2);
+  overflow: visible;
+  transition: transform 0.2s ease-out;
+
+  > img {
+    max-height: 215px;
+    border-radius: 3px;
+  }
+
+  &.book-height-lg > img {
+    max-height: 315px;
+  }
+}
+
+.chapter-title {
+  > span:first-child {
+    font-size: 12px;
+  }
+}

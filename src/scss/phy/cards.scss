@@ -1,63 +1,100 @@
-@use 'sass:math';
+.rounded-card {
+  border-radius: 8px;
+}
 
-.card-neat {
-  .event-card-image {
+// stylistically this would work better as a class with a @extend of this class in the @container query, 
+// but the generated CSS seemingly ignores the @container condition when using @extend?
+@mixin horizontal-pod-container {
+  .pod.force-horizontal {
+    @content;
+  }
+
+  @container pod-parent (min-width: 576px) {
+    .pod:not(.no-horizontal) {
+      @content;
+    }
+  }
+}
+
+div:has(> .pod) {
+  container: pod-parent / inline-size;
+
+  @include horizontal-pod-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: min-content;
+    
+    a:has(> img) {
+      margin-right: 1.5rem;
+
+      > img {
+        width: 200px;
+      }
+    }
+
+    .card-body {
+      padding-top: 0;
+    }
+
+    .pod-title {
+      font-size: 24px;
+    }
+  }
+}
+
+.pod {
+  background-color: transparent;
+  border: none;
+  height: 100%;
+  width: 100%;
+
+  .card-body {
+    padding-top: 0.25rem;
+  }
+
+  .pod-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  
+  a:has(> img) {
+    height: min-content;
+    > img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border: 1px solid $color-neutral-200;
+      border-radius: 8px;
+    }
+  }
+
+  .event-pod-img {
     position: relative;
-    min-height: 100px;
+    height: min-content;
 
-    .event-card-image-banner {
+    .event-pod-badge {
       position: absolute;
-      bottom: 0;
-      background-color: rgba(51,51,51,0.73);
-      width: 100%;
+      margin: 3%;
+    }
+
+    .event-pod-hex {
+      position: absolute;
+      top: 1px;
+      right: 5%;
       color: white;
-      text-align: right;
-      padding: 8px 15px 8px;
 
-      &.disabled {
-        z-index: 5;
+      > b {
+        font-family: $secondary-font-semi-bold;
+        position: absolute;
+        text-align: center;
+        font-size: 12px;
+        padding-top: 5px;
       }
     }
-
-    img {
-      width: 100%;
-      height: 100%;
-    }
   }
 
-  .event-card-icons {
-    margin-left: auto;
-    img {
-      height: 2rem;
-      width: 2rem;
-      margin-left: 0.25rem;
-    }
-  }
-}
-
-.card-deck .news-card {
-  max-width: 308px;
-  margin-bottom: 1.5rem;
-
-  a img {
-    @include aspect-ratio(5, 3);
-    object-fit: cover;
-  }
-}
-
-// number of news cards per line for each breakpoint
-$news-cards-per-line: (
-  xs: 2,
-  lg: 3
-);
-
-@each $name, $breakpoint in $grid-breakpoints {
-  @if (map-has-key($news-cards-per-line, $name)) {
-    @include media-breakpoint-up($name) {
-      .card-deck .news-card {
-        flex: 0 0 calc(#{math.percentage(math.div(1, map-get($news-cards-per-line, $name)))} - #{$grid-gutter-width});
-        width: 100%;
-      }
-    }
+  .expired {
+    filter: grayscale(1);
   }
 }

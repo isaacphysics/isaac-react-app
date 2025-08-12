@@ -15,7 +15,7 @@ export const ProviderCallbackHandler = withRouter((props: ProviderCallbackHandle
 
     return <React.Fragment>
         <div className="w-100 text-center">
-            <h2 className="pt-5 pb-2">Signing in...</h2>
+            <h2 className="pt-7 pb-2">Signing in...</h2>
             <IsaacSpinner />
         </div>
     </React.Fragment>;

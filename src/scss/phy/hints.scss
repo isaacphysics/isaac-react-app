@@ -1,23 +1,27 @@
 .tabbed-hints {
   margin-top: 1rem;
-  @include respond-above(sm) {margin-top: 1.25rem;}
-  @include respond-above(md) {margin-top: 1.5rem;}
+  margin-bottom: 2rem;
   ul li {
     @include respond-below(lg) {padding-left: 0.5rem !important; padding-right: 0.5rem !important;}
     @include respond-below(xs) {padding-left: 0 !important; padding-right: 0 !important;}
   }
 
-  // Note: Colours are practically always overridden by subjects.scss.
-  // The following rule sets the default to be physics purple.
   li {
     .hint-tab-title {
-      color: $phy_physics !important;
+      color: var(--subject-color-500) !important;
     }
     &.active {
       .hint-tab-title {
         color: white !important;
-        background-color: $phy_physics !important;
+        background-color: var(--subject-color-500) !important;
       }
     }
-  }
+  }  
+}
+
+.isaac-accordion .tabbed-hints {
+  margin-bottom: 0;
+  margin-top: 1rem;
+  @include respond-above(sm) {margin-top: 1.25rem;}
+  @include respond-above(md) {margin-top: 1.5rem;}
 }

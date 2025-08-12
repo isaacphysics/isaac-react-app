@@ -10,7 +10,7 @@ import {
     isFound,
     isPhy,
     PATHS,
-    siteSpecific,
+    SITE_TITLE_SHORT,
     stagesOrdered
 } from "./";
 import {AssignmentBoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards} from "../../IsaacAppTypes";
@@ -31,7 +31,7 @@ export enum BoardCompletions {
 
 export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
     if (board.tags && board.tags.includes("ISAAC_BOARD")) {
-        return siteSpecific("Isaac", "Ada");
+        return SITE_TITLE_SHORT;
     }
     if (user && (user.id == board.ownerUserId)) {
         return "Me";
@@ -183,7 +183,7 @@ export enum BoardViews {
 // Reusable pattern for site-specific "enums"
 export const BoardCreators = {
     "all": "All",
-    "isaac": siteSpecific("Isaac", "Ada"),
+    "isaac": SITE_TITLE_SHORT,
     "me": "Me",
     "someoneElse": "Someone else"
 } as const;
@@ -205,16 +205,16 @@ export enum BoardLimit {
 }
 
 export const BOARD_ORDER_NAMES: {[key in AssignmentBoardOrder]: string} = {
-    "created": "Date Created Ascending",
-    "-created": "Date Created Descending",
-    "visited": "Date Visited Ascending",
-    "-visited": "Date Visited Descending",
-    "title": "Title Ascending",
-    "-title": "Title Descending",
-    "attempted": "Attempted Ascending",
-    "-attempted": "Attempted Descending",
-    "correct": "Correctness Ascending",
-    "-correct": "Correctness Descending"
+    "created": "Date created (recent first)",
+    "-created": "Date created (oldest first)",
+    "visited": "Date visited (recent first)",
+    "-visited": "Date visited (oldest first)",
+    "title": "Title (A-Z)",
+    "-title": "Title (Z-A)",
+    "attempted": "Attempted (lowest first)",
+    "-attempted": "Attempted (highest first)",
+    "correct": "Correctness (lowest first)",
+    "-correct": "Correctness (highest first)"
 };
 
 const BOARD_SORT_FUNCTIONS = {
@@ -236,13 +236,15 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
     const boards = useAppSelector(selectors.boards.boards);
 
     const [boardOrder, setBoardOrder] = useState<AssignmentBoardOrder>(AssignmentBoardOrder.visited);
-    const [boardView, setBoardView] = useState<BoardViews>(initialView);
+    const [boardView, setBoardView] = useState<BoardViews>((boards && boards.boards.length > 6) ? BoardViews.table : initialView);
     const [boardLimit, setBoardLimit] = useState<BoardLimit>(initialLimit);
     const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
 
     const [loading, setLoading] = useState(false);
 
     const [numberOfBoards, setNumberOfBoards] = useState<NumberOfBoards>(parseBoardLimitAsNumber(boardLimit));
+
+    const haveAllBoards = boards && boards.totalResults === boards.boards.length;
 
     // Fetch gameboards from server, no aggregation since we want a fresh list
     const loadInitial = useCallback((limit: NumberOfBoards) => {
@@ -258,7 +260,7 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
     // number as is currently on screen
     useEffect(() => {
         // Only refetch if we cannot reorder the boards in the frontend (we need all the boards to reorder them)
-        if (boardLimit != BoardLimit.All) {
+        if (!haveAllBoards) {
             loadInitial(numberOfBoards);
         }
     }, [boardOrder]);
@@ -267,7 +269,7 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
     useEffect(() => {
         if (boardView == BoardViews.table) {
             setBoardLimit(BoardLimit.All);
-        } else if (boardView == BoardViews.card) {
+        } else if (boardView == BoardViews.card && !haveAllBoards) {
             setBoardLimit(BoardLimit.six);
         }
     }, [boardView]);
@@ -301,7 +303,7 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
 
     // If we have all the users boards already, order them client-side
     const orderedBoards = useMemo<Boards | null>(() => {
-        if (boards == null || boardLimit != BoardLimit.All) {
+        if (boards == null || !haveAllBoards) {
             return boards;
         }
         const boardOrderNegative = boardOrder.at(0) == "-";

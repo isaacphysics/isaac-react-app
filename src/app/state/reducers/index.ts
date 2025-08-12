@@ -8,8 +8,7 @@ import {
     printingSettingsSlice,
     transientUserContextSlice,
     glossaryTerms,
-    concepts,
-    doc,
+    docSlice,
     questions,
     activeModals,
     notifications,
@@ -21,14 +20,17 @@ import {
     testQuestions,
     quizAttempt,
     groupMemberships,
-    currentTopic,
     questionSearchResult,
     search,
     isaacApi,
     gameboardsSlice,
     adminUserSearchSlice,
     userSlice,
-    interstitialCookieSlice
+    interstitialCookieSlice,
+    pageContextSlice,
+    topicSlice,
+    linkableSettingSlice,
+    sidebarSlice,
 } from "../index";
 
 export const rootReducer = combineReducers({
@@ -56,8 +58,8 @@ export const rootReducer = combineReducers({
     glossaryTerms,
 
     // Content
-    doc,
-    concepts,
+    page: docSlice.reducer,
+    sidebar: sidebarSlice.reducer,
 
     // Question
     questions,
@@ -76,7 +78,7 @@ export const rootReducer = combineReducers({
     groupMemberships,
 
     // Topics
-    currentTopic,
+    currentTopic: topicSlice.reducer,
 
     // Gameboards
     boards: gameboardsSlice.reducer,
@@ -87,6 +89,12 @@ export const rootReducer = combineReducers({
 
     // Quizzes
     quizAttempt,
+
+    // Context
+    pageContext: pageContextSlice.reducer,
+
+    // Linkable settings
+    linkableSetting: linkableSettingSlice.reducer,
 
     // API reducer
     [isaacApi.reducerPath]: isaacApi.reducer

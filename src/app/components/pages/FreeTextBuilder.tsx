@@ -4,7 +4,7 @@ import {ContentBase, TestCaseDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AppState, testQuestion, useAppDispatch, useAppSelector} from "../../state";
 import {Tabs} from "../elements/Tabs";
-import {atLeastOne} from "../../services";
+import {atLeastOne, siteSpecific} from "../../services";
 import {IsaacContent} from "../content/IsaacContent";
 import { Container, Form, Card, CardBody, Table, Label, Input, UncontrolledTooltip, Row, Col, Button } from "reactstrap";
 
@@ -143,7 +143,7 @@ export const FreeTextBuilder = () => {
     const atLeastOneQuestionChoiceAndTestCase = atLeastOne(cleanQuestionChoices.length) && atLeastOne(cleanTestCases.length);
 
     return <Container>
-        <TitleAndBreadcrumb className="mb-4" currentPageTitle="Free-text question builder" />
+        <TitleAndBreadcrumb className="mb-4" currentPageTitle="Free-text question builder" icon={{type: "hex", icon: "icon-concept"}} />
         <Form onSubmit={(event: React.FormEvent) => {
             if (event) {event.preventDefault();}
             if (atLeastOneQuestionChoiceAndTestCase) {
@@ -168,7 +168,7 @@ export const FreeTextBuilder = () => {
                                                         className="w-100" type="text" value={choice.value}
                                                         onChange={e => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, value: e.target.value} : c))}
                                                     />
-                                                    <span id={`choice-help-${choice.choiceNumber}`} className="icon-help me-2" />
+                                                    <i id={`choice-help-${choice.choiceNumber}`} className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help me-2")} />
                                                 </div>
                                             </Label>
                                             <UncontrolledTooltip target={`choice-help-${choice.choiceNumber}`} placement="bottom" innerClassName="">
@@ -375,8 +375,8 @@ export const FreeTextBuilder = () => {
                 </CardBody>
             </Card>
 
-            <div className="mb-5 text-center">
-                <Input type="submit" value="Test question" className="btn btn-xl btn-secondary border-0" />
+            <div className="mb-7 text-center">
+                <Button type="submit" color="secondary" className={siteSpecific("btn-xl", "form-control border-0")}>Test question</Button>
             </div>
         </Form>
     </Container>;

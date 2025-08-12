@@ -3,7 +3,7 @@ import {AdditionalInformation, AugmentedEvent} from "../../../IsaacAppTypes";
 import {SchoolInput} from "./inputs/SchoolInput";
 import {selectors, useAppSelector, useRequestEmailVerificationMutation} from "../../state";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
-import {examBoardLabelMap, isAda, isTutor, stageLabelMap, studentOnlyEventMessage} from "../../services";
+import {examBoardLabelMap, isAda, isTutor, siteSpecific, stageLabelMap, studentOnlyEventMessage} from "../../services";
 import {Immutable} from "immer";
 import { Card, CardBody, Row, Col, Label, Input, FormFeedback, Button, UncontrolledPopover, PopoverBody } from "reactstrap";
 
@@ -29,7 +29,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
         {/* Account Information */}
         <Card className="mb-3 bg-light">
             <CardBody>
-                <legend>Your account information (<a href="/account" target="_blank" className="text-secondary">update</a>)</legend>
+                <legend>Your account information (<a href="/account" target="_blank" className="text-theme">update</a>)</legend>
                 <Row>
                     <Col md={6}>
                         {/* Should be impossible to not have a first name */}
@@ -113,7 +113,12 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             id="job-title" name="job-title" type="text" value={additionalInformation.jobTitle  || ""}
                             onChange={event => updateAdditionalInformation({jobTitle: event.target.value})}
                         />
-                    </React.Fragment>}
+                        <Label htmlFor="experience-level">Level of teaching experience</Label>
+                        <Input
+                            id="experience-level" name="experience-level" type="text" value={additionalInformation.experienceLevel  || ""}
+                            onChange={event => updateAdditionalInformation({experienceLevel: event.target.value})}
+                        />
+                    </React.Fragment>}                   
                     {targetUser.role == 'STUDENT' && <React.Fragment>
                         <Label htmlFor="year-group" className="form-required">
                             {/* Based on the options, if only teacher roles are avalable use "Role" */}
@@ -133,7 +138,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             {!event.isStudentOnly && <option value="OTHER">N/A - Other</option>}
                         </Input>
                         {event.isStudentOnly && <div className="text-muted">{studentOnlyEventMessage(event.id)}</div>}
-                        {(event.isATeacherEvent || additionalInformation.yearGroup == 'TEACHER') && <div className="mt-2 text-end">
+                        {isAda && (event.isATeacherEvent || additionalInformation.yearGroup == 'TEACHER') && <div className="mt-2 text-end">
                             <a href="/pages/teacher_accounts" target="_blank">Click to upgrade to a teacher account</a> for free!
                         </div>}
                     </React.Fragment>}
@@ -142,8 +147,10 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                 {!event.isVirtual && <div>
                     <div>
                         <Label htmlFor="medical-reqs">
-                            Dietary requirements or relevant medical conditions
-                            <span id="dietary-reqs-help" aria-haspopup="true" className="icon-help has-tip" />
+                            <span className={siteSpecific("d-flex align-items-center", "")}>
+                                Dietary requirements or relevant medical conditions
+                                <i id="dietary-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help has-tip")} />
+                            </span>
                             <UncontrolledPopover trigger="click" placement="bottom" target="dietary-reqs-help">
                                 <PopoverBody>For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...</PopoverBody>
                             </UncontrolledPopover>
@@ -156,8 +163,10 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
 
                     <div>
                         <Label htmlFor="access-reqs">
-                            Accessibility requirements
-                            <span id="access-reqs-help" aria-haspopup="true" className="icon-help has-tip" />
+                            <span className={siteSpecific("d-flex align-items-center", "")}>
+                                Accessibility requirements
+                                <i id="access-reqs-help" aria-haspopup="true" className={siteSpecific("icon icon-info icon-color-grey ms-1", "icon-help has-tip")} />
+                            </span>
                             <UncontrolledPopover trigger="click" placement="bottom" target="access-reqs-help">
                                 <PopoverBody>For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.</PopoverBody>
                             </UncontrolledPopover>
@@ -170,7 +179,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
 
                     {additionalInformation.yearGroup != 'TEACHER' && additionalInformation.yearGroup != 'OTHER' && <Row>
                         <Col xs={12}>
-                            <h3>Emergency contact details</h3>
+                            <h5 className="mt-3">Emergency contact details</h5>
                         </Col>
                         <Col md={6}>
                             <Label htmlFor="emergency-name" className="form-required">
@@ -192,13 +201,6 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         </Col>
                     </Row>}
                 </div>}
-                {targetUser.role != 'STUDENT' && <React.Fragment>
-                    <Label htmlFor="experience-level">Level of teaching experience</Label>
-                    <Input
-                        id="experience-level" name="experience-level" type="text" value={additionalInformation.experienceLevel  || ""}
-                        onChange={event => updateAdditionalInformation({experienceLevel: event.target.value})}
-                    />
-                </React.Fragment>}
             </CardBody>
         </Card>
     </>;

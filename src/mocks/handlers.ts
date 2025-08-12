@@ -1,4 +1,4 @@
-import {http, HttpResponse} from "msw";
+import {http, HttpResponse, JsonBodyType} from "msw";
 import {
     buildMockUserSummary,
     mockAssignmentsGroup2,
@@ -13,11 +13,17 @@ import {
     mockUserAuthSettings,
     mockUserPreferences,
     mockRegressionTestQuestions,
-    mockQuestionFinderResults
+    mockQuestionFinderResults,
+    mockConceptPage,
+    mockRubrics,
+    mockAttempts,
+    mockPreviews,
+    mockConceptsResults
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
 import {School} from "../IsaacAppTypes";
+import { errorResponses } from "../test/test-factory";
 
 export const handlers = [
     http.get(API_PATH + "/gameboards/user_gameboards", ({request}) => {
@@ -61,6 +67,27 @@ export const handlers = [
         return HttpResponse.json(mockQuizAssignments, {
             status: 200,
         });
+    }),
+    http.get(API_PATH + "/quiz/:quizId/rubric", ({ params }) => {
+        const quizId = params.quizId as string;
+        if (quizId in mockRubrics) {
+            return HttpResponse.json(mockRubrics[quizId], { status: 200 });
+        } 
+        return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
+    }),
+    http.get(API_PATH + "/quiz/:quizId/preview", ({ params }) => {
+        const quizId = params.quizId as string;
+        if (quizId in mockPreviews) {
+            return HttpResponse.json(mockPreviews[quizId], { status: 200 });
+        } 
+        return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
+    }),
+    http.post(API_PATH + "/quiz/:quizId/attempt", ({ params }) => {
+        const quizId = params.quizId as string;
+        if (quizId in mockAttempts) {
+            return HttpResponse.json(mockAttempts[quizId], { status: 200 });
+        } 
+        return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.get(API_PATH + "/assignments/assign/:assignmentId", ({params}) => {
         const {assignmentId: _assignmentId} = params;
@@ -160,6 +187,16 @@ export const handlers = [
             status: 200,
         });
     }),
+    http.get(API_PATH + "/pages/concepts", () => {
+        return HttpResponse.json(mockConceptsResults, {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/pages/concepts/_mock_concept_page_", () => {
+        return HttpResponse.json(mockConceptPage, {
+            status: 200,
+        });
+    }),
     http.get(API_PATH + "/pages/:pageId", ({params}) => {
         const {pageId} = params;
 
@@ -240,3 +277,18 @@ export const buildGroupHandler = (groups?: any[]) => jest.fn(({request}) => {
         status: 200,
     });
 });
+export const buildFunctionHandler = <T extends string, V extends JsonBodyType>(path: string, keys: T[], fn: (p: Record<T, string>) => V) => {
+    return http.get(API_PATH + path, async ({ request }) => {
+        const params = keys.reduce(
+            (acc, key) => Object.assign(acc, {[key]: new URL(request.url).searchParams.get(key)}),
+            {} as Record<T, string>
+        );
+        return HttpResponse.json(fn(params), { status: 200, });
+    });
+};
+export const buildPostHandler = <T, V extends JsonBodyType>(path: string, fn: (p: T) => V) => {
+    return http.post(API_PATH + path, async ({ request }) => {
+        const body = await request.json() as T;
+        return HttpResponse.json(fn(body), { status: 200, });
+    });
+};

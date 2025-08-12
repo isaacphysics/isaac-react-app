@@ -75,7 +75,8 @@ export const UserPassword = (
 
     const authButtonsMap : Record<any, (isLinked: boolean) => JSX.Element> = {
         "RASPBERRYPI": (isLinked: boolean) => <ThirdPartyAccount provider={"RASPBERRYPI"} imgCss="rpf-button" isLinked={isLinked}/>,
-        "GOOGLE": (isLinked: boolean) => <ThirdPartyAccount provider={"GOOGLE"} imgCss="google-button" isLinked={isLinked}/>
+        "GOOGLE": (isLinked: boolean) => <ThirdPartyAccount provider={"GOOGLE"} imgCss="google-button" isLinked={isLinked}/>,
+        "MICROSOFT": (isLinked: boolean) => <ThirdPartyAccount provider={"MICROSOFT"} imgCss="microsoft-button" isLinked={isLinked}/>
     };
 
     const connectedAccounts : AuthenticationProvider[] = [];
@@ -135,7 +136,7 @@ export const UserPassword = (
                             </span>}
                         </FormGroup>
                     </>}
-                    {isAda && !showPasswordFields && <Button className="w-100 py-2 mt-3 mb-2" outline onClick={() => setShowPasswordFields(true)}>Change password</Button>}
+                    {isAda && !showPasswordFields && <Button className="w-100 py-2 mt-3 mb-2" color="keyline" onClick={() => setShowPasswordFields(true)}>Change password</Button>}
                 </>
                 : !passwordResetRequested ?
                     <React.Fragment>
@@ -154,7 +155,7 @@ export const UserPassword = (
                         </Row>
                         <Row className="pb-4">
                             <Col className="text-center">
-                                <Button className="btn-secondary" onClick={resetPasswordIfValidEmail}>
+                                <Button className="btn-keyline" onClick={resetPasswordIfValidEmail}>
                                 Click here to add a password
                                 </Button>
                             </Col>
@@ -169,12 +170,12 @@ export const UserPassword = (
                     </React.Fragment>
             }
             <React.Fragment>
-                <hr className="text-center" />
+                {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 {connectedAccounts.length > 0 && <FormGroup className="form-group">
                     <h4>Linked {siteSpecific("Accounts", "accounts")}</h4>
                     <Col>
                         {connectedAccounts.map((provider) => {
-                            return authButtonsMap[provider](true);
+                            return <React.Fragment key={provider}>{authButtonsMap[provider](true)}</React.Fragment>;
                         })}
                     </Col>
                 </FormGroup>}
@@ -182,13 +183,13 @@ export const UserPassword = (
                     <h4>Link other accounts</h4>
                     <Col>
                         {unconnectedAccounts.map((provider) => {
-                            return authButtonsMap[provider](false);
+                            return <React.Fragment key={provider}>{authButtonsMap[provider](false)}</React.Fragment>;
                         })}
                     </Col>
                 </FormGroup>}
             </React.Fragment>
             <React.Fragment>
-                <hr className="text-center"/>
+                {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 <FormGroup className="form-group">
                     <h4>Log Out</h4>
                     <p>
@@ -196,7 +197,7 @@ export const UserPassword = (
                         "You might want to do this if you forgot to log out on a shared device like a school computer."}
                     </p>
                     <Col className="text-center mt-2 px-0">
-                        <Button className={classNames("w-100 py-2 mt-3 mb-2", isAda)} color="primary" outline onClick={() => dispatch(logOutUserEverywhere())}>
+                        <Button className={classNames("w-100 py-2", {"mt-3": isAda})} color="keyline" onClick={() => dispatch(logOutUserEverywhere())}>
                             Log {above['sm'](deviceSize) ? "me " : ""}out everywhere
                         </Button>
                     </Col>

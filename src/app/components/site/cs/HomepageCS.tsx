@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useGetNewsPodListQuery} from "../../../state";
+import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardFooter, CardTitle, Col, Container, Row} from "reactstrap";
 import {PATHS, SITE_TITLE, useDeviceSize} from "../../../services";
@@ -13,12 +13,16 @@ import { IconCard } from "../../elements/cards/IconCard";
 import { TextBlock } from "../../elements/layout/TextBlock";
 import { ColumnSlice } from "../../elements/layout/ColumnSlice";
 import { AdaCard } from "../../elements/cards/AdaCard";
+import {useLinkableSetting} from "../../../services/linkableSetting";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
     const featuredNewsItem = news ? news[0] : undefined;
     const deviceSize = useDeviceSize();
+    const {setLinkedSetting} = useLinkableSetting();
+    const userPreferences = useAppSelector(selectors.user.preferences);
+    const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
 
     return <>
         {/*<WarningBanner/>*/}
@@ -34,12 +38,12 @@ export const HomepageCS = () => {
                             </h1>
                             <Row className="justify-content-start align-items-center my-3">
                                 <Col xs={6} sm={3}>
-                                    <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
+                                    <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="d-block">
                                         <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
                                     </a>
                                 </Col>
                                 <Col xs={6} sm={3}>
-                                    <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
+                                    <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener" className="d-block">
                                         <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
                                     </a>
                                 </Col>
@@ -47,18 +51,24 @@ export const HomepageCS = () => {
                             <Button className="mt-3" tag={Link} to="/topics" color="dark-primary">Explore our resources</Button>
                         </TextBlock>
                         <ImageBlock lg={5} className={"mb-1 mb-sm-3 mb-lg-0"}>
-                            <AdaHero2x1 className={"mt-5 mt-lg-0 d-block"}/>
+                            <AdaHero2x1 className={"mt-7 mt-lg-0 d-block"}/>
                         </ImageBlock>
                     </Row>
                 </Container>
             </section>
             <section id="news-and-updates">
                 <Container className="homepage-padding mw-1600 position-relative" fluid>
-                    <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                     <ColumnSlice>
-                        <TextBlock className="pe-5">
+                        <TextBlock className="pe-7">
                             <h2>Our latest updates</h2>
-                            <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read the latest news and updates from the team.</p>
+                            <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read
+                                the latest news and updates from the team.</p>
+                            {showNewsletterPrompts && <div className={"d-none d-lg-block"}>
+                                <Button onClick={() => {setLinkedSetting("news-preference");}} color="solid"
+                                    tag={Link} to={"/account#notifications"}>
+                                    Join our newsletter
+                                </Button>
+                            </div>}
                         </TextBlock>
                         {featuredNewsItem && featuredNewsItem.title && featuredNewsItem.value ? <IconCard card={{
                             title: featuredNewsItem.title,
@@ -70,15 +80,22 @@ export const HomepageCS = () => {
                             buttonStyle: "link"
                         }}/> : <div/>}
                     </ColumnSlice>
+                    {showNewsletterPrompts && <div className={"mt-4 mt-lg-7 w-100 text-center d-lg-none"}>
+                        <Button onClick={() => {setLinkedSetting("news-preference");}} color="solid"
+                            tag={Link} to={"/account#notifications"}>
+                                Join our newsletter
+                        </Button>
+                    </div>
+                    }
                 </Container>
             </section>
             <section id="benefits-for-teachers-and-students" className="bg-white">
-                <Container className={"homepage-padding mw-1600"}>                    
+                <Container className={"homepage-padding mw-1600"}>
                     <Row className={"align-items-center"}>
                         <Col xs={12} lg={5} className="mt-4 mt-lg-4 order-1 order-lg-0">
                             <picture>
                                 <source srcSet="/assets/cs/decor/benefits-for-homepage.png" type="image/png"/>
-                                <img className={"d-block w-100 mw-760 px-sm-5 px-lg-0"} src={"/assets/cs/decor/benefits-for-homepage.png"} alt="" />
+                                <img className={"d-block w-100 mw-760 px-sm-7 px-lg-0"} src={"/assets/cs/decor/benefits-for-homepage.png"} alt="" />
                             </picture>
                         </Col>
                         <Col xs={12} lg={7}>
@@ -96,8 +113,8 @@ export const HomepageCS = () => {
                                     {" "}<a href={"/exam_specifications_scotland#scotland_advanced_higher/sqa"}>Advanced&nbsp;Higher</a></li>
                             </ul>
                             <div>
-                                <Button className="mt-3 me-3" tag={Link} to="/students" color="primary">Student Resources</Button>
-                                <Button className="mt-3" tag={Link} to="/teachers" color="primary">Teacher Resources</Button>
+                                <Button className="mt-3 me-3" tag={Link} to="/students" color="solid">Student Resources</Button>
+                                <Button className="mt-3" tag={Link} to="/teachers" color="solid">Teacher Resources</Button>
                             </div>
                         </Col>
                     </Row>
@@ -114,7 +131,7 @@ export const HomepageCS = () => {
                             </p>
                             <p><b>For students</b>: Learn or revise a topic and receive instant feedback.</p>
                             <p><b>For teachers</b>: Save time by creating self-marking quizzes for your class.</p>
-                            <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color='primary'>
+                            <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color="solid">
                                 Find questions
                             </Button>
                         </TextBlock>
@@ -171,7 +188,7 @@ export const HomepageCS = () => {
                     <ColumnSlice>
                         <Container className="cs-card-container px-3 my-3">
                             <Card className={classNames("cs-card-plain w-100 border-0 backslash-1")}>
-                                <CardTitle className={"px-4 mt-5"}>
+                                <CardTitle className={"px-4 mt-7"}>
                                     <h3 className={"mt-1 font-size-1-5"}>Core</h3>
                                 </CardTitle>
                                 <CardBody className={"px-4 pb-4"}>
@@ -182,13 +199,13 @@ export const HomepageCS = () => {
                                     </ul>
                                 </CardBody>
                                 <CardFooter className="border-top-0 p-4">
-                                    <Button outline to="/exam_specifications_ada#core/ada" color='secondary' tag={Link}>See more</Button>
+                                    <Button to="/exam_specifications_ada#core/ada" color="keyline" tag={Link}>See more</Button>
                                 </CardFooter>
                             </Card>
                         </Container>
                         <Container className="cs-card-container px-3 my-3">
                             <Card className={classNames("cs-card-plain w-100 border-0 backslash-2")}>
-                                <CardTitle className={"px-4 mt-5 font-size-1-5"}>
+                                <CardTitle className={"px-4 mt-7 font-size-1-5"}>
                                     <h3 className={"mt-1"}>Advanced</h3>
                                 </CardTitle>
                                 <CardBody className={"px-4 pb-4"}>
@@ -200,7 +217,7 @@ export const HomepageCS = () => {
                                     </ul>
                                 </CardBody>
                                 <CardFooter className="border-top-0 p-4">
-                                    <Button outline to="/exam_specifications_ada#advanced/ada" color='secondary' tag={Link}>See more</Button>
+                                    <Button to="/exam_specifications_ada#advanced/ada" color="keyline" tag={Link}>See more</Button>
                                 </CardFooter>
                             </Card>
                         </Container>
@@ -214,14 +231,28 @@ export const HomepageCS = () => {
                     <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around my-3">
                         {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n} showTitle cardClassName="bg-cultured-grey" />)}
                     </Row>
-                    <div className={"mt-4 mt-lg-5 w-100 text-center"}>
+                    <div className={"mt-4 mt-lg-7 w-100 text-center"}>
                         <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
                     </div>
+                    {showNewsletterPrompts &&
+                        <Row xs={12} className="d-flex flex-row row-cols-1 row-cols-md-2 mt-3">
+                            <IconCard
+                                card={{
+                                    title: "Stay updated",
+                                    icon: {src: "/assets/cs/icons/mail.svg"},
+                                    bodyText: "Update your preferences and be the first to hear about new features, challenges, topics, and improvements on the platform.",
+                                    clickUrl: "/account#notifications",
+                                    buttonText: "Join our newsletter",
+                                    onButtonClick: () => {setLinkedSetting("news-preference");}
+                                }}
+                            />
+                        </Row>
+                    }
                 </Container>
             </section>}
 
             <section id="search">
-                <Container className={"py-lg-6 py-5 text-center"}>
+                <Container className={"py-9 text-center"}>
                     <h3 className={"text-white mb-4"}>Ready to get started?</h3>
                     <AdaHomepageSearch className={"d-block"} />
                 </Container>

@@ -58,7 +58,7 @@ export const RegistrationVerifyEmail = () => {
     };
 
     return <Container className="text-center">
-        <Card className="my-5">
+        <Card className="my-7">
             <CardBody>
                 {!emailVerified && userFromParamVerificationFailed &&
                     <ExigentAlert color="warning">
@@ -86,9 +86,9 @@ export const RegistrationVerifyEmail = () => {
                 <Row className="justify-content-center">
                     <Col>
                         {emailVerified ?
-                            <img className="img-fluid w-md-50 mx-auto my-5" src={"/assets/cs/decor/verify_done.png"} alt="" />
+                            <img className="img-fluid w-md-50 mx-auto my-7" src={"/assets/cs/decor/verify_done.png"} alt="" />
                             :
-                            <img className="img-fluid w-md-50 mx-auto my-5" src={"/assets/cs/decor/verify_request.png"} alt="" />
+                            <img className="img-fluid w-md-50 mx-auto my-7" src={"/assets/cs/decor/verify_request.png"} alt="" />
                         }
                     </Col>
                 </Row>
@@ -113,7 +113,7 @@ export const RegistrationVerifyEmail = () => {
                     emailVerified &&
                         <Row className="justify-content-center">
                             <Col xs={12} sm={6} md={4} lg={3}>
-                                <Button className={"my-2 w-100"} outline color="secondary" onClick={myAccount}>Your account</Button>
+                                <Button className={"my-2 w-100"} color="keyline" onClick={myAccount}>Your account</Button>
                             </Col>
                             <Col xs={12} sm={6} md={4} lg={3}>
                                 <Button className={"my-2 w-100"} onClick={continueToPreferences}>Continue</Button>

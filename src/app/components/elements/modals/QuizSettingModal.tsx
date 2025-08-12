@@ -16,8 +16,9 @@ import {currentYear, DateInput} from "../inputs/DateInput";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {StyledSelect} from "../inputs/StyledSelect";
-import {Alert, Button, FormFeedback, Label, UncontrolledTooltip} from "reactstrap";
+import {Button, Form, FormFeedback, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
 import { AppGroup } from "../../../../IsaacAppTypes";
+import classNames from "classnames";
 
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
@@ -38,8 +39,6 @@ const feedbackOptionsMap = feedbackOptionsList.reduce((obj, option) => {
     return obj;
 }, {} as {[key in QuizFeedbackMode]: QuizFeedbackOption});
 
-type ControlName = 'group' | 'dueDate' | 'scheduledStartDate' | 'feedbackMode';
-
 interface QuizSettingModalProps {
     allowedToSchedule?: boolean;
     quiz: ContentSummaryDTO | IsaacQuizDTO;
@@ -55,7 +54,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
 
     const [_assignQuiz, {isLoading: isAssigning}] = useAssignQuizMutation();
 
-    const [validated, setValidated] = useState<Set<ControlName>>(new Set());
+    const [validationAttempted, setValidationAttempted] = useState(false);
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date | null>(initialDueDate ?? null);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date | null>(initialScheduledStartDate ?? null);
@@ -64,10 +63,12 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
 
     const yearRange = range(currentYear, currentYear + 5);
 
-    function addValidated(what: ControlName) {
-        setValidated(validated => {
-            return new Set([...validated, what]);
-        });
+    function attemptAssign() {
+        setValidationAttempted(true);
+        if (groupInvalid || feedbackModeInvalid || dueDateInvalid || scheduledStartDateInvalid) {
+            return;
+        }
+        assign();
     }
 
     function assign() {
@@ -80,11 +81,11 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
             userId: user?.id
         })).then(success => {
             if (success) {
-                setValidated(new Set());
                 setSelectedGroups([]);
                 setDueDate(null);
                 setScheduledStartDate(null);
                 setFeedbackMode(null);
+                dispatch(closeActiveModal());
             }
         });
     }
@@ -92,85 +93,116 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
     const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.quizId === quiz.id && assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() > Date.now() : true)) : false;
     const alreadyAssignedToAGroup = selectedGroups.some(group => quizAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
 
-    const groupInvalid = validated.has('group') && selectedGroups.length === 0 || alreadyAssignedToAGroup;
-    const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false) || dueDate.valueOf() < Date.now());
-    const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() < TODAY().valueOf();
-    const feedbackModeInvalid = validated.has('feedbackMode') && feedbackMode === null;
+    const groupInvalid = selectedGroups.length === 0 || alreadyAssignedToAGroup;
+    const feedbackModeInvalid = feedbackMode === null;
+    const dueDateInvalid = !isDefined(dueDate) || (scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false) || dueDate.valueOf() < Date.now();
+    const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() < TODAY().valueOf(); // optional, so undefined is valid
 
     const scheduledQuizHelpTooltipId = "scheduled-quiz-help-tooltip";
 
-    return <div className="mb-4">
-        <Label className="w-100 mb-4">Set test to the following group(s):<br/>
-            <ShowLoadingQuery
-                query={groupsQuery}
-                defaultErrorTitle={"Error fetching groups"}
-                thenRender={groups => {
-                    const groupOptions = groups.map((g: AppGroup) => {return {label: g.groupName as string, value: g.id as number}; });
+    return <Form 
+        className={classNames("mb-4")} 
+        onSubmit={(e) => {e.preventDefault(); attemptAssign();}}>
+        <FormGroup>
+            <Label className="w-100">
+                <span className="form-required">Set test to the following group(s):</span>
+                <ShowLoadingQuery
+                    query={groupsQuery}
+                    defaultErrorTitle={"Error fetching groups"}
+                    thenRender={groups => {
+                        const groupOptions = groups.map((g: AppGroup) => {return {label: g.groupName as string, value: g.id as number}; });
 
-                    return <StyledSelect isMulti placeholder="Select groups"
-                        options={groupOptions}
+                        return <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
+                            <StyledSelect isMulti placeholder="Select groups"
+                                options={groupOptions}
+                                onChange={(s) => {
+                                    selectOnChange(setSelectedGroups, false)(s);
+                                }}
+                                value={selectedGroups}
+                                isSearchable
+                                menuPortalTarget={document.body}
+                                styles={{
+                                    control: (styles) => ({...styles, ...(validationAttempted && groupInvalid ? {borderColor: '#dc3545'} : {})}),
+                                    menuPortal: base => ({...base, zIndex: 9999}),
+                                }}
+                            />
+                        </div>;
+                    }}
+                />
+                {(selectedGroups.length === 0 
+                    ? <FormFeedback>You must select a group</FormFeedback> 
+                    : <FormFeedback>You cannot reassign a test to this group(s) until the due date has passed.</FormFeedback>
+                )}
+            </Label>
+        </FormGroup>
+
+        <FormGroup>
+            <Label className="w-100">
+                <span className="form-required">What level of feedback should students get:</span>
+                <div className={classNames({"is-invalid": validationAttempted && feedbackModeInvalid})}>
+                    <StyledSelect
+                        value={feedbackMode ? feedbackOptionsMap[feedbackMode] : null}
                         onChange={(s) => {
-                            selectOnChange(setSelectedGroups, false)(s);
-                            addValidated('group');
+                            if (s && (s as QuizFeedbackOption).value) {
+                                const item = s as QuizFeedbackOption;
+                                setFeedbackMode(item.value);
+                            }
                         }}
-                        value={selectedGroups}
-                        onBlur={() => addValidated('group')}
-                        isSearchable
+                        options={feedbackOptionsList}
                         menuPortalTarget={document.body}
                         styles={{
-                            control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
+                            control: (styles) => ({...styles, ...(validationAttempted && feedbackModeInvalid ? {borderColor: '#dc3545'} : {})}),
                             menuPortal: base => ({...base, zIndex: 9999}),
                         }}
-                    />;
-                }}
-            />
-            {groupInvalid && (selectedGroups.length === 0 ? <FormFeedback className="d-block" valid={false}>You must select a group</FormFeedback> : <FormFeedback className="d-block" valid={false}>You cannot reassign a test to this group(s) until the due date has passed.</FormFeedback>)}
-        </Label>
-        <Label className="w-100 mb-4">What level of feedback should students get:<br/>
-            <StyledSelect
-                value={feedbackMode ? feedbackOptionsMap[feedbackMode] : null}
-                onChange={(s) => {
-                    if (s && (s as QuizFeedbackOption).value) {
-                        const item = s as QuizFeedbackOption;
-                        setFeedbackMode(item.value);
-                    }
-                    addValidated('feedbackMode');
-                }}
-                onBlur={() => addValidated('feedbackMode')}
-                options={feedbackOptionsList}
-                menuPortalTarget={document.body}
-                styles={{
-                    control: (styles) => ({...styles, ...(feedbackModeInvalid ? {borderColor: '#dc3545'} : {})}),
-                    menuPortal: base => ({...base, zIndex: 9999}),
-                }}
-            />
-            {feedbackModeInvalid && <FormFeedback className="d-block" valid={false}>You must select a feedback mode</FormFeedback>}
-        </Label>
-        <Label className="w-100 mb-4">Set an optional start date:<span id={scheduledQuizHelpTooltipId} className="icon-help"/><br/>
-            <DateInput value={scheduledStartDate ?? undefined} invalid={scheduledStartDateInvalid || undefined}
-                yearRange={yearRange}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate)}
-            />
-            <UncontrolledTooltip placement="top" autohide={false} target={scheduledQuizHelpTooltipId}>
-                You can schedule a test to appear in the future by setting a start date.
-                The test will be visible to students from this date onwards.<br/>
-                If you do not set a start date, the test will be visible immediately.
-            </UncontrolledTooltip>
-            {scheduledStartDateInvalid && <small className={"pt-2 text-danger"}>Start date must be today or in the future.</small>}
-        </Label>
-        <Label className="w-100 mb-4">Set an optional due date:<br/>
-            <DateInput invalid={dueDateInvalid || undefined} value={dueDate ?? undefined} yearRange={yearRange}
-                onChange={(e) => setDueDate(e.target.valueAsDate)}/>
-            {dueDateInvalid && <small className={"pt-2 text-danger"}>{dueDate.valueOf() > TODAY().valueOf() ? "Due date must be on or after the start date." : `Due date must be after today.`}</small>}
-        </Label>
+                    />
+                </div>
+                <FormFeedback>You must select a feedback mode</FormFeedback>
+            </Label>
+        </FormGroup>
 
-        <Alert color={siteSpecific("warning", "info")} className="py-1 px-2 mb-4">
-            From {siteSpecific("Jan", "January")} 2025, due dates will be required for set tests.
-        </Alert>
+        <FormGroup>
+            <Label className="w-100">
+                <div className={siteSpecific("d-flex align-items-center", "")}>
+                    Set an optional start date:
+                    <i id={scheduledQuizHelpTooltipId} className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help")}/>
+                </div>
+                <DateInput 
+                    value={scheduledStartDate ?? undefined} 
+                    invalid={scheduledStartDateInvalid || undefined}
+                    yearRange={yearRange}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate)}
+                />
+                <UncontrolledTooltip placement="top" autohide={false} target={scheduledQuizHelpTooltipId}>
+                    You can schedule a test to appear in the future by setting a start date.
+                    The test will be visible to students from this date onwards.<br/>
+                    If you do not set a start date, the test will be visible immediately.
+                </UncontrolledTooltip>
+                <FormFeedback>Start date must be today or in the future.</FormFeedback>
+            </Label>
+        </FormGroup>
 
-        <div className="w-100">
+        <FormGroup>
+            <Label className="w-100">
+                <span className="form-required">Set a due date:</span>
+                <DateInput 
+                    invalid={validationAttempted && dueDateInvalid} 
+                    value={dueDate ?? undefined} 
+                    yearRange={yearRange}
+                    onChange={(e) => setDueDate(e.target.valueAsDate)}
+                />
+                <FormFeedback>
+                    {!isDefined(dueDate) 
+                        ? "Select a due date for the assignment."
+                        : dueDate.valueOf() > TODAY().valueOf() 
+                            ? "Due date must be on or after the start date." 
+                            : "Due date must be after today."}
+                </FormFeedback>
+            </Label>
+        </FormGroup>
+
+        <div className="d-flex justify-content-between gap-4 mb-4 w-100">
             <Button
-                className={"float-start mb-4 w-100 w-sm-auto"}
+                className={"float-start w-100 w-sm-auto"}
                 color="tertiary"
                 disabled={isAssigning}
                 onClick={() => dispatch(closeActiveModal())}
@@ -178,13 +210,11 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 Close
             </Button>
             <Button
-                className={"float-end mb-4 w-100 w-sm-auto"}
-                disabled={groupInvalid || !feedbackMode || isAssigning || dueDateInvalid || scheduledStartDateInvalid}
-                onMouseEnter={() => setValidated(new Set(['group', 'feedbackMode']))}
-                onClick={assign}
+                className={"float-end w-100 w-sm-auto"}
+                disabled={isAssigning}
             >
-                {isAssigning ? <IsaacSpinner size={"sm"} /> : siteSpecific("Set Test", "Set test")}
+                {isAssigning ? <IsaacSpinner size={"sm"} /> : "Set test"}
             </Button>
         </div>
-    </div>;
+    </Form>;
 }

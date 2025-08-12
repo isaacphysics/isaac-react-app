@@ -7,10 +7,10 @@ import {SocialLinksRow} from "../../elements/list-groups/SocialLinks";
 export const FooterCS = () => (
     <footer>
         <div className="footer-top d-print-none">
-            <Container fluid className="py-5">
+            <Container fluid className="py-7">
                 <Row className="justify-content-start">
-                    <Col xs={"auto"} className={"me-5 mb-4 mb-md-0"}>
-                        <Link to="/">
+                    <Col xs={"auto"} className={"me-7 mb-4 mb-md-0"}>
+                        <Link to="/" className="d-block">
                             <img
                                 src="/assets/common/logos/ada_logo_stamp_aqua.svg"
                                 className="footer-logo"
@@ -30,7 +30,7 @@ export const FooterCS = () => (
         <div className="footer-bottom">
             <Container fluid>
                 <div className='footer-rule mb-4' />
-                <div className='footer-links footer-bottom pb-5'>
+                <div className='footer-links footer-bottom pb-7'>
                     <Row className="justify-content-between">
                         <Col xs={{size: 12}} md={{size: 7, order: 2}} lg={{size: 8}} xl={{size: 9}} className="text-cs-white text-start text-md-end">
                             <p>

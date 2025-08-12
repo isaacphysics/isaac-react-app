@@ -1,5 +1,20 @@
 @import "../common/forms";
 
+.search--main-group,
+.search--filter-group {
+  &.form-group {
+    margin: 0;
+    position: relative;
+
+    input {
+      &.form-control {
+        border-width: 0;
+        padding: 0 1rem;
+      }
+    }
+  }
+}
+
 .search--main-group {
   #header-search {
     border-bottom-left-radius: 0;
@@ -92,3 +107,22 @@ input[type=text], input[type=search] {
   }
 }
 
+select.form-select, input.form-control, .separate-input-group > .form-control + .input-group-append {
+  height: calc(1.5em + 0.75rem + 2px);
+  &.input-group-append > button {
+    height: 100%;
+    padding: 0;
+    border: none;
+  }
+}
+
+select {
+  &.form-select {
+    border: solid 1px $black;
+    padding: 0 1.2em;
+
+    &[name='selectMulti'] {
+      padding: 1rem 1.2rem 1.5rem;
+    }
+  }
+}

@@ -8,16 +8,18 @@ interface TogglablePasswordInputProps extends InputProps {
 export const TogglablePasswordInput = (props: TogglablePasswordInputProps) => {
     const [showPassword, setShowPassword] = useState(false);
 
+    const {feedbackText, ...rest} = props;
+
     return <InputGroup>
         <Input
-            {...props}
+            {...rest}
             type={showPassword ? "text" : "password"}
         />
         <button type="button" tabIndex={-1} className="inline-form-input-btn" onClick={() => {setShowPassword(!showPassword);}}>
             {showPassword ? "Hide" : "Show"}
         </button>
         <FormFeedback>
-            {props.feedbackText ?? "Please enter a valid password."}
+            {feedbackText ?? "Please enter a valid password."}
         </FormFeedback>
     </InputGroup>;
 };
