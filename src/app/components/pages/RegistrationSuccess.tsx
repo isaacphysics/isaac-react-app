@@ -20,7 +20,7 @@ export const RegistrationSuccess = () => {
     };
 
     return <Container className="text-center">
-        <Card className="my-5">
+        <Card className="my-7">
             <CardBody>
                 <Row className="justify-content-center">
                     <Col>
@@ -31,15 +31,15 @@ export const RegistrationSuccess = () => {
                     <Col>
                         {siteSpecific(
                             <img className="img-fluid mx-auto mt-3 mb-4" src="/assets/common/icons/tick.svg" alt="" id="registration-complete-tick" />,
-                            <img className="img-fluid mx-auto my-5" src="/assets/cs/decor/verify_done.svg" alt="" />
+                            <img className="img-fluid mx-auto my-7" src="/assets/cs/decor/verify_done.svg" alt="" />
                         )}
                     </Col>
                 </Row>
                 <Row className="justify-content-center">
                     <Col xs={12} sm={6} lg={3}>
                         {siteSpecific(
-                            <Button className={"my-2"} color="primary" onClick={returnToHomepage}>Home</Button>,
-                            <Button className={"my-2"} outline color="secondary" onClick={myAccount}>Your account</Button>
+                            <Button className={"my-2"} color="solid" onClick={returnToHomepage}>Home</Button>,
+                            <Button className={"my-2"} color="keyline" onClick={myAccount}>Your account</Button>
                         )}
                     </Col>
                     <Col xs={12} sm={6} lg={3}>

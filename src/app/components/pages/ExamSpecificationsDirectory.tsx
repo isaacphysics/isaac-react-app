@@ -6,8 +6,8 @@ import {Link} from "react-router-dom";
 
 
 export const ExamSpecificationsDirectory = () => {
-    return <Container className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle={"Specifications"}/>
+    return <Container className="mb-7">
+        <TitleAndBreadcrumb currentPageTitle={"Exam specifications"}/>
         <MetaDescription description="Discover our free A level computer science topics and questions."/>
         <Row className={"justify-content-center d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-xl-4 my-3"}>
             <Col className={"my-3"}>
@@ -24,7 +24,7 @@ export const ExamSpecificationsDirectory = () => {
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
-                        <Button className="justify-content-end" color='secondary' outline tag={Link} to="/exam_specifications_ada">
+                        <Button className="justify-content-end" color="keyline" tag={Link} to="/exam_specifications_ada">
                             Show me
                         </Button>
                     </CardFooter>
@@ -44,7 +44,7 @@ export const ExamSpecificationsDirectory = () => {
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
-                        <Button className="justify-content-end" color='secondary' outline tag={Link}
+                        <Button className="justify-content-end" color="keyline" tag={Link}
                             to="/exam_specifications_england">
                             Show me
                         </Button>
@@ -66,7 +66,7 @@ export const ExamSpecificationsDirectory = () => {
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
-                        <Button color='secondary' outline tag={Link} to="/exam_specifications_scotland">
+                        <Button color="keyline" tag={Link} to="/exam_specifications_scotland">
                             Show me
                         </Button>
                     </CardFooter>
@@ -86,7 +86,7 @@ export const ExamSpecificationsDirectory = () => {
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
-                        <Button color='secondary' outline tag={Link} to="/exam_specifications_wales">Show me</Button>
+                        <Button color="keyline" tag={Link} to="/exam_specifications_wales">Show me</Button>
                     </CardFooter>
                 </Card>
             </Col>

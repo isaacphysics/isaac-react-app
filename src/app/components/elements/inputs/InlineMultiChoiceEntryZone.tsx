@@ -27,13 +27,11 @@ export const InlineMultiChoiceEntryZone = ({questionDTO, focusRef, setModified, 
             className={classNames("d-flex feedback-wrapper", contentClasses)}
             style={contentStyle}
         >
-            <DropdownToggle innerRef={focusRef} className={classNames("w-100 h-100 d-flex ps-2 pe-4 p-0", correctnessClass(correctness))} color="white">
-                <span aria-hidden>
-                    <Markup trusted-markup-encoding={"html"}>
-                        {currentAttempt?.value ?? ""}
-                    </Markup>
-                </span>
-                <img className={classNames("dropzone-dropdown", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"/>
+            <DropdownToggle innerRef={focusRef} className={classNames("d-flex align-items-center p-2 pe-0 w-100 h-100", correctnessClass(correctness))} color="white">
+                <Markup encoding="latex">
+                    {currentAttempt?.value ?? ""}
+                </Markup>
+                <i className={classNames("icon icon-chevron-right icon-dropdown-90 ms-auto", {"active": isOpen})} aria-hidden="true"/>
             </DropdownToggle>
             <DropdownMenu container={focusRef.current?.closest(".question-content") as HTMLElement || "body"} end> 
                 {/* Dummy option added to clear selection */}

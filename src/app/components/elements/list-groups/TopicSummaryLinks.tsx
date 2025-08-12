@@ -20,6 +20,7 @@ import {selectors, useAppSelector} from "../../../state";
 import classNames from "classnames";
 import {Markup} from "../markup";
 import { ListGroup, ListGroupItem, Button, UncontrolledTooltip } from "reactstrap";
+import { Spacer } from "../Spacer";
 
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
     const userContext = useUserViewingContext();
@@ -67,11 +68,15 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                                 </Markup>
                             </div>
                             {isPhy && item.deEmphasised && <div className="ms-auto me-3 d-flex align-items-center">
-                                <span id={`audience-help-${index}`} className="icon-help mx-1" />
+                                <i id={`audience-help-${index}`} className="icon icon-info icon-color-grey" />
                                 <UncontrolledTooltip placement="bottom" target={`audience-help-${index}`}>
                                     {`This content has ${notRelevantMessage(userContext)}.`}
                                 </UncontrolledTooltip>
                             </div>}
+                        </div>
+                        <Spacer />
+                        <div className="d-flex align-items-center">
+                            <i className="icon icon-chevron-right me-3" />
                         </div>
                     </Button>
                 </ListGroupItem>;

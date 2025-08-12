@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
 import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {siteSpecific, trackEvent, WEBMASTER_EMAIL} from "../../services";
+import {SITE_TITLE_SHORT, trackEvent, WEBMASTER_EMAIL} from "../../services";
 import {FallbackProps} from "react-error-boundary";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {Loading} from "../handlers/IsaacSpinner";
@@ -46,8 +46,8 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
 
     return <Container>
         <div>
-            <TitleAndBreadcrumb currentPageTitle="Error" />
-            <h3 className="my-4"><small>{`We're sorry, but an error has occurred in the ${siteSpecific("Isaac", "Ada")} app!`}</small></h3>
+            <TitleAndBreadcrumb currentPageTitle="Error" icon={{type: "hex", icon: "icon-error"}}/>
+            <h3 className="my-4"><small>{`We're sorry, but an error has occurred in the ${SITE_TITLE_SHORT} app!`}</small></h3>
             <h3>
                 <small>
                     {"You may want to "}
@@ -75,7 +75,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
                     <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a>
                     {" us if this keeps happening."}
                 </small>
-                <Row className="mt-4 mb-5">
+                <Row className="mt-4 mb-7">
                     <Col>
                         <div className="alert alert-info small overflow-auto">
                             <h4>Useful information to include in your email</h4>

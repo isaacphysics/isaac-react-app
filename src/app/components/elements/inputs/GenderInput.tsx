@@ -33,13 +33,13 @@ export const GenderInput = ({className, userToUpdate, setUserToUpdate, submissio
         </p>
         <StyledDropdown 
             id={`${idPrefix}-gender-select`}
-            value={userToUpdate && userToUpdate.gender}
+            value={userToUpdate && userToUpdate.gender || "UNKNOWN"}
             invalid={submissionAttempted && required && !validateUserGender(userToUpdate)}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setUserToUpdate(Object.assign({}, userToUpdate, {gender: e.target.value}))
             }
         >
-            <option value="UNKNOWN" selected disabled hidden></option>
+            <option value="UNKNOWN" disabled hidden></option>
             <option value="FEMALE">Female</option>
             <option value="MALE">Male</option>
             <option value="OTHER">Other gender identity</option>

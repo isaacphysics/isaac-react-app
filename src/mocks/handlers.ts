@@ -17,7 +17,8 @@ import {
     mockConceptPage,
     mockRubrics,
     mockAttempts,
-    mockPreviews
+    mockPreviews,
+    mockConceptsResults
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -71,21 +72,21 @@ export const handlers = [
         const quizId = params.quizId as string;
         if (quizId in mockRubrics) {
             return HttpResponse.json(mockRubrics[quizId], { status: 200 });
-        } 
+        }
         return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.get(API_PATH + "/quiz/:quizId/preview", ({ params }) => {
         const quizId = params.quizId as string;
         if (quizId in mockPreviews) {
             return HttpResponse.json(mockPreviews[quizId], { status: 200 });
-        } 
+        }
         return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.post(API_PATH + "/quiz/:quizId/attempt", ({ params }) => {
         const quizId = params.quizId as string;
         if (quizId in mockAttempts) {
             return HttpResponse.json(mockAttempts[quizId], { status: 200 });
-        } 
+        }
         return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.get(API_PATH + "/assignments/assign/:assignmentId", ({params}) => {
@@ -179,10 +180,15 @@ export const handlers = [
     http.get(API_PATH + "/pages/questions/_regression_test_", () => {
         return HttpResponse.json(mockRegressionTestQuestions, {
             status: 200,
-        });   
+        });
     }),
     http.get(API_PATH + "/pages/questions/", () => {
         return HttpResponse.json(mockQuestionFinderResults, {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/pages/concepts", () => {
+        return HttpResponse.json(mockConceptsResults, {
             status: 200,
         });
     }),

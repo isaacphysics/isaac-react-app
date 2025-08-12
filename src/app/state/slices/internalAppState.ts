@@ -26,13 +26,24 @@ export const mainContentIdSlice = createSlice({
     }
 });
 
-export type TransientUserContextState = {examBoard?: EXAM_BOARD, stage?: STAGE} | null;
+export type SidebarState = {open?: boolean} | null;
+export const sidebarSlice = createSlice({
+    name: "sidebar",
+    initialState: null as SidebarState,
+    reducers: {
+        setOpen: (state, action: PayloadAction<boolean | undefined>) => ({...state, open: action.payload}),
+        toggle: (state) => ({...state, open: !state?.open}),
+    }
+});
+
+export type TransientUserContextState = {examBoard?: EXAM_BOARD, stage?: STAGE, isFixedContext?: boolean} | null;
 export const transientUserContextSlice = createSlice({
     name: "transientUserContext",
     initialState: null as TransientUserContextState,
     reducers: {
         setStage: (state, action: PayloadAction<STAGE | undefined>) => ({...state, stage: action.payload}),
         setExamBoard: (state, action: PayloadAction<EXAM_BOARD | undefined>) => ({...state, examBoard: action.payload}),
+        setFixedContext: (state, action: PayloadAction<boolean>) => ({...state, isFixedContext: action.payload}),
     }
 });
 

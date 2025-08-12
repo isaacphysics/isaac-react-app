@@ -1,51 +1,126 @@
-import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
-import {RouteComponentProps, withRouter} from "react-router-dom";
-import {AppState, fetchConcepts, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {Badge, Card, CardBody, CardHeader, Col, Container, Form, Input, Label, Row} from "reactstrap";
+import React, {FormEvent, MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
+import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import {selectors, useAppSelector} from "../../state";
+import {Container} from "reactstrap";
 import queryString from "query-string";
-import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID} from "../../services";
-import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ShortcutResponse} from "../../../IsaacAppTypes";
-import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import {getFilteredStageOptions, isPhy, isRelevantToPageContext, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, stageLabelMap, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, tags} from "../../services";
+import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
+import { ListView } from "../elements/list-groups/ListView";
+import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
+import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
+import { getHumanContext, isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
+import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { ContentSummaryDTO, Stage } from "../../../IsaacApiTypes";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { PageMetadata } from "../elements/PageMetadata";
+import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
+import { FilterSummary } from "./QuestionFinder";
+
+const subjectToTagMap = {
+    physics: TAG_ID.physics,
+    chemistry: TAG_ID.chemistry,
+    biology: TAG_ID.biology,
+    maths: TAG_ID.maths,
+};
 
 // This component is Isaac Physics only (currently)
 export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const concepts = useAppSelector((state: AppState) => state?.concepts?.results || null);
+    const pageContext = useUrlPageTheme();
 
-    useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);
+    const searchParsed = queryString.parse(location.search, {arrayFormat: "comma"});
 
-    const searchParsed = queryString.parse(location.search);
+    const [query, filters, stages] = useMemo(() => {
+        const queryParsed = searchParsed.query || null;
+        const query = Array.isArray(queryParsed) ? queryParsed.join(",") : queryParsed;
+    
+        const filterParsed = searchParsed.types || null;
+        const filters = Array.isArray(filterParsed) ? filterParsed.filter(x => !!x) as string[] : filterParsed?.split(",") ?? [];
 
-    const queryParsed = searchParsed.query || "";
-    const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
+        const stagesParsed = searchParsed.stages || null;
+        const stages = Array.isArray(stagesParsed) ? stagesParsed.filter(x => !!x) as string[] : stagesParsed?.split(",") ?? [];
 
-    const filterParsed = (searchParsed.types || (TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry + "," + TAG_ID.biology));
-    const filters = (Array.isArray(filterParsed) ? filterParsed[0] || "" : filterParsed || "").split(",");
+        return [query, filters, stages];
+    }, [searchParsed]);
 
-    const physics = filters.includes(TAG_ID.physics);
-    const maths = filters.includes(TAG_ID.maths);
-    const chemistry = filters.includes(TAG_ID.chemistry);
-    const biology = filters.includes(TAG_ID.biology);
+    const applicableTags = pageContext?.subject && pageContext?.stage?.length === 1
+        ? [
+            ...tags.getChildren(subjectToTagMap[pageContext.subject]), 
+            ...((SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject][pageContext.stage[0]]?.map(tag => tags.getById(tag))) || [])
+        ]
+        : [...tags.allSubjectTags, ...tags.allFieldTags];
 
     const [searchText, setSearchText] = useState(query);
-    const [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
-    const [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
-    const [conceptFilterChemistry, setConceptFilterChemistry] = useState(chemistry);
-    const [conceptFilterBiology, setConceptFilterBiology] = useState(biology);
+    const [conceptFilters, setConceptFilters] = useState<Tag[]>(applicableTags.filter(f => filters.includes(f.id)));
+    const [searchStages, setSearchStages] = useState<Stage[]>(getFilteredStageOptions().filter(s => stages.includes(s.value)).map(s => s.value));
     const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
+
+    const tagIds = useMemo(() => (pageContext?.subject && pageContext?.stage?.length === 1
+        ? [pageContext?.subject, ...(SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext.subject][pageContext.stage[0]] ?? [])]
+        : tags.allSubjectTags.map(t => t.id)).join(","), [pageContext]
+    );
+
+    const listConceptsQuery = useListConceptsQuery(pageContext 
+        ? {conceptIds: undefined, tagIds}
+        : skipToken
+    );
+
+    const shortcutAndFilter = (concepts?: ContentSummaryDTO[], excludeTopicFiltering?: boolean, excludeStageFiltering?: boolean) => {
+        const searchResults = concepts?.filter(c =>
+            (matchesAllWordsInAnyOrder(c.title, searchText || "") || matchesAllWordsInAnyOrder(c.summary, searchText || ""))
+        );
+
+        const filteredSearchResults = searchResults
+            ?.filter((result) => excludeTopicFiltering || !filters.length || result?.tags?.some(t => filters.includes(t)))
+            .filter((result) => excludeStageFiltering || !searchStages.length || searchStages.some(s => result.audience?.some(a => a.stage?.includes(s))))
+            .filter((result) => !pageContext?.stage?.length || isRelevantToPageContext(result.audience, pageContext))
+            .filter((result) => searchResultIsPublic(result, user));
+    
+        const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
+
+        return shortcutAndFilteredSearchResults;
+    };
+    
+    const filterTags = useMemo(() => [
+        conceptFilters.map(t => ({ value: t.id, label: t.title })), 
+        searchStages.map(s => ({ value: s, label: stageLabelMap[s] }))
+    ].flat()
+    , [conceptFilters, searchStages]);
+
+    const removeFilterTag = (value: string) => {
+        setConceptFilters(conceptFilters.filter(f => f.id !== value));
+        setSearchStages(searchStages.filter(s => s !== value));
+    };
+    
+    const clearFilters = () => {
+        setConceptFilters([]);
+        setSearchStages([]);
+    };
+    
+    const tagCounts : Record<string, number> = [
+        ...applicableTags, 
+        ...(pageContext?.subject ? [tags.getById(pageContext?.subject as TAG_ID)] : [])
+    ].reduce((acc, t) => ({
+        ...acc, 
+        // we exclude topics when filtering here to avoid selecting a filter changing the tag counts
+        [t.id]: shortcutAndFilter(listConceptsQuery?.data?.results, true, false)?.filter(c => c.tags?.includes(t.id)).length || 0
+    }), {});
+
+    const stageCounts = getFilteredStageOptions().reduce((acc, s) => ({
+        ...acc,
+        // we exclude stages when filtering here to avoid selecting a filter changing the tag counts
+        [s.value]: shortcutAndFilter(listConceptsQuery?.data?.results, false, true)?.filter(c => c.audience?.some(a => a.stage?.includes(s.value)))?.length || 0
+    }), {});
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {
             e.preventDefault();
         }
-        if (searchText != query || conceptFilterPhysics != physics || conceptFilterMaths != maths || conceptFilterChemistry != chemistry || conceptFilterBiology != biology) {
-            pushConceptsToHistory(history, searchText || "", conceptFilterPhysics, conceptFilterMaths, conceptFilterChemistry, conceptFilterBiology);
-        }
+        pushConceptsToHistory(history, searchText || "", [...conceptFilters.map(f => f.id)], searchStages);
+
         if (searchText) {
             setShortcutResponse(shortcuts(searchText));
         }
@@ -61,83 +136,65 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         };
     }, [searchText]);
 
-    useEffect(() => {doSearch();}, [conceptFilterPhysics, conceptFilterMaths, conceptFilterChemistry, conceptFilterBiology]);
+    useEffect(() => doSearch(), [conceptFilters, searchStages]);
 
-    const searchResults = concepts
-        ?.filter(c =>
-            matchesAllWordsInAnyOrder(c.title, searchText || "") ||
-            matchesAllWordsInAnyOrder(c.summary, searchText || "")
-        );
-
-    const filteredSearchResults = searchResults
-        ?.filter((result) => result?.tags?.some(t => filters.includes(t)))
-        .filter((result) => searchResultIsPublic(result, user));
-
-    const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
+    const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
+    const sidebarProps = {searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts};
 
     return (
-        <Container id="search-page">
-            <Row>
-                <Col>
-                    <TitleAndBreadcrumb currentPageTitle="Concepts" />
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Form className="form-inline" onSubmit={doSearch}>
-                        <Input
-                            className='search--filter-input mt-4'
-                            type="search" value={searchText || ""}
-                            placeholder="Search concepts"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+        <Container id="search-page" { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
+            <TitleAndBreadcrumb 
+                currentPageTitle="Concepts" 
+                intermediateCrumbs={crumb ? [crumb] : undefined}
+                icon={{type: "hex", icon: "icon-concept"}}
+            />
+            <SidebarLayout>
+                {pageContext?.subject 
+                    ? <SubjectSpecificConceptListSidebar {...sidebarProps} hideButton /> 
+                    : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>
+                }
+                <MainContent>
+                    <PageMetadata noTitle showSidebarButton>
+                        {pageContext?.subject 
+                            ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
+                                <p className="me-0 me-lg-3">
+                                    The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.
+                                    You can browse all concepts <Link to="/concepts">here</Link>.
+                                </p>
+                            </div> 
+                            : <p>Use our concept finder to explore all concepts on the Isaac platform.</p>
+                        }
+                    </PageMetadata>
+                    {isPhy && !pageContext?.subject && (!pageContext?.stage || pageContext.stage.length === 0) && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
+                    
+                    <ResultsListContainer>
+                        <ShowLoadingQuery
+                            query={listConceptsQuery}
+                            thenRender={({results: concepts}) => {
+
+                                const shortcutAndFilteredSearchResults = shortcutAndFilter(concepts);
+
+                                return <>
+                                    {!!shortcutAndFilteredSearchResults.length && <ResultsListHeader>
+                                        Showing <b>{shortcutAndFilteredSearchResults.length}</b> results
+                                    </ResultsListHeader>}
+
+                                    {shortcutAndFilteredSearchResults.length
+                                        ? isPhy
+                                            ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
+                                            : <LinkToContentSummaryList 
+                                                items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
+                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
+                                            />
+                                        : <em>No results found</em>
+                                    }
+                                </>;
+                            }}
+                            defaultErrorTitle="Error fetching concepts"
                         />
-                    </Form>
-                </Col>
-            </Row>
-            <Row className="mb-4">
-                <Col className="py-4">
-                    <Card>
-                        <CardHeader className="search-header">
-                            <Col lg={4} md={3} xs={12}>
-                                <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
-                                </h3>
-                            </Col>
-                            <Col lg={8} md={9} xs={12}>
-                                <Form id="concept-filter" className="form-inline search-filters">
-                                    <Label for="concept-filter" className="d-none d-sm-inline-block">Filter:</Label>
-                                    <Label>
-                                        <Input id="problem-search-phy" type="checkbox" defaultChecked={conceptFilterPhysics} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterPhysics(e.target.checked)} />
-                                        <span className="visually-hidden">Show </span>Physics<span className="visually-hidden"> concept</span>
-                                    </Label>
-                                    <Label>
-                                        <Input id="concept-search-maths" type="checkbox" defaultChecked={conceptFilterMaths} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterMaths(e.target.checked)} />
-                                        <span className="visually-hidden">Show </span>Maths<span className="visually-hidden"> concept</span>
-                                    </Label>
-                                    <Label>
-                                        <Input id="concept-search-chem" type="checkbox" defaultChecked={conceptFilterChemistry} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterChemistry(e.target.checked)} />
-                                        <span className="visually-hidden">Show </span>Chemistry<span className="visually-hidden"> concept</span>
-                                    </Label>
-                                    <Label>
-                                        <Input id="concept-search-bio" type="checkbox" defaultChecked={conceptFilterBiology} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterBiology(e.target.checked)} />
-                                        <span className="visually-hidden">Show </span>Biology<span className="visually-hidden"> concept</span>
-                                    </Label>
-                                </Form>
-                            </Col>
-                        </CardHeader>
-                        <CardBody>
-                            <ShowLoading until={shortcutAndFilteredSearchResults}>
-                                {shortcutAndFilteredSearchResults ?
-                                    <LinkToContentSummaryList 
-                                        items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
-                                        contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                    />
-                                    : <em>No results found</em>}
-                            </ShowLoading>
-                        </CardBody>
-                    </Card>
-                </Col>
-            </Row>
+                    </ResultsListContainer>
+                </MainContent>
+            </SidebarLayout>
         </Container>
     );
 });

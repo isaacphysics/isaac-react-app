@@ -15,7 +15,7 @@ import {
     Stage,
     UserRole
 } from "../../IsaacApiTypes";
-import {isPhy, siteSpecific} from "./";
+import {isPhy, SITE_TITLE_SHORT, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 
 export const STAGING_URL = siteSpecific(
@@ -23,7 +23,7 @@ export const STAGING_URL = siteSpecific(
     "https://staging.adacomputerscience.org"
 );
 
-// eslint-disable-next-line no-undef
+
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
 /*
@@ -64,7 +64,7 @@ export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/compare";
 
 export const { trackPageview, trackEvent } = Plausible(
     {
-        apiHost: siteSpecific("https://plausible.isaacphysics.org", "https://plausible.adacomputerscience.org"),
+        apiHost: siteSpecific("https://plausible.isaacscience.org", "https://plausible.adacomputerscience.org"),
     }
 );
 
@@ -85,7 +85,7 @@ export const SOCIAL_LINKS = siteSpecific(
 // Change to "http://localhost:3000" if you want to run a local version of the code editor
 export const CODE_EDITOR_BASE_URL = "https://code-editor.ada-cs.org";
 
-export const API_REQUEST_FAILURE_MESSAGE = `There may be an error connecting to the ${siteSpecific("Isaac", "Ada")} platform.`;
+export const API_REQUEST_FAILURE_MESSAGE = `There may be an error connecting to the ${SITE_TITLE_SHORT} platform.`;
 export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attempts at this question. Please try again later!";
 
 export const NOT_FOUND: NOT_FOUND_TYPE = 404;
@@ -238,10 +238,6 @@ export enum ACTION_TYPE {
     GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS = "GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS",
     GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE = "GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE",
 
-    CONCEPTS_REQUEST = "CONCEPTS_REQUEST",
-    CONCEPTS_RESPONSE_SUCCESS = "CONCEPTS_RESPONSE_SUCCESS",
-    CONCEPTS_RESPONSE_FAILURE = "CONCEPTS_RESPONSE_FAILURE",
-
     // Different ways of loading attempts, but ultimately either an attempt is loaded or it isn't
     QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST = "QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST",
     QUIZ_START_FREE_ATTEMPT_REQUEST = "QUIZ_START_FREE_ATTEMPT_REQUEST",
@@ -332,7 +328,7 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
     [EXAM_BOARD.SQA]: "SQA",
-    [EXAM_BOARD.ADA]: "Ada",
+    [EXAM_BOARD.ADA]: "Ada CS",
     [EXAM_BOARD.ALL]: "All exam boards",
 };
 
@@ -446,6 +442,185 @@ export enum SUBJECTS {
     BIOLOGY = 'biology',
     CS = 'computer_science'
 }
+
+export const HUMAN_SUBJECTS: {[key: string]: string} = {
+    [SUBJECTS.PHYSICS]: 'Physics',
+    [SUBJECTS.MATHS]: 'Maths',
+    [SUBJECTS.CHEMISTRY]: 'Chemistry',
+    [SUBJECTS.BIOLOGY]: 'Biology',
+    [SUBJECTS.CS]: 'Computer Science'
+};
+
+export enum LEARNING_STAGE {
+    "11_TO_14" = "11_14",
+    GCSE = "gcse",
+    A_LEVEL = "a_level",
+    UNIVERSITY = "university",
+}
+
+export const Subjects = ["physics", "maths", "chemistry", "biology"] as const;
+export type Subject = typeof Subjects[number];
+export type SiteTheme = Subject | "neutral";
+
+export const LearningStages = ["11_14", "gcse", "a_level", "university"] as const;
+export type LearningStage = typeof LearningStages[number];
+
+export const STAGE_TO_LEARNING_STAGE: {[stage in STAGE]: LearningStage | undefined} = {
+    year_7_and_8: "11_14",
+    year_9: "11_14",
+    gcse: "gcse",
+    a_level: "a_level",
+    further_a: "a_level",
+    university: "university",
+    all: undefined,
+
+    // ada-only stages need to be here for typing, but shouldn't be used
+    scotland_national_5: "gcse",
+    scotland_higher: "a_level",
+    scotland_advanced_higher: "a_level",
+    core: "gcse",
+    advanced: "a_level",
+};
+
+export const LEARNING_STAGE_TO_STAGES: {[stage in LearningStage]: STAGE[]} = {
+    "11_14": [STAGE.YEAR_7_AND_8, STAGE.YEAR_9],
+    gcse: [STAGE.GCSE, STAGE.SCOTLAND_NATIONAL_5, STAGE.CORE],
+    a_level: [STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.ADVANCED],
+    university: [STAGE.UNIVERSITY],
+};
+
+export const HUMAN_STAGES: {[key: string]: string} = {
+    "11_14": "11-14",
+    "gcse": "GCSE",
+    "a_level": "A\u00A0Level",
+    "university": "University",
+};
+
+export const PHY_NAV_SUBJECTS = {
+    [SUBJECTS.PHYSICS]: [LEARNING_STAGE["11_TO_14"], LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
+    [SUBJECTS.MATHS]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
+    [SUBJECTS.CHEMISTRY]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
+    [SUBJECTS.BIOLOGY]: [LEARNING_STAGE.A_LEVEL],
+} as const;
+
+export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) => {
+    acc[stage.valueOf() as LEARNING_STAGE] = Object.keys(PHY_NAV_SUBJECTS).filter(subject => (PHY_NAV_SUBJECTS[subject as keyof typeof PHY_NAV_SUBJECTS] as readonly LEARNING_STAGE[]).includes(stage as LEARNING_STAGE)) as Exclude<SUBJECTS, SUBJECTS.CS>[];
+    return acc;
+}, {} as {[stage in LEARNING_STAGE]: Exclude<SUBJECTS, SUBJECTS.CS>[]});
+
+type BookTag = "phys_book_step_into" | "phys_book_step_up" | "phys_book_gcse" | "physics_skills_19" | "solving_physics_problems" | "physics_linking_concepts" | "qmp" | "maths_book_gcse" | "maths_book_2e" | "maths_book" | "chemistry_16";
+export enum BookHiddenState {
+    BOOKS_LISTING_ONLY = "books_listing_only",
+    HIDDEN = "hidden"
+}
+export interface BookInfo {
+    title: string;
+    shortTitle: string;
+    description?: string;
+    tag: BookTag;
+    image: string;
+    path: string;
+    subject: Subject;
+    stages: LearningStage[];
+    hidden?: BookHiddenState;
+}
+
+export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
+    [
+        {
+            title: "Step into Physics", tag: "phys_book_step_into",
+            shortTitle: "Step into Physics", image: "/assets/phy/books/2025_step_into_physics.png",
+            path: "/books/step_into_phys", subject: "physics", stages: ["11_14"],
+            description: "Aimed principally at KS3, but also works well with foundation students at GCSE.",
+        },
+        {
+            title: "Step Up to GCSE Physics", tag: "phys_book_step_up",
+            shortTitle: "Step Up to GCSE Physics", image: "/assets/phy/books/2025_step_up_phys.png",
+            path: "/books/step_up_phys", subject: "physics", stages: ["11_14", "gcse"],
+            description: "Aimed principally at Year 9 students but also works well for the transition to GCSE.",
+        },
+        {
+            title: "Essential GCSE Physics", tag: "phys_book_gcse",
+            shortTitle: "GCSE Physics", image: "/assets/phy/books/2025_phys_book_gcse.png",
+            path: "/books/phys_book_gcse", subject: "physics", stages: ["gcse"],
+            description: "Helps students to practise applying the GCSE Physics concepts to numerical problems.",
+        },
+        {
+            title: "Using Essential GCSE Mathematics", tag: "maths_book_gcse",
+            shortTitle: "GCSE Maths", image: "/assets/phy/books/2025_maths_book_gcse.png",
+            path: "/books/maths_book_gcse", subject: "maths", stages: ["gcse"],
+            description: "Develops the maths skills needed to succeed in science at GCSE level and beyond. Also useful for teaching GCSE maths.",
+        },
+        {
+            title: "Essential Pre-University Physics", tag: "physics_skills_19",
+            shortTitle: "A Level Physics (3rd edition)", image: "/assets/phy/books/2025_physics_skills_19.png",
+            path: "/books/physics_skills_19", subject: "physics", stages: ["a_level"],
+            description: "Covers core topics in A level, IB, and equivalent. Helps students practise applying the concepts of A-level Physics and apply them to solve numerical problems.",
+        },
+        {
+            title: "Pre-University Mathematics for Sciences (2nd edition)", tag: "maths_book_2e",
+            shortTitle: "Pre-Uni Maths (2nd edition)", image: "/assets/phy/books/2025_pre_uni_maths_2e.png",
+            path: "/books/pre_uni_maths_2e", subject: "maths", stages: ["a_level", "university"],
+            description: "Provides questions on mathematical topics that underpin all the sciences, as well as giving practice and fluency for Maths and Further Maths A-levels themselves.",
+        },
+        {
+            title: "Pre-University Mathematics for Sciences (1st edition)", tag: "maths_book",
+            shortTitle: "Pre-Uni Maths (1st edition)", image: "/assets/phy/books/pre_uni_maths.jpg",
+            path: "/books/pre_uni_maths", subject: "maths", stages: ["a_level", "university"],
+            hidden: BookHiddenState.HIDDEN,
+        },
+        {
+            title: "Linking Concepts in Pre-University Physics", tag: "physics_linking_concepts",
+            shortTitle: "Linking Concepts in Pre-Uni Physics", image: "/assets/phy/books/linking_concepts.png",
+            path: "/books/linking_concepts", subject: "physics", stages: ["a_level", "university"],
+            description: "Provides practice and guidance in using more than one physics idea to solve problems.",
+        },
+        {
+            title: "Essential Pre-University Physical Chemistry", tag: "chemistry_16",
+            shortTitle: "A Level Physical Chemistry", image: "/assets/phy/books/2025_chemistry_16.png",
+            path: "/books/chemistry_16", subject: "chemistry", stages: ["a_level"],
+            description: "Helps students to practise applying the concepts of physics and physical chemistry included in typical Sixth Form and GCSE courses.",
+        },
+        {
+            title: "A Cavendish Quantum Mechanics Primer", tag: "qmp",
+            shortTitle: "Quantum Mechanics Primer", image: "/assets/phy/books/2025_quantum_mechanics_primer.png",
+            path: "/books/quantum_mechanics_primer", subject: "physics", stages: ["a_level", "university"],
+            description: "Mathematical introduction to quantum mechanics accessible to sixth form students with support.",
+            hidden: BookHiddenState.BOOKS_LISTING_ONLY,
+        },
+        {
+            title: "How to Solve Physics Problems", tag: "solving_physics_problems",
+            shortTitle: "How to Solve Physics Problems", image: "/assets/phy/books/solving_physics_problems.jpg",
+            path: "/books/solve_physics_problems", subject: "physics", stages: ["a_level", "university"],
+            description: "Only available in print. Examples of worked solutions, similar to problem online but not solutions to any of our online questions.",
+            hidden: BookHiddenState.BOOKS_LISTING_ONLY,
+        },
+    ] as const,
+    [] as const
+);
+
+export const ISAAC_BOOKS_BY_TAG: {[tag in BookTag]: BookInfo} = ISAAC_BOOKS.reduce((acc, book) => {
+    acc[book.tag] = book;
+    return acc;
+}, {} as {[tag in BookTag]: BookInfo});
+
+export const BOOK_DETAIL_ID_SEPARATOR = "__";
+
+export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNING_STAGE, string>>>> = { 
+    "physics": {
+        [LEARNING_STAGE["11_TO_14"]]: "app_page_overview_ks3_phys",
+        [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_phys_fragment",
+    },
+    "maths": {
+        // [LEARNING_STAGE["11_TO_14"]]: "app_page_overview_ks3_maths_fragment",
+        [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_maths_fragment",
+        [LEARNING_STAGE.A_LEVEL]: "app_page_overview_alevel_maths_fragment",
+    },
+    "chemistry": {
+        [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_chem_fragment",
+        [LEARNING_STAGE.A_LEVEL]: "app_page_overview_alevel_chem_fragment",
+    },
+};
 
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
@@ -767,10 +942,18 @@ export enum TAG_LEVEL {
     topic = "topic",
 }
 
+// A mapping used to define tags which should be treated as children of a subject, but only in that subject-specific context
+export const SUBJECT_SPECIFIC_CHILDREN_MAP: Record<SUBJECTS, Partial<Record<LearningStage, TAG_ID[]>>> = {
+    [SUBJECTS.MATHS]: {[LEARNING_STAGE.A_LEVEL]: [TAG_ID.mechanics]},
+    [SUBJECTS.PHYSICS]: {}, [SUBJECTS.CHEMISTRY]: {}, [SUBJECTS.BIOLOGY]: {}, [SUBJECTS.CS]: {}
+};
+
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
     FAST_TRACK_QUESTION = "isaacFastTrackQuestionPage",
+    BOOK_INDEX_PAGE = "isaacBookIndexPage",
+    REVISION = "isaacRevisionDetailPage",
     EVENT = "isaacEventPage",
     TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
@@ -780,16 +963,27 @@ export function isAQuestionLikeDoc(doc: ContentDTO): doc is IsaacQuestionPageDTO
     return doc.type === DOCUMENT_TYPE.QUESTION || doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 }
 
-export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
+export enum SEARCH_RESULT_TYPE {
+    SHORTCUT = "shortcut",
+    GAMEBOARD = "gameboard",
+    BOOK_DETAIL_PAGE = "isaacBookDetailPage",
+}
 
-export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
+export type SearchableDocumentType = DOCUMENT_TYPE | SEARCH_RESULT_TYPE;
+
+export const documentDescription: {[documentType in SearchableDocumentType]: string} = {
     [DOCUMENT_TYPE.CONCEPT]: "Concepts",
     [DOCUMENT_TYPE.QUESTION]: "Questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
+    [DOCUMENT_TYPE.BOOK_INDEX_PAGE]: "Books",
+    [DOCUMENT_TYPE.REVISION]: "Revision",
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
     [DOCUMENT_TYPE.GENERIC]: "Other pages",
     [DOCUMENT_TYPE.QUIZ]: "Tests",
+    [SEARCH_RESULT_TYPE.SHORTCUT]: "Shortcuts",
+    [SEARCH_RESULT_TYPE.GAMEBOARD]: "Gameboards",
+    [SEARCH_RESULT_TYPE.BOOK_DETAIL_PAGE]: "Book sections",
 };
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
@@ -797,6 +991,8 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.CONCEPT]: "concepts",
     [DOCUMENT_TYPE.QUESTION]: "questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "questions",
+    [DOCUMENT_TYPE.BOOK_INDEX_PAGE]: "books",
+    [DOCUMENT_TYPE.REVISION]: "revision",
     [DOCUMENT_TYPE.EVENT]: "events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics",
     [DOCUMENT_TYPE.QUIZ]: "quiz",
@@ -842,10 +1038,13 @@ export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
+export const GENERIC_QUESTION_CRUMB = {title: "Questions", to: "/questions"};
+export const GENERIC_CONCEPT_CRUMB = {title: "Concepts", to: siteSpecific("/concepts", "")};
 export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
-    {title: "Assignment Progress", to: "/assignment_progress"},
+    {title: "Assignment progress", to: "/assignment_progress"},
     {title: "Markbook", to: "/my_markbook"}
 );
+export const BOOKS_CRUMB = {title: "Books", to: "/books"};
 
 export const UserFacingRole: {[role in UserRole]: string} = {
     ADMIN: "admin",
@@ -879,13 +1078,13 @@ export enum sortIcon {
 }
 
 export enum EventStatusFilter {
-    "All events" = "all",
     "Upcoming events" = "upcoming",
     "My booked events" = "showBookedOnly",
-    "My event reservations" = "showReservationsOnly"
+    "My event reservations" = "showReservationsOnly",
+    "All events" = "all"
 }
 export enum EventTypeFilter {
-    "All events" = "all",
+    "All groups" = "all",
     "Student events" = "student",
     "Teacher events" = "teacher",
     "Online tutorials" = "virtual",
@@ -958,8 +1157,8 @@ export const specificDoughnutColours: { [key: string]: string } = siteSpecific(
     {
         "Physics": "#944cbe",
         "Maths": "#007fa9",
-        "Chemistry": "#e22e25",
-        "Biology": "#005210",
+        "Chemistry": "#b7236d",
+        "Biology": "#127025",
         [difficultyLabelMap.practice_1]: "#509e2e",
         [difficultyLabelMap.practice_2]: "#3b6e25",
         [difficultyLabelMap.practice_3]: "#27421a",
@@ -974,10 +1173,10 @@ export const doughnutColours = siteSpecific(
     [
         "#944cbe",
         "#007fa9",
-        "#e22e25",
-        "#005210",
-        "#991846",
-        "#fea100"
+        "#b7236d",
+        "#127025",
+        "#001f47",
+        "#fea102"
     ],
     [
         "#870D5A",
@@ -991,7 +1190,7 @@ export const doughnutColours = siteSpecific(
 );
 
 export const progressColour = siteSpecific(
-    '#509E2E',
+    '#3a8621',
     '#000000'
 );
 
@@ -1009,29 +1208,35 @@ export const FEATURED_NEWS_TAG = "featured";
 
 export const NEWS_PODS_PER_PAGE = 12; // <= api.MAX_PODS_TO_RETURN (if lower, the backend will still return the maximum number of pods, but they won't be displayed in the frontend)
 
-export const PATHS = siteSpecific({
-    ASSIGNMENT_PROGRESS: "/assignment_progress",
-    MY_GAMEBOARDS: "/my_gameboards",
-    MY_ASSIGNMENTS: "/assignments",
-    QUESTION_FINDER: "/questions",
-    GAMEBOARD_FILTER: "/gameboards/new",
-    GAMEBOARD: "/gameboards",
-    SET_ASSIGNMENTS: "/set_assignments",
-    GAMEBOARD_BUILDER: "/gameboard_builder",
-    ADD_GAMEBOARD: "/add_gameboard",
+export const PATHS = {
+    // Site-specific paths
+    ...siteSpecific({
+        ASSIGNMENT_PROGRESS: "/assignment_progress",
+        MY_GAMEBOARDS: "/my_question_decks",
+        MY_ASSIGNMENTS: "/assignments",
+        QUESTION_FINDER: "/questions",
+        GAMEBOARD_FILTER: "/question_decks/new",
+        GAMEBOARD: "/question_decks",
+        SET_ASSIGNMENTS: "/set_assignments",
+        GAMEBOARD_BUILDER: "/question_deck_builder",
+        ADD_GAMEBOARD: "/add_question_deck",
+    },
+    {
+        ASSIGNMENT_PROGRESS: "/my_markbook",
+        MY_GAMEBOARDS: "/quizzes",
+        MY_ASSIGNMENTS: "/assignments",
+        QUESTION_FINDER: "/questions",
+        GAMEBOARD_FILTER: "/quizzes/new",
+        GAMEBOARD: "/quizzes/view",
+        SET_ASSIGNMENTS: "/quizzes/set",
+        GAMEBOARD_BUILDER: "/quizzes/builder",
+        ADD_GAMEBOARD: "/quizzes/add",
+    }),
+    // Common paths
+    MANAGE_GROUPS: "/groups",
+    TEST: "/test/assignment",
     PREVIEW_TEST: "/test/preview",
-}, {
-    ASSIGNMENT_PROGRESS: "/my_markbook",
-    MY_GAMEBOARDS: "/quizzes",
-    MY_ASSIGNMENTS: "/assignments",
-    QUESTION_FINDER: "/questions",
-    GAMEBOARD_FILTER: "/quizzes/new",
-    GAMEBOARD: "/quizzes/view",
-    SET_ASSIGNMENTS: "/quizzes/set",
-    GAMEBOARD_BUILDER: "/quizzes/builder",
-    ADD_GAMEBOARD: "/quizzes/add",
-    PREVIEW_TEST: "/test/preview",
-});
+};
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
@@ -1056,10 +1261,11 @@ export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "GOOGLE": "Google",
     "RAVEN": "Raven",
     "TEST": "Test",
-    "SEGUE": "your email address and password"
+    "MICROSOFT": "Microsoft",
+    "SEGUE": "your email address and password",
 };
 
-export const AUTHENTICATOR_PROVIDERS : AuthenticationProvider[] = siteSpecific(["GOOGLE"], ["RASPBERRYPI", "GOOGLE"]);
+export const AUTHENTICATOR_PROVIDERS : AuthenticationProvider[] = siteSpecific(["GOOGLE", "MICROSOFT"], ["RASPBERRYPI", "GOOGLE"]);
 
 export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023
 

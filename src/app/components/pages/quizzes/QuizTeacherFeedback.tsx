@@ -1,45 +1,58 @@
-import React, { useContext } from "react";
+import React, {useContext, useState} from "react";
 import {
     getRTKQueryErrorMessage,
     useGetQuizAssignmentWithFeedbackQuery,
     useUpdateQuizAssignmentMutation
 } from "../../../state";
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {AssignmentProgressDTO, ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
-import {AssignmentProgressLegend} from '../AssignmentProgress';
+import {
+    AssignmentProgressDTO,
+    ContentBaseDTO,
+    IsaacQuizDTO,
+    IsaacQuizSectionDTO,
+    QuizAssignmentDTO,
+    QuizFeedbackMode,
+    RegisteredUserDTO,
+    UserSummaryDTO
+} from "../../../../IsaacApiTypes";
 import {
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
-    siteSpecific,
-    isDefined,
-    nthHourOf,
-    TODAY,
-    useAssignmentProgressAccessibilitySettings,
+    isAuthorisedFullAccess,
+    isPhy,
     isQuestion,
-    PATHS,
-    isAuthorisedFullAccess
+    nthHourOf,
+    siteSpecific,
+    TODAY,
+    useAssignmentProgressAccessibilitySettings
 } from "../../../services";
-import {AuthorisedAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
+import {
+    AssignmentProgressPageSettingsContext,
+    AuthorisedAssignmentProgress,
+    QuizFeedbackModes
+} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {formatDate} from "../../elements/DateString";
-import {Spacer} from "../../elements/Spacer";
-import {ResultsTable, passMark} from "../../elements/quiz/QuizProgressCommon";
+import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
 import {
     Alert,
     Button,
-    Col,
+    Card,
     Container,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
     Label,
-    Row,
     UncontrolledButtonDropdown
 } from "reactstrap";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
+import {AssignmentProgressSettings, markClassesInternal} from "../AssignmentProgressIndividual";
+import classNames from "classnames";
+import {Spacer} from "../../elements/Spacer";
+import {CollapsibleContainer} from "../../elements/CollapsibleContainer";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.
@@ -72,37 +85,39 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const quizTitle = (quizAssignment?.quiz?.title || quizAssignment?.quiz?.id || "Test") + (assignmentNotYetStarted ? ` (starts ${formatDate(assignmentStartDate)})` : " results");
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
-        <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
         <Alert color="danger">
             <h4 className="alert-heading">Error loading test feedback</h4>
             <p>{getRTKQueryErrorMessage(error)?.message}</p>
         </Alert>
     </>;
 
+    const [settingsVisible, setSettingsVisible] = useState(true);
+
     return <Container>
+        <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs} icon={{type: "hex", icon: quizAssignmentQuery?.isError ? "icon-error" : "icon-tests"}}/>
         <ShowLoadingQuery
             query={quizAssignmentQuery}
             ifError={buildErrorComponent}
             thenRender={quizAssignment => <>
-                <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
-                <div className="d-flex mb-4">
-                    <span>
-                        Set by: {extractTeacherName(quizAssignment.assignerSummary)} on {formatDate(quizAssignment.creationDate)}
-                    </span>
-                    {isDefined(quizAssignment.dueDate) && <><Spacer/>Due: {formatDate(quizAssignment.dueDate)}</>}
-                </div>
-                {assignmentNotYetStarted && <div className="mb-4">
-                    <h4 className="alert-heading">This test has not yet started</h4>
-                    <p>It will be released to your group on {formatDate(assignmentStartDate)}.</p>
+                {assignmentNotYetStarted && <div className="mb-4 alert alert-info px-3 py-2 mt-4">
+                    <span className="alert-heading fw-bold">This test has not yet started. </span>
+                    <span>It will be released to your group on {formatDate(assignmentStartDate)}.</span>
                 </div>}
-                <Row>
-                    {quizAssignment.dueDate && <Col xs={12} sm={6} md={4}>
-                        <p>Due date: {formatDate(quizAssignment.dueDate)}</p>
-                    </Col>}
-                    <Col>
+
+                <div className="content-metadata-container d-flex flex-column flex-md-row">
+                    <div className="d-flex flex-column pb-3 pb-md-0 px-3 flex-grow-1 justify-content-center">
+                        <span>
+                            Set by: {extractTeacherName(quizAssignment.assignerSummary)} on {formatDate(quizAssignment.creationDate)}
+                        </span>
+                        {quizAssignment.dueDate && <span>
+                            Due date: {formatDate(quizAssignment.dueDate)}
+                        </span>}
+                    </div>
+
+                    <div className="px-3 py-3 py-md-0 text-md-center justify-content-center">
                         <Label for="feedbackMode" className="pe-1">Student feedback mode:</Label><br/>
                         <UncontrolledButtonDropdown size="sm">
-                            <DropdownToggle color={siteSpecific("tertiary", "secondary")} className={siteSpecific("border", "")} caret size={siteSpecific("lg", "sm")} disabled={isUpdatingQuiz}>
+                            <DropdownToggle color={siteSpecific("tertiary", "solid")} className={siteSpecific("border", "")} caret size={siteSpecific("lg", "sm")} disabled={isUpdatingQuiz}>
                                 {feedbackNames[quizAssignment.quizFeedbackMode as QuizFeedbackMode]}
                             </DropdownToggle>
                             <DropdownMenu>
@@ -116,21 +131,41 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                                 )}
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
-                    </Col>
-                    <Col sm={12} md={"auto"} className={"text-end mt-2 mt-md-0"}>
+                    </div>
+
+                    <div className="px-3 pt-3 pt-md-0 align-content-center">
                         <Button
-                            color="primary" outline className="btn-md mt-1 text-nowrap"
+                            color={siteSpecific("solid", "keyline")} className="btn-md mt-1 text-nowrap"
                             href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
                             target="_blank"
                         >
                             Export as CSV
                         </Button>
-                    </Col>
-                </Row>
+                    </div>
+                </div>
+
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-                        <AssignmentProgressLegend showQuestionKey />
-                        <QuizProgressDetails assignment={quizAssignment} />
+                        {/* <AssignmentProgressLegend showQuestionKey /> */}
+                        <Card className="p-4 my-3">
+                            <div className="d-flex mb-3">
+                                {siteSpecific(
+                                    <h4>Group results</h4>,
+                                    <h3>Group results</h3>
+                                )}
+                                <Spacer />
+                                {isPhy && <button onClick={() => setSettingsVisible(o => !o)} className="d-flex align-items-center bg-transparent gap-2 invert-underline">
+                                    {settingsVisible ? "Hide settings" : "Show settings"}
+                                    <i className={classNames("icon icon-cog anim-rotate-45", { "active": settingsVisible })}/>
+                                </button>}
+                            </div>
+                            {isPhy && <CollapsibleContainer expanded={settingsVisible} className="w-100">
+                                <div className="py-3">
+                                    <AssignmentProgressSettings />
+                                </div>
+                            </CollapsibleContainer>}
+                            <QuizProgressDetails assignment={quizAssignment} />
+                        </Card>
                     </AssignmentProgressPageSettingsContext.Provider>
                 </div>
             </>}
@@ -145,6 +180,7 @@ interface QuizQuestion extends ContentBaseDTO {
 export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO}) => {
 
     const questions : QuizQuestion[] = questionsInQuiz(assignment.quiz).map(q => ({...q, questionPartsTotal: 1} as QuizQuestion));
+    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
 
     function questionsInSection(section?: IsaacQuizSectionDTO) {
         return section?.children?.filter(isQuestion) || [];
@@ -160,22 +196,6 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         return questions;
     }
 
-    function markClassesInternal(studentProgress: AssignmentProgressDTO, correctParts: number, incorrectParts: number, totalParts: number) {
-        if (!isAuthorisedFullAccess(studentProgress)) {
-            return "revoked";
-        } else if (correctParts === totalParts) {
-            return "completed";
-        } else if ((correctParts / totalParts) >= passMark) {
-            return "passed";
-        } else if ((incorrectParts / totalParts) > (1 - passMark)) {
-            return "failed";
-        } else if (correctParts > 0 || incorrectParts > 0) {
-            return "in-progress";
-        } else {
-            return "not-attempted";
-        }
-    }
-
     function markClasses(studentProgress: AssignmentProgressDTO) {
         if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
@@ -185,7 +205,7 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         const incorrectParts = studentProgress.incorrectQuestionPartsCount;
         const total = questions.reduce((acc, q) => acc + (q.questionPartsTotal ?? 0), 0);
 
-        return markClassesInternal(studentProgress, correctParts, incorrectParts, total);
+        return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, null, correctParts, incorrectParts, total);
     }
 
     function markQuestionClasses(studentProgress: AssignmentProgressDTO, index: number) {
@@ -197,77 +217,31 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
         const totalParts = questions[index].questionPartsTotal ?? 0;
 
-        return markClassesInternal(studentProgress, correctParts, incorrectParts, totalParts);
+        return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, null, correctParts, incorrectParts, totalParts);
     }
-
-    const fractionCorrect = (questionId: string) => {
-        if (!assignment.userFeedback) return [0, 0];
-        const marks = assignment.userFeedback.map(row => row.feedback?.questionMarks?.[questionId]);
-        const definedMarks = marks?.filter(isDefined);
-        if (!definedMarks || definedMarks.length === 0) return [0, 0];
-        const correct = definedMarks.reduce((p, c) => p + (c.correct ?? 0), 0);
-        // the multiple is always 1 for now, but if different parts have different marks in future this should still work
-        const total = assignment.userFeedback.length * ((definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) + (definedMarks[0].notAttempted ?? 0));
-        return [correct, total];
-    };
-
-    const fractionAttempted = (questionId: string) => {
-        if (!assignment.userFeedback) return [0, 0];
-        const marks = assignment.userFeedback.map(row => row.feedback?.questionMarks?.[questionId]);
-        const definedMarks = marks?.filter(isDefined);
-        if (!definedMarks || definedMarks.length === 0) return [0, 0];
-        const attempted = definedMarks.reduce((p, c) => p + (c.notAttempted === 0 ? (definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) : 0), 0);
-        const total = assignment.userFeedback.length * ((definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) + (definedMarks[0].notAttempted ?? 0));
-        return [attempted, total];
-    };
-
-    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
-
-    const quizAverages = questions.map(q => {
-        if (!q.id) return 0;
-        if (assignmentProgressContext?.attemptedOrCorrect === "ATTEMPTED") {
-            const [attempted, total] = fractionAttempted(q.id);
-            return total ? Math.round(100 * attempted / total) : 0;
-        } else {
-            const [correct, total] = fractionCorrect(q.id);
-            return total ? Math.round(100 * correct / total) : 0;
-        }
-    });
 
     const totalParts = questions.length;
 
     const progress : AuthorisedAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
+        const partsCorrect = questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? -1]?.correct ?? 0), 0);
         return {
             user: user.user as UserSummaryDTO,
             completed: user.feedback?.complete ?? false,
             // a list of the correct parts of an answer, one list for each question
-            correctPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.correct ?? 0),
-            incorrectPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0),
-            notAttemptedPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.notAttempted ?? 0),
-            results: [],
-            correctQuestionPagesCount: user.feedback?.questionMarks?.[0]?.correct ?? 0,
-            correctQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? 0]?.correct ?? 0), 0),
-            incorrectQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0), 0),
+            correctPartResults:      questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.correct ?? 0),
+            incorrectPartResults:    questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0),
+            notAttemptedPartResults: user.feedback?.complete || user.feedback?.questionMarks !== undefined
+                ? questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.notAttempted ?? 0)
+                // if the quiz has not been completed (i.e. submitted), then all parts are not attempted
+                : questions.map(q => q.questionPartsTotal ?? 0),
+            questionResults: [],
+            correctQuestionPagesCount: partsCorrect,  // quizzes don't have pages, but QuizProgressCommon expects this key to be the "Correct" column value for sorting
+            correctQuestionPartsCount: partsCorrect,
+            incorrectQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0), 0),
         };
     });
 
-    const header = <div className="progress-header">
-        {assignment.userFeedback
-            ? <>
-                <strong>{assignment.userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{assignment.userFeedback.length}</strong>
-                {` students have completed the test `}
-            </>
-            : 'Preview '
-        }
-        <Link to={`${PATHS.PREVIEW_TEST}/${assignment.quizId}/page/1`}>{assignment.quiz?.title}</Link>.
-    </div>;
-
-    const getQuestionTitle = (question: QuizQuestion) => <div key={question.id}>
-        {`Question ${questions.indexOf(question) + 1}`}
-    </div>;
-
     return <ResultsTable<QuizQuestion> assignmentId={assignment.id} duedate={assignment.dueDate} progress={progress}
-        questions={questions} header={header} getQuestionTitle={getQuestionTitle} assignmentAverages={quizAverages}
-        assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
+        questions={questions} assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
         isAssignment={false}/>;
 };

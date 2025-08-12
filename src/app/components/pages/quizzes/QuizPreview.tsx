@@ -1,23 +1,24 @@
 import React, {useCallback, useMemo} from "react";
 import {useGetQuizPreviewQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {isDefined, tags, useQuizQuestions, useQuizSections} from "../../../services";
+import {getThemeFromTags, isDefined, tags, useQuizQuestions, useQuizSections} from "../../../services";
 import {myQuizzesCrumbs, QuizContentsComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizContentsComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {buildErrorComponent} from "../../elements/quiz/buildErrorComponent";
+import { QuizSidebarLayout } from "../../elements/quiz/QuizSidebarLayout";
 
 const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
-    <div className="d-flex border-top pt-2 my-2 align-items-center">
+    <QuizSidebarLayout>
         {isDefined(page)
             ? <QuizPagination {...rest} page={page} pageLink={pageLink} finalLabel="Back to Contents" />
             : <>
                 <Spacer/>
                 <Button color="secondary" tag={Link} to={pageLink(1)}>{"View questions"}</Button>
             </>}
-    </div>;
+    </QuizSidebarLayout>;
 
 const pageHelp = <span>
     Preview the questions on this test.
@@ -51,7 +52,7 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user};
 
-    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
+    return <Container data-testid="quiz-preview" className="mb-7" data-bs-theme={getThemeFromTags(quiz?.tags)}>
         <ShowLoadingQuery query={quizPreviewQuery} ifError={Error}>
             <QuizContentsComponent preview {...subProps} />
             <QuizFooter {...subProps} />

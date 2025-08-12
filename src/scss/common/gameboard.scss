@@ -16,30 +16,6 @@
 }
 
 .list-gameboard {
-  .bg-success {
-    background-color: #dfefd7 !important;
-    a > span:first-of-type {
-      border-color: #ddd;
-    }
-
-    a {
-      // Slightly higher contrast colours to achieve 4.5 contrast ratio with light green background
-      .maths > .text-secondary {
-        color: #017195 !important;
-      }
-      .physics > .text-secondary {
-        color: #8f49b8 !important;
-      }
-      .chemistry > .text-secondary {
-        color: #cb2921 !important;
-      }
-      // Biology green has a 7.88 contrast ratio against the light green background
-      .biology > .text-secondary {
-        color: #005210 !important;
-      }
-    }
-  }
-
   .gameboard-item-icon {
     max-width: 2rem;
     max-height: 2rem;
@@ -63,6 +39,7 @@
   }
 }
 
+
 .hierarchy-tags {
   font-size: 0.875rem;
   color: $gray-160;
@@ -70,16 +47,17 @@
 
   .hierarchy-tag:not(:first-child) {
     padding-left: 12px;
+    position: relative;
+    
     &::before {
-      background-image: url(/assets/common/icons/chevron_right.svg);
-      background-repeat: no-repeat;
-      background-size: contain;
-      content: ' ';
-      height: 10px;
-      margin-left: -9px;
-      margin-top: 6px;
-      width: 10px;
+      $height: 14px;
+
+      content: "";
       position: absolute;
+      height: $height;
+      border-left: 1px solid $gray-160;
+      top: calc((100% - $height) / 2);
+      left: 6px;
     }
   }
 }
@@ -113,12 +91,16 @@
 .my-gameboards-filters {
   overflow: hidden;
   max-height: 0;
-  transition: max-height 0.3s ease-in-out;
+  @include reduced-motion-compliant-animation {
+    transition: max-height 0.3s ease-in-out;
+  }
   &.shown {
     max-height: 144px;
   }
   @include media-breakpoint-up(lg) {
-    transition: max-height 0.2s ease-in-out;
+    @include reduced-motion-compliant-animation {
+      transition: max-height 0.2s ease-in-out;
+    }
     &.shown {
       max-height: 72px;
     }
@@ -142,16 +124,4 @@
   border-radius: 0.5rem;
   min-width: unset;
   font-size: unset;
-  &::after {
-    content: url(/assets/common/icons/chevron_down.svg);
-    filter: invert(1);
-    transform: rotate(-90deg);
-    transition: transform 0.2s ease-in-out;
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-  &.selected::after {
-    transform: rotate(0deg);
-  }
 }

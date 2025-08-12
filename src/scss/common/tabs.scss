@@ -1,12 +1,28 @@
 // ISAAC
 .isaac-tab {
-  border: solid 1px $gray-103;
-  box-shadow: 0 2px 30px 0 $shadow-08;
-  padding: 1.5rem 1.5rem 0.5rem;
+  padding: 1.5rem;
   margin-top: 1.5rem;
-  margin-bottom: 3rem;
-  overflow: auto;
-  background-color: #fff !important;
+  margin-bottom: 2rem;
+  
+  &:not(.tab-style-dropdowns) {
+    background-color: #fff;
+    box-shadow: 0 2px 30px 0 $shadow-08;
+    overflow: auto; // unsure what this was for originally, on dropdowns it cuts off the first button's box shadow
+  }
+  &.tab-style-dropdowns {
+    padding: 0 0 1.5rem;
+    margin-top: 0;
+    .tab-content .tab-pane {
+      @include no-print {
+        background-color: #fff;
+        padding: 1rem;
+      }
+
+      .content-video-container {
+        margin-bottom: 0;
+      }
+    }
+  }
 }
 
 
@@ -26,21 +42,16 @@
   }
 
   .nav-item {
-    border-left: 1px solid $black;
     height: 100%;
     line-height: 1.5;
     align-self: center !important;
     padding-left: 1rem;
     padding-right: 1rem;
 
-    &:first-child {
-      border-width: 0;
-    }
-
     &.active {
       .nav-link {
         font-family: $secondary-font-semi-bold;
-        background-color: $black;
+        background-color: var(--tab-active, $black);
         color: $white;
         text-decoration: none;
         cursor: default;
@@ -48,7 +59,7 @@
     }
     .nav-link {
       background-color: transparent;
-      border-radius: 0;
+      border-radius: 8px;
       border-width: 0;
       color: $black;
       font-family: $secondary-font;
@@ -63,8 +74,6 @@
 }
 
 .question-hints {
-  border-top: 1px solid $gray-107;
-
   &.list-group {
     flex-direction: row;
     flex-wrap: wrap;
@@ -138,5 +147,31 @@
     .expand-button {
       visibility: visible;
     }
+  }
+}
+
+.card-tabs {
+  > .card-tab {
+    border-radius: 1rem 1rem 0 0;
+    &.active {
+      background-color: var(--bs-body-bg);
+      > span {
+        border-bottom: 3px solid var(--icon-primary);
+      }
+    }
+    &:not(.active) {
+      background-color: transparent;
+    }
+    &:hover:not(.active) > span {
+      border-bottom: 3px solid $gray-118;
+    }
+  }
+
+  &:has(:first-child.active) ~ .tab-content .card {
+    border-top-left-radius: 0;
+  }
+
+  &:has(:last-child.active) ~ .tab-content .card {
+    border-top-right-radius: 0;
   }
 }

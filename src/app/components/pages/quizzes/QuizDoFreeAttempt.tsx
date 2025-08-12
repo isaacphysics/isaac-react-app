@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from "react";
 import {clearQuizAttempt, loadFreeQuizAttempt, useAppDispatch} from "../../../state";
 import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {isDefined, useCurrentQuizAttempt} from "../../../services";
+import {getThemeFromTags, isDefined, useCurrentQuizAttempt} from "../../../services";
 import {myQuizzesCrumbs, QuizContentsComponent, QuizAttemptProps} from "../../elements/quiz/QuizContentsComponent";
 import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
@@ -30,7 +30,7 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
     useSectionViewLogging(attempt, pageNumber);
 
-    const assignedQuizError = error?.toString().includes("You are currently set this test");
+    const assignedQuizError = error?.toString().includes("This test has been assigned to you by a teacher");
 
     const pageLink = useCallback((page?: number) =>
         `/test/attempt/${quizId}` + (isDefined(page) ? `/page/${page}` : "")
@@ -41,17 +41,17 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
     // Importantly, these are only used if attempt is defined
     const subProps: QuizAttemptProps & {feedbackLink: string} = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user, feedbackLink};
 
-    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
+    return <Container data-testid="quiz-attempt" className="mb-7" data-bs-theme={getThemeFromTags(attempt?.quiz?.tags)}>
         <ShowLoading until={attempt || error}>
             {attempt && <>
                 <QuizContentsComponent {...subProps} />
                 <QuizAttemptFooter {...subProps} />
             </>}
             {error && <>
-                <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} />
+                <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "hex", icon: "icon-error"}} />
                 <Alert color={assignedQuizError ? "warning" : "danger"} className="mt-4">
                     <h4 className="alert-heading">{assignedQuizError ? "You have been set this test" : "Error loading test!"}</h4>
-                    {!assignedQuizError && <p data-testId="error-message">{error}</p>}
+                    {!assignedQuizError && <p data-testid="error-message">{error}</p>}
                     {assignedQuizError && <>
                         <p>Your teacher has set this test to you.  You may not practise it in advance.<br/>
                             If you are ready to take the test, click on it in your <a href={"/tests"} target="_self" rel="noopener noreferrer">assigned tests</a> page.

@@ -22,13 +22,13 @@ import {
 type ExtendDueDateModalProps = {
     isOpen: boolean;
     toggle: () => void;
-    currDueDate: Date;
+    currDueDate: Date | number;
     numericQuizAssignmentId: number;
 }
 export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
     const {isOpen, toggle, currDueDate, numericQuizAssignmentId} = props;
     const yearRange = range(currentYear, currentYear + 5);
-    const [dueDate, setDueDate] = useState<Date>(currDueDate);
+    const [dueDate, setDueDate] = useState<Date>(new Date(currDueDate));
     const [updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
     const dispatch = useAppDispatch();
 
@@ -50,7 +50,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
         }
     };
 
-    return <Modal isOpen={isOpen} toggle={toggle}>
+    return <Modal isOpen={isOpen} toggle={toggle} data-bs-theme="neutral">
         <ModalHeader role={"heading"} className={"text-break d-flex justify-content-between"} close={
             <button className={"text-nowrap close"} onClick={toggle}>
                 Close
@@ -61,7 +61,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
         <ModalBody>
             <p className="px-1">{`Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.`}</p>
             <hr className="text-center"/>
-            <Container className="py-2">
+            <div className="p-2">
                 <Label for="dueDate" className="pe-1">Extend the due date:
                     <DateInput id="dueDate" value={dueDate} invalid={dueDate && ((dueDate < currDueDate) || dueDate <= TODAY())}
                         yearRange={yearRange} noClear disabled={isUpdatingQuiz} className="text-center"
@@ -80,7 +80,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
                     disabled={isUpdatingQuiz && dueDate && (dueDate < currDueDate)}>
                     {`Extend due date`}
                 </Button>
-            </Container>
+            </div>
         </ModalBody>
     </Modal>;
 };

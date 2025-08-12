@@ -3,7 +3,6 @@ import {
     ACTION_TYPE,
     api,
     API_REQUEST_FAILURE_MESSAGE,
-    DOCUMENT_TYPE,
     FIRST_LOGIN_STATE,
     history,
     isNotPartiallyLoggedIn,
@@ -12,10 +11,9 @@ import {
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    TAG_ID,
     trackEvent,
     siteSpecific,
-    isAda
+    isAda,
 } from "../../services";
 import {
     Action,
@@ -37,7 +35,7 @@ import {
     IsaacQuestionPageDTO,
     QuestionDTO,
     TestCaseDTO,
-    UserContext
+    UserContext, UserRole
 } from "../../../IsaacApiTypes";
 import {AxiosError} from "axios";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
@@ -67,6 +65,23 @@ export function extractMessage(e: Error) {
         return e.response.data.errorMessage;
     }
     return API_REQUEST_FAILURE_MESSAGE;
+}
+
+export function fetchErrorFromParameters(parameters: string): { error?: string, errorDescription?: string, parseError?: string } {
+    try {
+        const parsed = new URLSearchParams(parameters);
+        const [error, errorDescription] = [parsed.get('error'), parsed.get('error_description')];
+        return {
+            ...(null !== error && { error }),
+            ...(null !== errorDescription && { errorDescription })
+        };
+    } catch (e) {
+        let parseError = `Failed to parse "${parameters}".`;
+        if (e !== null && typeof e === 'object' && 'message' in e) {
+            parseError += ` ${e.message}`;
+        }
+        return { parseError };
+    }
 }
 
 export function showAxiosErrorToastIfNeeded(error: string, e: any) {
@@ -121,6 +136,7 @@ export const linkAccount = (provider: AuthenticationProvider) => async (dispatch
         const redirectResponse = await api.authentication.linkAccount(provider);
         const redirectUrl = redirectResponse.data.redirectUrl;
         dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS, provider, redirectUrl: redirectUrl});
+        trackEvent("sign_in_attempt", { props: { provider: provider.toLowerCase(), fromLinkPage: true } });
         window.location.href = redirectUrl;
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
@@ -157,7 +173,7 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
         await dispatch(requestCurrentUser() as any);
-        history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
+        continueToAfterAuthPath(result.data);
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showAxiosErrorToastIfNeeded("Error with verification code.", e));
@@ -246,8 +262,7 @@ export const updateCurrentUser = (
                 <div className="w-100">
                     <Button
                         className={"float-start mb-4"}
-                        color={siteSpecific("tertiary", "secondary")}
-                        outline={isAda}
+                        color={siteSpecific("tertiary", "keyline")}
                         onClick={() => { cancelSettingsUpdate(); dispatch(closeActiveModal() as any); }}
                     >
                         Cancel
@@ -292,7 +307,7 @@ export const updateCurrentUser = (
             if (isFirstLogin) {
                 persistence.session.remove(KEY.FIRST_LOGIN);
                 if (redirect) {
-                    history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
+                    continueToAfterAuthPath({loggedIn: true, ...currentUser});
                 }
             } else if (!editingOtherUser) {
                 dispatch(showToast({
@@ -412,7 +427,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
         dispatch(requestCurrentUser() as any);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
+        continueToAfterAuthPath(result.data);
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -462,6 +477,7 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider, is
         const redirectResponse = await api.authentication.getRedirect(provider, isSignup);
         const redirectUrl = redirectResponse.data.redirectUrl;
         dispatch({type: ACTION_TYPE.AUTHENTICATION_REDIRECT, provider, redirectUrl: redirectUrl});
+        trackEvent("sign_in_attempt", { props: { provider: provider.toLowerCase(), fromLinkPage: false } });
         window.location.href = redirectUrl;
     } catch (e) {
         dispatch(showAxiosErrorToastIfNeeded("Login redirect failed", e));
@@ -479,6 +495,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             dispatch(getUserPreferences() as any)
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
+        trackEvent("sign_in_success", { props: { provider: provider.toLowerCase() }});
         if (providerResponse.data.firstLogin) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             trackEvent("registration", {
@@ -495,6 +512,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
         history.push(nextPage || defaultNextPage);
     } catch (error: any) {
+        trackEvent("sign_in_failure", { props: { provider: provider.toLowerCase(), ...fetchErrorFromParameters(parameters) }});
         history.push("/auth_error", { errorMessage: extractMessage(error) });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
@@ -511,33 +529,6 @@ export const requestNotifications = () => async (dispatch: Dispatch<Action>) => 
         dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS, notifications: response.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE});
-    }
-};
-
-// Document & topic fetch
-export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
-    let apiEndpoint;
-    switch (documentType) {
-        case DOCUMENT_TYPE.CONCEPT: apiEndpoint = api.concepts; break;
-        case DOCUMENT_TYPE.QUESTION: apiEndpoint = api.questions; break;
-        case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
-    }
-    try {
-        const response = await apiEndpoint.get(pageId);
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
-    }
-};
-
-export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.TOPIC_REQUEST, topicName});
-    try {
-        const response = await api.topics.get(topicName);
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS, topic: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE});
     }
 };
 
@@ -717,7 +708,7 @@ export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<
     dispatch(openActiveModal({
         closeAction: () => {dispatch(closeActiveModal() as any);},
         title: "Test already submitted",
-        body: <div className="text-center my-5 pb-4">
+        body: <div className="text-center my-7 pb-4">
             <strong>A submission has already been recorded for this test by your account.</strong>
         </div>
     }) as any);
@@ -763,21 +754,21 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
     }
 };
 
-// Concepts
-export const fetchConcepts = (conceptIds?: string, tagIds?: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONCEPTS_REQUEST});
-    try {
-        const concepts = await api.concepts.list(conceptIds, tagIds);
-        dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS, concepts: concepts.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Loading Concepts Failed", e));
-    }};
-
 // SERVICE ACTIONS (w/o dispatch)
 
 export const changePage = (path: string) => {
     history.push(path);
+};
+
+export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => {
+    let target = "/";
+    const pathOverride = persistence.pop(KEY.AFTER_AUTH_PATH);
+    if (pathOverride) {
+        target = pathOverride;
+    } else if (user && isTeacherOrAbove(user) && isAda) {
+        target = "/dashboard";
+    }
+    history.push(target);
 };
 
 // Hard redirect (refreshes page)

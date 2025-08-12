@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import classNames from "classnames";
+import { siteSpecific } from "../../services";
+import { IconButton } from "../elements/AffixButton";
 
 export const ScrollToTop = ({mainContent}: {mainContent: React.MutableRefObject<HTMLElement | null>}) => {
     const [sticky, setSticky] = React.useState(false);
@@ -15,10 +17,13 @@ export const ScrollToTop = ({mainContent}: {mainContent: React.MutableRefObject<
         };
     }, [isSticky]);
 
-    return <button 
-        onClick={() => mainContent.current?.scrollIntoView({behavior: 'smooth'})} 
+    return <IconButton
+        color={siteSpecific("keyline", "white")}
+        icon="icon-chevron-up"
         className={classNames("scroll-btn d-print-none", {"is-sticky": sticky})}
-    >
-        <img src="/assets/common/icons/chevron-up.svg" alt="Scroll to top of page"/>
-    </button>;
+        onClick={() => mainContent.current?.scrollIntoView({behavior: 'smooth'})}
+        tabIndex={sticky ? 0 : -1}
+        aria-label="Scroll to top of page"
+        data-bs-theme="neutral"
+    />;
 };

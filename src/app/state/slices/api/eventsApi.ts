@@ -79,7 +79,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             query: ({startIndex, limit, stageFilter, statusFilter, typeFilter}) => ({
                 url: "/events",
                 params: {
-                    tags: typeFilter !== EventTypeFilter["All events"] ? typeFilter : undefined,
+                    tags: typeFilter !== EventTypeFilter["All groups"] ? typeFilter : undefined,
                     start_index: startIndex,
                     limit,
                     show_active_only: statusFilter === EventStatusFilter["Upcoming events"],
@@ -90,19 +90,20 @@ export const eventsApi = isaacApi.enhanceEndpoints({
                 }
             }),
             transformResponse: (data: {results: IsaacEventPageDTO[], totalResults: number}) => ({events: data.results.map(augmentEvent), total: data.totalResults}),
-            // i.e. choose the query args to use as the cache key - ones that, if changed, will start a new request
-            // in a new cache entry.
-            serializeQueryArgs: ({queryArgs}) => {
-                const {stageFilter, statusFilter, typeFilter} = queryArgs;
-                return {stageFilter, statusFilter, typeFilter};
+            serializeQueryArgs: ({endpointName}) => {
+                return endpointName;
             },
-            merge: ({events: currentEvents}, {events: newEvents, total}) => {
+            merge: ({events: currentEvents}, {events: newEvents, total}, { arg }) => {
+                if (arg.startIndex === 0) {
+                    return {events: newEvents, total};
+                }
+                
                 return {events: Array.from(new Set([...currentEvents, ...newEvents])), total};
             },
             // i.e. choose the query args that cause the query to be rerun, to update what is currently in the cache.
             // As far as I can tell, forceRefetch should be entirely disjoint from serializeQueryArgs (and visa versa).
             forceRefetch: ({currentArg, previousArg}) => {
-                return currentArg?.startIndex !== previousArg?.startIndex || currentArg?.limit !== previousArg?.limit;
+                return currentArg !== previousArg;
             },
             providesTags: ["EventsList"],
             onQueryStarted: onQueryLifecycleEvents({

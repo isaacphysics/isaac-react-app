@@ -10,11 +10,25 @@ import {
     useGetGameboardByIdQuery,
     useGetWildcardsQuery,
 } from "../../state";
-import {Button, Card, CardBody, Col, Container, Input, Label, Row, Spinner, Table} from "reactstrap";
+import {
+    Button,
+    Card,
+    CardBody,
+    Col,
+    Container,
+    Form,
+    FormFeedback,
+    FormGroup,
+    Input,
+    Label,
+    Row,
+    Spinner,
+    Table
+} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardDTO, GameboardItem, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
-import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
+import {DragDropContext, Draggable, Droppable, DropResult} from "@hello-pangea/dnd";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {
     convertContentSummaryToGameboardItem,
@@ -45,6 +59,8 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
 import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import {ExigentAlert} from "../elements/ExigentAlert";
+import { PageMetadata } from '../elements/PageMetadata';
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
@@ -115,6 +131,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const [redoSelectedQuestionsStack, setRedoSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
+    const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
     const cloneGameboard = useCallback((gameboard: GameboardDTO) => {
         setGameboardTitle(gameboard.title ? `${gameboard.title} (Copy)` : "");
@@ -138,13 +155,77 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setWildcardId(undefined);
     };
 
+    const submit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        setSubmissionAttempted(true);
+
+        if (!allInputIsValid) {
+            return;
+        }
+
+        let wildcard = undefined;
+        if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
+            wildcard = wildcards.filter((wildcard) => wildcard.id === wildcardId)[0];
+        }
+
+        let subjects = [];
+
+        if (isAda) {
+            subjects.push("computer_science");
+        } else {
+            const definedSubjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
+            selectedQuestions?.forEach((item) => {
+                const tags = intersection(definedSubjects, item.tags || []);
+                tags.forEach((tag: string) => subjects.push(tag));
+            });
+            // If none of the questions have a subject tag, default to physics
+            if (subjects.length === 0) {
+                subjects.push(TAG_ID.physics);
+            }
+            subjects = Array.from(new Set(subjects));
+        }
+
+        createGameboard({
+            gameboard: {
+                id: gameboardURL ? gameboardURL : undefined,
+                title: gameboardTitle,
+                contents: questionOrder.map((questionId) => {
+                    const question = selectedQuestions.get(questionId);
+                    return question && convertContentSummaryToGameboardItem(question);
+                }).filter((question) => question !== undefined) as GameboardItem[],
+                wildCard: wildcard,
+                wildCardPosition: wildcard ? 0 : undefined,
+                gameFilter: {subjects: subjects},
+                tags: gameboardTags.map(getValue)
+            },
+            previousId: baseGameboardId
+        }).then(gameboardOrError => {
+            const error = 'error' in gameboardOrError ? gameboardOrError.error : undefined;
+            const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
+            dispatch(openActiveModal({
+                closeAction: () => dispatch(closeActiveModal()),
+                title: `${siteSpecific("Question deck", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
+                body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
+            }));
+            if (gameboardId) setSubmissionAttempted(false);
+        });
+
+        logEvent(eventLog, "SAVE_GAMEBOARD", {});
+        dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
+    };
+
     useEffect(() => {
         if (baseGameboard) {
             cloneGameboard(baseGameboard);
         }
     }, [baseGameboard]);
 
-    const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "" && isValidGameboardId(gameboardURL);
+    const titleIsValid = gameboardTitle != "";
+    const tooFewQuestions = selectedQuestions.size == 0;
+    const tooManyQuestions = selectedQuestions.size > 10;
+    const questionSetIsValid = !tooFewQuestions && !tooManyQuestions;
+    const allInputIsValid = isValidGameboardId(gameboardURL) && titleIsValid && questionSetIsValid;
 
     const reorder = (result: DropResult) => {
         if (result.destination) {
@@ -157,21 +238,21 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         if (concepts && (!baseGameboardId)) {
             const params: { [key: string]: string } = {};
             params.concepts = concepts;
-            if (userContext.stage !== STAGE.ALL) {
-                params.stages = userContext.stage;
+            if (!userContext.contexts.map(c => c.stage).includes(STAGE.ALL)) {
+                params.stages = userContext.contexts[0].stage ?? "";
             }
-            if (userContext.examBoard !== EXAM_BOARD.ALL) {
-                params.examBoards = userContext.examBoard;
+            if (!userContext.contexts.map(c => c.examBoard).includes(EXAM_BOARD.ALL)) {
+                params.examBoards = userContext.contexts[0].examBoard ?? "";
             }
             generateTemporaryGameboard(params).then((gameboardResponse) => {
                 if (mutationSucceeded(gameboardResponse)) {
                     cloneGameboard(gameboardResponse.data);
                 } else {
-                    console.error(`Failed to create ${siteSpecific("gameboard", "quiz")} from concepts.`);
+                    console.error(`Failed to create ${siteSpecific("question deck", "quiz")} from concepts.`);
                 }
             });
         }
-    }, [dispatch, concepts, baseGameboardId, cloneGameboard, generateTemporaryGameboard, userContext.examBoard, userContext.stage]);
+    }, [dispatch, concepts, baseGameboardId, cloneGameboard, generateTemporaryGameboard, userContext.contexts[0]]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
@@ -181,10 +262,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const pageHelp = <span>
         You can create custom question sets to assign to your groups. Search by question title or topic and add up to
-        ten questions to a {siteSpecific("gameboard", "quiz")}.
+        ten questions to a {siteSpecific("question deck", "quiz")}.
         <br/>
-        You cannot modify a {siteSpecific("gameboard", "quiz")} after it has been created. You&apos;ll find a
-        link underneath any existing {siteSpecific("gameboard", "quiz")} to duplicate and edit it.
+        You cannot modify a {siteSpecific("question deck", "quiz")} after it has been created. You&apos;ll find a
+        link underneath any existing {siteSpecific("question deck", "quiz")} to duplicate and edit it.
     </span>;
 
     const sentinel = useRef<HTMLDivElement>(null);
@@ -212,259 +293,234 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setSelectedQuestionsStack: setRedoSelectedQuestionsStack
     });
 
-    return <Container id="gameboard-builder" fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
+    return <Container id="gameboard-builder">
         <div ref={sentinel}/>
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Gameboard", "Quiz")} builder`} help={pageHelp} modalId="help_modal_gameboard_builder"/>
-
-        <Card className="p-3 mt-4 mb-5">
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question deck", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
+        <PageMetadata helpModalId="help_modal_gameboard_builder" />
+        <Card className="p-3 mt-4 mb-7">
             <CardBody>
-                <Row>
-                    <Col>
-                        <Label htmlFor="gameboard-builder-name">{siteSpecific("Gameboard", "Quiz")} title:</Label>
-                        <Input id="gameboard-builder-name"
-                            type="text"
-                            placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
-                            value={gameboardTitle}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setGameboardTitle(e.target.value);
-                            }}
-                        />
-                    </Col>
-                </Row>
+                {submissionAttempted && !allInputIsValid  &&
+                    <ExigentAlert color={"warning"}>
+                        <p className={"fw-bold alert-heading"}>Unable to create {siteSpecific("question deck", "quiz")}</p>
+                        <p>Please correct the problems below.</p>
+                    </ExigentAlert>
+                }
+                <Form onSubmit={submit}>
+                    <Row>
+                        <Col>
+                            <Label className={"fw-bold form-required"} htmlFor="gameboard-builder-name">Title</Label>
+                            <p className="d-block input-description mb-2">
+                               This will be visible to your students.
+                            </p>
+                            <FormGroup>
+                                <Input id="gameboard-builder-name"
+                                    type="text"
+                                    placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
+                                    value={gameboardTitle}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        setGameboardTitle(e.target.value);
+                                    }}
+                                    invalid={submissionAttempted && !titleIsValid}
+                                />
+                                <FormFeedback>
+                                    Please provide a title.
+                                </FormFeedback>
+                            </FormGroup>
+                        </Col>
+                    </Row>
 
-                {isStaff(user) && <Row className="mt-2">
-                    <Col>
-                        <Label htmlFor="gameboard-builder-tag-as">Tag as</Label>
-                        <StyledSelect inputId="question-search-level"
-                            isMulti
-                            options={siteSpecific([
-                                {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
-                            ], [
-                                {value: 'ISAAC_BOARD', label: 'Created by Ada'},
-                                {value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board'}
-                            ])}
-                            name="colors"
-                            value={gameboardTags}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            placeholder="None"
-                            onChange={selectOnChange(setGameboardTags, false)}
-                        />
-                    </Col>
-                    <Col>
-                        <Label htmlFor="gameboard-builder-url">{siteSpecific("Gameboard", "Quiz")} ID</Label>
-                        <Input id="gameboard-builder-url"
-                            type="text"
-                            placeholder="Optional"
-                            value={gameboardURL ?? ""}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setGameboardURL(e.target.value);
-                            }}
-                            invalid={!isValidGameboardId(gameboardURL)}
-                        />
-                    </Col>
-                    <Col>
-                        <Label htmlFor="gameboard-builder-wildcard">Wildcard</Label>
-                        <Input id="gameboard-builder-wildcard"
-                            type="select" value={wildcardId}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setWildcardId(e.target.value);
-                            }}
-                        >
-                            <option value="">No wildcard</option>
-                            {isDefined(wildcards) && wildcards.map((wildcard) => {
-                                return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>;
-                            })}
-                        </Input>
-                    </Col>
-                </Row>}
-
-                <div className="my-4 responsive">
-                    <DragDropContext onDragEnd={reorder}>
-                        <Droppable droppableId="droppable">
-                            {(providedDrop) => {
-                                return (
-                                    <Table bordered className="m-0" innerRef={providedDrop.innerRef}>
-                                        <thead>
-                                            <tr>
-                                                <th className="w-5"/>
-                                                <th className={siteSpecific("w-40", "w-30")}>Question title</th>
-                                                <th className={siteSpecific("w-25", "w-20")}>Topic</th>
-                                                <th className="w-15">Stage</th>
-                                                <th className="w-15">Difficulty</th>
-                                                {isAda && <th className="w-15">Exam boards</th>}
-                                            </tr>
-                                        </thead>
-                                        {questionOrder.map((questionId, index: number) => {
-                                            const question = selectedQuestions.get(questionId);
-                                            return question && question.id && <Draggable key={question.id} draggableId={question.id} index={index}>
-                                                {(providedDrag, snapshot) => {
-                                                    return <tbody ref={providedDrag && providedDrag.innerRef}
-                                                        className={classNames({"table-row-dragging" : snapshot.isDragging})}
-                                                        {...(providedDrag && providedDrag.draggableProps)} {...(providedDrag && providedDrag.dragHandleProps)}
-                                                    >
-                                                        <GameboardBuilderRow
-                                                            provided={providedDrag}
-                                                            snapshot={snapshot}
-                                                            key={`gameboard-builder-row-${question.id}`}
-                                                            question={question}
-                                                            currentQuestions={currentQuestions}
-                                                            undoStack={undoStack}
-                                                            redoStack={redoStack}
-                                                            creationContext={question.creationContext}
-                                                        />
-                                                    </tbody>;
-                                                }}
-                                            </Draggable>;
-                                        })}
-                                        <tbody >
-                                            {providedDrop.placeholder}
-                                            {selectedQuestions?.size === 0 && <tr>
-                                                <td colSpan={20}>
-                                                </td>
-                                            </tr>}
-                                        </tbody>
-                                    </Table>
-                                );
-                            }}
-                        </Droppable>
-                    </DragDropContext>
-                </div>
-
-                <Row className="justify-content-center">
-                    <Col className="col-auto col-md-2 order-1 d-flex justify-content-center">
-                        {undoStack.length > 0 && <Button
-                            className="btn-sm my-2"
-                            color="primary" outline
-                            onClick={() => {
-                                const newQuestion = undoStack.pop();
-                                redoStack.push(currentQuestions);
-                                currentQuestions.setQuestionOrder(newQuestion.questionOrder);
-                                currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
-                            }}
-                        >
-                            Undo
-                        </Button>}
-                    </Col>
-                    <Col className="col-auto col-md-2 order-2 order-md-4 d-flex justify-content-center">
-                        {redoStack.length > 0 && <Button
-                            className="btn-sm my-2"
-                            color="primary" outline
-                            onClick={() => {
-                                const newQuestion = redoStack.pop();
-                                undoStack.push(currentQuestions);
-                                currentQuestions.setQuestionOrder(newQuestion.questionOrder);
-                                currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
-                            }}
-                        >
-                            Redo
-                        </Button>}
-                    </Col>
-                    <div className="w-100 d-md-none"></div>
-                    {/* Main two centre buttons: */}
-                    <Col className="col-12 col-md-4 order-3 order-md-2 d-flex justify-content-center justify-content-md-end pb-2 pb-md-0">
-                        <ShowLoading
-                            placeholder={<div className="text-center"><IsaacSpinner/></div>}
-                            until={!baseGameboardId || baseGameboard}
-                        >
-                            <Button
-                                className="plus-button"
-                                color="primary" outline
-                                onClick={() => {
-                                    logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                    dispatch(openActiveModal({
-                                        closeAction: () => {
-                                            dispatch(closeActiveModal());
-                                        },
-                                        closeLabelOverride: "Cancel",
-                                        size: "xl",
-                                        title: "Search questions",
-                                        body: <QuestionSearchModal
-                                            currentQuestions={currentQuestions}
-                                            undoStack={undoStack}
-                                            redoStack={redoStack}
-                                            eventLog={eventLog}
-                                        />
-                                    }));
+                    {isStaff(user) && <Row className="mt-2">
+                        <Col>
+                            <Label htmlFor="gameboard-builder-tag-as" className={"fw-bold form-optional"}>Tag as</Label>
+                            <StyledSelect inputId="question-search-level"
+                                isMulti
+                                options={siteSpecific([
+                                    {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
+                                ], [
+                                    {value: 'ISAAC_BOARD', label: 'Created by Ada'},
+                                    {value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board'}
+                                ])}
+                                name="colors"
+                                value={gameboardTags}
+                                placeholder="None"
+                                onChange={selectOnChange(setGameboardTags, false)}
+                            />
+                        </Col>
+                        <Col>
+                            <FormGroup>
+                                <Label htmlFor="gameboard-builder-url"
+                                    className={"fw-bold form-optional"}>{siteSpecific("Question deck", "Quiz")} ID</Label>
+                                <Input id="gameboard-builder-url"
+                                    type="text"
+                                    placeholder="Optional"
+                                    value={gameboardURL ?? ""}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        setGameboardURL(e.target.value);
+                                    }}
+                                    invalid={!isValidGameboardId(gameboardURL)}
+                                />
+                                <FormFeedback>
+                                    The ID may only contain lowercase letters, numbers, dashes and underscores.
+                                </FormFeedback>
+                            </FormGroup>
+                        </Col>
+                        <Col>
+                            <Label htmlFor="gameboard-builder-wildcard" className={"fw-bold"}>Wildcard</Label>
+                            <Input id="gameboard-builder-wildcard"
+                                type="select" value={wildcardId}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setWildcardId(e.target.value);
                                 }}
                             >
-                                {siteSpecific("Add Questions", "Add questions")}
-                                {isAda && <img className={"plus-icon"} src={"/assets/cs/icons/add-circle-outline-pink.svg"} alt="" />}
+                                <option value="">No wildcard</option>
+                                {isDefined(wildcards) && wildcards.map((wildcard) => {
+                                    return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>;
+                                })}
+                            </Input>
+                        </Col>
+                    </Row>}
+                    <span className={classNames("fw-bold form-required")}>Questions</span>
+                    <p className="d-block input-description mb-2">
+                        You can add up to 10 questions.
+                    </p>
+                    <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "mt-4 responsive vertical-scroll-shadow")}>
+                        <DragDropContext onDragEnd={reorder}>
+                            <Droppable droppableId="droppable">
+                                {(providedDrop) => {
+                                    return (
+                                        <Table className={"mb-0"} id={"gameboard-builder-questions"} bordered
+                                            innerRef={providedDrop.innerRef}>
+                                            <thead>
+                                                <tr className="border-top-0">
+                                                    <th className="w-5">{isAda && selectedQuestions.size > 0 && "Remove"}</th>
+                                                    <th className={siteSpecific("w-40", "w-30")}>Question title</th>
+                                                    <th className={siteSpecific("w-25", "w-20")}>Topic</th>
+                                                    <th className="w-15">Stage</th>
+                                                    <th className="w-15">Difficulty</th>
+                                                    {isAda && <th className="w-15">Exam boards</th>}
+                                                </tr>
+                                            </thead>
+                                            {questionOrder.map((questionId, index: number) => {
+                                                const question = selectedQuestions.get(questionId);
+                                                return question && question.id &&
+                                                        <Draggable key={question.id} draggableId={question.id}
+                                                            index={index}>
+                                                            {(providedDrag, snapshot) => {
+                                                                return <tbody
+                                                                    ref={providedDrag && providedDrag.innerRef}
+                                                                    className={classNames({"table-row-dragging": snapshot.isDragging})}
+                                                                    {...(providedDrag && providedDrag.draggableProps)} {...(providedDrag && providedDrag.dragHandleProps)}
+                                                                >
+                                                                    <GameboardBuilderRow
+                                                                        provided={providedDrag}
+                                                                        snapshot={snapshot}
+                                                                        key={`gameboard-builder-row-${question.id}`}
+                                                                        question={question}
+                                                                        currentQuestions={currentQuestions}
+                                                                        undoStack={undoStack}
+                                                                        redoStack={redoStack}
+                                                                        creationContext={question.creationContext}
+                                                                    />
+                                                                </tbody>;
+                                                            }}
+                                                        </Draggable>;
+                                            })}
+                                            <tbody>
+                                                {providedDrop.placeholder}
+                                                {selectedQuestions?.size === 0 && <tr>
+                                                    <td colSpan={20}>
+                                                    </td>
+                                                </tr>}
+                                            </tbody>
+                                        </Table>
+
+                                    );
+                                }}
+                            </Droppable>
+                        </DragDropContext>
+                    </div>
+                    <div className={"invalid-feedback"}>
+                        {`${tooManyQuestions ? "Only 10 questions can be added, please remove some." : "Please add some questions."}`}
+                    </div>
+                    <Row className="justify-content-center mt-4">
+                        <Col className="col-auto col-md-2 order-1 d-flex justify-content-center">
+                            {undoStack.length > 0 && <Button
+                                className={classNames("my-2", {"btn-sm": isAda})}
+                                color="keyline"
+                                onClick={() => {
+                                    const newQuestion = undoStack.pop();
+                                    redoStack.push(currentQuestions);
+                                    currentQuestions.setQuestionOrder(newQuestion.questionOrder);
+                                    currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
+                                }}
+                            >
+                                Undo
+                            </Button>}
+                        </Col>
+                        <Col className="col-auto col-md-2 order-2 order-md-4 d-flex justify-content-center">
+                            {redoStack.length > 0 && <Button
+                                className={classNames("my-2", {"btn-sm": isAda})}
+                                color="keyline"
+                                onClick={() => {
+                                    const newQuestion = redoStack.pop();
+                                    undoStack.push(currentQuestions);
+                                    currentQuestions.setQuestionOrder(newQuestion.questionOrder);
+                                    currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
+                                }}
+                            >
+                                Redo
+                            </Button>}
+                        </Col>
+                        <div className="w-100 d-md-none"></div>
+                        {/* Main two centre buttons: */}
+                        <Col
+                            className="col-12 col-md-4 order-3 order-md-2 d-flex justify-content-center justify-content-md-end pb-2 pb-md-0">
+                            <ShowLoading
+                                placeholder={<div className="text-center"><IsaacSpinner/></div>}
+                                until={!baseGameboardId || baseGameboard}
+                            >
+                                <Button
+                                    className={classNames("d-flex align-items-center", {"plus-button": isAda})}
+                                    color="keyline"
+                                    onClick={() => {
+                                        logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
+                                        dispatch(openActiveModal({
+                                            closeAction: () => {
+                                                dispatch(closeActiveModal());
+                                            },
+                                            closeLabelOverride: "Cancel",
+                                            size: "xl",
+                                            title: "Search questions",
+                                            body: <QuestionSearchModal
+                                                currentQuestions={currentQuestions}
+                                                undoStack={undoStack}
+                                                redoStack={redoStack}
+                                                eventLog={eventLog}
+                                            />
+                                        }));
+                                    }}
+                                >
+                                    Add questions
+                                    {siteSpecific(<img src={"/assets/phy/icons/redesign/plus.svg"} height={"12px"}
+                                        className={"ms-2"} alt=""/>,
+                                    <img className={"plus-icon"}
+                                        src={"/assets/cs/icons/add-circle-outline-pink.svg"} alt=""/>)}
+                                </Button>
+                            </ShowLoading>
+                        </Col>
+                        <Col
+                            className="col-12 col-md-4 order-4 order-md-3 d-flex justify-content-center justify-content-md-start">
+                            <Button
+                                id="gameboard-save-button" color="secondary"
+                                aria-describedby="gameboard-help"
+                                type={"submit"}
+                            >
+                                {isWaitingForCreateGameboard ?
+                                    <Spinner size={"md"}/> : siteSpecific("Save question deck", "Save quiz")}
                             </Button>
-                        </ShowLoading>
-                    </Col>
-                    <Col className="col-12 col-md-4 order-4 order-md-3 d-flex justify-content-center justify-content-md-start">
-                        <Button
-                            id="gameboard-save-button" disabled={!canSubmit} color="secondary"
-                            aria-describedby="gameboard-help"
-                            onClick={() => {
-                                // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
-                                let wildcard = undefined;
-                                if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
-                                    wildcard = wildcards.filter((wildcard) => wildcard.id === wildcardId)[0];
-                                }
-
-                                let subjects = [];
-
-                                if (isAda) {
-                                    subjects.push("computer_science");
-                                } else {
-                                    const definedSubjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
-                                    selectedQuestions?.forEach((item) => {
-                                        const tags = intersection(definedSubjects, item.tags || []);
-                                        tags.forEach((tag: string) => subjects.push(tag));
-                                    });
-                                    // If none of the questions have a subject tag, default to physics
-                                    if (subjects.length === 0) {
-                                        subjects.push(TAG_ID.physics);
-                                    }
-                                    subjects = Array.from(new Set(subjects));
-                                }
-
-                                createGameboard({
-                                    gameboard: {
-                                        id: gameboardURL ? gameboardURL : undefined,
-                                        title: gameboardTitle,
-                                        contents: questionOrder.map((questionId) => {
-                                            const question = selectedQuestions.get(questionId);
-                                            return question && convertContentSummaryToGameboardItem(question);
-                                        }).filter((question) => question !== undefined) as GameboardItem[],
-                                        wildCard: wildcard,
-                                        wildCardPosition: wildcard ? 0 : undefined,
-                                        gameFilter: {subjects: subjects},
-                                        tags: gameboardTags.map(getValue)
-                                    },
-                                    previousId: baseGameboardId
-                                }).then(gameboardOrError => {
-                                    const error = 'error' in gameboardOrError ? gameboardOrError.error : undefined;
-                                    const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
-                                    dispatch(openActiveModal({
-                                        closeAction: () => dispatch(closeActiveModal()),
-                                        title: `${siteSpecific("Gameboard", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
-                                        body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
-                                    }));
-                                });
-
-                                logEvent(eventLog, "SAVE_GAMEBOARD", {});
-                                dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
-                            }}
-                        >
-                            {isWaitingForCreateGameboard ?
-                                <Spinner size={"md"}/> : siteSpecific("Save Gameboard", "Save quiz")}
-                        </Button>
-                    </Col>
-                </Row>
-
-                {!canSubmit && <div
-                    id="gameboard-help" color="light"
-                    className={`text-center mb-0 pt-3 pb-0 ${selectedQuestions.size > 10 ? "text-danger" : ""}`}
-                >
-                    {siteSpecific("Gameboards", "Quizzes")} require both a title and between 1 and 10 questions.
-                    {!isValidGameboardId(gameboardURL) && <div className="text-danger">
-                        The {siteSpecific("gameboard", "quiz")} ID should contain numbers, lowercase letters, underscores and hyphens only.<br/>
-                        It should not be the full URL.
-                    </div>}
-                </div>}
+                        </Col>
+                    </Row>
+                </Form>
             </CardBody>
         </Card>
     </Container>;

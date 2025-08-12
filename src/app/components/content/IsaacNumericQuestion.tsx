@@ -1,4 +1,4 @@
-import React, {FormEvent, useMemo, useState} from "react";
+import React, {FormEvent, useRef, useState} from "react";
 import {AppState, useAppSelector, useGetConstantUnitsQuery} from "../../state";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
@@ -11,12 +11,10 @@ import {
     DropdownToggle,
     Input,
     InputGroup,
-    Label,
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {isAda, siteSpecific, useCurrentQuestionAttempt} from "../../services";
-import {v4 as uuid_v4} from 'uuid';
+import {above, below, isAda, isPhy, siteSpecific, useCurrentQuestionAttempt, useDeviceSize} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
@@ -65,6 +63,8 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
     const userId = useAppSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
     const {data: units} = useGetConstantUnitsQuery();
 
+    const deviceSize = useDeviceSize();
+
     const selectedUnits = selectUnits(doc, questionId, units, userId);
 
     function updateValue(event: FormEvent<HTMLInputElement>) {
@@ -87,7 +87,15 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const helpTooltipId = useMemo(() => `numeric-input-help-${uuid_v4()}`, []);
+    const helpTooltip = useRef(null);
+
+    const tooltip = <UncontrolledTooltip placement="auto" autohide={false} target={helpTooltip}>
+        Here are some examples of numbers you can write:<br /><br />
+        3.7<br />
+        -3x10^14<br />
+        2.8e-12<br /><br />
+        Do not use commas or spaces.
+    </UncontrolledTooltip>;
 
     const noDisplayUnit = doc.displayUnit == null || doc.displayUnit === "";
 
@@ -99,69 +107,63 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                 </IsaacContentValueOrChildren>
             </div>
             <Row className="no-print">
-                <Col className="d-flex flex-column flex-md-row">
-                    <div className="numeric-value w-100 w-md-50">
-                        <Label className="w-100">
-                            Value <br />
-                            <InputGroup className={"feedback-zone nq-feedback separate-input-group"}>
-                                <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
-                                    onChange={e => {
-                                        updateValue(e);
-                                    }} readOnly={readonly}
-                                />
-                                {currentAttemptValueWrong && <div className={"feedback-box"}>
-                                    <span className={"feedback incorrect"}><b>!</b></span>
-                                </div>}
-                                {!readonly && <>
-                                    {siteSpecific(
-                                        <Button type="button" className={classNames("numeric-help", {"py-0": isAda})} size="sm" id={helpTooltipId}>?</Button>,
-                                        <span id={helpTooltipId} className="icon-help-q my-auto ms-3"/>
-                                    )}
-                                    <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
-                                        Here are some examples of numbers you can write:<br /><br />
-                                        3.7<br />
-                                        -3x10^14<br />
-                                        2.8e-12<br /><br />
-                                        Do not use commas or spaces.
-                                    </UncontrolledTooltip>
-                                </>}
-                            </InputGroup>
-                        </Label>
+                <Col xs={12} className="d-flex flex-column flex-md-row">
+                    <div className="d-flex flex-column numeric-value w-100 w-md-50 mb-2">
+                        Value
+                        <InputGroup className={"feedback-zone nq-feedback separate-input-group flex-grow-1"}>
+                            <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
+                                onChange={e => {
+                                    updateValue(e);
+                                }} readOnly={readonly}
+                            />
+                            {currentAttemptValueWrong && <div className={"feedback-box"}>
+                                <span className={"feedback incorrect"}><b>!</b></span>
+                            </div>}
+                            {!readonly && isAda && <span ref={helpTooltip} className="icon-help-q my-auto ms-3"/>}
+                            {!readonly && isPhy && !above['md'](deviceSize) && <Button type="button" className="numeric-help" size="sm" innerRef={helpTooltip}>?</Button>}
+                            {!readonly && !(isPhy && above['md'](deviceSize)) && tooltip}
+                        </InputGroup>
                     </div>
-                    {(doc.requireUnits || doc.displayUnit) && <div className="unit-selection w-100 w-md-50">
-                        <Label className="w-100 w-md-auto ps-md-5">
-                            Unit{noDisplayUnit && "s"} <br/>
-                            <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
-                                <DropdownToggle
-                                    disabled={readonly || !noDisplayUnit}
-                                    className={classNames("feedback-zone px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong && noDisplayUnit})}
-                                    color={noDisplayUnit ? undefined : "white"}
-                                >
-                                    <Markup encoding={"latex"}>
-                                        {wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}
-                                    </Markup>
-                                    {currentAttemptUnitsWrong && noDisplayUnit && <div className={"feedback-box"}>
-                                        <span className={"feedback incorrect"}>✘</span>
-                                    </div>}
-                                </DropdownToggle>
-                                <DropdownMenu end>
-                                    {selectedUnits.map((unit) =>
-                                        <DropdownItem key={wrapUnitForSelect(unit)}
-                                            data-unit={unit || 'None'}
-                                            className={unit === currentAttemptUnits ? "btn bg-grey selected" : ""}
-                                            onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
-                                            {/* Buttons cannot contain semantic children in the accessibility tree;
+                    {(doc.requireUnits || doc.displayUnit) && <div className="d-flex flex-column unit-selection ps-md-7 w-100 w-md-50 mb-2">
+                        Unit{noDisplayUnit && "s"}
+                        <Dropdown className="flex-grow-1" disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
+                            <DropdownToggle
+                                disabled={readonly || !noDisplayUnit}
+                                className={classNames("feedback-zone w-md-auto h-100 px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong && noDisplayUnit, "bg-white": isPhy, "my-2": isPhy && below['sm'](deviceSize)})}
+                                color={noDisplayUnit ? siteSpecific("dropdown", undefined) : "white"}
+                                caret={isPhy && noDisplayUnit}
+                            >
+                                <Markup encoding={"latex"}>
+                                    {wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}
+                                </Markup>
+                                {isAda && currentAttemptUnitsWrong && noDisplayUnit && <div className={"feedback-box"}>
+                                    <span className={"feedback incorrect"}>✘</span>
+                                </div>}
+                            </DropdownToggle>
+                            <DropdownMenu end className="w-100 w-md-50">
+                                {selectedUnits.map((unit) =>
+                                    <DropdownItem key={wrapUnitForSelect(unit)}
+                                        data-unit={unit || 'None'}
+                                        className={classNames({"bg-inline-question selected": unit === currentAttemptUnits})}
+                                        onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
+                                        {/* Buttons cannot contain semantic children in the accessibility tree;
                                                 so we must use alt text here! */}
-                                            <Markup encoding={"latex"} forceMathsAltText={true}>
-                                                {wrapUnitForSelect(unit)}
-                                            </Markup>
-                                        </DropdownItem>
-                                    )}
-                                </DropdownMenu>
-                            </Dropdown>
-                        </Label>
+                                        <Markup encoding={"latex"} forceMathsAltText={true}>
+                                            {wrapUnitForSelect(unit)}
+                                        </Markup>
+                                    </DropdownItem>
+                                )}
+                            </DropdownMenu>
+                        </Dropdown>
                     </div>}
                 </Col>
+                {!readonly && isPhy && above['md'](deviceSize) && <Col xs={12}>
+                    <Button className="numeric-help d-flex align-items-center m-0 p-0 gap-2 text-muted small" type="button" color="link" size="sm" innerRef={helpTooltip}>
+                        <i className="icon icon-info icon-color-grey"/>
+                        What can I type in this box?
+                    </Button>
+                    {tooltip}
+                </Col>}
             </Row>
             <QuestionInputValidation userInput={currentAttemptValue ?? ""} validator={numericInputValidator} />
         </div>

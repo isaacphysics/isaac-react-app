@@ -1,19 +1,34 @@
-import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectUrl } from "../testUtils";
+import {expectH1, expectH4, expectLinkWithEnabledBackwardsNavigation, expectUrl} from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
-import { editButton, expectBreadcrumbs, expectErrorMessage, expectRubric, previewButton, renderQuizPage, setTestButton, testSectionsHeader } from "../helpers/quiz";
-import { siteSpecific } from "../../app/services";
-import {screen } from "@testing-library/react";
+import {
+    editButton,
+    expectAdaBreadCrumbs,
+    expectErrorMessage,
+    expectPhyBreadCrumbs,
+    expectRubric,
+    expectSidebarToggle,
+    previewButton,
+    renderQuizPage,
+    setTestButton,
+    sideBarTestCases,
+    testSectionsHeader
+} from "../helpers/quiz";
+import {isPhy, siteSpecific} from "../../app/services";
+import {screen} from "@testing-library/react";
 
 describe("QuizView", () => {
     const quizId = Object.keys(mockRubrics)[0];
     const rubric = mockRubrics[quizId];
 
     const renderQuizView = renderQuizPage('/test/view');
-    const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', quizId }); 
+    const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', quizId });
 
     it('shows quiz title on the breadcrumbs', async () => {
         await studentViewsQuiz();
-        expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: siteSpecific("Practice Tests", "Practice tests")}, rubric.title]);
+        siteSpecific(
+            () => expectPhyBreadCrumbs({href: "/practice_tests", text: "Practice tests"}),
+            () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice tests"}, rubric.title])
+        )();
     });
 
     it('shows quiz title', async () => {
@@ -52,8 +67,8 @@ describe("QuizView", () => {
     });
 
     describe('for teachers', () => {
-        const teacherViewsQuiz = () => renderQuizView({ role: 'TEACHER', quizId }); 
-        
+        const teacherViewsQuiz = () => renderQuizView({ role: 'TEACHER', quizId });
+
         it('shows Set Test button', async () => {
             await teacherViewsQuiz();
             expect(setTestButton()).toBeInTheDocument();
@@ -88,8 +103,8 @@ describe("QuizView", () => {
     });
 
     describe('for unregistered users', () => {
-        const anonymousViewsMissingQuiz = () => renderQuizView({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'}); 
-        
+        const anonymousViewsMissingQuiz = () => renderQuizView({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'});
+
         it('redirects to log in', async () => {
             await anonymousViewsMissingQuiz();
             await expectUrl('/login');
@@ -101,9 +116,12 @@ describe("QuizView", () => {
 
         it ('shows Unknown Test on breadcrumbs', async () => {
             await studentViewsMissingQuiz();
-            expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: siteSpecific("Practice Tests", "Practice tests")}, "Unknown Test"]);
+            siteSpecific(
+                () => expectPhyBreadCrumbs({href: '/practice_tests', text: "Practice tests"}),
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice tests"}, "Unknown Test"])
+            )();
         });
-        
+
         it('shows error', async () => {
             await studentViewsMissingQuiz();
             expectH1('Unknown Test');
@@ -111,4 +129,18 @@ describe("QuizView", () => {
             expectErrorMessage('This test has become unavailable.');
         });
     });
+
+    if (isPhy) {
+        it('applies subject-specific theme', async () => {
+            await studentViewsQuiz();
+            expect(screen.getByTestId('quiz-view')).toHaveAttribute('data-bs-theme', 'physics');
+        });
+
+        describe('shows the redesigned sidebar', sideBarTestCases(studentViewsQuiz));
+
+        it('sidebar toggle is called "Details"', async () => {
+            await studentViewsQuiz();
+            await expectSidebarToggle("Details");
+        });
+    }
 });

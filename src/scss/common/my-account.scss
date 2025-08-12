@@ -16,6 +16,12 @@
   legend {
     font-size: 1rem;
   }
+
+  .btn.form-control {
+    width: 65%;
+  }
+
+  box-shadow: none;
 }
 
 .react-select-error {
@@ -214,6 +220,11 @@
   &.google-button {
     padding: 10px;
     background: url("/assets/common/logos/google-g-icon-light.svg") center no-repeat content-box;
+  }
+
+  &.microsoft-button {
+    padding: 10px;
+    background: url("/assets/common/logos/microsoft-logo.svg") center no-repeat content-box;
   }
 }
 

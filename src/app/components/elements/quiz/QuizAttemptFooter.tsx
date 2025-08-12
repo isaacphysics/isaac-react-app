@@ -11,6 +11,7 @@ import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
 import {confirmThen, siteSpecific} from "../../../services";
+import {QuizSidebarLayout} from "./QuizSidebarLayout";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
@@ -58,16 +59,11 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
 
         if (allCompleted) {
             controls = <>
-                {
-                    siteSpecific(
-                        <Button color="tertiary" tag={Link} to={pageLink(1)}>Review answers</Button>,
-                        <Button outline color="secondary" tag={Link} to={pageLink(1)}>Review answers</Button>
-                    )
-                }
+                <Button color="keyline" tag={Link} to={pageLink(1)}>Review answers</Button>
                 <Spacer/>
                 All sections complete
                 <Spacer/>
-                <Button color={siteSpecific("secondary", "primary")} onClick={submitQuiz}>{submitButton}</Button>
+                <Button color={siteSpecific("keyline", "solid")} onClick={submitQuiz}>{submitButton}</Button>
             </>;
         } else {
             if (anyAnswered) {
@@ -78,12 +74,12 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
                     <Spacer/>
                     {totalCompleted} / {sectionCount} sections complete<br/>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "primary")} tag={Link} to={pageLink(firstIncomplete + 1)}>Continue</Button>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(firstIncomplete + 1)}>Continue</Button>
                 </>;
             } else {
                 controls = <>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "primary")} tag={Link} to={pageLink(1)}>Continue</Button>
+                    <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(1)}>Continue</Button>
                 </>;
             }
         }
@@ -91,9 +87,8 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
         controls = <QuizPagination {...props} page={page} finalLabel="Finish"/>;
     }
 
-    return <>
-        <div className="d-flex border-top pt-2 my-2 align-items-center">
-            {controls}
-        </div>
-    </>;
+    // Empty sidebar to match layout of quiz attempt component
+    return <QuizSidebarLayout>
+        {controls}
+    </QuizSidebarLayout>;
 }

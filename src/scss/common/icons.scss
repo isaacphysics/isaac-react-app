@@ -1,7 +1,3 @@
-.bg-grey {
-  background: rgba($gray-120, 0.6);
-}
-
 .icon-email-status {
   display: inline-block;
   width: 25px;
@@ -38,7 +34,6 @@ polygon.fill-secondary {
   align-self: center;
   right: 5px;
   @extend .icon-dropdown-180;
-  transition: transform 0.15s ease-in-out;
   opacity: 0.3;
 }
 
@@ -50,7 +45,10 @@ polygon.fill-secondary {
 
 .icon-dropdown-180 {
   &.active {
-    @include icon-dropdown(180deg);
+    @include icon-dropdown(-180deg); // negative so it points outwards while spinning
+  }
+  @include not-reduced-motion {
+    transition: transform 0.15s ease-in-out;
   }
 }
 
@@ -58,8 +56,180 @@ polygon.fill-secondary {
   &.active {
     @include icon-dropdown(90deg);
   }
+  @include not-reduced-motion {
+    transition: transform 0.15s ease-in-out;
+  }
 }
 
 img[aria-disabled="true"] {
   opacity: 0.5;
+}
+
+.icon-download {
+  @include svg-icon('/assets/common/icons/download.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-chevron-right {
+  // use for dropdowns, tabs, etc. prefer arrow-right for links.
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 35% 50%);
+}
+
+.icon-chevron-down {
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 35% 50%);
+  // we use `rotate: x` for image rotations, and `transform: rotate(x)` for individual element rotations.
+  // this means we can reuse just one image for all directions, and animations can animate over transform oblivious to the image rotation.
+  rotate: 90deg;
+}
+
+.icon-chevron-left {
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 35% 50%);
+  rotate: 180deg;
+}
+
+.icon-chevron-up {
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 35% 50%);
+  rotate: -90deg;
+}
+
+.icon-arrow-right {
+  @include svg-icon('/assets/common/icons/arrow-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-arrow-left {
+  @include svg-icon('/assets/common/icons/arrow-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  rotate: 180deg;
+}
+
+.icon-search {
+  @include svg-icon('/assets/common/icons/search-icon.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-file {
+  @include svg-icon('/assets/common/icons/file.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-person {
+  @include svg-icon('/assets/common/icons/person.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-school {
+  @include svg-icon('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-event-upcoming {
+  @include svg-icon('/assets/common/icons/event-upcoming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-event-complete {
+  @include svg-icon('/assets/common/icons/event-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-task-complete {
+  @include svg-icon('/assets/common/icons/task-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-file {
+  @include svg-icon('/assets/common/icons/file.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-person {
+  @include svg-icon('/assets/common/icons/person.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-school {
+  @include svg-icon('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-event-upcoming {
+  @include svg-icon('/assets/common/icons/event-upcoming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-event-complete {
+  @include svg-icon('/assets/common/icons/event-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-task-complete {
+  @include svg-icon('/assets/common/icons/task-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-new-tab {
+  @include svg-icon('/assets/common/icons/open-in-new.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-fullscreen {
+  @include svg-icon('/assets/common/icons/fullscreen.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+// Icon sizing
+.icon {
+  --icon-size: 16px;
+  --mask-size: 100%;
+}
+
+.icon-md {
+  --icon-size: 24px;
+  --mask-size: 100%;
+}
+
+.icon-lg {
+  --icon-size: 60px;
+  --mask-size: initial;
+}
+
+.icon-xl {
+  --icon-size: 75px;
+  --mask-size: initial;
+}
+
+.icon-inline { // intended for inline 16px icons
+  --icon-size: 1lh;
+  --mask-size: 83%;
+  vertical-align: bottom;
+}
+
+i.icon:not(.icon-raw) {
+  &, &[color="primary"] {
+    background-color: var(--layered-icon-parent-bg-override, var(--icon-primary));
+    
+    @include not-reduced-motion {
+      transition: all 0.15s ease-in-out; // mirrors BS's $btn-transition
+    }
+  
+    // for layered icons, the ::after element takes the colour while the ::before remains uncoloured
+    &::after {
+      background-color: var(--icon-primary);
+      
+      @include not-reduced-motion {
+        transition: all 0.15s ease-in-out;
+      }
+    }
+
+    // however, the ::before is also able to change colour, e.g. during hover inversions on keyline or tint buttons
+    &::before {
+      @include not-reduced-motion {
+        transition: all 0.15s ease-in-out;
+      }
+    }
+  }
+
+  &[color="secondary"] {
+    background-color: var(--layered-icon-parent-bg-override, var(--icon-secondary));
+    &::after {
+      background-color: var(--icon-secondary);
+    }
+  }
+
+  &[color="tertiary"] {
+    background-color: var(--layered-icon-parent-bg-override, var(--icon-tertiary));
+    &::after {
+      background-color: var(--icon-tertiary);
+    }
+  }
+
+  &[color="white"] {
+    background-color: $white;
+    &::after {
+      background-color: $white;
+    }
+  }
 }

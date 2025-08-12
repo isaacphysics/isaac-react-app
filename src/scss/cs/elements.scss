@@ -1,18 +1,15 @@
 @import "../common/elements";
 
-.text-block {
-  h2, p {
-    margin-bottom: 1.2rem;
-  }
+.text-theme {
+  @extend .text-secondary;
 }
 
-.image-block {
-  object-fit: contain;
-  @extend .vertical-center;
+.bg-theme {
+  @extend .bg-secondary;
+}
 
-  > img {
-    width: 100%;
-  }
+.border-theme {
+  @extend .border-secondary;
 }
 
 .bg-dark-pink-200 {

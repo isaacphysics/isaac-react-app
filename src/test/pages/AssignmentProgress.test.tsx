@@ -55,7 +55,7 @@ describe("AssignmentProgress", () => {
         }
     });
 
-    it("only shows assignments to tutors, with no tabs shown", async () => {
+    it("only shows assignments to tutors, with only assignments tab shown", async () => {
         const mockGroup = mockActiveGroups[0];
         const mockAssignments = mockAssignmentsGroup2;
         const mockTestAssignments = mockQuizAssignments.filter(q => q.groupId === mockGroup.id);
@@ -80,10 +80,8 @@ describe("AssignmentProgress", () => {
         const groupTitle = await screen.findByTestId("group-name");
         // Clicking on the group title should suffice to open the accordion
         await userEvent.click(groupTitle);
-        // Make sure that that tab buttons aren't shown
-        const assignmentsTab = screen.queryByRole("button", {name: `Assignments (${mockAssignments.length})`});
+        // Make sure that that tests tab button isn't shown
         const testsTab = screen.queryByRole("button", {name: `Tests (${mockTestAssignments.length})`});
-        expect(assignmentsTab).toBeNull();
         expect(testsTab).toBeNull();
         // Check that all assignments are showing
         for (const assignmentTitle of mockAssignments.map(a => a.gameboard?.title)) {
@@ -110,7 +108,7 @@ describe("AssignmentProgress", () => {
             ]
         });
         await navigateToAssignmentProgress();
-        const groupDownloadLinks = await screen.findAllByText("(Download group assignments CSV)");
+        const groupDownloadLinks = await screen.findAllByText("Download assignments CSV");
 
         // Act
         await userEvent.click(groupDownloadLinks[0]);
@@ -185,7 +183,7 @@ describe("AssignmentProgress", () => {
             ]
         });
         await navigateToAssignmentProgress();
-        const groupDownloadLinks = await screen.findAllByText("(Download group tests CSV)");
+        const groupDownloadLinks = await screen.findAllByText("Download tests CSV");
 
         // Act
         await userEvent.click(groupDownloadLinks[0]);

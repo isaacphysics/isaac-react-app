@@ -30,7 +30,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
         }
     }, [hasSubmitted]);
 
-    return <div ref={feedbackPanelRef} className='llm-feedback question-component p-md-5'>
+    return <div ref={feedbackPanelRef} className='llm-feedback question-component p-md-7'>
         <h2 className="mb-0">Do you agree with the LLM’s predicted marks?</h2>
         <p className="mb-0">1 in 3 times the predicted mark will be wrong. Find out more in our <Link to="/support/student/general" target="_blank">FAQs</Link></p>
         <div className="prediction my-4">
@@ -66,13 +66,13 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                     <ul className="no-bullet px-2 mb-4">
                         <li>
                             <StyledCheckbox
-                                id="disagree"  label={<p>Disagree</p>} className='"mb-4'
+                                id="disagree"  label={<p>Disagree</p>}
                                 checked={feedback.disagree} onChange={() => setFeedback({...noFeedback, disagree: !feedback.disagree})}
                             />
                         </li>
                         <li>
                             <StyledCheckbox
-                                id="partlyAgree" label={<p>Partly agree</p>} className='"mb-4'
+                                id="partlyAgree" label={<p>Partly agree</p>}
                                 checked={feedback.partlyAgree} onChange={() => setFeedback({...noFeedback, partlyAgree: !feedback.partlyAgree})}
                             />
                         </li>
@@ -84,7 +84,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                         </li>
                     </ul>
                     <Button
-                        color="primary" outline disabled={Object.values(feedback).every(a => !a)}
+                        color="keyline" disabled={Object.values(feedback).every(a => !a)}
                         onClick={() => {
                             dispatch(logAction({type: "LLM_FREE_TEXT_QUESTION_FEEDBACK", events: {...validationResponse, pageId, userFeedback: feedback}}));
                             setSentFeedback(true);

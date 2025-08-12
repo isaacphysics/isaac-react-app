@@ -7,7 +7,6 @@ it('Navigation menu should have no visual regressions', () => {
     if (isAda) {
         // Arrange
         cy.mountWithStoreAndRouter(<HeaderCS/>, ["/"]);
-        
         cy.wait(1000);
 
         // Act
@@ -16,23 +15,17 @@ it('Navigation menu should have no visual regressions', () => {
         cy.get('button.navbar-toggler[aria-label="Toggle navigation"] ~ div.navbar-collapse > ul > li').eq(1).click();
         cy.scrollTo('top');
 
-        cy.wait(1000);
-
         // Assert
         cy.matchImage();
     } else {
         // Arrange
         cy.mountWithStoreAndRouter(<HeaderPhy/>, ["/"]);
-
         cy.wait(1000);
 
         // Act
-        cy.get('button.navbar-toggler[aria-label="Open menu"]').click();
+        cy.get('[data-testid="nav-menu-toggle"]').click();
         // click on the second menu item
-        cy.get('button.navbar-toggler[aria-label="Close menu"] ~ div.navbar-collapse > ul > li').eq(1).click();
-        cy.scrollTo('top');
-
-        cy.wait(1000);
+        cy.get('ul#main-menu > li').eq(1).click();
 
         // Assert
         cy.matchImage();

@@ -1,7 +1,8 @@
 import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectUrl } from "../testUtils";
 import {mockAttempts} from "../../mocks/data";
-import { siteSpecific } from "../../app/services";
-import { expectActionMessage, expectBreadcrumbs, expectErrorMessage, expectRubric, renderQuizPage, testSectionsHeader } from "../helpers/quiz";
+import { isPhy, siteSpecific } from "../../app/services";
+import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectSidebarToggle, expectRubric, renderQuizPage, sideBarTestCases, testSectionsHeader } from "../helpers/quiz";
+import { screen } from "@testing-library/react";
 
 describe("QuizAttempt", () => {
     const quizId = Object.keys(mockAttempts)[0];
@@ -14,7 +15,10 @@ describe("QuizAttempt", () => {
     describe("overview", () => {
         it('shows quiz title on the breadcrumbs', async () => {
             await studentAttemptsQuiz();
-            expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/tests", text: siteSpecific("My Tests", "My tests")}, attempt.quiz?.title]);
+            siteSpecific(
+                () => expectPhyBreadCrumbs({href: "/tests", text: "My tests"}),
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "My tests"}, attempt.quiz?.title])
+            )();
         });
 
         it('shows quiz title', async () => {
@@ -67,8 +71,8 @@ describe("QuizAttempt", () => {
     });
 
     describe('for unregistered users', () => {
-        const anonymousAttemptsMissingQuiz = () => renderQuizAttempt({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'}); 
-        
+        const anonymousAttemptsMissingQuiz = () => renderQuizAttempt({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'});
+
         it('redirects to log in', async () => {
             await anonymousAttemptsMissingQuiz();
             await expectUrl('/login');
@@ -78,11 +82,14 @@ describe("QuizAttempt", () => {
     describe('when quiz does not exist', () => {
         const studentAttemptsMissingQuiz = () => renderQuizAttempt({ role: 'STUDENT', quizId: 'some_non_existent_test'});
 
-        it ('shows Unknown Test on breadcrumbs', async () => {
+        it ('shows Test on breadcrumbs', async () => {
             await studentAttemptsMissingQuiz();
-            expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/tests", text: siteSpecific("My Tests", "My tests")}, "Test"]);
+            siteSpecific(
+                () => expectPhyBreadCrumbs({href: "/tests", text: "My tests"}),
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "My tests"}, "Test"])
+            )();
         });
-        
+
         it('shows error', async () => {
             await studentAttemptsMissingQuiz();
             expectH1('Test');
@@ -90,4 +97,18 @@ describe("QuizAttempt", () => {
             expectErrorMessage('This test has become unavailable.');
         });
     });
+
+    if (isPhy) {
+        it('applies subject-specific theme', async () => {
+            await studentAttemptsQuiz();
+            expect(screen.getByTestId('quiz-attempt')).toHaveAttribute('data-bs-theme', 'physics');
+        });
+
+        describe('sidebar on redesigned Physics site', sideBarTestCases(studentAttemptsQuiz));
+
+        it('sidebar toggle is called "Sections"', async () => {
+            await studentAttemptsQuiz();
+            await expectSidebarToggle("Sections");
+        });
+    }
 });

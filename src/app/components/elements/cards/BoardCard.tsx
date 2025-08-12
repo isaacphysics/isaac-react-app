@@ -19,15 +19,13 @@ import {GameboardDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Circle} from "../svg/Circle";
 import classNames from "classnames";
 import sortBy from "lodash/sortBy";
-import {formatDate} from "../DateString";
+import {formatDate, getFriendlyDaysUntil} from "../DateString";
 import {ShareLink} from "../ShareLink";
 import {
     Button,
     Card,
     CardBody,
     CardFooter,
-    CardSubtitle,
-    CardTitle,
     Col,
     Input,
     Row,
@@ -38,7 +36,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {BoardAssignee, Boards} from "../../../../IsaacAppTypes";
 import indexOf from "lodash/indexOf";
-import { Spacer } from "../Spacer";
+import { GameboardCard, GameboardLinkLocation } from "./GameboardCard";
 
 
 interface HexagonGroupsButtonProps {
@@ -68,7 +66,7 @@ const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: 
                 {isDefined(assignees) &&
                 <UncontrolledTooltip placement={"top"} target={"#" + id}>{assignees.length === 0 ?
                     "No groups have been assigned."
-                    : (`${siteSpecific("Gameboard", "Quiz")} assigned to: ` + assignees.map(g => g.groupName).join(", "))}
+                    : (`${siteSpecific("Question deck", "Quiz")} assigned to: ` + assignees.map(g => g.groupName).join(", "))}
                 </UncontrolledTooltip>}
             </span>
         </div>
@@ -90,11 +88,10 @@ const PhyHexagon = ({hexagonId, percentageDisplayed, boardSubjects, assignees, t
     return <div className={classNames("board-subject-hexagon-container", isTable ? "table-view" : "card-view")}>
         {
             isSetAssignments ? <HexagonGroupsButton toggleAssignModal={toggleAssignModal} boardSubjects={boardSubjects} assignees={assignees} id={hexagonId} />
-                : percentageDisplayed === 100 ? <span className="board-subject-hexagon subject-complete"/>
-                    : /* else show percentage */ <>
-                        {generateGameboardSubjectHexagons(boardSubjects)}
-                        <div className="board-percent-completed">{percentageDisplayed}</div>
-                    </>
+                : <>
+                    {generateGameboardSubjectHexagons(boardSubjects)}
+                    <div className="board-percent-completed">{percentageDisplayed}</div>
+                </>
         }
     </div>;
 };
@@ -161,9 +158,9 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
             if (isAdminOrEventManager(user)) {
-                alert(`Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("gameboard", "quiz")} in your assigned ${siteSpecific("gameboards", "quizzes")} or '${siteSpecific("My gameboards", "My quizzes")}' page.`);
+                alert(`Warning: You currently have groups assigned to this ${siteSpecific("question deck", "quiz")}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("question deck", "quiz")} on the ${siteSpecific("Set assignments", "Manage assignments")} page.`);
             } else {
-                dispatch(showErrorToast(`${siteSpecific("Gameboard", "Quiz")} Deletion Not Allowed`, `You have groups assigned to this gameboard. To delete this ${siteSpecific("gameboard", "quiz")}, you must unassign all groups.`));
+                dispatch(showErrorToast(`${siteSpecific("Question Deck", "Quiz")} Deletion Not Allowed`, `You have groups assigned to this gameboard. To delete this ${siteSpecific("question deck", "quiz")}, you must unassign all groups.`));
                 return;
             }
         }
@@ -226,7 +223,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
                 <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
                 <td className={"align-middle text-center"}>
-                    <Button className="set-assignments-button" color={siteSpecific("tertiary", "secondary")} size="sm" onClick={toggleAssignModal}>
+                    <Button className="set-assignments-button" color={siteSpecific("tertiary", "solid")} size="sm" onClick={toggleAssignModal}>
                         Assign{hasAssignedGroups && "\u00a0/ Unassign"}
                     </Button>
                 </td>
@@ -236,7 +233,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </div>
                 </td>}
                 {isAda && <td className={basicCellClasses}>
-                    <Button outline color={"secondary"} className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                    <Button color="keyline" className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
                 </td>}
             </> 
                 : 
@@ -267,7 +264,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </td>}
                     {siteSpecific(
                         <td className={"text-center align-middle"}>
-                            <Button outline color="primary" className={"bin-icon d-inline-block outline"} style={{
+                            <Button outline color="solid" className={"bin-icon d-inline-block outline"} style={{
                                 width: "20px",
                                 minWidth: "20px",
                             }} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
@@ -289,82 +286,21 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         </tr>)
         :
         siteSpecific(
-            <Card className="board-card card-neat" data-testid={"gameboard-card"}>
-                <CardBody className="d-flex flex-column pb-4 pt-4">
-                    <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
-                    <Row className="mt-1 mb-2 justify-content-between">
-                        <Col lg={8} md={8} sm={10} xs={8}>
-                            <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
-                            <CardSubtitle data-testid={"owner"}>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
-                        </Col>
-                        {isSetAssignments ? <Col className="d-flex justify-content-center">
-                            <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                        </Col>
-                            : <>
-                                <Col xs={2} className="card-share-link col-auto px-3">
-                                    <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
-                                </Col>
-                            </>}
-                    </Row>
-                    <CardSubtitle data-testid={"created-date"}>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
-                    <CardSubtitle data-testid={"last-visited"}>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                    <br />
-                    <table className="w-100">
-                        <thead>
-                            <tr>
-                                <th className="w-50">
-                                    <strong>{`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}`}</strong>
-                                </th>
-                                <th className="w-50 ps-1">
-                                    <strong>{`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}</strong>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
-                                <td className="w-50 align-baseline text-lg">
-                                    {stageLabelMap[stage]}
-                                </td>
-                                <td className="w-50 ps-1">
-                                    {difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}
-                                </td>
-                            </tr>)}
-                            {boardStagesAndDifficulties.length === 0 && <tr>
-                                <td className="w-50 align-baseline text-lg">
-                                N/A
-                                </td>
-                                <td className="w-50 ps-1">
-                                -
-                                </td>
-                            </tr>}
-                        </tbody>
-                    </table>
-                    <Spacer />
-                    <Row className={isSetAssignments ? "justify-content-end" : "pt-4 my-gameboards-cards-hex-container"}>
-                        {isSetAssignments ? <Col xs={2} className="card-share-link col-auto">
-                            <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
-                        </Col>
-                            :
-                            <>
-                                <Col>
-                                    <b>Attempted:</b>
-                                    <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                                </Col>
-                                <Col>
-                                    <b>Correct:</b>
-                                    <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />                    
-                                </Col>
-                            </>}
-                    </Row>
-                </CardBody>
-                {isSetAssignments && <CardFooter>
-                    <Button className={"mb-1"} block color="tertiary" onClick={toggleAssignModal}>
-                        Assign{hasAssignedGroups && " / Unassign"}
-                    </Button>
-                </CardFooter>}
-            </Card>,
+            <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} data-testid="gameboard-card"
+                {...(isSetAssignments ? {'setAssignmentsDetails': {toggleAssignModal, groupCount: assignees.length}} : {})}>
+                <Row className="w-100">
+                    <Col>
+                        {isDefined(board.creationDate) && <p className="mb-0" data-testid={"created-date"}>
+                            Created <strong>{getFriendlyDaysUntil(board.creationDate)}</strong>
+                        </p>}
+                        {isDefined(board.lastVisited) && <p className="mb-0" data-testid={"last-visited"}>
+                            Last visited <strong>{getFriendlyDaysUntil(board.lastVisited)}</strong>
+                        </p>}
+                    </Col>
+                </Row>
+            </GameboardCard>,
             <Card className={"board-card"} data-testid={"gameboard-card"}>
-                <CardBody className="pb-5 pt-4">
+                <CardBody className="pb-7 pt-4">
                     <Row className={"mb-2"}>
                         <Col xs={8} sm={7} md={8}>
                             <h4><Link className={"d-inline"} to={boardLink}>{board.title}</Link></h4>
@@ -404,15 +340,20 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                                 </Col>
                         )}
                         <Col className="pt-3">
-                            <b>Stages and difficulties</b>:<br/> {boardStagesAndDifficulties.map(([stage,difficulties], _) =>
-                                `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
-                            ).join(", ") || "-"}<br/>
+                            <b>Stages and difficulties</b>:
+                            <br/> 
+                            <p>
+                                {boardStagesAndDifficulties.map(([stage,difficulties], _) =>
+                                    `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
+                                ).join(", ") || "-"}
+                            </p>
+                            <br/>
                         </Col>
                     </Row>
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
-                        <Button outline color={"secondary"} className={"me-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
-                        {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="secondary" onClick={toggleAssignModal}>
+                        <Button color="keyline" className={"me-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                        {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={toggleAssignModal}>
                             Assign{hasAssignedGroups && " / Unassign"}
                         </Button>}
                     </CardFooter>

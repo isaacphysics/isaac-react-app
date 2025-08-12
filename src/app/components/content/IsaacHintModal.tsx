@@ -47,7 +47,7 @@ export const IsaacHintModal = (props: HintModalProps) => {
             {label}
         </Button>
 
-        <Modal isOpen={isOpen} toggle={toggle} size={"lg"} {...restOfProps}>
+        <Modal isOpen={isOpen} toggle={toggle} size={"lg"} data-bs-theme="neutral" {...restOfProps}>
             <ModalHeader close={closeButton} className={classNames({"d-flex justify-content-between": closeButton})}>
                 {title}
             </ModalHeader>

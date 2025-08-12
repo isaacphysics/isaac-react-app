@@ -1,55 +1,54 @@
 @import "../common/header";
 
-// reverse final element in the navigation bar to keep options on the screen
-ul#main-menu {
-  li.dropdown.nav-item:last-child {
-    div.dropdown-menu {
-      right: 0;
-      left: auto;
-      &::before {
-        right: 1rem;
-        left: auto;
+#header-offcanvas {
+  width: 591px;
+  .offcanvas-header {
+    font-size: 14px;
+  }
+  ul#main-menu {
+    li:not(.explore-group) {
+      border-top: $color-neutral-200 1px solid;
+      &:last-child {
+        border-bottom: $color-neutral-200 1px solid;
+      }
+      > a {
+        position: relative;
+        z-index: 1;
+      }
+      div.nav-section {
+        border: none;
+        position: static;
       }
     }
   }
 }
 
-// NOMENSA header.scss
-// !important used to override bootstraps use of !important :(
+.navbar-nav.navbar-nav {
+  a:not(.btn):not(.dropdown-item), a.btn.btn-link {
+    text-decoration: none;
+    &:hover {
+      background-color: unset;
+      text-decoration: underline;
+    }
+  }
+
+  a.dropdown-item:hover {
+    text-decoration: underline;
+  }
+}
 
 header {
-  background-size: 100%;
-  background-repeat: no-repeat;
+  // >=md desktop menu, not the offcanvas
   position: relative;
+  font-size: 14px;
+
+  .navbar-nav div.nav-section {
+    position: absolute;
+  }
 
   > .container {
     @include respond-below(sm) {
       max-width: 100% !important;
-    }
-  }
-
-  .header-bar {
-    position: relative;
-    @include clearfix;
-
-    @include respond-above(sm) {
-      padding-right: auto;
-    }
-  }
-
-  .header-links {
-    justify-content: flex-end !important;
-
-    @include respond-below(xs) {
-      padding-right: 20% !important;
-    }
-    @include respond-above(xs){
-      padding-right: 28% !important;
-    }
-    @include respond-above(sm) {
-      margin-top: 0.2rem;
-      padding-right: 0 !important;
-      width: 100%;
     }
   }
 }
@@ -63,14 +62,176 @@ div#header-progress {
 }
 header {
   z-index: 20;
-  background-image: url('/assets/phy/line.svg');
-  @include respond-above(sm) {
-    background-size: 100% 70%;
+}
+
+#content-nav-container {
+  background-color: $color-neutral-50;
+
+  .explore-group {
+    > span {
+      color: $color-neutral-500;
+    }
+
+    > ul {
+      list-style-type: none;
+      list-style-image: none;
+    }
+
+    li.dropdown {
+
+      div.dropdown-menu:has(> .quick-switch) {
+        padding-top: 2px;
+      }
+
+      .quick-switch {
+        margin: -2px -1px 0;
+        background-color: var(--subject-color-700);
+        
+        span:first-child {
+          color: var(--subject-color-100);
+          font-size: 13px;
+        }
+        
+        span:last-child {
+          color: white;
+          font-size: 14px;
+        }
+
+        &:hover {
+          background-color: var(--subject-color-800);
+        }
+      }
+
+      &.hoverable:not(.quick-switch) {
+        &::after {
+          @include pseudo-element;
+          width: 16px;
+          bottom: 16px;
+          left: 50%;
+          transform: translateX(-50%);
+          border-bottom: 4px solid $color-neutral-200;
+          transition: width 0.2s ease, border-color 0.4s ease-out;
+          pointer-events: none;
+        }
+  
+        &:hover::after {
+          width: 24px;
+        }
+  
+        &.active::after {
+          border-color: var(--nav-primary);
+          width: calc(100% - 1rem);
+        }
+      }
+
+      > a {
+        font-size: 15px;
+        font-family: $secondary-font-medium;
+        color: $color-neutral-900;
+      }
+
+      &:not(.hoverable) {
+        > a {
+          font-size: 15px;
+          font-family: $primary-font;
+          color: $color-neutral-500;
+
+          &::after {
+            content: "";
+            position: relative;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+            @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
+            transform: rotate3d(1, 0, 0, 0deg);
+            transition: transform 0.21s ease-in-out;
+          }
+        }
+
+        &:hover > a, &.active > a {
+          color: $color-neutral-900;
+        }
+
+        &.active > a::after {
+          transform: rotate3d(1, 0, 0, 180deg);
+        }
+      }
+
+      div.dropdown-menu {
+        border: 1px solid $border-color;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        margin-top: 0px;
+        background-color: $color-neutral-50;
+        min-width: 268px;
+
+        a:not(.btn) {
+          min-width: 268px;
+          font-size: 14px;
+          text-decoration: none;
+          &:not(.quick-switch):hover {
+            background-color: $color-neutral-100;
+          }
+        }
+
+        h5 {
+          font-size: 14px;
+          font-family: $primary-font;
+          color: $color-neutral-500;
+          line-height: 1.1;
+          margin-left: 23px;
+        }
+      }
+    }
   }
 
-  .header-links {
-    @include respond-below(md) {
-      margin-top: 1.7rem !important;
+  a:not(.btn) {
+    color: $color-neutral-900;
+  }
+}
+
+#header-offcanvas {
+  .explore-group {
+    border: none;
+
+    &.accordion, .accordion-item, .accordion-header, .accordion-button {
+      background: $color-neutral-50;
+      box-shadow: none;
+      border-radius: 5px;
+    }
+
+    .accordion-button {
+      font-family: $primary-font;
+      font-size: 1rem !important; // RS... :(
+      line-height: 28px; // same height as the My Isaac icon
+      color: $color-neutral-500;
+      transition: none;
+    }
+
+    button:focus {
+      outline: 0.2rem solid black !important;
+    }
+
+    .accordion-button:not(.collapsed), .accordion-button:hover {
+      color: $color-neutral-900;
+    }
+
+    .accordion-body {
+      background: $color-neutral-50;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+
+      > a:hover {
+        background: $color-neutral-100;
+        text-decoration: none;
+      }
+      
+      h5 {
+        font-size: 14px;
+        font-family: $primary-font;
+        color: $color-neutral-500;
+        line-height: 1.1;
+        margin-left: 23px;
+      }
     }
   }
 }

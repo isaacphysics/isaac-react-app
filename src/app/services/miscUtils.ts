@@ -8,9 +8,13 @@ export function isDefined<T>(value: T | undefined | null): value is NonNullable<
     return <T>value !== undefined && <T>value !== null;
 }
 
+export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
+
+export type ArrayElement<T extends readonly any[]> = T extends readonly (infer U)[] ? U : never;
+
 /**
  * This function is used to check if a string contains all the words in a search phease, in any order.
- * 
+ *
  * @param text The text to check.
  * @param searchPhrase The search phrase from which words are checked for in the text.
  * @returns Whether the text contains all the words in the phrase, in any order, or not.
@@ -21,7 +25,7 @@ export function matchesAllWordsInAnyOrder(text: string | undefined, searchPhrase
 
 /**
  * This function is used to match a string against a search phrase, in a case-insensitive manner.
- * 
+ *
  * @param text The text to check.
  * @param searchPhrase The search phrase to check for in the text.
  * @returns Whether the text contains the search phrase or not.
@@ -129,7 +133,7 @@ export function useOutsideCallback(ref: RefObject<any>, callback : () => void, d
     }, [...deps, ref]);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
+
 export function noop(_: never) {}
 
 // Confirms (currently using `window.confirm`, but we could change that to a more Isaac/Ada-themed thing moving
@@ -146,4 +150,19 @@ export const confirmThen = <T, R>(prompt: string, confirmCallback: () => T, canc
     return cancelCallback?.();
 };
 
+export const interleave = <T>(...lists: T[][]): T[] => {
+    const maxLength = Math.max(...lists.map(list => list.length));
+    const result = [];
+    for (let i = 0; i < maxLength; i++) {
+        for (const list of lists) {
+            if (list[i] !== undefined) {
+                result.push(list[i]);
+            }
+        }
+    }
+    return result;
+};
+
 export const nextRandom = () => Math.random();
+
+export const nextSeed = () => Math.floor(Math.floor(nextRandom() * 10 ** 6));

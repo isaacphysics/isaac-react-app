@@ -2,14 +2,18 @@
 .content-summary-link .content-summary-link-title {
   background: none;
   border: 0;
-  .text-secondary {
+  .text-theme {
     font-family: $secondary-font-semi-bold;
   }
 }
 
 .new-tab {
-  height: 24px;
-  width: 24px;
+  height: fit-content;
+  background: none;
+  > img {
+    height: 24px;
+    width: 24px;
+  }
 }
 
 .content-summary-link {
@@ -203,7 +207,7 @@ button.btn.btn-link.login-b,
 
 .not-mobile {
   @include respond-below(sm) {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -281,39 +285,57 @@ iframe.email-html {
 //  }
 //}
 
-.collapsible-head {
-  margin-left: 0;
-  margin-right: 0;
-  border-top-style: solid;
-  border-bottom-style: solid;
-  border-width: 1px;
-  border-color: $gray-107;
+.text-block {
+  h2, p {
+    margin-bottom: 1.2rem;
+  }
+}
 
+.image-block {
+  object-fit: contain;
+  @extend .vertical-center;
+
+  > img {
+    width: 100%;
+  }
+}
+
+.collapsible-list-container {
+  border-top: 2px solid $gray-107;
   img {
     transition: transform 0.1s ease;
   }
 }
 
+:has(> .collapsible-list-container) {
+  &:last-of-type {
+    border-bottom: 2px solid $gray-107;
+  }
+}
+
 .collapsible-body {
-  transition: max-height 0.3s ease-in-out, height 0.3s ease-in-out;
+  @include reduced-motion-compliant-animation {
+    transition: max-height 0.3s ease-in-out, height 0.3s ease-in-out;
+  }
   // https://stackoverflow.com/q/6421966; x-overflow must be visible (for e.g. box shadows), y-overflow would preferably be entirely hidden but can't be.
   overflow: visible clip;
   // height must be animated alongside max-height to prevent jumping if the inner content changes height during the animation
   max-height: 0;
 }
 
-@mixin pill-tag($text-color, $bg-color: white, $border-color: null) {
+@mixin pill-tag($text-color: black, $bg-color: var(--subject-color-50, white), $border-color: null) {
   width: max-content;
   padding: 0 0.4em;
   align-self: center;
   font-size: small;
   text-decoration: none;
+  text-align: center;
   color: $text-color;
   background-color: $bg-color;
-  border-radius: 8px;
-  transition: color 0.2s;
+  border-radius: $border-radius-pill;
+  transition: color 0.2s ease-out, background-color 0.2s ease-out;
   &::after {
-      display: none;
+    display: none;
   }
 
   @if $border-color {
@@ -321,10 +343,136 @@ iframe.email-html {
   }
 
   &:is(a):hover {
-      color: darken($text-color, 20%);
+    color: color-mix(in srgb, var(--pill-text-color, black), black 20%);
+    background-color: color-mix(in hsl, var(--pill-bg-color, $bg-color), black 5%);
   }
 }
 
 .superseded-tag.superseded-tag {
   @include pill-tag($gray-160, white, $gray-194)
+}
+
+// mirror of bootstrap's .dropdown-divider (+ equiv for the y-axis), using always-defined props
+
+.section-divider {
+  height: 0;
+  margin: 0.5rem 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  opacity: 1;
+}
+
+.section-divider-y {
+  width: 0;
+  margin: 0 0.5rem;
+  overflow: hidden;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  opacity: 1;
+}
+
+.section-divider-bold {
+  @extend .section-divider;
+  border-top: 2px solid rgba(0, 0, 0, 0.20);
+}
+
+.hoverable-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  &:hover .popup {
+    display: block;
+  }
+}
+
+.tab-picker {
+  cursor: pointer;
+  border-left: solid 2px transparent;
+
+  .badge.rounded-pill {
+    background-color: white;
+    color: var(--bs-body-color-rgb);
+  }
+
+  background-size: 205% 100%;
+  background-image: linear-gradient(90deg, var(--subject-color-100) 50%, transparent 50%);
+  background-position: 100% 0%;
+  transition: background-position 0.3s ease-in-out;
+  
+  &:has(> input:checked) {
+    border-left: solid 2px var(--tab-active);
+    background-position: 0% 0%;
+    
+    .badge.rounded-pill {
+      background-color: var(--tab-active);
+      color: white;
+    }
+  }
+
+  &:hover:not(:has(> input:checked, > input:disabled)) {
+    border-left: solid 2px var(--tab-hover);
+  }
+
+  &:has(> input:disabled) {
+    color: var(--sidebar-tab-disabled);
+    cursor: not-allowed;
+  }
+
+  &:has(> input:focus-visible) {
+    @include focus-outline;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  > input {
+    @extend .visually-hidden;
+  }
+}
+
+.inline-tabs {
+
+  $active-height: 4px;
+  $baseline-height: 3px;
+
+  position: relative;
+  button {
+    background: transparent;
+    padding: 0.5rem 0.5rem 0.2rem;
+    margin: 0.5rem 0.5rem 0.3rem;
+    border-bottom: $active-height solid transparent;
+    z-index: 1;
+
+    &.active {
+      border-bottom: $active-height solid var(--tab-active);
+      color: var(--tab-active);
+    }
+
+    &:hover:not(.active) {
+      border-bottom: $active-height solid var(--tab-hover);
+    }
+  }
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: calc(100% - 1rem);
+    left: 0.5rem;
+    bottom: calc(0.5rem - $active-height);
+    border-bottom: $baseline-height solid var(--tab-hover);
+  }
+}
+
+.external-link {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.25rem;
+  padding: 0 0.25rem;
+  transition: all 0.15s ease-in-out;
+  
+  &:hover {
+    scale: 1.05;
+  }
 }

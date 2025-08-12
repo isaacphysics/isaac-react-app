@@ -27,7 +27,7 @@ import {
     isPhy,
     isTeacherOrAbove,
     schoolNameWithPostcode,
-    SITE_TITLE, siteSpecific,
+    SITE_TITLE, SITE_TITLE_SHORT, siteSpecific,
     validateEmail,
     WEBMASTER_EMAIL
 } from "../../services";
@@ -71,7 +71,7 @@ export const TeacherRequest = () => {
     );
 
     const message = "Hello,\n\n" +
-        `Please could you convert my ${siteSpecific("Isaac", "Ada")} account into a teacher account.` + "\n\n" +
+        `Please could you convert my ${SITE_TITLE_SHORT} account into a teacher account.` + "\n\n" +
         "My school is: " + school + "\n" +
         teacherVerificationMethodMessage + "\n\n\n" +
         "Any other information: " + otherInformation + "\n\n" +
@@ -116,8 +116,8 @@ export const TeacherRequest = () => {
         !emailVerified
     );
 
-    return <Container id="contact-page" className="pb-5">
-        <TitleAndBreadcrumb currentPageTitle="Teacher Account request" />
+    return <Container id="contact-page" className="pb-7">
+        <TitleAndBreadcrumb currentPageTitle="Teacher Account request" icon={{type: "hex", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>
                 <Col size={9}>
@@ -266,7 +266,7 @@ export const TeacherRequest = () => {
                                             </span>
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
-                                            <Input type="submit" value="Submit" disabled={invalidDetails} className="btn w-100 btn-secondary border-0" />
+                                            <Button type="submit" color="keyline" disabled={invalidDetails} className='w-100'>Submit</Button>
                                         </Col>
                                     </Row>
                                 </CardFooter>

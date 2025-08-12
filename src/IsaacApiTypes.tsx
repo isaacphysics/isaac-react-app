@@ -97,7 +97,25 @@ export interface IsaacAnvilQuestionDTO extends QuestionDTO {
 export interface IsaacConceptPageDTO extends SeguePageDTO {
 }
 
-export interface IsaacEventPageDTO extends ContentDTO {
+export interface IsaacBookIndexPageDTO extends SeguePageDTO {
+    coverImage?: ImageDTO;
+}
+
+export interface IsaacBookDetailPageDTO extends SeguePageDTO {
+    gameboards?: GameboardDTO[];
+    extensionGameboards?: GameboardDTO[];
+}
+
+export interface IsaacRevisionDetailPageDTO extends SeguePageDTO {
+    gameboards?: GameboardDTO[];
+};
+
+export interface IsaacPageFragmentDTO extends ContentDTO {
+    summary?: string;
+    teacherNotes?: string;
+}
+
+export interface IsaacEventPageDTO extends SeguePageDTO {
     date?: Date;
     bookingDeadline?: Date;
     prepWorkDeadline?: Date;
@@ -228,9 +246,25 @@ export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
     linkedGameboards?: GameboardDTO[];
 }
 
+export type SidebarEntryType = "isaacBookDetailPage" | "isaacBookIndexPage" | "isaacRevisionDetailPage" | "page";
+
 export interface IsaacWildcardDTO extends ContentDTO {
     description?: string;
     url?: string;
+}
+
+export interface SidebarEntryDTO extends ContentDTO {
+    label?: string;
+    pageId?: string;
+    pageType?: SidebarEntryType;
+}
+
+export interface SidebarGroupDTO extends SidebarEntryDTO {
+    sidebarEntries?: SidebarEntryDTO[];
+}
+
+export interface SidebarDTO extends ContentDTO {
+    sidebarEntries?: SidebarEntryDTO[];
 }
 
 export interface QuestionPartConceptDTO {
@@ -416,6 +450,7 @@ export interface ContentSummaryDTO {
     deprecated?: boolean;
     difficulty?: string;
     audience?: AudienceContext[];
+    className?: string;
 }
 
 export interface QuizSummaryDTO extends ContentSummaryDTO {
@@ -545,6 +580,8 @@ export interface SeguePageDTO extends ContentDTO {
     canonicalSourceFile?: string;
     summary?: string;
     deprecated?: boolean;
+    teacherNotes?: string;
+    sidebar?: SidebarDTO;
 }
 
 export interface StringChoiceDTO extends ChoiceDTO {
@@ -665,9 +702,9 @@ export interface UserSummaryWithGroupMembershipDTO extends UserSummaryDTO {
 export interface IAssignmentLike {
     groupId?: number;
     id?: number;
-    creationDate?: Date;
-    dueDate?: Date;
-    scheduledStartDate?: Date;
+    creationDate?: Date | number;
+    dueDate?: Date | number;
+    scheduledStartDate?: Date | number;
     ownerUserId?: number;
 }
 
@@ -826,6 +863,6 @@ export type GroupMembershipStatus = "ACTIVE" | "INACTIVE" | "DELETED";
 
 export type Gender = "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY" | "UNKNOWN";
 
-export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE" | "RASPBERRYPI";
+export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE" | "RASPBERRYPI" | "MICROSOFT";
 
 export type QuestionPartState = "CORRECT" | "INCORRECT" | "NOT_ATTEMPTED";

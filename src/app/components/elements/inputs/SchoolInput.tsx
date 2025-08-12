@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
-import {schoolNameWithPostcode, siteSpecific, validateUserSchool} from "../../../services";
+import {isPhy, schoolNameWithPostcode, siteSpecific, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
@@ -56,11 +56,13 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     // Get school associated with urn
     function fetchSchool(urn: string) {
         if (urn !== "") {
-            getSchoolByUrn(urn).then(({data}) => {
-                if (data && data.length > 0) {
-                    setSelectedSchoolObject(data[0]);
-                }
-            });
+            if (selectedSchoolObject?.urn !== urn) {
+                getSchoolByUrn(urn).then(({data}) => {
+                    if (data && data.length > 0) {
+                        setSelectedSchoolObject(data[0]);
+                    }
+                });
+            }
         } else {
             setSelectedSchoolObject(null);
         }
@@ -120,7 +122,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 placeholder={"Type your school name"}
                 value={schoolValue}
                 components={customComponents}
-                className={(isInvalid ? "react-select-error " : "") + "basic-multi-select"}
+                className={classNames("basic-multi-select", {"react-select-error": isInvalid})}
                 classNamePrefix="select"
                 onChange={handleSetSchool}
                 loadOptions={searchSchoolsFn}
@@ -133,6 +135,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             <StyledCheckbox
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
+                color="solid"
                 invalid={isInvalid}
                 disabled={disableInput || !setUserToUpdate}
                 onChange={(e => {

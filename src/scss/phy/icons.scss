@@ -18,22 +18,6 @@
   background: url(/assets/phy/ru.png) -296px -302px no-repeat;
   margin: 3px 10px 0 0;
 }
-.icon-person {
-  float: left;
-  width: 9px;
-  min-width: 9px;
-  height: 14px;
-  background: url(/assets/phy/ru.png) -296px -316px no-repeat;
-  margin: 0 10px 0 0;
-}
-.icon-group {
-  float: left;
-  width: 23px;
-  min-width: 23px;
-  height: 19px;
-  background: url(/assets/phy/ru.png) -330px -321px no-repeat;
-  margin: 10px 10px 10px 0;
-}
 .icon-group-table-person {
   float: left;
   width: 11px;
@@ -43,37 +27,279 @@
   margin: 8px 10px 0 0;
 }
 .icon-status {
-  width: 46;
+  width: 46px;
+  height: 46px;
   margin-top: -1px;
 }
 
 .icon-person-active,
-.icon-person,
 .icon-warning,
 .icon-help,
-.icon-group,
 .icon-group-table-person
 {
   background-image: url(/assets/phy/ru.png) !important;
 }
 
+.icon-correct {
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-correct.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-attempted {
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-incorrect {
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-incorrect.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-in-progress {
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-in-progress.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-not-started {
+  @include svg-icon-raw('/assets/phy/icons/redesign/status-not-started.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-not-attempted {
+  // only for assignment progress – prefer icon-not-started for questions
+  @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-initials {
+  // background hex
+  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), $color-brand-400, 28px, 28px, 100%);
+  opacity: 0.2;
+  // initials text
+  + * {
+    position: absolute;
+    font-size: 12px;
+  }
+}
+
+.icon-menu {
+  @include svg-icon('/assets/phy/icons/redesign/menu.svg', 16px, 16px, 14px 12px);
+}
+
+.icon-close {
+  @include svg-icon('/assets/phy/icons/redesign/close.svg', 16px, 16px, 14px 12px);
+}
+
+.icon-cog {
+  @include svg-icon('/assets/phy/icons/redesign/cog.svg', 16px, 16px);
+}
+
+.icon-hexagon {
+  @include svg-icon('/assets/phy/icons/redesign/hexagon.svg', 16px, 16px, 12px);
+}
+
+.icon-my-isaac {
+  @include svg-icon('/assets/phy/icons/redesign/my-isaac.svg', 28px, 28px);
+}
+
+.icon-search {
+  @include svg-icon('/assets/phy/icons/redesign/search.svg', 16px, 16px);
+}
+
+.icon-flag {
+  @include svg-icon('/assets/phy/icons/redesign/flag.svg', 16px, 16px);
+}
+
+.icon-print {
+  @include svg-icon('/assets/phy/icons/redesign/print.svg', 16px, 16px);
+}
+
+.icon-share {
+  @include svg-icon('/assets/phy/icons/redesign/share.svg', 16px, 16px);
+}
+
+.icon-refresh {
+  @include svg-icon('/assets/phy/icons/redesign/refresh.svg', 16px, 16px);
+}
+
+.icon-sidebar {
+  @include svg-icon('/assets/phy/icons/redesign/sidebar.svg', 16px, 16px);
+}
+
+.icon-arrow-down {
+  @include svg-icon('/assets/common/icons/arrow-right.svg', 16px, 16px);
+  transform: rotate(90deg);
+}
+
+.icon-question {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-question-fg.svg',
+    '/assets/phy/icons/redesign/page-question-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%)
+  );
+}
+
+// "-thick" icons have a thicker internal stroke (and are shaped slightly differently to account); intended for use at small sizes (e.g. inline)
+.icon-question-thick {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-question-thick-fg.svg', 
+    '/assets/phy/icons/redesign/page-question-thick-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%)
+  );
+}
+
+.icon-concept {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-concept-fg.svg', 
+    '/assets/phy/icons/redesign/page-concept-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 55%), center 55%
+    // the SVGs are correct, but visually top-heavy; the offset here shifts them down a little for better balance
+  );
+}
+
+.icon-concept-thick {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-concept-thick-fg.svg', 
+    '/assets/phy/icons/redesign/page-concept-thick-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 55%), center 55%
+  );
+}
+
+.icon-generic {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-generic-fg.svg', 
+    '/assets/phy/icons/redesign/page-generic-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), 52% center
+  );
+}
+
+.icon-question-deck {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-question-deck-fg.svg',
+    '/assets/phy/icons/redesign/page-question-deck-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), center 45%
+  );
+}
+
+.icon-finder {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-finder-fg.svg', 
+    '/assets/phy/icons/redesign/page-finder-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 57%)
+  );
+}
+
+.icon-tests {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-tests-fg.svg', 
+    '/assets/phy/icons/redesign/page-tests-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%)
+  );
+}
+
+.icon-quiz {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-quiz-fg.svg', 
+    '/assets/phy/icons/redesign/page-quiz-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 57%)
+  );
+}
+
+.icon-revision {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-revision-fg.svg', 
+    '/assets/phy/icons/redesign/page-revision-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%)
+  );
+}
+
+.icon-info {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/info-fg.svg',
+    '/assets/phy/icons/redesign/info-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 50%)
+  );
+}
+
+.icon-events {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-event-fg.svg',
+    '/assets/phy/icons/redesign/page-event-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 52%)
+  );
+}
+
+.icon-contact {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-contact-fg.svg', 
+    '/assets/phy/icons/redesign/page-contact-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), 58% 53%
+  );
+}
+
+.icon-group {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-group-fg.svg', 
+    '/assets/phy/icons/redesign/page-group-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 65%)
+  );
+}
+
+.icon-account {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-account-fg.svg',
+    '/assets/phy/icons/redesign/page-account-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 63%)
+);
+}
+
+.icon-progress {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-progress-fg.svg',
+    '/assets/phy/icons/redesign/page-progress-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 58%), 52% center
+  );
+}
+
+.icon-news {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-news-fg.svg', 
+    '/assets/phy/icons/redesign/page-news-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%)
+  );
+}
+
+.icon-error {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-error-fg.svg', 
+    '/assets/phy/icons/redesign/page-error-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), center 43%
+  );
+}
+
+.icon-mail {
+  @include svg-icon(
+    '/assets/phy/icons/redesign/page-mail.svg', 
+    var(--icon-size), var(--icon-size), var(--mask-size, 60%), center 55%
+  );
+}
+
+.icon-book {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-book-fg.svg',
+    '/assets/phy/icons/redesign/page-book-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 58%)
+  )
+}
+
+.icon-wildcard {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-revision-fg.svg',
+    '/assets/phy/icons/redesign/page-generic-bg.svg',
+    var(--icon-size), var(--icon-size), var(--mask-size, 58%)
+  );
+
+  // Reusing layers from other icons so this needs slight adjustments to fit
+  &::after {
+    scale: 0.9;
+  }
+}
+
 svg {
-  &.physics-fill {
-    fill: $phy_purple;
-  }
-
-  &.maths-fill {
-    fill: $phy_maths;
-  }
-
-  &.chemistry-fill {
-    fill: $phy_chemistry;
-  }
-
-  &.biology-fill {
-    fill: $phy_biology;
-  }
-
   &.almost-fill {
     fill: $phy_extra_force_yellow;
   }
@@ -81,4 +307,50 @@ svg {
   &.correct-fill {
     fill: $phy_green;
   }
+}
+
+.btn.btn-keyline:hover > i.icon:not(.icon-raw), .btn.btn-secondary:hover > i.icon:not(.icon-raw),
+.btn.btn-tint:hover > i.icon:not(.icon-raw), .btn.btn-tertiary:hover > i.icon:not(.icon-raw) {
+  background-color: var(--layered-icon-parent-bg-override, var(--icon-hover));
+
+  &::before {
+    background-color: var(--icon-hover);
+  }
+
+  &::after {
+    background-color: var(--icon-hover);
+  }
+}
+
+.phy-hex-icon {
+  // this is essentially an .icon, but needs different colouring; override size as needed with icon-lg, icon-xl, etc.
+  @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), var(--icon-size, 75px), var(--icon-size, 75px), 100%);
+  position: absolute;
+}
+
+// Overrides -- ONLY use these on an individual basis to override an active theme.
+// Setting `data-bs-theme` on a parent element is the much preferred approach.
+
+// These are !important by the same logic as Bootstrap classes; if you have specified this as an explicit classname, you want it to take precedence.
+
+// the default icon colour for `neutral` is $color-theme-500 (green), but we use black icons in a few places across e.g. navigation
+
+i.icon.icon-color-black {
+  @include icon-color-override($color-neutral-900);
+}
+
+i.icon.icon-color-grey {
+  @include icon-color-override($color-neutral-500);
+}
+
+i.icon.icon-color-muted {
+  @include icon-color-override($color-neutral-300);
+}
+
+i.icon.icon-color-white {
+  @include icon-color-override($color-neutral-white);
+}
+
+i.icon.icon-color-black-hoverable {
+  --buttons-light-icon: #{$color-neutral-900};
 }

@@ -32,7 +32,7 @@ export const useGroupAssignmentSummary = (user: RegisteredUserDTO, groupId?: num
 };
 
 // This looks a bit odd, but it means that we can use the same sort function for both gameboard and quiz assignments
-type SortFuncInputType = {creationDate?: Date, dueDate?: Date, scheduledStartDate?: Date, gameboard?: GameboardDTO, quiz?: IsaacQuizDTO};
+type SortFuncInputType = {creationDate?: Date | number, dueDate?: Date | number, scheduledStartDate?: Date | number, gameboard?: GameboardDTO, quiz?: IsaacQuizDTO};
 const sortAssignments = (assignments: SortFuncInputType[] | undefined, sortOrder?: AssignmentOrderSpec) => {
     let sortedAssignments;
     switch (sortOrder?.type) {
@@ -55,9 +55,9 @@ const sortAssignments = (assignments: SortFuncInputType[] | undefined, sortOrder
 
 // Returns assignment objects with full gameboard and question part data
 export const useGroupAssignments = (user: RegisteredUserDTO, groupId?: number, sortOrder?: AssignmentOrderSpec) => {
-    const {data: assignments} = useGetMySetAssignmentsQuery(groupId);
+    const {data: assignments, isFetching: isFetchingAssignments} = useGetMySetAssignmentsQuery(groupId);
     // Tutors can't set quizzes, so we skip the query in that case
-    const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery(isTeacherOrAbove(user) ? undefined : skipToken);
+    const {data: quizAssignments, isFetching: isFetchingQuizAssignments} = useGetQuizAssignmentsSetByMeQuery(isTeacherOrAbove(user) ? undefined : skipToken);
 
     const groupBoardAssignments = sortAssignments(assignments, sortOrder) as EnhancedAssignment[] | undefined;
     const groupQuizAssignments = isFound(quizAssignments)
@@ -66,6 +66,7 @@ export const useGroupAssignments = (user: RegisteredUserDTO, groupId?: number, s
 
     return {
         groupBoardAssignments,
-        groupQuizAssignments
+        groupQuizAssignments,
+        isFetching: isFetchingAssignments || isFetchingQuizAssignments,
     };
 };

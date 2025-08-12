@@ -18,11 +18,20 @@ export const selectors = {
     },
 
     doc: {
-        get: (state: AppState) => state?.doc || null,
+        get: (state: AppState) => state?.page?.doc || null,
+        getWithout404: (state: AppState) => {
+            return state?.page?.doc === NOT_FOUND ? null : state?.page?.doc ?? null;
+        }
     },
 
     questions: {
         getQuestions: (state: AppState) => state?.questions?.questions,
+        allQuestionsCorrect: (state: AppState) => {
+            return !!state && !!state.questions && state.questions.questions.every(q => !!q.bestAttempt?.correct);
+        },
+        anyQuestionCorrect: (state: AppState) => {
+            return !!state && !!state.questions && state.questions.questions.some(q => !!q.bestAttempt?.correct);
+        },
         allQuestionsAttempted: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
         },
@@ -54,6 +63,10 @@ export const selectors = {
         orDefault: (state: AppState) => state?.mainContentId || "main",
     },
 
+    sidebar: {
+        open: (state: AppState) => state?.sidebar?.open ?? false,
+    },
+
     teacher: {
         userProgress: (state: AppState) => state?.userProgress && anonymiseIfNeededWith(anonymisationFunctions.userProgress)(state.userProgress),
         userAnsweredQuestionsByDate: (state: AppState) => state?.userAnsweredQuestionsByDate
@@ -71,6 +84,13 @@ export const selectors = {
         /* Retrieves the current users most recent attempt at the current quiz being viewed */
         currentQuizAttempt: (state: AppState) => state?.quizAttempt,
     },
+
+    pageContext: {
+        context: (state: AppState) => state?.pageContext ?? undefined, // transform null => undefined
+        previousContext: (state: AppState) => state?.pageContext?.previousContext ?? undefined,
+        stage: (state: AppState) => state?.pageContext?.stage,
+        subject: (state: AppState) => state?.pageContext?.subject,
+    }
 };
 
 // Important type checking to avoid an awkward bug

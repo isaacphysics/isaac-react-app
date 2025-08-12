@@ -49,6 +49,14 @@
   width: max-content !important;
 }
 
+.mw-max-content {
+  min-width: max-content !important;
+}
+
+.justify-self-center {
+  justify-self: center !important;
+}
+
 .border-radius-0 {
   border-radius: 0 !important;
 }
@@ -71,4 +79,18 @@
 
 .flip-y {
   transform: scaleY(-1);
+}
+
+.white-space-pre {
+  white-space: pre !important;
+}
+
+.d-contents {
+  display: contents !important;
+}
+
+.text-overflow-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

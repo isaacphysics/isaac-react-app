@@ -35,10 +35,13 @@ export const EmailAlterHandler = () => {
     }, [verifyEmail, userid, token]);
 
     return <Container id="email-verification">
-        <TitleAndBreadcrumb currentPageTitle="Email verification" />
+        <TitleAndBreadcrumb 
+            currentPageTitle="Email verification"
+            icon={{type: "hex", icon: "icon-mail"}}
+        />
         <Row>
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
-                <Card className="my-5 text-center">
+                <Card className="my-7 text-center">
                     <CardBody className="m-4">
                         {/* Isaac Physics had a large icon here */}
 

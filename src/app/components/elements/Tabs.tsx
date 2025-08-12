@@ -1,18 +1,20 @@
 import React, {ReactNode, useEffect, useRef, useState} from "react";
 import {Button, ButtonGroup, Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
-import {isAda, isDefined, siteSpecific} from "../../services";
+import {isAda, isDefined, isPhy, siteSpecific} from "../../services";
 import classNames from "classnames";
 import {useStatefulElementRef} from "./markup/portals/utils";
 import {useExpandContent} from "./markup/portals/Tables";
 import {ExpandableParentContext} from "../../../IsaacAppTypes";
 import {Markup} from "./markup";
+import { AffixButton } from "./AffixButton";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
-
+export type TabStyle = "tabs" | "buttons" | "dropdowns" | "cards";
 interface TabsProps {
     className?: string;
     tabTitleClass?: StringOrTabFunction;
+    tabNavbarClass?: string;
     tabContentClass?: string;
     children: {[tabTitle: string]: React.ReactNode};
     activeTabOverride?: number;
@@ -21,7 +23,7 @@ interface TabsProps {
     refreshHash?: string;
     expandable?: boolean;
     singleLine?: boolean;
-    style?: "tabs" | "buttons";
+    style?: TabStyle;
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabTitle: string, tabIndex: number) {
@@ -30,8 +32,9 @@ function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabT
     return stringOrTabFunction(tabTitle, tabIndex);
 }
 
-const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
-    return <Nav tabs className={classNames("flex-wrap", {"guaranteed-single-line": singleLine})}>
+// e.g.:   Tab 1 | Tab 2 | Tab 3
+const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab, className}: TabsProps & {activeTab: number; changeTab: (i: number) => void;}) => {
+    return <Nav tabs className={classNames(className, "flex-wrap", {"guaranteed-single-line": singleLine})}>
         {Object.keys(children).map((tabTitle, mapIndex) => {
             const tabIndex = mapIndex + 1;
             const linkClasses = callOrString(tabTitleClass, tabTitle, tabIndex);
@@ -49,7 +52,8 @@ const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab}: 
     </Nav>;
 };
 
-const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+// e.g.:   (Tab 1|Tab 2|Tab 3), i.e. as joined buttons
+const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass="", className}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
     const gliderRef = useRef<HTMLSpanElement>(null);
     const numberOfTabs = Object.keys(children).length;
     const buttonRefs = useRef<(HTMLButtonElement | null)[]>(Array(numberOfTabs).fill(null));
@@ -65,7 +69,7 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsPr
     }
 
     return <div className={"w-100 text-center"}>
-        <ButtonGroup className={"selector-tabs"}>
+        <ButtonGroup className={classNames(className, "selector-tabs")}>
             {Object.keys(children).map((tabTitle, i) =>
                 <Button key={i} innerRef={el => buttonRefs.current[i] = el}
                     color={"secondary"} outline={activeTab !== i + 1}
@@ -80,12 +84,39 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsPr
     </div>;
 };
 
+const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass, className}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+    return <div className={classNames(className, "mt-3 mb-1")}>
+        {Object.keys(children).map((tabTitle, i) =>
+            <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2 mb-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
+                affix: "icon-chevron-right",
+                position: "suffix",
+                type: "icon",
+                affixClassName: classNames("ms-2 icon-dropdown-90", {"active icon-color-white": activeTab === i + 1}),
+            }}>
+                {tabTitle}
+            </AffixButton>
+        )}
+    </div>;
+};
+
+const CardsNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+    return <div className="d-flex card-tabs">
+        {Object.keys(children).map((tabTitle, i) =>
+            <button key={i} className={classNames(tabTitleClass, "flex-grow-1 py-3 card-tab", {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} type="button">
+                <span>{tabTitle}</span>
+            </button>
+        )}
+    </div>;
+};
+
 export const Tabs = (props: TabsProps) => {
     const {
-        className="", tabContentClass="", children, activeTabOverride, onActiveTabChange,
-        deselectable=false, refreshHash, expandable, style="tabs"
+        className, tabContentClass, tabNavbarClass, children, activeTabOverride, onActiveTabChange,
+        deselectable=undefined, refreshHash, expandable, style=(siteSpecific("dropdowns", "tabs")),
     } = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
+
+    const isDeselectable = deselectable ?? (style === "dropdowns" ? true : deselectable);
 
     useEffect(() => {
         if (isDefined(activeTabOverride)) {
@@ -96,7 +127,7 @@ export const Tabs = (props: TabsProps) => {
     function changeTab(tabIndex: number) {
         pauseAllVideos();
         let nextTabIndex = tabIndex;
-        if (deselectable && activeTab === tabIndex) {
+        if (isDeselectable && activeTab === tabIndex) {
             nextTabIndex = -1;
         }
         setActiveTab(nextTabIndex);
@@ -110,18 +141,34 @@ export const Tabs = (props: TabsProps) => {
 
     return <div className={classNames({"mt-4": isDefined(expandButton)}, outerClasses)} ref={updateExpandRef}>
         {expandButton}
-        <div className={classNames(className, innerClasses, "position-relative")}>
+        <div className={classNames(className, innerClasses, `tab-style-${style}`, "position-relative")}>
             {style === "tabs"
-                ? <TabNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</TabNavbar>
-                : <ButtonNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</ButtonNavbar>
+                ? <TabNavbar {...props} className="no-print" activeTab={activeTab} changeTab={changeTab}>{children}</TabNavbar>
+                : style === "buttons"
+                    ? <ButtonNavbar {...props} activeTab={activeTab} changeTab={changeTab}>{children}</ButtonNavbar>
+                    : style === "dropdowns" 
+                        ? <DropdownNavbar {...props} className={classNames({"no-print": isPhy}, tabNavbarClass)} activeTab={activeTab} changeTab={changeTab}>{children}</DropdownNavbar>
+                        : <CardsNavbar  {...props} activeTab={activeTab} changeTab={changeTab}>{children}</CardsNavbar>
             }
             <ExpandableParentContext.Provider value={true}>
                 <TabContent activeTab={activeTab} className={tabContentClass}>
                     {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
                         const tabIndex = mapIndex + 1;
-                        return <TabPane key={tabTitle} tabId={tabIndex}>
-                            {tabBody as ReactNode}
-                        </TabPane>;
+                        return <React.Fragment key={tabTitle}>
+                            {/* This navbar exists only when printing so each tab has its own heading */}
+                            {style === "tabs" ?
+                                <TabNavbar {...props} className={classNames("d-none d-print-flex mb-3 mt-2", {"mt-n4": mapIndex === 0 && tabContentClass?.includes("pt-4")})} activeTab={tabIndex} changeTab={changeTab}>
+                                    {children}
+                                </TabNavbar> :
+                                style === "dropdowns" && isPhy && 
+                                <DropdownNavbar {...props} className={classNames("d-none d-print-flex mb-3 mt-2", {"mt-n4": mapIndex === 0 && tabContentClass?.includes("pt-4")})} activeTab={tabIndex} changeTab={changeTab}>
+                                    {children}
+                                </DropdownNavbar>
+                            }
+                            <TabPane key={tabTitle} tabId={tabIndex}>
+                                {tabBody as ReactNode}
+                            </TabPane>
+                        </React.Fragment>;
                     })}
                 </TabContent>
             </ExpandableParentContext.Provider>

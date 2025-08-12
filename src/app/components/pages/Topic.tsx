@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Link, withRouter} from "react-router-dom";
-import {AppState, fetchTopicSummary, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {selectors, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {
@@ -8,7 +8,7 @@ import {
     atLeastOne,
     getRelatedDocs,
     isAda,
-    NOT_FOUND, PATHS,
+    PATHS,
     TAG_ID,
 } from "../../services";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
@@ -18,18 +18,17 @@ import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import { IntendedAudienceWarningBanner } from "../navigation/IntendedAudienceWarningBanner";
+import {useGetTopicQuery} from "../../state";
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
-    const dispatch = useAppDispatch();
-    const topicPage = useAppSelector((state: AppState) => state ? state.currentTopic : null);
     const user = useAppSelector(selectors.user.orNull);
     
-    useEffect(() => {dispatch(fetchTopicSummary(topicName));}, [dispatch, topicName]);
+    const { data: topicPage } = useGetTopicQuery(topicName);
 
-    const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage);
+    const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage ?? null);
 
     const searchQuery = `?topic=${topicName}`;
-    const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards;
+    const linkedRelevantGameboards = topicPage && topicPage.linkedGameboards;
 
     return <ShowLoading until={topicPage} thenRender={topicPage =>
         <Container id="topic-page">
@@ -75,11 +74,11 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                 </Col>
             </Row>}
 
-            <Row className="mt-3 mb-5">
+            <Row className="mt-3 mb-7">
                 <Col className={"pb-3 mw-760"}>
                     <Row>
                         <Col size={6} className="text-center">
-                            <Button tag={Link} to="/topics" color="primary" outline size="lg" block>
+                            <Button tag={Link} to="/topics" color="keyline" size="lg" block>
                                 <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>

@@ -5,7 +5,9 @@
     box-shadow: 0 0 0 0.2rem $focus-blue;
   }
   .select__control, .select__control:hover {
-    border-color: $black;
+    min-height: 2.6rem;
+    border: 1px solid $color-neutral-300;
+    border-radius: $border-radius-lg;
 
     .select__value-container {
       padding: 0 0 0 1.2em;
@@ -27,4 +29,98 @@
     font-weight: 600;
     color: $secondary;
   }
+}
+
+.search--main-group {
+  &.form-group {
+    &:has(#header-search) {
+      @media (min-width: 768px) and (max-width: 1199px) {
+        width: 130px;
+      }
+    }
+    input.form-control {
+      border: 1px solid $color-neutral-300;
+      @include border-radius($input-border-radius, 0);
+    }
+  }
+}
+
+[type='search'].search--filter-input {
+  border: 1px solid $color-neutral-300;
+  background: $color-neutral-white url(/assets/cs/icons/search-jet.svg) no-repeat 95%;
+  background-size: 20px;
+}
+
+[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    margin-right: 24px;
+    height: 16px;
+    width: 16px;
+    background: url(/assets/phy/icons/redesign/close.svg);
+}
+
+select.form-select {
+  border: none;
+  border-radius: 0;
+  border-bottom: 2px solid $color-neutral-300;
+  background-color: transparent;
+
+  &:disabled {
+    background-color: $color-neutral-50;
+    border-color: $color-neutral-200;
+    color: $color-neutral-400;
+    background-blend-mode: difference;
+  }
+}
+
+.form-check-input {
+  width: 24px;
+  height: 24px;
+  transition: all 0.1s ease-in-out;
+  outline: none;
+  box-shadow: none;
+  &:checked {
+    border-color: var(--subject-color-500);
+    background-color: var(--subject-color-500);
+  }
+  &:focus {
+    border-color: var(--subject-color-500);
+    &:checked {
+      box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--subject-color-500) 25%, transparent);
+    }
+  }
+  &:not(:disabled):active {
+    background-color: color-mix(in srgb, var(--subject-color-500) 25%, transparent);
+    border-color: color-mix(in srgb, var(--subject-color-500) 25%, transparent);
+  }
+}
+
+input {
+  &.form-control {
+    height: 2.6rem;
+    border: 1px solid $color-neutral-300;
+    border-radius: $border-radius-lg;
+  }
+}
+
+select {
+  &.form-select {
+    height: 2.6rem;
+    border: 1px solid $color-neutral-300;
+    border-radius: $border-radius-lg;
+    background-color: white;
+
+    &[name='selectMulti'] {
+      padding: 1rem 1.2rem 1.5rem;
+    }
+  }
+}
+
+input[color='primary']:checked {
+  background-color: $color-brand-500;
+}
+
+.inline-form-input-btn {
+  border: 1px solid $color-neutral-300;
+  width: 55px;
 }

@@ -43,11 +43,6 @@
 button {
   -webkit-appearance: none;
   border: none;
-  outline: none !important;
-}
-
-.btn.btn-primary:focus-visible, .btn.btn-outline-primary:focus-visible {
-  background-color: unset !important;
 }
 
 .btn-close {
@@ -72,5 +67,13 @@ button {
   border: none;
   &:hover {
     text-decoration: none;
+  }
+}
+
+.invert-underline {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 }

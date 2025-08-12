@@ -1,10 +1,76 @@
 @import "../common/accordions";
 
 .accordion {
-  box-shadow: 0 2px 30px 0 $shadow-08;
   background: #FBFBFB;
-  border-top: 1px solid $shadow-08;//$gray-120;
+  border: 2px solid $color-neutral-300;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: border-color 0.2s ease-in-out, outline 0.2s ease-in-out;
+
+  &:not(:has(> .accordion-header.active)):hover {
+    border-color: $color-neutral-400;
+    transition: border-color 0.05s ease-out;
+  }
+
+  &:has(> .accordion-header.active) {
+    border-color: var(--nav-primary);
+    border-radius: 8px;
+
+    &:has(.de-emphasised) {
+      border-color: $color-neutral-500;
+    }
+  }
+
   .accordion-header {
     background: rgba(white, 1);
+    border-radius: 8px;
+
+    z-index: 1; // so that bottom of :focus-visible outline is visible
+
+    .accordion-part {
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: 600;
+      color: var(--subject-color-700);
+      font-family: $primary-font;
+    }
+
+    .accordion-title {
+      color: var(--subject-color-800);
+
+      > span.inline-stage-label {
+        font-size: 13px;
+        color: $color-neutral-400;
+        font-family: $primary-font;
+      }
+    }
+
+    .stage-label {
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;      
+    }
+
+    &.de-emphasised {
+      .accordion-title {
+        color: $color-neutral-800;
+      }
+    }
+  
+    &.active {
+      .stage-label {
+        border-bottom-left-radius: 0;
+      }
+    }
   }
+
+  .accordion-body {
+    background-color: rgba(white, 1);
+    border-radius: 0 0 8px 8px;
+    padding-top: 0;
+  }
+}
+
+.accordion-background {
+  background-color: $color-neutral-100;
+  padding: 8px;
 }

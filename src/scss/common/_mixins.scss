@@ -5,6 +5,7 @@
 // $position: when playing with pseudo element, you mainly use `position: absolute` (default value).
 // $display: when playing with pseudo element, you mainly use `display: block` (default value).
 @use "sass:math";
+@use "sass:color";
 
 @mixin pseudo-element($content: '', $position: absolute, $display: block) {
   content: $content;
@@ -161,7 +162,167 @@ $viewport-sizes: (
   aspect-ratio: calc($width / $height);
 }
 
-@mixin svg-color($image, $color) {
+@mixin svg-icon-raw($path, $width, $height, $background-size: none, $background-position: none) {
+  // use this only for SVG icons that should not be recoloured; prefer @svg-icon in general
+  display: inline-block;
+  background: url($path) center center no-repeat;
+  width: $width;
+  height: $height;
+  min-width: $width;
+  min-height: $height;
+  @if $background-size != none {
+    background-size: $background-size;
+  }
+  @if $background-position != none {
+    background-position: $background-position;
+  }
+}
+
+@mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
+  display: inline-block;
+  mask: url($path) center center no-repeat;
+  width: $width;
+  height: $height;
+  min-width: $width;
+  min-height: $height;
+  background-color: black;
+  @if $mask-size != none {
+    mask-size: $mask-size;
+  }
+  @if $mask-position != none {
+    mask-position: $mask-position;
+  }
+}
+
+@mixin svg-icon-layered($fg_path, $bg_path, $width: 16px, $height: 16px, $mask-size: 100%, $mask-position: none) {
+  --layered-icon-parent-bg-override: transparent;
+  display: inline-flex;
+  width: $width;
+  height: $height;
+  min-width: $width;
+  min-height: $height;
+  &::before {
+    content: '';
+    @include svg-icon($bg_path, $width, $height);
+    position: absolute;
+    @if $mask-size != none {
+      mask-size: $mask-size;
+    }
+    @if $mask-position != none {
+      mask-position: $mask-position;
+    }
+  }
+  &::after {
+    content: '';
+    @include svg-icon($fg_path, $width, $height);
+    position: absolute;
+    @if $mask-size {
+      mask-size: $mask-size;
+    }
+    @if $mask-position != none {
+      mask-position: $mask-position;
+    }
+  }
+}
+
+@mixin svg-color($image, $color, $width, $height, $mask-size: none) {
   mask: $image no-repeat center center;
   background-color: $color;
+  width: $width;
+  height: $height;
+  min-width: $width;
+  min-height: $height;
+  @if $mask-size != none {
+    mask-size: $mask-size;
+  }
+}
+
+@mixin pseudo-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
+  content: "";
+  position: relative;
+  @include svg-icon($path, $width, $height, $mask-size, $mask-position);
+}
+
+@mixin icon-color-override($color) {
+  background-color: var(--layered-icon-parent-bg-override, $color) !important;
+  
+  &::before {
+    background-color: $color !important;
+  }
+  &::after {
+    background-color: $color !important;
+  }
+}
+
+// modified from https://css-tricks.com/books/greatest-css-tricks/scroll-shadows/
+@mixin vertical-scroll-shadow($background-color: white, $shadow-color: rgba(0, 0, 0, 0.2)) {
+  background:
+    linear-gradient(
+      $background-color 30%,
+      color.change($background-color, $alpha: 0)
+    ) center top,
+    
+    linear-gradient(
+      color.change($background-color, $alpha: 0),
+      $background-color 70%
+    ) center bottom,
+
+    radial-gradient(
+      farthest-side at 50% 0,
+      $shadow-color,
+      color.change($shadow-color, $alpha: 0)
+    ) center top,
+
+    radial-gradient(
+      farthest-side at 50% 100%,
+      $shadow-color,
+      color.change($shadow-color, $alpha: 0)
+    ) center bottom;
+
+  background-repeat: no-repeat;
+  background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@mixin horizontal-scroll-shadow($background-color: white, $shadow-color: rgba(0, 0, 0, 0.2)) {
+  background:
+    linear-gradient(
+      to right,
+      $background-color 30%,
+      color.change($background-color, $alpha: 0)
+    ) left center,
+    
+    linear-gradient(
+      to right,
+      color.change($background-color, $alpha: 0),
+      $background-color 70%
+    ) right center,
+
+    radial-gradient(
+      farthest-side at 0 50%,
+      $shadow-color,
+      color.change($shadow-color, $alpha: 0)
+    ) left center,
+
+    radial-gradient(
+      farthest-side at 100% 50%,
+      $shadow-color,
+      color.change($shadow-color, $alpha: 0)
+    ) right center;
+
+  background-repeat: no-repeat;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@mixin no-print {
+  @media not print {
+    @content;
+  }
+}
+
+@mixin only-print {
+  @media print {
+    @content;
+  }
 }

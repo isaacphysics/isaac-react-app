@@ -6,6 +6,7 @@ import { SortItemHeader } from "./SortableItemHeader";
 import { BoardCard } from "./cards/BoardCard";
 import { RegisteredUserDTO, GameboardDTO } from "../../../IsaacApiTypes";
 import classNames from "classnames";
+import { HorizontalScroller } from "./inputs/HorizontalScroller";
 
 export interface GameboardsTableProps {
     user: RegisteredUserDTO;
@@ -39,7 +40,7 @@ export interface GameboardsCardsProps {
 }
 
 const PhyTable = (props: GameboardsTableProps) => {
-    return <Card className="mb-5 mt-3">
+    return <Card className="mb-7 mt-3">
         <CardBody id="boards-table" className="px-3 py-2">
             <CSTable {...props} />
         </CardBody>
@@ -56,7 +57,7 @@ const CSTable = (props: GameboardsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <SortItemHeader<AssignmentBoardOrder> colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
-            {siteSpecific("Board name", "Quiz name")}
+            {siteSpecific("Question deck name", "Quiz name")}
         </SortItemHeader>
         <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}>
             Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
@@ -93,17 +94,19 @@ const CSTable = (props: GameboardsTableProps) => {
         )}
     </tr>;
 
-    return <div className={siteSpecific("", "mb-5 mb-md-6")}>
-        <Table className={classNames("my-gameboard-table", {"mb-0" : isPhy})} responsive>
-            <thead>
-                {tableHeader}
-            </thead>
-            <tbody>
-                {boards?.boards
-                    .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
-                    .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                    .filter(board => boardCompletionSelection(board, boardCompletion))
-                    .map(board =>
+    const filteredBoards = boards && boards.boards
+        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+        .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+        .filter(board => boardCompletionSelection(board, boardCompletion));
+
+    return <div className={siteSpecific("", "mb-7")}>
+        <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
+            <Table className={classNames("my-gameboard-table", {"mb-0" : isPhy})}>
+                <thead>
+                    {tableHeader}
+                </thead>
+                <tbody>
+                    {filteredBoards && filteredBoards.map(board =>
                         <BoardCard
                             key={board.id}
                             board={board}
@@ -113,9 +116,10 @@ const CSTable = (props: GameboardsTableProps) => {
                             user={user}
                             boards={boards}
                         />)
-                }
-            </tbody>
-        </Table>
+                    }
+                </tbody>
+            </Table>
+        </HorizontalScroller>
     </div>;
 };
 
@@ -131,7 +135,7 @@ const Cards = (props: GameboardsCardsProps) => {
         .filter(board => boardCompletionSelection(board, boardCompletion));
 
     return filteredBoards && <>
-        {<Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
+        {<Row className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
             {filteredBoards.map(board => <Col key={board.id}>
                 <BoardCard
                     board={board}
@@ -143,7 +147,7 @@ const Cards = (props: GameboardsCardsProps) => {
                 />
             </Col>)}
         </Row>}
-        <div className="text-center mt-3 mb-5" style={{clear: "both"}}>
+        <div className="text-center mt-3 mb-7" style={{clear: "both"}}>
             {boards.boards.length === filteredBoards.length
                 ? <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong> results.</p>
                 : <p>Showing <strong>{filteredBoards.length}</strong> match from <strong>{boards.boards.length}</strong> results.</p>}

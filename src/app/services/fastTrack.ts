@@ -117,7 +117,7 @@ interface FastTrackPageProperties {
     isFastTrackPage: boolean;
     doc: QuestionDTO;
     correct: boolean;
-    page: ContentDTO | undefined;
+    page: ContentDTO | null;
     pageCompleted: boolean;
     questionHistory: string[];
     board: string | undefined;
@@ -133,7 +133,7 @@ export function useFastTrackInformation(
     const {board, questionHistory: questionHistoryUrl}: {board?: string; questionHistory?: string} = queryString.parse(location.search);
     const questionHistory = questionHistoryUrl?.split(",") || [];
 
-    const page = useAppSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
+    const page = useAppSelector(selectors.doc.getWithout404);
     const isFastTrackPage = page?.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
     const pageCompleted = useAppSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : false);
     const userContext = useUserViewingContext();

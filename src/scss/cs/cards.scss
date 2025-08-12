@@ -79,6 +79,11 @@ $cards-per-line: (
   display: flex;
   flex-direction: column;
 
+  &.prompt-banner {
+    border: 1px solid $cs-silver;
+    box-shadow: none;
+  }
+
   > img {
     width: 25px;
     height: 25px;
@@ -100,6 +105,11 @@ $cards-per-line: (
 .icon-card-container {
   container: icon-card / inline-size;
   max-width: unset;
+
+}
+.icon-card-container.without-margin {
+  margin-left: unset;
+  margin-right: unset;
 }
 
 a.icon-card, a.cs-card {
@@ -107,7 +117,9 @@ a.icon-card, a.cs-card {
   transition: all 0.2s;
 
   &:hover {
-    transform: scale(1.05);
+    @include not-reduced-motion {
+      transform: scale(1.05);
+    }
   }
 }
 
@@ -125,16 +137,13 @@ a.icon-card, a.cs-card {
   }
 }
 
-.cs-card, .icon-card {
+.cs-card, .icon-card, .prompt-banner {
   .card-footer {
     .btn-link::after {
       content: "";
       display: inline-flex;
-      width: 6px;
-      height: 8px;
-      margin-top: -3px;
+      @include svg-color(url('/assets/common/icons/chevron-right.svg'), $dark-pink-300, 12px, 12px);
       margin-left: 10px;
-      @include svg-color(url('/assets/common/icons/chevron_right.svg'), $dark-pink-300);
       mask-size: cover;
     }
   }
@@ -198,7 +207,7 @@ a.icon-card, a.cs-card {
 .cs-card-plain, .news-card, .board-card {
   // This is to make sure that the "footers" of multiple cards line up nicely
   &::after {
-    @extend .mb-5;
+    @extend .mb-7;
     display: block;
     content: " ";
     width: 100%;
@@ -215,9 +224,20 @@ a.icon-card, a.cs-card {
   }
 }
 
-.cs-card, .cs-card-plain, .icon-card, .news-card, .board-card {
+.cs-card, .cs-card-plain, .icon-card, .news-card, .board-card, .prompt-banner {
   .card-footer {
     background-color: transparent !important;
+  }
+}
+
+.card {
+  .card-header {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+
+    &:has(+ div.d-none) {
+      border-radius: inherit;
+    }
   }
 }
 

@@ -79,6 +79,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
     const embedSrc = src && rewrite(src);
     const errorSrc = src || altText || "Unknown embedded video.";
     const altTextToUse = `Embedded YouTube video: ${altText || src}.`;
+    const printSummary = 'Embedded YouTube video' + (altText ? `: ${altText}` : '') + ` (${src}).`;
 
     const videoRef = useCallback( (node: any) => { // This isn't great but I couldn't figure out the actual type
         const $window: any = window;
@@ -109,16 +110,16 @@ export function IsaacVideo(props: IsaacVideoProps) {
 
 
     const detailsForPrintOut = <div className="only-print py-2 mb-4">
-        {altTextToUse}
+        {printSummary}
     </div>;
 
-    // Exit early if a parent accordion section is closed (for the sake of pages containing many videos)
     const accordionSectionContext = useContext(AccordionSectionContext);
     const videoInAnAccordionSection = accordionSectionContext.open !== null;
+
+    // Exit early if a parent accordion section is closed (for the sake of pages containing many videos)
     if (videoInAnAccordionSection && !accordionSectionContext.open) {
         return detailsForPrintOut;
     }
-
 
     return <div>
         <div className="no-print content-value text-center">

@@ -84,6 +84,14 @@ header {
   line-height: 1.2;
 }
 
+.h-description {
+  margin-left: 92px;
+  padding-top: 5px;
+  font-size: 1rem;
+  width: 75%;
+  font-family: "exo _2", sans-serif;
+}
+
 a.skip-main {
   left:-999px;
   position:absolute;
@@ -106,4 +114,12 @@ a.skip-main:focus, a.skip-main:active {
   font-family: $secondary-font-medium;
   font-size: 1rem;
   z-index:999;
+}
+
+ul.plain-list {
+  list-style: none;
+  padding-left: 0;
+  > li {
+    border: none !important;
+  }
 }

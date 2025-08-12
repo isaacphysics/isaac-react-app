@@ -8,7 +8,7 @@ import {IsaacFigure} from "./IsaacFigure";
 import {IsaacGlossaryTerm} from "./IsaacGlossaryTerm";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
-import {IsaacTabs} from "./IsaacTabs";
+import {IsaacTabs, isTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
 import {RouteComponentProps, withRouter} from "react-router-dom";
@@ -43,7 +43,7 @@ export interface IsaacContentProps extends RouteComponentProps {
 export const IsaacContent = withRouter((props: IsaacContentProps) => {
     const {doc: {type, layout, encoding, value, children}, match} = props;
     const keyedProps = {...props, key: props.doc.id};
-    {/* 
+    {/*
         Each IsaacContent is assumed to be independent, not sharing state with any other.
         However, React will reuse components if they are the same type, have the same key (or undefined), and exist in the same place in the DOM.
         If two components A and B meet these criteria, if you switch from component A to component B, any e.g. useStates in B will not
@@ -86,6 +86,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
             default:
                 switch (layout) {
                     case "tabs": selectedComponent = <IsaacTabs {...keyedProps} />; break;
+                    case isTabs(layout): selectedComponent = <IsaacTabs {...keyedProps} style={layout?.split('/')[1]} />; break;
                     case "callout": selectedComponent = <IsaacCallout {...keyedProps} />; break;
                     case "accordion": selectedComponent = <IsaacAccordion {...keyedProps} />; break;
                     case "horizontal": selectedComponent = <IsaacHorizontal {...keyedProps} />; break;

@@ -1,10 +1,8 @@
 import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
-import {AppState, fetchDoc, useAppDispatch, useAppSelector} from "../../state";
-import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {ShowLoading} from "../handlers/ShowLoading";
+import {SeguePageDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
-import {DOCUMENT_TYPE, isAda, useUrlHashValue} from "../../services";
+import {above, isAda, isPhy, useDeviceSize, useUrlHashValue} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -16,6 +14,12 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
 import { useUntilFound } from "./Glossary";
+import { MainContent, SidebarLayout, GenericPageSidebar, PolicyPageSidebar, ContentControlledSidebar, GenericSidebarWithRelatedContent } from "../elements/layout/SidebarLayout";
+import { TeacherNotes } from "../elements/TeacherNotes";
+import { useGetGenericPageQuery } from "../../state/slices/api/genericApi";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { NotFound } from "./NotFound";
+import { PageMetadata } from "../elements/PageMetadata";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -30,14 +34,23 @@ const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
     "computer_science_stories": true
 };
 
+// Overrides for physics pages which shouldn't use the default GenericPageSidebar
+// TODO this should also consider page tags (for events/news etc)
+const PHY_SIDEBAR = new Map<string, () => React.JSX.Element>([
+    ["privacy_policy", () => <PolicyPageSidebar />],
+    ["terms_of_use", () => <PolicyPageSidebar />],
+    ["cookie_policy", () => <PolicyPageSidebar />],
+    ["accessibility_statement", () => <PolicyPageSidebar />]
+]);
+
 export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
     const pageId = pageIdOverride || params.pageId;
 
-    const dispatch = useAppDispatch();
-    useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.GENERIC, pageId));}, [dispatch, pageId]);
-    const doc = useAppSelector((state: AppState) => state?.doc || null);
+    const pageQuery = useGetGenericPageQuery(pageId);
 
-    const hash = useUntilFound(doc, useUrlHashValue());
+    const hash = useUntilFound(pageQuery.currentData, useUrlHashValue());
+
+    const deviceSize = useDeviceSize();
 
     useEffect(() => {
         if (hash) {
@@ -49,30 +62,48 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
         }
     }, [hash]);
 
-    return <ShowLoading until={doc} thenRender={supertypedDoc => {
-        const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
-        return <Container className={doc.subjectId || ""}>
-            <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} />
-            <MetaDescription description={doc.summary} />
-            <div className="no-print d-flex align-items-center">
-                <EditContentButton doc={doc} />
-                <div className="question-actions question-actions-leftmost mt-3">
-                    <ShareLink linkUrl={`/pages/${doc.id}`}/>
-                </div>
-                <div className="question-actions mt-3 not-mobile">
-                    <PrintButton/>
-                </div>
-            </div>
+    return <ShowLoadingQuery 
+        query={pageQuery}
+        defaultErrorTitle="Unable to load page"
+        ifNotFound={<NotFound />}
+        thenRender={supertypedDoc => {
+            const doc = supertypedDoc as SeguePageDTO & DocumentSubject;
 
-            <Row className="generic-content-container">
-                <Col className={classNames("py-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
-                    <WithFigureNumbering doc={doc}>
-                        <IsaacContent doc={doc} />
-                    </WithFigureNumbering>
-                </Col>
-            </Row>
+            const sidebar = doc.sidebar
+                ? <ContentControlledSidebar sidebar={doc.sidebar} />
+                : React.cloneElement(PHY_SIDEBAR.has(pageId) 
+                    ? PHY_SIDEBAR.get(pageId)!() 
+                    : doc.relatedContent
+                        ? <GenericSidebarWithRelatedContent relatedContent={doc.relatedContent} />
+                        : <GenericPageSidebar/>,
+                );
 
-            {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
-        </Container>;
-    }}/>;
+            return <Container data-bs-theme={doc.subjectId}>
+                <TitleAndBreadcrumb 
+                    currentPageTitle={doc.title as string} 
+                    subTitle={doc.subtitle} 
+                    icon={{type: "hex", icon: "icon-generic"}}
+                /> 
+                <MetaDescription description={doc.summary} />
+                <SidebarLayout>
+                    {sidebar}
+                    <MainContent>
+                        {/* on generic pages, the actual doc.title is used as the super-title, unlike e.g. questions which use "Question". 
+                            as such, we promote a generic page's subtitle to be the regular title. */}
+                        <PageMetadata doc={{...doc, subtitle: undefined}} title={doc.subtitle} noTitle={!doc.subtitle} />
+
+                        <Row className="generic-content-container">
+                            <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>
+                                <WithFigureNumbering doc={doc}>
+                                    <IsaacContent doc={doc} />
+                                </WithFigureNumbering>
+                            </Col>
+                        </Row>
+                    </MainContent>
+                </SidebarLayout>
+
+                {isAda && doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+            </Container>;
+        }}
+    />;
 });

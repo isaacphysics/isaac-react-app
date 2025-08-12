@@ -100,8 +100,36 @@ nav.search {
   }
 }
 
-.search-filters-select-container {
-  flex-grow: 1;
-  flex-flow: row nowrap;
-  max-width: 520px;
+.search-input-icon {
+  $search-button-offset: 50px;
+  > input {
+    border-right: none;
+  }
+
+  > button {
+    // background: white url(/assets/cs/icons/search-jet.svg) no-repeat center;
+    // background-size: 20px 20px;
+    background-color: white;
+    border: 1px solid black;
+    border-left: none;
+    border-radius: 0 $border-radius-lg $border-radius-lg 0;
+    padding: 0;
+    width: $search-button-offset;
+    min-width: 0;
+    &:active {
+      background-color: lightgray !important;
+    }
+  }
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 1px;
+    height: 75%;
+    top: 12.5%;
+    right: $search-button-offset;
+    background: #c2c2c2;
+    z-index: 4;
+  }
 }

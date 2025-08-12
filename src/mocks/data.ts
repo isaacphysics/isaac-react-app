@@ -2269,7 +2269,7 @@ export const mockRubrics = recordOf<string, DetailedQuizSummaryDTO>()({
         id: "a_level_1d_motion_test",
         title: "A Level 1-d Motion Test",
         type: "isaacQuiz",
-        tags: [],
+        tags: ["physics", "mechanics"],
         url: "/isaac-api/api/quiz/a_level_1d_motion_test",
         hiddenFromRoles: [USER_ROLES[0], USER_ROLES[1]],
         rubric: {
@@ -2327,12 +2327,12 @@ export const mockAttempts = recordOf<string, QuizAttemptDTO>()({
                     encoding: "markdown",
                     children:[],
                     value: "If an object accelerates from rest at $\\\\quantity{1.8}{m\\\\\\\\,s^{-2}}$, how far does it travel in the first $\\\\quantity{7.0}{s}$ of its motion?",
-                    published: false, 
-                }], 
+                    published: false,
+                }],
                 published:false,
                 tags:[]
             }],
-            tags: [],
+            tags: ["physics", "mechanics"],
             hiddenFromRoles: [
                 "STUDENT",
                 "TUTOR"
@@ -2389,12 +2389,12 @@ export const mockPreviews = recordOf<string, IsaacQuizDTO>()({
                 encoding: "markdown",
                 children:[],
                 value: "If an object accelerates from rest at $\\\\quantity{1.8}{m\\\\\\\\,s^{-2}}$, how far does it travel in the first $\\\\quantity{7.0}{s}$ of its motion?",
-                published: false, 
-            }], 
+                published: false,
+            }],
             published:false,
             tags:[]
         }],
-        tags: [],
+        tags: ["physics", "mechanics"],
         hiddenFromRoles: [
             "STUDENT",
             "TUTOR"
@@ -4403,7 +4403,7 @@ export const mockQuestionFinderResults = {
             "title": "A Bag of Flour",
             "subtitle": "Step into Physics: Weight 6",
             "type": "isaacQuestionPage",
-            "level": "0",
+            "level": 0,
             "tags": [
                 "physics",
                 "problem_solving",
@@ -4443,7 +4443,7 @@ export const mockQuestionFinderResults = {
             "title": "A Bungee Jumper",
             "subtitle": "Step into Physics: Force and Motion Practice 9",
             "type": "isaacQuestionPage",
-            "level": "0",
+            "level": 0,
             "tags": [
                 "physics",
                 "problem_solving",
@@ -4483,7 +4483,7 @@ export const mockQuestionFinderResults = {
             "title": "A Car Leaving Town",
             "subtitle": "Step into Physics: Acceleration 11",
             "type": "isaacQuestionPage",
-            "level": "0",
+            "level": 0,
             "tags": [
                 "physics",
                 "problem_solving",
@@ -4523,7 +4523,7 @@ export const mockQuestionFinderResults = {
             "title": "A Car on a Motorway",
             "subtitle": "Step into Physics: Calculating Speed 3",
             "type": "isaacQuestionPage",
-            "level": "0",
+            "level": 0,
             "tags": [
                 "physics",
                 "problem_solving",
@@ -4563,7 +4563,7 @@ export const mockQuestionFinderResults = {
             "title": "A Cat, Cyclist, Aeroplane and Cow",
             "subtitle": "Step into Physics: Acceleration Practice 1",
             "type": "isaacQuestionPage",
-            "level": "0",
+            "level": 0,
             "tags": [
                 "physics",
                 "problem_solving",
@@ -4601,6 +4601,217 @@ export const mockQuestionFinderResults = {
     ],
     "nextSearchOffset": 5,
     "totalResults": 5
+};
+
+export const mockQuestionFinderResultsWithMultipleStages = {
+    "results": [
+        {
+            "id": "phys_linking_22_q5",
+            "title": "Induction in a Rotating Coil 5",
+            "subtitle": "Linking Concepts in Pre-Uni Physics 22.5",
+            "type": "isaacQuestionPage",
+            "tags": [
+                "book",
+                "physics",
+                "physics_linking_concepts",
+                "magnetic",
+                "fields"
+            ],
+            "url": "/api/pages/questions/phys_linking_22_q5",
+            "state": "NOT_ATTEMPTED",
+            "audience": [
+                {
+                    "stage": [
+                        "a_level"
+                    ],
+                    "difficulty": [
+                        "practice_2"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "gcse_ch2_13_q12",
+            "title": "Resultant Force and Acceleration 12",
+            "subtitle": "Essential GCSE Physics 13.12",
+            "type": "isaacQuestionPage",
+            "tags": [
+                "dynamics",
+                "phys_book_gcse",
+                "book",
+                "physics",
+                "mechanics"
+            ],
+            "url": "/api/pages/questions/gcse_ch2_13_q12",
+            "state": "NOT_ATTEMPTED",
+            "audience": [
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "challenge_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "a_level"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "phys19_k1_q4",
+            "title": "Red Shift and Hubble's Law 4",
+            "subtitle": "Essential Pre-Uni Physics K1.4",
+            "type": "isaacQuestionPage",
+            "tags": [
+                "book",
+                "physics",
+                "physics_skills_19",
+                "waves_particles",
+                "wave_motion"
+            ],
+            "url": "/api/pages/questions/phys19_k1_q4",
+            "state": "NOT_ATTEMPTED",
+            "audience": [
+                {
+                    "stage": [
+                        "a_level"
+                    ],
+                    "difficulty": [
+                        "practice_3"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "step_up_35_q7",
+            "title": "Frequency 7",
+            "subtitle": "Step Up to GCSE Physics 35.7",
+            "type": "isaacQuestionPage",
+            "tags": [
+                "book",
+                "physics",
+                "waves_particles",
+                "wave_motion",
+                "phys_book_step_up"
+            ],
+            "url": "/api/pages/questions/step_up_35_q7",
+            "state": "NOT_ATTEMPTED",
+            "audience": [
+                {
+                    "stage": [
+                        "year_9"
+                    ],
+                    "difficulty": [
+                        "practice_2"
+                    ]
+                },
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "phys_linking_33_q1",
+            "title": "Capacitors and Resistors 1",
+            "subtitle": "Linking Concepts in Pre-Uni Physics 33.1",
+            "type": "isaacQuestionPage",
+            "tags": [
+                "capacitors",
+                "book",
+                "physics",
+                "physics_linking_concepts",
+                "electricity"
+            ],
+            "url": "/api/pages/questions/phys_linking_33_q1",
+            "state": "NOT_ATTEMPTED",
+            "audience": [
+                {
+                    "stage": [
+                        "a_level"
+                    ],
+                    "difficulty": [
+                        "practice_3"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "gcse_ch6_51_q2_r1",
+            "title": "Atomic Numbers and Nomenclature 2",
+            "subtitle": "Essential GCSE Physics 51.2",
+            "type": "isaacQuestionPage",
+            "tags": [
+                "phys_book_gcse",
+                "book",
+                "physics",
+                "waves_particles",
+                "nuclear"
+            ],
+            "url": "/api/pages/questions/gcse_ch6_51_q2_r1",
+            "state": "NOT_ATTEMPTED",
+            "audience": [
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "a_level"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+    ],
+    "nextSearchOffset": 6,
+    "totalResults": 6
+};
+
+export const mockConceptsResults = {
+    results: [{
+        id: "phys_step_up_1_concept",
+        title: "1. Displacement",
+        subtitle: "Step Up to GCSE Physics",
+        type: "isaacConceptPage",
+        tags: ["physics", "skills"],
+        url: "/api/pages/concepts/phys_step_up_1_concept"
+    }, {
+        id: "gcse_maths_ch1_1_concept",
+        title: "1. Solving Maths Problems",
+        subtitle: "Using Essential GCSE Maths",
+        type: "isaacConceptPage",
+        tags: [ "maths", "number"],
+        audience: [{ stage: ["a_level"]}],
+        url: "/api/pages/concepts/gcse_maths_ch1_1_concept"
+    }, {
+        id: "gcse_maths_ch1_2_concept",
+        title: "2. Solving Maths Problems",
+        subtitle: "Using Essential GCSE Maths",
+        type: "isaacConceptPage",
+        tags: [ "maths", "geometry"],
+        audience: [{ stage: ["a_level"]}],
+        url: "/api/pages/concepts/gcse_maths_ch1_1_concept"
+    }],
+    get totalResults() {
+        return this.results.length;
+    }
 };
 
 export const mockConceptPage =
@@ -4645,6 +4856,7 @@ export const mockConceptPage =
         "summary": "A mock concept page",
         "tags": [
             "physics",
+            "chemistry",
             "thermal"
         ],
         "published": false,

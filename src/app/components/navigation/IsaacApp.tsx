@@ -36,6 +36,7 @@ import {
     isStaff,
     isTutorOrAbove,
     KEY,
+    OnPageLoad,
     PATHS,
     persistence,
     showNotification,
@@ -66,7 +67,6 @@ import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import SiteSpecific from "../site/siteSpecificComponents";
 import StaticPageRoute from "./StaticPageRoute";
 import {Redirect} from "react-router";
-import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";
 import {notificationModal} from "../elements/modals/NotificationModal";
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
@@ -74,15 +74,14 @@ import {ChunkOrClientError} from "../pages/ClientError";
 import {Loading} from "../handlers/IsaacSpinner";
 import {ExternalRedirect} from "../handlers/ExternalRedirect";
 import {TutorRequest} from "../pages/TutorRequest";
-import {AssignmentProgress} from "../pages/AssignmentProgress";
+import {AssignmentProgress} from "../pages/AssignmentProgressWrapper";
 import {MyGameboards} from "../pages/MyGameboards";
-import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
 import {QuestionFinder} from "../pages/QuestionFinder";
 import {SessionCookieExpired} from "../pages/SessionCookieExpired";
 import { AccountDeletion } from '../pages/AccountDeletion';
 import { AccountDeletionSuccess } from '../pages/AccountDeletionSuccess';
-import { IsaacScienceMigrationBanner } from './IsaacScienceMigrationBanner';
+import { IsaacScienceLaunchBanner } from './IsaacScienceLaunchBanner';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -143,17 +142,19 @@ export const IsaacApp = () => {
         };
     }, []);
 
+    const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
+
     // Render
     return <Router history={history}>
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
-        <IsaacScienceMigrationBanner />
+        <IsaacScienceLaunchBanner />
         <ResearchNotificationBanner />
-        <UnsupportedBrowserBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
-        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
+        <OnPageLoad />
+        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-reduced-motion={displaySettings?.REDUCED_MOTION ? "true" : "false"}>
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <Suspense fallback={<Loading/>}>
                     <Switch>
@@ -189,14 +190,16 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path={PATHS.MY_GAMEBOARDS} ifUser={isLoggedIn} component={MyGameboards} />
-                        <TrackedRoute exact path={PATHS.GAMEBOARD_FILTER} ifUser={isLoggedIn} component={GameboardFilter} />
                         <TrackedRoute exact path={PATHS.QUESTION_FINDER} component={QuestionFinder} />
 
                         {/* Teacher pages */}
                         {/* Tutors can set and manage assignments, but not tests/quizzes */}
                         <TrackedRoute exact path="/groups" ifUser={isTutorOrAbove} component={Groups} />
                         <TrackedRoute exact path={PATHS.SET_ASSIGNMENTS} ifUser={isTutorOrAbove} component={SetAssignments} />
-                        <TrackedRoute exact path={PATHS.ASSIGNMENT_PROGRESS} ifUser={isTutorOrAbove} component={AssignmentProgress} />
+                        <TrackedRoute exact path={[
+                            PATHS.ASSIGNMENT_PROGRESS,
+                            `${PATHS.ASSIGNMENT_PROGRESS}/group/:groupId`,
+                        ]} ifUser={isTutorOrAbove} component={AssignmentProgress} />
 
                         {/* Admin */}
                         <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />

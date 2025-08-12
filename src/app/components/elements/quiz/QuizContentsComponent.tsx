@@ -8,6 +8,7 @@ import {
 } from "../../../../IsaacApiTypes";
 import React from "react";
 import {
+    above,
     below,
     extractTeacherName,
     isAda,
@@ -33,15 +34,34 @@ import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChil
 import {EditContentButton} from "../EditContentButton";
 import {Markup} from "../markup";
 import classNames from "classnames";
+import { MainContent, QuizSidebar, QuizSidebarAttemptProps, QuizSidebarViewProps, SidebarLayout } from "../layout/SidebarLayout";
 
 type PageLinkCreator = (page?: number) => string;
-type QuizView = { quiz?: DetailedQuizSummaryDTO & { subjectId: SUBJECTS | TAG_ID }, quizId: string | undefined };
+export type QuizView = { quiz?: DetailedQuizSummaryDTO & { subjectId: SUBJECTS | TAG_ID }, quizId: string | undefined };
 
 interface QuizProps {
     user: RegisteredUserDTO;
     pageHelp: React.ReactElement;
     studentUser?: UserSummaryDTO;
     quizAssignmentId?: string;
+}
+export interface QuizAttemptProps extends QuizProps {
+    attempt: QuizAttemptDTO
+    view?: undefined;
+    preview?: boolean;
+    page: number | null;
+    pageLink: PageLinkCreator;
+    questions: QuestionDTO[];
+    sections: { [id: string]: IsaacQuizSectionDTO };
+}
+interface QuizViewProps extends QuizProps {
+    attempt?: undefined;
+    view: QuizView;
+    preview?: undefined;
+    page?: undefined;
+    pageLink?: undefined;
+    questions?: undefined;
+    sections?: undefined;
 }
 export interface QuizAttemptProps extends QuizProps {
     attempt: QuizAttemptDTO
@@ -122,7 +142,7 @@ function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps)
 function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewProps) {
     const dispatch = useAppDispatch();
     if (view) {
-        return isTeacherOrAbove(user) && <Button className="float-end ms-3 mb-3" onClick={() => dispatch(showQuizSettingModal(view.quiz!))}>Set Test</Button>;
+        return isTeacherOrAbove(user) && <Button className="float-end ms-3 mb-3" onClick={() => dispatch(showQuizSettingModal(view.quiz!))}>Set test</Button>;
     }
     else if (preview) {
         return <>
@@ -130,7 +150,7 @@ function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewP
             <div data-testid="quiz-action" className="d-flex">
                 <p>You are previewing this test.</p>
                 <Spacer />
-                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz!))}>Set Test</Button>}
+                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz!))}>Set test</Button>}
             </div>
         </>;
     } else if (isDefined(attempt.quizAssignment)) {
@@ -173,13 +193,10 @@ function QuizRubric({attempt, view}: Pick<QuizAttemptProps | QuizViewProps, "att
     </div>;
 }
 
-function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizAttemptProps & {page: number}) {
-    const sections = attempt.quiz?.children;
-    const section = sections && sections[page - 1];
-    const rubric = attempt.quiz?.rubric;
-    const attribution = attempt.quiz?.attribution;
-    const renderRubric = (rubric?.children || []).length > 0 && (isPhy || !isDefined(attempt.completedDate));
+export function QuizRubricButton({attempt}: {attempt: QuizAttemptDTO}) {
     const dispatch = useAppDispatch();
+    const rubric = attempt.quiz?.rubric;
+    const renderRubric = (rubric?.children || []).length > 0 && (isPhy || !isDefined(attempt.completedDate));
 
     const openQuestionModal = (attempt: QuizAttemptDTO) => {
         dispatch(openActiveModal({
@@ -188,6 +205,18 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
         }));
     };
 
+    if (rubric && renderRubric) {
+        return <Button color={siteSpecific("keyline", "tertiary")} outline={isAda} className={siteSpecific("btn-lg text-nowrap", "mb-4 bg-light")}
+            alt="Show instructions" title="Show instructions in a modal" onClick={() => {openQuestionModal(attempt);}}> Show instructions
+        </Button>;
+    }
+}
+
+function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizAttemptProps & {page: number}) {
+    const deviceSize = useDeviceSize();
+    const sections = attempt.quiz?.children;
+    const section = sections && sections[page - 1];
+    const attribution = attempt.quiz?.attribution;
     const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
 
     return section ?
@@ -197,13 +226,11 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
                     You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
                 </div>}
                 <Row>
-                    {rubric && renderRubric && <Col className="text-end">
-                        <Button color="tertiary" outline className="mb-4 bg-light"
-                            alt="Show instructions" title="Show instructions in a modal"
-                            onClick={() => {rubric && openQuestionModal(attempt);}}>
-                            Show instructions
-                        </Button>
-                    </Col>}
+                    <Col className="d-flex flex-column align-items-end">
+                        {(isAda || above["lg"](deviceSize)) && <div className="mb-3">
+                            <QuizRubricButton attempt={attempt}/>
+                        </div>}
+                    </Col>
                 </Row>
 
                 <WithFigureNumbering doc={section}>
@@ -222,9 +249,9 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
     ;
 }
 
-export const myQuizzesCrumbs = [{title: siteSpecific("My Tests", "My tests"), to: `/tests`}];
-export const teacherQuizzesCrumbs = [{title: siteSpecific("Set / Manage Tests", "Set tests"), to: `/set_tests`}];
-export const rubricCrumbs = [{title: siteSpecific("Practice Tests", "Practice tests"), to: "/practice_tests"}];
+export const myQuizzesCrumbs = [{title: "My tests", to: `/tests`}];
+export const teacherQuizzesCrumbs = [{title: siteSpecific("Set / manage tests", "Set tests"), to: `/set_tests`}];
+export const rubricCrumbs = [{title: "Practice tests", to: "/practice_tests"}];
 const getCrumbs = (preview: boolean | undefined, view: boolean | undefined, user: RegisteredUserDTO) => {
     if (preview && isTeacherOrAbove(user)) {
         return teacherQuizzesCrumbs;
@@ -250,7 +277,7 @@ const QuizTitle = ({attempt, view, page, pageLink, pageHelp, preview, studentUse
     const crumbs = getCrumbs(preview, !!view, user);
     if (page === null || page === undefined) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
-            intermediateCrumbs={crumbs}
+            intermediateCrumbs={crumbs} icon={{"type": "hex", "icon": "icon-tests"}}
         />;
     } else {
         const sections = attempt.quiz?.children;
@@ -258,6 +285,7 @@ const QuizTitle = ({attempt, view, page, pageLink, pageHelp, preview, studentUse
         const sectionTitle = section?.title ?? "Section " + page;
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
             intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink()}]}
+            icon={{"type": "hex", "icon": "icon-tests"}}
         />;
     }
 };
@@ -275,22 +303,27 @@ export function QuizPagination({page, sections, pageLink, finalLabel}: QuizAttem
     const nextLink = pageLink(!finalSection ? page + 1 : undefined);
 
     return <div className="d-flex w-100 justify-content-between align-items-center">
-        <Button color="primary" outline size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={backLink}>Back</Button>
+        <Button color="keyline" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={backLink}>Back</Button>
         <div className="d-none d-md-block">Section {page} / {sectionCount}</div>
         <Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={nextLink}>{finalSection ? finalLabel : "Next"}</Button>
     </div>;
 }
 
-function QuizOverview(props: QuizAttemptProps | QuizViewProps) {
-    const {studentUser, user, quizAssignmentId} = props;
-    const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
+export enum SectionProgress {
+    NOT_STARTED = "Not started",
+    STARTED = "Started",
+    COMPLETED = "Completed"
+}
+
+function QuizOverview(props: (QuizAttemptProps | QuizViewProps) & { viewingAsSomeoneElse: boolean }) {
+    const {attempt, studentUser, quizAssignmentId, viewingAsSomeoneElse} = props;
     return <div className="mt-4">
         {!isDefined(studentUser?.id) && <QuizHeader {...props} />}
         {viewingAsSomeoneElse && <div className="mb-2">
             You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
         </div>}
         <QuizRubric {...props}/>
-        { props.attempt && <QuizDetails {...props} /> }
+        {attempt && <QuizDetails {...props} />}
     </div>;
 }
 
@@ -298,15 +331,42 @@ function QuizQuestions(props: Omit<QuizAttemptProps, 'page'> & {page: number}) {
     // Assumes that ids of questions are defined - I don't know why this is not enforced in the editor/backend, because
     // we do unchecked casts of "possibly undefined" content ids to strings almost everywhere
     const questionNumbers = Object.assign({}, ...props.questions.map((q, i) => ({[q.id as string]: i + 1})));
-    
+
     return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
         <QuizSection {...props} page={props.page}/>
     </QuizAttemptContext.Provider>;
 }
 
 export function QuizContentsComponent(props: QuizAttemptProps | QuizViewProps) {
+    const {attempt, view, studentUser, user} = props;
+
+    const questions = attempt ? props.questions : [];
+    const sections = attempt ? props.sections : {};
+
+    const sectionState = (section: IsaacQuizSectionDTO) => {
+        const sectionQs = section ? inSection(section, questions) : undefined;
+        const isStarted = sectionQs?.some(q => q.bestAttempt !== undefined);
+        const isCompleted = sectionQs?.every(q => q.bestAttempt !== undefined);
+        return isCompleted ? SectionProgress.COMPLETED : isStarted ? SectionProgress.STARTED : SectionProgress.NOT_STARTED;
+    };
+
+    const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
+
+    const sidebarProps: QuizSidebarAttemptProps | QuizSidebarViewProps = Object.assign({
+        viewingAsSomeoneElse,
+        totalSections: Object.keys(sections).length,
+        currentSection: props.page ? props.page : undefined,
+        sectionStates: Object.values(sections).map(section => sectionState(section)),
+        sectionTitles: Object.keys(sections).map(k => sections[k].title || "Section " + k),
+    }, attempt ? {attempt} : {view});
+
     return <>
         <QuizTitle {...props} />
-        {props.page === null || props.page === undefined ? <QuizOverview {...props}/> : <QuizQuestions {...props} page={props.page} />}
+        <SidebarLayout>
+            <QuizSidebar {...sidebarProps} />
+            <MainContent>
+                {props.page === null || props.page == undefined ? QuizOverview({...{viewingAsSomeoneElse, ...props}}): <QuizQuestions {...props} page={props.page} /> }
+            </MainContent>
+        </SidebarLayout>
     </>;
 }

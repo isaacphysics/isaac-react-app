@@ -27,10 +27,11 @@ import classNames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
 import { Difficulty } from "../../../IsaacApiTypes";
+import { PhyHexIcon, PhyHexIconProps } from "./svg/PhyHexIcon";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserViewingContext();
-    const viewsWithMyStage = audienceViews.filter(vc => vc.stage === userContext.stage);
+    const viewsWithMyStage = audienceViews.filter(vc => userContext.contexts.some(uc => uc.stage === vc.stage));
     // If there is a possible audience view that is correct for our user context, show that specific one
     const viewsToUse = viewsWithMyStage.length > 0 ? viewsWithMyStage.slice(0, 1) : audienceViews;
     const filteredViews = filterAudienceViewsByProperties(viewsToUse, AUDIENCE_DISPLAY_FIELDS);
@@ -62,22 +63,42 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     );
 }
 
+interface IconPlaceholderProps extends React.HTMLAttributes<HTMLDivElement> {
+    width: string;
+    height: string;
+}
+
+export const placeholderIcon = (props: IconPlaceholderProps): TitleIconProps => {
+    const {width, height} = props;
+    return {
+        type: "placeholder",
+        icon: undefined,
+        height,
+        width,
+    };
+};
+
+export interface TitleIconProps extends PhyHexIconProps {
+    type: "img" | "hex" | "placeholder";
+    height?: string;
+    width?: string;
+}
+
 export interface PageTitleProps {
     currentPageTitle: string;
+    displayTitleOverride?: string;
     subTitle?: string;
     disallowLaTeX?: boolean;
     help?: ReactElement;
     className?: string;
     audienceViews?: ViewingContext[];
-    modalId?: string;
     preview?: boolean;
+    icon?: TitleIconProps;
 }
-export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, className, audienceViews, modalId, preview}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, help, className, audienceViews, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
     const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
-
-    const showModal = modalId && isPhy;
 
     useEffect(() => {
         if (preview) return; // Don't set the main content ID if we're in preview mode
@@ -92,38 +113,27 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
         }
     }, [currentPageTitle, preview]);
 
-    interface HelpModalProps {
-        modalId: string;
-    }
-
-    const HelpModal = (props: HelpModalProps) => {
-        return <PageFragment fragmentId={props.modalId} ifNotFound={help}/>;
-    };
-
-    function openHelpModal(modalId: string) {
-        dispatch(openActiveModal({
-            closeAction: () => {dispatch(closeActiveModal());},
-            size: "xl",
-            title: "Help",
-            body: <HelpModal modalId={modalId}/>
-        }));
-    }
-
-    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary d-sm-flex ${className ? className : ""}`}>
-        <div className="me-auto" data-testid={"main-heading"}>
-            {formatPageTitle(currentPageTitle, disallowLaTeX)}
-            {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
+    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-2 mb-0": isPhy}, className)}>
+        <div className="d-flex w-100" data-testid={"main-heading"}>
+            {isPhy && icon && (
+                icon.type === "img" ? <img src={icon.icon} alt="" height={icon.height} width={icon.width} className="me-3"/> 
+                    : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/> 
+                        : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/>
+                            : undefined
+            )}
+            <div className="d-flex flex-column justify-content-center">
+                {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX)}
+                {/* in the new isaac designs, subtitles should only ever exist in the page title, not alongside this super-title */}
+                {isAda && subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
+            </div>
         </div>
         <Helmet>
             <meta property="og:title" content={currentPageTitle} />
         </Helmet>
         {audienceViews && <AudienceViewer audienceViews={audienceViews} />}
-        {help && !showModal && <React.Fragment>
+        {isAda && help && <React.Fragment>
             <div id="title-help" className="title-help">Help</div>
             <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>
-        </React.Fragment>}
-        {modalId && showModal && <React.Fragment>
-            <Button color="link" className="title-help title-help-modal" onClick={() => openHelpModal(modalId)}>Help</Button>
         </React.Fragment>}
     </h1>;
 };

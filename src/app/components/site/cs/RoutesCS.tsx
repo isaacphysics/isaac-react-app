@@ -34,7 +34,9 @@ import { StudentResources } from "../../pages/StudentResources";
 import { TeacherResources } from "../../pages/TeacherResources";
 import { CSProjects } from "../../pages/CSProjects";
 import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
+import {StudentChallenges} from "../../pages/StudentChallenges";
 import { QuizView } from "../../pages/quizzes/QuizView";
+import {Overview} from "../../pages/Overview";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -43,6 +45,7 @@ let key = 0;
 export const RoutesCS = [
 
     // Registration flow
+    <TrackedRoute key={key++} exact path="/dashboard" ifUser={isTeacherOrAbove} component={Overview} />,
     <TrackedRoute key={key++} exact path="/register" component={RegistrationStart} />,
     <TrackedRoute key={key++} exact path="/register/role" component={RegistrationRoleSelect} />,
     <TrackedRoute key={key++} exact path="/register/student/age" component={RegistrationAgeCheck} />,
@@ -85,21 +88,22 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
     <TrackedRoute key={key++} exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
     <TrackedRoute key={key++} exact path="/test/view/:quizId" ifUser={isLoggedIn} component={QuizView} />,
-    
+
 
     // Topics and content
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
     <Redirect key={key++} from="/topics/projects_link_pseudo_project" to="/projects" />,
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
-    <TrackedRoute key={key++} exact path="/exam_specifications_england" component={ExamSpecifications} />,
+    <TrackedRoute key={key++} exact path="/exam_specifications_england" component={ExamSpecifications}
+        componentProps={{title: "English qualifications"}} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_wales" component={ExamSpecifications}
-        componentProps={{'examBoardFilter': [EXAM_BOARD.WJEC]}} />,
+        componentProps={{'examBoardFilter': [EXAM_BOARD.WJEC], title: "Welsh qualifications"}} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_ada" component={ExamSpecifications}
-        componentProps={{'examBoardFilter': [EXAM_BOARD.ADA], 'stageFilter': [STAGE.CORE, STAGE.ADVANCED]}} />,
+        componentProps={{'examBoardFilter': [EXAM_BOARD.ADA], 'stageFilter': [STAGE.CORE, STAGE.ADVANCED], title: "Ada CS Curriculum"}} />,
     <Redirect key={key++} from="/concepts/sqa_computing_science" to="/exam_specifications_scotland" />,
     <TrackedRoute key={key++} exact path="/exam_specifications_scotland" component={ExamSpecifications}
         componentProps={{'examBoardFilter': [EXAM_BOARD.SQA], 'stageFilter': [STAGE.SCOTLAND_NATIONAL_5,
-            STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER]}} />,
+            STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER], title: "Scottish qualifications"}} />,
     <TrackedRoute key={key++} exact path="/exam_specifications" component={ExamSpecificationsDirectory} />,
     <TrackedRoute key={key++} exact path="/teaching_order" component={TeachingOrders}/>,
 
@@ -129,4 +133,7 @@ export const RoutesCS = [
 
     // <TrackedRoute key={key++} exact path="/coming_soon" component={ComingSoon} />,
     <TrackedRoute key={key++} exact path="/equality" ifUser={isStaff} component={Equality} />,
+
+    <TrackedRoute key={key++} exact path={"/student_challenges"} component={StudentChallenges} />,
+    <Redirect key={key++} from={"/pages/student_challenges"} to={"/student_challenges"} />
 ];

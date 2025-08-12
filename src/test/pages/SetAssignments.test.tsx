@@ -2,42 +2,50 @@ import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
-import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, SOME_FIXED_FUTURE_DATE} from "../dateUtils";
-import {clickOn, renderTestEnvironment, withMockedDate} from "../testUtils";
+import {
+    dayMonthYearStringToDate,
+    DDMMYYYY_REGEX,
+    ONE_DAY_IN_MS,
+    SOME_FIXED_FUTURE_DATE,
+    TEXTUAL_DATE_REGEX
+} from "../dateUtils";
+import {clickOn, navigateToSetAssignments, renderTestEnvironment, withMockedDate} from "../testUtils";
 
 import {API_PATH, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
-import { http, HttpHandler, HttpResponse } from "msw";
-import { AssignmentDTO } from "../../IsaacApiTypes";
-import { buildPostHandler } from "../../mocks/handlers";
+import {http, HttpHandler, HttpResponse} from "msw";
+import {AssignmentDTO} from "../../IsaacApiTypes";
+import {buildPostHandler} from "../../mocks/handlers";
 
 const expectedPhysicsTopLinks = {
     "our books": null,
-    "our Boards by Topic": "/pages/pre_made_gameboards",
-    "create a gameboard": PATHS.GAMEBOARD_BUILDER
+    "our topic question decks": "/physics/a_level/question_decks",
+    "create a question deck": PATHS.GAMEBOARD_BUILDER
 };
 
 describe("SetAssignments", () => {
 
-    const renderSetAssignments = ({path = PATHS.SET_ASSIGNMENTS, endpoints = []}: { endpoints?: HttpHandler[], path?: string } = {}) => {
+    const renderSetAssignments = async ({endpoints = []}: { endpoints?: HttpHandler[], path?: string } = {}) => {
         renderTestEnvironment({
-            PageComponent: SetAssignments,
-            initalRouteEntries: [path],
             extraEndpoints: endpoints
         });
+        await navigateToSetAssignments();
     };
 
     it('should show 6 gameboards in card view (and start in this view on Phy)', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         if (isPhy) {
             await waitFor(() => {
                 expect(screen.queryAllByText("Loading...")).toHaveLength(0);
             });
-            const viewDropdown: HTMLInputElement = await screen.findByLabelText("Display in");
+            const viewDropdown: HTMLInputElement = await screen.findByLabelText("Set display mode");
             expect(viewDropdown.value).toEqual("Card View");
         } else {
             // Change view to "Card View"
             const viewDropdown = await screen.findByLabelText("Display in");
             await userEvent.selectOptions(viewDropdown, "Card View");
+
+            const limitDropdown = await screen.findByLabelText("Show");
+            await userEvent.selectOptions(limitDropdown, "6");
             await waitFor(() => {
                 expect(screen.queryAllByText("Loading...")).toHaveLength(0);
             });
@@ -46,7 +54,7 @@ describe("SetAssignments", () => {
     });
 
     it('should show all gameboards in table view (and start in this view on CS)', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         if (isAda) {
             await waitFor(() => {
                 expect(screen.queryAllByText("Loading...")).toHaveLength(0);
@@ -55,16 +63,24 @@ describe("SetAssignments", () => {
             expect(viewDropdown.value).toEqual("Table View");
         } else {
             // Change view to "Table View"
-            const viewDropdown = await screen.findByLabelText("Display in");
+            const viewDropdown = await screen.findByLabelText("Set display mode");
             await userEvent.selectOptions(viewDropdown, "Table View");
         }
         // Make sure that all gameboards are listed
         const gameboardRows = await screen.findAllByTestId("gameboard-table-row");
         expect(gameboardRows).toHaveLength(mockGameboards.totalResults);
+        if (isPhy) {
+            // Phy persists the change to table view, so switch back to card view for subsequent tests
+            const viewDropdown = await screen.findByLabelText("Set display mode");
+            await userEvent.selectOptions(viewDropdown, "Card View");
+
+            const limitDropdown = await screen.findByLabelText("Set display limit");
+            await userEvent.selectOptions(limitDropdown, "6");
+        }
     });
 
     isPhy && it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
             const button = await screen.findByRole("link", {name: title});
             expect(button.getAttribute("href")).toBe(href);
@@ -72,7 +88,7 @@ describe("SetAssignments", () => {
     });
 
     it('should show all the correct information for a gameboard in card view', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         if (!isPhy) {
             // Change view to "Card View"
             const viewDropdown = await screen.findByLabelText("Display in");
@@ -86,12 +102,14 @@ describe("SetAssignments", () => {
         // Check that group count is correct
         const assignmentsToGameboard = mockSetAssignments.filter(a => a.gameboardId === mockGameboard.id);
         const groupsAssignedHexagon = await within(gameboard).findByTitle("Number of groups assigned");
-        expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual(`${assignmentsToGameboard.length}group${assignmentsToGameboard.length === 1 ? "" : "s"}`);
+        expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual(`${isPhy ? "Assignedto" : ""}${assignmentsToGameboard.length}group${assignmentsToGameboard.length === 1 ? "" : "s"}`);
 
         // Check that created date is present and in the expected format
-        const dateText = within(gameboard).getByTestId("created-date").textContent?.replace(/Created:\s?/, "");
-        expect(dateText).toMatch(DDMMYYYY_REGEX);
-        expect(mockGameboard.creationDate - (dayMonthYearStringToDate(dateText)?.valueOf() ?? 0)).toBeLessThanOrEqual(ONE_DAY_IN_MS);
+        const datePrefix = siteSpecific("Created on ", "Created: ");
+        const dateText = within(gameboard).getByTestId("created-date").textContent?.replace(datePrefix, "");
+        expect(dateText).toMatch(siteSpecific(TEXTUAL_DATE_REGEX, DDMMYYYY_REGEX));
+        const date = siteSpecific(Date.parse(dateText!), dayMonthYearStringToDate(dateText));
+        expect(mockGameboard.creationDate - (date?.valueOf() ?? 0)).toBeLessThanOrEqual(ONE_DAY_IN_MS);
 
         // TODO fix stage and difficulty tests (broken since UI change Jan 2023)
         // Check that stages are displayed
@@ -118,9 +136,14 @@ describe("SetAssignments", () => {
         // // Check for difficulty title TODO check for SVG using something like screen.getByTitle("Practice 2 (P2)...")
         // within(gameboard).getByText("Difficulty:");
 
-        // Ensure we have a title with a link to the gameboard
-        const title = within(gameboard).getByRole("link", {name: mockGameboard.title});
-        expect(title.getAttribute("href")).toBe(`/assignment/${mockGameboard.id}`);
+        // Ensure gameboard has correct title and link
+        if (isAda) {
+            const title = within(gameboard).getByRole("link", {name: mockGameboard.title});
+            expect(title.getAttribute("href")).toBe(`/assignment/${mockGameboard.id}`);
+        }
+        if (isPhy) {
+            expect(gameboard.getAttribute("href")).toBe(`/question_decks#${mockGameboard.id}`);
+        }
 
         // Ensure the assign/unassign button exists
         within(gameboard).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
@@ -131,12 +154,12 @@ describe("SetAssignments", () => {
         const requestAssignment = (body: AssignmentDTO[]) => body[0];
         const observer = parameterObserver<AssignmentDTO[]>();
 
-        renderSetAssignments({
+        await renderSetAssignments({
             endpoints: [
                 buildPostHandler(
                     "/assignments/assign_bulk",
                     observer.attach(body => body.map(x => ({ groupId: x.groupId, assignmentId: x.groupId! * 2 })))
-                ), 
+                ),
             ]
         });
         if (!isPhy) {
@@ -152,7 +175,7 @@ describe("SetAssignments", () => {
         await userEvent.click(modalOpenButton);
 
         // Wait for modal to appear, for the gameboard we expect
-        const modal = await screen.findByTestId("set-assignment-modal");
+        const modal = await screen.findByTestId("active-modal");
         expect(modal).toHaveModalTitle(mockGameboard.title);
         // Ensure all active groups are selectable in the drop-down
         const groupSelector = await toggleGroupSelect();
@@ -194,39 +217,140 @@ describe("SetAssignments", () => {
             expect(requestAssignment(observer.observedParams!).scheduledStartDate).not.toBeDefined();
         });
 
-        // Check that new assignment is displayed in the modal
-        await waitFor(() => {
-            const newCurrentAssignments = within(modal).queryAllByTestId("current-assignment");
-            expect(newCurrentAssignments.map(a => a.textContent).join(",")).toContain(mockActiveGroups[1].groupName);
-        });
-
-        // Close modal
-        const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
-        expect(closeButtons).toHaveLength(siteSpecific(2, 1)); // One at the top (and one at the bottom on Phy)
-        await userEvent.click(closeButtons[0]);
+        // TODO: the modal now closes automatically.
+        // // Check that new assignment is displayed in the modal
+        // await waitFor(() => {
+        //     const newCurrentAssignments = within(modal).queryAllByTestId("current-assignment");
+        //     expect(newCurrentAssignments.map(a => a.textContent).join(",")).toContain(mockActiveGroups[1].groupName);
+        // });
+        //
+        // // Close modal
+        // const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
+        // expect(closeButtons).toHaveLength(siteSpecific(2, 1)); // One at the top (and one at the bottom on Phy)
+        // await userEvent.click(closeButtons[0]);
         await waitFor(() => {
             expect(modal).not.toBeInTheDocument();
         });
 
         // Make sure the gameboard number of groups assigned is updated
         const groupsAssignedHexagon = await within(gameboards[0]).findByTitle("Number of groups assigned");
-        expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual("2groups");
+        expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual(siteSpecific("Assignedto2groups", "2groups"));
+    });
+
+    describe('modal', () => {
+        const renderModal = async (endpoints: HttpHandler[] = []) => {
+            await renderSetAssignments({endpoints});
+            if (!isPhy) {
+                // Change view to "Card View"
+                const viewDropdown = await screen.findByLabelText("Display in");
+                await userEvent.selectOptions(viewDropdown, "Card View");
+            }
+            const gameboards = await screen.findAllByTestId("gameboard-card");
+            // Find and click assign gameboard button for the first gameboard
+            const modalOpenButton = within(gameboards[0]).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
+            await userEvent.click(modalOpenButton);
+        };
+
+        it('groups are empty by default', async () => {
+            await renderModal();
+            expect(await groupSelector()).toHaveTextContent('Group(s):None');
+        });
+
+        it('start date is empty by default', async () => {
+            await renderModal();
+            expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
+        });
+
+        it('due date is a week from now by default', async() => {
+            await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
+                await renderModal();
+                expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
+            });
+        });
+
+        // local time zone is Europe/London, as set in globalSetup.ts
+        it('due date is displayed in UTC', async () => {
+            await withMockedDate(Date.parse("2025-04-28T23:30:00.000Z"), async () => { // Monday in UTC, already Tuesday in UTC+1.
+                await renderModal();
+                expect(await dateInput("Due date reminder")).toHaveValue('2025-05-04'); // Sunday in UTC (would be Monday if we showed UTC+1)
+            });
+        });
+
+        const testPostedDueDate = ({ currentTime, expectedDueDatePosted } : { currentTime: string, expectedDueDatePosted: string}) => async () => {
+            await withMockedDate(Date.parse(currentTime), async () => { // Monday
+                const observer = parameterObserver<AssignmentDTO[]>();
+                await renderModal([
+                    buildPostHandler(
+                        "/assignments/assign_bulk",
+                        observer.attach(body => body.map(x => ({ groupId: x.groupId, assignmentId: x.groupId! * 2 })))
+                    )
+                ]);
+
+                await toggleGroupSelect();
+                await selectGroup(mockActiveGroups[1].groupName);
+                await clickOn('Assign to group', modal());
+
+                await waitFor(() => expect(observer.observedParams![0].dueDate).toEqual(expectedDueDatePosted)); // Sunday
+            });
+        };
+
+        it('posts the default due date as UTC midnight, even when that is not exactly 24 hours away', testPostedDueDate(
+            { currentTime: "2025-01-30T09:00:00.000Z" /* Monday */, expectedDueDatePosted: "2025-02-05T00:00:00.000Z" /* Sunday */ }
+        ));
+
+        // local time zone is Europe/London, as set in globalSetup.ts
+        it('posts the default due date as UTC midnight, even when local representation does not equal UTC', testPostedDueDate(
+            { currentTime: "2025-04-28" /* Monday */, expectedDueDatePosted: "2025-05-04T00:00:00.000Z" /* Sunday */ }
+        ));
+
+        // TODO: we close the modal automatically now, so this test doesn't test the right thing.
+        // it('resets to defaults after a failed post', async () => {
+        //     await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
+        //         await renderModal([
+        //             buildPostHandler(
+        //                 "/assignments/assign_bulk",
+        //                 (body: AssignmentDTO[]) => body.map(x => ({ groupId: x.groupId, errorMessage: "Boo, something went wrong" }))
+        //             )
+        //         ]);
+        //
+        //         await toggleGroupSelect();
+        //         await selectGroup(mockActiveGroups[1].groupName);
+        //         await clickOn('Assign to group', modal());
+        //
+        //         expect(await groupSelector()).toHaveTextContent('Group(s):None');
+        //         expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
+        //         expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
+        //     });
+        // });
+
+        describe('validation', () => {
+            it('shows an error message when the due date is missing', async () => {
+                await renderModal();
+                await clearDateInput("Due date reminder");
+                expect(await findByText("Due date reminder")).toHaveTextContent(`Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments`);
+            });
+
+            it('does not show an error when the due date is present', async () => {
+                await renderModal();
+                expect(await findByText("Due date reminder")).not.toHaveTextContent(`due dates are required for assignments`);
+            });
+        });
     });
 
     describe('modal', () => {
         const mockGameboard = mockGameboards.results[0];
-        const renderModal = (endpoints: HttpHandler[] = []) => renderSetAssignments({ path: `${PATHS.SET_ASSIGNMENTS}#${mockGameboard.id}`, endpoints}); 
+        const renderModal = (endpoints: HttpHandler[] = []) => renderSetAssignments({ path: `${PATHS.SET_ASSIGNMENTS}#${mockGameboard.id}`, endpoints});
 
         it('groups are empty by default', async () => {
             renderModal();
             expect(await groupSelector()).toHaveTextContent('Group(s):None');
         });
-    
+
         it('start date is empty by default', async () => {
             renderModal();
             expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
         });
-            
+
         it('due date is a week from now by default', async() => {
             await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
                 renderModal();
@@ -304,10 +428,8 @@ describe("SetAssignments", () => {
 
     it('should let you unassign a gameboard', async () => {
         // Arrange
-        renderTestEnvironment({
-            PageComponent: SetAssignments,
-            initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
-            extraEndpoints: [
+        await renderSetAssignments({
+            endpoints: [
                 http.delete(API_PATH + "/assignments/assign/test-gameboard-1/2", async () => {
                     return HttpResponse.json(null, {
                         status: 204,
@@ -327,7 +449,7 @@ describe("SetAssignments", () => {
         await userEvent.click(modalOpenButton);
 
         // Wait for modal to appear
-        const modal = await screen.findByTestId("set-assignment-modal");
+        const modal = await screen.findByTestId("active-modal");
 
         // prepare response to window.confirm dialog
         const confirmSpy = jest.spyOn(window, 'confirm');
@@ -348,10 +470,8 @@ describe("SetAssignments", () => {
 
     it('should reject duplicate assignment', async () => {
         await withMockedDate(SOME_FIXED_FUTURE_DATE, async () => {
-            renderTestEnvironment({
-                PageComponent: SetAssignments,
-                initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
-                extraEndpoints: [
+            await renderSetAssignments({
+                endpoints: [
                     http.post(API_PATH + "/assignments/assign_bulk", async () => {
                         return HttpResponse.json([
                             {
@@ -376,7 +496,7 @@ describe("SetAssignments", () => {
             await userEvent.click(modalOpenButton);
 
             // wait for modal to appear, for the gameboard we expect
-            const modal = await screen.findByTestId("set-assignment-modal");
+            const modal = await screen.findByTestId("active-modal");
 
             // select the group with that gameboard already assigned
             const selectContainer = within(modal).getByText(/Group(\(s\))?:/);
@@ -404,12 +524,12 @@ describe("SetAssignments", () => {
             });
 
             const groupsAssignedHexagon = await within(gameboards[0]).findByTitle("Number of groups assigned");
-            expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual("1group");
+            expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual(siteSpecific("Assignedto1group", "1group"));
         });
     });
 });
 
-const modal = () => screen.findByTestId("set-assignment-modal");
+const modal = () => screen.findByTestId("active-modal");
 
 const findByText = async (labelText: string | RegExp) => await within(await modal()).findByText(labelText);
 
@@ -440,6 +560,6 @@ const parameterObserver = <T,>() => ({
         return (p: T) => {
             this.observedParams = p;
             return fn(p);
-        }; 
+        };
     }
 });

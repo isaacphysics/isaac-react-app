@@ -17,7 +17,7 @@ export const DowntimeWarningBanner = () => {
     }
 
     const inDateRange = new Date(1752480000000) <= new Date() && new Date() <= new Date(1752566400000);
-    const colour = "warning";
+    const colour = siteSpecific("danger", "warning"); // Ada doesn't support "danger" colours!
 
     return inDateRange && noCookie ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color={colour} className="mb-0">
@@ -27,7 +27,7 @@ export const DowntimeWarningBanner = () => {
                         {SITE_TITLE} may be unavailable on Tuesday 15 July from 7am BST until 9am BST due to essential network maintenance.
                     </Col>
                     <Col xs={12} md={3} className="text-center">
-                        <Button color="primary" outline className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
+                        <Button color="keyline" className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
                             Dismiss<span className="visually-hidden"> downtime notification</span>
                         </Button>
                     </Col>

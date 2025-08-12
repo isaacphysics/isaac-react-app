@@ -105,7 +105,7 @@ describe('TrustedHtml LaTeX locator', () => {
         const result = katexify(testcase, undefined, false, false, {foo: 42});
 
         const expectedFigureRef = "Figure" + "&nbsp;" + "42";
-        const expectedFigureRefWithFormatting = `<strong class="text-secondary figure-reference">${expectedFigureRef}</strong>`;
+        const expectedFigureRefWithFormatting = `<strong class="text-theme figure-reference">${expectedFigureRef}</strong>`;
         expect(result).toEqual(html[0] + expectedFigureRefWithFormatting + html[1]);
         expect(katex.renderToString).not.toHaveBeenCalled();
     });

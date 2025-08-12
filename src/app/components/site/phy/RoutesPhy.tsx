@@ -1,24 +1,12 @@
 import React, {lazy} from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
-import {PhysicsSkills19} from "../../pages/books/physics_skills_19";
-import {PhysBookGcse} from "../../pages/books/phys_book_gcse";
-import {PhysicsSkills14} from "../../pages/books/physics_skills_14";
-import {PreUniMaths} from "../../pages/books/pre_uni_maths";
-import {PreUniMaths2e} from "../../pages/books/pre_uni_maths_2e";
-import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
-import {Redirect} from "react-router";
-import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS} from "../../../services";
+import {Redirect, RouteComponentProps} from "react-router";
+import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
-import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
-import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
-import {MathsBookGcse} from "../../pages/books/maths_book_gcse";
-import {PhysBookYrNine} from "../../pages/books/phys_book_yr9";
-import {StepUpPhys} from "../../pages/books/step_up_phys";
-import {LinkingConcepts} from "../../pages/books/linking_concepts";
 import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
 import {QuizDoAssignment} from "../../pages/quizzes/QuizDoAssignment";
 import {QuizAttemptFeedback} from "../../pages/quizzes/QuizAttemptFeedback";
@@ -30,23 +18,58 @@ import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
 import {TeacherRequest} from "../../pages/TeacherRequest";
-import { RegistrationStart } from "../../pages/RegistrationStart";
+import {RegistrationStart} from "../../pages/RegistrationStart";
 import {EmailAlterHandler} from "../../handlers/EmailAlterHandler";
 import {News} from "../../pages/News";
-import { RegistrationAgeCheck } from "../../pages/RegistrationAgeCheck";
-import { RegistrationAgeCheckFailed } from "../../pages/RegistrationAgeCheckFailed";
-import { RegistrationAgeCheckParentalConsent } from "../../pages/RegistrationAgeCheckParentalConsent";
-import { RegistrationSetDetails } from "../../pages/RegistrationSetDetails";
-import { RegistrationTeacherConnect } from "../../pages/RegistrationTeacherConnect";
-import { RegistrationSuccess } from "../../pages/RegistrationSuccess";
-import { RegistrationSetPreferences } from "../../pages/RegistrationSetPreferences";
-import { RegistrationGroupInvite } from "../../pages/RegistrationGroupInvite";
-import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
-import { QuizView } from "../../pages/quizzes/QuizView";
+import {RegistrationAgeCheck} from "../../pages/RegistrationAgeCheck";
+import {RegistrationAgeCheckFailed} from "../../pages/RegistrationAgeCheckFailed";
+import {RegistrationAgeCheckParentalConsent} from "../../pages/RegistrationAgeCheckParentalConsent";
+import {RegistrationSetDetails} from "../../pages/RegistrationSetDetails";
+import {RegistrationTeacherConnect} from "../../pages/RegistrationTeacherConnect";
+import {RegistrationSuccess} from "../../pages/RegistrationSuccess";
+import {RegistrationSetPreferences} from "../../pages/RegistrationSetPreferences";
+import {RegistrationGroupInvite} from "../../pages/RegistrationGroupInvite";
+import {PracticeQuizzes} from "../../pages/quizzes/PracticeQuizzes";
+import {SubjectLandingPage} from "../../pages/SubjectLandingPage";
+import {QuestionFinder} from "../../pages/QuestionFinder";
+import {QuestionDecks} from "../../pages/QuestionDecks";
+import {QuickQuizzes} from "../../pages/QuickQuizzes";
+import {SubjectOverviewPage} from "../../pages/SubjectOverviewPage";
+import {Glossary} from "../../pages/Glossary";
+import {Book} from "../../elements/Book";
+import {SolvingPhysProblems} from "../../pages/books_old/SolvingPhysProblems";
+import {PhysBookYrNine} from "../../pages/books_old/phys_book_yr9";
+import {PreUniMaths} from "../../pages/books_old/pre_uni_maths";
+import {QuizView} from "../../pages/quizzes/QuizView";
+import {BooksOverview} from "../../pages/BooksOverview";
+import {RevisionPage} from "../../pages/RevisionDetailPage";
+import {AnvilAppsListing} from "../../pages/AnvilAppsListing";
+import {AdaCSOverviewPage} from "../../pages/AdaCSOverviewPage";
+import {PhysicsSkills14} from "../../pages/books_old/physics_skills_14";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
 const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
+
+const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
+    // at all valid paths matching `/:subject/:stage${string}`, render the given component
+    "": SubjectLandingPage,
+    "/questions": QuestionFinder,
+    "/concepts": Concepts,
+    "/practice_tests": PracticeQuizzes,
+    "/quick_quizzes": QuickQuizzes,
+    "/question_decks": QuestionDecks,
+    "/glossary": Glossary,
+    "/tools": AnvilAppsListing,
+};
+
+// TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
+const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
+    "/books/physics_skills_14": PhysicsSkills14,
+    "/books/pre_uni_maths": PreUniMaths,
+    "/books/solve_physics_problems": SolvingPhysProblems,
+    "/books/phys_book_yr9": PhysBookYrNine,
+};
 
 let key = 0;
 export const RoutesPhy = [
@@ -72,7 +95,7 @@ export const RoutesPhy = [
     // Student test pages
     <TrackedRoute key={key++} exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />,
     <Redirect key={key++} from="/quizzes" to="/tests" />,
-    <TrackedRoute key={key++} exact path="/practice_tests" ifUser={isLoggedIn} component={PracticeQuizzes} />,
+    <TrackedRoute key={key++} exact path="/practice_tests" component={PracticeQuizzes} />,
 
     // Quiz (test) pages
     <TrackedRoute key={key++} exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />,
@@ -102,19 +125,36 @@ export const RoutesPhy = [
     <Redirect key={key++} from="/quiz/attempt/:quizId/page/:page"              to="/test/attempt/:quizId/page/:page" />,
     <Redirect key={key++} from="/quiz/attempt/:quizId"                         to="/test/attempt/:quizId" />,
 
-    // Books
-    <TrackedRoute key={key++} exact path="/books/physics_skills_19" component={PhysicsSkills19}/>,
-    <TrackedRoute key={key++} exact path="/books/phys_book_gcse" component={PhysBookGcse}/>,
-    <TrackedRoute key={key++} exact path="/books/physics_skills_14" component={PhysicsSkills14}/>,
-    <TrackedRoute key={key++} exact path="/books/pre_uni_maths" component={PreUniMaths}/>,
-    <TrackedRoute key={key++} exact path="/books/pre_uni_maths_2e" component={PreUniMaths2e}/>,
-    <TrackedRoute key={key++} exact path="/books/chemistry_16" component={Chemistry16}/>,
-    <TrackedRoute key={key++} exact path="/books/quantum_mechanics_primer" component={QuantumMechanicsPrimer}/>,
-    <TrackedRoute key={key++} exact path="/books/solve_physics_problems" component={SolvingPhysProblems}/>,
-    <TrackedRoute key={key++} exact path="/books/maths_book_gcse" component={MathsBookGcse}/>,
-    <TrackedRoute key={key++} exact path="/books/phys_book_yr9" component={PhysBookYrNine}/>,
-    <TrackedRoute key={key++} exact path="/books/step_up_phys" component={StepUpPhys}/>,
-    <TrackedRoute key={key++} exact path="/books/linking_concepts" component={LinkingConcepts}/>,
+    // Books (old)
+    ...(Object.entries(old_books).map(([path, component]) => [
+        <TrackedRoute key={key++} exact path={path} component={component} />,
+        <TrackedRoute key={key++} exact path={`${path}/:pageId`} component={component} />,
+    ]).flat()),
+
+    // Books (new)
+    <TrackedRoute key={key++} exact path={"/books/:bookId"} component={Book} />,
+    <TrackedRoute key={key++} exact path={"/books/:bookId/:pageId"} component={Book} />,
+    <TrackedRoute key={key++} exact path={"/books"} component={BooksOverview} />,
+
+    // Revision pages
+    // <TrackedRoute key={key++} exact path="/revision" component={SubjectLandingPage} />,
+    <TrackedRoute key={key++} exact path="/revision/:pageId" component={RevisionPage} />,
+
+    // Subject-stage pages -- see subjectSpecificPages, defined above
+    ...(Object.entries(subjectStagePairPages).map(([path, component]) => (
+        <TrackedRoute key={key++} exact path={Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
+            stages.forEach((stage) => {
+                acc.push(`/${subject}/${stage}${path}`);
+            });
+            return acc;
+        }, [] as string[])} component={component} />
+    ))),
+
+    // Subject overview landing pages
+    ...(Object.keys(PHY_NAV_SUBJECTS).map((subject) => (
+        <TrackedRoute key={key++} exact path={`/${subject}`} component={SubjectOverviewPage} />
+    ))),
+    <TrackedRoute key={key++} exact path="/computer_science" component={AdaCSOverviewPage} />,
 
     // Concepts List
     <TrackedRoute key={key++} exact path="/concepts" component={Concepts} />,
@@ -123,6 +163,7 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/about" pageId="about_us_index" />,
     <StaticPageRoute key={key++} exact path="/apply_uni" />,
     <StaticPageRoute key={key++} exact path="/publications" />,
+    <StaticPageRoute key={key++} exact path="/books" pageId="books_overview" />,
     <StaticPageRoute key={key++} exact path="/solving_problems" />,
     <StaticPageRoute key={key++} exact path="/extraordinary_problems" pageId="extraordinary_problems_index" />,
     <StaticPageRoute key={key++} exact path="/challenge_problems" pageId="challenge_problems_index" />,
@@ -137,9 +178,7 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/book/question" pageId="book_question" />,
     <StaticPageRoute key={key++} exact path="/exam_uni_help" />,
     <StaticPageRoute key={key++} exact path="/coronavirus" pageId="2020_03_coronavirus" />,
-    <StaticPageRoute key={key++} exact path="/11_14" pageId="11_14" />,
-    <StaticPageRoute key={key++} exact path="/gcse" pageId="gcse" />,
-    <StaticPageRoute key={key++} exact path="/alevel" pageId="alevel" />,
+    <StaticPageRoute key={key++} exact path="/gameboards/new" pageId="question_finder_redirect" />,
     <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
     <TrackedRoute key={key++} exact path="/tutor_features" component={TutorFeatures}/>,
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
@@ -148,9 +187,13 @@ export const RoutesPhy = [
 
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,
-    <Redirect key={key++} exact from="/boards" to="/my_gameboards" />,
+    <Redirect key={key++} exact from="/boards" to={PATHS.MY_GAMEBOARDS} />,
+    <Redirect key={key++} exact from="/my_gameboards" to={PATHS.MY_GAMEBOARDS} />,
     <Redirect key={key++} exact from="/game_builder" to={PATHS.GAMEBOARD_BUILDER} />,
+    <Redirect key={key++} exact from="/gameboard_builder" to={PATHS.GAMEBOARD_BUILDER} />,
+    <Redirect key={key++} exact from="/add_gameboard/:id" to={`${PATHS.ADD_GAMEBOARD}/:id`} />,
     <Redirect key={key++} exact from="/board/:id" to={`${PATHS.GAMEBOARD}#:id`} />,
+    <Redirect key={key++} exact from="/gameboards" to={{pathname: PATHS.GAMEBOARD, hash: window.location.hash}} />,
     <Redirect key={key++} exact from="/gcsebook" to="/books/phys_book_gcse" />,
     <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_14" />,
     <Redirect key={key++} exact from="/book" to="/books/physics_skills_14" />,
@@ -161,6 +204,9 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/tutors" to="/support/tutor/general" />,
     <Redirect key={key++} exact from="/pages/isaac_embedded_schools" to="/support/teacher/partner#embedded_schools" />,
     <Redirect key={key++} exact from="/pages/questions_spreadsheet" to="/support/teacher/suggestions#spreadsheet" />,
+    <Redirect key={key++} exact from="/11_14" to="/" />,
+    <Redirect key={key++} exact from="/gcse" to="/" />,
+    <Redirect key={key++} exact from="/alevel" to="/" />,
     <Redirect key={key++} exact from="/s/:shortCode" to="/pages/problem_solving_qs" />,
 
     // Isaac Chemistry redirect

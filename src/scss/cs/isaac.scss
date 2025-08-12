@@ -190,6 +190,7 @@ $perfect-fill: $cs-perfect;
 $passed-fill: $cs-jet;
 $in-progress-fill: $cs-in-progress;
 $failed-fill: $cs-failed;
+$fully-attempted-fill: $cs-perfect; // Ada don't use these colours, but given ticks are used in place reusing $cs-perfect would make sense
 
 
 // fonts
@@ -323,10 +324,19 @@ $container-max-widths: (
 
 $spacer: 1rem !default;
 $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
-    6: ($spacer * 6.25) // 100px-ish
+    5: ($spacer * 2),
+    6: ($spacer * 2.5),
+    7: ($spacer * 3),
+    8: ($spacer * 3.5),
+    9: ($spacer * 4),
 ));
 
 $enable-negative-margins: true;
+
+$card-border-width: 0;
+$card-border-radius: 1rem;
+$card-spacer-x: 1.5rem;
+$card-spacer-y: 1.5rem;
 
 // all Bootstrap overrides must appear before this
 @import "~bootstrap/scss/bootstrap"; 
@@ -342,10 +352,15 @@ $enable-negative-margins: true;
 @import "../common/mixins";
 @import "../common/_utils";
 
+// Theming
+@import "accessibility";
+@import "color-theme";
+
 // Atoms
 @import "fonts";
 @import "typography";
 @import "../common/modals";
+@import "page-title";
 @import "questions";
 @import "forms";
 @import "elements";
@@ -369,7 +384,7 @@ $enable-negative-margins: true;
 @import "../common/fasttrack";
 @import "llm-questions";
 @import "../common/scroll";
-@import "../common/checkbox";
+@import "checkbox";
 @import "../common/toggle";
 @import "button";
 @import "logo";
@@ -379,14 +394,13 @@ $enable-negative-margins: true;
 // Navigation
 @import "header";
 @import "search";
-@import "../common/navigation-bar";
 @import "footer";
 @import "../common/scroll-button";
 
 // Pages
 @import "pages";
 @import "homepage";
-@import "login";
+@import "../common/login";
 @import "../common/registration";
 @import "../common/assignments";
 @import "my-account";
@@ -395,7 +409,7 @@ $enable-negative-margins: true;
 @import "../common/gameboard";
 @import "assignment-progress";
 @import "../common/books";
-@import "../common/groups";
+@import "groups";
 @import "../common/events";
 @import "../common/glossary";
 @import "quiz";
@@ -403,6 +417,8 @@ $enable-negative-margins: true;
 @import "finder";
 @import "topics";
 @import "resources";
+@import "groups";
+@import "overview";
 
 @import "expansion-layout";
 
@@ -460,7 +476,7 @@ body {
 
 .pattern-ada-dots {
     background-image: url('/assets/cs/decor/dots-circle-bg.svg');
-    background-position: 0% 160%;
+    background-position: 0% 460px;
     background-size: 300%;
     background-repeat: no-repeat;
 }

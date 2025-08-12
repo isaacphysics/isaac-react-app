@@ -64,14 +64,15 @@ export const HeaderCS = () => {
                         </NavigationSection>
 
                         <NavigationSection title="Students">
-                            <LinkItem to="/students">Ada for students</LinkItem>
+                            <LinkItem to="/students">Ada CS for students</LinkItem>
                             <LinkItem to="/pages/stem_smart_programme">STEM SMART</LinkItem>
                             <LinkItem to="/pages/student_challenges">Challenges</LinkItem>
                             <LinkItem to="/support/student">Support</LinkItem>
                         </NavigationSection>
 
                         <NavigationSection title="Teachers">
-                            <LinkItem to="/teachers">Ada for teachers</LinkItem>
+                            <LinkItem to="/teachers">Ada CS for teachers</LinkItem>
+                            <LinkItem to="/pages/revision_quizzes">Revision quizzes</LinkItem>
                             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             <LinkItem to="/pages/online_courses">Online courses</LinkItem>
                             <LinkItem to="/pages/teacher_mentoring_2024">Mentoring programme</LinkItem>
@@ -100,6 +101,7 @@ export const HeaderCS = () => {
                                 <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" />}</>}>
                                     {isTutorOrAbove(user) ?
                                         <>
+                                            <LinkItem to="/dashboard">Overview</LinkItem>
                                             <LinkItem to="/groups">Teaching groups</LinkItem>
                                             <LinkItem to={PATHS.SET_ASSIGNMENTS}>Manage assignments</LinkItem>
                                             <LinkItem to="/set_tests">Manage tests</LinkItem>

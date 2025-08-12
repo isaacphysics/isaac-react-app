@@ -39,6 +39,7 @@ import {
     difficultyShortLabelMap,
     formatBoardOwner,
     getAssignmentStartDate,
+    isAda,
     isDefined,
     isStaff,
     Item,
@@ -158,15 +159,13 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
                     <ButtonGroup className={"w-100 pt-3"}>
                         <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-end-0 px-1 px-lg-3"} id={"start-date-button"}
-                            color={viewBy === "startDate" ? "secondary" : "primary"}
-                            outline={viewBy !== "startDate"}
+                            color={viewBy === "startDate" ? "solid" : "keyline"}
                             onClick={() => setViewBy("startDate")}
                         >
                             By start date
                         </Button>
                         <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-start-0 px-1 px-lg-3"} id={"due-date-button"}
-                            color={viewBy === "dueDate" ? "secondary" : "primary"}
-                            outline={viewBy !== "dueDate"}
+                            color={viewBy === "dueDate" ? "solid" : "keyline"}
                             onClick={() => setViewBy("dueDate")}
                         >
                             By due date
@@ -196,14 +195,14 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     const [showMore, setShowMore] = useState(false);
     const [showGameboardPreview, setShowGameboardPreview] = useState(false);
     const deleteAssignment = () => {
-        if (confirm(`Are you sure you want to unassign ${assignment.gameboard?.title ?? "this gameboard"} from ${assignment.groupName ? `group ${assignment.groupName}` : "this group"}?`)) {
+        if (confirm(`Are you sure you want to unassign ${assignment.gameboard?.title ?? `this ${siteSpecific("question deck", "quiz")}`} from ${assignment.groupName ? `group ${assignment.groupName}` : "this group"}?`)) {
             unassignGameboard({boardId: assignment.gameboardId, groupId: assignment.groupId});
         }
     };
     const assignmentOwnedByMe = assignment.ownerUserId === user.id;
     const assignmentStartDate = getAssignmentStartDate(assignment);
     const gameboardLink = assignment.gameboardId ? `${PATHS.GAMEBOARD}#${assignment.gameboardId}` : undefined;
-    const gameboardTitle = assignment.gameboard?.title ?? `Unknown ${siteSpecific("gameboard", "quiz")} (may belong to another user)`;
+    const gameboardTitle = assignment.gameboard?.title ?? `Unknown ${siteSpecific("question deck", "quiz")} (may belong to another user)`;
     const gameboard = boardsById[assignment.gameboardId];
     const boardSubjects = determineGameboardSubjects(gameboard);
 
@@ -247,8 +246,8 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                 {assignment.gameboard && <div className={"mt-2 border-top pt-2"}>
                     <Row>
                         <Col xs={12} md={boardStagesAndDifficulties.length === 0 ? 12 : 6}>
-                            <div>Gameboard: <strong><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle} <span className={"visually-hidden"}>(opens in new tab)</span></a></strong></div>
-                            <div>Gameboard created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>
+                            <div>Question deck: <strong><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle} <span className={"visually-hidden"}>(opens in new tab)</span></a></strong></div>
+                            <div>Question deck created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>
                             <div className={"mb-1"}>Subject(s): <strong>{boardSubjects.map(subj => tags.getSpecifiedTag(TAG_LEVEL.subject, [subj as TAG_ID])?.title).join(", ")}</strong></div>
                         </Col>
                         {boardStagesAndDifficulties.length > 0 && <Col xs={12} md={6}>
@@ -277,9 +276,9 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                         </Col>}
                     </Row>
                     {gameboardToPreview?.contents && gameboardToPreview.contents.length > 0 && <Card className={"mt-1"}>
-                        <CardHeader className={"text-end"}><Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("gameboard", "quiz")} preview</Button></CardHeader>
+                        <CardHeader className={"text-end"}><Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("question deck", "quiz")} preview</Button></CardHeader>
                         {showGameboardPreview && gameboardToPreview && <GameboardViewerInner gameboard={gameboardToPreview}/>}
-                        {showGameboardPreview && <CardFooter className={"text-end"}><Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>Hide {siteSpecific("gameboard", "quiz")} preview</Button></CardFooter>}
+                        {showGameboardPreview && <CardFooter className={"text-end"}><Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>Hide {siteSpecific("question deck", "quiz")} preview</Button></CardFooter>}
                     </Card>}
                 </div>}
             </>}
@@ -331,7 +330,7 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
                 </svg>
                 {<foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
                     <div className={"position-relative w-100"}>
-                        <h3 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h3>
+                        <h4 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%, 4%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h4>
                     </div>
                 </foreignObject>}
             </svg>
@@ -406,7 +405,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
     useEffect(() => {
         setSelectedGroups([]);
         if (assignmentToCopy && assignmentToCopy.gameboardId) {
-            const displayTitle = (assignmentToCopy.gameboard?.title ?? boardsById[assignmentToCopy.gameboardId]?.title ?? `Unknown ${siteSpecific("gameboard", "quiz")}`) + (assignmentToCopy.gameboard?.ownerUserId === user.id ? "" : ` (belongs to another user)`);
+            const displayTitle = (assignmentToCopy.gameboard?.title ?? boardsById[assignmentToCopy.gameboardId]?.title ?? `Unknown ${siteSpecific("question deck", "quiz")}`) + (assignmentToCopy.gameboard?.ownerUserId === user.id ? "" : ` (belongs to another user)`);
             // Copy existing assignment
             setSelectedGameboard([{value: assignmentToCopy.gameboardId, label: displayTitle}]);
             setScheduledStartDate(assignmentToCopy.scheduledStartDate ? new Date(assignmentToCopy.scheduledStartDate.valueOf()) : undefined);
@@ -487,15 +486,15 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             <StyledSelect inputId="gameboard-to-assign" isClearable placeholder="None"
                 value={selectedGameboard}
                 onChange={selectOnChange(setSelectedGameboard, false)}
-                options={gameboards.map(g => itemise(g.id ?? "", g.title ?? `Unknown ${siteSpecific("gameboard", "quiz")} (may belong to another user)`))}
+                options={gameboards.map(g => itemise(g.id ?? "", g.title ?? `Unknown ${siteSpecific("question deck", "quiz")} (may belong to another user)`))}
             />
             {alreadyAssignedGroupNames && alreadyAssignedGroupNames.length > 0 && <Alert color={"warning"} className={"my-1"}>
-                This {siteSpecific("gameboard", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
+                This {siteSpecific("question deck", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
             </Alert>}
             {gameboardToPreview?.contents && <Card className={"my-1"} >
-                <CardHeader className={"text-end"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("gameboard", "quiz")} preview</Button></CardHeader>
+                <CardHeader className={"text-end"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("question deck", "quiz")} preview</Button></CardHeader>
                 {showGameboardPreview && gameboardToPreview && <GameboardViewerInner gameboard={gameboardToPreview}/>}
-                {showGameboardPreview && <CardFooter className={"text-end"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide {siteSpecific("gameboard", "quiz")} preview</Button></CardFooter>}
+                {showGameboardPreview && <CardFooter className={"text-end"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide {siteSpecific("question deck", "quiz")} preview</Button></CardFooter>}
             </Card>}
         </Label>
         <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
@@ -526,7 +525,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             <Col xs={12} sm={6}>
                 <Button
                     className="mb-2 mb-sm-0 w-100"
-                    block color={siteSpecific("secondary", "primary")}
+                    block color={siteSpecific("keyline", "solid")}
                     onClick={assign}
                     disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard) || alreadyAssignedGroupNames.length === selectedGroups.length || !dueDate || dueDateInvalid}
                 >
@@ -657,7 +656,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     const [collapsed, setCollapsed] = useState<boolean>(false);
 
     // const pageHelp = <span>
-    //     Use this page to set and manage assignments to your groups. You can assign any {siteSpecific("gameboard", "quiz")} you have saved to your account.
+    //     Use this page to set and manage assignments to your groups. You can assign any {siteSpecific("question deck", "quiz")} you have saved to your account.
     //     <br/>
     //     Students in the group will be emailed when you set a new assignment.
     // </span>;
@@ -666,22 +665,17 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Assignment Schedule" help={pageHelp}/>
+        <TitleAndBreadcrumb currentPageTitle="Assignment schedule" icon={{type: "hex", icon: "icon-events"}} help={pageHelp}/>
         {/*<h4 className="mt-4 mb-3">*/}
-        {/*    Assign a {siteSpecific("gameboard", "quiz")} from...*/}
+        {/*    Assign a {siteSpecific("question deck", "quiz")} from...*/}
         {/*</h4>*/}
         {/*<PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>*/}
         <ShowLoadingQuery
-            defaultErrorTitle="Error loading assignments and/or gameboards"
+            defaultErrorTitle="Error loading assignments and/or question decks"
             query={assignmentsSetByMeQuery}
         >
             <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 ps-2 pe-2 timeline-column mb-4 pt-2">
-                    {!isStaff(user) && <Alert className="mt-2" color="info">
-                        The Assignment Schedule page is an alternate way to manage your assignments, focusing on the start and due dates of the assignments, rather than the assigned gameboard.
-                        <br/>
-                        It is a work in progress, and we would love to <a target="_blank" href="/contact?subject=Assignment%20Schedule%20Feedback">hear your feedback</a>!
-                    </Alert>}
                     {!showSetAssignmentUI && <AssignmentScheduleStickyHeader
                         assignmentsSetByMe={assignmentsSetByMe}
                         groupsToInclude={groupsToInclude} setGroupsToInclude={setGroupsToInclude}

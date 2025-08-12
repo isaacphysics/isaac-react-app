@@ -8,7 +8,7 @@ import {screen, waitFor, within} from "@testing-library/react";
 describe("My Account", () => {
     it("students can join a group by entering a group code", async () => {
         const mockTeacher = buildMockTeacher(2);
-        const mockToken = "3GGD0G";
+        const mockToken = "ABCD234";
 
         const mockGroup = {
             ...mockActiveGroups[0],
@@ -107,7 +107,7 @@ describe("My Account", () => {
 
         const mockTeacher = buildMockTeacher(2);
         const mockTeacher2 = buildMockTeacher(3);
-        const mockToken = "3GGD0G";
+        const mockToken = "ABCD234";
 
         const mockGroup = {
             ...mockActiveGroups[0],

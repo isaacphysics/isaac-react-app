@@ -1,16 +1,13 @@
 import {AssignmentDTO, IAssignmentLike} from "../../IsaacApiTypes";
 import orderBy from "lodash/orderBy";
 import {EnhancedAssignment} from "../../IsaacAppTypes";
-import {API_PATH, extractTeacherName, matchesAllWordsInAnyOrder} from "./";
+import {extractTeacherName, matchesAllWordsInAnyOrder} from "./";
 
 export function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedAssignment {
     return assignment.gameboard != undefined;
 }
-export function getAssignmentCSVDownloadLink(assignmentId: number) {
-    return `${API_PATH}/assignments/assign/${assignmentId}/progress/download`;
-}
 
-function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO & {startDate: Date} {
+function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO & {startDate: Date | number} {
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate as Date;
     return {...assignment, startDate: assignmentStartDate};
 }
@@ -23,7 +20,7 @@ type AssignmentStatus = "inProgressRecent" | "inProgressOld" | "allAttempted" | 
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {
     const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));
 
-    const myAssignments: Record<AssignmentStatus, (AssignmentDTO & {startDate: Date})[]> = {
+    const myAssignments: Record<AssignmentStatus, (AssignmentDTO & {startDate: Date | number})[]> = {
         inProgressRecent: [],
         inProgressOld: [],
         allAttempted: [],
@@ -100,6 +97,19 @@ export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | unde
     }
     return distinctFormattedAssignmentSetters;
 };
+
+export const sortUpcomingAssignments = (assignments: IAssignmentLike[]): IAssignmentLike[] => {
+    // Prioritise non-overdue assignments, then sort by due date (soonest first), then start date
+    return orderBy(assignments, [
+        (a) => isOverdue(a),
+        (a) => a.dueDate,
+        (a) => a.scheduledStartDate ?? a.creationDate
+    ], ["asc", "asc", "asc"]);
+};
+
+export function isAssignment(assignment: IAssignmentLike): assignment is AssignmentDTO {
+    return (assignment as AssignmentDTO).gameboardId !== undefined;
+}
 
 export const getAssignmentStartDate = (a: AssignmentDTO): number => (a.scheduledStartDate ?? a.creationDate ?? 0).valueOf();
 

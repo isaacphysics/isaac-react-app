@@ -24,7 +24,6 @@ const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
                         checked={currentAttempt?.value === choice.value}
                         onChange={() => dispatchSetCurrentAttempt(choice)}
                         disabled={readonly}
-                        className={classNames({"mt-1": isAda})}
                     />
                     <div className="flex-fill overflow-x-auto">
                         <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />

@@ -1,7 +1,8 @@
 import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectUrl } from "../testUtils";
-import {mockPreviews} from "../../mocks/data";
-import { siteSpecific } from "../../app/services";
-import { expectActionMessage, expectBreadcrumbs, expectErrorMessage, expectRubric, renderQuizPage, testSectionsHeader } from "../helpers/quiz";
+import { mockPreviews } from "../../mocks/data";
+import { isPhy, siteSpecific } from "../../app/services";
+import { expectActionMessage, expectAdaBreadCrumbs, expectErrorMessage, expectPhyBreadCrumbs, expectSidebarToggle, expectRubric, renderQuizPage, sideBarTestCases, testSectionsHeader } from "../helpers/quiz";
+import { screen } from "@testing-library/react";
 
 describe("QuizPreview", () => {
     const quizId = Object.keys(mockPreviews)[0];
@@ -14,7 +15,10 @@ describe("QuizPreview", () => {
     describe("overview", () => {
         it('shows quiz title on the breadcrumbs', async () => {
             await teacherPreviewsQuiz();
-            expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/set_tests", text: siteSpecific("Set / Manage Tests", "Set tests")}, `${preview.title} Preview`]);
+            siteSpecific(
+                () => expectPhyBreadCrumbs({href: "/set_tests", text: "Set / manage tests"}),
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/set_tests", text: "Set tests"}, `${preview.title} Preview`])
+            )();
         });
 
         it('shows quiz title', async () => {
@@ -67,8 +71,8 @@ describe("QuizPreview", () => {
     });
 
     describe('for students', () => {
-        const studentPreviewsQuiz = () => rederQuizPreview({ role: 'STUDENT', quizId: 'some_non_existent_test'}); 
-        
+        const studentPreviewsQuiz = () => rederQuizPreview({ role: 'STUDENT', quizId: 'some_non_existent_test'});
+
         it('redirects to account upgrade', async () => {
             await studentPreviewsQuiz();
             await expectUrl(siteSpecific('/pages/contact_us_teacher', '/teacher_account_request'));
@@ -76,8 +80,8 @@ describe("QuizPreview", () => {
     });
 
     describe('for unregistered users', () => {
-        const anonymousAttemptsMissingQuiz = () => rederQuizPreview({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'}); 
-        
+        const anonymousAttemptsMissingQuiz = () => rederQuizPreview({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'});
+
         it('redirects to log in', async () => {
             await anonymousAttemptsMissingQuiz();
             await expectUrl('/login');
@@ -87,11 +91,14 @@ describe("QuizPreview", () => {
     describe('when quiz does not exist', () => {
         const teacherPreviewsMissingQuiz = () => rederQuizPreview({ role: 'TEACHER', quizId: 'some_non_existent_test'});
 
-        it ('shows Unknown Test on breadcrumbs', async () => {
+        it ('shows Test Preview on breadcrumbs', async () => {
             await teacherPreviewsMissingQuiz();
-            expectBreadcrumbs([{href: '/', text: "Home"}, {href: "/tests", text: siteSpecific("My Tests", "My tests")}, "Test Preview"]);
+            siteSpecific(
+                () => expectPhyBreadCrumbs({href: '/tests', text: "My tests"}),
+                () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "My tests"}, "Test Preview"])
+            )();
         });
-        
+
         it('shows error', async () => {
             await teacherPreviewsMissingQuiz();
             expectH1('Test Preview');
@@ -99,4 +106,18 @@ describe("QuizPreview", () => {
             expectErrorMessage('This test has become unavailable.');
         });
     });
+
+    if (isPhy) {
+        it('applies subject-specific theme', async () => {
+            await teacherPreviewsQuiz();
+            expect(screen.getByTestId('quiz-preview')).toHaveAttribute('data-bs-theme', 'physics');
+        });
+
+        describe('shows the redesigned sidebar', sideBarTestCases(teacherPreviewsQuiz));
+
+        it('sidebar toggle is called "Sections"', async () => {
+            await teacherPreviewsQuiz();
+            await expectSidebarToggle("Sections");
+        });
+    }
 });

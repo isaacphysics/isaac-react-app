@@ -16,6 +16,12 @@
   }
 }
 
+.hierarchy-tags {
+  font-size: 0.8125rem;
+  color: $color-neutral-500;
+  min-width: max-content;
+}
+
 .gameboard-builder-banner {
   position: relative;
   text-align: center;
@@ -41,10 +47,30 @@
       &.disabled {
         background-color: lightgrey;
       }
-
-      &.selected {
-        background-color: lightyellow;
-      }
     }
   }
+}
+
+button.btn.delete-button {
+  border-radius: inherit;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0.625rem;
+  > img {
+    filter: invert(1);
+  }
+}
+
+.board-sidebar-question {
+  &.selected-question {
+    background-color: $color-neutral-100;
+    border-left: solid 3px var(--subject-color-500);
+  }
+  &:not(.selected-question) {
+    border-left: solid 3px transparent;
+  }
+}
+
+.bg-wildcard {
+  background-color: $color-misc-pale-yellow;
 }

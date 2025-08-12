@@ -27,7 +27,7 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
         ? "NOT_SUBMITTED" 
         : attempt?.correctValue 
             ? "CORRECT"
-            : attempt?.correctValue === undefined 
+            : attempt?.correctValue === undefined && questionDTO.requireUnits
                 ? "NOT_SUBMITTED"  // this fixes an edge case caused by the value not being marked (i.e. correctValue === undefined) if the units are not answered; we should not colour the value in this case
                 : (attempt?.answer as QuantityDTO | undefined)?.value 
                     ? "INCORRECT" 
@@ -103,7 +103,7 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
                 {selectedUnits.map((unit) =>
                     <DropdownItem key={wrapUnitForSelect(unit)}
                         data-unit={isDefined(unit) ? (unit || 'None') : undefined}
-                        className={unit && unit === currentAttempt?.units ? "btn bg-grey selected" : ""}
+                        className={classNames({"bg-inline-question selected": unit && unit === currentAttempt?.units})}
                         onClick={(e: FormEvent) => {updateCurrentAttempt({newUnits: unit}); e.preventDefault();}}
                     >
                         <Markup encoding={"latex"}>

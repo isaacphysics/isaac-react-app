@@ -69,7 +69,7 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ClozeItemDTO>[]}
             item being hovered over.
         </Label>
         <SortableContext items={itemIds} strategy={() => null}>
-            <div aria-labelledby={"item-section-info"} ref={setNodeRef} aria-label={"Non-selected items"} className={`item-section rounded p-2 bg-grey ${isOverContainer ? "border border-dark" : "border-light"}`}>
+            <div aria-labelledby={"item-section-info"} ref={setNodeRef} aria-label={"Non-selected items"} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
                 {items.map((item, i) => <Item key={i} item={item} id={item.replacementId as string} type={"item-section"} />)}
             </div>
         </SortableContext>
@@ -502,7 +502,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                 {(!(deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize)))) && <>
                     {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
                     <DragOverlay>
-                        {activeItem && <Badge className="p-1 cloze-item is-dragging">
+                        {activeItem && <Badge className="p-1 cloze-item cloze-bg is-dragging" color="theme">
                             <IsaacContentValueOrChildren value={activeItem.value} encoding={activeItem.encoding || "html"}>
                                 {activeItem.children as ContentDTO[]}
                             </IsaacContentValueOrChildren>
