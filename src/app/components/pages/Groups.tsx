@@ -72,9 +72,6 @@ enum SortOrder {
     DateCreated = "Date Created"
 }
 
-interface GroupCreatorProps {
-    createNewGroup?: (newGroupName: string) => Promise<boolean>;
-}
 let tooltip = 0;
 const Tooltip = ({children, tipText, ...props}: any) => {
     const [tooltipId] = useState("forTooltip-" + tooltip++);
@@ -199,7 +196,7 @@ interface GroupEditorProps extends CardProps {
     group: AppGroup;
     allGroups?: AppGroup[];
 }
-const GroupEditor = ({group, allGroups, user, ...rest}: GroupCreatorProps & GroupEditorProps) => {
+const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     const dispatch = useAppDispatch();
 
     const [updateGroup] = useUpdateGroupMutation();
@@ -424,12 +421,11 @@ interface GroupSelectorProps {
     setSelectedGroupId: React.Dispatch<React.SetStateAction<number | undefined>>;
     showArchived: boolean;
     setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
-    createNewGroup?: (newGroupName: string) => Promise<boolean>;
     showCreateGroup?: boolean; // Avoids having 2 'create group' panels when selector is full screen
     sidebarStyle?: boolean;
 }
 
-export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, createNewGroup, showCreateGroup, sidebarStyle}: GroupSelectorProps) => {
+export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, showCreateGroup, sidebarStyle}: GroupSelectorProps) => {
     const dispatch = useAppDispatch();
 
     // Clear the selected group when switching between tabs
@@ -539,7 +535,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                     }
                                 </div>
                                 {isAda && selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
-                                    <GroupEditor user={user} group={selectedGroup} allGroups={allGroups} createNewGroup={createNewGroup}/>
+                                    <GroupEditor user={user} group={selectedGroup} allGroups={allGroups} />
                                 </div>}
                             </div>
                     )
