@@ -32,7 +32,7 @@ interface IsaacImageProps {
 }
 
 const IsaacImageCaption = ({doc}: {doc: ImageDTO}) => {
-    return (React.isValidElement(doc.children) || React.isValidElement(doc.attribution)) && <figcaption className="text-center figure-caption">
+    return (!!doc.children?.length || !!doc.attribution || !!doc.value) && <figcaption className="text-center figure-caption">
         <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
             {doc.children}
         </IsaacContentValueOrChildren>
