@@ -11,8 +11,8 @@ describe('Navigation', () => {
                 // extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed', 'startIndex'], questionsSearchResponse)]    
             });
             await waitForLoaded();    
-            setUrl({ pathname: '/' });
-            await waitForLoaded();    
+            await setUrl({ pathname: '/' });
+            await waitForLoaded();
         };
 
         const openMenu = async () => {
@@ -74,7 +74,7 @@ describe('Navigation', () => {
                 await closeMenu();
 
                 for (let i = 0; i < numLinks; i++) {
-                    setUrl({ pathname: '/' });
+                    await setUrl({ pathname: '/' });
                     
                     await openMenu();
                     
@@ -125,7 +125,7 @@ describe('Navigation', () => {
                 await closeMenu();
 
                 for (let i = 0; i < numButtons; i++) {
-                    setUrl({ pathname: '/' });
+                    await setUrl({ pathname: '/' });
                     
                     await openMenu();
                     await openDropdowns();

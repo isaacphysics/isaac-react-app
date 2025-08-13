@@ -16,7 +16,7 @@ describe("SubjectLandingPage", () => {
                 extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed'], questionsSearchResponse)]
             });
             await waitForLoaded();
-            setUrl({ pathname: '/maths/gcse' });
+            await setUrl({ pathname: '/maths/gcse' });
             await waitForLoaded();
         };
 

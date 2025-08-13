@@ -40,7 +40,7 @@ describe("QuestionFinder", () => {
             extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], response)]
         });
         await waitForLoaded();
-        setUrl({ pathname: context ? `/${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
+        await setUrl({ pathname: context ? `/${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
         await waitForLoaded();
     };
 

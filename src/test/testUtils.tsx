@@ -181,20 +181,20 @@ export const expectUrlParams = (text: string) => waitFor(() => {
     expect(history.location.search).toBe(text);
 });
 
-export const withSizedWindow = (width: number, height: number, cb: () => void) => {
+export const withSizedWindow = async (width: number, height: number, cb: () => void) => {
     const originalWindow = {
         width: window.innerWidth,
         height: window.innerHeight,
     };
     try {
-        act(() => {
+        await act(async () => {
             window.innerWidth = width;
             window.innerHeight = height;
         });
         fireEvent(window, new Event('resize'));
         cb();
     } finally {
-        act(() => {
+        await act(async () => {
             window.innerWidth = originalWindow.width;
             window.innerHeight = originalWindow.height;
         });
@@ -203,11 +203,11 @@ export const withSizedWindow = (width: number, height: number, cb: () => void) =
 };
 
 export type PathString = `/${string}`;
-export const setUrl = (location: { pathname: PathString, search?: string}) => {
+export const setUrl = async (location: { pathname: PathString, search?: string}) => {
     if (location.pathname.includes('?')) {
         throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
     }
-    return act(() => history.push(location));
+    return await act(async () => history.push(location));
 };
 
 export const goBack = () => history.goBack();

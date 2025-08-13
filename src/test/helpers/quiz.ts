@@ -5,7 +5,7 @@ import { UserRole } from "../../IsaacApiTypes";
 export const renderQuizPage = (baseUrl: PathString) => async ({role, quizId}: {role: UserRole | "ANONYMOUS", quizId: string}) => {
     renderTestEnvironment({ role });
     await waitForLoaded();
-    setUrl({ pathname: `${baseUrl}/${quizId}` });
+    await setUrl({ pathname: `${baseUrl}/${quizId}` });
     await waitForLoaded();
 };
 
@@ -63,8 +63,8 @@ const topic = () => within(
 
 const sidebarToggle = () => screen.getByTestId('sidebar-toggle');
 
-export const expectSidebarToggle = (text: string) => {
-    withSizedWindow(400, 400, () => {
+export const expectSidebarToggle = async (text: string) => {
+    await withSizedWindow(400, 400, () => {
         expect(sidebarToggle()).toHaveTextContent(text);
     });
 };

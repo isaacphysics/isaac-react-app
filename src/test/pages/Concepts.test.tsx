@@ -11,7 +11,7 @@ describe("Concepts", () => {
             renderTestEnvironment();
             await waitForLoaded();
             const url: PathString = context ? `/${context.subject}/${context.stage?.[0]}/concepts` : '/concepts';
-            setUrl({ pathname: url, search: query });
+            await setUrl({ pathname: url, search: query });
             await waitForLoaded();
         };
 
