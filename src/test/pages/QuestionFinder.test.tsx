@@ -1,5 +1,5 @@
 import {act, screen, waitFor, within} from "@testing-library/react";
-import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, setUrl, withMockedRandom} from "../testUtils";
+import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults, mockQuestionFinderResultsWithMultipleStages } from "../../mocks/data";
 import shuffle from "lodash/shuffle";
 import times from "lodash/times";
@@ -36,12 +36,14 @@ describe("QuestionFinder", () => {
     const resultsResponseWithMultipleStages = buildMockQuestionFinderResults(questionsWithMultipleStages, 0);
 
     const renderQuestionFinderPage = async ({response, queryParams, context} : RenderParameters) => {
-        await act(async () => {
-            renderTestEnvironment({
-                extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], response)]
-            });
+        renderTestEnvironment({
+            extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], response)]
+        });
+        await waitForLoaded();
+        act(() => {
             setUrl({ pathname: context ? `/${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
         });
+        await waitForLoaded();
     };
 
     it('should render results in alphabetical order', async () => {
@@ -108,17 +110,13 @@ describe("QuestionFinder", () => {
 
             if (isPhy) {
                 // On Ada, clearing filters only has an affect after clicking the "Apply" button, so same case as above 
-                it.skip('when clearing all filters', async () => {
+                it('when clearing all filters', async () => {
                     await renderQuestionFinderPage({ response, queryParams: "?randomSeed=1&stages=gcse" });
                     await clickOn(siteSpecific("Clear all filters", "Clear all"));
                     await expectUrlParams('');
                 });
 
-                // This test is currently flaky (fails every 10th execution, but the variance is really wild).
-                // I believe the flakiness is caused by the implementation, which nests the component definition functions
-                // for FilterTag and FilterSummary. The React docs advise against this, see:
-                // https://react.dev/learn/preserving-and-resetting-state  
-                it.skip('when clearing a filter tag', async () => {
+                it('when clearing a filter tag', async () => {
                     await renderQuestionFinderPage({ response, queryParams: "?randomSeed=1&stages=gcse" });
                     await clearFilterTag('gcse');
                     await expectUrlParams('');
