@@ -29,7 +29,7 @@ const pages = [
 
 const Page = ({ page }: { page: typeof pages[number]}) => {
     return <div role="region" aria-label="Teacher onboarding modal page" key={page.title} className="text-center mx-2">
-        <img aria-label="Teacher onboarding modal image" src={`/assets/cs/decor/${page.image}`} alt='' className="pb-3 modal-page-hero-image"/>
+        <img src={`/assets/cs/decor/${page.image}`} alt='' aria-hidden className="pb-3 modal-page-hero-image"/>
         <div className="d-flex flex-column align-items-center justify-content-center modal-page-text">
             <h4>{page.title}</h4>
             <p className="mb-0">{page.message}</p>

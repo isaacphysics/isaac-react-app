@@ -1,4 +1,4 @@
-import { act, screen, waitFor } from "@testing-library/react";
+import { act, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { times } from "lodash";
 
@@ -124,7 +124,7 @@ const modal = {
         return screen.getByRole('region', { name: 'Modal page indicator' });
     },
     get image() {
-        return screen.getByRole('presentation', { name: "Teacher onboarding modal image" });
+        return within(this.body).getByAltText('');
     },
     get element() {
         return screen.queryByRole('dialog');
