@@ -63,14 +63,15 @@ export const RegistrationVerifyEmail = () => {
                         </ExigentAlert>
                     }
                     <Row className="justify-content-center mt-3">
-                        <h3>Verify your email adddress</h3>
+                        {emailVerified ?
+                            <h2>Welcome to Ada Computer Science!</h2>
+                            :
+                            <h2>Verify your email address</h2>
+                        }
                     </Row>
                     <Row className="justify-content-center">    
                         {emailVerified ?
-                            userFromParamVerificationSucceeded ?
-                                <p>You&apos;ve verified your email address and finished creating your account.</p>
-                                :
-                                <p>Your email is already verified.</p>
+                            <p>You&apos;ve verified your email address and finished creating your account.</p>
                             :
                             <p>Click the link in the email we&apos;ve sent to finish setting up your account.</p>
                         }
