@@ -68,6 +68,11 @@ export const handlers = [
             status: 200,
         });
     }),
+    http.get(API_PATH + "/quiz/assigned", () => {
+        return HttpResponse.json([], {
+            status: 200,
+        });
+    }),
     http.get(API_PATH + "/quiz/:quizId/rubric", ({ params }) => {
         const quizId = params.quizId as string;
         if (quizId in mockRubrics) {

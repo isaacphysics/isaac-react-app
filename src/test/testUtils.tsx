@@ -48,6 +48,7 @@ interface RenderTestEnvironmentOptions {
 // defaults (those in handlers.ts).
 export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {    
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
+    history.replace({ pathname: '/', search: '' });
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
     store.dispatch(isaacApi.util.resetApiState());
