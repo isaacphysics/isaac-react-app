@@ -38,10 +38,10 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
                 close={
                     activeModal.closeAction ?
                         siteSpecific(
-                            <button className="text-nowrap close" onClick={activeModal.closeAction}>
+                            <button data-testid={"active-modal-close"} className="text-nowrap close" onClick={activeModal.closeAction}>
                                 {activeModal?.closeLabelOverride || "Close"}
                             </button>,
-                            <CloseButton onClick={activeModal.closeAction}/>
+                            <CloseButton data-testid={"active-modal-close"} onClick={activeModal.closeAction}/>
                         )
                         :
                         null

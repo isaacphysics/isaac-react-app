@@ -10,7 +10,7 @@ import {
     mockGroups,
     mockUser
 } from "../../mocks/data";
-import {ACCOUNT_TAB, API_PATH, extractTeacherName, isDefined} from "../../app/services";
+import {ACCOUNT_TAB, API_PATH, extractTeacherName, isDefined, siteSpecific} from "../../app/services";
 import difference from "lodash/difference";
 import isEqual from "lodash/isEqual";
 import userEvent from "@testing-library/user-event";
@@ -44,7 +44,7 @@ const switchGroupsTab = async (activeOrArchived: "active" | "archived", expected
 
 const closeActiveModal = async (modal: HTMLElement) => {
     // Close the modal
-    const closeButton = within(modal).getByRole("button", {name: "Close"});
+    const closeButton = within(modal).getByTestId("active-modal-close");
     await userEvent.click(closeButton);
     await waitFor(() => {
         expect(modal).not.toBeInTheDocument();
@@ -147,7 +147,7 @@ describe("Groups", () => {
         const modal = await screen.findByTestId("active-modal");
         // Expect that the auth token GET request is made exactly once
         await waitFor(() => {
-            expect(modal).toHaveModalTitle("Group Created");
+            expect(modal).toHaveModalTitle(siteSpecific("Group Created", "Group created"));
             expect(authTokenHandler).toHaveBeenCalledTimes(1);
         });
         // Expect the share link and share code to be shown on the modal
@@ -227,7 +227,7 @@ describe("Groups", () => {
             // Wait for "Manage group" panel to be open
             const groupEditor = await screen.findByTestId("group-editor");
             await waitFor(async () => {
-                await within(groupEditor).findByText("Manage group");
+                await within(groupEditor).findByText(siteSpecific("Manage group", "Group details"));
             });
             // Rename the group and click update
             const groupNameInput = await within(groupEditor).findByTestId("groupName");
@@ -534,7 +534,7 @@ describe("Groups", () => {
         const inviteModal = await screen.findByTestId("active-modal");
 
         // Expect the "add group managers" button NOT to be shown on the modal
-        expect(inviteModal).toHaveModalTitle("Group Created");
+        expect(inviteModal).toHaveModalTitle(siteSpecific("Group Created", "Group created"));
         expect(within(inviteModal).queryByRole("button", {name: "Add group managers"})).toBeNull();
         await closeActiveModal(inviteModal);
     });
