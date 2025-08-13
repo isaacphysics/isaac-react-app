@@ -1,4 +1,4 @@
-import {act, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { clickOn, renderTestEnvironment, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults } from "../../mocks/data";
 import { isAda } from "../../app/services";
@@ -16,7 +16,7 @@ describe("SubjectLandingPage", () => {
                 extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed'], questionsSearchResponse)]
             });
             await waitForLoaded();
-            act(() => setUrl({ pathname: '/maths/gcse' }));
+            setUrl({ pathname: '/maths/gcse' });
             await waitForLoaded();
         };
 

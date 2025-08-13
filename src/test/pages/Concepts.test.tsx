@@ -1,4 +1,3 @@
-import { act } from "@testing-library/react";
 import { expectH1, type PathString, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
 import { isAda } from "../../app/services";
 import { PartialCheckboxState, SelectState, expectPartialCheckBox, expectSelect, Filter, toggleFilter } from "../../mocks/filters";
@@ -12,7 +11,7 @@ describe("Concepts", () => {
             renderTestEnvironment();
             await waitForLoaded();
             const url: PathString = context ? `/${context.subject}/${context.stage?.[0]}/concepts` : '/concepts';
-            act(() => setUrl({ pathname: url, search: query }));
+            setUrl({ pathname: url, search: query });
             await waitForLoaded();
         };
 

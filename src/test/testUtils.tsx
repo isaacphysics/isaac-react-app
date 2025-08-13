@@ -207,7 +207,7 @@ export const setUrl = (location: { pathname: PathString, search?: string}) => {
     if (location.pathname.includes('?')) {
         throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
     }
-    return history.push(location);
+    return act(() => history.push(location));
 };
 
 export const goBack = () => history.goBack();

@@ -1,4 +1,4 @@
-import {act, screen, waitFor, within} from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults, mockQuestionFinderResultsWithMultipleStages } from "../../mocks/data";
 import shuffle from "lodash/shuffle";
@@ -40,9 +40,7 @@ describe("QuestionFinder", () => {
             extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], response)]
         });
         await waitForLoaded();
-        act(() => {
-            setUrl({ pathname: context ? `/${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
-        });
+        setUrl({ pathname: context ? `/${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
         await waitForLoaded();
     };
 
