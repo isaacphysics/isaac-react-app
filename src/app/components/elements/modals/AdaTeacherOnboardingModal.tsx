@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Button } from "reactstrap";
 import { closeActiveModal, openActiveModal, useAppDispatch } from "../../../state";
 import { KEY, persistence } from "../../../services";
-import { activeModalWithPagination, PaginationState } from "./ActiveModalWithPagination";
+import { activeModalWithPagination, type PaginationState } from "./ActiveModalWithPagination";
 
 const pages = [
     {

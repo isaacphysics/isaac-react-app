@@ -30,7 +30,7 @@ export const activeModalWithPagination = ({ title, pages, buttons, useInit }: Ac
         },
         header({ pageIndex, close }) {
             return <div className="d-flex justify-content-between px-4 pt-3 pb-2 border-bottom">
-                <strong role="region" aria-label="Modal page indicator" className="color-purple">{pageIndex} of {pages.length}</strong>
+                <strong role="region" aria-label="Modal page indicator" className="text-theme">{pageIndex} of {pages.length}</strong>
                 <button aria-label="Close modal" className="icon icon-close" onClick={close} />
             </div>;
         },
