@@ -6,7 +6,7 @@ import { activeModalWithPagination, PaginationState } from "./ActiveModalWithPag
 
 const pages = [
     {
-        title: "Welcome to Ada",
+        title: "Welcome to Ada CS",
         message: "Ada supports your teaching to help your students succeed in computer science.",
         image: "onboarding-welcome.svg"
     },
@@ -17,7 +17,7 @@ const pages = [
     },
     { 
         title: "Assign auto-marking quizzes",
-        message: "Choose a pre-made quiz or create your own and assign it to a whole group of stundents at once",
+        message: "Choose a pre-made quiz or create your own and assign it to a whole group of students at once",
         image: "onboarding-auto-marking-quizzes.svg"
     },
     {
