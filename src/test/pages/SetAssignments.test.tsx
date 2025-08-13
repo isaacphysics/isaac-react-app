@@ -1,6 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {
     dayMonthYearStringToDate,
@@ -79,13 +78,15 @@ describe("SetAssignments", () => {
         }
     });
 
-    isPhy && it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
-        await renderSetAssignments();
-        for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
-            const button = await screen.findByRole("link", {name: title});
-            expect(button.getAttribute("href")).toBe(href);
-        }
-    });
+    if (isPhy) {
+        it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
+            await renderSetAssignments();
+            for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
+                const button = await screen.findByRole("link", {name: title});
+                expect(button.getAttribute("href")).toBe(href);
+            }
+        });
+    }
 
     it('should show all the correct information for a gameboard in card view', async () => {
         await renderSetAssignments();
@@ -332,95 +333,6 @@ describe("SetAssignments", () => {
 
             it('does not show an error when the due date is present', async () => {
                 await renderModal();
-                expect(await findByText("Due date reminder")).not.toHaveTextContent(`due dates are required for assignments`);
-            });
-        });
-    });
-
-    describe('modal', () => {
-        const mockGameboard = mockGameboards.results[0];
-        const renderModal = (endpoints: HttpHandler[] = []) => renderSetAssignments({ path: `${PATHS.SET_ASSIGNMENTS}#${mockGameboard.id}`, endpoints});
-
-        it('groups are empty by default', async () => {
-            renderModal();
-            expect(await groupSelector()).toHaveTextContent('Group(s):None');
-        });
-
-        it('start date is empty by default', async () => {
-            renderModal();
-            expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
-        });
-
-        it('due date is a week from now by default', async() => {
-            await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
-                renderModal();
-                expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
-            });
-        });
-
-        // local time zone is Europe/London, as set in globalSetup.ts
-        it('due date is displayed in UTC', async () => {
-            await withMockedDate(Date.parse("2025-04-28T23:30:00.000Z"), async () => { // Monday in UTC, already Tuesday in UTC+1.
-                renderModal();
-                expect(await dateInput("Due date reminder")).toHaveValue('2025-05-04'); // Sunday in UTC (would be Monday if we showed UTC+1)
-            });
-        });
-
-        const testPostedDueDate = ({ currentTime, expectedDueDatePosted } : { currentTime: string, expectedDueDatePosted: string}) => async () => {
-            await withMockedDate(Date.parse(currentTime), async () => { // Monday
-                const observer = parameterObserver<AssignmentDTO[]>();
-                renderModal([
-                    buildPostHandler(
-                        "/assignments/assign_bulk",
-                        observer.attach(body => body.map(x => ({ groupId: x.groupId, assignmentId: x.groupId! * 2 })))
-                    )
-                ]);
-
-                await toggleGroupSelect();
-                await selectGroup(mockActiveGroups[1].groupName);
-                await clickOn('Assign to group', modal());
-
-                await waitFor(() => expect(observer.observedParams![0].dueDate).toEqual(expectedDueDatePosted)); // Sunday
-            });
-        };
-
-        it('posts the default due date as UTC midnight, even when that is not exactly 24 hours away', testPostedDueDate(
-            { currentTime: "2025-01-30T09:00:00.000Z" /* Monday */, expectedDueDatePosted: "2025-02-05T00:00:00.000Z" /* Sunday */ }
-        ));
-
-        // local time zone is Europe/London, as set in globalSetup.ts
-        it('posts the default due date as UTC midnight, even when local representation does not equal UTC', testPostedDueDate(
-            { currentTime: "2025-04-28" /* Monday */, expectedDueDatePosted: "2025-05-04T00:00:00.000Z" /* Sunday */ }
-        ));
-
-        it('resets to defaults after a failed post', async () => {
-            await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
-                renderModal([
-                    buildPostHandler(
-                        "/assignments/assign_bulk",
-                        (body: AssignmentDTO[]) => body.map(x => ({ groupId: x.groupId, errorMessage: "Boo, something went wrong" }))
-                    )
-                ]);
-
-                await toggleGroupSelect();
-                await selectGroup(mockActiveGroups[1].groupName);
-                await clickOn('Assign to group', modal());
-
-                expect(await groupSelector()).toHaveTextContent('Group(s):None');
-                expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
-                expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
-            });
-        });
-
-        describe('validation', () => {
-            it('shows an error message when the due date is missing', async () => {
-                renderModal();
-                await clearDateInput("Due date reminder");
-                expect(await findByText("Due date reminder")).toHaveTextContent(`Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments`);
-            });
-
-            it('does not show an error when the due date is present', async () => {
-                renderModal();
                 expect(await findByText("Due date reminder")).not.toHaveTextContent(`due dates are required for assignments`);
             });
         });
