@@ -143,4 +143,8 @@ form:has(+ .tab-content) {
     z-index: -1;
     transform: rotate(300deg);
   }
+
+  .verify-graphic {
+    max-width: 450px;
+  }
 }
