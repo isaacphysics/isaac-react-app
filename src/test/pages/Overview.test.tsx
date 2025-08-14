@@ -49,7 +49,7 @@ describe('Overview page', () => {
 
                     it('shows the text and picture for the first page', async () => {
                         await renderOverviewPage();
-                        expect(modal.body).toHaveTextContent(/Welcome to Ada CS(\s)*Ada supports your teaching.*/);
+                        expect(modal.body).toHaveTextContent(/Welcome to Ada CS(\s)*Ada CS supports your teaching.*/);
                         expect(modal.image).toHaveAttribute('src', '/assets/cs/decor/onboarding-welcome.svg');
                     });
 
