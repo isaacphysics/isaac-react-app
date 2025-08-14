@@ -20,7 +20,7 @@ import sortBy from "lodash/sortBy";
 import {
     history,
     isAda,
-    isDefined, isPhy,
+    isDefined,
     isTeacherOrAbove,
     PATHS,
     SITE_TITLE_SHORT,
