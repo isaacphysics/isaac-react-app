@@ -7,13 +7,17 @@ import {useDeviceSize} from "../../services";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../state";
 import {useLinkableSetting} from "../../services/linkableSetting";
 import {NewsCard} from "../elements/cards/NewsCard";
+import { useTeacherOnboardingModal } from "../elements/modals/AdaTeacherOnboardingModal";
 
 export const Overview = () => {
+    useTeacherOnboardingModal();    
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
+    
     const deviceSize = useDeviceSize();
     const userPreferences = useAppSelector(selectors.user.preferences);
     const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
-    const {setLinkedSetting} = useLinkableSetting();
+    const { setLinkedSetting } = useLinkableSetting();
+
     return <div id={"overview"}>
         <section id="browse">
             <Container className="overview-padding mw-1600">

@@ -9,6 +9,7 @@ import {
     isAda,
     isDobOldEnoughForSite,
     isPhy,
+    isTeacherOrAbove,
     KEY,
     persistence,
     SITE_TITLE,
@@ -37,6 +38,7 @@ import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
 import {DobInput} from "../elements/inputs/DobInput";
 import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
 import { SignupTab } from "../elements/panels/SignupTab";
+import { scheduleTeacherOnboardingModalForNextOverviewVisit } from "../elements/modals/AdaTeacherOnboardingModal";
 
 interface RegistrationSetDetailsProps {
     role: UserRole
@@ -82,6 +84,10 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             (!isAda || countryCodeIsValid) && (!isPhy || dobValidOrUnset) &&
             ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
+            
+            if (isAda && isTeacherOrAbove({ role })) {
+                scheduleTeacherOnboardingModalForNextOverviewVisit();
+            }
 
             // stop the Required account information modal appearing before the signup flow has completed
             persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
