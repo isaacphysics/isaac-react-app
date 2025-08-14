@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "4.0.0-rc28-SNAPSHOT",
+  "version": "4.0.0-rc29-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=18",
@@ -18,7 +18,7 @@
     "@popperjs/core": "^2.11.8",
     "@reduxjs/toolkit": "^1.9.7",
     "axios": "^1.11.0",
-    "billboard.js": "^1.12.12",
+    "billboard.js": "^3.16.0",
     "core-js": "^3.38.1",
     "dayjs": "^1.11.13",
     "he": "^1.2.0",

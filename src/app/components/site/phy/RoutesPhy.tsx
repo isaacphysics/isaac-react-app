@@ -18,33 +18,34 @@ import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
 import {TeacherRequest} from "../../pages/TeacherRequest";
-import { RegistrationStart } from "../../pages/RegistrationStart";
+import {RegistrationStart} from "../../pages/RegistrationStart";
 import {EmailAlterHandler} from "../../handlers/EmailAlterHandler";
 import {News} from "../../pages/News";
-import { RegistrationAgeCheck } from "../../pages/RegistrationAgeCheck";
-import { RegistrationAgeCheckFailed } from "../../pages/RegistrationAgeCheckFailed";
-import { RegistrationAgeCheckParentalConsent } from "../../pages/RegistrationAgeCheckParentalConsent";
-import { RegistrationSetDetails } from "../../pages/RegistrationSetDetails";
-import { RegistrationTeacherConnect } from "../../pages/RegistrationTeacherConnect";
-import { RegistrationSuccess } from "../../pages/RegistrationSuccess";
-import { RegistrationSetPreferences } from "../../pages/RegistrationSetPreferences";
-import { RegistrationGroupInvite } from "../../pages/RegistrationGroupInvite";
-import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
-import { SubjectLandingPage } from "../../pages/SubjectLandingPage";
-import { QuestionFinder } from "../../pages/QuestionFinder";
-import { QuestionDecks } from "../../pages/QuestionDecks";
-import { QuickQuizzes } from "../../pages/QuickQuizzes";
-import { SubjectOverviewPage } from "../../pages/SubjectOverviewPage";
-import { Glossary } from "../../pages/Glossary";
-import { Book } from "../../elements/Book";
-import { SolvingPhysProblems } from "../../pages/books_old/SolvingPhysProblems";
-import { PhysBookYrNine } from "../../pages/books_old/phys_book_yr9";
-import { PreUniMaths } from "../../pages/books_old/pre_uni_maths";
-import { QuizView } from "../../pages/quizzes/QuizView";
-import { BooksOverview } from "../../pages/BooksOverview";
-import { RevisionPage } from "../../pages/RevisionDetailPage";
-import { AnvilAppsListing } from "../../pages/AnvilAppsListing";
+import {RegistrationAgeCheck} from "../../pages/RegistrationAgeCheck";
+import {RegistrationAgeCheckFailed} from "../../pages/RegistrationAgeCheckFailed";
+import {RegistrationAgeCheckParentalConsent} from "../../pages/RegistrationAgeCheckParentalConsent";
+import {RegistrationSetDetails} from "../../pages/RegistrationSetDetails";
+import {RegistrationTeacherConnect} from "../../pages/RegistrationTeacherConnect";
+import {RegistrationSuccess} from "../../pages/RegistrationSuccess";
+import {RegistrationSetPreferences} from "../../pages/RegistrationSetPreferences";
+import {RegistrationGroupInvite} from "../../pages/RegistrationGroupInvite";
+import {PracticeQuizzes} from "../../pages/quizzes/PracticeQuizzes";
+import {SubjectLandingPage} from "../../pages/SubjectLandingPage";
+import {QuestionFinder} from "../../pages/QuestionFinder";
+import {QuestionDecks} from "../../pages/QuestionDecks";
+import {QuickQuizzes} from "../../pages/QuickQuizzes";
+import {SubjectOverviewPage} from "../../pages/SubjectOverviewPage";
+import {Glossary} from "../../pages/Glossary";
+import {Book} from "../../elements/Book";
+import {SolvingPhysProblems} from "../../pages/books_old/SolvingPhysProblems";
+import {PhysBookYrNine} from "../../pages/books_old/phys_book_yr9";
+import {PreUniMaths} from "../../pages/books_old/pre_uni_maths";
+import {QuizView} from "../../pages/quizzes/QuizView";
+import {BooksOverview} from "../../pages/BooksOverview";
+import {RevisionPage} from "../../pages/RevisionDetailPage";
+import {AnvilAppsListing} from "../../pages/AnvilAppsListing";
 import {AdaCSOverviewPage} from "../../pages/AdaCSOverviewPage";
+import {PhysicsSkills14} from "../../pages/books_old/physics_skills_14";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -64,6 +65,7 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
 
 // TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
 const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
+    "/books/physics_skills_14": PhysicsSkills14,
     "/books/pre_uni_maths": PreUniMaths,
     "/books/solve_physics_problems": SolvingPhysProblems,
     "/books/phys_book_yr9": PhysBookYrNine,

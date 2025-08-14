@@ -466,7 +466,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
             />
             <MainContent>
                 <PageMetadata noTitle showSidebarButton>
-                    <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-7"}/>} />
+                    <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_tests_teacher" : "help_toptext_tests_student"} ifNotFound={<div className={"mt-7"}/>} />
                 </PageMetadata>
                 <Tabs style="tabs" className="mb-7 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
                     history.replace({...history.location, hash: tabAnchors[index - 1]});
