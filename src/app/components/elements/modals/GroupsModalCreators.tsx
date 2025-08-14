@@ -103,7 +103,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
 };
 export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, firstTime: boolean, backToCreateGroup?: () => void) => ({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: firstTime ? `Group ${isPhy ? 'C' : 'c'}reated` : `Invite ${isPhy ? 'U' : 'u'}sers`,
+    title: firstTime ? "Group created" : "Invite users",
     body: <CurrentGroupInviteModal group={group} firstTime={firstTime} />,
     buttons: [
         <Row key={0} className="w-100">
