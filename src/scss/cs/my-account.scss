@@ -109,3 +109,42 @@ form:has(+ .tab-content) {
   padding: 10px;
   border-radius: 10px;
 }
+
+#verify-email {
+  z-index: 1;
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: "";
+    background-image: url("/assets/cs/decor/fingerprint-stage-slice.svg");
+    position: absolute;
+    opacity: 0.1;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 1000px;
+    width: 800px;
+    top: -75%;
+    left: 70%;
+    transform: rotate(210deg);
+  }
+
+  &:after {
+    content: "";
+    background-image: url("/assets/cs/decor/fingerprint-stage-slice.svg");
+    position: absolute;
+    opacity: 0.1;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 1000px;
+    width: 800px;
+    top: 10%;
+    left: -30%;
+    z-index: -1;
+    transform: rotate(300deg);
+  }
+
+  .verify-graphic {
+    max-width: 450px;
+  }
+}
