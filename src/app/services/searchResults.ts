@@ -272,7 +272,7 @@ export function shortcuts(term: string) {
                 id: `${learningStage} ${subject}`,
                 title: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]}`,
                 summary: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]} resources`,
-                url: `/${subject}/${stage}`,
+                url: `/${subject}/${learningStage}`,
                 type: SEARCH_RESULT_TYPE.SHORTCUT
             });
         }
