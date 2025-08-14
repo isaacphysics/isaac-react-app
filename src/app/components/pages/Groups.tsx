@@ -639,6 +639,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
                 <div className={"mb-7"}>
                     <p className={"mw-50"}>
                         Organise your students into groups and set work appropriate for each group.
+                        <br />
                         You need a student group before you can assign quizzes and tests in {SITE_TITLE_SHORT}.
                     </p>
                     <Button onClick={() => {dispatch(showCreateGroupModal({user}));}}>
