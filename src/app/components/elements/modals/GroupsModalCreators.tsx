@@ -396,7 +396,7 @@ const GroupCreateModal = ({user}: GroupCreateModalProps) => {
                 </FormFeedback>
             </FormGroup>
             <Button block type={"submit"} className={"mt-4"}>
-                Create Group
+                Create group
             </Button>
         </Form>
     </>;

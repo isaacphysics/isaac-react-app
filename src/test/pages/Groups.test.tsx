@@ -133,7 +133,7 @@ describe("Groups", () => {
         await screen.findByTestId("active-modal");
         const newGroupInput = await screen.findByTestId("group-name-input");
         await userEvent.type(newGroupInput, mockNewGroup.groupName);
-        const createButton = await screen.findByRole("button", {name: "Create Group"});
+        const createButton = await screen.findByRole("button", {name: "Create group"});
         await userEvent.click(createButton);
 
         // Expect that the new group POST request is made exactly once
@@ -147,7 +147,7 @@ describe("Groups", () => {
         const modal = await screen.findByTestId("active-modal");
         // Expect that the auth token GET request is made exactly once
         await waitFor(() => {
-            expect(modal).toHaveModalTitle(siteSpecific("Group Created", "Group created"));
+            expect(modal).toHaveModalTitle("Group created");
             expect(authTokenHandler).toHaveBeenCalledTimes(1);
         });
         // Expect the share link and share code to be shown on the modal
@@ -492,7 +492,7 @@ describe("Groups", () => {
         await screen.findByTestId("active-modal");
         const newGroupInput = await screen.findByTestId("group-name-input");
         await userEvent.type(newGroupInput, mockNewGroup.groupName);
-        const createButton = await screen.findByRole("button", {name: "Create Group"});
+        const createButton = await screen.findByRole("button", {name: "Create group"});
         await userEvent.click(createButton);
 
         const inviteModal = await screen.findByTestId("active-modal");
@@ -528,13 +528,13 @@ describe("Groups", () => {
         await screen.findByTestId("active-modal");
         const newGroupInput = await screen.findByTestId("group-name-input");
         await userEvent.type(newGroupInput, mockNewGroup.groupName);
-        const createButton = await screen.findByRole("button", {name: "Create Group"});
+        const createButton = await screen.findByRole("button", {name: "Create group"});
         await userEvent.click(createButton);
 
         const inviteModal = await screen.findByTestId("active-modal");
 
         // Expect the "add group managers" button NOT to be shown on the modal
-        expect(inviteModal).toHaveModalTitle(siteSpecific("Group Created", "Group created"));
+        expect(inviteModal).toHaveModalTitle("Group created");
         expect(within(inviteModal).queryByRole("button", {name: "Add group managers"})).toBeNull();
         await closeActiveModal(inviteModal);
     });
