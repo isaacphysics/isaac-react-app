@@ -7,7 +7,7 @@ import { activeModalWithPagination, type PaginationState } from "./ActiveModalWi
 const pages = [
     {
         title: "Welcome to Ada CS",
-        message: "Ada supports your teaching to help your students succeed in computer science.",
+        message: "Ada CS supports your teaching to help your students succeed in computer science.",
         image: "onboarding-welcome.svg"
     },
     {
