@@ -3,7 +3,7 @@ import React, {useRef, useState} from "react";
 
 export const ReadonlyClipboardInput = (props: InputProps) => {
     const [copied, setCopied] = useState<boolean>(false);
-    const buttonRef = useRef<HTMLInputElement | null>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
     function copyToClipboard() {
         if (props.value) {
@@ -16,7 +16,7 @@ export const ReadonlyClipboardInput = (props: InputProps) => {
     }
 
     return <InputGroup className={"flex-column flex-md-row gap-2 stackable-input-group align-items-center"}>
-        <Input {...props} readOnly={true} innerRef={buttonRef}
+        <Input {...props} readOnly={true} innerRef={inputRef}
             onClick={(e) => { e.currentTarget.select(); }}
             className={"w-100 w-md-auto"}
         />
@@ -29,7 +29,7 @@ export const ReadonlyClipboardInput = (props: InputProps) => {
         >
             Copy
         </Button>
-        <Tooltip placement="top" isOpen={copied} target={buttonRef}>
+        <Tooltip placement="top" isOpen={copied} target={inputRef}>
             Copied to clipboard!
         </Tooltip>
     </InputGroup>;
