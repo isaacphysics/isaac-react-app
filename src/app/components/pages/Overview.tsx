@@ -8,6 +8,7 @@ import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../state";
 import {useLinkableSetting} from "../../services/linkableSetting";
 import {NewsCard} from "../elements/cards/NewsCard";
 import { useTeacherOnboardingModal } from "../elements/modals/AdaTeacherOnboardingModal";
+import { GetStartedWithAda } from "../elements/panels/GetStartedWithAda";
 
 export const Overview = () => {
     useTeacherOnboardingModal();    
@@ -19,11 +20,16 @@ export const Overview = () => {
     const { setLinkedSetting } = useLinkableSetting();
 
     return <div id={"overview"}>
-        <section id="browse">
+        <section id="get-started">
             <Container className="overview-padding mw-1600">
                 <div id={"page-title"} className={"py-3"}>
                     <PageTitle currentPageTitle={"Overview"} />
                 </div>
+                <GetStartedWithAda />
+            </Container>
+        </section>
+        <section id="browse">
+            <Container className="overview-padding mw-1600">
                 <h2>Browse Ada CS</h2>
                 <ColumnSlice className={"row-cols-lg-4 row-cols-md-2"}>
                     <IconCard className={"without-margin"} card={{

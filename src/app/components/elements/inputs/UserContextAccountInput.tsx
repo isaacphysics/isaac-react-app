@@ -20,6 +20,7 @@ import classNames from "classnames";
 import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
 import isUndefined from "lodash/isUndefined";
+import { WithLinkableSetting } from "../WithLinkableSetting";
 
 interface UserContextRowProps {
     userContext: UserContext;
@@ -143,7 +144,7 @@ export function UserContextAccountInput({
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const isAllStages = userContexts.length === 1 && userContexts[0].stage === STAGE.ALL;
 
-    return <div className={className}>
+    return <WithLinkableSetting id={"account-context"} className={className}>
         <Label htmlFor="user-context-selector" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
             {siteSpecific(
                 <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
@@ -212,5 +213,5 @@ export function UserContextAccountInput({
                 />
             </div>}
         </div>
-    </div>;
+    </WithLinkableSetting>;
 }

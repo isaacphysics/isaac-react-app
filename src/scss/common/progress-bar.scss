@@ -1,7 +1,14 @@
 .progress-bar-outer {
   position: relative;
-  height: 30px;
   width: 100%;
+
+  &.thin {
+    height: 10px;
+  }
+
+  &:not(.thin) {
+    height: 30px;
+  }
 
   div {
     vertical-align: middle;

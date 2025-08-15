@@ -94,14 +94,15 @@ form:has(+ .tab-content) {
     outline-color: $pink-400;
   }
   100% {
-    outline-color: transparent;
+    outline-color: rgba(0, 0, 0, 0.1);
   }
 }
 
 .highlight-target {
-  outline: 2px solid transparent;
+  outline: 2px solid rgba(0, 0, 0, 0.1);
+  outline-offset: 12px;
+  border-radius: 0.2rem;
   animation: highlight-pulse 1.5s ease-in-out;
-  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.1);
 }
 
 .email-preference {

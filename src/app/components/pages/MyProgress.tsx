@@ -138,8 +138,8 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                 const attempts = progress?.attemptsByType?.[qType] || null;
                                 const percentage = safePercentage(correct, attempts);
                                 return <Col key={qType} lg={siteSpecific(6, 4)} className="mt-2 type-progress-bar">
-                                    <div className={"px-2"}>
-                                        {HUMAN_QUESTION_TYPES[qType]} questions correct
+                                    <div className={"p-2"}>
+                                        {HUMAN_QUESTION_TYPES[qType]} questions
                                     </div>
                                     <div className={"px-2"}>
                                         <ProgressBar percentage={percentage || 0}>
