@@ -78,9 +78,11 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                 id: question.id,
                 audience: question.audience,
             } as ContentSummaryDTO]}/>
-            : <div className="w-100 d-flex justify-content-center">
-                <IsaacSpinner size="sm" />
-            </div>
+            : <ul className="w-100 list-group ">
+                <li className="w-100 d-flex justify-content-center align-items-center content-summary-item list-group-item p-0">
+                    <IsaacSpinner size="sm" />
+                </li>
+            </ul>
         }
     </div>;
 };
