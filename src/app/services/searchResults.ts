@@ -2,7 +2,7 @@ import {HUMAN_STAGES, HUMAN_SUBJECTS, isValidStageSubjectPair, PATHS, SEARCH_RES
 import {SearchShortcut} from "../../IsaacAppTypes";
 import {Stage} from "../../IsaacApiTypes";
 
-export const searchList: SearchShortcut[] = [
+const searchList: SearchShortcut[] = [
     {
         id: "assignments",
         title: "My assignments",
@@ -249,7 +249,7 @@ const group = /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6}$/;
 
 const stages = /(year 9|gcse|a( |-)level|university)/;
 const subjects = /(physics|maths|chemistry|biology)/;
-const stageAndSubject = new RegExp(`(${stages.source}) (${subjects.source})|(${subjects.source}) (${stages.source})`, "i");
+const stageAndSubject = new RegExp(`${stages.source} ${subjects.source}|${subjects.source} ${stages.source}`);
 
 export function shortcuts(term: string) {
     const lterm = term.toLowerCase();
