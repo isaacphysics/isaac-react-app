@@ -71,4 +71,4 @@ export const GetStartedWithAda = () => {
             </AccordionBody>
         </AccordionItem>
     </Accordion>;
-}
+};
