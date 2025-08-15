@@ -35,6 +35,7 @@ import {Loading} from "../../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {useDispatch} from "react-redux";
+import {ReadonlyClipboardInput} from "../inputs/ReadonlyClipboardInput";
 
 const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
@@ -87,12 +88,12 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                 <div>
                     <h3>Share this link</h3>
                     <p>Share this link with students so they can join your group:</p>
-                    <Input readOnly={true} onClick={(e) => {e.currentTarget.select();}} className="w-100 block" data-testid={"share-link"} value={`${location.origin}/account?authToken=${token?.token}`} />
+                    <ReadonlyClipboardInput data-testid={"share-link"} value={`${location.origin}/account?authToken=${token?.token}`} />
                 </div>
                 <div>
                     <h3>Or use this code</h3>
                     <p>Students can enter this code in their {SITE_TITLE_SHORT} account. They’ll need to go to <b>My account</b>, then <b>Teacher Connections</b>.</p>
-                    <Input readOnly={true} onClick={(e) => {e.currentTarget.select();}} className="w-100 block" data-testid={"share-code"} value={token?.token} />
+                    <ReadonlyClipboardInput data-testid={"share-code"} value={token?.token} />
                 </div>
                 <div>
                     <h3>What to do next</h3>
