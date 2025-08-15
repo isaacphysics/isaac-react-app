@@ -10,7 +10,7 @@ import {
     mockGroups,
     mockUser
 } from "../../mocks/data";
-import {ACCOUNT_TAB, API_PATH, extractTeacherName, isDefined} from "../../app/services";
+import {ACCOUNT_TAB, API_PATH, extractTeacherName, isDefined, siteSpecific} from "../../app/services";
 import difference from "lodash/difference";
 import isEqual from "lodash/isEqual";
 import userEvent from "@testing-library/user-event";
@@ -44,7 +44,7 @@ const switchGroupsTab = async (activeOrArchived: "active" | "archived", expected
 
 const closeActiveModal = async (modal: HTMLElement) => {
     // Close the modal
-    const closeButton = within(modal).getByRole("button", {name: "Close"});
+    const closeButton = within(modal).getByTestId("active-modal-close");
     await userEvent.click(closeButton);
     await waitFor(() => {
         expect(modal).not.toBeInTheDocument();
@@ -124,12 +124,18 @@ describe("Groups", () => {
                 http.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, authTokenHandler),
             ]
         });
+
         await navigateToGroups();
-        // Implicitly expecting that opening the "Manage Groups" page shows you the create new group form first
-        const newGroupInput = await screen.findByPlaceholderText(/Group [Nn]ame/);
+
+        const create = await screen.findByRole("button", {name: "Create a new group"});
+        await userEvent.click(create);
+
+        await screen.findByTestId("active-modal");
+        const newGroupInput = await screen.findByTestId("group-name-input");
         await userEvent.type(newGroupInput, mockNewGroup.groupName);
-        const createButton = await screen.findByRole("button", {name: "Create"});
+        const createButton = await screen.findByRole("button", {name: "Create group"});
         await userEvent.click(createButton);
+
         // Expect that the new group POST request is made exactly once
         await waitFor(() => {
             expect(newGroupHandler).toHaveBeenCalledTimes(1);
@@ -141,14 +147,14 @@ describe("Groups", () => {
         const modal = await screen.findByTestId("active-modal");
         // Expect that the auth token GET request is made exactly once
         await waitFor(() => {
-            expect(modal).toHaveModalTitle("Group Created");
+            expect(modal).toHaveModalTitle("Group created");
             expect(authTokenHandler).toHaveBeenCalledTimes(1);
         });
         // Expect the share link and share code to be shown on the modal
         const link = await within(modal).findByTestId("share-link");
         const code = await within(modal).findByTestId("share-code");
-        expect(link).toHaveTextContent(`\/account?authToken=${mockToken}`);
-        expect(code.textContent).toEqual(mockToken);
+        expect(link).toHaveAttribute('value', expect.stringContaining(`/account?authToken=${mockToken}`));
+        expect(code).toHaveAttribute('value', expect.stringMatching(mockToken));
         await closeActiveModal(modal);
     });
 
@@ -221,10 +227,10 @@ describe("Groups", () => {
             // Wait for "Manage group" panel to be open
             const groupEditor = await screen.findByTestId("group-editor");
             await waitFor(async () => {
-                await within(groupEditor).findByText("Manage group");
+                await within(groupEditor).findByText(siteSpecific("Manage group", "Group details"));
             });
             // Rename the group and click update
-            const groupNameInput = await within(groupEditor).findByPlaceholderText(/Group [Nn]ame/);
+            const groupNameInput = await within(groupEditor).findByTestId("groupName");
             await userEvent.clear(groupNameInput);
             await userEvent.type(groupNameInput, newGroupName);
             const updateButton = await within(groupEditor).findByRole("button", {name: "Update"});
@@ -289,7 +295,7 @@ describe("Groups", () => {
                 // We need to look within the element marked with the "group-editor" test ID, because there are actually
                 // two GroupEditor components in the DOM at once, one is just hidden (depending on screen size).
                 const groupEditor = await screen.findByTestId("group-editor");
-                const archiveButton = await within(groupEditor).findByRole("button", {name: `${activeOrArchived === "active" ? "A" : "Una"}rchive`});
+                const archiveButton = await within(groupEditor).findByRole("button", {name: `${activeOrArchived === "active" ? "A" : "Una"}rchive group`});
                 await userEvent.click(archiveButton);
                 // Assert that the request was called, and the modified group no longer exists in the initial list of groups
                 await waitFor(() => {
@@ -412,7 +418,7 @@ describe("Groups", () => {
         // Expect that both members are shown
         const memberInfos = await within(groupEditor).findAllByTestId("member-info");
         expect(memberInfos).toHaveLength(2);
-        const resetPasswordButton1 = within(memberInfos[0]).getByRole("button", {name: "Reset Password"});
+        const resetPasswordButton1 = within(memberInfos[0]).getByRole("button", {name: "Reset password"});
         // First button should work, because student has authorised full access
         expect(resetPasswordButton1).not.toBeDisabled();
         // CAUTION - We can't use `userEvent.click` here because of the tooltip on this button. It crashes tests after
@@ -423,7 +429,7 @@ describe("Groups", () => {
             expect(passwordResetSuccessfullySent).toBeTruthy();
         });
         // Second button should be disabled
-        const resetPasswordButton2 = within(memberInfos[1]).getByRole("button", {name: "Reset Password"});
+        const resetPasswordButton2 = within(memberInfos[1]).getByRole("button", {name: "Reset password"});
         expect(resetPasswordButton2).toBeDisabled();
     });
 
@@ -452,8 +458,8 @@ describe("Groups", () => {
         // Expect that both members are shown
         const memberInfos = await within(groupEditor).findAllByTestId("member-info");
         expect(memberInfos).toHaveLength(2);
-        const resetPasswordButton1 = within(memberInfos[0]).queryByRole("button", {name: "Reset Password"});
-        const resetPasswordButton2 = within(memberInfos[1]).queryByRole("button", {name: "Reset Password"});
+        const resetPasswordButton1 = within(memberInfos[0]).queryByRole("button", {name: "Reset password"});
+        const resetPasswordButton2 = within(memberInfos[1]).queryByRole("button", {name: "Reset password"});
         expect(resetPasswordButton1).toBeNull();
         expect(resetPasswordButton2).toBeNull();
     });
@@ -479,13 +485,20 @@ describe("Groups", () => {
             ]
         });
         await navigateToGroups();
-        const newGroupInput = await screen.findByPlaceholderText(/Group [Nn]ame/);
+
+        const create = await screen.findByRole("button", {name: "Create a new group"});
+        await userEvent.click(create);
+
+        await screen.findByTestId("active-modal");
+        const newGroupInput = await screen.findByTestId("group-name-input");
         await userEvent.type(newGroupInput, mockNewGroup.groupName);
-        const createButton = await screen.findByRole("button", {name: "Create"});
+        const createButton = await screen.findByRole("button", {name: "Create group"});
         await userEvent.click(createButton);
-        const firstModal = await screen.findByTestId("active-modal");
+
+        const inviteModal = await screen.findByTestId("active-modal");
+
         // Expect the "add group managers" button to be shown on the modal
-        const addGroupManagersButton = await within(firstModal).findByRole("button", {name: "Add group managers"});
+        const addGroupManagersButton = await within(inviteModal).findByRole("button", {name: "Add group managers"});
         await userEvent.click(addGroupManagersButton);
         await testAddAdditionalManagerInModal(newGroupManagerHandler, mockNewManager);
     });
@@ -508,15 +521,22 @@ describe("Groups", () => {
             ]
         });
         await navigateToGroups();
-        const newGroupInput = await screen.findByPlaceholderText(/Group [Nn]ame/);
+
+        const create = await screen.findByRole("button", {name: "Create a new group"});
+        await userEvent.click(create);
+
+        await screen.findByTestId("active-modal");
+        const newGroupInput = await screen.findByTestId("group-name-input");
         await userEvent.type(newGroupInput, mockNewGroup.groupName);
-        const createButton = await screen.findByRole("button", {name: "Create"});
+        const createButton = await screen.findByRole("button", {name: "Create group"});
         await userEvent.click(createButton);
-        const firstModal = await screen.findByTestId("active-modal");
+
+        const inviteModal = await screen.findByTestId("active-modal");
+
         // Expect the "add group managers" button NOT to be shown on the modal
-        expect(firstModal).toHaveModalTitle("Group Created");
-        expect(within(firstModal).queryByRole("button", {name: "Add group managers"})).toBeNull();
-        await closeActiveModal(firstModal);
+        expect(inviteModal).toHaveModalTitle("Group created");
+        expect(within(inviteModal).queryByRole("button", {name: "Add group managers"})).toBeNull();
+        await closeActiveModal(inviteModal);
     });
 
     it("only allows additional group managers to remove themselves as group managers", async () => {
@@ -645,7 +665,7 @@ describe("Groups", () => {
 
         await waitFor(async () => {
             const shareLink = within(inviteUsersModal as HTMLElement).getByTestId("share-link");
-            expect(shareLink).toHaveTextContent(`/account?authToken=${mockToken}`);
+            expect(shareLink).toHaveAttribute('value', expect.stringContaining(`/account?authToken=${mockToken}`));
         });
 
         await closeActiveModal(inviteUsersModal);
