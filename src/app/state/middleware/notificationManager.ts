@@ -22,7 +22,7 @@ import { emailConfirmationModal } from "../../components/elements/modals/EmailCo
 import { loginOrSignUpModal } from "../../components/elements/modals/LoginOrSignUpModal";
 import { userContextReconfirmationModal } from "../../components/elements/modals/UserContextReconfirmationModal";
 import { policyUpdateModal } from "../../components/elements/modals/PolicyUpdateModal";
-import { POLICY_UPDATE_TIME } from "../../components/elements/modals/inequality/constants";
+import { LAST_PRIVACY_POLICY_UPDATE_TIME } from "../../components/elements/modals/inequality/constants";
 
 export const notificationCheckerMiddleware: Middleware =
   (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
@@ -48,7 +48,7 @@ export const notificationCheckerMiddleware: Middleware =
         if (
           !isOnPrivacyPage &&
           isLoggedIn(user) &&
-          (acceptedTime === null || acceptedTime === undefined || acceptedTime <= POLICY_UPDATE_TIME)
+          (acceptedTime === null || acceptedTime === undefined || acceptedTime <= LAST_PRIVACY_POLICY_UPDATE_TIME)
         ) {
           setTimeout(() => {
             dispatch(openActiveModal(policyUpdateModal));

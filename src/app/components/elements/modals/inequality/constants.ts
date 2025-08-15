@@ -97,4 +97,4 @@ export const LOG_FUNCTION_NAMES = ["ln", "log"];
 
 export const DIFFERENTIAL_REGEX = /^(Delta|delta|d)\s*(?:\^([0-9]+))?\s*([a-zA-Z]+(?:(?:_|\^).+)?)/;
 
-export const POLICY_UPDATE_TIME = new Date("2025-07-23").getTime(); // Last privacy policy update date
+export const LAST_PRIVACY_POLICY_UPDATE_TIME = new Date("2025-07-23").getTime();
