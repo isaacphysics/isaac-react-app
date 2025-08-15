@@ -18,19 +18,22 @@ import { NewsCard } from "../elements/cards/NewsCard";
 import { BookCard } from "./BooksOverview";
 import { placeholderIcon } from "../elements/PageTitle";
 import { ContentSummaryDTO, IsaacPodDTO } from "../../../IsaacApiTypes";
-
+import {v4 as uuidV4} from "uuid";
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const dispatch = useAppDispatch();
     const [randomSeed, setrandomSeed] = useState(nextSeed);
 
     const handleGetDifferentQuestion = () => setrandomSeed(nextSeed);
+    const [searchId, setSearchId] = useState('');
 
     const searchDebounce = useCallback(debounce(() => {
         if (!isFullyDefinedContext(context)) {
             return;
         }
 
+        const nextSearchId = uuidV4();
+        setSearchId(nextSearchId);
         dispatch(searchQuestions({
             querySource: "randomQuestion",
             searchString: "",
@@ -48,10 +51,10 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
             startIndex: undefined,
             limit: 1,
             randomSeed
-        }));
+        }, nextSearchId));
     }), [dispatch, context, randomSeed]);
 
-    const {results: questions} = useAppSelector((state) => state && state.questionSearchResult) || {};
+    const {results: questions, searchId: questionSearchId } = useAppSelector((state) => state && state.questionSearchResult) || {};
 
     useEffect(() => {
         searchDebounce();
@@ -59,7 +62,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 
     const question = questions?.[0];
 
-    return <div className="d-flex flex-column pb-4 container-override random-question-panel">
+    return <div  className="d-flex flex-column pb-4 container-override random-question-panel" >
         <div className="d-flex my-3 justify-content-between align-items-center">
             <h4 className="m-0">Try a random question!</h4>
             <button className="btn btn-link invert-underline d-flex align-items-center gap-2" onClick={handleGetDifferentQuestion}>
@@ -67,7 +70,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                 <i className="icon icon-refresh icon-color-black"/>
             </button>
         </div>
-        {question
+        {question && searchId === questionSearchId
             ? <ListView className="border-0" type="item" items={[{
                 type: DOCUMENT_TYPE.QUESTION,
                 title: question.title,
@@ -79,7 +82,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                 <IsaacSpinner size="sm" />
             </div>
         }
-</div>;
+    </div>;
 };
 
 interface FooterRowProps {
@@ -181,7 +184,10 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
         />
 
         {pageContext && isSingleStageContext(pageContext) && <>
-            <RandomQuestionBanner context={pageContext} />
+            {/* Set key so the component resets questionId when the user navigates to a different subject page. Without
+              * setting this, the random question will still fetch and show a spinner, but the old question is displayed
+              * for just a single frame, before the useEffect takes place. */}
+            <RandomQuestionBanner key={`${pageContext.stage}_${pageContext.subject}`} context={pageContext} />
 
             <ListViewCards cards={getLandingPageCardsForContext(pageContext, below['md'](deviceSize))} showBlanks={!below['md'](deviceSize)} className="my-7" />
             
