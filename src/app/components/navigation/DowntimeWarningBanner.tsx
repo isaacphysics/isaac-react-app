@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Alert, Button, Col, Container, Row} from 'reactstrap';
 import Cookies from 'js-cookie';
-import {isAda, SITE_TITLE, siteSpecific} from "../../services";
+import {SITE_TITLE, siteSpecific} from "../../services";
 
 const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 
@@ -19,7 +19,7 @@ export const DowntimeWarningBanner = () => {
     const inDateRange = new Date(1752480000000) <= new Date() && new Date() <= new Date(1752566400000);
     const colour = siteSpecific("danger", "warning"); // Ada doesn't support "danger" colours!
 
-    return isAda && inDateRange && noCookie ? <div className="banner d-print-none" id="downtime-banner">
+    return inDateRange && noCookie ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color={colour} className="mb-0">
             <Container>
                 <Row style={{alignItems: "center"}}>

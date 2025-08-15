@@ -146,7 +146,9 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                         data-unit={unit || 'None'}
                                         className={classNames({"bg-inline-question selected": unit === currentAttemptUnits})}
                                         onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
-                                        <Markup encoding={"latex"}>
+                                        {/* Buttons cannot contain semantic children in the accessibility tree;
+                                                so we must use alt text here! */}
+                                        <Markup encoding={"latex"} forceMathsAltText={true}>
                                             {wrapUnitForSelect(unit)}
                                         </Markup>
                                     </DropdownItem>

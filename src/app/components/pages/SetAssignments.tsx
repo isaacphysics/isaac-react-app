@@ -213,8 +213,8 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
                             className="my-1 px-1 d-flex justify-content-between"
                         >
                             <span className="flex-grow-1">{assignee.groupName}</span>
-                            <button 
-                                className="close bg-transparent invert-underline" aria-label="Unassign group" 
+                            <button
+                                className="close bg-transparent invert-underline" aria-label="Unassign group"
                                 onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}
                             >
                                 Unassign
@@ -247,7 +247,7 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
                                         : assignee.startDate).toDateString()}
                                 </span>
                             </>}
-                            <button 
+                            <button
                                 className="close bg-transparent" aria-label="Unassign group"
                                 onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}
                             >
@@ -595,10 +595,10 @@ export const SetAssignments = () => {
         groupsByGameboard, openAssignModal
     };
 
-    const filteredBoards = useMemo(() => 
+    const filteredBoards = useMemo(() =>
         boards?.boards.filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
             .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))), 
+            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))),
     [boards, user, boardTitleFilter, boardCreator, boardSubject]);
 
     return <Container>

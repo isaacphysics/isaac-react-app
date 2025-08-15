@@ -43,7 +43,7 @@ export interface IsaacContentProps extends RouteComponentProps {
 export const IsaacContent = withRouter((props: IsaacContentProps) => {
     const {doc: {type, layout, encoding, value, children}, match} = props;
     const keyedProps = {...props, key: props.doc.id};
-    {/* 
+    {/*
         Each IsaacContent is assumed to be independent, not sharing state with any other.
         However, React will reuse components if they are the same type, have the same key (or undefined), and exist in the same place in the DOM.
         If two components A and B meet these criteria, if you switch from component A to component B, any e.g. useStates in B will not

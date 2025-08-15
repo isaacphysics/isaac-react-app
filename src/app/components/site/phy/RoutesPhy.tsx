@@ -207,6 +207,7 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/11_14" to="/" />,
     <Redirect key={key++} exact from="/gcse" to="/" />,
     <Redirect key={key++} exact from="/alevel" to="/" />,
+    <Redirect key={key++} exact from="/s/:shortCode" to="/pages/problem_solving_qs" />,
 
     // Isaac Chemistry redirect
     // TODO: if chemistry is a separate site ever, should move to Chemistry routes.

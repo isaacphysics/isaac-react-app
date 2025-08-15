@@ -24,18 +24,18 @@ export const NotFound = () => {
                     {(state && state.overridePathname) || pathname}
                 </code>
             </p>
-            
-            {window.navigator.onLine ? 
+
+            {window.navigator.onLine ?
                 <p>
                     Expecting to find something here?
                     <a className="ps-1" href={buildContactUrl(state, pathname)} >
                         Let us know<span className="visually-hidden"> about this missing page</span>
                     </a>.
-                </p> : 
+                </p> :
                 <p>
                     It looks like you&apos;re offline. You may want to check your internet connection, and then refresh this page to try again.
                     <br />
-                    If you are still having issues, please <a href={`mailto:${WEBMASTER_EMAIL}`}>let us know</a>. 
+                    If you are still having issues, please <a href={`mailto:${WEBMASTER_EMAIL}`}>let us know</a>.
                 </p> // Email link rather than contact form, as the contact form may not work offline
             }
         </div>

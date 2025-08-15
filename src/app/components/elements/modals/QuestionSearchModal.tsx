@@ -307,7 +307,7 @@ export const QuestionSearchModal = (
                         <tbody>
                             {isSearching ? <tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr> : sortedQuestions?.map(question =>
                                 <GameboardBuilderRow
-                                    key={`question-search-modal-row-${question.id}`} 
+                                    key={`question-search-modal-row-${question.id}`}
                                     question={question}
                                     currentQuestions={modalQuestions}
                                     undoStack={undoStack}
