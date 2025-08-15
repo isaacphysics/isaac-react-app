@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     getMyAnsweredQuestionsByDate,
     getMyProgress,
@@ -9,7 +9,7 @@ import {
     useAppSelector
 } from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Alert, Card, CardBody, Col, Container, Row} from "reactstrap";
+import {Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
     below,
     HUMAN_QUESTION_TAGS,
@@ -49,8 +49,6 @@ const siteSpecificStats = siteSpecific(
             "maths_book": 432,
             "chemistry_16": 338
         },
-        typeColWidth: "col-lg-6",
-        tagColWidth: "col-lg-12"
     },
     // Computer science
     {
@@ -59,8 +57,6 @@ const siteSpecificStats = siteSpecific(
             "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacLLMFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion"
         ],
         questionCountByTag: {},
-        typeColWidth: "col-lg-4",
-        tagColWidth: "col-lg-12"
     }
 );
 
@@ -75,9 +71,9 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const dispatch = useAppDispatch();
     const myProgress = useAppSelector(selectors.user.progress);
     const userProgress = useAppSelector(selectors.teacher.userProgress);
-    const achievements = useAppSelector(selectors.user.achievementsRecord);
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
+    const [chartTab, setChartTab] = useState<"correct" | "attempted">("correct");
     const screenSize = useDeviceSize();
 
     useEffect(() => {
@@ -90,7 +86,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
         }
     }, [dispatch, userIdOfInterest, viewingOwnData, user]);
 
-    const tabRefs: FlushableRef[] = [useRef(), useRef()];
+    const flushRef: FlushableRef = useRef();
 
     // Only teachers and above can see other users progress. The API checks if the other user has shared data with the
     // current user or not.
@@ -121,33 +117,16 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                     <Card className="mt-4">
                         <CardBody>
                             <Tabs style="tabs" tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
-                                const flush = tabRefs[tabIndex - 1].current;
-                                if (flush) {
-                                    // Don't call the flush in an event handler that causes the render, that's too early.
-                                    // Call it once that's done.
-                                    requestAnimationFrame(() => {
-                                        flush();
-                                        // You'd think this wouldn't do anything, but it fixes the vertical position of the
-                                        // legend. I'm beginning to dislike this library.
-                                        flush();
-                                    });
-                                }
+                                setChartTab(tabIndex === 1 ? "correct" : "attempted");
+                                if (flushRef.current) flushRef.current();
                             }}>
-                                {{
-                                    "Correct questions": <QuestionProgressCharts
-                                        subId="correct"
-                                        questionsByTag={(progress?.correctByTag) || {}}
-                                        questionsByLevel={(progress?.correctByLevel) || {}}
-                                        questionsByStageAndDifficulty={(progress?.correctByStageAndDifficulty) || {}}
-                                        flushRef={tabRefs[0]} />,
-                                    "Attempted questions": <QuestionProgressCharts
-                                        subId="attempted"
-                                        questionsByTag={(progress?.attemptsByTag) || {}}
-                                        questionsByLevel={(progress?.attemptsByLevel) || {}}
-                                        questionsByStageAndDifficulty={(progress?.attemptsByStageAndDifficulty) || {}}
-                                        flushRef={tabRefs[1]}/>
-                                }}
+                                {{"Correct questions": undefined, "Attempted questions": undefined}}
                             </Tabs>
+                            <QuestionProgressCharts
+                                subId={chartTab}
+                                flushRef={flushRef}
+                                userProgress={progress}
+                            />
                         </CardBody>
                     </Card>
 
@@ -158,9 +137,11 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                 const correct = progress?.correctByType?.[qType] || null;
                                 const attempts = progress?.attemptsByType?.[qType] || null;
                                 const percentage = safePercentage(correct, attempts);
-                                return <Col key={qType} className={`${siteSpecificStats.typeColWidth} type-progress-bar`}>
+                                return <Col key={qType} lg={siteSpecific(6, 4)} className="mt-2 type-progress-bar">
                                     <div className={"p-2"}>
                                         {HUMAN_QUESTION_TYPES[qType]} questions
+                                    </div>
+                                    <div className={"px-2"}>
                                         <ProgressBar percentage={percentage || 0}>
                                             {percentage == null ? "No data" : `${correct} of ${attempts}`}
                                         </ProgressBar>
@@ -179,7 +160,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                 const attempted = Math.min(progress?.attemptsByTag?.[qType] || 0, total);
                                 const correctPercentage = safePercentage(correct, total) || 0;
                                 const attemptedPercentage = safePercentage(attempted, total) || 0;
-                                return total > 0 && <Col key={qType} className={`${siteSpecificStats.tagColWidth} mt-2 type-progress-bar`}>
+                                return total > 0 && <Col key={qType} lg={12} className="mt-2 type-progress-bar">
                                     <div className={"px-2"}>
                                         {HUMAN_QUESTION_TAGS.get(qType)} questions
                                     </div>
