@@ -439,17 +439,26 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
-export const ClozeDropRegionContext = React.createContext<{
-    register: (id: string, index: number) => void,
-    onSelect: (item: Immutable<ClozeItemDTO>, dropZoneId: UniqueIdentifier, clearSelection: boolean) => void,
-    questionPartId: string, readonly: boolean,
-    inlineDropValueMap: {[p: string]: ClozeItemDTO},
+
+export const DragAndDropRegionContext = React.createContext<(
+    {
+        questionType: "isaacDragAndDropQuestion",
+        register: (divId: string, zoneId: string) => void,
+    } | {
+        questionType: "isaacClozeQuestion",
+        register: (divId: string, zoneId: number) => void,
+    }
+) & {
+    onSelect: (item: Immutable<ReplaceableItem>, dropZoneId: UniqueIdentifier, clearSelection: boolean) => void,
+    questionPartId: string, 
+    readonly: boolean,
+    inlineDropValueMap: {[p: string]: ReplaceableItem},
     dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
     shouldGetFocus: (id: string) => boolean,
-    nonSelectedItems: Immutable<ClozeItemDTO>[],
-    allItems: Immutable<ClozeItemDTO>[],
+    nonSelectedItems: Immutable<ReplaceableItem>[],
+    allItems: Immutable<ReplaceableItem>[],
     zoneIds: Set<string>,
-    } | undefined>(undefined);
+} | undefined>(undefined);
 
 export const InlineContext = React.createContext<{
     docId?: string,
@@ -749,7 +758,8 @@ export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
 
 export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "SECTION_MARKS", "DETAILED_FEEDBACK"];
 
-export interface ClozeItemDTO extends ItemDTO {
+export interface ReplaceableItem extends ItemDTO {
+    // can be either a cloze (ItemDTO) or dnd (DndItemDTO) under the hood
     replacementId?: string;
 }
 

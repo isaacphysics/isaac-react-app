@@ -1,4 +1,4 @@
-import {dropZoneRegex, inlineQuestionRegex, isDefined, isPhy, MARKDOWN_RENDERER} from "../../../services";
+import {dndDropZoneRegex, dropZoneRegex, inlineQuestionRegex, isDefined, isPhy, MARKDOWN_RENDERER} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
 
@@ -41,6 +41,15 @@ export const renderClozeDropZones = (markdown: string) => {
         while (reservedIndices.has(nonReservedIndex)) nonReservedIndex++;
         const dropId = `drop-region-${index}`;
         return `<span data-index="${index}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
+    });
+};
+
+export const renderDndDropZones = (markdown: string) => {
+    return markdown.replace(dndDropZoneRegex, (_match, id, params, widthMatch, heightMatch) => {
+        const minWidth = widthMatch ? widthMatch.slice("w-".length) + "px" : "100px";
+        const minHeight = heightMatch ? heightMatch.slice("h-".length) + "px" : "auto";
+        const dropId = `drop-region-${id}`;
+        return `<span data-index="${id}" id="${dropId}" style="min-width: ${minWidth}; min-height: ${minHeight}"></span>`;
     });
 };
 

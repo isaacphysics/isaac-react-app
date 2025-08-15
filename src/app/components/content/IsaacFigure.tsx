@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 import {FigureDTO} from "../../../IsaacApiTypes";
 import {apiHelper} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {ClozeDropRegionContext, FigureNumberingContext} from "../../../IsaacAppTypes";
+import {DragAndDropRegionContext, FigureNumberingContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import InlineDropRegion from '../elements/markup/portals/InlineDropZones';
 import { closeActiveModal, openActiveModal, useAppDispatch } from '../../state';
@@ -42,7 +42,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
     const figId = doc.id && extractFigureId(doc.id);
 
     // TODO: if the image fails to load, you can't answer the question
-    const clozeContext = useContext(ClozeDropRegionContext);
+    const dropRegionContext = useContext(DragAndDropRegionContext);
     const clozeDropRootElement = useRef<HTMLDivElement>(null);
 
     return <div className="figure-panel">
@@ -63,11 +63,11 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                             }}>
                                 <i className="icon icon-fullscreen icon-md" />
                             </button>
-                            {doc.dropZones && clozeContext && path && doc.dropZones.map((dropZone, i) => {
-                                const index = dropZone.index ?? clozeContext.zoneIds.size + i;
-                                const dropZoneElement = document.getElementById(`figure-drop-target-${index}`);
+                            {doc.dropZones && dropRegionContext && path && doc.dropZones.map((dropZone, i) => {
+                                const zoneId = dropZone.id;
+                                const dropZoneElement = document.getElementById(`figure-drop-target-${zoneId}`);
                                 return <div 
-                                    className="position-absolute" id={`figure-drop-target-${index}`} key={i}
+                                    className="position-absolute" id={`figure-drop-target-${zoneId}`} key={i}
                                     // style={{left: `calc(16px + ${dropZone.left}% - ${(100 + 16) * dropZone.left/100}px)`, top: `calc(32px + ${dropZone.top}% - ${(34 + 16) * dropZone.top/100}px)`}}
                                     style={{
                                         left: `calc(16px + ${dropZone.left}% - ((${dropZoneElement?.clientWidth}px + 16px + 16px) * ${(dropZone.left)/100})`, 
@@ -75,8 +75,8 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                                     }}
                                 >
                                     <InlineDropRegion 
-                                        id={`figure-drop-target-${index}`}
-                                        index={index}
+                                        divId={`figure-drop-target-${zoneId}`}
+                                        zoneId={zoneId}
                                         emptyWidth={dropZone.minWidth.endsWith("px") ? dropZone.minWidth.replace("px", "") : undefined}
                                         emptyHeight={dropZone.minHeight.endsWith("px") ? dropZone.minHeight.replace("px", "") : undefined}
                                         rootElement={clozeDropRootElement.current || undefined}
