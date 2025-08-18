@@ -21,8 +21,7 @@ export const ReadonlyClipboardInput = (props: InputProps) => {
             className={"w-100 w-md-auto"}
         />
         <Button
-            outline
-            color={"secondary"}
+            color={"keyline"}
             aria-label={"Copy to clipboard"}
             onClick={copyToClipboard}
             className={"w-100 w-md-auto"}
