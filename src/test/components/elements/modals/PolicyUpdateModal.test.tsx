@@ -144,7 +144,7 @@ describe("PolicyUpdateModal", () => {
       expect(actions).toBeDefined();
     });
 
-    it("should dispatch closeActiveModal action when button is clicked", async () => {
+    it("should close the privacy policy update modal when 'Agree and Continue' button is clicked", async () => {
       // Create a fresh modal object that uses our mocked store
       const testModal = {
         ...policyUpdateModal,
