@@ -41,6 +41,15 @@ jest.mock("../../../../app/state", () => ({
 const mockTimestamp = 1640995200000; // 2022-01-01 00:00:00 UTC
 const originalDateNow = Date.now;
 
+// Common render function for modal tests
+const renderModal = () => {
+  render(
+    <Provider store={mockStore}>
+      <ActiveModal activeModal={policyUpdateModal} />
+    </Provider>,
+  );
+};
+
 describe("PolicyUpdateModal", () => {
   beforeEach(() => {
     Date.now = jest.fn(() => mockTimestamp);
@@ -70,14 +79,6 @@ describe("PolicyUpdateModal", () => {
   });
 
   describe("Modal Content", () => {
-    const renderModal = () => {
-      render(
-        <Provider store={mockStore}>
-          <ActiveModal activeModal={policyUpdateModal} />
-        </Provider>,
-      );
-    };
-
     it("should render the modal with correct content", () => {
       renderModal();
 
@@ -114,14 +115,6 @@ describe("PolicyUpdateModal", () => {
   });
 
   describe("Button Click Behavior", () => {
-    const renderModal = () => {
-      render(
-        <Provider store={mockStore}>
-          <ActiveModal activeModal={policyUpdateModal} />
-        </Provider>,
-      );
-    };
-
     beforeEach(() => {
       // Mock the API call
       server.use(
@@ -206,14 +199,6 @@ describe("PolicyUpdateModal", () => {
   });
 
   describe("Modal Accessibility", () => {
-    const renderModal = () => {
-      render(
-        <Provider store={mockStore}>
-          <ActiveModal activeModal={policyUpdateModal} />
-        </Provider>,
-      );
-    };
-
     it("should have proper ARIA attributes", () => {
       renderModal();
 
