@@ -512,13 +512,14 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
         history.push(nextPage || defaultNextPage);
     } catch (error: any) {
+        const providerErrors = fetchErrorFromParameters(parameters);
         trackEvent("sign_in_failure", { props: {
             provider: provider.toLowerCase(),
-            providerErrors: fetchErrorFromParameters(parameters),
-            isaacErrors: {
-                error: error?.response?.data?.responseCode || error?.code,
-                errorDescription: error?.response?.data?.errorMessage || error?.message
-            }
+            providerError: providerErrors.error || 'unknown',
+            providerErrorDescription: providerErrors.errorDescription || 'unknown',
+            providerParseError: providerErrors.parseError || 'unknown',
+            isaacError: error?.response?.data?.responseCode || error?.code || 'unknown',
+            isaacErrorDescription: error?.response?.data?.errorMessage || error?.message || 'unknown'
         }});
         history.push("/auth_error", { errorMessage: extractMessage(error) });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
