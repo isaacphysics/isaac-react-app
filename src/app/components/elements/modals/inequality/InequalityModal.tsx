@@ -1,8 +1,8 @@
 import React, {FormEvent, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Inequality, WidgetSpec} from "inequality";
 import {
-    isAdminOrEventManager,
     isDefined,
+    isStaff,
     parsePseudoSymbolicAvailableSymbols,
     sanitiseInequalityState, siteSpecific
 } from "../../../../services";
@@ -360,9 +360,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
 
     useEffect(() => {
         if (sketch.current) {
-            sketch.current.isUserPrivileged = () => {
-                return isAdminOrEventManager(user);
-            };
+            sketch.current.isUserPrivileged = () => isStaff(user);
         }
     }, [sketch, user]);
 
