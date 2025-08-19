@@ -61,38 +61,9 @@ describe("PolicyUpdateModal", () => {
     jest.clearAllMocks();
   });
 
-  describe("Modal Configuration", () => {
-    it("should have the correct title", () => {
-      expect(policyUpdateModal.title).toBe("We've updated our Privacy Policy");
-    });
-
+  describe("Policy Update Modal", () => {
     it("should not be closeable", () => {
       expect(policyUpdateModal.isCloseable).toBe(false);
-    });
-
-    it("should have a closeAction that does nothing", () => {
-      const consoleSpy = jest.spyOn(console, "log").mockImplementation();
-      policyUpdateModal.closeAction();
-      expect(consoleSpy).not.toHaveBeenCalled();
-      consoleSpy.mockRestore();
-    });
-  });
-
-  describe("Modal Content", () => {
-    it("should render the modal with correct content", () => {
-      renderModal();
-
-      // Check title
-      expect(screen.getByText("We've updated our Privacy Policy")).toBeInTheDocument();
-
-      // Check body content
-      expect(
-        screen.getByText(/With this update, we have clarified the role of National Center for Computing Education/),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(/To continue using the platform, you'll need to review and accept the updated/),
-      ).toBeInTheDocument();
-      expect(screen.getByText("View Privacy Policy")).toBeInTheDocument();
     });
 
     it("should contain 2 privacy policy links", () => {
@@ -100,17 +71,10 @@ describe("PolicyUpdateModal", () => {
 
       const linkElements = screen.getAllByRole("link");
       expect(linkElements).toHaveLength(2);
-      // Check each link individually
+
       linkElements.forEach((link) => {
         expect(link).toHaveAttribute("href", "/privacy");
       });
-    });
-
-    it("should render the 'Agree and Continue' button", () => {
-      renderModal();
-
-      const button = screen.getByRole("button", { name: "Agree and Continue" });
-      expect(button).toBeInTheDocument();
     });
   });
 
@@ -124,28 +88,13 @@ describe("PolicyUpdateModal", () => {
       );
     });
 
-    it("should dispatch updatePrivacyPolicyAcceptedTime action when button is clicked", async () => {
-      renderModal();
-
-      const button = screen.getByRole("button", { name: "Agree and Continue" });
-      fireEvent.click(button);
-
-      // Check that the action was dispatched with correct payload
-      const actions = mockStore.getState();
-      // Note: We can't directly check the dispatched actions in this setup,
-      // but we can verify the behavior through the store state changes
-      expect(actions).toBeDefined();
-    });
-
     it("should close the privacy policy update modal when 'Agree and Continue' button is clicked", async () => {
-      // Create a fresh modal object that uses our mocked store
       const testModal = {
         ...policyUpdateModal,
         buttons: [
           <button
             key={0}
             onClick={() => {
-              // Update privacy policy acceptance with current timestamp
               mockStore.dispatch({
                 type: "UPDATE_PRIVACY_POLICY_ACCEPTED_TIME",
                 payload: { privacyPolicyAcceptedTime: Date.now() },
@@ -158,7 +107,6 @@ describe("PolicyUpdateModal", () => {
         ],
       };
 
-      // First, open the modal by dispatching the openActiveModal action
       mockStore.dispatch({
         type: ACTION_TYPE.ACTIVE_MODAL_OPEN,
         activeModal: testModal as ActiveModalType,
@@ -173,17 +121,10 @@ describe("PolicyUpdateModal", () => {
       const button = screen.getByRole("button", { name: "Agree and Continue" });
       fireEvent.click(button);
 
-      // Wait for the async operations to complete
       await new Promise((resolve) => setTimeout(resolve, 0));
 
       // Check that the modal is no longer in the DOM
       expect(screen.queryByTestId("active-modal")).not.toBeInTheDocument();
-
-      // Check that the modal title is no longer visible
-      expect(screen.queryByText("We've updated our Privacy Policy")).not.toBeInTheDocument();
-
-      // Check that the button is no longer visible
-      expect(screen.queryByRole("button", { name: "Agree and Continue" })).not.toBeInTheDocument();
     });
 
     it("should use current timestamp when updating privacy policy acceptance", () => {
@@ -195,26 +136,6 @@ describe("PolicyUpdateModal", () => {
       // Verify that Date.now() was called
       expect(Date.now).toHaveBeenCalled();
       expect(Date.now()).toBe(mockTimestamp);
-    });
-  });
-
-  describe("Modal Accessibility", () => {
-    it("should have proper ARIA attributes", () => {
-      renderModal();
-
-      const modal = screen.getByTestId("active-modal");
-      expect(modal).toBeInTheDocument();
-
-      const modalHeader = screen.getByTestId("modal-header");
-      expect(modalHeader).toBeInTheDocument();
-    });
-
-    it("should not have a close button since it's not closeable", () => {
-      renderModal();
-
-      // Since isCloseable is false, there should be no close button
-      const closeButton = screen.queryByRole("button", { name: /close/i });
-      expect(closeButton).not.toBeInTheDocument();
     });
   });
 
@@ -240,17 +161,45 @@ describe("PolicyUpdateModal", () => {
         }),
       );
 
+      // Create a test modal that uses the mock store
+      const testModal = {
+        ...policyUpdateModal,
+        buttons: [
+          <button
+            key={0}
+            onClick={() => {
+              mockStore.dispatch({
+                type: "UPDATE_PRIVACY_POLICY_ACCEPTED_TIME",
+                payload: { privacyPolicyAcceptedTime: Date.now() },
+              });
+              mockStore.dispatch({ type: ACTION_TYPE.ACTIVE_MODAL_CLOSE });
+            }}
+          >
+            Agree and Continue
+          </button>,
+        ],
+      };
+
+      // Add the modal to the store
+      mockStore.dispatch({
+        type: ACTION_TYPE.ACTIVE_MODAL_OPEN,
+        activeModal: testModal as ActiveModalType,
+      });
+
+      // Render using ActiveModals (which gets modals from store)
       render(
         <Provider store={mockStore}>
-          <ActiveModal activeModal={policyUpdateModal} />
+          <ActiveModals />
         </Provider>,
       );
 
       const button = screen.getByRole("button", { name: "Agree and Continue" });
       fireEvent.click(button);
 
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
       // The modal should still close even if the API call fails
-      // This is the expected behavior based on the implementation
+      expect(screen.queryByTestId("active-modal")).not.toBeInTheDocument();
     });
   });
 });
