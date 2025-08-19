@@ -138,11 +138,6 @@
   @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-:is(a, span) > i.icon:only-child {
-  // centers the icon in the default line height of 1.5rem
-  margin-top: 0.25rem;
-}
-
 i.icon.icon-color-black {
   @include icon-color-override($cs-jet);
 }
