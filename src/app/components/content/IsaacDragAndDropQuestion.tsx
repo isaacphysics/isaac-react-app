@@ -173,8 +173,6 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const inlineDropValueMap = useMemo<{[p: string]: ReplaceableItem}>(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
 
-    console.log(inlineDropValueMap);
-
     // Compute map used to highlight each inline drop-zone with whether it is correct or not
     const itemsCorrect = validationResponse?.itemsCorrect;
     const [dropZoneValidationMap, setDropZoneValidationMap] = useState<{[p: string]: {correct?: boolean, itemId?: string} | undefined}>({});
