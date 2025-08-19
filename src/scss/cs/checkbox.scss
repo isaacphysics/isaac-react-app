@@ -1,84 +1,109 @@
 @import "../common/checkbox";
 
+%tick {
+  position: absolute;
+  display: block;
+  width: 22px;
+  height: 22px;
+  top: 4px;
+  margin-left: 1px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  pointer-events: none;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 12px;
+    background-color: #fff;
+    left: 11px;
+    top: 2px;
+  }
+
+  &::after{
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 2px;
+    background-color: #fff;
+    left: 6px;
+    top: 13px;
+  }
+}
+
 .styled-checkbox-wrapper {
-    div {
-      input[type="checkbox"] {
-        &.checked {
-          background: #000;
-          border-color: #000;
+  div {
+    input[type="checkbox"] {
+      &.checked {
+        background: #000;
+        border-color: #000;
+
+        &:hover, &:disabled {
+          background: #333;
+          border-color: #333;
+        }
+
+        &[color="primary"] {
+          background: $dark-pink-300;
+          border-color: $dark-pink-300;
 
           &:hover, &:disabled {
-            background: #333;
-            border-color: #333;
-          }
-
-          &[color="primary"] {
-            background: $dark-pink-300;
-            border-color: $dark-pink-300;
-
-            &:hover, &:disabled {
-              background: darken($dark-pink-300, 10%);
-              border-color: darken($dark-pink-300, 10%);
-            }
-          }
-
-          &[color="danger"] {
-            background: $danger;
-            border-color: $danger;
-
-            &:hover, &:disabled {
-              background: darken($danger, 10%);
-              border-color: darken($danger, 10%);
-            }
+            background: darken($dark-pink-300, 10%);
+            border-color: darken($dark-pink-300, 10%);
           }
         }
 
-        &:not(.checked):hover, &:not(.checked):disabled {
-          background: #f8f8f8;
-          border-color: #666;
-        }
+        &[color="danger"] {
+          background: $danger;
+          border-color: $danger;
 
-        &.is-invalid {
-          border-color: $form-invalid-border-color !important;
-        }
-
-        &:focus {
-          box-shadow: 0 0 0 0.1em #000;
+          &:hover, &:disabled {
+            background: darken($danger, 10%);
+            border-color: darken($danger, 10%);
+          }
         }
       }
 
-      .tick {
-        position: absolute;
-        display: block;
-        width: 22px;
-        height: 22px;
-        top: 4px;
-        margin-left: 1px;
-        transform: rotate(45deg);
-        -webkit-transform: rotate(45deg);
-        -ms-transform: rotate(45deg);
-        pointer-events: none;
-        z-index: 1;
+      &:not(.checked):hover, &:not(.checked):disabled {
+        background: #f8f8f8;
+        border-color: #666;
+      }
 
-        &::before {
-          content: "";
-          position: absolute;
-          width: 2px;
-          height: 12px;
-          background-color: #fff;
-          left: 11px;
-          top: 2px;
-        }
+      &.is-invalid {
+        border-color: $form-invalid-border-color !important;
+      }
 
-        &::after{
-          content: "";
-          position: absolute;
-          width: 7px;
-          height: 2px;
-          background-color: #fff;
-          left: 6px;
-          top: 13px;
-        }
+      &:focus {
+        box-shadow: 0 0 0 0.1em #000;
       }
     }
+
+    .tick {
+      @extend %tick;
+    }
   }
+}
+
+.styled-checkbox-readonly {
+  position: relative;
+  appearance: none;
+  width: 27px;
+  height: 27px;
+  border: 0.1em solid #000;
+
+  &.checked {
+    background: $dark-pink-300;
+    border-color: $dark-pink-300;
+  }
+
+  &:disabled:not(.checked) {
+    border-color: $cs-silver;
+  }
+
+  ~ .tick {
+    @extend %tick;
+  }
+}
