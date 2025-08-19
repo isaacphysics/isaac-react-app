@@ -337,10 +337,12 @@ export function katexify(
 }
 
 // A hook wrapper around katexify that gets its required parameters from the current redux state and existing figure numbering context
-export const useRenderKatex = () => {
+export const useRenderKatex = (forceAltText?: boolean) => {
     const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
     const {preferredBooleanNotation, preferMathML} = useUserPreferences();
     const figureNumbers = useContext(FigureNumberingContext);
 
-    return (markup: string) => katexify(markup, preferredBooleanNotation && BOOLEAN_NOTATION[preferredBooleanNotation], segueEnvironment === "DEV", preferMathML ?? false, figureNumbers);
+    const useMathML = (!forceAltText && preferMathML) ?? false;
+
+    return (markup: string) => katexify(markup, preferredBooleanNotation && BOOLEAN_NOTATION[preferredBooleanNotation], segueEnvironment === "DEV", useMathML, figureNumbers);
 };

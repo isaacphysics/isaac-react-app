@@ -1,6 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {
     dayMonthYearStringToDate,
@@ -79,13 +78,15 @@ describe("SetAssignments", () => {
         }
     });
 
-    isPhy && it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
-        await renderSetAssignments();
-        for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
-            const button = await screen.findByRole("link", {name: title});
-            expect(button.getAttribute("href")).toBe(href);
-        }
-    });
+    if (isPhy) {
+        it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
+            await renderSetAssignments();
+            for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
+                const button = await screen.findByRole("link", {name: title});
+                expect(button.getAttribute("href")).toBe(href);
+            }
+        });
+    }
 
     it('should show all the correct information for a gameboard in card view', async () => {
         await renderSetAssignments();

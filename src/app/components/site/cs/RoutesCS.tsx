@@ -88,7 +88,7 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
     <TrackedRoute key={key++} exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
     <TrackedRoute key={key++} exact path="/test/view/:quizId" ifUser={isLoggedIn} component={QuizView} />,
-    
+
 
     // Topics and content
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,

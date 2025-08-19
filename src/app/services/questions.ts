@@ -144,9 +144,9 @@ const pseudoToSymbolDict: {[key: string]: string[]} = {
     '_brackets_round': ['()'],
     '_brackets_square': ['[]'],
     '_dot': ['.'],
-    // Adding a pseudosymbol to an empty list in the content editor causes the list to start with a comma 
+    // Adding a pseudosymbol to an empty list in the content editor causes the list to start with a comma
     // and so this empty string is used to avoid adding it to the list of available symbols
-    '': [] 
+    '': []
 };
 
 export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[]) => {

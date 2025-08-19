@@ -3,6 +3,7 @@ import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO, SOME_FIXED_FUTURE_DATE} from "../test/dateUtils";
 import {
     BookingStatus,
+    CompletionState,
     DetailedQuizSummaryDTO,
     EmailVerificationStatus,
     EventStatus,
@@ -2326,8 +2327,8 @@ export const mockAttempts = recordOf<string, QuizAttemptDTO>()({
                     encoding: "markdown",
                     children:[],
                     value: "If an object accelerates from rest at $\\\\quantity{1.8}{m\\\\\\\\,s^{-2}}$, how far does it travel in the first $\\\\quantity{7.0}{s}$ of its motion?",
-                    published: false, 
-                }], 
+                    published: false,
+                }],
                 published:false,
                 tags:[]
             }],
@@ -2388,8 +2389,8 @@ export const mockPreviews = recordOf<string, IsaacQuizDTO>()({
                 encoding: "markdown",
                 children:[],
                 value: "If an object accelerates from rest at $\\\\quantity{1.8}{m\\\\\\\\,s^{-2}}$, how far does it travel in the first $\\\\quantity{7.0}{s}$ of its motion?",
-                published: false, 
-            }], 
+                published: false,
+            }],
             published:false,
             tags:[]
         }],
@@ -4529,7 +4530,7 @@ export const mockQuestionFinderResults = {
                 "mechanics"
             ],
             "url": "/api/pages/questions/itsp24_calcspeed_class_q3",
-            "state": "FAILED",
+            "state": CompletionState.ALL_INCORRECT,
             "audience": [
                 {
                     "stage": [
@@ -6345,4 +6346,14 @@ export const buildMockEvent = (eventId: string, eventStatus: EventStatus, userBo
         "address": {}
     },
     endDate: 4613677200000
+});
+
+export const buildMockQuestions = (n: number) => {
+    return Array(n).fill(null).map((_, i) => ({ ...mockQuestionFinderResults.results[0], id: `q${i}`, title: `Question ${i}` }));
+};
+
+export const buildMockQuestionFinderResults = (questions: typeof mockQuestionFinderResults.results, start: number) => ({
+    results: questions.slice(start, start + 31),
+    nextSearchOffset: start + 31,
+    totalResults: questions.length
 });

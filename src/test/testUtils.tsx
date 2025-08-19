@@ -46,7 +46,7 @@ interface RenderTestEnvironmentOptions {
 // Provider with the global store.
 // When called, the Redux store will be cleaned completely, and other the MSW server handlers will be reset to
 // defaults (those in handlers.ts).
-export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {    
+export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
@@ -86,7 +86,7 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     }
     render(<Provider store={store}>
         {/* #root usually exists in index-{phy|ada}.html, but this is not loaded in Jest */}
-        <div id="root" className="d-flex flex-column overflow-clip min-vh-100" data-bs-theme="neutral"> 
+        <div id="root" className="d-flex flex-column overflow-clip min-vh-100" data-bs-theme="neutral">
             {PageComponent
                 ? <MemoryRouter initialEntries={initalRouteEntries ?? []}>
                     <PageComponent/>
