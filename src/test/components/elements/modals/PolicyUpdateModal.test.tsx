@@ -29,7 +29,6 @@ const mockStore = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(isaacApi.middleware),
 });
 
-// Mock the actual store from the state module
 jest.mock("../../../../app/state", () => ({
   ...jest.requireActual("../../../../app/state"),
   store: mockStore,
@@ -37,17 +36,60 @@ jest.mock("../../../../app/state", () => ({
   updatePrivacyPolicyAcceptedTime: (payload: any) => ({ type: "UPDATE_PRIVACY_POLICY_ACCEPTED_TIME", payload }),
 }));
 
-// Mock Date.now() to return a predictable timestamp
-const mockTimestamp = 1640995200000; // 2022-01-01 00:00:00 UTC
+const mockTimestamp = 1640995200000;
 const originalDateNow = Date.now;
 
-// Common render function for modal tests
-const renderModal = () => {
-  render(
+const createTestModal = (customButtons?: React.ReactElement[]) => ({
+  ...policyUpdateModal,
+  buttons: customButtons || [
+    <button
+      key={0}
+      onClick={() => {
+        mockStore.dispatch({
+          type: "UPDATE_PRIVACY_POLICY_ACCEPTED_TIME",
+          payload: { privacyPolicyAcceptedTime: Date.now() },
+        });
+        mockStore.dispatch({ type: ACTION_TYPE.ACTIVE_MODAL_CLOSE });
+      }}
+    >
+      Agree and Continue
+    </button>,
+  ],
+});
+
+const renderModalFromStore = (modal: ActiveModalType) => {
+  mockStore.dispatch({
+    type: ACTION_TYPE.ACTIVE_MODAL_OPEN,
+    activeModal: modal,
+  });
+
+  return render(
+    <Provider store={mockStore}>
+      <ActiveModals />
+    </Provider>,
+  );
+};
+
+const renderModalDirect = () => {
+  return render(
     <Provider store={mockStore}>
       <ActiveModal activeModal={policyUpdateModal} />
     </Provider>,
   );
+};
+
+const mockApiResponse = (status: number, response: any) => {
+  server.use(
+    rest.post(`${API_PATH}/users/privacy_policy_accepted_time`, (req, res, ctx) => {
+      return res(ctx.status(status), ctx.json(response));
+    }),
+  );
+};
+
+const clickAgreeButton = async () => {
+  const button = screen.getByRole("button", { name: "Agree and Continue" });
+  fireEvent.click(button);
+  await new Promise((resolve) => setTimeout(resolve, 0));
 };
 
 describe("PolicyUpdateModal", () => {
@@ -67,7 +109,7 @@ describe("PolicyUpdateModal", () => {
     });
 
     it("should contain 2 privacy policy links", () => {
-      renderModal();
+      renderModalDirect();
 
       const linkElements = screen.getAllByRole("link");
       expect(linkElements).toHaveLength(2);
@@ -80,60 +122,24 @@ describe("PolicyUpdateModal", () => {
 
   describe("Button Click Behavior", () => {
     beforeEach(() => {
-      // Mock the API call
-      server.use(
-        rest.post(`${API_PATH}/users/privacy_policy_accepted_time`, (req, res, ctx) => {
-          return res(ctx.status(200), ctx.json({ success: true }));
-        }),
-      );
+      mockApiResponse(200, { success: true });
     });
 
     it("should close the privacy policy update modal when 'Agree and Continue' button is clicked", async () => {
-      const testModal = {
-        ...policyUpdateModal,
-        buttons: [
-          <button
-            key={0}
-            onClick={() => {
-              mockStore.dispatch({
-                type: "UPDATE_PRIVACY_POLICY_ACCEPTED_TIME",
-                payload: { privacyPolicyAcceptedTime: Date.now() },
-              });
-              mockStore.dispatch({ type: ACTION_TYPE.ACTIVE_MODAL_CLOSE });
-            }}
-          >
-            Agree and Continue
-          </button>,
-        ],
-      };
+      const testModal = createTestModal();
+      renderModalFromStore(testModal as ActiveModalType);
 
-      mockStore.dispatch({
-        type: ACTION_TYPE.ACTIVE_MODAL_OPEN,
-        activeModal: testModal as ActiveModalType,
-      });
+      await clickAgreeButton();
 
-      render(
-        <Provider store={mockStore}>
-          <ActiveModals />
-        </Provider>,
-      );
-
-      const button = screen.getByRole("button", { name: "Agree and Continue" });
-      fireEvent.click(button);
-
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      // Check that the modal is no longer in the DOM
       expect(screen.queryByTestId("active-modal")).not.toBeInTheDocument();
     });
 
     it("should use current timestamp when updating privacy policy acceptance", () => {
-      renderModal();
+      renderModalDirect();
 
       const button = screen.getByRole("button", { name: "Agree and Continue" });
       fireEvent.click(button);
 
-      // Verify that Date.now() was called
       expect(Date.now).toHaveBeenCalled();
       expect(Date.now()).toBe(mockTimestamp);
     });
@@ -141,64 +147,20 @@ describe("PolicyUpdateModal", () => {
 
   describe("Integration with Redux Store", () => {
     it("should work with the actual store configuration", () => {
-      // This test verifies that the modal can be rendered with the real store setup
-      const { container } = render(
-        <Provider store={mockStore}>
-          <ActiveModal activeModal={policyUpdateModal} />
-        </Provider>,
-      );
-
+      const { container } = renderModalDirect();
       expect(container).toBeInTheDocument();
     });
   });
 
   describe("Error Handling", () => {
     it("should handle API errors gracefully", async () => {
-      // Mock API error
-      server.use(
-        rest.post(`${API_PATH}/users/privacy_policy_accepted_time`, (req, res, ctx) => {
-          return res(ctx.status(500), ctx.json({ error: "Internal server error" }));
-        }),
-      );
+      mockApiResponse(500, { error: "Internal server error" });
 
-      // Create a test modal that uses the mock store
-      const testModal = {
-        ...policyUpdateModal,
-        buttons: [
-          <button
-            key={0}
-            onClick={() => {
-              mockStore.dispatch({
-                type: "UPDATE_PRIVACY_POLICY_ACCEPTED_TIME",
-                payload: { privacyPolicyAcceptedTime: Date.now() },
-              });
-              mockStore.dispatch({ type: ACTION_TYPE.ACTIVE_MODAL_CLOSE });
-            }}
-          >
-            Agree and Continue
-          </button>,
-        ],
-      };
+      const testModal = createTestModal();
+      renderModalFromStore(testModal as ActiveModalType);
 
-      // Add the modal to the store
-      mockStore.dispatch({
-        type: ACTION_TYPE.ACTIVE_MODAL_OPEN,
-        activeModal: testModal as ActiveModalType,
-      });
+      await clickAgreeButton();
 
-      // Render using ActiveModals (which gets modals from store)
-      render(
-        <Provider store={mockStore}>
-          <ActiveModals />
-        </Provider>,
-      );
-
-      const button = screen.getByRole("button", { name: "Agree and Continue" });
-      fireEvent.click(button);
-
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      // The modal should still close even if the API call fails
       expect(screen.queryByTestId("active-modal")).not.toBeInTheDocument();
     });
   });
