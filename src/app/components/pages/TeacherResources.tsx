@@ -9,12 +9,11 @@ import { AdaCard } from "../elements/cards/AdaCard";
 import { isLoggedIn, SITE_TITLE } from "../../services";
 import { ImageBlock } from "../elements/layout/ImageBlock";
 import classNames from "classnames";
+import { ExternalLink } from "../elements/ExternalLink";
 
 export const TeacherResources = () => {
     useEffect( () => {document.title = "Teachers — " + SITE_TITLE;}, []);
-    const {data: teacherPods} = useGetNewsPodListQuery({subject: "news"});
     const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
-    const featuredPod = teacherPods?.[0];
     const featuredStudentChallengePod = studentChallengesPods?.[0];
 
     const user = useAppSelector(selectors.user.orNull);
@@ -31,28 +30,8 @@ export const TeacherResources = () => {
                         <p>Classwork, homework, and exam prep to help you teach computer science. All available for free.</p>
                     </TextBlock>
                     <ImageBlock>
-                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-1.png" alt=""/>
+                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-1-wide.png" alt=""  />
                     </ImageBlock>
-                </ColumnSlice>
-            </Container>
-        </section>
-        <section id="latest-updates">
-            <Container className="homepage-padding mw-1600 position-relative" fluid>
-                <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
-                <ColumnSlice>
-                    <TextBlock className="pe-7">
-                        <h2>Our latest updates</h2>
-                        <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read the latest news and updates from the team.</p>
-                    </TextBlock>
-                    {featuredPod && featuredPod.title && featuredPod.value ? <IconCard card={{
-                        title: featuredPod.title,
-                        icon: {src: "/assets/cs/icons/book.svg"},
-                        bodyText: featuredPod.value,
-                        tag: "New",
-                        clickUrl: featuredPod.url,
-                        buttonText: "Read more",
-                        buttonStyle: "link"
-                    }}/> : <div/>}
                 </ColumnSlice>
             </Container>
         </section>
@@ -116,6 +95,16 @@ export const TeacherResources = () => {
                         buttonStyle: "link",
                     }}/>
                 </ColumnSlice>
+            </Container>
+        </section>
+        <section id="testimonial" className="bg-black">
+            <Container className="homepage-padding mw-1600" fluid>
+                <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
+                    <h2>
+                        &ldquo;Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it&apos;s free!&rdquo;
+                    </h2>
+                    <p>– Matt Arnmor, computer science teacher</p>
+                </TextBlock>
             </Container>
         </section>
         <section id="cpd" className="bg-white">
@@ -203,14 +192,20 @@ export const TeacherResources = () => {
                 </ColumnSlice>
             </Container>
         </section>
-        <section id="testimonial" className="bg-black">
+        <section id="try-isaac">
             <Container className="homepage-padding mw-1600" fluid>
-                <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
-                    <h2>
-                        &ldquo;Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it&apos;s free!&rdquo;
-                    </h2>
-                    <p>– Matt Arnmor, computer science teacher</p>
-                </TextBlock>
+                <ColumnSlice>
+                    <ImageBlock>
+                        <img className="px-md-2 px-xl-4" src="/assets/cs/decor/isaac-subject-logos.svg" alt=""/>
+                    </ImageBlock>
+                    <TextBlock className="">
+                        <h2>Teaching science or maths?</h2>
+                        <p>Check out Isaac Science, our partner platform packed with free tools and resources to help you teach physics, chemistry, biology and maths.</p>
+                        <Button className="external-link" tag={({ children, className }) => ExternalLink({ href: 'https://isaacscience.org', children, className })}>
+                            Go to Isaac Science
+                        </Button>
+                    </TextBlock>
+                </ColumnSlice>
             </Container>
         </section>
         <section id="help-and-support" className="bg-white">

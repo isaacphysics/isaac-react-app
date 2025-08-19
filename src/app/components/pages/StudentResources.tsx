@@ -29,7 +29,7 @@ export const StudentResources = () => {
                         <p>We&apos;ve got everything to help you study computer science – including classwork, homework, and exam prep. And it&apos;s all available for free.</p>
                     </TextBlock>
                     <ImageBlock>
-                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/learner-1-wide.png" alt="" style={{ aspectRatio: 51/29 }}/>
+                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/learner-1-wide.png" alt=""/>
                     </ImageBlock>
                 </ColumnSlice>
             </Container>
@@ -141,7 +141,7 @@ export const StudentResources = () => {
                 </ColumnSlice>
             </Container>
         </section>
-        <section>
+        <section id="try-isaac">
             <Container className="homepage-padding mw-1600" fluid>
                 <ColumnSlice>
                     <ImageBlock>
