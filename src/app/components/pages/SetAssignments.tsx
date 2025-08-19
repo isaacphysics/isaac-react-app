@@ -80,20 +80,30 @@ import { PageMetadata } from "../elements/PageMetadata";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
+    assignees: BoardAssignee[];
     board: GameboardDTO | undefined;
     closeModal: () => void;
 }
 
-const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
+const AssignGroup = ({groups, assignees, board, closeModal}: AssignGroupProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date | undefined>(UTC_MIDNIGHT_IN_SIX_DAYS);
     const [userSelectedDueDate, setUserSelectedDueDate] = useState<boolean>(false);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
+    const [validationAttempted, setValidationAttempted] = useState<boolean>(false);
     const user = useAppSelector(selectors.user.loggedInOrNull);
     const dispatch = useAppDispatch();
 
     if (!board) return <Loading/>;
+
+    function attemptAssign() {
+        setValidationAttempted(true);
+        if (groupInvalid || dueDateInvalid || startDateInvalid || notesInvalid) {
+            return;
+        }
+        assign();
+    }
 
     function assign() {
         dispatch(assignGameboard({
@@ -115,10 +125,6 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
         });
     }
 
-    const yearRange = range(currentYear, currentYear + 5);
-    const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) : false) || TODAY().valueOf() > dueDate.valueOf());
-    const startDateInvalid = scheduledStartDate ? TODAY().valueOf() > scheduledStartDate.valueOf() : false;
-
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
         const utcDate = e.target.valueAsDate;
         if (utcDate) {
@@ -136,35 +142,50 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
         }
     }
 
-    return <Container fluid className="py-2">
+    const yearRange = range(currentYear, currentYear + 5);
+    const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) : false) || TODAY().valueOf() > dueDate.valueOf());
+    const startDateInvalid = scheduledStartDate ? TODAY().valueOf() > scheduledStartDate.valueOf() : false;
+    const groupInvalid = selectedGroups.length === 0 || selectedGroups.some(g => assignees.some(a => a.groupId === g.value));
+    const notesInvalid = isDefined(assignmentNotes) && assignmentNotes.length > 500;
+    
+    //const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.quizId === quiz.id && assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() > Date.now() : true)) : false;
+    //const alreadyAssignedToAGroup = selectedGroups.some(group => quizAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
+
+    return <Form onSubmit={(e) => {e.preventDefault(); attemptAssign();}} className="py-2">
         <FormGroup>
-            <Label data-testid="modal-groups-selector" className="w-100 pb-2">Group(s):
-                <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
-                    value={selectedGroups}
-                    closeMenuOnSelect={false}
-                    onChange={selectOnChange(setSelectedGroups, false)}
-                    options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
-                />
+            <Label data-testid="modal-groups-selector" className="w-100 pb-2">
+                <span className="form-required">Group(s):</span>
+                <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
+                    <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
+                        value={selectedGroups}
+                        closeMenuOnSelect={false}
+                        onChange={selectOnChange(setSelectedGroups, false)}
+                        options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
+                    />
+                </div>
             </Label>
         </FormGroup>
         <FormGroup>
-            <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
+            <Label className="w-100 pb-2">
+                <span>Set an optional start date:</span>
                 <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..."
-                    yearRange={yearRange}
+                    yearRange={yearRange} invalid={validationAttempted && startDateInvalid}
                     onChange={setScheduledStartDateAtSevenAM}/>
-                {startDateInvalid && <small className={"pt-2 text-danger"}>Start date must be in the future.</small>}
+                <FormFeedback>{startDateInvalid && "Start date must be in the future."}</FormFeedback>
             </Label>
         </FormGroup>
         <FormGroup>
-            <Label className="w-100 pb-2">Due date reminder
-                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
+            <Label className={"w-100 pb-2"}>
+                <span className="form-required">Due date reminder</span>
+                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} invalid={validationAttempted && dueDateInvalid}
                     onChange={e => { setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date); }}/> {/* DANGER here with force-casting Date|null to Date */}
                 {!dueDate && <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.</small>}
                 <FormFeedback>{dueDateInvalid && "Due date must be on or after start date and in the future."}</FormFeedback>
             </Label>
         </FormGroup>
         <FormGroup>
-            {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
+            {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">
+                <span>Notes:</span>
                 <Input type="textarea"
                     spellCheck={true}
                     rows={3}
@@ -172,24 +193,24 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
                 />
                 <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
-                {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
+                {notesInvalid &&
                     <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
                 }
             </Label>}
         </FormGroup>
-        <Button
-            className="mt-2 mb-2"
-            block color={siteSpecific("keyline", "solid")}
-            onClick={assign}
-            role={"button"}
-            disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !dueDate || dueDateInvalid || startDateInvalid}
-        >Assign to group{selectedGroups.length > 1 ? "s" : ""}</Button>
-    </Container>;
+        <Button className="mt-2 mb-2" block color={siteSpecific("keyline", "solid")} type="submit">
+            Assign to group{selectedGroups.length > 1 ? "s" : ""}
+        </Button>
+    </Form>;
 };
 
-const AssignmentDisplay = (props: SetAssignmentsModalProps) => {
-    const {board, assignees,  unassignBoard} = props;
+interface AssignmentDisplayProps {
+    board: GameboardDTO | undefined;
+    assignees: BoardAssignee[];
+    unassignBoard: (props: { boardId: string, groupId: number }) => void;
+}
 
+const AssignmentDisplay = ({board, assignees, unassignBoard}: AssignmentDisplayProps) => {
     const hasStarted = (a: { startDate?: Date | number }) => !a.startDate || (Date.now() > a.startDate.valueOf());
 
     const startedAssignees = assignees.filter(hasStarted);
@@ -255,7 +276,7 @@ const AssignmentDisplay = (props: SetAssignmentsModalProps) => {
                 : <p className="px-2">No groups.</p>}
         </div>
     </>;
-}
+};
 
 type SetAssignmentsModalProps = {
     board: GameboardDTO | undefined;
@@ -288,13 +309,13 @@ const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
     const description = "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. " +
         "Assignments are due by the end of the day indicated.";
 
-    return <Form>
+    return <>
         <p className="px-1">{description}</p>
         <hr className="text-center"/>
         <AssignGroup closeModal={toggle} {...props} />
         <hr className="text-center"/>
         <AssignmentDisplay {...props} />
-    </Form>;
+    </>;
 };
 
 interface SetAssignmentsTableProps {
