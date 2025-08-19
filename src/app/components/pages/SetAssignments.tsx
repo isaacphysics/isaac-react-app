@@ -163,6 +163,10 @@ const AssignGroup = ({groups, assignees, board, closeModal}: AssignGroupProps) =
                         options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
                     />
                 </div>
+                {(selectedGroups.length === 0 
+                    ? <FormFeedback>You must select a group</FormFeedback> 
+                    : <FormFeedback>You cannot reassign an assignment to this group(s) until the due date has passed.</FormFeedback>
+                )}
             </Label>
         </FormGroup>
         <FormGroup>
@@ -179,7 +183,7 @@ const AssignGroup = ({groups, assignees, board, closeModal}: AssignGroupProps) =
                 <span className="form-required">Due date reminder</span>
                 <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} invalid={validationAttempted && dueDateInvalid}
                     onChange={e => { setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date); }}/> {/* DANGER here with force-casting Date|null to Date */}
-                {!dueDate && <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.</small>}
+                <FormFeedback>{!dueDate && `Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments.`}</FormFeedback>
                 <FormFeedback>{dueDateInvalid && "Due date must be on or after start date and in the future."}</FormFeedback>
             </Label>
         </FormGroup>
@@ -193,12 +197,11 @@ const AssignGroup = ({groups, assignees, board, closeModal}: AssignGroupProps) =
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
                 />
                 <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
-                {notesInvalid &&
-                    <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
-                }
+                <FormFeedback>{notesInvalid && <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p> }</FormFeedback>
             </Label>}
         </FormGroup>
-        <Button className="mt-2 mb-2" block color={siteSpecific("keyline", "solid")} type="submit">
+        
+        <Button className="my-2" block color={siteSpecific("keyline", "solid")} type="submit">
             Assign to group{selectedGroups.length > 1 ? "s" : ""}
         </Button>
     </Form>;
@@ -265,10 +268,7 @@ const AssignmentDisplay = ({board, assignees, unassignBoard}: AssignmentDisplayP
                                     : assignee.startDate).toDateString()}
                             </span>
                         </>}
-                        <button 
-                            className="close bg-transparent" aria-label="Unassign group"
-                            onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}
-                        >
+                        <button className="close bg-transparent" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>
                             ×
                         </button>
                     </li>
@@ -291,16 +291,14 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
 
     return {
         closeAction: toggle,
-        size: "md",
         title: board?.title,
         body: <SetAssignmentsModalContent
-            board={board}
-            assignees={assignees}
-            groups={groups}
-            toggle={toggle}
+            board={board} assignees={assignees}
+            groups={groups} toggle={toggle}
             unassignBoard={unassignBoard}
         />,
-        buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]};
+        buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]
+    };
 }
 
 const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
