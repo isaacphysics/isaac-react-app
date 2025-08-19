@@ -57,7 +57,9 @@ import {
     useDeviceSize,
     useGameboards,
     TODAY,
-    UTC_MIDNIGHT_IN_SIX_DAYS
+    UTC_MIDNIGHT_IN_SIX_DAYS,
+    addDays,
+    nthUtcHourOf
 } from "../../services";
 import {Loading} from "../handlers/IsaacSpinner";
 import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
@@ -82,6 +84,7 @@ interface AssignGroupProps {
 const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date | undefined>(UTC_MIDNIGHT_IN_SIX_DAYS);
+    const [userSelectedDueDate, setUserSelectedDueDate] = useState<boolean>(false);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
     const user = useAppSelector(selectors.user.loggedInOrNull);
@@ -101,6 +104,7 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(UTC_MIDNIGHT_IN_SIX_DAYS);
+                setUserSelectedDueDate(false);
                 setScheduledStartDate(undefined);
                 setAssignmentNotes('');
                 closeModal();
@@ -118,10 +122,14 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
             const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
             // Sets the scheduled date to 7AM in the timezone of the browser.
             setScheduledStartDate(scheduledDate);
+
+            if (!userSelectedDueDate) {
+                // Sets the due date to 6 days after the scheduled start date at UTC midnight (if the user hasn't already selected a due date).
+                setDueDate(addDays(6, nthUtcHourOf(0, scheduledDate)));
+            }
         } else {
             setScheduledStartDate(null as unknown as Date);
-            {/* DANGER here with force-casting Date|null to Date */
-            }
+            {/* DANGER here with force-casting Date|null to Date */}
         }
     }
 
@@ -142,12 +150,9 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
         </Label>
         <Label className="w-100 pb-2">Due date reminder
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)}/> {/* DANGER here with force-casting Date|null to Date */}
-            {!dueDate &&
-                <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are
-                    required for assignments.</small>}
-            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the
-                future.</small>}
+                onChange={e => { setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date); }}/> {/* DANGER here with force-casting Date|null to Date */}
+            {!dueDate && <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.</small>}
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
         </Label>
         {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
@@ -327,7 +332,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                 <Col lg={4}>
                     <Label className="w-100">
                         Filter boards <Input type="text"
-                            onChange={(e) => setBoardTitleFilter(e.target.value)}
+                            onChange={e => setBoardTitleFilter(e.target.value)}
                             placeholder="Filter boards by name"/>
                     </Label>
                 </Col>
