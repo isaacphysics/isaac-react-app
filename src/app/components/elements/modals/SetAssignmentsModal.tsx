@@ -106,11 +106,8 @@ const AssignGroup = ({groups, assignees, board, closeModal}: AssignGroupProps) =
     const startDateInvalid = scheduledStartDate ? TODAY().valueOf() > scheduledStartDate.valueOf() : false;
     const groupInvalid = selectedGroups.length === 0 || selectedGroups.some(g => assignees.some(a => a.groupId === g.value));
     const notesInvalid = isDefined(assignmentNotes) && assignmentNotes.length > 500;
-    
-    //const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.quizId === quiz.id && assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() > Date.now() : true)) : false;
-    //const alreadyAssignedToAGroup = selectedGroups.some(group => quizAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
 
-    return <Form onSubmit={(e) => {e.preventDefault(); attemptAssign();}} className="py-2">
+    return <Form onSubmit={e => {e.preventDefault(); attemptAssign();}} className="py-2">
         <FormGroup>
             <Label data-testid="modal-groups-selector" className="w-100 pb-2">
                 <span className="form-required">Group(s):</span>
@@ -141,7 +138,7 @@ const AssignGroup = ({groups, assignees, board, closeModal}: AssignGroupProps) =
             <Label className={"w-100 pb-2"}>
                 <span className="form-required">Due date reminder</span>
                 <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} invalid={validationAttempted && dueDateInvalid}
-                    onChange={e => { setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date); }}/> {/* DANGER here with force-casting Date|null to Date */}
+                    onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date);}}/> {/* DANGER here with force-casting Date|null to Date */}
                 <FormFeedback>{!dueDate && `Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments.`}</FormFeedback>
                 <FormFeedback>{dueDateInvalid && "Due date must be on or after start date and in the future."}</FormFeedback>
             </Label>
@@ -156,7 +153,7 @@ const AssignGroup = ({groups, assignees, board, closeModal}: AssignGroupProps) =
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
                 />
                 <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
-                <FormFeedback>{notesInvalid && <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p> }</FormFeedback>
+                <FormFeedback>{notesInvalid && "You have exceeded the maximum length."}</FormFeedback>
             </Label>}
         </FormGroup>
         
@@ -246,31 +243,21 @@ type SetAssignmentsModalProps = {
 };
 
 export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModal => {
-    const {board, assignees, groups, toggle, unassignBoard} = props;
+    const {board, toggle} = props;
 
     return {
         closeAction: toggle,
         title: board?.title,
-        body: <SetAssignmentsModalContent
-            board={board} assignees={assignees}
-            groups={groups} toggle={toggle}
-            unassignBoard={unassignBoard}
-        />,
+        body: <div>
+            <p className="px-1"> 
+                Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately.
+                Assignments are due by the end of the day indicated.
+            </p>
+            <hr className="text-center"/>
+            <AssignGroup closeModal={toggle} {...props} />
+            <hr className="text-center"/>
+            <AssignmentDisplay {...props} />
+        </div>,
         buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]
     };
-};
-
-const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
-    const {toggle} = props;
-
-    return <>
-        <p className="px-1"> 
-            Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately.
-            Assignments are due by the end of the day indicated.
-        </p>
-        <hr className="text-center"/>
-        <AssignGroup closeModal={toggle} {...props} />
-        <hr className="text-center"/>
-        <AssignmentDisplay {...props} />
-    </>;
 };
