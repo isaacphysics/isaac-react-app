@@ -6,6 +6,8 @@ import {
     CardBody,
     Col,
     Container,
+    Form,
+    FormGroup,
     Input,
     Label,
     Row,
@@ -134,38 +136,46 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
     }
 
     return <Container fluid className="py-2">
-        <Label data-testid="modal-groups-selector" className="w-100 pb-2">Group(s):
-            <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
-                value={selectedGroups}
-                closeMenuOnSelect={false}
-                onChange={selectOnChange(setSelectedGroups, false)}
-                options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
-            />
-        </Label>
-        <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
-            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..."
-                yearRange={yearRange}
-                onChange={setScheduledStartDateAtSevenAM}/>
-            {startDateInvalid && <small className={"pt-2 text-danger"}>Start date must be in the future.</small>}
-        </Label>
-        <Label className="w-100 pb-2">Due date reminder
-            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
-                onChange={e => { setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date); }}/> {/* DANGER here with force-casting Date|null to Date */}
-            {!dueDate && <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.</small>}
-            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
-        </Label>
-        {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
-            <Input type="textarea"
-                spellCheck={true}
-                rows={3}
-                value={assignmentNotes}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
-            />
-            <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
-            {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
-                <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
-            }
-        </Label>}
+        <FormGroup>
+            <Label data-testid="modal-groups-selector" className="w-100 pb-2">Group(s):
+                <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
+                    value={selectedGroups}
+                    closeMenuOnSelect={false}
+                    onChange={selectOnChange(setSelectedGroups, false)}
+                    options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
+                />
+            </Label>
+        </FormGroup>
+        <FormGroup>
+            <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
+                <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..."
+                    yearRange={yearRange}
+                    onChange={setScheduledStartDateAtSevenAM}/>
+                {startDateInvalid && <small className={"pt-2 text-danger"}>Start date must be in the future.</small>}
+            </Label>
+        </FormGroup>
+        <FormGroup>
+            <Label className="w-100 pb-2">Due date reminder
+                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
+                    onChange={e => { setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date); }}/> {/* DANGER here with force-casting Date|null to Date */}
+                {!dueDate && <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.</small>}
+                {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
+            </Label>
+        </FormGroup>
+        <FormGroup>
+            {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
+                <Input type="textarea"
+                    spellCheck={true}
+                    rows={3}
+                    value={assignmentNotes}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
+                />
+                <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
+                {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
+                    <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
+                }
+            </Label>}
+        </FormGroup>
         <Button
             className="mt-2 mb-2"
             block color={siteSpecific("keyline", "solid")}
@@ -185,6 +195,23 @@ type SetAssignmentsModalProps = {
 };
 
 export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModal => {
+    const {board, assignees, groups, toggle, unassignBoard} = props;
+
+    return {
+        closeAction: toggle,
+        size: "md",
+        title: board?.title,
+        body: <SetAssignmentsModalContent
+            board={board}
+            assignees={assignees}
+            groups={groups}
+            toggle={toggle}
+            unassignBoard={unassignBoard}
+        />,
+        buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]};
+}
+
+const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
     const {board, assignees, toggle, unassignBoard} = props;
 
     const hasStarted = (a: { startDate?: Date | number }) => !a.startDate || (Date.now() > a.startDate.valueOf());
@@ -201,70 +228,64 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
     const description = "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. " +
         "Assignments are due by the end of the day indicated.";
 
-    return {
-        closeAction: toggle,
-        size: "md",
-        title: board?.title,
-        body: <>
-            <p className="px-1">{description}</p>
-            <hr className="text-center"/>
-            <AssignGroup closeModal={toggle} {...props} />
-            <hr className="text-center"/>
-            <div className="py-2 border-bottom d-flex flex-column" data-testid="currently-assigned-to">
-                <span>{siteSpecific("Question deck", "Quiz")} currently assigned to:</span>
-                {startedAssignees.length > 0
-                    ? <ul className="p-2 mb-3">{startedAssignees.map(assignee =>
-                        <li data-testid={"current-assignment"} key={assignee.groupId}
-                            className="my-1 px-1 d-flex justify-content-between"
+    return <Form>
+        <p className="px-1">{description}</p>
+        <hr className="text-center"/>
+        <AssignGroup closeModal={toggle} {...props} />
+        <hr className="text-center"/>
+        <div className="py-2 border-bottom d-flex flex-column" data-testid="currently-assigned-to">
+            <span>{siteSpecific("Question deck", "Quiz")} currently assigned to:</span>
+            {startedAssignees.length > 0
+                ? <ul className="p-2 mb-3">{startedAssignees.map(assignee =>
+                    <li data-testid={"current-assignment"} key={assignee.groupId}
+                        className="my-1 px-1 d-flex justify-content-between"
+                    >
+                        <span className="flex-grow-1">{assignee.groupName}</span>
+                        <button 
+                            className="close bg-transparent invert-underline" aria-label="Unassign group" 
+                            onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}
                         >
-                            <span className="flex-grow-1">{assignee.groupName}</span>
-                            <button 
-                                className="close bg-transparent invert-underline" aria-label="Unassign group" 
-                                onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}
-                            >
-                                Unassign
-                            </button>
-                        </li>
-                    )}</ul>
-                    : <p className="px-2">No groups.</p>}
-            </div>
-            <div className="py-2 d-flex flex-column">
-                <span className={classNames("mb-2", siteSpecific("d-flex align-items-center", ""))}>
-                    Pending {siteSpecific("assignments", "quiz assignments")}:
-                    <i className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help mx-1")}
-                        id={`pending-assignments-help-${board?.id}`}/>
-                </span>
-                <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
-                    These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the
-                    morning of the scheduled date, students
-                    will be able to see the {siteSpecific("assignment", "quiz")}, and will receive a notification email.
-                </UncontrolledTooltip>
-                {scheduledAssignees.length > 0
-                    ? <ul className="p-2 mb-3">{scheduledAssignees.map(assignee =>
-                        <li data-testid={"pending-assignment"} key={assignee.groupId}
-                            className="my-1 px-1 d-flex justify-content-between"
+                            Unassign
+                        </button>
+                    </li>
+                )}</ul>
+                : <p className="px-2">No groups.</p>}
+        </div>
+        <div className="py-2 d-flex flex-column">
+            <span className={classNames("mb-2", siteSpecific("d-flex align-items-center", ""))}>
+                Pending {siteSpecific("assignments", "quiz assignments")}:
+                <i className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help mx-1")}
+                    id={`pending-assignments-help-${board?.id}`}/>
+            </span>
+            <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
+                These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the
+                morning of the scheduled date, students
+                will be able to see the {siteSpecific("assignment", "quiz")}, and will receive a notification email.
+            </UncontrolledTooltip>
+            {scheduledAssignees.length > 0
+                ? <ul className="p-2 mb-3">{scheduledAssignees.map(assignee =>
+                    <li data-testid={"pending-assignment"} key={assignee.groupId}
+                        className="my-1 px-1 d-flex justify-content-between"
+                    >
+                        <span className="flex-grow-1">{assignee.groupName}</span>
+                        {assignee.startDate && <>
+                            <span id={`start-date-${assignee.groupId}`}
+                                className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
+                                    ? new Date(assignee.startDate)
+                                    : assignee.startDate).toDateString()}
+                            </span>
+                        </>}
+                        <button 
+                            className="close bg-transparent" aria-label="Unassign group"
+                            onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}
                         >
-                            <span className="flex-grow-1">{assignee.groupName}</span>
-                            {assignee.startDate && <>
-                                <span id={`start-date-${assignee.groupId}`}
-                                    className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
-                                        ? new Date(assignee.startDate)
-                                        : assignee.startDate).toDateString()}
-                                </span>
-                            </>}
-                            <button 
-                                className="close bg-transparent" aria-label="Unassign group"
-                                onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}
-                            >
-                                ×
-                            </button>
-                        </li>
-                    )}</ul>
-                    : <p className="px-2">No groups.</p>}
-            </div>
-        </>,
-        buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]
-    };
+                            ×
+                        </button>
+                    </li>
+                )}</ul>
+                : <p className="px-2">No groups.</p>}
+        </div>
+    </Form>;
 };
 
 interface SetAssignmentsTableProps {
