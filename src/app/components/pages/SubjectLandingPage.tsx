@@ -18,7 +18,7 @@ import { NewsCard } from "../elements/cards/NewsCard";
 import { BookCard } from "./BooksOverview";
 import { placeholderIcon } from "../elements/PageTitle";
 import { ContentSummaryDTO, IsaacPodDTO } from "../../../IsaacApiTypes";
-import {v4 as uuidV4} from "uuid";
+import {v4 as uuid_v4} from "uuid";
 
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const dispatch = useAppDispatch();
@@ -32,7 +32,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
             return;
         }
 
-        const nextSearchId = uuidV4();
+        const nextSearchId = uuid_v4();
         setSearchId(nextSearchId);
         dispatch(searchQuestions({
             querySource: "randomQuestion",
