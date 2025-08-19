@@ -7,6 +7,7 @@ import {
     Col,
     Container,
     Form,
+    FormFeedback,
     FormGroup,
     Input,
     Label,
@@ -159,7 +160,7 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
                 <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                     onChange={e => { setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date); }}/> {/* DANGER here with force-casting Date|null to Date */}
                 {!dueDate && <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.</small>}
-                {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
+                <FormFeedback>{dueDateInvalid && "Due date must be on or after start date and in the future."}</FormFeedback>
             </Label>
         </FormGroup>
         <FormGroup>
@@ -186,33 +187,8 @@ const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
     </Container>;
 };
 
-type SetAssignmentsModalProps = {
-    board: GameboardDTO | undefined;
-    assignees: BoardAssignee[];
-    groups: UserGroupDTO[];
-    toggle: () => void;
-    unassignBoard: (props: { boardId: string, groupId: number }) => void;
-};
-
-export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModal => {
-    const {board, assignees, groups, toggle, unassignBoard} = props;
-
-    return {
-        closeAction: toggle,
-        size: "md",
-        title: board?.title,
-        body: <SetAssignmentsModalContent
-            board={board}
-            assignees={assignees}
-            groups={groups}
-            toggle={toggle}
-            unassignBoard={unassignBoard}
-        />,
-        buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]};
-}
-
-const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
-    const {board, assignees, toggle, unassignBoard} = props;
+const AssignmentDisplay = (props: SetAssignmentsModalProps) => {
+    const {board, assignees,  unassignBoard} = props;
 
     const hasStarted = (a: { startDate?: Date | number }) => !a.startDate || (Date.now() > a.startDate.valueOf());
 
@@ -225,14 +201,7 @@ const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
         }
     }
 
-    const description = "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. " +
-        "Assignments are due by the end of the day indicated.";
-
-    return <Form>
-        <p className="px-1">{description}</p>
-        <hr className="text-center"/>
-        <AssignGroup closeModal={toggle} {...props} />
-        <hr className="text-center"/>
+    return <> 
         <div className="py-2 border-bottom d-flex flex-column" data-testid="currently-assigned-to">
             <span>{siteSpecific("Question deck", "Quiz")} currently assigned to:</span>
             {startedAssignees.length > 0
@@ -285,6 +254,46 @@ const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
                 )}</ul>
                 : <p className="px-2">No groups.</p>}
         </div>
+    </>;
+}
+
+type SetAssignmentsModalProps = {
+    board: GameboardDTO | undefined;
+    assignees: BoardAssignee[];
+    groups: UserGroupDTO[];
+    toggle: () => void;
+    unassignBoard: (props: { boardId: string, groupId: number }) => void;
+};
+
+export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModal => {
+    const {board, assignees, groups, toggle, unassignBoard} = props;
+
+    return {
+        closeAction: toggle,
+        size: "md",
+        title: board?.title,
+        body: <SetAssignmentsModalContent
+            board={board}
+            assignees={assignees}
+            groups={groups}
+            toggle={toggle}
+            unassignBoard={unassignBoard}
+        />,
+        buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]};
+}
+
+const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
+    const {toggle} = props;
+
+    const description = "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. " +
+        "Assignments are due by the end of the day indicated.";
+
+    return <Form>
+        <p className="px-1">{description}</p>
+        <hr className="text-center"/>
+        <AssignGroup closeModal={toggle} {...props} />
+        <hr className="text-center"/>
+        <AssignmentDisplay {...props} />
     </Form>;
 };
 
