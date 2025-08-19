@@ -1,22 +1,20 @@
-import { act, screen, waitFor, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { times } from "lodash";
 
 import { isPhy, KEY, persistence } from "../../app/services";
 import { type UserRole } from "../../IsaacApiTypes";
-import { mockPersistence, mockRedirects } from "../../mocks/utils";
+import { mockPersistence } from "../../mocks/utils";
 import { expectH1, renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
 
 describe('Overview page', () => {
     if (isPhy) {
         it('has no such page', () => {});
     } else {
-        mockRedirects();
-
         const renderOverviewPage = async (role: UserRole | "ANONYMOUS" = 'TEACHER') => {
             renderTestEnvironment({ role });
             await waitForLoaded();
-            act(() => setUrl({ pathname: '/dashboard' }));
+            await setUrl({ pathname: '/dashboard' });
             await waitForLoaded();
         };
 
