@@ -635,7 +635,7 @@ export function setCurrentAttempt<T extends ChoiceDTO>(questionId: string, attem
 
 let questionSearchCounter = 0;
 
-export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: Dispatch<Action>) => {
+export const searchQuestions = (query: QuestionSearchQuery, searchId?: string) => async (dispatch: Dispatch<Action>) => {
     const searchCount = ++questionSearchCounter;
     dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
     try {
@@ -643,7 +643,7 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
         // Because some searches might take longer to return that others, check this is the most recent search still.
         // Otherwise, we just discard the data.
         if (searchCount === questionSearchCounter) {
-            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: questionsResponse.data});
+            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: questionsResponse.data, searchId});
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
