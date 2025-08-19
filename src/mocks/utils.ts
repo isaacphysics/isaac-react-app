@@ -1,18 +1,7 @@
 import { persistence } from "../app/services";
-import * as Actions from "../app/state/actions";
 
 // this makes sure `elem` implements an interface without widening its type
 export const recordOf = <T extends string | number | symbol, U>() => <V extends U>(elem: Record<T, V>) => elem;
-
-export const mockRedirects = () => {
-    beforeEach(() => {
-        jest.spyOn(Actions, "redirectTo").mockImplementation(() => true);
-    });
-
-    afterEach(() => {
-        jest.resetAllMocks();
-    });
-};
 
 export const mockPersistence = (cb: (p: typeof persistence) => void) => {
     const fakeStorage = new Map<string, string>();
