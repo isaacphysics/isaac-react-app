@@ -6,7 +6,12 @@
 }
 .progress-bar-outer {
   background: $cs-silver;
+
   .progress-bar-inner {
     background: $yellow-300;
+  }
+
+  .bar-ada-primary {
+    background: $primary;
   }
 }

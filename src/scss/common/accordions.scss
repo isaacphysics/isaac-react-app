@@ -72,7 +72,7 @@
 }
 
 // Nomensa accordions.scss
-.accordion {
+.accordion:not(:has(> .accordion-item)) { // for Isaac Accordions only; leave BS Accordions as is
   .accordion-header {
     border-radius: 0;
     font-family: $secondary-font-semi-bold;
