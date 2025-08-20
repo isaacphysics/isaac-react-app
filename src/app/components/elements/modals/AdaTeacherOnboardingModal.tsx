@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Button } from "reactstrap";
 import { closeActiveModal, openActiveModal, useAppDispatch } from "../../../state";
 import { KEY, persistence } from "../../../services";
-import { activeModalWithPagination, type PaginationState } from "./ActiveModalWithPagination";
+import { ActiveModalWithPagination, PaginationState } from "./ActiveModalWithPagination";
 
 const pages = [
     {
@@ -47,21 +47,25 @@ const buttons = ({ pageIndex, setPage, close}: PaginationState) => {
     ];
 };
 
-export const adaTeacherOnboardingModal = activeModalWithPagination({ 
-    title: 'Teacher Onboarding modal',
-    useInit: () => useEffect(() => {
+export const AdaTeacherOnboardingModal = () => {
+    console.log('showing teacher onboarding modal');
+    useEffect(() => {
+        console.log('useffect for modal');
         const unschedule = setTimeout(unscheduleTeacherOnboardingModal, 100);
         return () => clearTimeout(unschedule);
-    }, []),
-    pages: pages.map((page, idx) => <Page key={idx} page={page}/>),
-    buttons
-});
+    }, []);
+  
+    return <ActiveModalWithPagination
+        title="Teacher Onboarding modal"
+        pages={pages.map((page, idx) => <Page key={idx} page={page}/>)}
+        buttons={buttons} />;
+};
 
 export const useTeacherOnboardingModal = () => {
     const dispatch = useAppDispatch();
     useEffect(() => {
         if (shouldModalShow()) {
-            dispatch(openActiveModal(adaTeacherOnboardingModal));
+            dispatch(openActiveModal('adaTeacherOnboardingModal'));
             return () => {
                 dispatch(closeActiveModal());
             };
