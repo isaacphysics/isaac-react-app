@@ -17,9 +17,6 @@ export const TeacherResources = () => {
     const featuredStudentChallengePod = studentChallengesPods?.[0];
 
     const user = useAppSelector(selectors.user.orNull);
-    const welcomeButton = !isLoggedIn(user) ? loginButton :
-        !isTeacherOrAbove(user) ? accountUpgradeButton : goToOverviewButton;
-
     return <div id="teacher-resources">
         <section id="resources-header" className="bg-dark-pink-200" aria-labelledby="resources-header-heading">
             <Container className="homepage-padding mw-1600" fluid>
@@ -33,9 +30,13 @@ export const TeacherResources = () => {
                             Self-marking assignments, student progress tracking and exam prep support. Ada&nbsp;CS is
                             full of free tools and resources to support classwork, homework and exam prep.
                         </p>
-                        <Button color="keyline" className="bg-white" to={welcomeButton.path} tag={Link}>
-                            {welcomeButton.text}
-                        </Button>
+                        {(!isLoggedIn(user) && <>
+                            <Button color="keyline" to="/register" tag={Link}>Sign up to Ada&nbsp;CS</Button>    
+                        </>) || isTeacherOrAbove(user) && <>
+                            <Button color="keyline" to="/dashboard" tag={Link}>Go to My&nbsp;Ada Overview</Button>
+                        </> || <>
+                            <Button color="keyline" to="/teacher_account_request" tag={Link}>Upgrade to a teacher account</Button>    
+                        </>}
                     </TextBlock>
                     <ImageBlock>
                         <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-1-wide.png" alt=""  />
@@ -58,23 +59,29 @@ export const TeacherResources = () => {
                 </ColumnSlice>
             </Container>
         </section>
-        <section id="tools">
+        <section id="tools" aria-labelledby="tools-header">
             <Container className="homepage-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <TextBlock md={8} className={classNames({"mb-3": !isLoggedIn(user)})}>
-                    <h2>Tools to help you teach</h2>
+                    <h2 id="tools-header">Tools to help you teach</h2>
                     <p>An Ada CS account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.</p>
-                    {!isLoggedIn(user) && <div className="pb-2 mb-3">
-                        <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
-                        <Button color="keyline" to={"/login"} tag={Link}>Log in</Button>
-                    </div>}
+                    <div className="pb-2 mb-3">
+                        {(!isLoggedIn(user) && <> 
+                            <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
+                            <Button color="keyline" to={"/login"} tag={Link}>Log in</Button>
+                        </>) || (isTeacherOrAbove(user) && <>
+                            <Button to={"/dashboard"} tag={Link}>Go to My&nbsp;Ada</Button>
+                        </>) || <>
+                            <Button to={"/teacher_account_request"} tag={Link}>Upgrade to a teacher account</Button>
+                        </>}
+                    </div>
                 </TextBlock>
                 <ColumnSlice>
                     <IconCard card={{
                         title: "See content specific to you",
                         icon: {src: "/assets/cs/icons/tune-cyan.svg"},
                         bodyText: "Set your location, level, and exam board, and we'll show you the content most relevant to you.",
-                        clickUrl: isLoggedIn(user) ? "/account" : undefined,
+                        clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/account" : undefined,
                         buttonText: "Set your preferences",
                         buttonStyle: "link",
                     }}/>
@@ -82,7 +89,7 @@ export const TeacherResources = () => {
                         title: "Create student groups",
                         icon: {src: "/assets/cs/icons/group-cyan.svg"},
                         bodyText: "Organise your students into groups and set work appropriate for each group.",
-                        clickUrl: isLoggedIn(user) ? "/groups" : undefined,
+                        clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/groups" : undefined,
                         buttonText: "Create a group",
                         buttonStyle: "link",
                     }}/>
@@ -90,7 +97,7 @@ export const TeacherResources = () => {
                         title: "Set assignments",
                         icon: {src: "/assets/cs/icons/file-cyan.svg"},
                         bodyText: "Create self-marking assignments for your students. There are over 1000 questions for you to choose from.",
-                        clickUrl: isLoggedIn(user) ? "/quizzes/set" : undefined,
+                        clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/quizzes/set" : undefined,
                         buttonText: "Set an assignment",
                         buttonStyle: "link",
                     }}/>
@@ -98,7 +105,7 @@ export const TeacherResources = () => {
                         title: "Review your markbook",
                         icon: {src: "/assets/cs/icons/search-cyan.svg"},
                         bodyText: "Track student progress with a personal markbook to help pinpoint areas to work on.",
-                        clickUrl: isLoggedIn(user) ? "/my_markbook" : undefined,
+                        clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/my_markbook" : undefined,
                         buttonText: "View markbook",
                         buttonStyle: "link",
                     }}/>
@@ -230,14 +237,3 @@ export const TeacherResources = () => {
         </section>
     </div>;
 };
-
-const [loginButton, goToOverviewButton, accountUpgradeButton] = [{
-    text: <>Sign up to Ada&nbsp;CS</>,
-    path: "/login"
-}, {
-    text: "Go to My Ada Overview",
-    path: "/dashboard"
-}, {
-    text: "Upgrade to a teacher account",
-    path: "/teacher_account_request"
-}];
