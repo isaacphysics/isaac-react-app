@@ -6,7 +6,7 @@ import { selectors, useAppSelector, useGetNewsPodListQuery } from "../../state";
 import { TextBlock } from "../elements/layout/TextBlock";
 import { Link } from "react-router-dom";
 import { AdaCard } from "../elements/cards/AdaCard";
-import { isLoggedIn, SITE_TITLE } from "../../services";
+import { isLoggedIn, isTeacherOrAbove, SITE_TITLE } from "../../services";
 import { ImageBlock } from "../elements/layout/ImageBlock";
 import classNames from "classnames";
 import { ExternalLink } from "../elements/ExternalLink";
@@ -17,17 +17,25 @@ export const TeacherResources = () => {
     const featuredStudentChallengePod = studentChallengesPods?.[0];
 
     const user = useAppSelector(selectors.user.orNull);
+    const welcomeButton = !isLoggedIn(user) ? loginButton :
+        !isTeacherOrAbove(user) ? accountUpgradeButton : goToOverviewButton;
 
     return <div id="teacher-resources">
-        <section id="resources-header" className="bg-dark-pink-200">
+        <section id="resources-header" className="bg-dark-pink-200" aria-labelledby="resources-header-heading">
             <Container className="homepage-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock className="text-white">
-                        <h1 className="font-size-1-75 font-size-md-2-5">
+                        <h1 id="resources-header-heading" className="font-size-1-75 font-size-md-2-5">
                             <span className="text-pink">/</span><br/>
                             Ada CS for teachers
                         </h1>
-                        <p>Classwork, homework, and exam prep to help you teach computer science. All available for free.</p>
+                        <p>
+                            Self-marking assignments, student progress tracking and exam prep support. Ada&nbsp;CS is
+                            full of free tools and resources to support classwork, homework and exam prep.
+                        </p>
+                        <Button color="keyline" className="bg-white" to={welcomeButton.path} tag={Link}>
+                            {welcomeButton.text}
+                        </Button>
                     </TextBlock>
                     <ImageBlock>
                         <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-1-wide.png" alt=""  />
@@ -222,3 +230,14 @@ export const TeacherResources = () => {
         </section>
     </div>;
 };
+
+const [loginButton, goToOverviewButton, accountUpgradeButton] = [{
+    text: <>Sign up to Ada&nbsp;CS</>,
+    path: "/login"
+}, {
+    text: "Go to My Ada Overview",
+    path: "/dashboard"
+}, {
+    text: "Upgrade to a teacher account",
+    path: "/teacher_account_request"
+}];
