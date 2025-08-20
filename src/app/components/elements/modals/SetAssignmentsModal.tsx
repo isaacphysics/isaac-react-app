@@ -127,7 +127,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
             </Label>
         </FormGroup>
         <FormGroup>
-            <Label className="w-100 pb-2">
+            <Label data-testid="modal-start-date-selector" className="w-100 pb-2">
                 <span>Set an optional start date:</span>
                 <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..."
                     yearRange={yearRange} invalid={validationAttempted && startDateInvalid}
@@ -136,8 +136,8 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
             </Label>
         </FormGroup>
         <FormGroup>
-            <Label className="w-100 pb-2">
-                <span className="form-required">Due date reminder</span>
+            <Label data-testid="modal-due-date-selector" className="w-100 pb-2">
+                <span className="form-required">Due date reminder:</span>
                 <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} invalid={validationAttempted && dueDateInvalid}
                     onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date);}}/> {/* DANGER here with force-casting Date|null to Date */}
                 <FormFeedback>{!dueDate && `Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments.`}</FormFeedback>
@@ -145,7 +145,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
             </Label>
         </FormGroup>
         <FormGroup>
-            {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">
+            {isEventLeaderOrStaff(user) && <Label data-testid="modal-notes" className="w-100 pb-2">
                 <span>Notes:</span>
                 <Input type="textarea" spellCheck={true} rows={3} value={assignmentNotes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}/>
@@ -250,7 +250,7 @@ const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
         <hr className="text-center"/>
         <AssignmentDisplay {...props} currentAssignees={currentAssignees} setCurrentAssignees={setCurrentAssignees}/>
     </div>;
-}
+};
 
 export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModal => {
     const {board, toggle} = props;

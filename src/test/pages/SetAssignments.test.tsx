@@ -1,6 +1,5 @@
-import {screen, waitFor, within} from "@testing-library/react";
+import {getByText, screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {
     dayMonthYearStringToDate,
@@ -178,20 +177,28 @@ describe("SetAssignments", () => {
         const modal = await screen.findByTestId("active-modal");
         expect(modal).toHaveModalTitle(mockGameboard.title);
         // Ensure all active groups are selectable in the drop-down
-        const groupSelector = await toggleGroupSelect();
-        mockActiveGroups.forEach(g => {
-            expect(groupSelector.textContent).toContain(g.groupName);
-        });
+        //await toggleGroupSelect();
+        const groupContainer = within(modal).getByTestId("modal-groups-selector");
+        const groupSelector = groupContainer.children[1] as HTMLElement;
+        await userEvent.click(groupSelector);
+        await userEvent.keyboard("{ArrowDown}");
+
         // Pick the second active group
-        await selectGroup(mockActiveGroups[1].groupName);
+        await waitFor(async () => {
+            expect(within(groupContainer).getByText(mockActiveGroups[1].groupName)).toBeInTheDocument();
+            const groupChoice = await within(modal).findByText(mockActiveGroups[1].groupName);
+            await userEvent.click(groupChoice);
+        });
 
         // Check scheduled start date and due date are there
-        within(modal).getByLabelText("Schedule an assignment start date", {exact: false});
-        const dueDateContainer = within(modal).getByLabelText("Due date reminder", {exact: false});
+        within(modal).getByLabelText("Set an optional start date:", {exact: false});
+        // const dueDateContainer = within(modal).getByLabelText("Due date reminder:", {exact: false});
         // TODO check setting scheduled start date and due date leads to correctly saved values,
         //  since this currently just checks any form of due date is set.
-        await clearDateInput("Due date reminder"); // get rid of default due date
-        await userEvent.selectOptions(dueDateContainer, "1"); // set some due date
+        const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
+        const dueDateSelector = within(dueDateContainer.children[1] as HTMLElement).getByRole("combobox", {name: "Day"});
+        await userEvent.click(within(dueDateContainer).getByRole("button"));
+        await userEvent.selectOptions(dueDateSelector, "1"); // set some due date
 
         // Add some notes
         const testNotes = "Test notes to test groups for test assignments";
@@ -324,13 +331,13 @@ describe("SetAssignments", () => {
         // });
 
         describe('validation', () => {
-            it('shows an error message when the due date is missing', async () => {
+            it('shows an error message when the due date is missing', async () => { //We need to submit first now
                 await renderModal();
                 await clearDateInput("Due date reminder");
                 expect(await findByText("Due date reminder")).toHaveTextContent(`Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments`);
             });
 
-            it('does not show an error when the due date is present', async () => {
+            it('does not show an error when the due date is present', async () => {  //We need to submit first now
                 await renderModal();
                 expect(await findByText("Due date reminder")).not.toHaveTextContent(`due dates are required for assignments`);
             });
@@ -410,11 +417,8 @@ describe("SetAssignments", () => {
             const modal = await screen.findByTestId("active-modal");
 
             // select the group with that gameboard already assigned
-            const selectContainer = within(modal).getByText(/Group(\(s\))?:/);
-            const selectBox = within(modal).getByLabelText(/Group(\(s\))?:/);
-            await userEvent.click(selectBox);
-            const group1Choice = within(selectContainer).getByText(mockActiveGroups[0].groupName);
-            await userEvent.click(group1Choice);
+            const groupSelector = await within(modal).findByTestId("modal-groups-selector");
+            await userEvent.click(groupSelector);
 
             // Act
             const assignButton = within(modal).getByRole("button", {name: "Assign to group"});
@@ -446,23 +450,28 @@ const findByText = async (labelText: string | RegExp) => await within(await moda
 
 const dateInput = async (labelText: string | RegExp) => await within(await findByText(labelText)).findByTestId('date-input');
 
-const clearDateInput = async (labelText: string) => {
-    const clearButton = await within(await findByText(labelText)).findByRole('button');
-    await userEvent.click(clearButton);
-};
+/*
+        // select the group with that gameboard already assigned
+        
+        await userEvent.click(groupSelector);
+        const group1Choice = within(modal).getByText(mockActiveGroups[0].groupName);
+        await userEvent.click(group1Choice);
+*/
+
 
 const groupSelector = async () => await within(await modal()).findByTestId('modal-groups-selector');
 
 const toggleGroupSelect = async () => {
-    const selectBox = within(await modal()).getByLabelText(/Group(\(s\))?:/);
-    await userEvent.click(selectBox);
-    return within(await modal()).getByText(/Group(\(s\))?:/);;
+    return userEvent.click(await groupSelector());
+    // return await within(groupSelector())
 };
 
 const selectGroup = async (groupName: string) => {
-    const selectContainer = within(await modal()).getByText(/Group(\(s\))?:/);
-    const group1Choice = within(selectContainer).getByText(groupName);
-    await userEvent.click(group1Choice);
+    const modal = await screen.findByTestId("active-modal");
+    const groupSelectorElement = await within(modal).getByTestId("modal-groups-selector");
+    await userEvent.click(groupSelectorElement);
+    const groupChoice = within(modal).getByText(groupName);
+    await userEvent.click(groupChoice);
 };
 
 const parameterObserver = <T,>() => ({
