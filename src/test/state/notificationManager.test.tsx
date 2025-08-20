@@ -100,7 +100,7 @@ describe("notificationCheckerMiddleware - Policy Update Modal", () => {
     it("should show policy update modal when user's accepted time is before the last policy update", () => {
       const oldAcceptedTime = new Date(LAST_PRIVACY_POLICY_UPDATE_TIME - 86400000).toISOString();
       const user = createMinimalUser(oldAcceptedTime);
-      const { dispatch, wrappedDispatch, next } = createMiddlewareTest(user);
+      const { wrappedDispatch, next } = createMiddlewareTest(user);
 
       const action = {
         type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS,
@@ -115,7 +115,7 @@ describe("notificationCheckerMiddleware - Policy Update Modal", () => {
 
     it("should NOT show policy update modal when user is on privacy policy page", () => {
       const user = createMinimalUser(null);
-      const { dispatch, wrappedDispatch, next } = createMiddlewareTest(user, "/privacy");
+      const { wrappedDispatch, next } = createMiddlewareTest(user, "/privacy");
 
       const action = {
         type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS,
@@ -131,7 +131,7 @@ describe("notificationCheckerMiddleware - Policy Update Modal", () => {
     it("should NOT show policy update modal when user has recently accepted the policy", () => {
       const recentAcceptedTime = new Date(LAST_PRIVACY_POLICY_UPDATE_TIME + 86400000).toISOString();
       const user = createMinimalUser(recentAcceptedTime);
-      const { dispatch, wrappedDispatch, next } = createMiddlewareTest(user);
+      const { wrappedDispatch, next } = createMiddlewareTest(user);
 
       const action = {
         type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS,
@@ -146,7 +146,7 @@ describe("notificationCheckerMiddleware - Policy Update Modal", () => {
 
     it("should NOT show policy update modal when user is not logged in", () => {
       const user = { ...createMinimalUser(null), loggedIn: false };
-      const { dispatch, wrappedDispatch, next } = createMiddlewareTest(user);
+      const { wrappedDispatch, next } = createMiddlewareTest(user);
 
       const action = {
         type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS,
