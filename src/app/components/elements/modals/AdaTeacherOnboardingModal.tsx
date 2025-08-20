@@ -50,7 +50,7 @@ const buttons = ({ pageIndex, setPage, close}: PaginationState) => {
 export const adaTeacherOnboardingModal = activeModalWithPagination({ 
     title: 'Teacher Onboarding modal',
     useInit: () => useEffect(() => {
-        const unschedule = setTimeout(unscheduleTeacherOnboardingModal, 100);
+        const unschedule = setTimeout(unscheduleTeacherOnboardingModal, 300);
         return () => clearTimeout(unschedule);
     }, []),
     pages: pages.map((page, idx) => <Page key={idx} page={page}/>),
