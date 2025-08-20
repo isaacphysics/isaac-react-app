@@ -52,7 +52,7 @@ export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable
 }
 
 // Inline droppables rendered for each registered drop region
-function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement}: {divId: string; zoneId: string | number; emptyWidth?: string; emptyHeight?: string; rootElement?: HTMLElement}) {
+function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement}: {divId: string; zoneId: string | number; emptyWidth?: string | number; emptyHeight?: string | number; rootElement?: HTMLElement}) {
     const dropRegionContext = useContext(DragAndDropRegionContext);
     const deviceSize = useDeviceSize();
     const [isOpen, setIsOpen] = useState<boolean>(false);

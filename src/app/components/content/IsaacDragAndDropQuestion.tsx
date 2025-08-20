@@ -1,12 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Badge, Label} from "reactstrap";
 import {
-    ItemValidationResponseDTO,
     ContentDTO,
-    IsaacClozeQuestionDTO,
-    ItemChoiceDTO,
     ItemDTO,
-    ContentBaseDTO,
     DndChoiceDTO,
     IsaacDragAndDropQuestionDTO,
     DndValidationResponseDTO,
@@ -15,7 +11,6 @@ import {
 import {
     CLOZE_DROP_ZONE_ID_PREFIX,
     CLOZE_ITEM_SECTION_ID,
-    NULL_CLOZE_ITEM,
     NULL_CLOZE_ITEM_ID,
     below,
     isDefined,
