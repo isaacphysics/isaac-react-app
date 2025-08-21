@@ -171,7 +171,7 @@ export const QuestionSearchModal = (
 
     const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center">
         <div className="flex-grow-1 mb-1">
-            <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
+            <strong className={classNames({"text-danger": selectedQuestions.size > 10})}>
                 {`${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`}
             </strong>
         </div>
@@ -245,7 +245,7 @@ export const QuestionSearchModal = (
                             inputId: "question-search-topic", tier: 0, index: TAG_LEVEL.subject,
                             choices: topicChoices, selections: topicSelections, setSelections: setTopicSelections}}/>
                     </div>}
-                    <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
+                    <div className={classNames("mb-2", {"d-none": isBookSearch})}>
                         <Label htmlFor="question-search-difficulty">Difficulty</Label>
                         <StyledSelect
                             inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
