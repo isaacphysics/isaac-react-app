@@ -80,6 +80,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
                 setUserSelectedDueDate(false);
                 setScheduledStartDate(undefined);
                 setAssignmentNotes('');
+                setValidationAttempted(false);
                 closeModal();
             }
         });
@@ -258,7 +259,7 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
     return {
         closeAction: toggle,
         size: "md",
-        title: `Assign ${board?.title}"`,
+        title: `Assign "${board?.title}"`,
         body: <SetAssignmentsModalContent {...props} />,
         buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]
     };
