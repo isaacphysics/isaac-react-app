@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { type ActiveModalWithState } from "../../../../IsaacAppTypes";
 import { closeActiveModal } from "../../../state";
 import { useDispatch } from "react-redux";
+import { ActiveModal } from "./ActiveModal";
 
 interface ActiveModalWithPagination {
-    pages: React.ReactNode[];
     title: string;
-    useInit: () => void;
-    buttons: (state: PaginationState) => React.ReactNode[];
+    pages: React.ReactNode[];
+    buttons: (p: PaginationState) => React.ReactNode[];
 }
 
 export interface PaginationState {
@@ -16,29 +15,19 @@ export interface PaginationState {
     close: () => void;
 }
 
-export const activeModalWithPagination = ({ title, pages, buttons, useInit }: ActiveModalWithPagination): ActiveModalWithState<PaginationState> => {
-    return {
-        size: 'md',
-        centered: true,
-        title,
-        useInit() {
-            useInit();
-            const dispatch = useDispatch();
-            const close = () => dispatch(closeActiveModal());;
-            const [pageIndex, setPage] = useState(1);
-            return { pageIndex, setPage, close };
-        },
-        header({ pageIndex, close }) {
-            return <div className="d-flex justify-content-between px-4 pt-3 pb-2 border-bottom">
-                <strong role="region" aria-label="Modal page indicator" className="text-theme">{pageIndex} of {pages.length}</strong>
-                <button aria-label="Close modal" className="icon icon-close" onClick={close} />
-            </div>;
-        },
-        body: ({ pageIndex }) => {
-            return <>
-                {pages.map((page, idx) => <div key={idx} style={pageIndex === (idx + 1) ? {} : {display: "none"}}>{ page }</div>)}
-            </>;
-        },
-        buttons
-    };
+export const ActiveModalWithPagination = ({ title, pages, buttons }: ActiveModalWithPagination) => {
+    const dispatch = useDispatch();
+    const [pageIndex, setPage] = useState(1);
+    const close = () => dispatch(closeActiveModal());;
+    
+    const header = <div className="d-flex justify-content-between px-4 pt-3 pb-2 border-bottom">
+        <strong role="region" aria-label="Modal page indicator" className="text-theme">{pageIndex} of {pages.length}</strong>
+        <button aria-label="Close modal" className="icon icon-close" onClick={close} />
+    </div>;
+
+    const body = <>
+        {pages.map((page, idx) => <div key={idx} style={pageIndex === (idx + 1) ? {} : {display: "none"}}>{ page }</div>)}
+    </>;
+
+    return <ActiveModal activeModal={{title, size: 'md', centered: true, header, body, buttons: buttons({ pageIndex, setPage, close}) }}/>;
 };

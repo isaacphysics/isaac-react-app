@@ -1,22 +1,17 @@
-import React, {ReactNode, useEffect} from "react";
+import React, {useEffect} from "react";
 import * as AppTypes from "../../../../IsaacAppTypes";
 import {closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import classNames from "classnames";
 import {isAda, siteSpecific} from "../../../services";
 import {Modal, ModalHeader, ModalFooter, ModalBody, CloseButton} from "reactstrap";
 
-interface ActiveModalProps <T> {
-    activeModal?: AppTypes.ActiveModalWithState<T> | AppTypes.ActiveModalWithoutState | null;
+interface ActiveModalProps {
+    activeModal?: AppTypes.ActiveModalWithoutState | null;
 }
 
-export const ActiveModal = <T,>({activeModal}: ActiveModalProps<T>) => {
+export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement<typeof Modal> => {
     const dispatch = useAppDispatch();
     const subject = useAppSelector(selectors.pageContext.subject);
-    const state = isActiveModalWithState(activeModal) && activeModal.useInit ? activeModal.useInit() : null;
-
-    const display = (prop: ((state: T) => ReactNode) | ReactNode): ReactNode => {
-        return typeof prop === "function" ? prop(state!) : prop;
-    };
     
     const toggle = () => {
         dispatch(closeActiveModal());
@@ -32,7 +27,7 @@ export const ActiveModal = <T,>({activeModal}: ActiveModalProps<T>) => {
     return <Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={activeModal?.size ?? "lg"} centered={activeModal?.centered} data-bs-theme={subject ?? "neutral"}>
         {activeModal && <React.Fragment>
             {activeModal.header ?
-                display(activeModal.header)
+                activeModal.header
                 :
                 (activeModal.title || activeModal.closeAction) &&
                     <ModalHeader
@@ -61,20 +56,14 @@ export const ActiveModal = <T,>({activeModal}: ActiveModalProps<T>) => {
             }
 
             <ModalBody className={classNames(activeModal.bodyContainerClassName, {"mx-4": ["lg", "xl", undefined].includes(activeModal.size), "pt-0": !activeModal.title})}>
-                {display(activeModal.body)}
+                {typeof activeModal?.body === "function" ? <activeModal.body /> : activeModal?.body}
             </ModalBody>
 
             {activeModal.buttons &&
                 <ModalFooter className="mb-2 mx-2">
-                    {display(activeModal.buttons)}
+                    {activeModal.buttons}
                 </ModalFooter>
             }
         </React.Fragment>}
     </Modal>;
-};
-
-const isActiveModalWithState = <T,>(
-    activeModal: AppTypes.ActiveModalWithState<T> | AppTypes.ActiveModalWithoutState | null | undefined
-): activeModal is AppTypes.ActiveModalWithState<T> => {
-    return activeModal !== null && activeModal !== undefined && 'useInit' in activeModal;
 };

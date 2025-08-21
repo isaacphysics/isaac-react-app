@@ -35,6 +35,7 @@ import {
 } from "./app/services";
 import {Immutable} from "immer";
 import { UniqueIdentifier } from "@dnd-kit/core";
+import { ModalRegistryKey } from "./app/components/elements/modals/ActiveModals";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -313,14 +314,7 @@ export interface Toast {
     showing?: boolean;
 }
 
-export type ActiveModal = ActiveModalWithoutState | ActiveModalWithState<never>
-
-export interface ActiveModalWithState<T> extends Omit<ActiveModalWithoutState, 'header' | 'body' | 'buttons'> {
-    header?: ReactNode | ((state: T) => ReactNode) 
-    body: ReactNode | ((state: T) => ReactNode);
-    buttons?: ReactNode[] | ((state: T) => ReactNode[]);
-    useInit: () => T;
-}
+export type ActiveModal = ActiveModalWithoutState | ModalRegistryKey
 export interface ActiveModalWithoutState {
     centered?: boolean;
     closeAction?: () => void;
