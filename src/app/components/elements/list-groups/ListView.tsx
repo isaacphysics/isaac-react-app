@@ -14,7 +14,7 @@ import classNames from "classnames";
 type ListViewCardItemProps = Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}>;
 
 export const ListViewCardItem = (props: ListViewCardItemProps) => {
-    return <AbstractListViewItem 
+    return <AbstractListViewItem
         {...props}
     />;
 };
@@ -56,7 +56,7 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
 
-    return <AbstractListViewItem 
+    return <AbstractListViewItem
         icon={{type: "hex", icon: "icon-concept", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
@@ -74,7 +74,7 @@ export const EventListViewItem = ({item, ...rest}: EventListViewItemProps) => {
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
 
-    return <AbstractListViewItem 
+    return <AbstractListViewItem
         icon={{type: "hex", icon: "icon-events", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
@@ -93,14 +93,14 @@ interface QuizListViewItemProps extends Extract<AbstractListViewItemProps, {alvi
 export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}: QuizListViewItemProps) => {
     const dispatch = useAppDispatch();
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const quizButton = isQuizSetter ? 
+    const quizButton = isQuizSetter ?
         <AffixButton size="md" color="solid" onClick={() => (dispatch(showQuizSettingModal(item)))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
             Set test
         </AffixButton> :
         <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
             Take the test
         </AffixButton>;
-    return <AbstractListViewItem 
+    return <AbstractListViewItem
         icon={{type: "hex", icon: "icon-tests", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
@@ -133,7 +133,7 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
     const questionSubjects = tags.allSubjectTags.filter(s => Object.keys(questionTagsCountMap || {}).includes(s.id));
     const questionTags = Object.entries(questionTagsCountMap || {}).filter(([tagId]) => tags.allTopicTags.includes(tags.getById(tagId as TAG_ID))).sort((a, b) => b[1] - a[1]).map(([tagId]) => tagId);
     const breadcrumb = questionTags.map(tagId => tags.getById(tagId as TAG_ID)?.title).slice(0, 3);
-    
+
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
@@ -164,7 +164,7 @@ export const QuickQuizListViewItem = ({item, ...rest}: QuickQuizListViewItemProp
         subtitle={item.subtitle}
         breadcrumb={breadcrumb}
         status={item.state}
-        quizTag={"Level 1" /* Quick quizzes are currently just gameboards. This tag doesn't exist yet in the content. */} 
+        quizTag={"Level 1" /* Quick quizzes are currently just gameboards. This tag doesn't exist yet in the content. */}
         url={url}
         audienceViews={audienceViews}
         {...rest}
@@ -185,7 +185,7 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
         icon={{type: "hex", icon: "icon-info", size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
-        subtitle={item.subtitle}
+        subtitle={item.summary ?? item.subtitle}  // summary more useful than subtitle, if present.
         tags={item.tags}
         supersededBy={item.supersededBy}
         breadcrumb={breadcrumb}
@@ -269,7 +269,7 @@ export const ListViewCards = (props: {cards: (ListViewCardProps | null)[]} & {sh
     </ListGroup>;
 };
 
-type ListViewItemProps = 
+type ListViewItemProps =
     | QuestionListViewItemProps
     | ConceptListViewItemProps
     | EventListViewItemProps
@@ -288,7 +288,7 @@ type ListViewProps<T, G extends "item" | "gameboard" | "quiz"> = {
     {
         items: Required<T> extends Required<Extract<ListViewItemProps, {alviType: G}>['item']> ? T[] : never;
         type: G;
-    } 
+    }
     & Omit<UnionToIntersection<Extract<ListViewItemProps, {alviType: G}>>, "item" | keyof AbstractListViewItemProps>
 )
 
@@ -301,15 +301,15 @@ type ListViewProps<T, G extends "item" | "gameboard" | "quiz"> = {
 //   concepts, search results... – these have titles, subtitles, tags, and a url (e.g. ContentSummaryDTOs, ShortcutResponses). The other types are "gameboard",
 //   which have exclusive "Assign" buttons for teachers, and "quiz", which have exclusive "Preview" and "Take quiz" buttons.
 
-//   On to the typing. ListView has two generic types, T and G, which should not be specified directly in a component – if TS can infer them, you're using it 
-//   right. T is the type of the items being passed in; G is the type of ListView being rendered ("item" | "gameboard" | "quiz"). 
+//   On to the typing. ListView has two generic types, T and G, which should not be specified directly in a component – if TS can infer them, you're using it
+//   right. T is the type of the items being passed in; G is the type of ListView being rendered ("item" | "gameboard" | "quiz").
 
 //   In order to ensure that the items being passed in are valid under the context of type G, T is not immediately inferred from the items prop. Instead, it is
 //   checked against the union of all possible ListViewItem prop types, provided that ListViewItem is of the type G. The items prop is valid if its type extends
 //   the type of any single ListViewItem type of type G. We use `Required` as most of these types (e.g. ContentSummaryDTO) are fully optional by nature.
 
-//   The second part of the type system is the {...rest} props. These are props that can be passed to an individual ListViewItem type; for example, a 
-//   QuestionListViewItem can have a `linkedBoardId` prop, which is not present on a ConceptListViewItem. In a ListView where this is prop is set 
+//   The second part of the type system is the {...rest} props. These are props that can be passed to an individual ListViewItem type; for example, a
+//   QuestionListViewItem can have a `linkedBoardId` prop, which is not present on a ConceptListViewItem. In a ListView where this is prop is set
 //   (<ListView type="item" linkedBoardId="123" items={...} />), all question items will have the `linkedBoardId` prop passed to them. The prop is ignored on
 //   other item types.
 

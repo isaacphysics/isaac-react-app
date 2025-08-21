@@ -1,6 +1,5 @@
-import React, {MutableRefObject, useEffect, useState} from 'react';
-import {LevelAttempts} from "../../../../IsaacAppTypes";
-import {bb, Chart} from "billboard.js";
+import React, {MutableRefObject, useEffect, useMemo, useState} from 'react';
+import {bb, Chart, donut} from "billboard.js";
 import {
     comparatorFromOrderedValues,
     difficultiesOrdered,
@@ -22,13 +21,12 @@ import {SingleValue} from "react-select";
 import {Difficulty} from "../../../../IsaacApiTypes";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { Row, Col } from 'reactstrap';
+import { MyProgressState } from '../../../state';
 
 interface QuestionProgressChartsProps {
     subId: string;
-    questionsByTag: { [tag: string]: number };
-    questionsByLevel: LevelAttempts<number>;
-    questionsByStageAndDifficulty: { [stage: string]: {[difficulty: string]: number} };
     flushRef: FlushableRef;
+    userProgress?: MyProgressState;
 }
 
 export type FlushableRef = MutableRefObject<(() => void) | undefined>;
@@ -53,8 +51,12 @@ const colourPicker = (names: string[]): { [key: string]: string } => {
 };
 
 export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
-    const {subId, questionsByTag, questionsByLevel, questionsByStageAndDifficulty, flushRef} = props;
-
+    const {subId, flushRef, userProgress} = props;
+    const questionsByTag = useMemo(() => (subId === "correct" ? userProgress?.correctByTag : userProgress?.attemptsByTag) || {}, 
+        [subId, userProgress?.attemptsByTag, userProgress?.correctByTag]);
+    const questionsByStageAndDifficulty = useMemo(() => (subId === "correct" ? userProgress?.correctByStageAndDifficulty : userProgress?.attemptsByStageAndDifficulty) || {},
+        [subId, userProgress?.attemptsByStageAndDifficulty, userProgress?.correctByStageAndDifficulty]);
+        
     const topTagLevel = tags.getTagHierarchy()[0];
     const searchTagLevel = tags.getTagHierarchy()[1];
 
@@ -68,11 +70,12 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         ).length == 0;
     const categoryColumns = tags.getSpecifiedTags(topTagLevel, tags.allTagIds).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const topicColumns = tags.getRecursiveDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
-    const difficultyColumns = stageChoices && questionsByStageAndDifficulty[stageChoices[0].value] ?
-        Object.keys(questionsByStageAndDifficulty[stageChoices[0].value])
-            .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
-            .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoices[0].value][key]]) : [];
-
+    const difficultyColumns = useMemo(() => (
+        stageChoices && questionsByStageAndDifficulty[stageChoices[0].value] ?
+            Object.keys(questionsByStageAndDifficulty[stageChoices[0].value])
+                .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
+                .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoices[0].value][key]]) : []
+    ), [stageChoices, questionsByStageAndDifficulty]);
 
     useEffect(() => {
         const charts: Chart[] = [];
@@ -81,7 +84,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 data: {
                     columns: categoryColumns,
                     colors: colourPicker(categoryColumns.map((column) => column[0]) as string[]),
-                    type: "donut",
+                    type: donut(),
                 },
                 donut: {
                     title: "By " + topTagLevel,
@@ -97,7 +100,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             data: {
                 columns: topicColumns,
                 colors: colourPicker(topicColumns.map((column) => column[0]) as string[]),
-                type: "donut"
+                type: donut()
             },
             donut: {
                 title: isAllZero(topicColumns) ? "No Data" : "By Topic",
@@ -112,7 +115,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 data: {
                     columns: difficultyColumns,
                     colors: colourPicker(difficultyColumns?.map((column) => column[0]) as string[]),
-                    type: "donut",
+                    type: donut(),
                     order: null
                 },
                 donut: {
@@ -126,22 +129,23 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
         flushRef.current = () => {
             charts.forEach(chart => {
-                // N.B. This no-op actually clears the text size cache, which makes this flush actually work.
-                // (The relevant line in BB is this.internal.clearLegendItemTextBoxCache() )
-                chart.data.names();
-                // N.B. Of course, under the text size cache, is a more general cache, which also needs
-                // clearing, and is not exposed.
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (chart as any).internal.resetCache();
                 chart.flush();
             });
         };
         return () => {
             flushRef.current = undefined;
         };
-    }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns]);
+    }, [questionsByTag, categoryColumns, topicColumns, difficultyColumns, subId, flushRef, topTagLevel]);
 
     const numberOfCharts = siteSpecific(3, 2);
+
+    const questionTags = tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title};});
+    const labelledQuestionTags = siteSpecific([TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology].map(p => {
+        return {
+            label: p.charAt(0).toUpperCase() + p.slice(1),
+            options: questionTags.filter(t => tags.getChildren(p).map(t2 => t2.id).includes(t.value))
+        };
+    }), questionTags);
 
     return <Row>
         {isPhy && <Col xl={12/numberOfCharts} md={12/numberOfCharts} className="mt-4 d-flex flex-column">
@@ -184,7 +188,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         inputId={`${subId}-subcategory-select`}
                         name="subcategory"
                         defaultValue={{value: defaultSearchChoiceTag.id, label: defaultSearchChoiceTag.title}}
-                        options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title};})}
+                        options={labelledQuestionTags}
                         onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
                     />
                 </div>

@@ -94,18 +94,58 @@ form:has(+ .tab-content) {
     outline-color: $pink-400;
   }
   100% {
-    outline-color: transparent;
+    outline-color: rgba(0, 0, 0, 0.1);
   }
 }
 
 .highlight-target {
-  outline: 2px solid transparent;
+  outline: 2px solid rgba(0, 0, 0, 0.1);
+  outline-offset: 12px;
+  border-radius: 0.2rem;
   animation: highlight-pulse 1.5s ease-in-out;
-  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.1);
 }
 
 .email-preference {
   margin: 5px;
   padding: 10px;
   border-radius: 10px;
+}
+
+#verify-email {
+  z-index: 1;
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: "";
+    background-image: url("/assets/cs/decor/fingerprint-stage-slice.svg");
+    position: absolute;
+    opacity: 0.1;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 1000px;
+    width: 800px;
+    top: -75%;
+    left: 70%;
+    transform: rotate(210deg);
+  }
+
+  &:after {
+    content: "";
+    background-image: url("/assets/cs/decor/fingerprint-stage-slice.svg");
+    position: absolute;
+    opacity: 0.1;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 1000px;
+    width: 800px;
+    top: 10%;
+    left: -30%;
+    z-index: -1;
+    transform: rotate(300deg);
+  }
+
+  .verify-graphic {
+    max-width: 450px;
+  }
 }

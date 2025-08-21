@@ -79,10 +79,10 @@ const ExampleQuestions = ({ subject, className }: { subject: Subject, className:
             title: "Sample Maths Questions",
             id: "sample_maths_questions",
         }],
-        physics: [/*{
+        physics: [{
             title: "Sample Physics Questions",
             id: "sample_phy_questions",
-        }*/], // Uncomment when physics questions are available
+        }],
         chemistry: [{
             title: "Sample Chemistry Questions",
             id: "sample_chem_questions",

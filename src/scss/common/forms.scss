@@ -39,7 +39,8 @@
 }
 
 .date-input .is-invalid, .date-input .is-valid {
-  background: white;
+  background-color: white;
+  --bs-form-select-bg-icon: none !important;
 }
 
 .date-input {
@@ -192,6 +193,16 @@ input[type=date]::-webkit-outer-spin-button {
   }
 }
 
+// Same as above without the margin, making it easier to use a column layout when needed
+.stackable-input-group {
+  input {
+    border-radius: 0.25rem !important;
+  }
+  button {
+    border-radius: 50px !important;
+  }
+}
+
 .inline-form-input-btn {
   background-color: transparent;
   border-style: solid;
@@ -264,4 +275,8 @@ label {
   border: 2px solid black;
   min-width: 20px;
   min-height: 20px;
+}
+
+.is-invalid .basic-multi-select .select__control {
+  border-color: $red; // bootstrap red, so as to align with other invalid inputs
 }

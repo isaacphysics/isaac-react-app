@@ -6,6 +6,7 @@ import {ConfidenceContext} from "../../../IsaacAppTypes";
 import {IsaacContent} from "./IsaacContent";
 import {AppState, useAppDispatch, useAppSelector, logAction} from "../../state";
 import {Tabs} from "../elements/Tabs";
+import classNames from "classnames";
 
 const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
     const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
@@ -78,7 +79,9 @@ export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
         }
     }, [hints]);
 
-    return <div className="tabbed-hints">
+    const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
+
+    return <div className={classNames("tabbed-hints", {"no-print": !printHints})}>
         {hints && !!hints.length && <>
             <h5 className="text-theme mb-2">Need some help?</h5>
             <Tabs onActiveTabChange={logHintView} className="no-print" style="dropdowns" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>

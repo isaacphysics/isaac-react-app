@@ -12,7 +12,8 @@ export enum KEY {
     MOST_RECENT_ALL_TOPICS_PATH = "mostRecentAllTopicsPath",
     FIRST_ANON_QUESTION = "firstAnonQuestion",
     ASSIGN_BOARD_PATH = "assignBoardPath",
-    INITIAL_DAILY_QUESTION_ATTEMPT_TIME = "initialQuestionAttemptedTime"
+    INITIAL_DAILY_QUESTION_ATTEMPT_TIME = "initialQuestionAttemptedTime",
+    SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT = "showTeacherOnboardingModalOnNextOverviewVisit",
 }
 
 export const LOADING_FAILURE_VALUE = null;

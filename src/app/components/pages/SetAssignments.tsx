@@ -199,7 +199,7 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
     return {
         closeAction: toggle,
         size: "md",
-        title: board?.title,
+        title: `Assign "${board?.title}"`,
         body: <>
             <p className="px-1">{description}</p>
             <hr className="text-center"/>
@@ -210,10 +210,14 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
                 {startedAssignees.length > 0
                     ? <ul className="p-2 mb-3">{startedAssignees.map(assignee =>
                         <li data-testid={"current-assignment"} key={assignee.groupId}
-                            className="px-1 d-flex justify-content-between">
+                            className="my-1 px-1 d-flex justify-content-between"
+                        >
                             <span className="flex-grow-1">{assignee.groupName}</span>
-                            <button className="close" aria-label="Unassign group"
-                                onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×
+                            <button 
+                                className="close bg-transparent invert-underline" aria-label="Unassign group" 
+                                onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}
+                            >
+                                Unassign
                             </button>
                         </li>
                     )}</ul>
@@ -233,7 +237,8 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
                 {scheduledAssignees.length > 0
                     ? <ul className="p-2 mb-3">{scheduledAssignees.map(assignee =>
                         <li data-testid={"pending-assignment"} key={assignee.groupId}
-                            className="px-1 d-flex justify-content-between">
+                            className="my-1 px-1 d-flex justify-content-between"
+                        >
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             {assignee.startDate && <>
                                 <span id={`start-date-${assignee.groupId}`}
@@ -242,8 +247,11 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
                                         : assignee.startDate).toDateString()}
                                 </span>
                             </>}
-                            <button className="close" aria-label="Unassign group"
-                                onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×
+                            <button 
+                                className="close bg-transparent" aria-label="Unassign group"
+                                onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}
+                            >
+                                ×
                             </button>
                         </li>
                     )}</ul>

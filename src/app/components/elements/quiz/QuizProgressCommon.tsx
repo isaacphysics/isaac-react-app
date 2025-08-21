@@ -274,6 +274,7 @@ export function ResultsTable<Q extends QuestionType>({
     </tr>;
 
     const tableRef = useRef<HTMLTableElement>(null);
+    const questionTitle = selectedQuestionIndex !== undefined ? questions[selectedQuestionIndex]?.title : undefined;
 
     return <div className="assignment-progress-progress">
         {progress && progress.length > 0 && <>
@@ -287,11 +288,11 @@ export function ResultsTable<Q extends QuestionType>({
                                     {isAssignment
                                         ? <a href={`/questions/${questions[selectedQuestionIndex]?.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
                                             <Markup encoding="latex">
-                                                {`Q${selectedQuestionIndex + 1}: ${questions[selectedQuestionIndex]?.title}`}
+                                                {`Q${selectedQuestionIndex + 1}${questionTitle ? ` : ${questionTitle}` : ""}`}
                                             </Markup>
                                         </a>
                                         : <Markup encoding="latex">
-                                            {`Q${selectedQuestionIndex + 1}: ${questions[selectedQuestionIndex]?.title}`}
+                                            {`Q${selectedQuestionIndex + 1}${questionTitle ? ` : ${questionTitle}` : ""}`}
                                         </Markup>
                                     }
                                 </div>

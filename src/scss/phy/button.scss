@@ -447,11 +447,3 @@ button.close { // default <button class="close"/> components;
   background-position: 50% 50%;
   background-color: transparent;
 }
-
-.invert-underline {
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}

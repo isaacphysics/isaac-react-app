@@ -124,7 +124,7 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>}
 
     | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questionResults: ApiTypes.SearchResultsWrapper<ApiTypes.ContentSummaryDTO>}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questionResults: ApiTypes.SearchResultsWrapper<ApiTypes.ContentSummaryDTO>, searchId?: string}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST}
@@ -313,15 +313,24 @@ export interface Toast {
     showing?: boolean;
 }
 
-export interface ActiveModal {
+export type ActiveModal = ActiveModalWithoutState | ActiveModalWithState<never>
+
+export interface ActiveModalWithState<T> extends Omit<ActiveModalWithoutState, 'header' | 'body' | 'buttons'> {
+    header?: ReactNode | ((state: T) => ReactNode) 
+    body: ReactNode | ((state: T) => ReactNode);
+    buttons?: ReactNode[] | ((state: T) => ReactNode[]);
+    useInit: () => T;
+}
+export interface ActiveModalWithoutState {
     centered?: boolean;
     closeAction?: () => void;
     closeLabelOverride?: string;
     size?: "sm" | "md" | "lg" | "xl" | "xxl";
     title?: string;
+    header?: ReactNode;
     body: ReactNode | (() => ReactNode);
-    bodyContainerClassName?: string;
     buttons?: ReactNode[];
+    bodyContainerClassName?: string;
 }
 
 export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
@@ -448,7 +457,7 @@ export const ClozeDropRegionContext = React.createContext<{
     shouldGetFocus: (id: string) => boolean,
     nonSelectedItems: Immutable<ClozeItemDTO>[]
     allItems: Immutable<ClozeItemDTO>[]
-    } | undefined>(undefined);
+        } | undefined>(undefined);
 
 export const InlineContext = React.createContext<{
     docId?: string,
@@ -483,7 +492,7 @@ export const AssignmentScheduleContext = React.createContext<{
     collapsed: boolean;
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
-    }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+        }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 export const ContentSidebarContext = React.createContext<{ toggle: () => void; close: () => void; } | undefined>(undefined);
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {

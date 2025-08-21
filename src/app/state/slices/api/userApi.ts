@@ -1,6 +1,8 @@
 import {isaacApi} from "./baseApi";
 import {onQueryLifecycleEvents} from "./utils";
 import {TOTPSharedSecretDTO} from "../../../../IsaacApiTypes";
+import { scheduleTeacherOnboardingModalForNextOverviewVisit } from "../../../components/elements/modals/AdaTeacherOnboardingModal";
+import { isAda } from "../../../services";
 
 export const userApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -49,8 +51,9 @@ export const userApi = isaacApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 successTitle: "Account upgraded",
                 successMessage: "You have upgraded to a teacher account!",
-                errorTitle: "Failed to upgrade account"
-            })
+                errorTitle: "Failed to upgrade account",
+                onQuerySuccess: () => isAda && scheduleTeacherOnboardingModalForNextOverviewVisit()
+            }),
         })
     })
 });

@@ -14,6 +14,7 @@ import {
     makeIntendedAudienceComparator,
     mergeDisplayOptions,
     siteSpecific,
+    sortStages,
     STAGE,
     STAGE_TO_LEARNING_STAGE,
     stageLabelMap,
@@ -116,24 +117,25 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             }, {} as Record<string, number>) || {};
             
         // at this point, there exists a stageIndex for each unique stage.
-        // now collapse indices before/after the userContext stage into "additional learning stages" when there are multiple
+        // now collapse indices before/after all userContext stages into "additional learning stages" when there are multiple
 
-        // only consider the first stage (even though teachers may have multiple) so the before/after logic works
-        const userContextStage = userContext.contexts[0].stage ?? STAGE.ALL;
+        const userContextStages = sortStages(userContext.contexts.map(c => c.stage).filter(isDefined));
+        const firstUserContextStage = userContextStages[0] ?? STAGE.ALL;
+        const lastUserContextStage = userContextStages[userContextStages.length-1] ?? STAGE.ALL;
 
         const getMaxRelevantIndex = () => {
-            const learningStage = STAGE_TO_LEARNING_STAGE[userContextStage];
+            const learningStage = STAGE_TO_LEARNING_STAGE[lastUserContextStage];
             if (learningStage) {
                 const applicableStages = LEARNING_STAGE_TO_STAGES[learningStage];
                 return Math.max(...applicableStages.map(stage => stageToFirstIndexMap[stage] ?? -1));
             }
-            return -1; // only occurs when userContext.stage === STAGE.ALL
+            return -1; // only occurs when lastUserContextStage === STAGE.ALL
         };
 
         // if we need to show everything, don't remove anything
-        if (userContextStage && isDefined(stageToFirstIndexMap[userContextStage]) && userContextStage !== STAGE.ALL) {
+        if (firstUserContextStage && isDefined(stageToFirstIndexMap[firstUserContextStage]) && firstUserContextStage !== STAGE.ALL) {
             const beforeUserStage = Object.keys(stageToFirstIndexMap).filter(stage => {
-                return stageToFirstIndexMap[stage] < stageToFirstIndexMap[userContextStage];
+                return stageToFirstIndexMap[stage] < stageToFirstIndexMap[firstUserContextStage];
             });
             const afterUserStage = Object.keys(stageToFirstIndexMap).filter(stage => {
                 return stageToFirstIndexMap[stage] > getMaxRelevantIndex();

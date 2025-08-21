@@ -188,9 +188,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             <div className="align-content-center text-overflow-ellipsis pe-2">
                 <div className="d-flex text-wrap">
                     {url && !isDisabled
-                        ? <a href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                        ? <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                             <Markup encoding="latex">{title}</Markup>
-                        </a>
+                        </Link>
                         : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                             <Markup encoding="latex">{title}</Markup>
                         </span>
@@ -202,6 +202,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                                 className="superseded-tag mx-1 ms-sm-3 align-self-end" 
                                 href={`/questions/${typedProps.supersededBy}`}
                                 onClick={(e) => e.stopPropagation()}
+                                target="_blank"
                             >SUPERSEDED</a>}
                             {tags?.includes("nofilter") && isStaff(user) && <span
                                 className="superseded-tag mx-1 ms-sm-3 align-self-end" 
