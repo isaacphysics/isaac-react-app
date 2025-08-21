@@ -7,11 +7,13 @@ import {
     useGetSingleSetAssignmentQuery
 } from "../../state";
 import {
+    AppGroup,
     AssignmentProgressPageSettingsContext,
     EnhancedAssignmentWithProgress
 } from "../../../IsaacAppTypes";
 import {
     ASSIGNMENT_PROGRESS_CRUMB,
+    PATHS,
     siteSpecific,
     useAssignmentProgressAccessibilitySettings} from "../../services";
 import {ProgressDetails} from "./AssignmentProgressIndividual";
@@ -28,12 +30,14 @@ const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWith
     </div>;
 };
 
-export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
+export const SingleAssignmentProgress = ({user, group}: {user: RegisteredUserDTO, group?: AppGroup}) => {
     const params = useParams<{ assignmentId?: string }>();
     const assignmentId = parseInt(params.assignmentId || ""); // DANGER: This will produce a NaN if params.assignmentId is undefined
     const assignmentQuery = useGetSingleSetAssignmentQuery(assignmentId || skipToken);
     const { data: assignment } = assignmentQuery;
     const assignmentProgressQuery = useGetAssignmentProgressQuery(assignmentId || skipToken);
+
+    const groupCrumb = group && group.groupName ? {to: `${PATHS.ASSIGNMENT_PROGRESS}/group/${group.id}`, title: group.groupName} : undefined;
 
     const augmentAssignmentWithProgress = (assignment: AssignmentDTO, assignmentProgress: AssignmentProgressDTO[]): EnhancedAssignmentWithProgress => ({...assignment, progress: assignmentProgress} as EnhancedAssignmentWithProgress);
 
@@ -42,7 +46,7 @@ export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
     return <>
         <Container>
             <TitleAndBreadcrumb
-                intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
+                intermediateCrumbs={groupCrumb ? [ASSIGNMENT_PROGRESS_CRUMB, groupCrumb] : [ASSIGNMENT_PROGRESS_CRUMB]}
                 currentPageTitle={assignment?.gameboard?.title ?? siteSpecific("Assignment progress", "Markbook")}
                 className="mb-4"
                 icon={{type: "hex", icon: "icon-revision"}}
