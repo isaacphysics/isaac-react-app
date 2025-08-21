@@ -257,7 +257,7 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
 
     return {
         closeAction: toggle,
-        title: board?.title,
+        title: `Assign ${board?.title}"`,
         body: <SetAssignmentsModalContent {...props} />,
         buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]
     };
