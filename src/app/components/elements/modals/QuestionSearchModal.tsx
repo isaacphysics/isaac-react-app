@@ -169,7 +169,7 @@ export const QuestionSearchModal = (
         );
     }, [questions, user, searchTopics, isBookSearch, questionsSort, creationContext]);
 
-    const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center">
+    const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center mt-2">
         <div className="flex-grow-1 mb-1">
             <strong className={classNames({"text-danger": selectedQuestions.size > 10})}>
                 {`${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`}
@@ -252,7 +252,7 @@ export const QuestionSearchModal = (
                             options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                         />
                         {isAda && <>
-                            <Label htmlFor="question-search-exam-board">Exam Board</Label>
+                            <Label className="mt-2" htmlFor="question-search-exam-board">Exam Board</Label>
                             <StyledSelect
                                 inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
                                 value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
@@ -262,7 +262,7 @@ export const QuestionSearchModal = (
                         </>}
                     </div>
                     <Label htmlFor="question-search-title">Search</Label>
-                    <Input id="question-search-title" className="mb-2"
+                    <Input id="question-search-title" className="mb-3"
                         type="text"
                         placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
