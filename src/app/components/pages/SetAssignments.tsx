@@ -199,7 +199,7 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
     return {
         closeAction: toggle,
         size: "md",
-        title: board?.title,
+        title: `Assign "${board?.title}"`,
         body: <>
             <p className="px-1">{description}</p>
             <hr className="text-center"/>

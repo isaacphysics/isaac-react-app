@@ -32,7 +32,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
                 (activeModal.title || activeModal.closeAction) &&
                     <ModalHeader
                         data-testid={"modal-header"}
-                        tag={siteSpecific(undefined, "h2")}
+                        tag={siteSpecific(undefined, "h3")}
                         className={classNames({
                             "d-flex justify-content-between": activeModal.closeAction,
                             "h-title": !!activeModal.title && isAda,
