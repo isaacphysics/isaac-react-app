@@ -230,6 +230,7 @@ export function ResultsTable<Q extends QuestionType>({
             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
             onClick={() => setSelectedQuestionIndex(undefined)}
             label={"Name"}
+            alignment={"start"}
         >
             Name
         </SortItemHeader>
@@ -262,7 +263,6 @@ export function ResultsTable<Q extends QuestionType>({
                 currentOrder={sortOrder}
                 setOrder={toggleSort}
                 reversed={reverseOrder}
-                alignment="center"
                 onClick={() => setSelectedQuestionIndex(index)}
                 className={classNames("pointer-cursor", {"selected": index === selectedQuestionIndex})}
                 label={`Question ${index + 1}`}
@@ -311,13 +311,13 @@ export function ResultsTable<Q extends QuestionType>({
                                             isAssignment ?
                                                 <div className="d-flex align-items-center gap-2">
                                                     <i className="icon icon-person icon-md" color="tertiary"/>
-                                                    <Link className="w-100 text-center gap-2 pe-3" to={`/progress/${studentProgress.user?.id}`} target="_blank">
+                                                    <Link className="w-100 text-start gap-2 pe-3" to={`/progress/${studentProgress.user?.id}`} target="_blank">
                                                         {studentProgress.user?.givenName}
                                                         <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
                                                     </Link>
                                                 </div>
                                                 : <>
-                                                    <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
+                                                    <Button className="quiz-student-menu text-start" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
                                                         <div
                                                             className="quiz-student-name"
                                                         >
