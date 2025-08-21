@@ -369,7 +369,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "sidebar";
 @import "table";
 @import "../common/headings";
-@import "../common/modals";
+@import "modals";
 @import "forms";
 @import "elements";
 @import "breadcrumbs";

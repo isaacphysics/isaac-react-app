@@ -1,18 +1,18 @@
 import { isPhy } from "../../app/services";
 import { UserRole } from "../../IsaacApiTypes";
-import { renderTestEnvironment, setUrl } from "../testUtils";
+import { renderTestEnvironment, setUrl, waitForLoaded } from "../testUtils";
 import {act, screen, waitFor, within} from "@testing-library/react";
 
 describe('Navigation', () => {
     if (isPhy) {
         const renderHomepage = async (role : UserRole | 'ANONYMOUS' = 'ANONYMOUS') => {
-            await act(async () => {
-                renderTestEnvironment({
-                    role,
-                    // extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed', 'startIndex'], questionsSearchResponse)]    
-                });
-                setUrl({ pathname: '/' });
+            renderTestEnvironment({
+                role,
+                // extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed', 'startIndex'], questionsSearchResponse)]    
             });
+            await waitForLoaded();    
+            await setUrl({ pathname: '/' });
+            await waitForLoaded();
         };
 
         const openMenu = async () => {
@@ -74,9 +74,7 @@ describe('Navigation', () => {
                 await closeMenu();
 
                 for (let i = 0; i < numLinks; i++) {
-                    act(() => {
-                        setUrl({ pathname: '/' });
-                    });
+                    await setUrl({ pathname: '/' });
                     
                     await openMenu();
                     
@@ -127,9 +125,7 @@ describe('Navigation', () => {
                 await closeMenu();
 
                 for (let i = 0; i < numButtons; i++) {
-                    act(() => {
-                        setUrl({ pathname: '/' });
-                    });
+                    await setUrl({ pathname: '/' });
                     
                     await openMenu();
                     await openDropdowns();

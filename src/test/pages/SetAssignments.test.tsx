@@ -175,7 +175,7 @@ describe("SetAssignments", () => {
 
         // Wait for modal to appear, for the gameboard we expect
         const modal = await screen.findByTestId("active-modal");
-        expect(modal).toHaveModalTitle(mockGameboard.title);
+        expect(modal).toHaveModalTitle(`Assign "${mockGameboard.title}"`);
         // Ensure all active groups are selectable in the drop-down
         //await toggleGroupSelect();
         const groupContainer = within(modal).getByTestId("modal-groups-selector");
