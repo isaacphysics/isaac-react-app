@@ -72,7 +72,6 @@ describe("SetAssignments", () => {
         const gameboard = gameboardRows[0];
         const mockGameboard = mockGameboards.results[0];
 
-        // TODO fix stage and difficulty tests (broken since UI change Jan 2023)
         // Check that stages are displayed
         const requiredStages = (mockGameboard.contents as {audience?: {stage?: STAGE[]}[]}[]).reduce(
             (set: Set<string>, q) => q.audience?.reduce(
@@ -89,9 +88,7 @@ describe("SetAssignments", () => {
                 expect(stages?.includes(s)).toBeTruthy();
             });
         }
-        
-        // // Check for difficulty title TODO check for SVG using something like screen.getByTitle("Practice 2 (P2)...")
-        // within(gameboard).getByText("Difficulty:");
+        // TODO Check that the difficulties are listed
 
         if (isPhy) {
             // Phy persists the change to table view, so switch back to card view for subsequent tests
