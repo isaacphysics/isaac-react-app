@@ -10,7 +10,7 @@ import {
 } from "../dateUtils";
 import {clickOn, navigateToSetAssignments, renderTestEnvironment, withMockedDate} from "../testUtils";
 
-import {API_PATH, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
+import {API_PATH, isAda, isPhy, PATHS, siteSpecific, STAGE, stageLabelMap} from "../../app/services";
 import {http, HttpHandler, HttpResponse} from "msw";
 import {AssignmentDTO} from "../../IsaacApiTypes";
 import {buildPostHandler} from "../../mocks/handlers";
@@ -68,6 +68,31 @@ describe("SetAssignments", () => {
         // Make sure that all gameboards are listed
         const gameboardRows = await screen.findAllByTestId("gameboard-table-row");
         expect(gameboardRows).toHaveLength(mockGameboards.totalResults);
+
+        const gameboard = gameboardRows[0];
+        const mockGameboard = mockGameboards.results[0];
+
+        // TODO fix stage and difficulty tests (broken since UI change Jan 2023)
+        // Check that stages are displayed
+        const requiredStages = (mockGameboard.contents as {audience?: {stage?: STAGE[]}[]}[]).reduce(
+            (set: Set<string>, q) => q.audience?.reduce(
+                (_set: Set<string>, a) => a.stage?.reduce(
+                    (__set: Set<string>, t) => __set.add(stageLabelMap[t]),
+                    _set) ?? _set,
+                set) ?? set,
+            new Set<string>());
+        const stages = gameboard.children[2].textContent;
+        if (!stages || stages.length === 0) {
+            expect(requiredStages.size).toBe(0);
+        } else {
+            requiredStages.forEach(s => {
+                expect(stages?.includes(s)).toBeTruthy();
+            });
+        }
+        
+        // // Check for difficulty title TODO check for SVG using something like screen.getByTitle("Practice 2 (P2)...")
+        // within(gameboard).getByText("Difficulty:");
+
         if (isPhy) {
             // Phy persists the change to table view, so switch back to card view for subsequent tests
             const viewDropdown = await screen.findByLabelText("Set display mode");
@@ -78,13 +103,15 @@ describe("SetAssignments", () => {
         }
     });
 
-    isPhy && it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
-        await renderSetAssignments();
-        for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
-            const button = await screen.findByRole("link", {name: title});
-            expect(button.getAttribute("href")).toBe(href);
-        }
-    });
+    if (isPhy) {
+        it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
+            await renderSetAssignments();
+            for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
+                const button = await screen.findByRole("link", {name: title});
+                expect(button.getAttribute("href")).toBe(href);
+            }
+        });
+    } 
 
     it('should show all the correct information for a gameboard in card view', async () => {
         await renderSetAssignments();
@@ -109,31 +136,6 @@ describe("SetAssignments", () => {
         expect(dateText).toMatch(siteSpecific(TEXTUAL_DATE_REGEX, DDMMYYYY_REGEX));
         const date = siteSpecific(Date.parse(dateText!), dayMonthYearStringToDate(dateText));
         expect(mockGameboard.creationDate - (date?.valueOf() ?? 0)).toBeLessThanOrEqual(ONE_DAY_IN_MS);
-
-        // TODO fix stage and difficulty tests (broken since UI change Jan 2023)
-        // Check that stages are displayed
-        // const requiredStages = (mockGameboard.contents as {audience?: {stage?: STAGE[]}[]}[]).reduce(
-        //     (set: Set<string>, q) => q.audience?.reduce(
-        //         (_set: Set<string>, a) => a.stage?.reduce(
-        //             (__set: Set<string>, t) => __set.add(stageLabelMap[t]),
-        //             _set) ?? _set,
-        //         set) ?? set,
-        //     new Set<string>());
-        // const stages = within(gameboard).getByText("Stages:").textContent?.replace(/Stages:\s?/, "")?.split(/,\s?/);
-        //
-        // if (!stages || stages.length === 0) {
-        //     expect(requiredStages.size).toBe(0);
-        // } else {
-        //     requiredStages.forEach(s => {
-        //         expect(stages?.includes(s)).toBeTruthy();
-        //     });
-        //     stages.forEach(s => {
-        //         expect(requiredStages?.has(s)).toBeTruthy();
-        //     });
-        // }
-        //
-        // // Check for difficulty title TODO check for SVG using something like screen.getByTitle("Practice 2 (P2)...")
-        // within(gameboard).getByText("Difficulty:");
 
         // Ensure gameboard has correct title and link
         if (isAda) {
@@ -177,13 +179,12 @@ describe("SetAssignments", () => {
         const modal = await screen.findByTestId("active-modal");
         expect(modal).toHaveModalTitle(`Assign "${mockGameboard.title}"`);
         // Ensure all active groups are selectable in the drop-down
-        //await toggleGroupSelect();
-        selectGroup(mockActiveGroups[0].groupName);
+        await selectGroup(mockActiveGroups[1].groupName);
 
         // Check scheduled start date and due date are there
         within(modal).getByLabelText("Set an optional start date:", {exact: false});
         // TODO check setting scheduled start date and due date leads to correctly saved values,
-        //  since this currently just checks any form of due date is set.
+        // since this currently just checks any form of due date is set.
         const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
         const dueDateSelector = within(dueDateContainer.children[1] as HTMLElement).getByRole("combobox", {name: "Day"});
         await userEvent.click(within(dueDateContainer).getByRole("button"));
@@ -213,17 +214,10 @@ describe("SetAssignments", () => {
             expect(requestAssignment(observer.observedParams!).scheduledStartDate).not.toBeDefined();
         });
 
-        // TODO: the modal now closes automatically.
-        // // Check that new assignment is displayed in the modal
-        // await waitFor(() => {
-        //     const newCurrentAssignments = within(modal).queryAllByTestId("current-assignment");
-        //     expect(newCurrentAssignments.map(a => a.textContent).join(",")).toContain(mockActiveGroups[1].groupName);
-        // });
-        //
-        // // Close modal
-        // const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
-        // expect(closeButtons).toHaveLength(siteSpecific(2, 1)); // One at the top (and one at the bottom on Phy)
-        // await userEvent.click(closeButtons[0]);
+        // Close modal
+        const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
+        expect(closeButtons).toHaveLength(siteSpecific(2, 1)); // One at the top (and one at the bottom on Phy)
+        await userEvent.click(closeButtons[0]);
         await waitFor(() => {
             expect(modal).not.toBeInTheDocument();
         });
@@ -282,25 +276,12 @@ describe("SetAssignments", () => {
                     )
                 ]);
 
-                //await selectGroup(mockActiveGroups[1].groupName);
-                //console.log("aha 2");
+                await selectGroup(mockActiveGroups[1].groupName);
                 const modal = await screen.findByTestId("active-modal");
-                const groupContainer = within(modal).getByTestId("modal-groups-selector");
-                const groupSelector = within(groupContainer).getByRole("listbox");
-                await userEvent.click(groupSelector);
-                // await userEvent.keyboard("{ArrowDown}");
-                const groupName = mockActiveGroups[1].groupName;
-                console.log("1 aha");
-                waitFor(async () => {
-                    expect(within(groupSelector).getByText(groupName)).toBeInTheDocument();
-                    const groupChoice = await within(modal).findByText(groupName);
-                    await userEvent.click(groupChoice);
-                });
 
                 await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
 
                 await waitFor(() => expect(observer.observedParams![0].dueDate).toEqual(expectedDueDatePosted));
-                await userEvent.click(within(modal).getByRole("button", {name: "close"}));
             });
         };
 
@@ -312,26 +293,6 @@ describe("SetAssignments", () => {
         it('posts the default due date as UTC midnight, even when local representation does not equal UTC', 
             testPostedDueDate({ currentTime: "2025-04-28" /* Monday */, expectedDueDatePosted: "2025-05-04T00:00:00.000Z" /* Sunday */ })
         );
-
-        // TODO: we close the modal automatically now, so this test doesn't test the right thing.
-        // it('resets to defaults after a failed post', async () => {
-        //     await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
-        //         await renderModal([
-        //             buildPostHandler(
-        //                 "/assignments/assign_bulk",
-        //                 (body: AssignmentDTO[]) => body.map(x => ({ groupId: x.groupId, errorMessage: "Boo, something went wrong" }))
-        //             )
-        //         ]);
-        //
-        //         await toggleGroupSelect();
-        //         await selectGroup(mockActiveGroups[1].groupName);
-        //         await clickOn('Assign to group', modal());
-        //
-        //         expect(await groupSelector()).toHaveTextContent('Group(s):None');
-        //         expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
-        //         expect(await dateInput("Due date reminder:")).toHaveValue('2025-02-05'); // Sunday
-        //     });
-        // });
 
         describe('validation', () => {
             it('shows an error message when the due date is missing', async () => {
@@ -428,10 +389,7 @@ describe("SetAssignments", () => {
             const modal = await screen.findByTestId("active-modal");
 
             // select the group with that gameboard already assigned
-            const groupSelector = await within(modal).findByTestId("modal-groups-selector");
-            await userEvent.click(groupSelector);
-            const groupChoice = await within(groupSelector).findByText(mockActiveGroups[0].groupName);
-            await userEvent.click(groupChoice);
+            await selectGroup(mockActiveGroups[0].groupName);
 
             // Act
             const assignButton = within(modal).getByRole("button", {name: "Assign to group"});
@@ -464,15 +422,12 @@ const dateInput = async (testIdText: string | RegExp) => await within(await with
 const selectGroup = async (groupName: string) => {
     const modal = await screen.findByTestId("active-modal");
     const groupContainer = within(modal).getByTestId("modal-groups-selector");
-    const groupSelector = groupContainer.children[1] as HTMLElement;
+    const groupSelector = within(groupContainer).getByRole("combobox");
     await userEvent.click(groupSelector);
-    await userEvent.keyboard("{ArrowDown}");
-    
-    waitFor(async () => {
-        expect(within(groupSelector).getByText(groupName)).toBeInTheDocument();
-        const groupChoice = await within(modal).findByText(groupName);
-        await userEvent.click(groupChoice);
-    });
+
+    expect(within(groupContainer).getByText(groupName)).toBeInTheDocument();
+    const groupChoice = within(groupContainer).getByText(groupName);
+    await userEvent.click(groupChoice);
 };
 
 const parameterObserver = <T,>() => ({
