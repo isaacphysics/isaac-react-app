@@ -310,6 +310,47 @@ describe("SetAssignments", () => {
                 await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
                 expect(dueDateContainer).not.toHaveTextContent(`Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments`);
             });
+
+            it('shows an error message when the due date is before the start date', async () => {
+                await withMockedDate(Date.parse("2025-01-01"), async () => { // Monday
+                    await renderModal();
+                    const modal = await screen.findByTestId("active-modal");
+                    const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
+
+                    // Set a start date in the future
+                    await inputDate("modal-start-date-selector", "1", "2", "2025");
+
+                    // Set a due date before the start date
+                    await inputDate("modal-due-date-selector", "1", "1", "2025");
+
+                    await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
+                    expect(dueDateContainer.textContent).toContain("Due date must be on or after start date and in the future");
+                });
+            });
+
+            it('shows an error message when no groups are selected', async () => {
+                await renderModal();
+                const modal = await screen.findByTestId("active-modal");
+                const groupContainer = within(modal).getByTestId("modal-groups-selector");
+
+                await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
+                expect(groupContainer).toHaveTextContent("Group(s):None");
+                expect(within(groupContainer).getByText("You must select a group")).toBeInTheDocument();
+            });
+
+            it('shows an error message when the notes exceed 500 characters', async () => {
+                await renderModal();
+                const modal = await screen.findByTestId("active-modal");
+                const notesContainer = within(modal).getByTestId("modal-notes");
+                const notesBox = within(notesContainer).getByLabelText("Notes", {exact: false});
+
+                // Type more than 500 characters
+                const longNotes = "a".repeat(501);
+                await userEvent.type(notesBox, longNotes);
+
+                await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
+                expect(notesContainer.textContent).toContain("You have exceeded the maximum length");
+            });
         });
     });
 
@@ -426,6 +467,17 @@ const selectGroup = async (groupName: string) => {
     const groupChoice = within(groupContainer).getByText(groupName);
     await userEvent.click(groupChoice);
 };
+
+const inputDate = async (testIdText: string | RegExp, day: string, month: string, year: string) => {
+    const dueDateContainer = within(await modal()).getByTestId(testIdText);
+    await userEvent.click(within(dueDateContainer).getByRole("button"));
+    const dueDaySelector = within(dueDateContainer.children[1] as HTMLElement).getByRole("combobox", {name: "Day"});
+    await userEvent.selectOptions(dueDaySelector, day);
+    const dueMonthSelector = within(dueDateContainer.children[1] as HTMLElement).getByRole("combobox", {name: "Month"});
+    await userEvent.selectOptions(dueMonthSelector, month);
+    const dueYearSelector = within(dueDateContainer.children[1] as HTMLElement).getByRole("combobox", {name: "Year"});
+    await userEvent.selectOptions(dueYearSelector, year);
+}
 
 const parameterObserver = <T,>() => ({
     observedParams: null as T | null,
