@@ -314,14 +314,7 @@ export interface Toast {
     showing?: boolean;
 }
 
-export type ActiveModal = ActiveModalWithoutState | ActiveModalWithState<never> | ModalRegistryKey
-
-export interface ActiveModalWithState<T> extends Omit<ActiveModalWithoutState, 'header' | 'body' | 'buttons'> {
-    header?: ReactNode | ((state: T) => ReactNode) 
-    body: ReactNode | ((state: T) => ReactNode);
-    buttons?: ReactNode[] | ((state: T) => ReactNode[]);
-    useInit: () => T;
-}
+export type ActiveModal = ActiveModalWithoutState | ModalRegistryKey
 export interface ActiveModalWithoutState {
     centered?: boolean;
     closeAction?: () => void;

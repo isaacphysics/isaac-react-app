@@ -1,11 +1,11 @@
 import React from "react";
-import {AppState, useAppSelector} from "../../../state";
-import {ActiveModal} from "./ActiveModal";
+import { AppState, useAppSelector } from "../../../state";
+import { ActiveModal } from "./ActiveModal";
 import { AdaTeacherOnboardingModal } from "./AdaTeacherOnboardingModal";
 
 export type ModalRegistryKey = keyof typeof modalRegistry;
 const modalRegistry = {
-    'adaTeacherOnboardingModal': () => <AdaTeacherOnboardingModal />
+    'adaTeacherOnboardingModal': () => <AdaTeacherOnboardingModal />,
 };
 
 export const ActiveModals = () => {

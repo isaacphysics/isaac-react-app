@@ -45,7 +45,7 @@ let key = 0;
 export const RoutesCS = [
 
     // Registration flow
-    <TrackedRoute key={key++} exact path="/dashboard" component={Overview} />,
+    <TrackedRoute key={key++} exact path="/dashboard" ifUser={isTeacherOrAbove} component={Overview} />,
     <TrackedRoute key={key++} exact path="/register" component={RegistrationStart} />,
     <TrackedRoute key={key++} exact path="/register/role" component={RegistrationRoleSelect} />,
     <TrackedRoute key={key++} exact path="/register/student/age" component={RegistrationAgeCheck} />,

@@ -48,9 +48,7 @@ const buttons = ({ pageIndex, setPage, close}: PaginationState) => {
 };
 
 export const AdaTeacherOnboardingModal = () => {
-    console.log('showing teacher onboarding modal');
     useEffect(() => {
-        console.log('useffect for modal');
         const unschedule = setTimeout(unscheduleTeacherOnboardingModal, 100);
         return () => clearTimeout(unschedule);
     }, []);
