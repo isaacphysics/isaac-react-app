@@ -58,7 +58,7 @@ export const HomepageCS = () => {
                 <Container className="homepage-padding mw-1600 position-relative" fluid>
                     <div className="d-flex flex-column gap-5 align-items-center">
                         <h2 className={"font-size-2"}>Teach and learn about computer science with confidence</h2>
-                        <Card className={"cs-card p-5"}>
+                        <Card className={"cs-card w-100 p-5"}>
                             <ColumnSlice>
                                 <TextBlock>
                                     <h3 className={"font-size-1-5"}>Resources you can trust</h3>
@@ -74,7 +74,7 @@ export const HomepageCS = () => {
                                 </ImageBlock>
                             </ColumnSlice>
                         </Card>
-                        <Card className={"cs-card p-5"}>
+                        <Card className={"cs-card w-100 p-5"}>
                             <ColumnSlice>
                                 <ImageBlock>
                                     <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/tools-slice.svg" alt=""/>
@@ -104,15 +104,15 @@ export const HomepageCS = () => {
 
             <section id="testimonial" className="bg-black">
                 <Container className="homepage-padding mw-1600" fluid>
-                    <ColumnSlice>
+                    <ColumnSlice className={"align-items-start"}>
                         <TextBlock className="backslash-left text-white">
-                            <h2>
+                            <h2 className={"font-size-1-75"}>
                                 &rdquo;Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it’s free!&rdquo;
                             </h2>
                             <p>– Computer science teacher</p>
                         </TextBlock>
                         <TextBlock className="backslash-left text-white">
-                            <h2>
+                            <h2 className={"font-size-1-75"}>
                                 &ldquo;
                                     I love Ada CS! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.
                                 &rdquo;
