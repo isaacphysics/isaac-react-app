@@ -138,7 +138,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
         <FormGroup>
             <Label data-testid="modal-due-date-selector" className="w-100 pb-2">
                 <span className="form-required">Due date reminder:</span>
-                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} invalid={validationAttempted && dueDateInvalid}
+                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} invalid={validationAttempted && (dueDateInvalid || !dueDate)}
                     onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date);}}/> {/* DANGER here with force-casting Date|null to Date */}
                 <FormFeedback>{!dueDate && `Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments.`}</FormFeedback>
                 <FormFeedback>{dueDateInvalid && "Due date must be on or after start date and in the future."}</FormFeedback>
@@ -257,6 +257,7 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
 
     return {
         closeAction: toggle,
+        size: "md",
         title: `Assign ${board?.title}"`,
         body: <SetAssignmentsModalContent {...props} />,
         buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]

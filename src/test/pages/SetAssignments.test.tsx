@@ -192,7 +192,6 @@ describe("SetAssignments", () => {
 
         // Check scheduled start date and due date are there
         within(modal).getByLabelText("Set an optional start date:", {exact: false});
-        // const dueDateContainer = within(modal).getByLabelText("Due date reminder:", {exact: false});
         // TODO check setting scheduled start date and due date leads to correctly saved values,
         //  since this currently just checks any form of due date is set.
         const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
@@ -271,7 +270,7 @@ describe("SetAssignments", () => {
         it('due date is a week from now by default', async() => {
             await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
                 await renderModal();
-                expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
+                expect(await dateInput("Due date reminder:")).toHaveValue('2025-02-05'); // Sunday
             });
         });
 
@@ -279,7 +278,7 @@ describe("SetAssignments", () => {
         it('due date is displayed in UTC', async () => {
             await withMockedDate(Date.parse("2025-04-28T23:30:00.000Z"), async () => { // Monday in UTC, already Tuesday in UTC+1.
                 await renderModal();
-                expect(await dateInput("Due date reminder")).toHaveValue('2025-05-04'); // Sunday in UTC (would be Monday if we showed UTC+1)
+                expect(await dateInput("Due date reminder:")).toHaveValue('2025-05-04'); // Sunday in UTC (would be Monday if we showed UTC+1)
             });
         });
 
@@ -326,20 +325,26 @@ describe("SetAssignments", () => {
         //
         //         expect(await groupSelector()).toHaveTextContent('Group(s):None');
         //         expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
-        //         expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
+        //         expect(await dateInput("Due date reminder:")).toHaveValue('2025-02-05'); // Sunday
         //     });
         // });
 
         describe('validation', () => {
-            it('shows an error message when the due date is missing', async () => { //We need to submit first now
+            it('shows an error message when the due date is missing', async () => {
                 await renderModal();
-                await clearDateInput("Due date reminder");
-                expect(await findByText("Due date reminder")).toHaveTextContent(`Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments`);
+                const modal = await screen.findByTestId("active-modal");
+                const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
+                await userEvent.click(within(dueDateContainer).getByRole("button", {name: "close"}));
+                await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
+                expect(dueDateContainer).toHaveTextContent(`Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments`);
             });
 
-            it('does not show an error when the due date is present', async () => {  //We need to submit first now
+            it('does not show an error when the due date is present', async () => {  // We need to submit first now
                 await renderModal();
-                expect(await findByText("Due date reminder")).not.toHaveTextContent(`due dates are required for assignments`);
+                const modal = await screen.findByTestId("active-modal");
+                const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
+                await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
+                expect(dueDateContainer).not.toHaveTextContent(`due dates are required for assignments`);
             });
         });
     });
