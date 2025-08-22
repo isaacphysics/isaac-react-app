@@ -51,7 +51,7 @@ export const HomepageCS = () => {
                 </Container>
                 <Container className={"mw-1600 homepage-padding-x"} fluid>
                     <Card id={"cta-features-card"} className={"icon-card p-5"}>
-                        <Row className={"justify-content-center gy-5"}>
+                        <Row className={"justify-content-center gy-5 fw-bold"}>
                             <Col xs={12} md={6} lg={3} className={"cta-feature"}>
                                 Free computer science resources for students aged 14 to 19
                             </Col>
