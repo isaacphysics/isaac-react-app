@@ -144,7 +144,7 @@ export const HomepageCS = () => {
                         <h2 className={"font-size-1-75 mb-4"}>Exam board alignment</h2>
                         <p>We&apos;ve organised our learning resources so they can be easily used, wherever you are.</p>
                     </TextBlock>
-                    <ColumnSlice>
+                    <ColumnSlice breakpoint="md">
                         <IconCard card={{
                             title: "In the UK",
                             icon: {src: "/assets/cs/icons/location-on-cyan.svg"},
