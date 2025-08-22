@@ -153,7 +153,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
                     {isPhy && <div className="mt-4">
                         <h4>Isaac Books</h4>
-                        Questions completed correctly, against questions attempted for each of our <a href={"/pages/order_books"}>mastery books</a>.
+                        Questions completed correctly, against questions attempted for each of our <a href={"/books"}>books</a>.
                         <Row>
                             {Object.entries(siteSpecificStats.questionCountByTag).map(([qType, total]) => {
                                 const correct = Math.min(progress?.correctByTag?.[qType] || 0, total);

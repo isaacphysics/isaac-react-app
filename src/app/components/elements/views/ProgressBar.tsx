@@ -32,7 +32,7 @@ export const ProgressBar = ({percentage, primaryTitle, secondaryPercentage, seco
     return <div {...rest} className={classNames("progress-bar-outer", {"thin": thin}, rest.className)}>
         {isDefined(secondaryPercentage) && <div className={`progress-bar-secondary ${colour}`} title={secondaryTitle} style={{width: `${secondaryPercentage}%`}} />}
         <div className={classNames("progress-bar-inner", colour, {"rounded-pill": rounded})} style={{width: `${percentage}%`}} title={primaryTitle}>
-            {React.isValidElement(children) && <div className="ps-3 pt-1">
+            {children && <div className="ps-3 pt-1">
                 {children}
             </div>}
         </div>
