@@ -119,7 +119,7 @@ export const HomepageCS = () => {
 
             <section id="testimonial" className="bg-black">
                 <Container className="homepage-padding mw-1600" fluid>
-                    <ColumnSlice className={"align-items-start"}>
+                    <ColumnSlice className={"align-items-start row-gap-4"}>
                         <TextBlock className="backslash-left text-white">
                             <h2 className={"font-size-1-75"}>
                                 &rdquo;Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it’s free!&rdquo;
