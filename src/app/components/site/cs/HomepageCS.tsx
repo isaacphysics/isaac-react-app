@@ -193,29 +193,29 @@ export const HomepageCS = () => {
                 </Container>
             </section>
 
-            {news && news.length > 0 && <section id="news" className="bg-white">
+            {((news && news.length > 0) || showNewsletterPrompts) && <section id="news" className="bg-white">
                 <Container className={"homepage-padding mw-1600"}>
                     <h2 className={"font-size-1-75 mb-4"}>News and updates</h2>
-                    <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around my-3">
-                        {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n} showTitle cardClassName="bg-cultured-grey" />)}
-                    </Row>
-                    <div className={"mt-4 mt-lg-7 w-100 text-center"}>
-                        <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
-                    </div>
-                    {showNewsletterPrompts &&
-                        <Row xs={12} className="d-flex flex-row row-cols-1 row-cols-md-2 mt-3">
-                            <IconCard
-                                card={{
-                                    title: "Stay updated",
-                                    icon: {src: "/assets/cs/icons/mail.svg"},
-                                    bodyText: "Update your preferences and be the first to hear about new features, challenges, topics, and improvements on the platform.",
-                                    clickUrl: "/account#notifications",
-                                    buttonText: "Join our newsletter",
-                                    onButtonClick: () => {setLinkedSetting("news-preference");}
-                                }}
-                            />
-                        </Row>
-                    }
+                    {news && news.length > 0 &&
+                        <>
+                            <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around mt-3 mb-1">
+                                {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n} showTitle cardClassName="bg-cultured-grey" />)}
+                            </Row>
+                            <div className={"mt-4 mt-lg-7 w-100 text-center"}>
+                                <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
+                            </div>
+                        </>}
+                    {showNewsletterPrompts && <IconCard
+                        card={{
+                            title: "Stay updated",
+                            icon: {src: "/assets/cs/icons/mail.svg"},
+                            bodyText: "Update your preferences and be the first to hear about new features, challenges, topics, and improvements on the platform.",
+                            clickUrl: "/account#notifications",
+                            buttonText: "Join our newsletter",
+                            onButtonClick: () => {setLinkedSetting("news-preference");},
+                            className: "bg-cultured-grey px-0"
+                        }}
+                    />}
                 </Container>
             </section>}
         </div>
