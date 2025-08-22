@@ -15,4 +15,11 @@
       left: 6px;
     }
   }
+  .backslash-left-small {
+    &::before {
+      content: "/ ";
+      color: $pink-300;
+      font-size: 2.5rem;
+    }
+  }
 }

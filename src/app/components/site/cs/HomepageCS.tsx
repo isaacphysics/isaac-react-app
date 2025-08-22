@@ -2,8 +2,7 @@ import React, {useEffect} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, Col, Container, Row} from "reactstrap";
-import {SITE_TITLE, useDeviceSize} from "../../../services";
-import {AdaHero2x1} from "../../elements/svg/AdaHero";
+import {isLoggedIn, isTeacherOrAbove, SITE_TITLE, useDeviceSize} from "../../../services";
 import {NewsCard} from "../../elements/cards/NewsCard";
 import {MetaDescription} from "../../elements/MetaDescription";
 import { ImageBlock } from "../../elements/layout/ImageBlock";
@@ -19,6 +18,7 @@ export const HomepageCS = () => {
     const {setLinkedSetting} = useLinkableSetting();
     const userPreferences = useAppSelector(selectors.user.preferences);
     const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
+    const user = useAppSelector(selectors.user.orNull);
 
     return <>
         {/*<WarningBanner/>*/}
@@ -26,42 +26,57 @@ export const HomepageCS = () => {
         <div id="homepage">
 
             <section id="call-to-action" className="homepageHero">
-                <Container className="homepage-padding mw-1600" fluid>
-                    <Row>
-                        <TextBlock lg={7}>
-                            <h1 className={"font-size-1-75 font-size-md-2-5"}>
-                                <span className={"text-pink"}>/</span><br/>
-                                The free learning platform for computing teachers and students
-                            </h1>
-                            <Row className="justify-content-start align-items-center my-3">
-                                <Col xs={6} sm={3}>
-                                    <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="d-block">
-                                        <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
-                                    </a>
-                                </Col>
-                                <Col xs={6} sm={3}>
-                                    <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener" className="d-block">
-                                        <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
-                                    </a>
-                                </Col>
-                            </Row>
-                            <Button className="mt-3" tag={Link} to="/topics" color="dark-primary">Explore our resources</Button>
-                        </TextBlock>
-                        <ImageBlock lg={5} className={"mb-1 mb-sm-3 mb-lg-0"}>
-                            <AdaHero2x1 className={"mt-7 mt-lg-0 d-block"}/>
-                        </ImageBlock>
-                    </Row>
+                <Container id={"cta-container"} fluid>
+                    <div className="d-flex flex-column align-items-center gap-5">
+                        <div className={""}>
+                            <h1 className={"backslash-left-small text-center font-size-2 font-size-md-2-5 mb-0"}>The free learning platform for computing teachers and students</h1>
+                        </div>
+                        <div className="d-flex flex-row w-100 align-items-center justify-content-center">
+                            <div className={"mx-5"}>
+                                <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
+                                    <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
+                                </a>
+                            </div>
+                            <div className={"mx-5"}>
+                                <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
+                                    <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            {isLoggedIn(user) && isTeacherOrAbove(user) &&
+                                <Button color={"dark-primary"} tag={Link} to={"/dashboard"}>Go to My Ada Overview</Button>}
+                        </div>
+                    </div>
+                </Container>
+                <Container className={"mw-1600 homepage-padding-x"} fluid>
+                    <Card id={"cta-features-card"} className={"icon-card p-5"}>
+                        <Row className={"justify-content-center gy-5"}>
+                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                                Free computer science resources for students aged 14 to 19
+                            </Col>
+                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                                Instant feedback with self-marking quizzes
+                            </Col>
+                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                                Track progress in your personal markbook
+                            </Col>
+                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                                Specific exam alignment for the UK and adaptable to use worldwide
+                            </Col>
+                        </Row>
+                    </Card>
                 </Container>
             </section>
 
             <section id="teach-and-learn">
-                <Container className="homepage-padding mw-1600 position-relative" fluid>
+                <Container className="homepage-padding mw-1600" fluid>
                     <div className="d-flex flex-column gap-5 align-items-center">
-                        <h2 className={"font-size-2"}>Teach and learn about computer science with confidence</h2>
-                        <Card className={"cs-card w-100 p-5"}>
+                        <h2 className={"font-size-1-75 font-size-md-2 text-center"}>Teach and learn about computer science with confidence</h2>
+                        <Card className={"icon-card w-100 p-5"}>
                             <ColumnSlice>
                                 <TextBlock>
-                                    <h3 className={"font-size-1-5"}>Resources you can trust</h3>
+                                    <h3 className={"font-size-1-5 font-size-md-1-75"}>Resources you can trust</h3>
                                     <ul>
                                         <li>More than 50 curriculum-aligned topics covering the breadth of computer science</li>
                                         <li>Clear concept pages for every key topic</li>
@@ -74,13 +89,13 @@ export const HomepageCS = () => {
                                 </ImageBlock>
                             </ColumnSlice>
                         </Card>
-                        <Card className={"cs-card w-100 p-5"}>
+                        <Card className={"icon-card w-100 p-5"}>
                             <ColumnSlice>
                                 <ImageBlock>
                                     <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/tools-slice.svg" alt=""/>
                                 </ImageBlock>
                                 <TextBlock>
-                                    <h3 className={"font-size-1-5"}>Tools to aid learning</h3>
+                                    <h3 className={"font-size-1-5 font-size-md-1-75"}>Tools to aid learning</h3>
                                     <ul>
                                         <li>Self-marking assessments that save time and support independent learning and revision</li>
                                         <li>Over 1000 questions that provide instant feedback to students</li>
@@ -90,7 +105,7 @@ export const HomepageCS = () => {
                                 </TextBlock>
                             </ColumnSlice>
                         </Card>
-                        <div className={"d-flex flex-row gap-4"}>
+                        <div className={"d-flex flex-column flex-md-row gap-4"}>
                             <Button tag={Link} to={"/teachers"}>
                                 Explore Ada CS for teachers
                             </Button>
