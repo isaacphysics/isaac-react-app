@@ -85,14 +85,14 @@ export const HomepageCS = () => {
                                     </ul>
                                 </TextBlock>
                                 <ImageBlock>
-                                    <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/resources-slice.svg" alt=""/>
+                                    <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/concepts-slice.svg" alt=""/>
                                 </ImageBlock>
                             </ColumnSlice>
                         </Card>
                         <Card className={"icon-card w-100 p-5"}>
                             <ColumnSlice>
                                 <ImageBlock>
-                                    <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/tools-slice.svg" alt=""/>
+                                    <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/markbook-slice.svg" alt=""/>
                                 </ImageBlock>
                                 <TextBlock>
                                     <h3 className={"font-size-1-5 font-size-md-1-75"}>Tools to aid learning</h3>
@@ -187,7 +187,7 @@ export const HomepageCS = () => {
                             <Button color={"primary"} tag={Link} to={"/register"}>Create an account</Button>
                         </TextBlock>
                         <ImageBlock>
-                            <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/account-slice.svg" alt=""/>
+                            <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/tools-slice.svg" alt=""/>
                         </ImageBlock>
                     </ColumnSlice>
                 </Container>
