@@ -10,7 +10,8 @@ import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
 import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetGroupsQuery, useLazyGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
-import { getAssigneesByBoard, SetAssignmentsModal } from "../../pages/SetAssignments";
+import { getAssigneesByBoard } from "../../pages/SetAssignments";
+import { SetAssignmentsModal } from "../modals/SetAssignmentsModal";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
