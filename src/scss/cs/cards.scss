@@ -174,30 +174,6 @@ a.icon-card, a.cs-card {
     background-repeat: no-repeat;
   }
 
-  &.backslash-1 {
-    &::before {
-      height: 56px;
-      width: 28px;
-      background-image: url(/assets/cs/decor/backslash-outline-1.svg);
-    }
-  }
-
-  &.backslash-2 {
-    &::before {
-      height: 56px;
-      width: 46px;
-      background-image: url(/assets/cs/decor/backslash-outline-2.svg);
-    }
-  }
-
-  &.backslash-3 {
-    &::before {
-      height: 56px;
-      width: 64px;
-      background-image: url(/assets/cs/decor/backslash-outline-3.svg);
-    }
-  }
-
   .card-img, .card-img-top {
     width: 100%;
     border-radius: 15px 15px 0 0;

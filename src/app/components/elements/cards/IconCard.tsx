@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 export interface IconCardContentProps {
     title: string;
     icon: {src: string, altText?: string, className?: string};
-    bodyText: string;
+    bodyText?: string;
     tag?: string;
     clickUrl?: string;
     onButtonClick?: () => void;
@@ -21,7 +21,7 @@ export interface IconCardProps extends ContainerProps {
     card: IconCardContentProps;
 }
 
-export const IconCard = ({card, ...props}: IconCardProps) => {
+export const IconCard = ({card, children, ...props}: IconCardProps) => {
     const {title, icon, bodyText, tag, clickUrl, onButtonClick, buttonText, disabled, buttonStyle} = card;
     return <Container {...props} className={classNames("icon-card-container px-3 my-3", props?.className ?? "")}>
         <Card className={classNames("icon-card border-0", card.className)} tag={buttonStyle === "card" ? Link : Card} to={clickUrl}>
@@ -33,8 +33,8 @@ export const IconCard = ({card, ...props}: IconCardProps) => {
                 <CardTitle className="px-4 mt-4">
                     <h3 className="mb-0">{title}</h3>
                 </CardTitle>
-                {bodyText && <CardBody className="pt-2 pb-1 px-4">
-                    <p className="mb-0">{bodyText}</p>
+                {(children || bodyText) && <CardBody className="pt-2 pb-1 px-4">
+                    {children ?? <p className="mb-0">{bodyText}</p>}
                 </CardBody>}
                 {clickUrl && buttonStyle !== "card" && <CardFooter className={"border-top-0 p-4 pt-3"}>
                     <Button onClick={onButtonClick} className={classNames("text-start", {"d-flex align-items-center" : buttonStyle === "link"}, {"external-link": !isAppLink(clickUrl)})} disabled={disabled} outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} tag={Link} to={clickUrl}>
