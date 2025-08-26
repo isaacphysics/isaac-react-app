@@ -108,7 +108,7 @@ describe("SetAssignments", () => {
                 expect(button.getAttribute("href")).toBe(href);
             }
         });
-    } 
+    }
 
     it('should show all the correct information for a gameboard in card view', async () => {
         await renderSetAssignments();
@@ -140,7 +140,7 @@ describe("SetAssignments", () => {
             expect(title.getAttribute("href")).toBe(`/assignment/${mockGameboard.id}`);
         }
         if (isPhy) {
-            expect(gameboard.getAttribute("href")).toBe(`/question_decks#${mockGameboard.id}`);
+            expect(gameboard.getAttribute("href")).toBe(`/assignment/${mockGameboard.id}`);
         }
 
         // Ensure the assign/unassign button exists

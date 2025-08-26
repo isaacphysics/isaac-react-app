@@ -44,7 +44,10 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
     const isSetAssignments = isDefined(setAssignmentsDetails);
 
-    const boardLink = gameboard && `${PATHS.GAMEBOARD}#${gameboard.id}`;
+    const boardLink = gameboard && (isSetAssignments 
+        ? `/assignment/${gameboard.id}`
+        : `${PATHS.GAMEBOARD}#${gameboard.id}`
+    );
 
     const card = <div className="px-3 py-2 flex-grow-1">
         <Row data-testid="my-assignment">
