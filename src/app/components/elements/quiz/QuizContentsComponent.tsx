@@ -63,24 +63,6 @@ interface QuizViewProps extends QuizProps {
     questions?: undefined;
     sections?: undefined;
 }
-export interface QuizAttemptProps extends QuizProps {
-    attempt: QuizAttemptDTO
-    view?: undefined;
-    preview?: boolean;
-    page: number | null;
-    pageLink: PageLinkCreator;
-    questions: QuestionDTO[];
-    sections: { [id: string]: IsaacQuizSectionDTO };
-}
-interface QuizViewProps extends QuizProps {
-    attempt?: undefined;
-    view: QuizView;
-    preview?: undefined;
-    page?: undefined;
-    pageLink?: undefined;
-    questions?: undefined;
-    sections?: undefined;
-}
 
 function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
     return questions.filter(q => q.id?.startsWith(section.id as string + "|"));
