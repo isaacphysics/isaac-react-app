@@ -2,9 +2,9 @@ name: Cypress visual regression tests
 
 on:
   push:
-    branches: [ "master", "redesign-2024" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master", "redesign-2024" ]
+    branches: [ "main"" ]
 
 jobs:
   cypress-run:
