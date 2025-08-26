@@ -15,6 +15,7 @@ describe('Assignment progress', () => {
         cy.mountWithStoreAndRouter(<AssignmentProgress user={mockUser}/>);
         cy.get('[data-testid="loading"]').should('not.exist');
         cy.get('[data-testid="group-name"]').contains("Test Group 1").click();
+        cy.get('button').contains("Download assignments CSV").should('exist');
         cy.matchImage();
     });
 
