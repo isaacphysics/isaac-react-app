@@ -138,8 +138,8 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                 const attempts = progress?.attemptsByType?.[qType] || null;
                                 const percentage = safePercentage(correct, attempts);
                                 return <Col key={qType} lg={siteSpecific(6, 4)} className="mt-2 type-progress-bar">
-                                    <div className={"px-2"}>
-                                        {HUMAN_QUESTION_TYPES[qType]} questions correct
+                                    <div className={"p-2"}>
+                                        {HUMAN_QUESTION_TYPES[qType]} questions
                                     </div>
                                     <div className={"px-2"}>
                                         <ProgressBar percentage={percentage || 0}>
@@ -153,7 +153,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
                     {isPhy && <div className="mt-4">
                         <h4>Isaac Books</h4>
-                        Questions completed correctly, against questions attempted for each of our <a href={"/pages/order_books"}>mastery books</a>.
+                        Questions completed correctly, against questions attempted for each of our <a href={"/books"}>books</a>.
                         <Row>
                             {Object.entries(siteSpecificStats.questionCountByTag).map(([qType, total]) => {
                                 const correct = Math.min(progress?.correctByTag?.[qType] || 0, total);

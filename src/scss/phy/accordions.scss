@@ -1,6 +1,6 @@
 @import "../common/accordions";
 
-.accordion {
+.accordion:not(:has(> .accordion-item)) {
   background: #FBFBFB;
   border: 2px solid $color-neutral-300;
   border-radius: 8px;

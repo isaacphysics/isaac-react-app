@@ -35,8 +35,6 @@ if (document.location.hostname === "localhost") {
     apiPath = "http://localhost:8080/isaac-api/api";
 } else if (EDITOR_PREVIEW) {
     apiPath = `${STAGING_URL}/api/any/api`;
-} else if (document.location.hostname.endsWith(".ngrok.isaacscience.org")) {
-    apiPath = "https://isaac-api.ngrok.isaacscience.org/isaac-api/api";
 }
 let imagePath = `${apiPath}/images`;
 if (apiPath.indexOf(`/api/${API_VERSION}/api`) > -1) {
@@ -606,7 +604,7 @@ export const ISAAC_BOOKS_BY_TAG: {[tag in BookTag]: BookInfo} = ISAAC_BOOKS.redu
 
 export const BOOK_DETAIL_ID_SEPARATOR = "__";
 
-export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNING_STAGE, string>>>> = { 
+export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNING_STAGE, string>>>> = {
     "physics": {
         [LEARNING_STAGE["11_TO_14"]]: "app_page_overview_ks3_phys",
         [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_phys_fragment",

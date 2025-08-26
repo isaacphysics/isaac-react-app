@@ -11,7 +11,9 @@ export const WithLinkableSetting = (props: React.ComponentProps<"div">) => {
     useEffect(() => {
         if (isLinkedSetting) {
             setLinkedSettingSeen();
-            ref?.current?.scrollIntoView({ behavior: 'smooth' });
+            if (ref.current) {
+                window.scrollTo({top: ref.current.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth'});
+            }
         }
     }, [isLinkedSetting, setLinkedSettingSeen, ref]);
 

@@ -1,3 +1,19 @@
+@import "../common/modals";
+
+.modal-content {
+  // todo: input styling on Ada CS is a bit of a mess at the moment - we should fix this everywhere, at which point this can go.
+  & .form-control{
+    height: 45px;
+    border-radius: 10px !important;
+    border: solid 2px #666;
+    padding: 12px;
+  }
+
+  .modal-header {
+    padding-right: 1.75rem;
+  }
+}
+
 .modal-page-hero-image {
     aspect-ratio: 400 / 242;
     width: 100%;

@@ -11,13 +11,8 @@
   border-radius: 0.5rem;
   box-shadow: 0px 0px 20px 3px rgba(0,0,0,0.2);
 
-  .modal-footer,
   .modal-header {
-    border-width: 0;
-  }
-
-  .modal-header {
-    padding-left: 1.875rem;
+    padding-right: 1.75rem;
 
     button {
       &.close {
@@ -35,7 +30,6 @@
       font-family: $secondary-font-semi-bold;
       font-size: 2.125rem;
       font-weight: 600;
-      margin-top: 2.3rem;
     }
   }
 
@@ -50,6 +44,7 @@
         margin: 0 0.25rem 1rem;
       }
     }
+    border-top: none;
   }
 
   .book-link {

@@ -69,6 +69,14 @@ export interface QuestionStatus {
     complete: boolean;
 }
 
+export const statusLabelMap: {[key: string]: string} = {
+    "notAttempted": siteSpecific("Not started", "Not attempted"),
+    "tryAgain": siteSpecific("In progress", "Try again"),
+    "allIncorrect": "All incorrect",
+    "allAttempted": "All attempted",
+    "complete": siteSpecific("Fully correct", "Completed"),
+};
+
 function questionStatusToURIComponent(statuses: QuestionStatus): string {
     return Object.entries(statuses)
         .filter(e => e[1])
@@ -446,7 +454,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const filterTags = useMemo(() => [
         searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
         searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
-        statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
+        statusList.map(s => {return {value: s, label: statusLabelMap[s]};}),
         excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
         selectionList,
     ].flat(), [searchDifficulties, searchStages, statusList, excludeBooks, booksList, selectionList]);

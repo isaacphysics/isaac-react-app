@@ -1,4 +1,4 @@
-#student-resources, #teacher-resources {
+#student-resources, #teacher-resources, #homepage{
   .backslash-left {
     position: relative;
 
@@ -13,6 +13,13 @@
       position: absolute;
       top: 34px;
       left: 6px;
+    }
+  }
+  .backslash-left-small {
+    &::before {
+      content: "/ ";
+      color: $pink-300;
+      font-size: 2.5rem;
     }
   }
 }

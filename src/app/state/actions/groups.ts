@@ -3,7 +3,7 @@ import {openActiveModal} from "./../index";
 import {
     additionalManagerSelfRemovalModal,
     groupInvitationModal,
-    groupEmailModal, groupManagersModal
+    groupEmailModal, groupManagersModal, groupCreateModal
 } from "../../components/elements/modals/GroupsModalCreators";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {createAsyncThunk} from "@reduxjs/toolkit";
@@ -15,11 +15,18 @@ export const showGroupEmailModal = createAsyncThunk<void, number[]>(
     }
 );
 
+export const showCreateGroupModal = createAsyncThunk<void, {user: RegisteredUserDTO}>(
+    "groups/modals/new",
+    async ({user}, {dispatch}) => {
+        dispatch(openActiveModal(groupCreateModal(user)));
+    }
+);
+
 export const showGroupInvitationModal = createAsyncThunk<void, {group: AppGroup; user: RegisteredUserDTO; firstTime: boolean; backToCreateGroup?: () => void}>(
     "groups/modals/invitation",
-    async ({group, user, firstTime, backToCreateGroup}, {dispatch}) => {
-        dispatch(openActiveModal(groupInvitationModal(group, user, firstTime, backToCreateGroup)));
-    }
+async ({group, user, firstTime, backToCreateGroup}, {dispatch}) => {
+    dispatch(openActiveModal(groupInvitationModal(group, user, firstTime, backToCreateGroup)));
+}
 );
 
 export const showAdditionalManagerSelfRemovalModal = createAsyncThunk<void, {group: AppGroup; user: RegisteredUserDTO}>(

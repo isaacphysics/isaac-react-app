@@ -5,6 +5,7 @@ import pluginReact from "eslint-plugin-react";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginJsxA11y from "eslint-plugin-jsx-a11y";
 import { fixupPluginRules } from "@eslint/compat";
+import path from 'path';
 
 
 export default [
@@ -39,6 +40,7 @@ export default [
             "@typescript-eslint/explicit-function-return-type": "off",
             "@typescript-eslint/no-empty-interface": "warn",
             "@typescript-eslint/explicit-module-boundary-types": "off",
+            "@typescript-eslint/no-floating-promises": "warn",
             "react/jsx-no-target-blank": "off", // https://github.com/isaacphysics/isaac-react-app/pull/1134#discussion_r1774839755
         },
         languageOptions: {
@@ -46,8 +48,10 @@ export default [
             parserOptions: {
                 ecmaFeatures: {
                     "jsx": true
-                }
-            }
+                },
+                projectService: true,
+                tsconfigRootDir: path.__dirname,
+            },
         }
     }
 ];

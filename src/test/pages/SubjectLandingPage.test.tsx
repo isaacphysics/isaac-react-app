@@ -1,4 +1,4 @@
-import {act, screen} from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { clickOn, renderTestEnvironment, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults } from "../../mocks/data";
 import { isAda } from "../../app/services";
@@ -11,14 +11,13 @@ describe("SubjectLandingPage", () => {
         const questions = mockQuestionFinderResults.results;
 
         const renderSubjectLandingPage = async ({questionsSearchResponse} : RenderParameters) => {
-            await act(async () => {
-                renderTestEnvironment({
-                    role: 'ANONYMOUS',
-                    extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed'], questionsSearchResponse)]
-                            
-                });
-                setUrl({ pathname: '/maths/gcse' });
+            renderTestEnvironment({
+                role: 'ANONYMOUS',
+                extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed'], questionsSearchResponse)]
             });
+            await waitForLoaded();
+            await setUrl({ pathname: '/maths/gcse' });
+            await waitForLoaded();
         };
 
         it('should show the first question', () => 

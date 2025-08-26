@@ -1,4 +1,3 @@
-import classnames from "classnames";
 import {
     tags,
     AUDIENCE_DISPLAY_FIELDS,
@@ -42,10 +41,6 @@ const GameboardBuilderRow = (
 ) => {
     const dispatch = useAppDispatch();
 
-    const topicTag = () => {
-        const tag = question.tags && tags.getSpecifiedTag(TAG_LEVEL.topic, question.tags as TAG_ID[]);
-        return tag && tag.title;
-    };
     const tagIcon = (tag: string) => {
         return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</span>;
     };
@@ -58,7 +53,7 @@ const GameboardBuilderRow = (
     };
 
     const audienceViews = determineAudienceViews(question.audience, creationContext);
-    const filteredAudienceViews = filterAudienceViewsByProperties(audienceViews, AUDIENCE_DISPLAY_FIELDS);
+    const filteredAudienceViews = audienceViews.length === 0 ? [{stage: undefined, difficulty: undefined}] : filterAudienceViewsByProperties(audienceViews, AUDIENCE_DISPLAY_FIELDS);
 
     const cellClasses = "text-start align-middle";
     const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
@@ -83,9 +78,7 @@ const GameboardBuilderRow = (
         }
     };
 
-    return filteredAudienceViews.map((view, i, arr) => <tr
-        key={`${question.id} ${i}`}
-    >
+    return filteredAudienceViews.map((view, i, arr) => <tr key={`${question.id} ${i}`}>
         {i === 0 && <>
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
@@ -143,17 +136,15 @@ const GameboardBuilderRow = (
                 </div>
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-25", "w-20"))}>
-                {topicTag()}
+                {tags.getSpecifiedTag(TAG_LEVEL.topic, question.tags as TAG_ID[])?.title}
             </td>
         </>}
         <td className={classNames(cellClasses, "w-15")}>
             {view.stage && <span>{stageLabelMap[view.stage]}</span>}
         </td>
-        {(isPhy || i === 0) && <td rowSpan={siteSpecific(1, arr.length)} className={classNames(cellClasses, "w-15")}>
+        {(isPhy || (isAda && i === 0)) && <td rowSpan={siteSpecific(1, arr.length)} className={classNames(cellClasses, "w-15")}> 
             {/* Show each difficulty icon for Physics or just the first one for Ada */}
-            <div>
-                {view.difficulty && <DifficultyIcons difficulty={view.difficulty} />}
-            </div>
+            {view.difficulty && <DifficultyIcons difficulty={view.difficulty} />}
         </td>}
         {isAda && <td className={classNames(cellClasses, "w-15")}>
             {audienceViews.filter(audienceView => view.stage === audienceView.stage)
