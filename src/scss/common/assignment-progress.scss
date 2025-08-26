@@ -381,14 +381,6 @@ $failed-bg-size: 25%;
   }
 }
 
-@mixin table-sticky() {
-  position: sticky !important;
-  position: -webkit-sticky !important;
-  background-clip:  padding-box !important;
-  background: $gray-103;
-  z-index: 2;
-}
-
 @mixin after-border() {
   content: '';
   position: absolute;

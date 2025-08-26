@@ -42,6 +42,7 @@
   .table.table-bordered {
     thead {
       @include table-sticky();
+      background: $gray-103;
     }
     tr {
       &.disabled {

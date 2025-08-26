@@ -89,6 +89,19 @@
   display: contents !important;
 }
 
+.sticky-left {
+  // mirror BS sticky-top and sticky-bottom
+  position: sticky;
+  left: 0;
+  z-index: 1020;
+}
+
+.sticky-right {
+  position: sticky;
+  right: 0;
+  z-index: 1020;
+}
+
 .text-overflow-ellipsis {
   overflow: hidden;
   white-space: nowrap;
