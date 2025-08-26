@@ -240,7 +240,7 @@ describe("SetAssignments", () => {
 
         it('groups are empty by default', async () => {
             await renderModal();
-            expect(within(await modal()).getByTestId("modal-groups-selector")).toHaveTextContent('Group(s):None');
+            expect(within(await modal()).getByTestId("modal-groups-selector")).toHaveTextContent('Groups:None');
         });
 
         it('start date is empty by default', async () => {
@@ -299,7 +299,7 @@ describe("SetAssignments", () => {
                 await userEvent.click(within(dueDateContainer).getByRole("button", {name: "close"}));
 
                 await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
-                expect(dueDateContainer).toHaveTextContent(`Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments`);
+                expect(dueDateContainer).toHaveTextContent(`Due dates are required for assignments`);
             });
 
             it('does not show an error when the due date is present', async () => {
@@ -308,7 +308,7 @@ describe("SetAssignments", () => {
                 const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
 
                 await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
-                expect(dueDateContainer).not.toHaveTextContent(`Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments`);
+                expect(dueDateContainer).not.toHaveTextContent(`Due dates are required for assignments`);
             });
 
             it('shows an error message when the due date is before the start date', async () => {
@@ -334,8 +334,8 @@ describe("SetAssignments", () => {
                 const groupContainer = within(modal).getByTestId("modal-groups-selector");
 
                 await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
-                expect(groupContainer).toHaveTextContent("Group(s):None");
-                expect(within(groupContainer).getByText("You must select a group")).toBeInTheDocument();
+                expect(groupContainer).toHaveTextContent("Groups:None");
+                expect(within(groupContainer).getByText("Please select a group")).toBeInTheDocument();
             });
 
             it('shows an error message when the notes exceed 500 characters', async () => {
