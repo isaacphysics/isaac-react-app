@@ -59,7 +59,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
 
     function attemptAssign() {
         setValidationAttempted(true);
-        if (groupInvalid || dueDateInvalid || startDateInvalid || notesInvalid) {
+        if (groupInvalid || dueDateInvalid || !dueDate || startDateInvalid || notesInvalid) {
             return;
         }
         assign();
@@ -123,7 +123,11 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
                 </div>
                 {(selectedGroups.length === 0 
                     ? <FormFeedback>Please select a group</FormFeedback> 
-                    : <FormFeedback>You cannot reassign a {siteSpecific("question deck", "quiz")} to this group(s) until the due date has passed.</FormFeedback>
+                    : <FormFeedback> {selectedGroups.length === 1 ? 
+                        `You cannot reassign a ${siteSpecific("question deck", "quiz")} to this group until the due date has passed.` 
+                        : `You cannot reassign a ${siteSpecific("question deck", "quiz")} to the following groups until the due date has passed: 
+                            ${selectedGroups.filter(g => currentAssignees.some(a => a.groupId === g.value)).map(g => g.label).join(", ")}` }
+                    </FormFeedback>
                 )}
             </Label>
         </FormGroup>
