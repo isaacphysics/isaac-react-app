@@ -142,7 +142,7 @@ export const HomepageCS = () => {
                 <Container className={"homepage-padding mw-1600"}>
                     <TextBlock md={8}>
                         <h2 className={"font-size-1-75 mb-4"}>Exam board alignment</h2>
-                        <p>We&apos;ve organised our learning resources so they can be easily used, wherever you are.</p>
+                        <p className={"font-size-1-25"}>We&apos;ve organised our learning resources so they can be easily used, wherever you are.</p>
                     </TextBlock>
                     <ColumnSlice breakpoint="md">
                         <IconCard card={{
@@ -181,9 +181,11 @@ export const HomepageCS = () => {
                     <ColumnSlice>
                         <TextBlock>
                             <h2 className={"font-size-2"}>Manage workload and track progress with an Ada CS account</h2>
-                            <p>You can use any of our learning resources wherever you are, without an Ada CS account.</p>
-                            <p>An Ada CS account gets you access to lots of useful tools. Organise students into groups, set self-marking assignments, and track progress to identify learning opportunities.</p>
-                            <p>It’s totally free to use Ada CS, with or without an account.</p>
+                            <div className={"font-size-1-25"}>
+                                <p>You can use any of our learning resources wherever you are, without an Ada CS account.</p>
+                                <p>An Ada CS account gets you access to lots of useful tools. Organise students into groups, set self-marking assignments, and track progress to identify learning opportunities.</p>
+                                <p>It’s totally free to use Ada CS, with or without an account.</p>
+                            </div>
                             <Button color={"primary"} tag={Link} to={"/register"}>Create an account</Button>
                         </TextBlock>
                         <ImageBlock>
