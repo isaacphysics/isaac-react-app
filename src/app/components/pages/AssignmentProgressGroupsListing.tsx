@@ -36,7 +36,7 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
 
     return <Link to={`${PATHS.ASSIGNMENT_PROGRESS}/group/${group.id}`} className="w-100 d-block no-underline mt-2">
         <div className="d-flex assignment-progress-group w-100 p-3 align-items-center">
-            <div className="d-flex flex-grow-1 flex-column flex-lg-row">
+            <div className="d-flex flex-grow-1 flex-column flex-lg-row align-items-start">
                 <b data-testid="group-name">{group.groupName}</b>
                 <Spacer/>
                 <strong>
