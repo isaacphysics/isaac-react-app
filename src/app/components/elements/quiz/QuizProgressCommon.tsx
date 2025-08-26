@@ -10,7 +10,6 @@ import { SortItemHeader } from "../SortableItemHeader";
 import { AssignmentProgressDTO, CompletionState, QuestionPartState } from "../../../../IsaacApiTypes";
 import classNames from "classnames";
 import { Markup } from "../markup";
-import { HorizontalScroller } from "../inputs/HorizontalScroller";
 
 export const ICON = {
     correct: <i className="icon-md icon-correct"/>,

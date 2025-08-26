@@ -17,7 +17,7 @@ function AssignmentProgressType({user, assignmentId, groupId}: {user: Registered
 
     if (groupId) {
         // then we are in Group view
-        const currentGroup = groupId ? parseInt(groupId) : undefined;
+        const currentGroup = parseInt(groupId);
         const group = groups?.find(g => g.id === currentGroup);
 
         return <AssignmentProgressGroup user={user} group={group} />;
