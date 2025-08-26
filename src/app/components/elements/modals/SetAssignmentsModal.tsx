@@ -112,7 +112,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
     return <Form onSubmit={e => {e.preventDefault(); attemptAssign();}} className="py-2">
         <FormGroup>
             <Label data-testid="modal-groups-selector" className="w-100 pb-2">
-                <span className="form-required">Group(s):</span>
+                <span className="form-required">Groups:</span>
                 <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
                     <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
                         value={selectedGroups}
@@ -122,14 +122,14 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
                     />
                 </div>
                 {(selectedGroups.length === 0 
-                    ? <FormFeedback>You must select a group</FormFeedback> 
+                    ? <FormFeedback>Please select a group</FormFeedback> 
                     : <FormFeedback>You cannot reassign a {siteSpecific("question deck", "quiz")} to this group(s) until the due date has passed.</FormFeedback>
                 )}
             </Label>
         </FormGroup>
         <FormGroup>
             <Label data-testid="modal-start-date-selector" className="w-100 pb-2">
-                <span>Set an optional start date:</span>
+                <span className="form-optional">Start date:</span>
                 <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..."
                     yearRange={yearRange} invalid={validationAttempted && startDateInvalid}
                     onChange={setScheduledStartDateAtSevenAM}/>
@@ -138,10 +138,10 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
         </FormGroup>
         <FormGroup>
             <Label data-testid="modal-due-date-selector" className="w-100 pb-2">
-                <span className="form-required">Due date reminder:</span>
+                <span className="form-required">Due date:</span>
                 <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} invalid={validationAttempted && (dueDateInvalid || !dueDate)}
                     onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date);}}/> {/* DANGER here with force-casting Date|null to Date */}
-                <FormFeedback>{!dueDate && `Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments.`}</FormFeedback>
+                <FormFeedback>{!dueDate && `Due dates are required for assignments.`}</FormFeedback>
                 <FormFeedback>{dueDateInvalid && "Due date must be on or after start date and in the future."}</FormFeedback>
             </Label>
         </FormGroup>

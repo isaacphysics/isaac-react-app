@@ -179,7 +179,7 @@ describe("SetAssignments", () => {
         await selectGroup(mockActiveGroups[1].groupName);
 
         // Check scheduled start date and due date are there
-        within(modal).getByLabelText("Set an optional start date:", {exact: false});
+        within(modal).getByLabelText("Start date:", {exact: false});
         // TODO check setting scheduled start date and due date leads to correctly saved values,
         // since this currently just checks any form of due date is set.
         const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
