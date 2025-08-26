@@ -47,6 +47,6 @@ export const AssignmentProgress = withRouter((props: AssignmentProgressProps) =>
     const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
     return <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-        <AssignmentProgressType user={user} assignmentId={match.params.assignmentId} groupId={match.params.groupId} />;
+        <AssignmentProgressType user={user} assignmentId={match.params.assignmentId} groupId={match.params.groupId} />
     </AssignmentProgressPageSettingsContext.Provider>;
 });

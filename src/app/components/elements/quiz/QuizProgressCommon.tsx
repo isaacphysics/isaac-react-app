@@ -224,7 +224,7 @@ export function ResultsTable<Q extends QuestionType>({
 
     const tableHeaderFooter = <tr className="progress-table-header-footer fw-bold">
         <SortItemHeader<ProgressSortOrder>
-            className="student-name pointer-cursor ps-3 py-3"
+            className="student-name sticky-left pointer-cursor ps-3 py-3"
             defaultOrder={"name"}
             reverseOrder={"name"}
             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -276,11 +276,31 @@ export function ResultsTable<Q extends QuestionType>({
     const tableRef = useRef<HTMLTableElement>(null);
     const questionTitle = selectedQuestionIndex !== undefined ? questions[selectedQuestionIndex]?.title : undefined;
 
+    const classAverages: [number, number][] | undefined = progress ? questions.map((_, index) => {
+        // classAverages returns a pair of (numerator, denominator) to be passed into formatMark() for each question.
+
+        // AVERAGE CALCULATION #1:
+        // this gives (average mark) / (total available marks). this gives the most accurate percentages for "how much of this question did students
+        // get right", but makes no sense outside of percentage view (the denominator is fairly random). since the raw calculation is 
+        // (total marks for everyone) / (number of people) / (marks available), we could swap the divisions so that the number of people is the final
+        // denominator? but "3.2 / 4" doesn't make much sense either.
+
+        // const totalPartMarks = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].reduce((sum, part) => sum + (part === "CORRECT" ? 1 : 0), 0) || 0), 0);
+        // const averageMark = totalPartMarks / progress.length;
+        // return [averageMark, (questions[index]?.questionPartsTotal || 1)];
+
+        // AVERAGE CALCULATION #2:
+        // this gives (number of students who got everything correct) / (number of students). this is equal to the above IF there are no partially correct attempts;
+        // if there are any, this calculation ignores them entirely.
+        const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].every(part => part === "CORRECT") ? 1 : 0), 0);
+        return [studentsWithAllCorrect, progress.length];
+    }) : [];
+
     return <div className="assignment-progress-progress">
         {progress && progress.length > 0 && <>
-            <HorizontalScroller enabled={sortedProgress.length > 20} className="assignment-progress-table-wrapper">
-                <table ref={tableRef} className="progress-table w-100 border">
-                    <thead>
+            <div className="assignment-progress-table-wrapper border">
+                <table ref={tableRef} className="progress-table w-100">
+                    <thead className="sticky-top">
                         {tableHeaderFooter}
                         {isPhy && selectedQuestionIndex !== undefined && <tr>
                             <th className="py-2" colSpan={2 + questions.length}>
@@ -305,7 +325,7 @@ export function ResultsTable<Q extends QuestionType>({
                             const fullAccess = isAuthorisedFullAccess(studentProgress);
                             const internalCellSpacing = isPhy && isAssignment ? "py-1" : "py-3";
                             return <tr key={studentProgress.user?.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
-                                <th className={`student-name ${internalCellSpacing} fw-bold`}>
+                                <th className={`student-name sticky-left ps-2 ${internalCellSpacing} fw-bold`}>
                                     {fullAccess && pageSettings?.isTeacher ?
                                         (
                                             isAssignment ?
@@ -384,8 +404,17 @@ export function ResultsTable<Q extends QuestionType>({
                             </tr>;
                         })}
                     </tbody>
+                    <tfoot className="sticky-bottom">
+                        <tr>
+                            <th className="sticky-left text-start p-3 fw-bold">Total fully correct</th>
+                            <td/>{/* ignore totals per student column */}
+                            {classAverages.map(([numerator, denominator], index) => (
+                                <td key={index}>{formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}</td>
+                            ))}
+                        </tr>
+                    </tfoot>
                 </table>
-            </HorizontalScroller>
+            </div>
         </>}
     </div>;
 }
@@ -400,6 +429,8 @@ export function ResultsTablePartBreakdown({
     questionIndex,
     ...rest
 }: ResultsTablePartBreakdownProps) {
+
+    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     // TODO: the sorting is somewhat duplicated from above, could be slightly refactored
     const [sortOrder, setSortOrder] = useState<ProgressSortOrder>("name");
@@ -433,12 +464,18 @@ export function ResultsTablePartBreakdown({
         [(reverseOrder ? "desc" : "asc"), "asc"]
     ), [progress, reverseOrder, sortBySelectedSortOrder]);
 
+    const classAverages = sortedProgress[0].questionPartResults?.[questionIndex]?.map((_, i) => {
+        const totalCorrect = sortedProgress.reduce((acc, p) => acc + (p.questionPartResults?.[questionIndex][i] === "CORRECT" ? 1 : 0), 0);
+        const total = sortedProgress.length;
+        return [totalCorrect, total] as [number, number];
+    }) ?? [];
+
     return !!sortedProgress?.length && 
-    <HorizontalScroller enabled={sortedProgress.length > 20}>
-        <table {...rest} className={classNames("progress-table border assignment-progress-progress w-100", rest.className)}>
+    <div className="assignment-progress-table-wrapper border">
+        <table {...rest} className={classNames("progress-table assignment-progress-progress w-100", rest.className)}>
             <thead className="progress-table-header-footer">
                 <SortItemHeader<ProgressSortOrder>
-                    className="student-name ps-3 py-3"
+                    className="student-name sticky-left ps-3 py-3"
                     defaultOrder={"name"}
                     reverseOrder={"name"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -463,14 +500,14 @@ export function ResultsTablePartBreakdown({
             <tbody>
                 {sortedProgress.map((studentProgress, studentIndex) => (
                     <tr key={studentIndex}>
-                        <th className="student-name py-3 fw-bold">
-                            <Link className="d-flex justify-content-center align-items-center gap-2" to={`/progress/${studentProgress.user?.id}`} target="_blank">
+                        <th className="student-name sticky-left ps-2 py-3 fw-bold">
+                            <div className="d-flex align-items-center gap-2">
                                 <i className="icon icon-person icon-md" color="tertiary"/>
-                                <span className="pe-3">
+                                <Link className="w-100 text-start gap-2 pe-3" to={`/progress/${studentProgress.user?.id}`} target="_blank">
                                     {studentProgress.user?.givenName}
                                     <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
-                                </span>
-                            </Link>
+                                </Link>
+                            </div>
                         </th>
                         {studentProgress.questionPartResults &&
                             studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
@@ -479,6 +516,14 @@ export function ResultsTablePartBreakdown({
                     </tr>
                 ))}
             </tbody>
+            <tfoot className="sticky-bottom">
+                <tr>
+                    <th className="sticky-left text-start p-3 fw-bold">Total fully correct</th>
+                    {classAverages.map(([numerator, denominator], index) => (
+                        <td key={index}>{formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}</td>
+                    ))}
+                </tr>
+            </tfoot>
         </table>
-    </HorizontalScroller>;
+    </div>;
 }

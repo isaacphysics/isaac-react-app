@@ -143,13 +143,6 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                         <i className={classNames("icon icon-cog icon-dropdown-90", {"active": settingsVisible})}/>
                     </button>}
                 </div>
-                <Spacer/>
-                {isAda && <StyledToggle
-                    trueLabel="Correct"
-                    falseLabel="Attempted"
-                    checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"}
-                    onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")}
-                />}
             </div>
 
             <div className="d-flex flex-column flex-lg-row mt-2 mb-2 row-gap-2">
