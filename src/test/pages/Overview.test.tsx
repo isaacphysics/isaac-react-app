@@ -54,13 +54,13 @@ describe('Overview page', () => {
                     it('shows a "Next" button that takes to the following page', async () => {
                         await renderOverviewPage();
                         expect(modal.forwardButton).toHaveTextContent('Next');
-                        userEvent.click(modal.forwardButton);
+                        await userEvent.click(modal.forwardButton);
                         await waitFor(() => expect(modal.pages).toHaveTextContent('2 of 4'));
                     });
 
                     it('can be dismissed by closing the modal', async () => {
                         await renderOverviewPage();
-                        userEvent.click(modal.closeButton);
+                        await userEvent.click(modal.closeButton);
                         await waitFor(() => expect(modal.element).toBeNull());
                     });
                 });
@@ -68,7 +68,7 @@ describe('Overview page', () => {
                 describe('on the last page', () => {
                     const renderLastPage = async () => {
                         await renderOverviewPage();
-                        times(3, () => userEvent.click(modal.forwardButton));
+                        await Promise.all(times(3, () => userEvent.click(modal.forwardButton)));
                     };
 
                     it('shows the last page', async () => {
@@ -87,7 +87,7 @@ describe('Overview page', () => {
                     it('shows a "Go to My Ada" button that dismisses the modal', async () => {
                         await renderLastPage();
                         await waitFor(() => expect(modal.forwardButton).toHaveTextContent("Go to My Ada"));
-                        userEvent.click(modal.forwardButton);
+                        await userEvent.click(modal.forwardButton);
                         await waitFor(() => expect(modal.element).toBeNull());
                     });
                 });
@@ -99,8 +99,8 @@ describe('Overview page', () => {
 
                 it('leaves the flag when the modal is closed too quickly', async() => {
                     await renderOverviewPage();
-                    userEvent.click(modal.closeButton);
-                    waitFor(() => expect(modal.element).toBeNull());
+                    await userEvent.click(modal.closeButton);
+                    expect(modal.element).toBeNull();
                     expect(persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT)).toBe("true");
                 });
             });

@@ -1,6 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {
     dayMonthYearStringToDate,
@@ -11,7 +10,7 @@ import {
 } from "../dateUtils";
 import {clickOn, navigateToSetAssignments, renderTestEnvironment, withMockedDate} from "../testUtils";
 
-import {API_PATH, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
+import {API_PATH, isAda, isPhy, PATHS, siteSpecific, STAGE, stageLabelMap} from "../../app/services";
 import {http, HttpHandler, HttpResponse} from "msw";
 import {AssignmentDTO} from "../../IsaacApiTypes";
 import {buildPostHandler} from "../../mocks/handlers";
@@ -69,6 +68,28 @@ describe("SetAssignments", () => {
         // Make sure that all gameboards are listed
         const gameboardRows = await screen.findAllByTestId("gameboard-table-row");
         expect(gameboardRows).toHaveLength(mockGameboards.totalResults);
+
+        const gameboard = gameboardRows[0];
+        const mockGameboard = mockGameboards.results[0];
+
+        // Check that stages are displayed
+        const requiredStages = (mockGameboard.contents as {audience?: {stage?: STAGE[]}[]}[]).reduce(
+            (set: Set<string>, q) => q.audience?.reduce(
+                (_set: Set<string>, a) => a.stage?.reduce(
+                    (__set: Set<string>, t) => __set.add(stageLabelMap[t]),
+                    _set) ?? _set,
+                set) ?? set,
+            new Set<string>());
+        const stages = gameboard.children[2].textContent;
+        if (!stages || stages.length === 0) {
+            expect(requiredStages.size).toBe(0);
+        } else {
+            requiredStages.forEach(s => {
+                expect(stages?.includes(s)).toBeTruthy();
+            });
+        }
+        // TODO Check that the difficulties are listed
+
         if (isPhy) {
             // Phy persists the change to table view, so switch back to card view for subsequent tests
             const viewDropdown = await screen.findByLabelText("Set display mode");
@@ -79,13 +100,15 @@ describe("SetAssignments", () => {
         }
     });
 
-    isPhy && it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
-        await renderSetAssignments();
-        for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
-            const button = await screen.findByRole("link", {name: title});
-            expect(button.getAttribute("href")).toBe(href);
-        }
-    });
+    if (isPhy) {
+        it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
+            await renderSetAssignments();
+            for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
+                const button = await screen.findByRole("link", {name: title});
+                expect(button.getAttribute("href")).toBe(href);
+            }
+        });
+    } 
 
     it('should show all the correct information for a gameboard in card view', async () => {
         await renderSetAssignments();
@@ -110,31 +133,6 @@ describe("SetAssignments", () => {
         expect(dateText).toMatch(siteSpecific(TEXTUAL_DATE_REGEX, DDMMYYYY_REGEX));
         const date = siteSpecific(Date.parse(dateText!), dayMonthYearStringToDate(dateText));
         expect(mockGameboard.creationDate - (date?.valueOf() ?? 0)).toBeLessThanOrEqual(ONE_DAY_IN_MS);
-
-        // TODO fix stage and difficulty tests (broken since UI change Jan 2023)
-        // Check that stages are displayed
-        // const requiredStages = (mockGameboard.contents as {audience?: {stage?: STAGE[]}[]}[]).reduce(
-        //     (set: Set<string>, q) => q.audience?.reduce(
-        //         (_set: Set<string>, a) => a.stage?.reduce(
-        //             (__set: Set<string>, t) => __set.add(stageLabelMap[t]),
-        //             _set) ?? _set,
-        //         set) ?? set,
-        //     new Set<string>());
-        // const stages = within(gameboard).getByText("Stages:").textContent?.replace(/Stages:\s?/, "")?.split(/,\s?/);
-        //
-        // if (!stages || stages.length === 0) {
-        //     expect(requiredStages.size).toBe(0);
-        // } else {
-        //     requiredStages.forEach(s => {
-        //         expect(stages?.includes(s)).toBeTruthy();
-        //     });
-        //     stages.forEach(s => {
-        //         expect(requiredStages?.has(s)).toBeTruthy();
-        //     });
-        // }
-        //
-        // // Check for difficulty title TODO check for SVG using something like screen.getByTitle("Practice 2 (P2)...")
-        // within(gameboard).getByText("Difficulty:");
 
         // Ensure gameboard has correct title and link
         if (isAda) {
@@ -178,20 +176,16 @@ describe("SetAssignments", () => {
         const modal = await screen.findByTestId("active-modal");
         expect(modal).toHaveModalTitle(`Assign "${mockGameboard.title}"`);
         // Ensure all active groups are selectable in the drop-down
-        const groupSelector = await toggleGroupSelect();
-        mockActiveGroups.forEach(g => {
-            expect(groupSelector.textContent).toContain(g.groupName);
-        });
-        // Pick the second active group
         await selectGroup(mockActiveGroups[1].groupName);
 
         // Check scheduled start date and due date are there
-        within(modal).getByLabelText("Schedule an assignment start date", {exact: false});
-        const dueDateContainer = within(modal).getByLabelText("Due date reminder", {exact: false});
+        within(modal).getByLabelText("Start date:", {exact: false});
         // TODO check setting scheduled start date and due date leads to correctly saved values,
-        //  since this currently just checks any form of due date is set.
-        await clearDateInput("Due date reminder"); // get rid of default due date
-        await userEvent.selectOptions(dueDateContainer, "1"); // set some due date
+        // since this currently just checks any form of due date is set.
+        const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
+        const dueDateSelector = within(dueDateContainer.children[1] as HTMLElement).getByRole("combobox", {name: "Day"});
+        await userEvent.click(within(dueDateContainer).getByRole("button"));
+        await userEvent.selectOptions(dueDateSelector, "1"); // set some due date
 
         // Add some notes
         const testNotes = "Test notes to test groups for test assignments";
@@ -217,17 +211,10 @@ describe("SetAssignments", () => {
             expect(requestAssignment(observer.observedParams!).scheduledStartDate).not.toBeDefined();
         });
 
-        // TODO: the modal now closes automatically.
-        // // Check that new assignment is displayed in the modal
-        // await waitFor(() => {
-        //     const newCurrentAssignments = within(modal).queryAllByTestId("current-assignment");
-        //     expect(newCurrentAssignments.map(a => a.textContent).join(",")).toContain(mockActiveGroups[1].groupName);
-        // });
-        //
-        // // Close modal
-        // const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
-        // expect(closeButtons).toHaveLength(siteSpecific(2, 1)); // One at the top (and one at the bottom on Phy)
-        // await userEvent.click(closeButtons[0]);
+        // Close modal
+        const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
+        expect(closeButtons).toHaveLength(siteSpecific(2, 1)); // One at the top (and one at the bottom on Phy)
+        await userEvent.click(closeButtons[0]);
         await waitFor(() => {
             expect(modal).not.toBeInTheDocument();
         });
@@ -253,18 +240,18 @@ describe("SetAssignments", () => {
 
         it('groups are empty by default', async () => {
             await renderModal();
-            expect(await groupSelector()).toHaveTextContent('Group(s):None');
+            expect(within(await modal()).getByTestId("modal-groups-selector")).toHaveTextContent('Groups:None');
         });
 
         it('start date is empty by default', async () => {
             await renderModal();
-            expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
+            expect(await dateInput("modal-start-date-selector")).toHaveValue('');
         });
 
         it('due date is a week from now by default', async() => {
             await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
                 await renderModal();
-                expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
+                expect(await dateInput("modal-due-date-selector")).toHaveValue('2025-02-05'); // Sunday
             });
         });
 
@@ -272,12 +259,12 @@ describe("SetAssignments", () => {
         it('due date is displayed in UTC', async () => {
             await withMockedDate(Date.parse("2025-04-28T23:30:00.000Z"), async () => { // Monday in UTC, already Tuesday in UTC+1.
                 await renderModal();
-                expect(await dateInput("Due date reminder")).toHaveValue('2025-05-04'); // Sunday in UTC (would be Monday if we showed UTC+1)
+                expect(await dateInput("modal-due-date-selector")).toHaveValue('2025-05-04'); // Sunday in UTC (would be Monday if we showed UTC+1)
             });
         });
 
         const testPostedDueDate = ({ currentTime, expectedDueDatePosted } : { currentTime: string, expectedDueDatePosted: string}) => async () => {
-            await withMockedDate(Date.parse(currentTime), async () => { // Monday
+            await withMockedDate(Date.parse(currentTime), async () => {
                 const observer = parameterObserver<AssignmentDTO[]>();
                 await renderModal([
                     buildPostHandler(
@@ -286,53 +273,83 @@ describe("SetAssignments", () => {
                     )
                 ]);
 
-                await toggleGroupSelect();
                 await selectGroup(mockActiveGroups[1].groupName);
-                await clickOn('Assign to group', modal());
+                const modal = await screen.findByTestId("active-modal");
 
-                await waitFor(() => expect(observer.observedParams![0].dueDate).toEqual(expectedDueDatePosted)); // Sunday
+                await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
+
+                await waitFor(() => expect(observer.observedParams![0].dueDate).toEqual(expectedDueDatePosted));
             });
         };
 
-        it('posts the default due date as UTC midnight, even when that is not exactly 24 hours away', testPostedDueDate(
-            { currentTime: "2025-01-30T09:00:00.000Z" /* Monday */, expectedDueDatePosted: "2025-02-05T00:00:00.000Z" /* Sunday */ }
-        ));
+        it('posts the default due date as UTC midnight, even when that is not exactly 24 hours away', 
+            testPostedDueDate({ currentTime: "2025-01-30T09:00:00.000Z" /* Monday */, expectedDueDatePosted: "2025-02-05T00:00:00.000Z" /* Sunday */ })
+        );
 
         // local time zone is Europe/London, as set in globalSetup.ts
-        it('posts the default due date as UTC midnight, even when local representation does not equal UTC', testPostedDueDate(
-            { currentTime: "2025-04-28" /* Monday */, expectedDueDatePosted: "2025-05-04T00:00:00.000Z" /* Sunday */ }
-        ));
-
-        // TODO: we close the modal automatically now, so this test doesn't test the right thing.
-        // it('resets to defaults after a failed post', async () => {
-        //     await withMockedDate(Date.parse("2025-01-30"), async () => { // Monday
-        //         await renderModal([
-        //             buildPostHandler(
-        //                 "/assignments/assign_bulk",
-        //                 (body: AssignmentDTO[]) => body.map(x => ({ groupId: x.groupId, errorMessage: "Boo, something went wrong" }))
-        //             )
-        //         ]);
-        //
-        //         await toggleGroupSelect();
-        //         await selectGroup(mockActiveGroups[1].groupName);
-        //         await clickOn('Assign to group', modal());
-        //
-        //         expect(await groupSelector()).toHaveTextContent('Group(s):None');
-        //         expect(await dateInput(/Schedule an assignment start date/)).toHaveValue('');
-        //         expect(await dateInput("Due date reminder")).toHaveValue('2025-02-05'); // Sunday
-        //     });
-        // });
+        it('posts the default due date as UTC midnight, even when local representation does not equal UTC', 
+            testPostedDueDate({ currentTime: "2025-04-28" /* Monday */, expectedDueDatePosted: "2025-05-04T00:00:00.000Z" /* Sunday */ })
+        );
 
         describe('validation', () => {
             it('shows an error message when the due date is missing', async () => {
                 await renderModal();
-                await clearDateInput("Due date reminder");
-                expect(await findByText("Due date reminder")).toHaveTextContent(`Since ${siteSpecific("Jan", "January")} 2025, due dates are required for assignments`);
+                const modal = await screen.findByTestId("active-modal");
+                const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
+                await userEvent.click(within(dueDateContainer).getByRole("button", {name: "close"}));
+
+                await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
+                expect(dueDateContainer).toHaveTextContent(`Due dates are required for assignments`);
             });
 
             it('does not show an error when the due date is present', async () => {
                 await renderModal();
-                expect(await findByText("Due date reminder")).not.toHaveTextContent(`due dates are required for assignments`);
+                const modal = await screen.findByTestId("active-modal");
+                const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
+
+                await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
+                expect(dueDateContainer).not.toHaveTextContent(`Due dates are required for assignments`);
+            });
+
+            it('shows an error message when the due date is before the start date', async () => {
+                await withMockedDate(Date.parse("2025-01-01"), async () => { // Monday
+                    await renderModal();
+                    const modal = await screen.findByTestId("active-modal");
+                    const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
+
+                    // Set a start date in the future
+                    await inputDate("modal-start-date-selector", "1", "2", "2025");
+
+                    // Set a due date before the start date
+                    await inputDate("modal-due-date-selector", "1", "1", "2025");
+
+                    await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
+                    expect(dueDateContainer.textContent).toContain("Due date must be on or after start date and in the future");
+                });
+            });
+
+            it('shows an error message when no groups are selected', async () => {
+                await renderModal();
+                const modal = await screen.findByTestId("active-modal");
+                const groupContainer = within(modal).getByTestId("modal-groups-selector");
+
+                await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
+                expect(groupContainer).toHaveTextContent("Groups:None");
+                expect(within(groupContainer).getByText("Please select a group")).toBeInTheDocument();
+            });
+
+            it('shows an error message when the notes exceed 500 characters', async () => {
+                await renderModal();
+                const modal = await screen.findByTestId("active-modal");
+                const notesContainer = within(modal).getByTestId("modal-notes");
+                const notesBox = within(notesContainer).getByLabelText("Notes", {exact: false});
+
+                // Type more than 500 characters
+                const longNotes = "a".repeat(501);
+                await userEvent.type(notesBox, longNotes);
+
+                await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
+                expect(notesContainer.textContent).toContain("You have exceeded the maximum length");
             });
         });
     });
@@ -410,11 +427,7 @@ describe("SetAssignments", () => {
             const modal = await screen.findByTestId("active-modal");
 
             // select the group with that gameboard already assigned
-            const selectContainer = within(modal).getByText(/Group(\(s\))?:/);
-            const selectBox = within(modal).getByLabelText(/Group(\(s\))?:/);
-            await userEvent.click(selectBox);
-            const group1Choice = within(selectContainer).getByText(mockActiveGroups[0].groupName);
-            await userEvent.click(group1Choice);
+            await selectGroup(mockActiveGroups[0].groupName);
 
             // Act
             const assignButton = within(modal).getByRole("button", {name: "Assign to group"});
@@ -442,28 +455,29 @@ describe("SetAssignments", () => {
 
 const modal = () => screen.findByTestId("active-modal");
 
-const findByText = async (labelText: string | RegExp) => await within(await modal()).findByText(labelText);
-
-const dateInput = async (labelText: string | RegExp) => await within(await findByText(labelText)).findByTestId('date-input');
-
-const clearDateInput = async (labelText: string) => {
-    const clearButton = await within(await findByText(labelText)).findByRole('button');
-    await userEvent.click(clearButton);
-};
-
-const groupSelector = async () => await within(await modal()).findByTestId('modal-groups-selector');
-
-const toggleGroupSelect = async () => {
-    const selectBox = within(await modal()).getByLabelText(/Group(\(s\))?:/);
-    await userEvent.click(selectBox);
-    return within(await modal()).getByText(/Group(\(s\))?:/);;
-};
+const dateInput = async (testIdText: string | RegExp) => await within(await within(await modal()).findByTestId(testIdText)).findByTestId('date-input');
 
 const selectGroup = async (groupName: string) => {
-    const selectContainer = within(await modal()).getByText(/Group(\(s\))?:/);
-    const group1Choice = within(selectContainer).getByText(groupName);
-    await userEvent.click(group1Choice);
+    const modal = await screen.findByTestId("active-modal");
+    const groupContainer = within(modal).getByTestId("modal-groups-selector");
+    const groupSelector = within(groupContainer).getByRole("combobox");
+    await userEvent.click(groupSelector);
+
+    expect(within(groupContainer).getByText(groupName)).toBeInTheDocument();
+    const groupChoice = within(groupContainer).getByText(groupName);
+    await userEvent.click(groupChoice);
 };
+
+const inputDate = async (testIdText: string | RegExp, day: string, month: string, year: string) => {
+    const dueDateContainer = within(await modal()).getByTestId(testIdText);
+    await userEvent.click(within(dueDateContainer).getByRole("button"));
+    const dueDaySelector = within(dueDateContainer.children[1] as HTMLElement).getByRole("combobox", {name: "Day"});
+    await userEvent.selectOptions(dueDaySelector, day);
+    const dueMonthSelector = within(dueDateContainer.children[1] as HTMLElement).getByRole("combobox", {name: "Month"});
+    await userEvent.selectOptions(dueMonthSelector, month);
+    const dueYearSelector = within(dueDateContainer.children[1] as HTMLElement).getByRole("combobox", {name: "Year"});
+    await userEvent.selectOptions(dueYearSelector, year);
+}
 
 const parameterObserver = <T,>() => ({
     observedParams: null as T | null,

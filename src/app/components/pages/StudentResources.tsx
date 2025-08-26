@@ -8,12 +8,11 @@ import { Link } from "react-router-dom";
 import { AdaCard } from "../elements/cards/AdaCard";
 import { ImageBlock } from "../elements/layout/ImageBlock";
 import { isLoggedIn, SITE_TITLE } from "../../services";
+import { ExternalLink } from "../elements/ExternalLink";
 
 export const StudentResources = () => {
     useEffect( () => {document.title = "Students — " + SITE_TITLE;}, []);
-    const {data: studentPods} = useGetNewsPodListQuery({subject: "news"});
     const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
-    const featuredPod = studentPods?.[0];
     const featuredStudentChallengePod = studentChallengesPods?.[0];
     
     const user = useAppSelector(selectors.user.orNull);
@@ -30,28 +29,8 @@ export const StudentResources = () => {
                         <p>We&apos;ve got everything to help you study computer science – including classwork, homework, and exam prep. And it&apos;s all available for free.</p>
                     </TextBlock>
                     <ImageBlock>
-                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/learner-1.png" alt=""/>
+                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/learner-1-wide.png" alt=""/>
                     </ImageBlock>
-                </ColumnSlice>
-            </Container>
-        </section>
-        <section id="updates">
-            <Container className="homepage-padding mw-1600 position-relative" fluid>
-                <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
-                <ColumnSlice>
-                    <TextBlock className="pe-7">
-                        <h2>Our latest updates</h2>
-                        <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read the latest news and updates from the team.</p>
-                    </TextBlock>
-                    {featuredPod && featuredPod.title && featuredPod.value ? <IconCard card={{
-                        title: featuredPod.title,
-                        icon: {src: "/assets/cs/icons/book.svg"},
-                        bodyText: featuredPod.value,
-                        tag: "New",
-                        clickUrl: featuredPod.url,
-                        buttonText: "Read more",
-                        buttonStyle: "link"
-                    }}/> : <div/>}
                 </ColumnSlice>
             </Container>
         </section>
@@ -159,6 +138,22 @@ export const StudentResources = () => {
                         clickUrl: "https://editor.raspberrypi.org/en/education",
                         className: "bg-cultured-grey",
                     }}/>
+                </ColumnSlice>
+            </Container>
+        </section>
+        <section id="try-isaac">
+            <Container className="homepage-padding mw-1600" fluid>
+                <ColumnSlice>
+                    <ImageBlock>
+                        <img className="px-md-2 px-xl-4" src="/assets/cs/decor/isaac-subject-logos.svg" alt=""/>
+                    </ImageBlock>
+                    <TextBlock className="">
+                        <h2>Studying science or maths?</h2>
+                        <p>Check out Isaac Science, our partner platform packed with free tools and resources to help you learn physics, chemistry, biology and maths.</p>
+                        <Button className="external-link" tag={({ children, className }) => ExternalLink({ href: 'https://isaacscience.org', children, className })}>
+                            Go to Isaac Science
+                        </Button>
+                    </TextBlock>
                 </ColumnSlice>
             </Container>
         </section>

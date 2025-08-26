@@ -21,7 +21,7 @@ export const nthUtcHourOf = (n: number, d: Date | number) => {
     return newDate;
 };
 
-const addDays = (days: number, date: Date, ) => {
+export const addDays = (days: number, date: Date, ) => {
     const newDate = new Date(date.valueOf());
     newDate.setDate(date.getDate() + days);
     return newDate;
