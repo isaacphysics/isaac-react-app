@@ -180,6 +180,26 @@
   background-image: url("/assets/cs/icons/flag.svg");
 }
 
+.undo-icon {
+  &:not(.outline) {
+    @include ada-icon-button-base(48px, 48px, false);
+  }
+  &.outline {
+    @include ada-icon-button-base(48px, 48px, true);
+  }
+  background-image: url("/assets/cs/icons/undo-pink.svg");
+}
+
+.redo-icon {
+  &:not(.outline) {
+    @include ada-icon-button-base(48px, 48px, false);
+  }
+  &.outline {
+    @include ada-icon-button-base(48px, 48px, true);
+  }
+  background-image: url("/assets/cs/icons/redo-pink.svg");
+}
+
 .bin-icon {
   &:not(.outline) {
     @include ada-icon-button-base(48px, 48px, false);
