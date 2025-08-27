@@ -453,7 +453,7 @@ export function ResultsTablePartBreakdown({
         [(reverseOrder ? "desc" : "asc"), "asc"]
     ), [progress, reverseOrder, sortBySelectedSortOrder]);
 
-    const classAverages = sortedProgress[0]?.questionPartResults?.[questionIndex]?.map((_, i) => {
+    const classAverages = sortedProgress.find(p => !!p.questionPartResults)?.questionPartResults?.[questionIndex]?.map((_, i) => {
         const totalCorrect = sortedProgress.reduce((acc, p) => acc + (p.questionPartResults?.[questionIndex][i] === "CORRECT" ? 1 : 0), 0);
         const total = sortedProgress.length;
         return [totalCorrect, total] as [number, number];
@@ -471,7 +471,7 @@ export function ResultsTablePartBreakdown({
                     >
                         Name
                     </SortItemHeader>
-                    {sortedProgress[0].questionPartResults?.[questionIndex]?.map((_, i) =>
+                    {sortedProgress.find(p => !!p.questionPartResults)?.questionPartResults?.[questionIndex]?.map((_, i) =>
                         // <th key={i} className="text-center">
                         <SortItemHeader<ProgressSortOrder>
                             defaultOrder={i}
