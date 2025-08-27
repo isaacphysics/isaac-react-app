@@ -23,6 +23,20 @@ describe('Assignment progress', () => {
         cy.matchImage();
     });
 
+    it('Individual assignment view (Group Overview tab) should have no visual regressions', () => {
+        cy.mountWithStoreAndRouter(<AssignmentProgressWithRoute />, [`${PATHS.ASSIGNMENT_PROGRESS}/40`]);
+        cy.get('button').contains("Download CSV").should('exist');
+        cy.matchImage();
+    });
+
+    it('Individual assignment view (Detailed Marks tab) should have no visual regressions', () => {
+        cy.mountWithStoreAndRouter(<AssignmentProgressWithRoute />, [`${PATHS.ASSIGNMENT_PROGRESS}/40`]);
+        cy.get('button').contains("Detailed marks").click();
+        cy.get('div.assignment-progress-card > button').first().click('right');
+        cy.wait(1000); // wait for expansion to complete
+        cy.matchImage();
+    });
+
     // TODO: add mock data for progress details; add test on <ProgressDetails /> component
 });
 
