@@ -278,19 +278,7 @@ export function ResultsTable<Q extends QuestionType>({
     const classAverages: [number, number][] | undefined = progress ? questions.map((_, index) => {
         // classAverages returns a pair of (numerator, denominator) to be passed into formatMark() for each question.
 
-        // AVERAGE CALCULATION #1:
-        // this gives (average mark) / (total available marks). this gives the most accurate percentages for "how much of this question did students
-        // get right", but makes no sense outside of percentage view (the denominator is fairly random). since the raw calculation is 
-        // (total marks for everyone) / (number of people) / (marks available), we could swap the divisions so that the number of people is the final
-        // denominator? but "3.2 / 4" doesn't make much sense either.
-
-        // const totalPartMarks = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].reduce((sum, part) => sum + (part === "CORRECT" ? 1 : 0), 0) || 0), 0);
-        // const averageMark = totalPartMarks / progress.length;
-        // return [averageMark, (questions[index]?.questionPartsTotal || 1)];
-
-        // AVERAGE CALCULATION #2:
-        // this gives (number of students who got everything correct) / (number of students). this is equal to the above IF there are no partially correct attempts;
-        // if there are any, this calculation ignores them entirely.
+        // this gives (number of students who got everything correct) / (number of students). this therefore ignores partially correct attempts.
         const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].every(part => part === "CORRECT") ? 1 : 0), 0);
         return [studentsWithAllCorrect, progress.length];
     }) : [];
