@@ -6,6 +6,26 @@
   text-decoration: none !important;
 }
 
+.assignment-progress-table-wrapper {
+  display: block;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.progress-table {
+  tbody {
+    background-color: white;
+  }
+
+  thead, tfoot {
+    background-color: $cs-cultured;
+  }
+
+  tbody tr:not(:last-child) {
+    border-bottom: 1px solid $cs-cultured;
+  }
+}
+
 .progress-questions {
   font-size: 1.1rem;
 }

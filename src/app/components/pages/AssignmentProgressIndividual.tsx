@@ -80,6 +80,10 @@ export function markClassesInternal(attemptedOrCorrect: "ATTEMPTED" | "CORRECT",
     }
 }
 
+const BoardLink = ({id}: {id?: string}) => <a className="new-tab-link" href={`${PATHS.GAMEBOARD}#${id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
+    <i className="icon icon-new-tab" />
+</a>;
+
 interface GroupAssignmentTabProps {
     assignment: EnhancedAssignmentWithProgress;
     progress: AssignmentProgressDTO[];
@@ -129,8 +133,8 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                 <div className="d-flex w-100 align-items-start justify-content-between">
                     <div>
                         {siteSpecific(
-                            <h4>Group assignment overview</h4>,
-                            <h3>Group assignment overview</h3>
+                            <h4>Group assignment overview <BoardLink id={assignment.gameboard?.id} /></h4>,
+                            <h3>Group assignment overview <BoardLink id={assignment.gameboard?.id} /></h3>
                         )}
                         <span>See who attempted the assignment and which questions they struggled with.</span>
                     </div>
@@ -139,13 +143,6 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                         <i className={classNames("icon icon-cog icon-dropdown-90", {"active": settingsVisible})}/>
                     </button>}
                 </div>
-                <Spacer/>
-                {isAda && <StyledToggle
-                    trueLabel="Correct"
-                    falseLabel="Attempted"
-                    checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"}
-                    onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")}
-                />}
             </div>
 
             <div className="d-flex flex-column flex-lg-row mt-2 mb-2 row-gap-2">
@@ -286,7 +283,7 @@ const DetailedMarksTab = ({assignment, progress}: DetailedMarksTabProps) => {
                 <h4>Performance on questions</h4>,
                 <h3>Performance on questions</h3>
             )}
-            <span>See the questions your students answered and which parts they struggled with.</span>
+            <span>See the questions your students answered{isPhy && " and which parts they struggled with"}.</span>
 
             {questions.map((_, questionIndex) => (
                 <DetailedMarksCard

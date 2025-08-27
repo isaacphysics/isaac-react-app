@@ -49,7 +49,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
             <div className="d-flex flex-column">
                 <span className="d-flex">
                     <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
-                    <a className="external-link" href={quiz ? assignment.quizSummary?.url : `/question_decks#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
+                    <a className="new-tab-link" href={quiz ? assignment.quizSummary?.url : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
                         <i className="icon icon-new-tab" />
                     </a>
                 </span>
