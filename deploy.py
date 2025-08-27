@@ -348,7 +348,7 @@ if __name__ == '__main__':
 
     check_running_servers(context)
 
-    sites = [Site.ADA, Site.PHY] if context['site'] == Site.BOTH else [context['site']]
+    sites = [Site.ADA, Site.SCI] if context['site'] == Site.BOTH else [context['site']]
     for site in sites:
         context['site'] = site
         if context['env'] == 'test' and volume_exists(context):
