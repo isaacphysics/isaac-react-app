@@ -365,10 +365,9 @@ if __name__ == '__main__':
                 deploy_staging_or_dev(context)
             context['env'] = 'live'
             deploy_live(context)
-            if context['site'] in (Site.PHY, Site.ADA):  # FIXME: once PHY goes away, do this unconditionally.
-                context['env'] = 'etl'
-                deploy_etl(context)
-                context['env'] = 'live'
+            context['env'] = 'etl'
+            deploy_etl(context)
+            context['env'] = 'live'
             write_changelog()
         elif context['env'] == 'etl':
             deploy_etl(context)
