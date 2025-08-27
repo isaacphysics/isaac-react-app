@@ -36,8 +36,6 @@ describe('Assignment progress', () => {
         cy.wait(1000); // wait for expansion to complete
         cy.matchImage();
     });
-
-    // TODO: add mock data for progress details; add test on <ProgressDetails /> component
 });
 
 const AssignmentProgressWithRoute = () => <TrackedRoute exact path={[
