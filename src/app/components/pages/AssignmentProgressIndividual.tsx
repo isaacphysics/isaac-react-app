@@ -80,7 +80,7 @@ export function markClassesInternal(attemptedOrCorrect: "ATTEMPTED" | "CORRECT",
     }
 }
 
-const BoardLink = ({id}: {id?: string}) => <a className="new-tab-link" href={`/question_decks#${id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
+const BoardLink = ({id}: {id?: string}) => <a className="new-tab-link" href={`${PATHS.GAMEBOARD}#${id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
     <i className="icon icon-new-tab" />
 </a>;
 
