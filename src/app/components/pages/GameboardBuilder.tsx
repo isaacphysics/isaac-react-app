@@ -410,23 +410,19 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     <div className={"d-flex flex-row justify-content-between align-items-center"}>
                         <div>
                             <span className={classNames("fw-bold form-required")}>Questions</span>
-                            <p className={classNames("d-sm-block input-description mb-2", {"d-none": canUndo || canRedo})}>
-                        You can add up to 10 questions.
+                            <p className={classNames("d-none d-sm-block input-description mb-2")}>
+                                You can add up to 10 questions.
                             </p>
                         </div>
                         <div className={"d-flex flex-row gap-2"}>
-                            {canUndo &&
-                                siteSpecific(
-                                    <IconButton icon="icon-undo"{...undoButtonProps} />,
-                                    <Button className={"undo-icon btn-action outline"} {...undoButtonProps} />
-                                )
-                            }
-                            {canRedo &&
-                                siteSpecific(
-                                    <IconButton icon="icon-redo" {...redoButtonProps} />,
-                                    <Button className={"redo-icon btn-action outline"}  {...redoButtonProps} />
-                                )
-                            }
+                            {siteSpecific(
+                                <IconButton icon="icon-undo" className="icon-button-sm" {...undoButtonProps} disabled={!canUndo}/>,
+                                <Button className={"undo-icon btn-action outline"} {...undoButtonProps} disabled={!canUndo} />
+                            )}
+                            {siteSpecific(
+                                <IconButton icon="icon-redo" className="icon-button-sm" {...redoButtonProps} disabled={!canRedo}/>,
+                                <Button className={"redo-icon btn-action outline"} {...redoButtonProps} disabled={!canRedo} />
+                            )}
                         </div>
                     </div>
 

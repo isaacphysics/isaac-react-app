@@ -188,6 +188,10 @@
     @include ada-icon-button-base(48px, 48px, true);
   }
   background-image: url("/assets/cs/icons/undo-pink.svg");
+  
+  &:disabled, &.disabled {
+    filter: grayscale(100%);
+  }
 }
 
 .redo-icon {
@@ -198,6 +202,10 @@
     @include ada-icon-button-base(48px, 48px, true);
   }
   background-image: url("/assets/cs/icons/redo-pink.svg");
+  
+  &:disabled, &.disabled {
+    filter: grayscale(100%);
+  }
 }
 
 .bin-icon {
