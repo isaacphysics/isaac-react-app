@@ -7,7 +7,7 @@ import {
 } from "../IsaacApiTypes";
 import {UserPreferencesDTO} from "../IsaacAppTypes";
 
-export type ErrorType = 'mustBeLoggedIn401' | 'testUnavailable404';
+export type ErrorType = 'mustBeLoggedIn401' | 'testUnavailable404' | 'csrfError401';
 export const errorResponses: Record<ErrorType, object> = {
     mustBeLoggedIn401: {
         responseCode: 401,
@@ -19,6 +19,12 @@ export const errorResponses: Record<ErrorType, object> = {
         responseCode: 404,
         responseCodeType: "Not found",
         errorMessage: "This test has become unavailable.",
+        bypassGenericSiteErrorPage: false
+    },
+    csrfError401: {
+        responseCode: 401,
+        responseCodeType: "Unauthorized",
+        errorMessage: "CSRF check failed",
         bypassGenericSiteErrorPage: false
     }
 };

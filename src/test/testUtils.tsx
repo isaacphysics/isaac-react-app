@@ -207,6 +207,9 @@ export const setUrl = async (location: { pathname: PathString, search?: string})
     if (location.pathname.includes('?')) {
         throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
     }
+    if (location.search?.startsWith('?')) {
+        throw new Error('When navigation using `setUrl`, do not start the query string with `?`.');
+    }
     return await act(async () => history.push(location));
 };
 
