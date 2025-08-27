@@ -1,4 +1,4 @@
-import {act, screen, within} from "@testing-library/react";
+import {screen, within} from "@testing-library/react";
 import {
     expectTextInElementWithId,
     type PathString,
@@ -10,8 +10,9 @@ import {
 import {UserRole} from "../../IsaacApiTypes";
 
 export const renderQuizPage = (baseUrl: PathString) => async ({role, quizId}: {role: UserRole | "ANONYMOUS", quizId: string}) => {
-    await act(async () => renderTestEnvironment({ role }));
-    await act(async () => setUrl({ pathname: `${baseUrl}/${quizId}` }));
+    renderTestEnvironment({ role });
+    await waitForLoaded();
+    await setUrl({ pathname: `${baseUrl}/${quizId}` });
     await waitForLoaded();
 };
 

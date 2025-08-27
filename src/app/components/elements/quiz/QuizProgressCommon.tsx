@@ -223,12 +223,13 @@ export function ResultsTable<Q extends QuestionType>({
 
     const tableHeaderFooter = <tr className="progress-table-header-footer fw-bold">
         <SortItemHeader<ProgressSortOrder>
-            className="student-name pointer-cursor ps-3 py-3"
+            className="student-name sticky-left pointer-cursor ps-3 py-3"
             defaultOrder={"name"}
             reverseOrder={"name"}
             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
             onClick={() => setSelectedQuestionIndex(undefined)}
             label={"Name"}
+            alignment={"start"}
         >
             Name
         </SortItemHeader>
@@ -261,7 +262,6 @@ export function ResultsTable<Q extends QuestionType>({
                 currentOrder={sortOrder}
                 setOrder={toggleSort}
                 reversed={reverseOrder}
-                alignment="center"
                 onClick={() => setSelectedQuestionIndex(index)}
                 className={classNames("pointer-cursor", {"selected": index === selectedQuestionIndex})}
                 label={`Question ${index + 1}`}
@@ -273,12 +273,21 @@ export function ResultsTable<Q extends QuestionType>({
     </tr>;
 
     const tableRef = useRef<HTMLTableElement>(null);
+    const questionTitle = selectedQuestionIndex !== undefined ? questions[selectedQuestionIndex]?.title : undefined;
+
+    const classAverages: [number, number][] | undefined = progress ? questions.map((_, index) => {
+        // classAverages returns a pair of (numerator, denominator) to be passed into formatMark() for each question.
+
+        // this gives (number of students who got everything correct) / (number of students). this therefore ignores partially correct attempts.
+        const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].every(part => part === "CORRECT") ? 1 : 0), 0);
+        return [studentsWithAllCorrect, progress.length];
+    }) : [];
 
     return <div className="assignment-progress-progress">
-        {progress && progress.length > 0 && <>
-            <div className="assignment-progress-table-wrapper">
-                <table ref={tableRef} className="progress-table w-100 border">
-                    <thead>
+        {progress && progress.length > 0 ? <>
+            <div className="assignment-progress-table-wrapper border">
+                <table ref={tableRef} className="progress-table w-100">
+                    <thead className="sticky-top">
                         {tableHeaderFooter}
                         {isPhy && selectedQuestionIndex !== undefined && <tr>
                             <th className="py-2" colSpan={2 + questions.length}>
@@ -286,11 +295,11 @@ export function ResultsTable<Q extends QuestionType>({
                                     {isAssignment
                                         ? <a href={`/questions/${questions[selectedQuestionIndex]?.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
                                             <Markup encoding="latex">
-                                                {`Q${selectedQuestionIndex + 1}: ${questions[selectedQuestionIndex]?.title}`}
+                                                {`Q${selectedQuestionIndex + 1}${questionTitle ? ` : ${questionTitle}` : ""}`}
                                             </Markup>
                                         </a>
                                         : <Markup encoding="latex">
-                                            {`Q${selectedQuestionIndex + 1}: ${questions[selectedQuestionIndex]?.title}`}
+                                            {`Q${selectedQuestionIndex + 1}${questionTitle ? ` : ${questionTitle}` : ""}`}
                                         </Markup>
                                     }
                                 </div>
@@ -303,19 +312,19 @@ export function ResultsTable<Q extends QuestionType>({
                             const fullAccess = isAuthorisedFullAccess(studentProgress);
                             const internalCellSpacing = isPhy && isAssignment ? "py-1" : "py-3";
                             return <tr key={studentProgress.user?.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
-                                <th className={`student-name ${internalCellSpacing} fw-bold`}>
+                                <th className={`student-name sticky-left ps-2 ${internalCellSpacing} fw-bold`}>
                                     {fullAccess && pageSettings?.isTeacher ?
                                         (
                                             isAssignment ?
-                                                <Link className="d-flex justify-content-center align-items-center gap-2" to={`/progress/${studentProgress.user?.id}`} target="_blank">
+                                                <div className="d-flex align-items-center gap-2">
                                                     <i className="icon icon-person icon-md" color="tertiary"/>
-                                                    <span className="pe-3">
+                                                    <Link className="w-100 text-start gap-2 pe-3" to={`/progress/${studentProgress.user?.id}`} target="_blank">
                                                         {studentProgress.user?.givenName}
                                                         <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
-                                                    </span>
-                                                </Link>
+                                                    </Link>
+                                                </div>
                                                 : <>
-                                                    <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
+                                                    <Button className="quiz-student-menu text-start" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
                                                         <div
                                                             className="quiz-student-name"
                                                         >
@@ -382,9 +391,20 @@ export function ResultsTable<Q extends QuestionType>({
                             </tr>;
                         })}
                     </tbody>
+                    <tfoot className="sticky-bottom">
+                        <tr>
+                            <th className="sticky-left text-start p-3 fw-bold">Total fully correct</th>
+                            <td/>{/* ignore totals per student column */}
+                            {classAverages.map(([numerator, denominator], index) => (
+                                <td key={index}>{formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}</td>
+                            ))}
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
-        </>}
+        </> : <div className="w-100 text-center p-3">
+            This group is empty, so has no progress data available. You can invite users through the <Link to="/groups">Manage groups</Link> page.
+        </div>}
     </div>;
 }
 
@@ -398,6 +418,8 @@ export function ResultsTablePartBreakdown({
     questionIndex,
     ...rest
 }: ResultsTablePartBreakdownProps) {
+
+    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     // TODO: the sorting is somewhat duplicated from above, could be slightly refactored
     const [sortOrder, setSortOrder] = useState<ProgressSortOrder>("name");
@@ -431,49 +453,69 @@ export function ResultsTablePartBreakdown({
         [(reverseOrder ? "desc" : "asc"), "asc"]
     ), [progress, reverseOrder, sortBySelectedSortOrder]);
 
-    return !!sortedProgress?.length && <table {...rest} className={classNames("progress-table border assignment-progress-progress w-100", rest.className)}>
-        <thead className="progress-table-header-footer">
-            <SortItemHeader<ProgressSortOrder>
-                className="student-name ps-3 py-3"
-                defaultOrder={"name"}
-                reverseOrder={"name"}
-                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-            >
-                Name
-            </SortItemHeader>
-            {sortedProgress[0].questionPartResults?.[questionIndex]?.map((_, i) =>
-                // <th key={i} className="text-center">
-                <SortItemHeader<ProgressSortOrder>
-                    defaultOrder={i}
-                    reverseOrder={i}
-                    currentOrder={sortOrder}
-                    setOrder={toggleSort}
-                    reversed={reverseOrder}
-                    key={i}
-                >
-                    Part {i + 1}
-                </SortItemHeader>
-                // </th>
-            )}
-        </thead>
-        <tbody>
-            {sortedProgress.map((studentProgress, studentIndex) => (
-                <tr key={studentIndex}>
-                    <th className="student-name py-3 fw-bold">
-                        <Link className="d-flex justify-content-center align-items-center gap-2" to={`/progress/${studentProgress.user?.id}`} target="_blank">
-                            <i className="icon icon-person icon-md" color="tertiary"/>
-                            <span className="pe-3">
-                                {studentProgress.user?.givenName}
-                                <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
-                            </span>
-                        </Link>
-                    </th>
-                    {studentProgress.questionPartResults &&
-                        studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
-                            <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>
+    const classAverages = sortedProgress[0]?.questionPartResults?.[questionIndex]?.map((_, i) => {
+        const totalCorrect = sortedProgress.reduce((acc, p) => acc + (p.questionPartResults?.[questionIndex][i] === "CORRECT" ? 1 : 0), 0);
+        const total = sortedProgress.length;
+        return [totalCorrect, total] as [number, number];
+    }) ?? [];
+
+    return sortedProgress?.length
+        ? <div className="assignment-progress-table-wrapper border">
+            <table {...rest} className={classNames("progress-table assignment-progress-progress w-100", rest.className)}>
+                <thead className="progress-table-header-footer">
+                    <SortItemHeader<ProgressSortOrder>
+                        className="student-name sticky-left ps-3 py-3"
+                        defaultOrder={"name"}
+                        reverseOrder={"name"}
+                        currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                    >
+                        Name
+                    </SortItemHeader>
+                    {sortedProgress[0].questionPartResults?.[questionIndex]?.map((_, i) =>
+                        // <th key={i} className="text-center">
+                        <SortItemHeader<ProgressSortOrder>
+                            defaultOrder={i}
+                            reverseOrder={i}
+                            currentOrder={sortOrder}
+                            setOrder={toggleSort}
+                            reversed={reverseOrder}
+                            key={i}
+                        >
+                            Part {i + 1}
+                        </SortItemHeader>
+                        // </th>
+                    )}
+                </thead>
+                <tbody>
+                    {sortedProgress.map((studentProgress, studentIndex) => (
+                        <tr key={studentIndex}>
+                            <th className="student-name sticky-left ps-2 py-3 fw-bold">
+                                <div className="d-flex align-items-center gap-2">
+                                    <i className="icon icon-person icon-md" color="tertiary"/>
+                                    <Link className="w-100 text-start gap-2 pe-3" to={`/progress/${studentProgress.user?.id}`} target="_blank">
+                                        {studentProgress.user?.givenName}
+                                        <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
+                                    </Link>
+                                </div>
+                            </th>
+                            {studentProgress.questionPartResults &&
+                                studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
+                                    <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>
+                                ))}
+                        </tr>
+                    ))}
+                </tbody>
+                <tfoot className="sticky-bottom">
+                    <tr>
+                        <th className="sticky-left text-start p-3 fw-bold">Total fully correct</th>
+                        {classAverages.map(([numerator, denominator], index) => (
+                            <td key={index}>{formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}</td>
                         ))}
-                </tr>
-            ))}
-        </tbody>
-    </table>;
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        : <div className="w-100 text-center p-3">
+            This group is empty, so has no progress data available. You can invite users through the <Link to="/groups">Manage groups</Link> page.
+        </div>;
 }

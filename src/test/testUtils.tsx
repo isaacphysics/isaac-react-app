@@ -48,6 +48,7 @@ interface RenderTestEnvironmentOptions {
 // defaults (those in handlers.ts).
 export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
+    history.replace({ pathname: '/', search: '' });
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
     store.dispatch(isaacApi.util.resetApiState());
@@ -202,11 +203,11 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
 };
 
 export type PathString = `/${string}`;
-export const setUrl = (location: { pathname: PathString, search?: string}) => {
+export const setUrl = async (location: { pathname: PathString, search?: string}) => {
     if (location.pathname.includes('?')) {
         throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
     }
-    return history.push(location);
+    return await act(async () => history.push(location));
 };
 
 export const goBack = () => history.goBack();
@@ -238,6 +239,8 @@ export const withMockedDate = async (date: number, fn: () => Promise<void>) => {
 const expectHeading = (n: number) => (txt?: string) => expect(screen.getByRole('heading', { level: n })).toHaveTextContent(`${txt}`);
 
 export const expectH1 = expectHeading(1);
+
+export const expectH2 = expectHeading(2);
 
 export const expectH4 = expectHeading(4);
 

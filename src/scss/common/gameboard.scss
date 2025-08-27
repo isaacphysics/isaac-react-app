@@ -1,11 +1,3 @@
-@mixin table-sticky() {
-  position: sticky !important;
-  background-clip:  padding-box !important;
-  background: $gray-103;
-  z-index: 1;
-  top: 0;
-}
-
 @mixin after-border() {
   content:'';
   position:absolute;

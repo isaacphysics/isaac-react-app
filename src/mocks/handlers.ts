@@ -26,6 +26,12 @@ import {School} from "../IsaacAppTypes";
 import { errorResponses } from "../test/test-factory";
 
 export const handlers = [
+    http.get(API_PATH + "/content/units", () => {
+        return HttpResponse.json(["m", "cm", "mm"], {
+            status: 200,
+        });
+    }),
+    
     http.get(API_PATH + "/gameboards/user_gameboards", ({request}) => {
         const url = new URL(request.url);
         const startIndexStr = url.searchParams.get("start_index");
@@ -68,6 +74,11 @@ export const handlers = [
             status: 200,
         });
     }),
+    http.get(API_PATH + "/quiz/assigned", () => {
+        return HttpResponse.json([], {
+            status: 200,
+        });
+    }),
     http.get(API_PATH + "/quiz/:quizId/rubric", ({ params }) => {
         const quizId = params.quizId as string;
         if (quizId in mockRubrics) {
@@ -81,6 +92,9 @@ export const handlers = [
             return HttpResponse.json(mockPreviews[quizId], { status: 200 });
         }
         return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
+    }),
+    http.post(API_PATH + "/quiz/attempt/:quizId/log", () => {
+        return HttpResponse.json(null, { status: 204 });
     }),
     http.post(API_PATH + "/quiz/:quizId/attempt", ({ params }) => {
         const quizId = params.quizId as string;

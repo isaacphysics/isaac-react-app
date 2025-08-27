@@ -47,87 +47,86 @@ export const RegistrationVerifyEmail = () => {
         }
     };
 
-    const myAccount = (event: React.MouseEvent) => {
+    const continueToMyAda = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/account");
+        history.push("/dashboard");
     };
 
-    const continueToPreferences = (event: React.MouseEvent) => {
-        event.preventDefault();
-        history.push("/register/preferences");
-    };
-
-    return <Container className="text-center">
-        <Card className="my-7">
-            <CardBody>
-                {!emailVerified && userFromParamVerificationFailed &&
-                    <ExigentAlert color="warning">
-                        <p className="alert-heading fw-bold">Unable to verify your email address</p>
-                        <p>{getRTKQueryErrorMessage(userFromParamVerificationErrored).message}</p>
-                    </ExigentAlert>
-                }
-                <Row className="justify-content-center">
-                    <Col>
-                        <h3>Verify your account</h3>
-                    </Col>
-                </Row>
-                <Row className="justify-content-center">
-                    <Col>
+    return <div id="verify-email">
+        <Container className="text-center">
+            <Card className="my-9">
+                <CardBody>
+                    {!emailVerified && userFromParamVerificationFailed &&
+                        <ExigentAlert color="warning">
+                            <p className="alert-heading fw-bold">Unable to verify your email address</p>
+                            <p>{getRTKQueryErrorMessage(userFromParamVerificationErrored).message}</p>
+                        </ExigentAlert>
+                    }
+                    <Row className="justify-content-center mt-3">
                         {emailVerified ?
-                            userFromParamVerificationSucceeded ?
-                                <p>Account verified and created!</p>
-                                :
-                                <p>Your email is already verified.</p>
+                            <h2>Welcome to Ada Computer Science!</h2>
                             :
-                            <p>Check your email for a link to verify your account.</p>
-                        }
-                    </Col>
-                </Row>
-                <Row className="justify-content-center">
-                    <Col>
-                        {emailVerified ?
-                            <img className="img-fluid w-md-50 mx-auto my-7" src={"/assets/cs/decor/verify_done.png"} alt="" />
-                            :
-                            <img className="img-fluid w-md-50 mx-auto my-7" src={"/assets/cs/decor/verify_request.png"} alt="" />
-                        }
-                    </Col>
-                </Row>
-                {!emailVerified &&
-                    <Row className="justify-content-center">
-                        {verifyingCurrentUser ?
-                            <p>
-                                {verificationNotResent ?
-                                    <Button onClick={requestNewVerificationEmail}>
-                                        Resend verification email
-                                    </Button>
-                                    :
-                                    "Verification email sent to " + (user && user.loggedIn && user.email)
-                                }
-                            </p>
-                            :
-                            <p>If you need a new verification email, please <Link to="/login">log in</Link> first.</p>
+                            <h2>Verify your email address</h2>
                         }
                     </Row>
-                }
-                {verifyingCurrentUser ?
-                    emailVerified &&
+                    <Row className="justify-content-center">    
+                        {emailVerified ?
+                            <p>You&apos;ve verified your email address and finished creating your account.</p>
+                            :
+                            <p>Click the link in the email we&apos;ve sent to finish setting up your account.</p>
+                        }
+                    </Row>
+                    <Row className="justify-content-center">
+                        {emailVerified ?
+                            <img className="verify-graphic img-fluid mx-auto my-5" src={"/assets/cs/decor/verify_done.png"} alt="" />
+                            :
+                            <img className="verify-graphic img-fluid mx-auto my-5" src={"/assets/cs/decor/verify_request.png"} alt="" />
+                        }
+                    </Row>
+                    {!emailVerified &&
                         <Row className="justify-content-center">
-                            <Col xs={12} sm={6} md={4} lg={3}>
-                                <Button className={"my-2 w-100"} color="keyline" onClick={myAccount}>Your account</Button>
-                            </Col>
-                            <Col xs={12} sm={6} md={4} lg={3}>
-                                <Button className={"my-2 w-100"} onClick={continueToPreferences}>Continue</Button>
-                            </Col>
+                            {verifyingCurrentUser ?
+                                <>
+                                    <h4 className="mb-3">Didn&apos;t get the email?</h4>
+                                    <p>
+                                        {verificationNotResent ?
+                                            <Button onClick={requestNewVerificationEmail}>
+                                                Resend verification email
+                                            </Button>
+                                            :
+                                            "Verification email sent to " + (user && user.loggedIn && user.email)
+                                        }
+                                    </p>
+                                    {/*<p>    TODO: Allow email address to be changed from this page
+                                        <Button onClick={() => setShowEmailInput(true)} color="keyline">
+                                            Change account email
+                                        </Button>
+                                    </p>*/}
+                                </>
+                                :
+                                <p>If you need a new verification email, please <Link to="/login">log in</Link> first.</p>
+                            }
                         </Row>
-                    :
-                    emailVerified &&
-                        <Row className="justify-content-center">
-                            <Col xs={3}>
-                                <p>Please <Link to="/login">log in</Link> to continue.</p>
-                            </Col>
-                        </Row>
-                }
-            </CardBody>
-        </Card>
-    </Container>;
+                    }
+                    {verifyingCurrentUser ?
+                        emailVerified &&
+                            <Row className="justify-content-center">
+                                <p>
+                                    <Button className="my-3" onClick={continueToMyAda}>
+                                        Continue to My Ada
+                                    </Button>
+                                </p>
+                            </Row>
+                        :
+                        emailVerified &&
+                            <Row className="justify-content-center">
+                                <Col xs={3}>
+                                    <p>Please <Link to="/login">log in</Link> to continue.</p>
+                                </Col>
+                            </Row>
+                    }
+                </CardBody>
+            </Card>
+        </Container>
+    </div>;
 };

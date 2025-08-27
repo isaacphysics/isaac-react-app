@@ -328,10 +328,6 @@ $failed-bg-size: 25%;
   overflow: auto hidden;
 }
 
-.assignment-progress-progress {
-  background: $gray-103;
-}
-
 .group-progress-summary {
   background: $gray-103;
   border: 1px solid $gray-118;
@@ -381,14 +377,6 @@ $failed-bg-size: 25%;
   }
 }
 
-@mixin table-sticky() {
-  position: sticky !important;
-  position: -webkit-sticky !important;
-  background-clip:  padding-box !important;
-  background: $gray-103;
-  z-index: 2;
-}
-
 @mixin after-border() {
   content: '';
   position: absolute;
@@ -424,18 +412,9 @@ $failed-bg-size: 25%;
 .progress-table {
   padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders
 
-  tbody tr:nth-of-type(even) {
-    background: $gray-103;
-    th {
-      background: $gray-103;
-    }
-  }
-
-  tbody tr:nth-of-type(odd) {
-    background: white;
-    th {
-      background: white;
-    }
+  tr, th {
+    // sticky columns need a background colour to hide content behind it. this color depends on below, so we make all tr and (possibly sticky) th inherit bg-c.
+    background-color: inherit;
   }
 
   font-size: 12px;
@@ -471,12 +450,8 @@ $failed-bg-size: 25%;
     border-bottom: 1px solid $gray-118;
   }
 
-  tfoot th {
+  tfoot th, tfoot td {
     border-top: 1px solid $gray-118;
-  }
-
-  .progress-table-header-footer th {
-    position: relative;
   }
 
   @include respond-below(xs) {
@@ -524,10 +499,7 @@ $failed-bg-size: 25%;
 
   .student-name {
     min-width: 195px;
-
-    @include table-sticky;
-    left: 0;
-    top: 0;
+    word-break: break-word;
     width: 195px;
   }
 
@@ -555,12 +527,5 @@ $failed-bg-size: 25%;
       border-left: 1px solid $gray-118;
       pointer-events: none; // don't intercept clicks as we want links in the th element
     }
-  }
-}
-
-.results-table-container {
-  border-left: $border-width solid $border-color-translucent;
-  table {
-    border-left: none !important;
   }
 }

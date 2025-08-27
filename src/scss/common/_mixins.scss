@@ -326,3 +326,10 @@ $viewport-sizes: (
     @content;
   }
 }
+
+@mixin table-sticky() {
+  position: sticky !important;
+  position: -webkit-sticky !important;
+  background-clip:  padding-box !important;
+  z-index: 2;
+}

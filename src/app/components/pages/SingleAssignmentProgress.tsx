@@ -7,11 +7,13 @@ import {
     useGetSingleSetAssignmentQuery
 } from "../../state";
 import {
+    AppGroup,
     AssignmentProgressPageSettingsContext,
     EnhancedAssignmentWithProgress
 } from "../../../IsaacAppTypes";
 import {
     ASSIGNMENT_PROGRESS_CRUMB,
+    PATHS,
     siteSpecific,
     useAssignmentProgressAccessibilitySettings} from "../../services";
 import {ProgressDetails} from "./AssignmentProgressIndividual";
@@ -28,12 +30,14 @@ const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWith
     </div>;
 };
 
-export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
+export const SingleAssignmentProgress = ({user, group}: {user: RegisteredUserDTO, group?: AppGroup}) => {
     const params = useParams<{ assignmentId?: string }>();
     const assignmentId = parseInt(params.assignmentId || ""); // DANGER: This will produce a NaN if params.assignmentId is undefined
     const assignmentQuery = useGetSingleSetAssignmentQuery(assignmentId || skipToken);
     const { data: assignment } = assignmentQuery;
     const assignmentProgressQuery = useGetAssignmentProgressQuery(assignmentId || skipToken);
+
+    const groupCrumb = group && group.groupName ? {to: `${PATHS.ASSIGNMENT_PROGRESS}/group/${group.id}`, title: group.groupName} : undefined;
 
     const augmentAssignmentWithProgress = (assignment: AssignmentDTO, assignmentProgress: AssignmentProgressDTO[]): EnhancedAssignmentWithProgress => ({...assignment, progress: assignmentProgress} as EnhancedAssignmentWithProgress);
 
@@ -42,7 +46,7 @@ export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
     return <>
         <Container>
             <TitleAndBreadcrumb
-                intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
+                intermediateCrumbs={groupCrumb ? [ASSIGNMENT_PROGRESS_CRUMB, groupCrumb] : [ASSIGNMENT_PROGRESS_CRUMB]}
                 currentPageTitle={assignment?.gameboard?.title ?? siteSpecific("Assignment progress", "Markbook")}
                 className="mb-4"
                 icon={{type: "hex", icon: "icon-revision"}}
@@ -78,15 +82,15 @@ export const AssignmentProgressLegend = ({id}: {id?: string}) => {
                 ? <ul id={`key-${id}`} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-5 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
                     <LegendKey cellClass="completed" description={`100% correct`}/>
                     <LegendKey cellClass="passed" description={`≥${passMark * 100}% correct`}/>
-                    <LegendKey cellClass="in-progress" description={`<${passMark * 100}% correct`}/>
-                    <LegendKey cellClass="failed" description={`>${100 - (passMark * 100)}% incorrect`}/>
+                    <LegendKey cellClass="in-progress" description={`≥${100 - passMark * 100}% correct`}/>
+                    <LegendKey cellClass="failed" description={`<${100 - passMark * 100}% correct`}/>
                     <LegendKey cellClass="" description={`Not attempted`}/>
                 </ul>
                 : <ul id={`key-${id}`} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-4 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
                     <LegendKey cellClass="fully-attempted" description={`100% attempted`}/>
                     <LegendKey cellClass="passed" description={`≥${passMark * 100}% attempted`}/>
                     <LegendKey cellClass="in-progress" description={`≥${100 - passMark * 100}% attempted`}/>
-                    <LegendKey cellClass="" description={`<25% attempted`}/>
+                    <LegendKey cellClass="" description={`<${100 - passMark * 100}% attempted`}/>
                 </ul>
             }
         </div>

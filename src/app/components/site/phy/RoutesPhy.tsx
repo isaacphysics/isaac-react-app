@@ -86,7 +86,6 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/register/success" ifUser={isLoggedIn} component={RegistrationSuccess} />,
 
     // Assignments
-    <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
     <TrackedRoute key={key++} exact path="/assignment_schedule" ifUser={isTutorOrAbove} component={AssignmentSchedule} />, // Currently in beta, not yet advertised or listed on navigation menus
 
     // Teacher test pages

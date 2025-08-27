@@ -23,6 +23,7 @@
     --buttons-dark-text: #{$color-neutral-white};
     --buttons-focus-ring: #{map.get($subject-colors, 300)};
     --buttons-keyline-border: #{map.get($subject-colors, 500)};
+    --buttons-keyline-disabled-border: #{map.get($subject-colors, 300)};
     --buttons-keyline-white-border: #{map.get($subject-colors, 400)};
     --buttons-keyline-white-hover: #{map.get($subject-colors, 900)};
     --buttons-keyline-white-text: #{$color-neutral-white};

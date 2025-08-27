@@ -160,6 +160,14 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/fullscreen.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-undo {
+  @include svg-icon('/assets/common/icons/undo.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-redo {
+  @include svg-icon('/assets/common/icons/redo.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 // Icon sizing
 .icon {
   --icon-size: 16px;

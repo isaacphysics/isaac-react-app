@@ -1,180 +1,141 @@
 import React, {useEffect} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
-import {Button, Card, CardBody, CardFooter, CardTitle, Col, Container, Row} from "reactstrap";
-import {PATHS, SITE_TITLE, useDeviceSize} from "../../../services";
-import {AdaHero2x1} from "../../elements/svg/AdaHero";
+import {Button, Card, Col, Container, Row} from "reactstrap";
+import {isLoggedIn, isTeacherOrAbove, SITE_TITLE, useDeviceSize} from "../../../services";
 import {NewsCard} from "../../elements/cards/NewsCard";
-import {AdaHomepageSearch} from "../../elements/SearchInputs";
 import {MetaDescription} from "../../elements/MetaDescription";
-import classNames from "classnames";
 import { ImageBlock } from "../../elements/layout/ImageBlock";
 import { IconCard } from "../../elements/cards/IconCard";
 import { TextBlock } from "../../elements/layout/TextBlock";
 import { ColumnSlice } from "../../elements/layout/ColumnSlice";
-import { AdaCard } from "../../elements/cards/AdaCard";
 import {useLinkableSetting} from "../../../services/linkableSetting";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
-    const featuredNewsItem = news ? news[0] : undefined;
     const deviceSize = useDeviceSize();
     const {setLinkedSetting} = useLinkableSetting();
     const userPreferences = useAppSelector(selectors.user.preferences);
     const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
+    const user = useAppSelector(selectors.user.orNull);
 
     return <>
         {/*<WarningBanner/>*/}
         <MetaDescription description={"Ada Computer Science is a free online computer science programme for students and teachers. Learn by using our computer science topics and questions!"}/>
         <div id="homepage">
+
             <section id="call-to-action" className="homepageHero">
-                <Container className="homepage-padding mw-1600" fluid>
-                    <Row>
-                        <TextBlock lg={7}>
-                            <h1 className={"font-size-1-75 font-size-md-2-5"}>
-                                <span className={"text-pink"}>/</span><br/>
-                                The free learning platform for computing teachers and students
-                            </h1>
-                            <Row className="justify-content-start align-items-center my-3">
-                                <Col xs={6} sm={3}>
-                                    <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="d-block">
-                                        <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
-                                    </a>
-                                </Col>
-                                <Col xs={6} sm={3}>
-                                    <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener" className="d-block">
-                                        <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
-                                    </a>
-                                </Col>
-                            </Row>
-                            <Button className="mt-3" tag={Link} to="/topics" color="dark-primary">Explore our resources</Button>
-                        </TextBlock>
-                        <ImageBlock lg={5} className={"mb-1 mb-sm-3 mb-lg-0"}>
-                            <AdaHero2x1 className={"mt-7 mt-lg-0 d-block"}/>
-                        </ImageBlock>
-                    </Row>
-                </Container>
-            </section>
-            <section id="news-and-updates">
-                <Container className="homepage-padding mw-1600 position-relative" fluid>
-                    <ColumnSlice>
-                        <TextBlock className="pe-7">
-                            <h2>Our latest updates</h2>
-                            <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read
-                                the latest news and updates from the team.</p>
-                            {showNewsletterPrompts && <div className={"d-none d-lg-block"}>
-                                <Button onClick={() => {setLinkedSetting("news-preference");}} color="solid"
-                                    tag={Link} to={"/account#notifications"}>
-                                    Join our newsletter
-                                </Button>
-                            </div>}
-                        </TextBlock>
-                        {featuredNewsItem && featuredNewsItem.title && featuredNewsItem.value ? <IconCard card={{
-                            title: featuredNewsItem.title,
-                            icon: {src: "/assets/cs/icons/book.svg"},
-                            bodyText: featuredNewsItem.value,
-                            tag: "New",
-                            clickUrl: featuredNewsItem.url,
-                            buttonText: "Read more",
-                            buttonStyle: "link"
-                        }}/> : <div/>}
-                    </ColumnSlice>
-                    {showNewsletterPrompts && <div className={"mt-4 mt-lg-7 w-100 text-center d-lg-none"}>
-                        <Button onClick={() => {setLinkedSetting("news-preference");}} color="solid"
-                            tag={Link} to={"/account#notifications"}>
-                                Join our newsletter
-                        </Button>
-                    </div>
-                    }
-                </Container>
-            </section>
-            <section id="benefits-for-teachers-and-students" className="bg-white">
-                <Container className={"homepage-padding mw-1600"}>
-                    <Row className={"align-items-center"}>
-                        <Col xs={12} lg={5} className="mt-4 mt-lg-4 order-1 order-lg-0">
-                            <picture>
-                                <source srcSet="/assets/cs/decor/benefits-for-homepage.png" type="image/png"/>
-                                <img className={"d-block w-100 mw-760 px-sm-7 px-lg-0"} src={"/assets/cs/decor/benefits-for-homepage.png"} alt="" />
-                            </picture>
-                        </Col>
-                        <Col xs={12} lg={7}>
-                            <h2 className={"font-size-1-75 mb-4"}>What we offer</h2>
-                            <ul className={"font-size-1 font-size-md-1-25"}>
-                                <li>Free computer science resources: Tailored for students aged 14 to 19</li>
-                                <li>Interactive questions: Over 1000 questions with instant marking and feedback</li>
-                                <li>Teacher tools: Set quizzes and assignments effortlessly</li>
-                                <li>AI and machine learning resources: Stay ahead of the AI curve</li>
-                                <li>Complete curriculums: For
-                                    {" "}<a href={"/exam_specifications_england#gcse/aqa"}>GCSE</a>,
-                                    {" "}<a href={"/exam_specifications_england#a_level/aqa"}>A&nbsp;Level</a>,
-                                    {" "}<a href={"/exam_specifications_scotland#scotland_national_5/sqa"}>National&nbsp;5</a>,
-                                    {" "}<a href={"/exam_specifications_scotland#scotland_higher/sqa"}>Higher</a>, and
-                                    {" "}<a href={"/exam_specifications_scotland#scotland_advanced_higher/sqa"}>Advanced&nbsp;Higher</a></li>
-                            </ul>
-                            <div>
-                                <Button className="mt-3 me-3" tag={Link} to="/students" color="solid">Student Resources</Button>
-                                <Button className="mt-3" tag={Link} to="/teachers" color="solid">Teacher Resources</Button>
+                <Container id={"cta-container"} fluid>
+                    <div className="d-flex flex-column align-items-center gap-5">
+                        <div className={""}>
+                            <h1 className={"backslash-left-small text-center font-size-2 font-size-md-2-5 mb-0"}>The free learning platform for computing teachers and students</h1>
+                        </div>
+                        <div className="d-flex flex-row w-100 align-items-center justify-content-center">
+                            <div className={"mx-5"}>
+                                <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
+                                    <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
+                                </a>
                             </div>
-                        </Col>
-                    </Row>
+                            <div className={"mx-5"}>
+                                <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
+                                    <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            {isLoggedIn(user) && isTeacherOrAbove(user) &&
+                                <Button color={"dark-primary"} tag={Link} to={"/dashboard"}>Go to My Ada Overview</Button>}
+                        </div>
+                    </div>
+                </Container>
+                <Container className={"mw-1600 homepage-padding-x"} fluid>
+                    <Card id={"cta-features-card"} className={"icon-card p-5"}>
+                        <Row className={"justify-content-center gy-5 fw-bold"}>
+                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                                Free computer science resources for students aged 14 to 19
+                            </Col>
+                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                                Instant feedback with self-marking quizzes
+                            </Col>
+                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                                Track progress in your personal markbook
+                            </Col>
+                            <Col xs={12} md={6} lg={3} className={"cta-feature"}>
+                                Specific exam alignment for the UK and adaptable to use worldwide
+                            </Col>
+                        </Row>
+                    </Card>
                 </Container>
             </section>
 
-            <section id="question-finder">
-                <Container className={"homepage-padding mw-1600"}>
-                    <ColumnSlice>
-                        <TextBlock>
-                            <h2 className={"font-size-1-75 mb-4"}>Questions for classwork, homework, and exam prep</h2>
-                            <p>
-                                Explore our bank of over 1000 self-marking questions. Filter by topic, concept, and qualification.
-                            </p>
-                            <p><b>For students</b>: Learn or revise a topic and receive instant feedback.</p>
-                            <p><b>For teachers</b>: Save time by creating self-marking quizzes for your class.</p>
-                            <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color="solid">
-                                Find questions
-                            </Button>
-                        </TextBlock>
-                        <ImageBlock>
-                            <picture>
-                                <source srcSet="/assets/cs/decor/question-finder-clean.svg" type="image/png"/>
-                                <img className={"d-block w-100"} src={"/assets/cs/decor/question-finder-clean.svg"} alt="" />
-                            </picture>
-                        </ImageBlock>
-                    </ColumnSlice>
-                </Container>
-            </section>
-
-            <section id="further-learning" className="bg-white">
+            <section id="teach-and-learn">
                 <Container className="homepage-padding mw-1600" fluid>
-                    <TextBlock md={8}>
-                        <h2>More learning resources</h2>
-                    </TextBlock>
-                    <ColumnSlice>
-                        <AdaCard card={{
-                            title: "Student challenges",
-                            image: {src: "/assets/cs/decor/student-challenges.png"},
-                            bodyText: "Our student challenge programme is designed to encourage and recognise  achievements as students progress through their studies. Take part and get entered to win prizes!",
-                            clickUrl: "/pages/student_challenges",
-                            buttonText: "Explore challenges",
-                            className: "bg-cultured-grey",
-                        }}/>
-                        <AdaCard card={{
-                            title: "Computer science stories",
-                            image: {src: "/assets/cs/decor/lella.png"},
-                            bodyText: "Read our interviews with computer scientists who are doing amazing things in a huge range of computing-related fields.",
-                            clickUrl: "/pages/computer_science_stories",
-                            buttonText: "Read more",
-                            className: "bg-cultured-grey",
-                        }}/>
-                        <AdaCard card={{
-                            title: "Online professional development",
-                            image: {src: "/assets/cs/decor/teacher-2.png"},
-                            bodyText: "20+ training courses, written specifically for computing teachers. No programming experience is needed. Great for keeping up with CPD requirements.",
-                            clickUrl: "/pages/online_courses",
-                            buttonText: "Find out more",
-                            className: "bg-cultured-grey",
-                        }}/>
+                    <div className="d-flex flex-column gap-5 align-items-center">
+                        <h2 className={"font-size-1-75 font-size-md-2 text-center"}>Teach and learn about computer science with confidence</h2>
+                        <Card className={"icon-card w-100 p-5"}>
+                            <ColumnSlice>
+                                <TextBlock>
+                                    <h3 className={"font-size-1-5 font-size-md-1-75"}>Resources you can trust</h3>
+                                    <ul>
+                                        <li>More than 50 curriculum-aligned topics covering the breadth of computer science</li>
+                                        <li>Clear concept pages for every key topic</li>
+                                        <li>Created in collaboration with the University of Cambridge</li>
+                                        <li>Termly student challenges to test skills and win prizes</li>
+                                    </ul>
+                                </TextBlock>
+                                <ImageBlock>
+                                    <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/concepts-slice.svg" alt=""/>
+                                </ImageBlock>
+                            </ColumnSlice>
+                        </Card>
+                        <Card className={"icon-card w-100 p-5"}>
+                            <ColumnSlice>
+                                <ImageBlock>
+                                    <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/markbook-slice.svg" alt=""/>
+                                </ImageBlock>
+                                <TextBlock>
+                                    <h3 className={"font-size-1-5 font-size-md-1-75"}>Tools to aid learning</h3>
+                                    <ul>
+                                        <li>Self-marking assessments that save time and support independent learning and revision</li>
+                                        <li>Over 1000 questions that provide instant feedback to students</li>
+                                        <li>Identify knowledge gaps and tailor teaching with class and student progress insights</li>
+                                        <li>Students see their own progress over time and discover where to improve</li>
+                                    </ul>
+                                </TextBlock>
+                            </ColumnSlice>
+                        </Card>
+                    </div>
+                    <div className={"d-flex w-100 justify-content-center"}>
+                        <div className={"d-flex flex-column flex-md-row gap-4 mt-7 align-items-center"}>
+                            <Button tag={Link} to={"/teachers"}>
+                                Explore Ada CS for teachers
+                            </Button>
+                            <Button tag={Link} to={"/students"}>
+                                Explore Ada CS for students
+                            </Button>
+                        </div>
+                    </div>
+                </Container>
+            </section>
+
+            <section id="testimonial" className="bg-black">
+                <Container className="homepage-padding mw-1600" fluid>
+                    <ColumnSlice className={"align-items-start row-gap-4"}>
+                        <TextBlock className="backslash-left text-white">
+                            <h2 className={"font-size-1-75"}>
+                                &rdquo;Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it’s free!&rdquo;
+                            </h2>
+                            <span>– Computer science teacher</span>
+                        </TextBlock>
+                        <TextBlock className="backslash-left text-white">
+                            <h2 className={"font-size-1-75"}>
+                                &ldquo;
+                                    I love Ada CS! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.
+                                &rdquo;
+                            </h2>
+                            <span>– Computer science student</span>
+                        </TextBlock>
                     </ColumnSlice>
                 </Container>
             </section>
@@ -182,60 +143,74 @@ export const HomepageCS = () => {
             <section id="what-resources">
                 <Container className={"homepage-padding mw-1600"}>
                     <TextBlock md={8}>
-                        <h2 className={"font-size-1-75 mb-4"}>Teaching outside the UK?</h2>
-                        <p>We&apos;ve organised our learning resources by prior knowledge and age group to make them easy to adapt for curricula around the world.</p>
+                        <h2 className={"font-size-1-75 mb-4"}>Exam board alignment</h2>
+                        <p className={"font-size-1-25"}>We&apos;ve organised our learning resources so they can be easily used, wherever you are.</p>
                     </TextBlock>
-                    <ColumnSlice>
-                        <Container className="cs-card-container px-3 my-3">
-                            <Card className={classNames("cs-card-plain w-100 border-0 backslash-1")}>
-                                <CardTitle className={"px-4 mt-7"}>
-                                    <h3 className={"mt-1 font-size-1-5"}>Core</h3>
-                                </CardTitle>
-                                <CardBody className={"px-4 pb-4"}>
-                                    <ul className="mb-4">
-                                        <li>For students aged 14 to 16</li>
-                                        <li>Gives learners a strong theoretical and practical knowledge of the basics of computer science</li>
-                                        <li>Suitable for students with no previous knowledge</li>
-                                    </ul>
-                                </CardBody>
-                                <CardFooter className="border-top-0 p-4">
-                                    <Button to="/exam_specifications_ada#core/ada" color="keyline" tag={Link}>See more</Button>
-                                </CardFooter>
-                            </Card>
-                        </Container>
-                        <Container className="cs-card-container px-3 my-3">
-                            <Card className={classNames("cs-card-plain w-100 border-0 backslash-2")}>
-                                <CardTitle className={"px-4 mt-7 font-size-1-5"}>
-                                    <h3 className={"mt-1"}>Advanced</h3>
-                                </CardTitle>
-                                <CardBody className={"px-4 pb-4"}>
-                                    <ul className="mb-4">
-                                        <li>For students aged 16 to 19</li>
-                                        <li>Expands on the concepts learnt in the Core curriculum with more detail</li>
-                                        <li>Covers more advanced concepts that are not in the Core curriculum</li>
-                                        <li>Prepares students for a university degree / degree apprenticeship programme</li>
-                                    </ul>
-                                </CardBody>
-                                <CardFooter className="border-top-0 p-4">
-                                    <Button to="/exam_specifications_ada#advanced/ada" color="keyline" tag={Link}>See more</Button>
-                                </CardFooter>
-                            </Card>
-                        </Container>
+                    <ColumnSlice breakpoint="md">
+                        <IconCard card={{
+                            title: "In the UK",
+                            icon: {src: "/assets/cs/icons/location-on-cyan.svg"},
+                            clickUrl: "/exam_specifications",
+                            buttonText: "See more",
+                            buttonStyle: "link",
+                        }}>
+                            <p>Find resources tailored to the specific learning levels and exam boards in the UK:</p>
+                            <ul>
+                                <li><b>England:</b> GCSE and A Level</li>
+                                <li><b>Scotland:</b> National 5, Higher, and Advanced Higher</li>
+                                <li><b>Wales:</b> GCSE and A Level</li>
+                            </ul>
+                        </IconCard>
+                        <IconCard card={{
+                            title: "Teaching outside the UK",
+                            icon: {src: "/assets/cs/icons/globe-cyan.svg"},
+                            clickUrl: "/exam_specifications_ada",
+                            buttonText: "See more",
+                            buttonStyle: "link",
+                        }}>
+                            <p>Learning resources tailored to prior knowledge and learning age groups:</p>
+                            <ul>
+                                <li><b>Core:</b> Aimed at students aged 14 to 16, with no previous knowledge needed.</li>
+                                <li><b>Advanced:</b> Aimed at students aged 16 to 19, expands on concepts learned in the Core curriculum.</li>
+                            </ul>
+                        </IconCard>
                     </ColumnSlice>
                 </Container>
             </section>
 
-            {news && news.length > 0 && <section id="news" className="bg-white">
+            <section id="account">
+                <Container className="homepage-padding mw-1600 position-relative" fluid>
+                    <ColumnSlice>
+                        <TextBlock>
+                            <h2 className={"font-size-2"}>Manage workload and track progress with an Ada CS account</h2>
+                            <div className={"font-size-1-25"}>
+                                <p>You can use any of our learning resources wherever you are, without an Ada CS account.</p>
+                                <p>An Ada CS account gets you access to lots of useful tools. Organise students into groups, set self-marking assignments, and track progress to identify learning opportunities.</p>
+                                <p>It’s totally free to use Ada CS, with or without an account.</p>
+                            </div>
+                            <Button className={"mt-3"} color={"primary"} tag={Link} to={"/register"}>Create an account</Button>
+                        </TextBlock>
+                        <ImageBlock>
+                            <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/tools-slice.svg" alt=""/>
+                        </ImageBlock>
+                    </ColumnSlice>
+                </Container>
+            </section>
+
+            {((news && news.length > 0) || showNewsletterPrompts) && <section id="news" className="bg-white">
                 <Container className={"homepage-padding mw-1600"}>
-                    <h2 className={"font-size-1-75 mb-4"}>News</h2>
-                    <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around my-3">
-                        {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n} showTitle cardClassName="bg-cultured-grey" />)}
-                    </Row>
-                    <div className={"mt-4 mt-lg-7 w-100 text-center"}>
-                        <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
-                    </div>
+                    <h2 className={"font-size-1-75 mb-4"}>News and updates</h2>
+                    {news && news.length > 0 &&
+                        <>
+                            <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around mt-3 mb-1">
+                                {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n} showTitle cardClassName="bg-cultured-grey" />)}
+                            </Row>
+                            <div className={"mt-4 mt-lg-5 w-100 text-center"}>
+                                <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
+                            </div>
+                        </>}
                     {showNewsletterPrompts &&
-                        <Row xs={12} className="d-flex flex-row row-cols-1 row-cols-md-2 mt-3">
+                        <div className={"mt-7"}>
                             <IconCard
                                 card={{
                                     title: "Stay updated",
@@ -243,20 +218,14 @@ export const HomepageCS = () => {
                                     bodyText: "Update your preferences and be the first to hear about new features, challenges, topics, and improvements on the platform.",
                                     clickUrl: "/account#notifications",
                                     buttonText: "Join our newsletter",
-                                    onButtonClick: () => {setLinkedSetting("news-preference");}
+                                    onButtonClick: () => {setLinkedSetting("news-preference");},
+                                    className: "bg-cultured-grey px-0"
                                 }}
                             />
-                        </Row>
+                        </div>
                     }
                 </Container>
             </section>}
-
-            <section id="search">
-                <Container className={"py-9 text-center"}>
-                    <h3 className={"text-white mb-4"}>Ready to get started?</h3>
-                    <AdaHomepageSearch className={"d-block"} />
-                </Container>
-            </section>
         </div>
     </>;
 };

@@ -10,7 +10,9 @@ import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
 import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetGroupsQuery, useLazyGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
-import { getAssigneesByBoard, SetAssignmentsModal } from "../../pages/SetAssignments";
+import { getAssigneesByBoard } from "../../pages/SetAssignments";
+import { SetAssignmentsModal } from "../modals/SetAssignmentsModal";
+import { ExternalLink } from "../ExternalLink";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -188,9 +190,14 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             <div className="align-content-center text-overflow-ellipsis pe-2">
                 <div className="d-flex text-wrap">
                     {url && !isDisabled
-                        ? <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
-                            <Markup encoding="latex">{title}</Markup>
-                        </Link>
+                        ? (url.startsWith("http")
+                            ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                                <Markup encoding="latex">{title}</Markup>
+                            </ExternalLink>
+                            : <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                                <Markup encoding="latex">{title}</Markup>
+                            </Link>
+                        )
                         : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                             <Markup encoding="latex">{title}</Markup>
                         </span>

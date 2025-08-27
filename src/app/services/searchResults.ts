@@ -1,7 +1,8 @@
-import {PATHS, SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific} from "./";
+import {HUMAN_STAGES, HUMAN_SUBJECTS, isValidStageSubjectPair, PATHS, SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific, STAGE_TO_LEARNING_STAGE, Subject} from "./";
 import {SearchShortcut} from "../../IsaacAppTypes";
+import {Stage} from "../../IsaacApiTypes";
 
-export const searchList: SearchShortcut[] = [
+const searchList: SearchShortcut[] = [
     {
         id: "assignments",
         title: "My assignments",
@@ -14,7 +15,8 @@ export const searchList: SearchShortcut[] = [
         title: "Teacher connections",
         terms: ["join group", "join class", "teacher connections", "teacher connection", "class code", "join a class",
             "classes", "class", "share token", "groups", "group", "join", "group code", "code", "token", "teacher code",
-            "teachers connections", "join a group", "teacher conections", "teacher connect", "teachers connection"],
+            "teachers connections", "join a group", "teacher conections", "teacher connect", "teachers connection",
+            "teacher", "connections"],
         summary: "Join groups and manage your teacher connections.",
         url: "/account",
         hash: "teacherconnections",
@@ -76,13 +78,6 @@ export const searchList: SearchShortcut[] = [
         terms: ["question finder", "questions", "question search", "practice questions"],
         summary: "Find questions to try by topic and difficulty.",
         url: PATHS.QUESTION_FINDER,
-        type: SEARCH_RESULT_TYPE.SHORTCUT
-    }, {
-        id: "a_level",
-        title: "A Level Resources",
-        terms: ["a level", "alevel", "a-level", "pre uni", "pre-uni"],
-        summary: "Resources for A Level or equivalent.",
-        url: siteSpecific("/alevel", "/topics#a_level"),
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "my_progress",
@@ -195,7 +190,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
     }, {
         id: "physics",
         title: "Isaac Physics",
-        terms: ["physics", "isaac physics"],
+        terms: ["physics", "isaac physics", "phy"],
         summary: "Isaac Physics resources",
         url: "/physics",
         type: SEARCH_RESULT_TYPE.SHORTCUT
@@ -209,14 +204,14 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
     }, {
         id: "chemistry",
         title: "Isaac Chemistry",
-        terms: ["chemistry", "isaac chemistry"],
+        terms: ["chemistry", "isaac chemistry", "chem"],
         summary: "Isaac Chemistry resources",
         url: "/chemistry",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "biology",
         title: "Isaac Biology",
-        terms: ["biology", "isaac biology"],
+        terms: ["biology", "isaac biology", "bio"],
         summary: "Isaac Biology resources",
         url: "/biology",
         type: SEARCH_RESULT_TYPE.SHORTCUT
@@ -228,28 +223,11 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         url: "/computer_science",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
-        id: "senior_physics_challenge",
-        title: "Senior Physics Challenge (SPC)",
-        terms: ["senior physics challenge", "spc"],
-        summary: "The Senior Physics Challenge summer school.",
-        url: "/pages/spc",
-        hash: "senior_physics_challenge",
-        type: SEARCH_RESULT_TYPE.SHORTCUT
-    }, {
-        id: "essential_books",
-        title: "Order Isaac Books",
-        terms: ["essential", "books", "isaac books"],
-        summary: "Including the Essential series workbooks.",
-        url: "/pages/order_books",
-        hash: "essential_books",
-        type: SEARCH_RESULT_TYPE.SHORTCUT
-    }, {
-        id: "quantum_primer",
-        title: "Quantum Mechanics Primer",
-        terms: ["quantum mechanics primer", "quantum primer"],
-        summary: "Interactive questions from a first-year uni introduction.",
-        url: "/books/quantum_mechanics_primer",
-        hash: "quantum_primer",
+        id: "books",
+        title: "Isaac Books",
+        terms: ["books", "book", "isaac books"],
+        summary: "Isaac books: in print and online",
+        url: "/books",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }
 ],
@@ -269,6 +247,10 @@ searchList.push(...siteShortcuts);
 
 const group = /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6}$/;
 
+const stages = /(year 9|gcse|a( |-)level|university)/;
+const subjects = /(physics|maths|chemistry|biology)/;
+const stageAndSubject = new RegExp(`${stages.source} ${subjects.source}|${subjects.source} ${stages.source}`);
+
 export function shortcuts(term: string) {
     const lterm = term.toLowerCase();
     const response = [];
@@ -281,6 +263,19 @@ export function shortcuts(term: string) {
             url: ("/account?authToken=" + term),
             type: SEARCH_RESULT_TYPE.SHORTCUT
         });
+    } else if (stageAndSubject.test(lterm)) {
+        const subject = lterm.match(subjects)![0].toString();
+        const stage = lterm.match(stages)![0].toString().replace(/[- ]/g, "_");
+        const learningStage = STAGE_TO_LEARNING_STAGE[stage as Stage];
+        if (learningStage && isValidStageSubjectPair(subject as Subject, learningStage)) {
+            response.push({
+                id: `${learningStage} ${subject}`,
+                title: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]}`,
+                summary: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]} resources`,
+                url: `/${subject}/${learningStage}`,
+                type: SEARCH_RESULT_TYPE.SHORTCUT
+            });
+        }
     } else {
         for (const i in searchList) {
             for (const j in searchList[i].terms) {
