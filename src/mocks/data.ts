@@ -1,4 +1,4 @@
-import {siteSpecific} from "../app/services";
+import {isDefined, siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO, SOME_FIXED_FUTURE_DATE} from "../test/dateUtils";
 import {
@@ -6085,11 +6085,11 @@ export const mockAssignmentsGroup2 = [
     mockSetAssignments.find(a => a.id === 37),
     mockSetAssignments.find(a => a.id === 40),
     mockSetAssignments.find(a => a.id === 45),
-];
+].filter(isDefined);
 
 export const mockAssignmentsGroup6 = [
-    mockSetAssignments.find(a => a.id === 38),
-];
+    mockSetAssignments.find(a => a.id === 38)!,
+].filter(isDefined);
 
 export const mockUserPreferences = {
     BETA_FEATURE: {
