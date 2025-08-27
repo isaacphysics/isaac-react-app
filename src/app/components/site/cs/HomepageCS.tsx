@@ -105,7 +105,9 @@ export const HomepageCS = () => {
                                 </TextBlock>
                             </ColumnSlice>
                         </Card>
-                        <div className={"d-flex flex-column flex-md-row gap-4"}>
+                    </div>
+                    <div className={"d-flex w-100 justify-content-center"}>
+                        <div className={"d-flex flex-column flex-md-row gap-4 mt-7 align-items-center"}>
                             <Button tag={Link} to={"/teachers"}>
                                 Explore Ada CS for teachers
                             </Button>
@@ -124,7 +126,7 @@ export const HomepageCS = () => {
                             <h2 className={"font-size-1-75"}>
                                 &rdquo;Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it’s free!&rdquo;
                             </h2>
-                            <p>– Computer science teacher</p>
+                            <span>– Computer science teacher</span>
                         </TextBlock>
                         <TextBlock className="backslash-left text-white">
                             <h2 className={"font-size-1-75"}>
@@ -132,7 +134,7 @@ export const HomepageCS = () => {
                                     I love Ada CS! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.
                                 &rdquo;
                             </h2>
-                            <p>– Computer science student</p>
+                            <span>– Computer science student</span>
                         </TextBlock>
                     </ColumnSlice>
                 </Container>
@@ -186,7 +188,7 @@ export const HomepageCS = () => {
                                 <p>An Ada CS account gets you access to lots of useful tools. Organise students into groups, set self-marking assignments, and track progress to identify learning opportunities.</p>
                                 <p>It’s totally free to use Ada CS, with or without an account.</p>
                             </div>
-                            <Button color={"primary"} tag={Link} to={"/register"}>Create an account</Button>
+                            <Button className={"mt-3"} color={"primary"} tag={Link} to={"/register"}>Create an account</Button>
                         </TextBlock>
                         <ImageBlock>
                             <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/tools-slice.svg" alt=""/>
@@ -203,21 +205,25 @@ export const HomepageCS = () => {
                             <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around mt-3 mb-1">
                                 {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n} showTitle cardClassName="bg-cultured-grey" />)}
                             </Row>
-                            <div className={"mt-4 mt-lg-7 w-100 text-center"}>
+                            <div className={"mt-4 mt-lg-5 w-100 text-center"}>
                                 <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
                             </div>
                         </>}
-                    {showNewsletterPrompts && <IconCard
-                        card={{
-                            title: "Stay updated",
-                            icon: {src: "/assets/cs/icons/mail.svg"},
-                            bodyText: "Update your preferences and be the first to hear about new features, challenges, topics, and improvements on the platform.",
-                            clickUrl: "/account#notifications",
-                            buttonText: "Join our newsletter",
-                            onButtonClick: () => {setLinkedSetting("news-preference");},
-                            className: "bg-cultured-grey px-0"
-                        }}
-                    />}
+                    {showNewsletterPrompts &&
+                        <div className={"mt-7"}>
+                            <IconCard
+                                card={{
+                                    title: "Stay updated",
+                                    icon: {src: "/assets/cs/icons/mail.svg"},
+                                    bodyText: "Update your preferences and be the first to hear about new features, challenges, topics, and improvements on the platform.",
+                                    clickUrl: "/account#notifications",
+                                    buttonText: "Join our newsletter",
+                                    onButtonClick: () => {setLinkedSetting("news-preference");},
+                                    className: "bg-cultured-grey px-0"
+                                }}
+                            />
+                        </div>
+                    }
                 </Container>
             </section>}
         </div>
