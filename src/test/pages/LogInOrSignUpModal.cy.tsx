@@ -4,6 +4,7 @@ import { loginOrSignUpModal } from "../../app/components/elements/modals/LoginOr
 
 it('Log In or Sign Up Modal should have no visual regressions', () => {
     // Arrange
+    cy.viewport(500, 1000);
     const modal = loginOrSignUpModal;
     cy.mountWithStoreAndRouter(<ActiveModal activeModal={modal}/>, ["/"]);
     cy.get('[data-testid="active-modal"]').should('be.visible');
