@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import {useGetGroupsQuery, useGetMySetAssignmentsQuery} from "../../state";
 import sortBy from "lodash/sortBy";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AssignmentProgressGroupsListing } from "./AssignmentProgressGroupsListing";
 import { GroupSortOrder, useAssignmentProgressAccessibilitySettings } from "../../services";
 import { AssignmentProgressGroup } from "./AssignmentProgressGroup";
@@ -39,14 +39,15 @@ function AssignmentProgressType({user, assignmentId, groupId}: {user: Registered
     return <AssignmentProgressGroupsListing user={user} groups={sortedGroups} />;
 }
 
-interface AssignmentProgressProps extends RouteComponentProps<{assignmentId?: string, groupId?: string}> {
+interface AssignmentProgressProps {
     user: RegisteredUserDTO;
 }
-export const AssignmentProgress = withRouter((props: AssignmentProgressProps) => {
-    const {user, match} = props;
+export const AssignmentProgress = (props: AssignmentProgressProps) => {
+    const { user } = props;
+    const { groupId, assignmentId } = useParams<{ groupId?: string; assignmentId?: string }>();
     const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
     return <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-        <AssignmentProgressType user={user} assignmentId={match.params.assignmentId} groupId={match.params.groupId} />
+        <AssignmentProgressType user={user} assignmentId={assignmentId} groupId={groupId} />
     </AssignmentProgressPageSettingsContext.Provider>;
-});
+};
