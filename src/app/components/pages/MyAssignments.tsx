@@ -19,7 +19,6 @@ import { MyAssignmentsOrder } from "../../../IsaacAppTypes";
 import sortBy from "lodash/sortBy";
 import { PageMetadata } from "../elements/PageMetadata";
 
-
 const INITIAL_NO_ASSIGNMENTS = 10;
 const NO_ASSIGNMENTS_INCREMENT = 10;
 export enum AssignmentState {
@@ -29,6 +28,12 @@ export enum AssignmentState {
     ALL_ATTEMPTED = "All attempted",
     ALL_CORRECT = "All correct"
 }
+
+const pageHelp = <span>
+    Any {siteSpecific("assignments", "quizzes")} you have been set will appear here.<br />
+    Overdue {siteSpecific("assignments", "quizzes")} which have not been fully attempted will be treated as {siteSpecific("assignments", "quizzes")} <strong>To do</strong> until they are due,
+    after which they are considered <strong>Older</strong> {siteSpecific("assignments", "quizzes")}.
+</span>;
 
 const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
@@ -53,12 +58,6 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
         [MyAssignmentsOrder.correct]: (a: AssignmentDTO) => a.gameboard?.percentageCorrect ?? 0,
     };
 
-    const pageHelp = <span>
-        Any {siteSpecific("assignments", "quizzes")} you have been set will appear here.<br />
-        Overdue {siteSpecific("assignments", "quizzes")} which have not been fully attempted will be treated as {siteSpecific("assignments", "quizzes")} <strong>To do</strong> until they are due,
-        after which they are considered <strong>Older</strong> {siteSpecific("assignments", "quizzes")}.
-    </span>;
-
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
         <SidebarLayout>
@@ -72,10 +71,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
             />
             <MainContent>
                 <PageMetadata noTitle showSidebarButton helpModalId="help_modal_my_assignments">
-                    <PageFragment fragmentId={siteSpecific(
-                        isTutorOrAbove(user) ? "help_toptext_assignments_teacher" : "help_toptext_assignments_student", 
-                        isTutorOrAbove(user) ? "assignments_help_teacher" : "assignments_help_student"
-                    )} ifNotFound={<div className={"mt-7"}/>} />
+                    <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_assignments_teacher" : "help_toptext_assignments_student"} ifNotFound={<div className={"mt-7"}/>} />
                 </PageMetadata>
                 <ShowLoadingQuery
                     query={assignmentQuery}
@@ -106,7 +102,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                             {limit < orderedAssignments.length && <div className="text-center">
                                 <hr className="text-center" />
                                 <p className="mt-4">
-                                    Showing <strong>{limit}</strong> of <strong>{orderedAssignments.length}</strong> filtered {siteSpecific("assignments", "quizzes")}.
+                                    Showing <strong>{limit}</strong> of <strong>{orderedAssignments.length}</strong> filtered assignments.
                                 </p>
                                 <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
                                     Show more
@@ -135,19 +131,10 @@ const AdaMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
 
-    const pageHelp = <span>
-        Any {siteSpecific("assignments", "quizzes")} you have been set will appear here.<br />
-        Overdue {siteSpecific("assignments", "quizzes")} which have not been fully attempted will be treated as {siteSpecific("assignments", "quizzes")} <strong>To do</strong> until they are due,
-        after which they are considered <strong>Older</strong> {siteSpecific("assignments", "quizzes")}.
-    </span>;
-
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} />
-        <PageFragment fragmentId={siteSpecific(
-            isTutorOrAbove(user) ? "help_toptext_assignments_teacher" : "help_toptext_assignments_student", 
-            isTutorOrAbove(user) ? "assignments_help_teacher" : "assignments_help_student"
-        )} ifNotFound={<div className={"mt-7"}/>} />
-        <Card className={siteSpecific("my-7", "my-assignments-card")}>
+        <PageFragment fragmentId={isTutorOrAbove(user) ? "assignments_help_teacher" : "assignments_help_student"} ifNotFound={<div className={"mt-7"}/>} />
+        <Card className="my-assignments-card">
             <CardBody className="pt-2">
                 <ShowLoadingQuery
                     query={assignmentQuery}
@@ -177,7 +164,8 @@ const AdaMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                 </Col>
                                 <Col md={8} lg={5}>
                                     <Label className="w-100">
-                                        {siteSpecific("Filter assignments", "Filter quizzes by name")} <Input type="text" onChange={(e) => setAssignmentTitleFilter(e.target.value)} placeholder={siteSpecific("Filter assignments by name", undefined)}/>
+                                        Filter quizzes by name 
+                                        <Input type="text" onChange={(e) => setAssignmentTitleFilter(e.target.value)} placeholder={siteSpecific("Filter assignments by name", undefined)}/>
                                     </Label>
                                 </Col>
                                 <Col sm={6} lg={{size: 2, offset: 1}}>
@@ -205,7 +193,7 @@ const AdaMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                             {limit < filteredAssignments.length && <div className="text-center">
                                 <hr className="text-center" />
                                 <p className="mt-4">
-                                    Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered {siteSpecific("assignments", "quizzes")}.
+                                    Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered quizzes.
                                 </p>
                                 <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
                                     Show more
