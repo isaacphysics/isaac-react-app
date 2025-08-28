@@ -12,22 +12,22 @@ describe("Microsoft SSO Authentication", () => {
 
     describe('when the token from the provider belongs to a valid user', () => {
         it('signs them in', async () => {
-            renderTestEnvironment({ extraEndpoints: successfulSignIn });
-            await setUrl({ pathname: '/auth/microsoft/callback', search:'code=valid&state=valid'});
+            renderTestEnvironment({ extraEndpoints: microsoftSignIn });
+            await setUrl({ pathname: '/auth/microsoft/callback', search:'?code=valid&state=valid'});
             expect(dashboard.welcomeText).toHaveTextContent('Welcome back, T. Admin!');
         });
     });
 
     describe('when Isaac rejects the token', () => {
         it('shows an error', async () => {
-            renderTestEnvironment({ extraEndpoints: successfulSignIn });
-            await setUrl({ pathname: '/auth/microsoft/callback', search:'code=invalid&state=invalid'});
+            renderTestEnvironment({ extraEndpoints: microsoftSignIn });
+            await setUrl({ pathname: '/auth/microsoft/callback', search:'?code=invalid&state=invalid'});
             expect(authenticationError.heading).toHaveTextContent('CSRF check failed');
         });
     });
 });
 
-const successfulSignIn = [http.get(API_PATH + "/auth/microsoft/callback", ({ request }) => {
+const microsoftSignIn = [http.get(API_PATH + "/auth/microsoft/callback", ({ request }) => {
     const url = new URL(request.url);
     if (url.searchParams.get('code') === 'valid' && url.searchParams.get('state') === 'valid') {
         return HttpResponse.json(mockUser, { status: 200, });

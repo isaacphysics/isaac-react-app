@@ -177,7 +177,7 @@ export const expectUrl = (text: string) => waitFor(() => {
     expect(history.location.pathname).toBe(text);
 });
 
-export const expectUrlParams = (text: string) => waitFor(() => {
+export const expectUrlParams = (text: SearchString | '') => waitFor(() => {
     expect(history.location.search).toBe(text);
 });
 
@@ -203,12 +203,10 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
 };
 
 export type PathString = `/${string}`;
-export const setUrl = async (location: { pathname: PathString, search?: string}) => {
+export type SearchString = `?${string}`;
+export const setUrl = async (location: { pathname: PathString, search?: SearchString}) => {
     if (location.pathname.includes('?')) {
         throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
-    }
-    if (location.search?.startsWith('?')) {
-        throw new Error('When navigation using `setUrl`, do not start the query string with `?`.');
     }
     return await act(async () => history.push(location));
 };
