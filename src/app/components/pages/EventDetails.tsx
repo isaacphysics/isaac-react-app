@@ -413,7 +413,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                         </Row>
                     </div>
                 </div>
-                <Button to="/events" color="keyline" className="float-end my-4">
+                <Button tag={Link} to="/events" color="keyline" className="float-end my-4">
                     More events
                 </Button>
             </Container>;

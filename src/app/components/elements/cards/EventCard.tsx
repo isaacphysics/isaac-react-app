@@ -75,7 +75,7 @@ const AdaEventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolea
         buttonAltText: `View details of the event: ${title} - ${formatDate(date, FRIENDLY_DATE_AND_TIME)}`,
         clickUrl: `/events/${id}`,
         className: classnames({'disabled text-muted': hasExpired || isCancelled}),
-    }}>
+    }} className="h-100">
         <div>
             {userBookingStatus === "CONFIRMED" && <>{" "}<Badge color={siteSpecific("success", "perfect")} outline>Booked</Badge></>}
             {userBookingStatus === "WAITING_LIST" && <>{" "}<Badge color={siteSpecific("warning", "in-progress")} outline>On waiting list</Badge></>}
