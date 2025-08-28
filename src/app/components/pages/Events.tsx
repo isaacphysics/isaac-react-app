@@ -17,7 +17,7 @@ import {
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import { Container, Row, Button, Form, Input, Label } from "reactstrap";
+import { Container, Row, Button, Form, Input, Label, Col } from "reactstrap";
 import { EventsSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 export interface EventsPageQueryParams {
@@ -128,16 +128,18 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                                 </div>
 
                                 <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1 row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
-                                    {events.map(event => <div key={event.id} className="my-2 px-3">
+                                    {events.map(event => <Col key={event.id} className={siteSpecific("my-2 px-3", "p-3")}>
                                         {deviceSize==="md" && <div className="section-divider mb-4"/>}
                                         <EventCard event={event} />
-                                    </div>)}
+                                    </Col>)}
                                 </Row>
 
                                 {/* Load More Button */}
                                 {numberOfLoadedEvents < total && <div className="text-center mt-4 mb-7">
                                     <Button color="solid"
-                                        onClick={() => {getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});}}>
+                                        onClick={() => {
+                                            void getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
+                                        }}>
                                         Load more events
                                     </Button>
                                 </div>}
