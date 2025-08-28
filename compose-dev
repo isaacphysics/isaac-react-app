@@ -68,7 +68,6 @@ elif [ "$SUBJECT" == "phy" ]; then
 fi
 
 docker compose -p dc-${APP_NAME//./-} -f - $@ << EOF
-version: '2'
 services:
   $APP_NAME:
     container_name: $APP_NAME
@@ -121,10 +120,11 @@ services:
       - /local/data/test-$SITE-db-schema.sql:/docker-entrypoint-initdb.d/99-test-db-schema.sql:ro
 networks:
   default:
-    external:
-      name: isaac
+    name: isaac
+    external: true
 volumes:
   $PG_CONTAINER_NAME:
+    name: $PG_CONTAINER_NAME
     external: true
 EOF
 
