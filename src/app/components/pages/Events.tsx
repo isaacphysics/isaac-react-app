@@ -64,7 +64,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
         return <div className="my-4">
             <Form className="form-inline d-flex justify-content-end">
                 <Label>Filter by
-                    <Input id="event-status-filter" className="ms-2 me-3" type="select" value={statusFilter} onChange={e => {
+                    <Input id="event-status-filter" className="ms-3" type="select" value={statusFilter} onChange={e => {
                         const selectedFilter = e.target.value as EventStatusFilter;
                         query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
                         query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
@@ -80,7 +80,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                             )
                         }
                     </Input>
-                    <Input id="event-type-filter" className="ms-2 me-3" type="select" value={typeFilter} onChange={e => {
+                    <Input id="event-type-filter" className="ms-3" type="select" value={typeFilter} onChange={e => {
                         const selectedType = e.target.value as EventTypeFilter;
                         query.types = selectedType !== EventTypeFilter["All groups"] ? selectedType : undefined;
                         history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
@@ -89,7 +89,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                             <option key={typeValue} value={typeValue}>{typeLabel}</option>
                         )}
                     </Input>
-                    <Input id="event-stage-filter" className="ms-2" type="select" style={{minWidth: "140px"}}
+                    {Object.keys(EventStageMap).length > 1 && <Input id="event-stage-filter" className="ms-3" type="select" style={{minWidth: "140px"}}
                         value={query.show_stage_only && Object.keys(reverseEventsMap).includes(query.show_stage_only) ? query.show_stage_only : STAGE.ALL}
                         onChange={e => {
                             const selectedStage = e.target.value as STAGE;
@@ -99,7 +99,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                         {Object.entries(EventStageMap).map(([label, value]) =>
                             <option key={value} value={value}>{label}</option>
                         )}
-                    </Input>
+                    </Input>}
                 </Label>
             </Form>
         </div>;
