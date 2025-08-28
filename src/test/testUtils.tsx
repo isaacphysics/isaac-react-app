@@ -5,7 +5,7 @@ import {http, HttpResponse, HttpHandler} from "msw";
 import {ACCOUNT_TAB, ACCOUNT_TABS, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
 import {produce} from "immer";
 import {mockUser} from "../mocks/data";
-import {isaacApi, requestCurrentUser, store} from "../app/state";
+import {isaacApi, removeToast, requestCurrentUser, store} from "../app/state";
 import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
@@ -52,6 +52,7 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
     store.dispatch(isaacApi.util.resetApiState());
+    store.getState().toasts?.forEach(toast => toast.id && store.dispatch(removeToast(toast.id)));
     server.resetHandlers();
     if (role || modifyUser) {
         server.use(

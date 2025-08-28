@@ -7,7 +7,7 @@ import {
 } from "../IsaacApiTypes";
 import {UserPreferencesDTO} from "../IsaacAppTypes";
 
-export type ErrorType = 'mustBeLoggedIn401' | 'testUnavailable404' | 'csrfError401';
+export type ErrorType = 'mustBeLoggedIn401' | 'testUnavailable404' | 'csrfError401' | 'accountNotLinked403';
 export const errorResponses: Record<ErrorType, object> = {
     mustBeLoggedIn401: {
         responseCode: 401,
@@ -25,6 +25,12 @@ export const errorResponses: Record<ErrorType, object> = {
         responseCode: 401,
         responseCodeType: "Unauthorized",
         errorMessage: "CSRF check failed",
+        bypassGenericSiteErrorPage: false
+    },
+    accountNotLinked403: {
+        responseCode: 403,
+        responseCodeType: "Forbidden",
+        errorMessage: "You do not use Microsoft to log in. You may have registered using a different provider, or your email address and password.",
         bypassGenericSiteErrorPage: false
     }
 };
