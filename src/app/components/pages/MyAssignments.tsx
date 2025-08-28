@@ -165,7 +165,7 @@ const AdaMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                 <Col md={8} lg={5}>
                                     <Label className="w-100">
                                         Filter quizzes by name 
-                                        <Input type="text" onChange={(e) => setAssignmentTitleFilter(e.target.value)} placeholder={siteSpecific("Filter assignments by name", undefined)}/>
+                                        <Input type="text" onChange={(e) => setAssignmentTitleFilter(e.target.value)} placeholder="Search"/>
                                     </Label>
                                 </Col>
                                 <Col sm={6} lg={{size: 2, offset: 1}}>
