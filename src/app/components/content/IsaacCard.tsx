@@ -1,12 +1,12 @@
 import React from "react";
-import {Card, CardBody, CardTitle, Col, Row} from "reactstrap";
+import {Card, CardBody, CardTitle, Col, ContainerProps, Row} from "reactstrap";
 import classNames from "classnames";
 import {apiHelper, isAppLink, siteSpecific} from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacCardDTO} from "../../../IsaacApiTypes";
 import { AdaCard } from "../elements/cards/AdaCard";
 
-interface IsaacCardProps {
+interface IsaacCardProps extends ContainerProps {
     doc: IsaacCardDTO;
     imageClassName?: string;
     className?: string;
@@ -25,7 +25,7 @@ const PhysicsContentCard = ({doc, imageClassName, className}: IsaacCardProps) =>
             <Card className={classes}>
                 {image && <Row className={imageClassName}>
                     <Col className="justify-content-md-center">
-                        <img className={[classes, imageClassName].join(" ")} src={imgSrc} alt={image.altText}/>
+                        <img className={classNames(classes, imageClassName)} src={imgSrc} alt={image.altText}/>
                     </Col>
                 </Row>}
                 <CardTitle className="px-3">
