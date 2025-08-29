@@ -23,30 +23,9 @@ export enum AssignmentState {
     ALL_CORRECT = "All correct"
 }
 
-interface PhyAssignmentProps {
+interface AdaAssignmentProps {
     assignments: AssignmentDTO[];
     limit: number;
-    setLimit: (limit: number) => void;
-}
-
-const PhyAssignmentView = (props: PhyAssignmentProps) => {
-    const {assignments, limit, setLimit} = props;
-
-    return <div className="pt-4">
-        <Assignments assignments={assignments.slice(0, limit)} />
-        {limit < assignments.length && <div className="text-center">
-            <hr className="text-center" />
-            <p className="mt-4">
-                Showing <strong>{limit}</strong> of <strong>{assignments.length}</strong> filtered assignments.
-            </p>
-            <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
-                Show more
-            </Button>
-        </div>}
-    </div>;
-};
-
-interface AdaAssignmentProps extends PhyAssignmentProps {
     filteredAssignments: AssignmentDTO[];
     statusFilter: AssignmentState[];
     groupFilter: string;
@@ -58,7 +37,7 @@ interface AdaAssignmentProps extends PhyAssignmentProps {
 }
 
 const AdaAssignmentView = (props: AdaAssignmentProps) => {
-    const {filteredAssignments, assignments, statusFilter, groupFilter, setByFilter, setStatusFilter, setTitleFilter, setGroupFilter, setSetByFilter, limit, setLimit} = props;
+    const {filteredAssignments, assignments, statusFilter, groupFilter, setByFilter, setStatusFilter, setTitleFilter, setGroupFilter, setSetByFilter, limit} = props;
 
     return <>
         <Row className="pt-2">
@@ -94,19 +73,8 @@ const AdaAssignmentView = (props: AdaAssignmentProps) => {
             </Col>
         </Row>
         <Row className="mt-3">
-            <Col sm="12">
-                <Assignments assignments={filteredAssignments.slice(0, limit)} />
-            </Col>
+            <Assignments assignments={filteredAssignments.slice(0, limit)} />
         </Row>
-        {limit < filteredAssignments.length && <div className="text-center">
-            <hr className="text-center" />
-            <p className="mt-4">
-                Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered quizzes.
-            </p>
-            <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
-                Show more
-            </Button>
-        </div>}
     </>;
 };
 
@@ -183,20 +151,29 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                 const orderedAssignments = sortBy(filteredAssignments, SORT_FUNCTIONS[orderKind]);
                                 if (orderNegative) orderedAssignments.reverse();
                                 
-                                return siteSpecific(
-                                    <PhyAssignmentView
-                                        assignments={orderedAssignments}
-                                        limit={limit}
-                                        setLimit={setLimit}
-                                    />, 
-                                    <AdaAssignmentView
-                                        {...myAssignmentOptionProps}
-                                        assignments={assignments}
-                                        filteredAssignments={filteredAssignments}
-                                        limit={limit}
-                                        setLimit={setLimit}
-                                    />
-                                );}
+                                return <>
+                                    {siteSpecific(
+                                        <div className="pt-4">
+                                            <Assignments assignments={orderedAssignments.slice(0, limit)} />
+                                        </div>, 
+                                        <AdaAssignmentView
+                                            {...myAssignmentOptionProps}
+                                            assignments={assignments}
+                                            filteredAssignments={filteredAssignments}
+                                            limit={limit}
+                                        />
+                                    )}
+                                    {limit < filteredAssignments.length && <div className="text-center">
+                                        <hr className="text-center" />
+                                        <p className="mt-4">
+                                            Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered quizzes.
+                                        </p>
+                                        <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
+                                            Show more
+                                        </Button>
+                                    </div>} 
+                                </>;
+                            } 
                             }
                         />
                     </div>
