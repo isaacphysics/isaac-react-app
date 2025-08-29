@@ -8,6 +8,7 @@ import {
     filterAssignmentsByStatus,
     getDistinctAssignmentGroups,
     getDistinctAssignmentSetters,
+    isAda,
     isTutorOrAbove,
     siteSpecific
 } from "../../services";
@@ -18,6 +19,7 @@ import { MainContent, MyAssignmentsSidebar, SidebarLayout } from "../elements/la
 import { MyAssignmentsOrder } from "../../../IsaacAppTypes";
 import sortBy from "lodash/sortBy";
 import { PageMetadata } from "../elements/PageMetadata";
+import classNames from "classnames";
 
 const INITIAL_NO_ASSIGNMENTS = 10;
 const NO_ASSIGNMENTS_INCREMENT = 10;
@@ -28,108 +30,6 @@ export enum AssignmentState {
     ALL_ATTEMPTED = "All attempted",
     ALL_CORRECT = "All correct"
 }
-
-const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
-    const dispatch = useAppDispatch();
-    useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}));}, [dispatch]);
-
-    // TODO don't refetch "my assignments" every component mount, an instead invalidate cache when actions occur
-    // that require refetching.
-    const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
-
-    const [assignmentStateFilter, setAssignmentStateFilter] = useState<AssignmentState[]>([AssignmentState.ALL]);
-    const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
-    const [assignmentSetByFilter, setAssignmentSetByFilter] = useState<string>("All");
-    const [assignmentGroupFilter, setAssignmentGroupFilter] = useState<string>("All");
-    const [sortOrder, setSortOrder] = useState<MyAssignmentsOrder>(MyAssignmentsOrder["-startDate"]);
-
-    const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
-
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "hex", icon: "icon-question-deck"}} />
-        <SidebarLayout>
-            <MyAssignmentsSidebar
-                statusFilter={assignmentStateFilter} setStatusFilter={setAssignmentStateFilter}
-                titleFilter={assignmentTitleFilter} setTitleFilter={setAssignmentTitleFilter}
-                groupFilter={assignmentGroupFilter} setGroupFilter={setAssignmentGroupFilter}
-                setByFilter={assignmentSetByFilter} setSetByFilter={setAssignmentSetByFilter}
-                sortOrder={sortOrder} setSortOrder={setSortOrder}
-                assignmentQuery={assignmentQuery} hideButton
-            />
-            <MainContent>
-                <PageMetadata noTitle showSidebarButton helpModalId="help_modal_my_assignments">
-                    <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_assignments_teacher" : "help_toptext_assignments_student"} ifNotFound={<div className="mt-7"/>} />
-                </PageMetadata>
-                <ShowLoadingQuery
-                    query={assignmentQuery}
-                    defaultErrorTitle={"Error fetching your assignments"}
-                    thenRender={(assignments) => 
-                        <PhyAssignmentView
-                            assignments={assignments}
-                            assignmentStateFilter={assignmentStateFilter}
-                            assignmentTitleFilter={assignmentTitleFilter}
-                            assignmentGroupFilter={assignmentGroupFilter}
-                            assignmentSetByFilter={assignmentSetByFilter}
-                            sortOrder={sortOrder}
-                            limit={limit}
-                            setLimit={setLimit}
-                        />
-                    }
-                />
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
-};
-
-const AdaMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
-    const dispatch = useAppDispatch();
-    useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}));}, [dispatch]);
-
-    // TODO don't refetch "my assignments" every component mount, an instead invalidate cache when actions occur
-    // that require refetching.
-    const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
-
-    const [assignmentStateFilter, setAssignmentStateFilter] = useState<AssignmentState>(AssignmentState.ALL);
-    const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
-    const [assignmentSetByFilter, setAssignmentSetByFilter] = useState<string>("All");
-    const [assignmentGroupFilter, setAssignmentGroupFilter] = useState<string>("All");
-
-    const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
-
-    const pageHelp = <span>
-        Any quizzes you have been set will appear here.<br />
-        Overdue quizzes which have not been fully attempted will be treated as quizzes <strong>To do</strong> until they are due,
-        after which they are considered <strong>Older</strong> quizzes.
-    </span>;
-
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} />
-        <PageFragment fragmentId={isTutorOrAbove(user) ? "assignments_help_teacher" : "assignments_help_student"} ifNotFound={<div className="mt-7"/>} />
-        <Card className="my-assignments-card">
-            <CardBody className="pt-2">
-                <ShowLoadingQuery
-                    query={assignmentQuery}
-                    defaultErrorTitle={"Error fetching your assignments"}
-                    thenRender={(assignments) => 
-                        <AdaAssignmentView
-                            assignments={assignments}
-                            assignmentStateFilter={assignmentStateFilter}
-                            assignmentTitleFilter={assignmentTitleFilter}
-                            assignmentGroupFilter={assignmentGroupFilter}
-                            assignmentSetByFilter={assignmentSetByFilter}
-                            setAssignmentStateFilter={setAssignmentStateFilter}
-                            setAssignmentTitleFilter={setAssignmentTitleFilter}
-                            setAssignmentGroupFilter={setAssignmentGroupFilter}
-                            setAssignmentSetByFilter={setAssignmentSetByFilter}
-                            limit={limit}
-                            setLimit={setLimit} 
-                        />
-                    }
-                />
-            </CardBody>
-        </Card>
-    </Container>;
-};
 
 interface PhyAssignmentProps {
     assignments: AssignmentDTO[];
@@ -265,4 +165,79 @@ const AdaAssignmentView = (props: AdaAssignmentProps) => {
     </>;
 }
 
-export const MyAssignments = siteSpecific(PhyMyAssignments, AdaMyAssignments);
+export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
+    const dispatch = useAppDispatch();
+    useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}));}, [dispatch]);
+
+    // TODO don't refetch "my assignments" every component mount, an instead invalidate cache when actions occur
+    // that require refetching.
+    const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
+
+    const [assignmentStateFilter, setAssignmentStateFilter] = useState<AssignmentState[]>([AssignmentState.ALL]);
+    const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
+    const [assignmentSetByFilter, setAssignmentSetByFilter] = useState<string>("All");
+    const [assignmentGroupFilter, setAssignmentGroupFilter] = useState<string>("All");
+    const [sortOrder, setSortOrder] = useState<MyAssignmentsOrder>(MyAssignmentsOrder["-startDate"]);
+
+    const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
+
+    const pageHelp = <span>
+        Any quizzes you have been set will appear here.<br />
+        Overdue quizzes which have not been fully attempted will be treated as quizzes <strong>To do</strong> until they are due,
+        after which they are considered <strong>Older</strong> quizzes.
+    </span>;
+
+    return <Container>
+        <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}/>
+        <SidebarLayout>
+            <MyAssignmentsSidebar
+                statusFilter={assignmentStateFilter} setStatusFilter={setAssignmentStateFilter}
+                titleFilter={assignmentTitleFilter} setTitleFilter={setAssignmentTitleFilter}
+                groupFilter={assignmentGroupFilter} setGroupFilter={setAssignmentGroupFilter}
+                setByFilter={assignmentSetByFilter} setSetByFilter={setAssignmentSetByFilter}
+                sortOrder={sortOrder} setSortOrder={setSortOrder}
+                assignmentQuery={assignmentQuery} hideButton
+            />
+            <MainContent>
+                <PageMetadata noTitle showSidebarButton helpModalId="help_modal_my_assignments">
+                    <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_assignments_teacher" : "help_toptext_assignments_student"} ifNotFound={<div className="mt-7"/>} />
+                </PageMetadata>
+                <div className={classNames({"my-assignments-card card": isAda})}>
+                    <div className={classNames({"pt-2 card-body": isAda})}>
+                        <ShowLoadingQuery
+                            query={assignmentQuery}
+                            defaultErrorTitle={"Error fetching your assignments"}
+                            thenRender={(assignments) => 
+                            {return siteSpecific(
+                                <PhyAssignmentView
+                                    assignments={assignments}
+                                    assignmentStateFilter={assignmentStateFilter}
+                                    assignmentTitleFilter={assignmentTitleFilter}
+                                    assignmentGroupFilter={assignmentGroupFilter}
+                                    assignmentSetByFilter={assignmentSetByFilter}
+                                    sortOrder={sortOrder}
+                                    limit={limit}
+                                    setLimit={setLimit}
+                                />, 
+                                <AdaAssignmentView
+                                    assignments={assignments}
+                                    assignmentStateFilter={assignmentStateFilter[0]}
+                                    assignmentTitleFilter={assignmentTitleFilter}
+                                    assignmentGroupFilter={assignmentGroupFilter}
+                                    assignmentSetByFilter={assignmentSetByFilter}
+                                    setAssignmentStateFilter={(assignmentState) => setAssignmentStateFilter([assignmentState])}
+                                    setAssignmentTitleFilter={setAssignmentTitleFilter}
+                                    setAssignmentGroupFilter={setAssignmentGroupFilter}
+                                    setAssignmentSetByFilter={setAssignmentSetByFilter}
+                                    limit={limit}
+                                    setLimit={setLimit}
+                                />
+                            );}
+                            }
+                        />
+                    </div>
+                </div>
+            </MainContent>
+        </SidebarLayout>
+    </Container>;
+};
