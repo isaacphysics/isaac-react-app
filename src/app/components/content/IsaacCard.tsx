@@ -1,24 +1,24 @@
 import React from "react";
-import {Card, CardBody, CardTitle, Col, ContainerProps, Row} from "reactstrap";
+import {Card, CardBody, CardTitle, Col, Row} from "reactstrap";
 import classNames from "classnames";
 import {apiHelper, isAppLink, siteSpecific} from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacCardDTO} from "../../../IsaacApiTypes";
 import { AdaCard } from "../elements/cards/AdaCard";
 
-interface IsaacCardProps extends ContainerProps {
+interface IsaacCardProps {
     doc: IsaacCardDTO;
     imageClassName?: string;
     className?: string;
 }
 
-const PhysicsContentCard = ({doc, imageClassName, className, ...rest}: IsaacCardProps) => {
+const PhysicsContentCard = ({doc, imageClassName, className}: IsaacCardProps) => {
     const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
     const classes = classNames(className + " menu-card", {"disabled": disabled, "isaac-card-vertical": verticalContent});
     const imgSrc = image?.src && apiHelper.determineImageUrl(image.src);
 
-    const link = (clickUrl && isAppLink(clickUrl)) ? <Link to={clickUrl} className={"stretched-link"} aria-label={title} aria-disabled={disabled}/> :
-        <a href={clickUrl} className={"stretched-link"} aria-label={title} aria-disabled={disabled}/>;
+    const link = (clickUrl && isAppLink(clickUrl)) ? <Link to={clickUrl} className="stretched-link" aria-label={title} aria-disabled={disabled}/> :
+        <a href={clickUrl} className="stretched-link" aria-label={title} aria-disabled={disabled}/>;
 
     return <Col className="d-flex h-100 justify-content-center">
         {verticalContent ?
@@ -58,8 +58,8 @@ const PhysicsContentCard = ({doc, imageClassName, className, ...rest}: IsaacCard
     </Col>;
 };
 
-const AdaContentCard = ({doc, imageClassName, ...rest}: IsaacCardProps) => {
-    const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
+const AdaContentCard = ({doc, ...rest}: IsaacCardProps) => {
+    const {title, subtitle, image, clickUrl, disabled} = doc;
     const imageSrc = image?.src && apiHelper.determineImageUrl(image.src);
     
     return <AdaCard card={{
