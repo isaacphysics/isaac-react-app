@@ -18,7 +18,8 @@ import {
     mockRubrics,
     mockAttempts,
     mockPreviews,
-    mockConceptsResults
+    mockConceptsResults,
+    mockProgress
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -106,13 +107,22 @@ export const handlers = [
     http.get(API_PATH + "/assignments/assign/:assignmentId", ({params}) => {
         const {assignmentId: _assignmentId} = params;
         const assignmentId = parseInt(_assignmentId as string);
-        // FIXME augment the returned assignment like in the API
         const assignments = mockSetAssignments.filter(a => a.id === assignmentId);
         if (assignments.length === 1) {
             return HttpResponse.json(assignments[0]);
         }
         // FIXME this is probably the wrong format for errors
         return HttpResponse.json({error: `Assignment with id ${_assignmentId} not found.`}, {
+            status: 404,
+        });
+    }),
+    http.get(API_PATH + "/assignments/assign/:assignmentId/progress", ({params}) => {
+        const {assignmentId: _assignmentId} = params;
+        const assignmentId = parseInt(_assignmentId as string);
+        if (assignmentId in mockProgress) {
+            return HttpResponse.json(mockProgress[assignmentId as keyof typeof mockProgress]);
+        }
+        return HttpResponse.json({error: `Assignment progress for assignment ${_assignmentId} not found.`}, {
             status: 404,
         });
     }),
