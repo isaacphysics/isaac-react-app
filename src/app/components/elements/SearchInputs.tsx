@@ -86,8 +86,7 @@ const LongSearchButton = () => (
         <span className='visually-hidden'>Search</span>
     </Button>
 );
-
-export const PhySearchInput = withSearch(({inputProps, setSearchText, searchText}) => {
+export const MainSearchInput = withSearch(({inputProps, setSearchText, searchText}) => {
     function setSearchTextAsValue(e: ChangeEvent<HTMLInputElement>) {
         setSearchText(e.target.value);
     }
@@ -101,21 +100,7 @@ export const PhySearchInput = withSearch(({inputProps, setSearchText, searchText
     </>;
 });
 
-export const AdaSearchInput = withSearch(({inputProps, setSearchText, searchText}) => {
-    function setSearchTextAsValue(e: ChangeEvent<HTMLInputElement>) {
-        setSearchText(e.target.value);
-    }
-    return <>
-        <Label for='header-search' className='visually-hidden'>Search</Label>
-        <Input
-            id="header-search" {...inputProps}
-            value={searchText} onChange={setSearchTextAsValue}
-        />
-        <SearchButton/>
-    </>;
-});
-
-export const PhySimpleSearch = withSearch(({inputProps, setSearchText, searchText}) => {
+const PhySimpleSearch = withSearch(({inputProps, setSearchText, searchText}) => {
     function setSearchTextAsValue(e: ChangeEvent<HTMLInputElement>) {
         setSearchText(e.target.value);
     }
@@ -161,8 +146,6 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
 });
 
 export const SearchPageSearch = siteSpecific(PhySimpleSearch, AdaHeaderSearch);
-export const MainSearchInput = siteSpecific(PhySearchInput, AdaSearchInput);
-
 
 interface SearchButtonWithIconProps extends InputProps {
     onSearch?: () => void;
