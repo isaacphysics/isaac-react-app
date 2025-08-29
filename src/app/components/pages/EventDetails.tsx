@@ -59,6 +59,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { PageMetadata } from "../elements/PageMetadata";
 import { MetadataContainer } from "../elements/panels/MetadataContainer";
 import { Immutable } from "immer";
+import classNames from "classnames";
 
 function formatDate(date: Date | number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -76,22 +77,6 @@ interface EventBookingProps {
 }
 
 const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, bookingFormOpen, setBookingFormOpen}: EventBookingProps) => {
-    function googleCalendarTemplate() {
-        if (event) {
-            // https://calendar.google.com/calendar/event?action=TEMPLATE&text=[event_name]&dates=[start_date as YYYYMMDDTHHMMSS or YYYYMMDD]/[end_date as YYYYMMDDTHHMMSS or YYYYMMDD]&details=[extra_info]&location=[full_address_here]
-            const address = event.location && event.location.address ? [event.location.address.addressLine1, event.location.address.addressLine2, event.location.address.town, event.location.address.county, event.location.address.postalCode, event.location.address.country] : [];
-
-            const calendarTemplateUrl = [
-                "https://calendar.google.com/calendar/event?action=TEMPLATE",
-                event.title && "text=" + encodeURI(event.title),
-                event.date && "dates=" + encodeURI(formatDate(event.date)) + (event.endDate ? '/' + encodeURI(formatDate(event.endDate)) : ""),
-                event.subtitle && "details=" + encodeURI(event.subtitle),
-                "location=" + encodeURI(address.filter(s => !!s).join(', '))
-            ];
-
-            window.open(calendarTemplateUrl.filter(s => !!s).join('&'), '_blank');
-        }
-    }
 
     function openAndScrollToBookingForm() {
         document.getElementById("booking_form")?.scrollIntoView({behavior: 'smooth'});
@@ -102,74 +87,94 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
     const canBeAddedToWaitingList = userCanBeAddedToEventWaitingList(user, event);
     const studentOnlyRestrictionSatisfied = userSatisfiesStudentOnlyRestrictionForEvent(user, event);
 
-    return <div className="event-key-info px-4">
-        <Row>
-            <Col className={firstColumnWidths}>When:</Col>
-            <Col>
-                {formatEventDetailsDate(event)}
-                {event.hasExpired && <div>
-                    <b>This event is in the past.</b>
-                </div>}
-            </Col>
-            {isAda && isStaff(user) &&
-                <Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2"
-                    title="Add to Google Calendar">
-                    Add to Calendar
-                </Button>
-            }
-        </Row>
-        {<Row>
-            <Col className={firstColumnWidths}>Location:</Col>
-            {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <Col>
-                {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
-            </Col>}
-            {isVirtual && <Col>Online</Col>}
-        </Row>}
-        {event.isNotClosed && !event.hasExpired &&
-            <Row>
-                <Col className={firstColumnWidths}>Availability:</Col>
-                <Col>
-                    {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
-                    {zeroOrLess(event.placesAvailable) && <div>
-                        <strong className="text-danger">FULL</strong>
-                        {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
-                        {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings</span>}
-                    </div>}
-                    {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
-                    {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
-                        You have been reserved a place on this event!
-                        <Button color="link text-success" onClick={openAndScrollToBookingForm}>
-                            <u>Complete your registration below</u>.
-                        </Button>
-                    </span></span>}
-                    {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
-                    {event.userBookingStatus === "WAITING_LIST" && <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
-                    {event.isStudentOnly && !studentOnlyRestrictionSatisfied && 
-                        <div className="text-muted fw-normal">
-                            {studentOnlyEventMessage(eventId)}
-                        </div>
-                    }
-                </Col>
-            </Row>}
-        {(!event.isCancelled || isEventLeader(user) || isAdminOrEventManager(user)) && event.bookingDeadline &&
-            <Row>
-                <Col className={firstColumnWidths}>Booking Deadline:</Col>
-                <Col>
-                    <DateString>{event.bookingDeadline}</DateString>
-                    {!event.isWithinBookingDeadline && !event.hasExpired &&
-                        <div className="text-start">
-                            The booking deadline for this event has passed.
-                        </div>
-                    }
-                </Col>
-                {isPhy && isLoggedIn(user) && !event.hasExpired && (canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
-                    <Col size={3} sm={2} className="d-flex flex-column justify-content-end" style={{minWidth: "fit-content"}}>
-                        <Button color="solid" onClick={openAndScrollToBookingForm} className="mt-2 mb-3 me-2 text-nowrap align-self-center">
-                            {formatMakeBookingButtonMessage(event)}
-                        </Button>
+    const KeyInfo = siteSpecific("div", Card);
+
+    return <>
+        <MetadataContainer className={siteSpecific("", "mt-3")}>
+            <KeyInfo className={classNames("event-key-info", siteSpecific("px-4", "gap-3 p-4"))}>
+                <Row>
+                    <Col className={firstColumnWidths}>
+                        {siteSpecific(
+                            <b>When:</b>, 
+                            <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-upcoming me-2" color="secondary"/><b>When</b></span>
+                        )}
+                    </Col>
+                    <Col>
+                        {formatEventDetailsDate(event)}
+                        {event.hasExpired && <div>
+                            <b>This event is in the past.</b>
+                        </div>}
+                    </Col>
+                </Row>
+                {<Row>
+                    <Col className={firstColumnWidths}>
+                        {siteSpecific(
+                            <b>Location:</b>, 
+                            <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-location me-2" color="secondary"/><b>Location</b></span>
+                        )}
+                    </Col>
+                    {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <Col>
+                        {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
                     </Col>}
-            </Row>}
-    </div>;
+                    {isVirtual && <Col>Online</Col>}
+                </Row>}
+                {event.isNotClosed && !event.hasExpired &&
+                    <Row>
+                        <Col className={firstColumnWidths}>
+                            {siteSpecific(
+                                <b>Availability:</b>, 
+                                <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-person me-2" color="secondary"/><b>Availability</b></span>
+                            )}
+                        </Col>
+                        <Col>
+                            {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
+                            {zeroOrLess(event.placesAvailable) && <div>
+                                <strong className="text-danger">FULL</strong>
+                                {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
+                                {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings</span>}
+                            </div>}
+                            {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
+                            {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
+                                You have been reserved a place on this event!
+                                <Button color="link text-success" onClick={openAndScrollToBookingForm}>
+                                    <u>Complete your registration below</u>.
+                                </Button>
+                            </span></span>}
+                            {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
+                            {event.userBookingStatus === "WAITING_LIST" && <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
+                            {event.isStudentOnly && !studentOnlyRestrictionSatisfied && 
+                                <div className="text-muted fw-normal">
+                                    {studentOnlyEventMessage(eventId)}
+                                </div>
+                            }
+                        </Col>
+                    </Row>}
+                {(!event.isCancelled || isEventLeader(user) || isAdminOrEventManager(user)) && event.bookingDeadline &&
+                    <Row>
+                        <Col className={firstColumnWidths}>
+                            {siteSpecific(
+                                <b>Booking deadline:</b>, 
+                                <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-complete me-2" color="secondary"/><b>Booking deadline</b></span>
+                            )}
+                        </Col>
+                        <Col>
+                            <DateString>{event.bookingDeadline}</DateString>
+                            {!event.isWithinBookingDeadline && !event.hasExpired &&
+                                <div className="text-start">
+                                    The booking deadline for this event has passed.
+                                </div>
+                            }
+                        </Col>
+                    </Row>
+                }
+            </KeyInfo>
+        </MetadataContainer>
+        {isPhy && isLoggedIn(user) && !event.hasExpired && (canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
+            <Button color="solid" onClick={openAndScrollToBookingForm} className="d-flex ms-auto text-nowrap">
+                {formatMakeBookingButtonMessage(event)}
+            </Button>
+        }
+    </>;
 };
 
 const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFormOpen, setBookingFormOpen}: EventBookingProps) => {
@@ -301,11 +306,6 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
                     }
                 </>}
             </div>
-            <div className="align-self-end">
-                <Link to="/events" className="btn-more-events mb-3">
-                    More events
-                </Link>
-            </div>
         </div>
     </div>;
 };
@@ -323,8 +323,8 @@ const ImageAndMap = ({event}: EventBookingProps) => {
         iconAnchor: [12, 41]
     }), []);
 
-    return <div className="mb-3">
-        <Col className={siteSpecific("d-none d-lg-block", "d-block")} lg={12}>
+    return <div className="ms-3 mb-3 float-none float-md-end w-30">
+        {isPhy && <div className={"d-none d-lg-block"}>
             {event.eventThumbnail && <div className="px-0 align-self-center">
                 <CardImg
                     aria-hidden={true}
@@ -332,11 +332,7 @@ const ImageAndMap = ({event}: EventBookingProps) => {
                     className={siteSpecific("my-3", "m-auto restrict-height")} src={event.eventThumbnail.src}
                 />
             </div>}
-
-            {isAda && <div className="border px-2 py-1 mt-3 bg-light">
-                <strong>{event.title}</strong>
-            </div>}
-        </Col>
+        </div>}
 
         {isDefined(event.location) && isDefined(event.location?.latitude) && isDefined(event.location?.longitude) 
         && <Col xs={12} sm={6} lg={12} className="mt-3 px-0">
@@ -380,7 +376,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                 canMakeABooking, bookingFormOpen, setBookingFormOpen
             };
 
-            return <Container className="events">
+            return <Container className="events mb-5">
                 {isPhy ?
                     <TitleAndBreadcrumb
                         currentPageTitle="Events" icon={{type: "hex", icon: "icon-events"}}
@@ -402,32 +398,24 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                         </Badge>}
                     </>}
                 >
-                    <MetadataContainer>
-                        <KeyEventInfo {...eventBookingProps} />
-                    </MetadataContainer>
+                    <KeyEventInfo {...eventBookingProps} />
                 </PageMetadata>
                 <div className={siteSpecific("", "mt-4 pt-2 card")}>
                     <div className={siteSpecific("", "card-body")}>
                         <Row> 
-                            {isAda && <Col lg={4}>
-                                <ImageAndMap {...eventBookingProps} />
-                            </Col>}
                             <Col>
-                                <Row>
-                                    <Col size={5} lg={8} xxl={9}>
-                                        <IsaacContent doc={event}/>
-                                    </Col>
-                                    {isPhy && <Col size={5} lg={4} xxl={3}>
-                                        <ImageAndMap {...eventBookingProps} />
-                                    </Col>}
-                                </Row>
-                                <Row>
-                                    <BookingForm {...eventBookingProps} />
-                                </Row>
+                                <div className="d-flex flex-column-reverse d-md-block">
+                                    <ImageAndMap {...eventBookingProps} />
+                                    <IsaacContent doc={event}/>
+                                </div>
+                                <BookingForm {...eventBookingProps} />
                             </Col>
                         </Row>
                     </div>
                 </div>
+                <Button tag={Link} to="/events" color="keyline" className="float-end my-4">
+                    More events
+                </Button>
             </Container>;
         }}/>;
 };

@@ -46,7 +46,7 @@ const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassNam
 
 const AdaNewsCard = ({newsItem, showTitle, cardClassName, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
-    return <AdaCard {...props} data-testid={"news-pod"} card={{
+    return <AdaCard {...props} data-testid={"news-pod"} className="px-3 my-3" card={{
         title: showTitle && title || "",
         image: {
             src: (image?.src && apiHelper.determineImageUrl(image.src)) || "/assets/cs/decor/news-placeholder.png",

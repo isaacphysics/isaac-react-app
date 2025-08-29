@@ -128,7 +128,7 @@ export const TeacherResources = () => {
                     <h2>Professional development</h2>
                     <p>Learn new skills and build confidence with our free courses for continuing professional development (CPD). They&apos;re designed to support you, whatever your level of experience.</p>
                 </TextBlock>
-                <ColumnSlice>
+                <ColumnSlice className="row-gap-5">
                     <AdaCard card={{
                         title: "Free online courses",
                         image: {src: "/assets/cs/decor/teacher-2.png"},
@@ -179,7 +179,7 @@ export const TeacherResources = () => {
                     <h2>More teaching resources</h2>
                     <p>Support, lesson plans, ideas, and tools from the Raspberry Pi Foundation&apos;s world-class range of computer science resources.</p>
                 </TextBlock>
-                <ColumnSlice>
+                <ColumnSlice className="row-gap-5">
                     <AdaCard card={{
                         title: "Research projects",
                         image: {src: "/assets/cs/decor/teacher-4.png"},
