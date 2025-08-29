@@ -50,11 +50,11 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
         <ul>
             <li>
                 To get back to your account, try <Link to="/login" aria-label="Log in link">logging in</Link> using
-                a {differentProvider} account or a password. If this fails, you can also reset your password on the log-in page.
+                a {differentProvider} account or a password. You can also reset your password on the log-in page.
             </li>
             <li>
-                Once you&apos;ve regained access, you can configure your account so you can sign in
-                with {provider}. <Link to="/pages/single_sign_on" aria-label="Link to SSO documentation">Learn how.</Link> 
+                You can configure your account so you can sign in with {provider}, once you&apos;ve regained
+                access. <Link to="/pages/single_sign_on" aria-label="Link to SSO documentation">Learn how.</Link> 
             </li>
         </ul>
     </>;
