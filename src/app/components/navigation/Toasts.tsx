@@ -10,7 +10,7 @@ export const SUCCESS_TOAST: ToastType = {color: "success", title: "Action comple
 export const Toasts = () => {
     const dispatch = useAppDispatch();
     const toasts = useAppSelector((state: AppState) => state?.toasts || []);
-    return <div className="toasts-container">{
+    return <div className="toasts-container" data-testid='toasts'>{
         toasts.map((toast) => <Toast key={toast.id} isOpen={toast.showing}>
             <ToastHeader icon={toast.color} className={siteSpecific("py-2 px-3", "")}
                 toggle={toast.closable ? (() => toast.id && dispatch(hideToast(toast.id))): undefined}>
