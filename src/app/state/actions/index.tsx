@@ -521,12 +521,11 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             isaacError: error?.response?.data?.responseCode || error?.code || 'unknown',
             isaacErrorDescription: error?.response?.data?.errorMessage || error?.message || 'unknown'
         }});
-        history.push("/auth_error", { errorMessage: extractMessage(error), provider });
+        history.push("/auth_error", { errorMessage: extractMessage(error), provider, providerErrors });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
-        if (extractMessage(error).startsWith("You do not use")) {
-            return;
+        if (!extractMessage(error).startsWith("You do not use") && !providerErrors.errorDescription?.startsWith("AADSTS65004")) {
+            dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
         }
-        dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
     }
 };
 

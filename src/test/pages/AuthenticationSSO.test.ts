@@ -1,5 +1,5 @@
 import { http, HttpHandler, HttpResponse } from "msw";
-import { expectH2, renderTestEnvironment, setUrl } from "../testUtils";
+import { expectH2, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
 import { API_PATH, isPhy } from "../../app/services";
 import { mockUser } from "../../mocks/data";
 import { screen, within } from "@testing-library/react";
@@ -11,9 +11,9 @@ describe("Microsoft SSO Authentication", () => {
         return it('does not apply', () => {});
     }
 
-    const renderProviderCallback = async (endpoint: HttpHandler) => {
+    const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
         renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
-        await setUrl({ pathname: '/auth/microsoft/callback' });
+        await setUrl({ pathname: '/auth/microsoft/callback', search });
             
     };
 
@@ -32,9 +32,9 @@ describe("Microsoft SSO Authentication", () => {
 
         it('shows the error and the generic error page', async () => {
             await renderProviderCallback(microsoftSignInFailure);
-            expect(authenticationError.heading).toHaveTextContent('CSRF check failed');
-            expect(authenticationError.body).toHaveTextContent(/An error occurred while attempting to log in/);
-            expect(authenticationError.body).toHaveTextContent(/You may want to return to the home page/);
+            expect(authenticationError.element).toHaveTextContent('CSRF check failed');
+            expect(authenticationError.element).toHaveTextContent(/An error occurred while attempting to log in/);
+            expect(authenticationError.element).toHaveTextContent(/You may want to return to the home page/);
         });
     });
 
@@ -47,9 +47,9 @@ describe("Microsoft SSO Authentication", () => {
 
             it('shows a specific error message', async () => {
                 await renderProviderCallback(microsoftSignInUnlinked);
-                expect(authenticationError.heading).toHaveTextContent("You don't use microsoft to log in");
-                expect(authenticationError.body).toHaveTextContent(/not configured for signing in with microsoft/);
-                expect(authenticationError.list).toHaveTextContent(/try logging in using a Google account/);
+                expect(authenticationError.element).toHaveTextContent("You don't use microsoft to log in");
+                expect(authenticationError.element).toHaveTextContent(/not configured for signing in with microsoft/);
+                expect(authenticationError.element).toHaveTextContent(/try logging in using a Google account/);
             });
 
             it('the log-in link works', async () => {
@@ -63,6 +63,26 @@ describe("Microsoft SSO Authentication", () => {
                 expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
             });
 
+        });
+
+        describe('consent missing', () => {
+            const queryFromProvider = `?error=access_denied&error_subcode=cancel${
+                "&error_description=AADSTS65004%3a+User+declined+to+consent+to+access+the+app."}`;
+
+            it('does not show a toast message', async () => {
+                await renderProviderCallback(microsoftSignInDeniedAccess, queryFromProvider);
+                expect(toast().children).toHaveLength(0);
+            });
+
+            it('shows a specific error message', async () => {
+                await renderProviderCallback(microsoftSignInDeniedAccess, queryFromProvider);
+                expect(authenticationError.element).toHaveTextContent("We need your consent");
+            });
+
+            it('shows a link to the SSO help page', async () => {
+                await renderProviderCallback(microsoftSignInDeniedAccess, queryFromProvider);
+                expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
+            });
         });
     });
 });
@@ -79,6 +99,10 @@ const microsoftSignInUnlinked = http.get(API_PATH + "/auth/microsoft/callback",
     () => HttpResponse.json(errorResponses.accountNotLinked403, { status: 403})
 );
 
+const microsoftSignInDeniedAccess = http.get(API_PATH + "/auth/microsoft/callback", 
+    () => HttpResponse.json(errorResponses.deniedAccess401, { status: 401 })
+);
+
 const toast = () => screen.getByTestId('toasts');
 
 const dashboard = {
@@ -89,18 +113,6 @@ const dashboard = {
 };
 
 const authenticationError = {
-    get heading() {
-        return within(this.element).getByRole('heading', { level: 3 });
-    },
-
-    get body() {
-        return within(this.element).getByRole('paragraph');
-    },
-
-    get list() {
-        return within(this.element).getByRole('list');
-    },
-
     get logInLink() {
         return within(this.element).getByRole('link', { name: 'Log in link'});
     },

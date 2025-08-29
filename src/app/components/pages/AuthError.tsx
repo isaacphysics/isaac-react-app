@@ -1,10 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import {Link} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { Container, Row, Col } from "reactstrap";
 import { isPhy } from "../../services";
+import { type fetchErrorFromParameters } from "../../state";
 
-type State = { errorMessage?: string, provider?: string};
+type State = { errorMessage?: string, provider?: string, providerErrors: ReturnType<typeof fetchErrorFromParameters>};
 
 export const AuthError = ({location: {state}}: {location: {state?: State}}) => {
     return <Container role="region" aria-label="Authentication Error">
@@ -20,6 +21,8 @@ export const AuthError = ({location: {state}}: {location: {state?: State}}) => {
 const ErrorMessage = ({ state }: { state?: State }) => {
     if (state?.errorMessage?.startsWith('You do not use') && isPhy) {
         return <AccountNotLinked state={state}/>;
+    } else if (state?.providerErrors?.errorDescription?.startsWith('AADSTS65004') && state.provider === 'microsoft' && isPhy) {
+        return <ConsentMissingMicrosoft/>;
     } else {
         return <GenericError state={state}/>;
     }
@@ -54,8 +57,23 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
             </li>
             <li>
                 You can configure your account so you can sign in with {provider}, once you&apos;ve regained
-                access. <Link to="/pages/single_sign_on" aria-label="Link to SSO documentation">Learn how.</Link> 
+                access. <SSOLink>Learn how.</SSOLink>  
             </li>
         </ul>
     </>;
 };
+
+const ConsentMissingMicrosoft = () => <>
+    <h3>We need your consent</h3>
+    <p>
+        If you&apos;d like to use your Microsoft account for signing in to Isaac, you need to let us read your name and 
+        email address from your Microsoft account.
+    </p>
+    <p>
+        If you&apos;re using a school account and you&apos;re the first person using Isaac from your school, your
+        IT department may need to pre-approve Isaac before you can consent. <SSOLink>Read more about signing in with Microsoft.</SSOLink>
+    </p>
+</>;
+
+const SSOLink = ({ children }: { children: ReactNode}) =>
+    <Link to="/pages/single_sign_on" aria-label="Link to SSO documentation">{children}</Link>;
