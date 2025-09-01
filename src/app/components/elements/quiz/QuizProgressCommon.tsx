@@ -278,13 +278,23 @@ export function ResultsTable<Q extends QuestionType>({
     const classAverages: [number, number][] | undefined = progress ? questions.map((_, index) => {
         // classAverages returns a pair of (numerator, denominator) to be passed into formatMark() for each question.
 
-        // this gives (number of students who got everything correct) / (number of students). this therefore ignores partially correct attempts.
-        if (pageSettings?.attemptedOrCorrect === "ATTEMPTED") {
-            const studentsWithAllAttempted = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].every(part => part !== "NOT_ATTEMPTED") ? 1 : 0), 0);
-            return [studentsWithAllAttempted, progress.length];
+        if (isAssignment) {
+            // this gives (number of students who got everything correct) / (number of students). this therefore ignores partially correct attempts.
+            if (pageSettings?.attemptedOrCorrect === "ATTEMPTED") {
+                const studentsWithAllAttempted = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].every(part => part !== "NOT_ATTEMPTED") ? 1 : 0), 0);
+                return [studentsWithAllAttempted, progress.length];
+            } else {
+                const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].every(part => part === "CORRECT") ? 1 : 0), 0);
+                return [studentsWithAllCorrect, progress.length];
+            }
         } else {
-            const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].every(part => part === "CORRECT") ? 1 : 0), 0);
-            return [studentsWithAllCorrect, progress.length];
+            if (pageSettings?.attemptedOrCorrect === "ATTEMPTED") {
+                const studentsWithAllAttempted = progress.reduce((acc, p) => acc + (isAuthorisedFullAccess(p) && !p.notAttemptedPartResults?.[index] ? 1 : 0), 0);
+                return [studentsWithAllAttempted, progress.length];
+            } else {
+                const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (p.correctPartResults?.[index] ? 1 : 0), 0);
+                return [studentsWithAllCorrect, progress.length];
+            }
         }
     }) : [];
 
