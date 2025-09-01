@@ -396,7 +396,9 @@ export function ResultsTable<Q extends QuestionType>({
                             <th className="sticky-left text-start p-3 fw-bold">Total fully correct</th>
                             <td/>{/* ignore totals per student column */}
                             {classAverages.map(([numerator, denominator], index) => (
-                                <td key={index}>{formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}</td>
+                                <td key={index} className={classNames({"selected": index === selectedQuestionIndex})}>
+                                    {formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}
+                                </td>
                             ))}
                         </tr>
                     </tfoot>
