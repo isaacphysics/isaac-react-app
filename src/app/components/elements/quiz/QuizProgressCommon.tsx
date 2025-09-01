@@ -398,8 +398,7 @@ export function ResultsTable<Q extends QuestionType>({
                     </tbody>
                     <tfoot className="sticky-bottom">
                         <tr>
-                            <th className="sticky-left text-start p-3 fw-bold">Total fully {pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}</th>
-                            <td/>{/* ignore totals per student column */}
+                            <th className="sticky-left text-start p-3 fw-bold" colSpan={2}>Total fully {pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}</th>
                             {classAverages.map(([numerator, denominator], index) => (
                                 <td key={index} className={classNames({"selected": index === selectedQuestionIndex})}>
                                     {formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}
@@ -461,9 +460,13 @@ export function ResultsTablePartBreakdown({
     ), [progress, reverseOrder, sortBySelectedSortOrder]);
 
     const classAverages = sortedProgress.find(p => !!p.questionPartResults)?.questionPartResults?.[questionIndex]?.map((_, i) => {
-        const totalCorrect = sortedProgress.reduce((acc, p) => acc + (p.questionPartResults?.[questionIndex][i] === "CORRECT" ? 1 : 0), 0);
-        const total = sortedProgress.length;
-        return [totalCorrect, total] as [number, number];
+        if (pageSettings?.attemptedOrCorrect === "ATTEMPTED") {
+            const totalAttempted = sortedProgress.reduce((acc, p) => acc + (p.questionPartResults?.[questionIndex][i] !== "NOT_ATTEMPTED" ? 1 : 0), 0);
+            return [totalAttempted, sortedProgress.length];
+        } else {
+            const totalCorrect = sortedProgress.reduce((acc, p) => acc + (p.questionPartResults?.[questionIndex][i] === "CORRECT" ? 1 : 0), 0);
+            return [totalCorrect, sortedProgress.length];
+        }
     }) ?? [];
 
     return sortedProgress?.length
@@ -478,6 +481,26 @@ export function ResultsTablePartBreakdown({
                     >
                         Name
                     </SortItemHeader>
+                    {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
+                        ? <SortItemHeader<ProgressSortOrder>
+                            className="pointer-cursor"
+                            defaultOrder={"totalQuestionPercentage"}
+                            reverseOrder={"totalQuestionPercentage"}
+                            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                            label={"Total correct"}
+                        >
+                            Correct
+                        </SortItemHeader>
+                        : <SortItemHeader<ProgressSortOrder>
+                            className="pointer-cursor"
+                            defaultOrder={"totalAttemptedQuestionPercentage"}
+                            reverseOrder={"totalAttemptedQuestionPercentage"}
+                            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                            label={"Total attempted"}
+                        >
+                            Attempted
+                        </SortItemHeader>
+                    )}
                     {sortedProgress.find(p => !!p.questionPartResults)?.questionPartResults?.[questionIndex]?.map((_, i) =>
                         // <th key={i} className="text-center">
                         <SortItemHeader<ProgressSortOrder>
@@ -496,6 +519,7 @@ export function ResultsTablePartBreakdown({
                 <tbody>
                     {sortedProgress.map((studentProgress, studentIndex) => (
                         <tr key={studentIndex}>
+                            {/* student name */}
                             <th className="student-name sticky-left ps-2 py-3 fw-bold">
                                 <div className="d-flex align-items-center gap-2">
                                     <i className="icon icon-person icon-md" color="tertiary"/>
@@ -505,16 +529,36 @@ export function ResultsTablePartBreakdown({
                                     </Link>
                                 </div>
                             </th>
+
+                            {/* total correct/attempted */}
+                            {isPhy && studentProgress.questionPartResults && 
+                                <td>
+                                    {formatMark(
+                                        studentProgress.questionPartResults[questionIndex].reduce((acc, questionPartResult) => {
+                                            if (pageSettings?.attemptedOrCorrect === "CORRECT") {
+                                                return acc + (questionPartResult === "CORRECT" ? 1 : 0);
+                                            } else {
+                                                return acc + (questionPartResult !== "NOT_ATTEMPTED" ? 1 : 0);
+                                            }
+                                        }, 0),
+                                        studentProgress.questionPartResults[questionIndex].length,
+                                        !!pageSettings?.formatAsPercentage
+                                    )}
+                                </td>
+                            }
+
+                            {/* main data */}
                             {studentProgress.questionPartResults &&
                                 studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
                                     <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>
-                                ))}
+                                ))
+                            }
                         </tr>
                     ))}
                 </tbody>
                 <tfoot className="sticky-bottom">
                     <tr>
-                        <th className="sticky-left text-start p-3 fw-bold">Total fully correct</th>
+                        <th className="sticky-left text-start p-3 fw-bold" colSpan={siteSpecific(2, 1)}>Total fully {pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}</th>
                         {classAverages.map(([numerator, denominator], index) => (
                             <td key={index}>{formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}</td>
                         ))}
