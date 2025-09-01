@@ -133,7 +133,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                 <div className="d-flex w-100 align-items-start justify-content-between">
                     <div>
                         {siteSpecific(
-                            <h4>Group assignment overview <BoardLink id={assignment.gameboard?.id} /></h4>,
+                            <h4>Overview: {assignment.gameboard.title} <BoardLink id={assignment.gameboard?.id} /></h4>,
                             <h3>Group assignment overview <BoardLink id={assignment.gameboard?.id} /></h3>
                         )}
                         <span>See who attempted the assignment and which questions they struggled with.</span>
