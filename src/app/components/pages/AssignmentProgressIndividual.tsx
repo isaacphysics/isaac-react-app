@@ -205,6 +205,11 @@ const AdaKey = () => {
         }
     </div>;
 };
+
+const QuestionLink = ({questionId, boardId}: {questionId?: string, boardId?: string}) => <a className="new-tab-link" href={`/questions/${questionId}` + (boardId ? `?board=${boardId}` : "")} target="_blank" onClick={(e) => e.stopPropagation()}>
+    <i className="icon icon-new-tab" />
+</a>;
+
 interface DetailedMarksProps extends React.HTMLAttributes<HTMLDivElement> {
     progress: AssignmentProgressDTO[];
     questions: GameboardItem[];
@@ -239,12 +244,14 @@ const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...
     return <div {...rest} className={classNames("assignment-progress-card w-100 my-2", {"open": isOpen}, rest.className)}>
         <button onClick={() => setIsOpen(o => !o)} className="w-100 p-3 d-flex align-items-center text-start bg-transparent">
             <div className="d-flex flex-column">
-                <h5 className="m-0">
-                    {questionIndex + 1}.{" "}
-                    <Link to={`/questions/${questions[questionIndex].id}` + (gameboardId ? `?board=${gameboardId}` : "")} target="_blank" onClick={(e) => e.stopPropagation()}>
+                <div className="d-flex">
+                    <h5 className="m-0">
+                        {questionIndex + 1}.{" "}
                         <Markup encoding="latex">{questions[questionIndex].title}</Markup>
-                    </Link>
-                </h5>
+                    </h5>
+                    <QuestionLink questionId={questions[questionIndex].id} boardId={gameboardId} />
+                </div>
+
                 {difficultParts.length > 0 && <span className="mt-2 small">
                     <strong>50%</strong> or more of the group answered incorrectly on part{difficultParts.length > 1 && <>s</>} <strong>{difficultParts.slice(0, 3).map(i => i + 1).join(", ")}{difficultParts.length > 3 ? `, and ${difficultParts.length - 3} more` : ""}</strong>.
                 </span>}
@@ -292,7 +299,7 @@ const DetailedMarksTab = ({assignment, progress}: DetailedMarksTabProps) => {
                     questions={questions}
                     questionIndex={questionIndex}
                     gameboardId={assignment.gameboardId}
-                    data-bs-theme={getThemeFromTags(questions[questionIndex].tags)}
+                    // data-bs-theme={getThemeFromTags(questions[questionIndex].tags)}
                 />
             ))}
 
