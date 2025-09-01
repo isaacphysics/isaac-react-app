@@ -408,7 +408,8 @@ export function ResultsTable<Q extends QuestionType>({
                     </tbody>
                     <tfoot className="sticky-bottom">
                         <tr>
-                            <th className="sticky-left text-start p-3 fw-bold" colSpan={2}>Total fully {pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}</th>
+                            <th className="sticky-left text-start p-3 fw-bold">Total fully {pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}</th>
+                            <th/>{/* correct column */}
                             {classAverages.map(([numerator, denominator], index) => (
                                 <td key={index} className={classNames({"selected": index === selectedQuestionIndex})}>
                                     {formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}
@@ -568,7 +569,8 @@ export function ResultsTablePartBreakdown({
                 </tbody>
                 <tfoot className="sticky-bottom">
                     <tr>
-                        <th className="sticky-left text-start p-3 fw-bold" colSpan={siteSpecific(2, 1)}>Total fully {pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}</th>
+                        <th className="sticky-left text-start p-3 fw-bold">Total fully {pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}</th>
+                        {isPhy && <th/>}{/* correct column */}
                         {classAverages.map(([numerator, denominator], index) => (
                             <td key={index}>{formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}</td>
                         ))}
