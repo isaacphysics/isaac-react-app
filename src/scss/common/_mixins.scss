@@ -184,10 +184,10 @@ $viewport-sizes: (
   height: $height;
   min-width: $width;
   min-height: $height;
+  background-color: black; // this has to be here, not inside the @supports, as that raises the specificity beyond that of background colours specified alongside @include svg-icon
 
   @supports (mask: url($path) center center no-repeat) {
     mask: url($path) center center no-repeat;
-    background-color: black;
     @if $mask-size != none {
       mask-size: $mask-size;
     }
@@ -197,10 +197,6 @@ $viewport-sizes: (
   }
 
   @supports not (mask: url($path) center center no-repeat) {
-    // as a sneaky way to prevent any background-colors being applied (including from e.g. .icon-color-black), we can set the override normally
-    // reserved for layered icons such that all icons have a transparent background, meaning all you can see is the background (set below)
-    --layered-icon-parent-bg-override: transparent;
-
     // TODO this had to be shorthand format to correctly override all background props, surely can simplify though
     @if $mask-size != none {
       @if $mask-position != none {
@@ -290,13 +286,16 @@ $viewport-sizes: (
 }
 
 @mixin icon-color-override($color) {
-  background-color: var(--layered-icon-parent-bg-override, $color) !important;
-  
-  &::before {
-    background-color: $color !important;
-  }
-  &::after {
-    background-color: $color !important;
+  // only do this if masks are supported
+  @supports (mask-position: center) {
+    background-color: var(--layered-icon-parent-bg-override, $color) !important;
+
+    &::before {
+      background-color: $color !important;
+    }
+    &::after {
+      background-color: $color !important;
+    }
   }
 }
 
