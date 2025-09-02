@@ -319,6 +319,11 @@ iframe.email-html {
   }
   // https://stackoverflow.com/q/6421966; x-overflow must be visible (for e.g. box shadows), y-overflow would preferably be entirely hidden but can't be.
   overflow: visible clip;
+
+  @supports not (overflow: visible clip) {
+    overflow: hidden;
+  }
+
   // height must be animated alongside max-height to prevent jumping if the inner content changes height during the animation
   max-height: 0;
 }
