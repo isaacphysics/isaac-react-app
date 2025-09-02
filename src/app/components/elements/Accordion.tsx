@@ -148,7 +148,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     const isOpen = open && !disabled;
 
-    return <div className="accordion">
+    return <div className="isaac-accordion">
         <button 
             className={classNames(
                 "accordion-header d-flex w-100 p-0", 
