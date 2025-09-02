@@ -429,6 +429,18 @@ iframe.email-html {
   > input {
     @extend .visually-hidden;
   }
+
+  @supports not selector(:has(a, b)) {
+    &.checked {
+      border-left: solid 2px var(--tab-active);
+      background-position: 0% 0%;
+      
+      .badge.rounded-pill {
+        background-color: var(--tab-active);
+        color: white;
+      }
+    }
+  }
 }
 
 .inline-tabs {
