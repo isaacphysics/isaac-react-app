@@ -1,5 +1,5 @@
 import React, {ReactElement, useEffect, useRef} from "react";
-import {Button, UncontrolledTooltip} from "reactstrap";
+import {UncontrolledTooltip} from "reactstrap";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     filterAudienceViewsByProperties,
@@ -14,13 +14,10 @@ import {
 } from "../../services";
 import {
     AppState,
-    closeActiveModal,
     mainContentIdSlice,
-    openActiveModal,
     useAppDispatch,
     useAppSelector
 } from "../../state";
-import {PageFragment} from "./PageFragment";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";

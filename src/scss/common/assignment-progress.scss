@@ -483,6 +483,11 @@ $failed-bg-size: 25%;
     opacity: 1;
   }
 
+  .progress-table-header-footer .correct-attempted-header {
+    width: 10rem;
+    min-width: 8rem;
+  }
+
   td, th {
     vertical-align: middle;
     text-align: center;
