@@ -48,7 +48,7 @@ const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAA
             "physics_linking_concepts": 258,
             "maths_book_gcse": 639,
             "maths_book": 432,
-            "maths_book_2e": 485,
+            "maths_book_2e": 490,
             "chemistry_16": 338
         },
     },
