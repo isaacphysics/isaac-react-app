@@ -57,3 +57,11 @@
   text-align: center;
   border-radius: 8px;
 }
+
+.progress-table {
+  @include respond-above(sm) {
+    tbody td, tbody th {
+      min-width: 77px; // fits 10 questions on screen at once
+    }
+  }
+}
