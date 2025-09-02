@@ -223,25 +223,13 @@ $viewport-sizes: (
   min-height: $height;
   &::before {
     content: '';
-    @include svg-icon($bg_path, $width, $height);
+    @include svg-icon($bg_path, $width, $height, $mask-size, $mask-position);
     position: absolute;
-    @if $mask-size != none {
-      mask-size: $mask-size;
-    }
-    @if $mask-position != none {
-      mask-position: $mask-position;
-    }
   }
   &::after {
     content: '';
-    @include svg-icon($fg_path, $width, $height);
+    @include svg-icon($fg_path, $width, $height, $mask-size, $mask-position);
     position: absolute;
-    @if $mask-size {
-      mask-size: $mask-size;
-    }
-    @if $mask-position != none {
-      mask-position: $mask-position;
-    }
   }
 }
 
