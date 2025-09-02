@@ -11,15 +11,15 @@
     width: auto;
   }
 }
+
 .event-key-info {
-  .row {
-    .col {
-      padding: 0.5rem 0.5rem 0.5rem 0;
-      &:first-child {
-        font-weight: bold;
-        padding-left: 0.5rem;
-      }
-    }
+  .row .col:first-child {
+    min-width: 150px;
+  }
+
+  .col {
+    display: flex;
+    align-items: center;
   }
 }
 

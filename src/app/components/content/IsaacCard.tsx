@@ -62,7 +62,7 @@ const AdaContentCard = ({doc, ...rest}: IsaacCardProps) => {
     const {title, subtitle, image, clickUrl, disabled} = doc;
     const imageSrc = image?.src && apiHelper.determineImageUrl(image.src);
     
-    return <AdaCard card={{
+    return <AdaCard className="px-3 my-3" card={{
         title: title ?? "",
         image: {src: imageSrc ?? "", altText: image?.altText},
         bodyText: subtitle ?? "",
