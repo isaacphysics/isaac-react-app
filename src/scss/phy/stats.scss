@@ -23,6 +23,10 @@
   mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 95%);
 }
 
+#concept-column li {
+  height: 100%;
+}
+
 .stats-hex-container {
   width: 120px;
   height: 128px;
