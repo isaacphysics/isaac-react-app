@@ -494,7 +494,7 @@ export function ResultsTablePartBreakdown({
                     </SortItemHeader>
                     {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
                         ? <SortItemHeader<ProgressSortOrder>
-                            className="pointer-cursor"
+                            className="pointer-cursor correct-attempted-header"
                             defaultOrder={"totalQuestionPercentage"}
                             reverseOrder={"totalQuestionPercentage"}
                             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -503,7 +503,7 @@ export function ResultsTablePartBreakdown({
                             Correct
                         </SortItemHeader>
                         : <SortItemHeader<ProgressSortOrder>
-                            className="pointer-cursor"
+                            className="pointer-cursor correct-attempted-header"
                             defaultOrder={"totalAttemptedQuestionPercentage"}
                             reverseOrder={"totalAttemptedQuestionPercentage"}
                             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
