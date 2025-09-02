@@ -82,8 +82,33 @@ const QuizButton = ({quiz}: QuizAssignmentProps) => {
         </>;
 };
 
-const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
+const QuizInfo = ({quiz}: QuizAssignmentProps) => {
     const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
+    const siteFormatDate = (date: number | Date) => <strong>{`${siteSpecific(getFriendlyDaysUntil(date), formatDate(date))}`}</strong>;
+    return <>
+        {<p>
+            {quiz.isAssigned ? 
+                quiz.dueDate && <> Due date: {siteFormatDate(quiz.dueDate)} </> : 
+                quiz.attempt && siteSpecific(
+                    `Freely ${quiz.status === QuizStatus.Started ? "attempting" : "attempted"}`,
+                    `${quiz.status === QuizStatus.Started ? "Attempting" : "Attempted"} independently`
+                )
+            }
+        </p>}
+        {quiz.isAssigned && <p>
+            {assignmentStartDate && <> Set: {siteFormatDate(assignmentStartDate)} </>}
+            {quiz.assignerSummary && `by ${extractTeacherName(quiz.assignerSummary)}`}
+        </p>}
+        {quiz.attempt && <p>
+            {quiz.status === QuizStatus.Complete ?
+                quiz.attempt.completedDate && <> Completed: {siteFormatDate(quiz.attempt.completedDate)} </> :
+                quiz.attempt.startDate && <> Started: {siteFormatDate(quiz.attempt.startDate)} </>
+            }
+        </p>}
+    </>;
+};
+
+const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
     const deviceSize = useDeviceSize();
     const determineQuizSubject = (quizSummary?: DisplayableQuiz) => {
         return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `${tag.toLowerCase()}`, "");
@@ -107,20 +132,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                         </div>
                     </Col>
                     <Col className="d-flex flex-column justify-content-between col-sm-4">
-                        {quiz.isAssigned
-                            ? quiz.dueDate && <p>Due date: <strong>{getFriendlyDaysUntil(quiz.dueDate)}</strong></p>
-                            : quiz.attempt && <p>Freely {quiz.status === QuizStatus.Started ? "attempting" : "attempted"}</p>
-                        }
-                        {quiz.isAssigned && <p>
-                            Set: <strong>{getFriendlyDaysUntil(assignmentStartDate as Date)}</strong>
-                            {quiz.assignerSummary && <> by {extractTeacherName(quiz.assignerSummary)}</>}
-                        </p>}
-                        {quiz.attempt && <p>
-                            {quiz.status === QuizStatus.Complete
-                                ? <>Completed: <strong>{getFriendlyDaysUntil(quiz.attempt.completedDate as Date)}</strong></>
-                                : <>Started: <strong>{getFriendlyDaysUntil(quiz.attempt.startDate as Date)}</strong></>
-                            }
-                        </p>}
+                        <QuizInfo quiz={quiz}/>
                         <QuizButton quiz={quiz}/>
                     </Col>
                 </Row>
@@ -130,25 +142,11 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
 };
 
 const AdaQuizItem = ({quiz}: QuizAssignmentProps) => {
-    const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
     return <div className="p-2">
         <Card className="card-neat my-quizzes-card">
             <CardBody className="d-flex flex-column">
                 <h4 className="border-bottom pb-3 mb-3">{quiz.title || quiz.id}</h4>
-                {quiz.isAssigned
-                    ? quiz.dueDate && <p>Due date: <strong>{formatDate(quiz.dueDate)}</strong></p>
-                    : quiz.attempt && <p>{quiz.status === QuizStatus.Started ? "Attempting" : "Attempted"} independently</p>
-                }
-                {quiz.isAssigned && <p>
-                    Set: {formatDate(assignmentStartDate)}
-                    {quiz.assignerSummary && <> by {extractTeacherName(quiz.assignerSummary)}</>}
-                </p>}
-                {quiz.attempt && <p>
-                    {quiz.status === QuizStatus.Complete ?
-                        `Completed: ${formatDate(quiz.attempt.completedDate)}`
-                        : `Started: ${formatDate(quiz.attempt.startDate)}`
-                    }
-                </p>}
+                <QuizInfo quiz={quiz}/>
                 <Spacer/>
                 <div className="text-center mt-4">
                     <QuizButton quiz={quiz}/>
