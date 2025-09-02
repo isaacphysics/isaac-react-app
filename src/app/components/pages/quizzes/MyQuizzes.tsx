@@ -55,34 +55,31 @@ interface QuizAssignmentProps {
 }
 
 const QuizButton = ({quiz}: QuizAssignmentProps) => {
-    return <>{
-        quiz.isAssigned ? 
-            <>
-                {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={quiz.link}>
-                    Start test
-                </Button>}
-                {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-                    Continue test
-                </Button>}
-                {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
-                    Overdue
-                </Button>}
-                {quiz.status === QuizStatus.Complete && (
-                    <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-                        {quiz.quizFeedbackMode === "NONE" ? "No feedback" : "View feedback"}
-                    </Button>
-                )}
-            </> : 
-            quiz.attempt && <>
-                {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-                    Continue test
-                </Button>}
-                {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-                    {quiz.quizFeedbackMode === "NONE" ? "No feedback" : "View feedback"}
-                </Button>
-                }
-            </>
-    }</>;
+    return quiz.isAssigned ? <>
+        {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={quiz.link}>
+            Start test
+        </Button>}
+        {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
+            Continue test
+        </Button>}
+        {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
+            Overdue
+        </Button>}
+        {quiz.status === QuizStatus.Complete && (
+            <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
+                {quiz.quizFeedbackMode === "NONE" ? "No feedback" : "View feedback"}
+            </Button>
+        )}
+    </> : 
+        quiz.attempt && <>
+            {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
+                Continue test
+            </Button>}
+            {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
+                {quiz.quizFeedbackMode === "NONE" ? "No feedback" : "View feedback"}
+            </Button>
+            }
+        </>;
 };
 
 const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
