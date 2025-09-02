@@ -55,30 +55,34 @@ interface QuizAssignmentProps {
 }
 
 const QuizButton = ({quiz}: QuizAssignmentProps) => {
-    return <>{quiz.isAssigned ? <>
-        {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={quiz.link}>
-            {siteSpecific("Start Test", "Start test")}
-        </Button>}
-        {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-            {siteSpecific("Continue Test", "Continue test")}
-        </Button>}
-        {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
-            {siteSpecific("Overdue", "Overdue")}
-        </Button>}
-        {quiz.status === QuizStatus.Complete && (
-            <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-                {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
-            </Button>
-        )}
-    </> : quiz.attempt && <>
-        {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-            {siteSpecific("Continue Test", "Continue test")}
-        </Button>}
-        {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-            {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
-        </Button>
-        }
-    </>}</>;
+    return <>{
+        quiz.isAssigned ? 
+            <>
+                {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={quiz.link}>
+                    Start test
+                </Button>}
+                {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
+                    Continue test
+                </Button>}
+                {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
+                    Overdue
+                </Button>}
+                {quiz.status === QuizStatus.Complete && (
+                    <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
+                        {quiz.quizFeedbackMode === "NONE" ? "No feedback" : "View feedback"}
+                    </Button>
+                )}
+            </> : 
+            quiz.attempt && <>
+                {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
+                    Continue test
+                </Button>}
+                {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
+                    {quiz.quizFeedbackMode === "NONE" ? "No feedback" : "View feedback"}
+                </Button>
+                }
+            </>
+    }</>;
 };
 
 const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
@@ -133,7 +137,7 @@ const AdaQuizItem = ({quiz}: QuizAssignmentProps) => {
     return <div className="p-2">
         <Card className="card-neat my-quizzes-card">
             <CardBody className="d-flex flex-column">
-                <h4 className="border-bottom pb-3 mb-3">{quiz.title || quiz.id }</h4>
+                <h4 className="border-bottom pb-3 mb-3">{quiz.title || quiz.id}</h4>
                 {quiz.isAssigned
                     ? quiz.dueDate && <p>Due date: <strong>{formatDate(quiz.dueDate)}</strong></p>
                     : quiz.attempt && <p>{quiz.status === QuizStatus.Started ? "Attempting" : "Attempted"} independently</p>
