@@ -235,7 +235,7 @@ export function ResultsTable<Q extends QuestionType>({
         </SortItemHeader>
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
-                className="pointer-cursor ps-3 wf-10"
+                className="pointer-cursor ps-3 correct-attempted-header"
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -245,7 +245,7 @@ export function ResultsTable<Q extends QuestionType>({
                 Correct
             </SortItemHeader>
             : <SortItemHeader<ProgressSortOrder>
-                className="pointer-cursor ps-3 wf-10"
+                className="pointer-cursor ps-3 correct-attempted-header"
                 defaultOrder={"totalAttemptedQuestionPercentage"}
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
