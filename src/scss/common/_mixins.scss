@@ -180,17 +180,41 @@ $viewport-sizes: (
 
 @mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
   display: inline-block;
-  mask: url($path) center center no-repeat;
   width: $width;
   height: $height;
   min-width: $width;
   min-height: $height;
-  background-color: black;
-  @if $mask-size != none {
-    mask-size: $mask-size;
+
+  @supports (mask: url($path) center center no-repeat) {
+    mask: url($path) center center no-repeat;
+    background-color: black;
+    @if $mask-size != none {
+      mask-size: $mask-size;
+    }
+    @if $mask-position != none {
+      mask-position: $mask-position;
+    }
   }
-  @if $mask-position != none {
-    mask-position: $mask-position;
+
+  @supports not (mask: url($path) center center no-repeat) {
+    // as a sneaky way to prevent any background-colors being applied (including from e.g. .icon-color-black), we can set the override normally
+    // reserved for layered icons such that all icons have a transparent background, meaning all you can see is the background (set below)
+    --layered-icon-parent-bg-override: transparent;
+
+    // TODO this had to be shorthand format to correctly override all background props, surely can simplify though
+    @if $mask-size != none {
+      @if $mask-position != none {
+        background: url($path) $mask-position/$mask-size no-repeat !important;
+      } @else {
+        background: url($path) center center/$mask-size no-repeat !important;
+      }
+    } @else {
+      @if $mask-position != none {
+        background: url($path) $mask-position no-repeat !important;
+      } @else {
+        background: url($path) center center no-repeat !important;
+      }
+    }
   }
 }
 
@@ -225,15 +249,37 @@ $viewport-sizes: (
   }
 }
 
-@mixin svg-color($image, $color, $width, $height, $mask-size: none) {
-  mask: $image no-repeat center center;
-  background-color: $color;
+@mixin svg-color($image, $color, $width, $height, $mask-size: none, $mask-position: none) {
   width: $width;
   height: $height;
   min-width: $width;
   min-height: $height;
-  @if $mask-size != none {
-    mask-size: $mask-size;
+
+  @supports (mask: $image center center no-repeat) {
+    mask: $image no-repeat center center;
+    background-color: $color;
+    @if $mask-size != none {
+      mask-size: $mask-size;
+    }
+    @if $mask-position != none {
+      mask-position: $mask-position;
+    }
+  }
+
+  @supports not (mask: $image center center no-repeat) {
+    @if $mask-size != none {
+      @if $mask-position != none {
+        background: $image $mask-position/$mask-size no-repeat !important;
+      } @else {
+        background: $image center center/$mask-size no-repeat !important;
+      }
+    } @else {
+      @if $mask-position != none {
+        background: $image $mask-position no-repeat !important;
+      } @else {
+        background: $image center center no-repeat !important;
+      }
+    }
   }
 }
 

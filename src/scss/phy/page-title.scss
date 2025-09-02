@@ -12,8 +12,7 @@
 
         &::before {
             @include pseudo-element;
-            @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-900), 1160px, 100%, 1160px);
-            mask-position: 0 -810px;
+            @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-900), 1160px, 100%, 1160px, 0 -810px);
             right: 660px;
             top: 0;
 
@@ -32,8 +31,7 @@
 
         &::after {
             @include pseudo-element;
-            @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), color-mix(in srgb, var(--subject-color-700) 30%, transparent), 510px, 100%, 510px);
-            mask-position: 0 -322px;
+            @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), color-mix(in srgb, var(--subject-color-700) 30%, transparent), 510px, 100%, 510px, 0 -322px);
             right: 400px;
             top: 0;
             
