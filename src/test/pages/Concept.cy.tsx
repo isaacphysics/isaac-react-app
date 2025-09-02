@@ -9,8 +9,8 @@ it('Concept pages should have no visual regressions', () => {
     cy.get('[data-testid="loading"]').should('not.exist');
 
     // open accordion
-    cy.get('.accordion > button.accordion-header:not(.active)').scrollIntoView();
-    cy.get('.accordion > button.accordion-header:not(.active)').click();
+    cy.get('.isaac-accordion > button.accordion-header:not(.active)').scrollIntoView();
+    cy.get('.isaac-accordion > button.accordion-header:not(.active)').click();
 
     cy.scrollTo('top');
 
