@@ -16,7 +16,7 @@
   }
 }
 
-.accordion .accordion-button::after {
+.isaac-accordion .accordion-button::after {
   @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
 }
 

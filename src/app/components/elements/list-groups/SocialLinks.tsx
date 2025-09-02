@@ -17,7 +17,7 @@ export const SocialLinksRow = () => {
             <ul className='ps-0 mt-1 text-nowrap'>
                 {Object.entries(SOCIAL_LINKS).map(([_, {name, href}], i, a) =>
                     <li key={name} className={classNames(siteSpecific(i !== a.length - 1 ? "me-2" : "", "me-3"), siteSpecific("d-inline", "d-inline-block"))}>
-                        <ExternalLink href={href}>
+                        <ExternalLink href={href} className="img-link">
                             <img src={getSocialIcon(name.toLowerCase())} alt={`${SITE_TITLE} on ${name}`}
                                 className='img-fluid footer-social-logo'/>
                         </ExternalLink>
