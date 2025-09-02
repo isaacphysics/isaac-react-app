@@ -179,7 +179,6 @@ function QuizGrid({quizzes, emptyMessage}: AssignmentGridProps) {
 
 // To avoid the chaos of QuizProgressCommon, this and PracticeQuizTable are **separate components**. Despite this repeating some code, please don't try to merge them.
 const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void, emptyMessage: ReactNode}) => {
-
     return <HorizontalScroller enabled={quizzes.length > 6}>
         <Table className="my-quizzes-table mb-0">
             <colgroup>
@@ -350,7 +349,6 @@ export const PastTestsToggle = ({showCompleted, setShowCompleted, setQuizStatusF
 };
 
 const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
-
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
     const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
 
