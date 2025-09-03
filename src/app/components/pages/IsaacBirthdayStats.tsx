@@ -86,9 +86,9 @@ export const IsaacStats = () => {
             <div className="d-flex gap-4">
                 <div className="text-center">
                     <h2>
-                        <AnimatedCounter limit={16_224} time={6} />
+                        <AnimatedCounter limit={8_446} time={6} />
                     </h2>
-                    teachers using Isaac
+                    teachers setting assignments
                 </div>
             </div>
             <div className="d-flex gap-4">
