@@ -90,7 +90,7 @@ export const IsaacStats = () => {
             <Col>
                 <StatCard title="Question attempts" icon="icon-question" counterProps={{ limit: 186_125_271, time: 4, increasingRate: 0.53654 }} />
             </Col>
-            <Col>
+            <Col className="mx-auto">
                 <StatCard title="Concepts viewed" icon="icon-concept" counterProps={{ limit: 6_456_752, time: 5, increasingRate: 0.0186 }} />
             </Col>
         </Row>
@@ -110,21 +110,22 @@ export const IsaacStats = () => {
 
         <section className="container-override bg-white py-9">
             <Row className="my-9">
-                <Col lg={6}>
+                <Col xl={6} className="d-flex flex-column">
                     <h3>Most popular question</h3>
                     <ListView type={"item"} items={[{
-                        "id": "gcse_ch3_23_q1",
-                        "title": "Circuit Rules 1",
-                        "subtitle": "Essential GCSE Physics 23.1",
+                        "id": "gcse_ch2_13_q1",
+                        "title": "Resultant Force and Acceleration 1",
+                        "subtitle": "Essential GCSE Physics 13.1",
                         "type": "isaacQuestionPage",
                         "tags": [
-                            "resistors",
+                            "dynamics",
                             "phys_book_gcse",
                             "book",
                             "physics",
-                            "electricity"
+                            "mechanics"
                         ],
-                        "url": "/api/pages/questions/gcse_ch3_23_q1",
+                        "url": "/api/pages/questions/gcse_ch2_13_q1",
+                        "state": "NOT_ATTEMPTED",
                         "audience": [
                             {
                                 "stage": [
@@ -144,12 +145,12 @@ export const IsaacStats = () => {
                             }
                         ]
                     } as ContentSummaryDTO]} />
-                    <span className="me-2 float-end">
-                        (<AnimatedCounter limit={125024} time={3} increasingRate={0.1} />
-                        {" "}attempts)
+                    <span className="me-2 text-end">
+                        (<AnimatedCounter limit={1_518_456} time={3} increasingRate={0.1} />
+                        {" "}attempts across all parts)
                     </span>
                 </Col>
-                <Col lg={6} className="d-flex flex-column" id="concept-column">
+                <Col xl={6} className="d-flex flex-column" id="concept-column">
                     <h3>Most popular concept</h3>
                     <ListView type={"item"} className="flex-grow-1" items={[{
                         type: DOCUMENT_TYPE.CONCEPT,
@@ -160,8 +161,8 @@ export const IsaacStats = () => {
                         id: "kirchhoffs-laws",
                         audience: [{stage: [STAGE.GCSE], difficulty: ["challenge_2"]}],
                     } as ContentSummaryDTO]} />
-                    <span className="me-2 float-end">
-                        (<AnimatedCounter limit={62102} time={3} increasingRate={0.04} />
+                    <span className="me-2 text-end">
+                        (<AnimatedCounter limit={856_776} time={3} increasingRate={0.04} />
                         {" "}views)
                     </span>
                 </Col>
@@ -231,7 +232,7 @@ export const IsaacStats = () => {
                 ]
             } as ContentSummaryDTO]} />
             <span className="me-2 float-end">
-                (<AnimatedCounter limit={4} time={3} increasingRate={0.04} />
+                (<AnimatedCounter limit={115} time={3} />
                 {" "}correct answers)
             </span>
         </section>
