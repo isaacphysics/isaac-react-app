@@ -47,9 +47,10 @@ describe("Microsoft SSO Authentication", () => {
 
             it('shows a specific error message', async () => {
                 await renderProviderCallback(microsoftSignInUnlinked);
-                expect(authenticationError.element).toHaveTextContent("You don't use microsoft to log in");
-                expect(authenticationError.element).toHaveTextContent(/not configured for signing in with microsoft/);
-                expect(authenticationError.element).toHaveTextContent(/try logging in using a Google account/);
+                expect(authenticationError.element).toHaveTextContent("You don't use this Microsoft account to log in");
+                expect(authenticationError.element).toHaveTextContent(/not configured for signing in with this Microsoft account/);
+                expect(authenticationError.element).toHaveTextContent(/either didn't configure sign-in with Microsoft, or used a different Microsoft account/);
+                expect(authenticationError.element).toHaveTextContent(/try logging in using a different Microsoft account, a Google account, or a password/);
             });
 
             it('the log-in link works', async () => {

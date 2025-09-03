@@ -42,22 +42,25 @@ const GenericError = ({ state }: { state?: State }) => <>
 </>;
 
 const AccountNotLinked  = ({ state }: { state?: State }) => {
-    const provider = <span className="title-case">{state?.provider}</span>;
-    const differentProvider = state?.provider === 'google' ? 'Microsoft': 'Google';
+    const [provider, differentProvider] =
+        state?.provider === 'google' ? ["Google", "Microsoft"] : ["Microsoft", 'Google'];
 
     return <>
-        <h3>You don&apos;t use {provider} to log in</h3>
+        <h3>You don&apos;t use this {provider} account to log in</h3>
         <p>
-            We&apos;ve found an account with that email address, but it&apos;s not configured for signing in with {provider}.
+            We&apos;ve found an account with that email address, but it&apos;s not configured for signing in with
+            this {provider} account. You either didn&apos;t configure sign-in with {provider}, or used a
+            different {provider} account.  
         </p>
         <ul>
             <li>
                 To get back to your account, try <Link to="/login" aria-label="Log in link">logging in</Link> using
-                a {differentProvider} account or a password. You can also reset your password on the log-in page.
+                a different {provider} account, a {differentProvider} account, or a password. You can also reset
+                your password on the log-in page.
             </li>
             <li>
-                You can configure your account so you can sign in with {provider}, once you&apos;ve regained
-                access. <SSOLink>Learn how.</SSOLink>  
+                Once you&apos;ve regained access, you can start using this {provider} account for signing in to Isaac.
+                <SSOLink>Learn how.</SSOLink>  
             </li>
         </ul>
     </>;
