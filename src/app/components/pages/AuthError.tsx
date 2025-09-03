@@ -48,7 +48,7 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
     return <>
         <h3>You don&apos;t use this {provider} account to log in</h3>
         <p>
-            We&apos;ve found an account with that email address, but it&apos;s not configured for signing in with
+            We&apos;ve found an Isaac account with that email address, but it&apos;s not configured for signing in with
             this {provider} account. You either didn&apos;t configure sign-in with {provider}, or used a
             different {provider} account.  
         </p>
