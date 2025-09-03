@@ -19,9 +19,9 @@ export const AuthError = ({location: {state}}: {location: {state?: State}}) => {
 };
 
 const ErrorMessage = ({ state }: { state?: State }) => {
-    if (state?.errorMessage?.startsWith('You do not use') && isPhy) {
+    if (isPhy && state?.errorMessage?.startsWith('You do not use')) {
         return <AccountNotLinked state={state}/>;
-    } else if (state?.providerErrors?.errorDescription?.startsWith('AADSTS65004') && state.provider === 'microsoft' && isPhy) {
+    } else if (isPhy && state?.provider === 'microsoft' && state?.providerErrors?.errorDescription?.startsWith('AADSTS65004')) {
         return <ConsentMissingMicrosoft/>;
     } else {
         return <GenericError state={state}/>;
