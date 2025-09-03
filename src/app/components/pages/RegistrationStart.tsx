@@ -6,6 +6,7 @@ import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
 import { MicrosoftSignInButton } from "../elements/MicrosoftSignInButton";
+import { Link } from "react-router-dom";
 
 export const RegistrationStart = () => {
 
@@ -43,9 +44,12 @@ export const RegistrationStart = () => {
                                         <RaspberryPiSignInButton />
                                     </div>}
                                     <GoogleSignInButton />
-                                    {isPhy && <div className="mt-2">
+                                    {isPhy && <div className="mt-2 mb-3">
                                         <MicrosoftSignInButton />
                                     </div>}
+                                    {isPhy && <Link className="justify-content-end d-flex" to="/pages/single-sign-on" target='_blank'>
+                                        Learn more about Sigle Sign-On
+                                    </Link>}
                                 </div>
                                 {siteSpecific(<div className="section-divider"/>, <hr/>)}
                                 <div className="mt-7">
