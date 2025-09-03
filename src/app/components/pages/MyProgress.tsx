@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     getMyAnsweredQuestionsByDate,
     getMyProgress,
@@ -8,38 +8,39 @@ import {
     useAppDispatch,
     useAppSelector
 } from "../../state";
-import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Card, CardBody, Col, Container, Row} from "reactstrap";
+import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
+import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import {
     below,
-    HUMAN_QUESTION_TAGS,
+    BookHiddenState,
     HUMAN_QUESTION_TYPES,
+    ISAAC_BOOKS_BY_TAG,
     isPhy,
     isTeacherOrAbove,
     safePercentage,
     siteSpecific,
     useDeviceSize
 } from "../../services";
-import {RouteComponentProps, withRouter} from "react-router-dom";
-import {PotentialUser} from "../../../IsaacAppTypes";
-import {Unauthorised} from "./Unauthorised";
-import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats";
-import {StreakPanel} from "../elements/panels/StreakPanel";
-import {Tabs} from "../elements/Tabs";
-import {FlushableRef, QuestionProgressCharts} from "../elements/views/QuestionProgressCharts";
-import {ActivityGraph} from "../elements/views/ActivityGraph";
-import {ProgressBar} from "../elements/views/ProgressBar";
-import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { PotentialUser } from "../../../IsaacAppTypes";
+import { Unauthorised } from "./Unauthorised";
+import { AggregateQuestionStats } from "../elements/panels/AggregateQuestionStats";
+import { StreakPanel } from "../elements/panels/StreakPanel";
+import { Tabs } from "../elements/Tabs";
+import { FlushableRef, QuestionProgressCharts } from "../elements/views/QuestionProgressCharts";
+import { ActivityGraph } from "../elements/views/ActivityGraph";
+import { ProgressBar } from "../elements/views/ProgressBar";
+import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { ListView } from '../elements/list-groups/ListView';
 
-const siteSpecificStats = siteSpecific(
+const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
     {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion",
             "isaacClozeQuestion", "isaacReorderQuestion"
         ],
-        questionCountByTag: {
+        questionCountByBookTag: {
             "phys_book_step_up": 432,
             "phys_book_gcse": 534,
             "physics_skills_14": 75,
@@ -47,6 +48,7 @@ const siteSpecificStats = siteSpecific(
             "physics_linking_concepts": 258,
             "maths_book_gcse": 639,
             "maths_book": 432,
+            "maths_book_2e": 490,
             "chemistry_16": 338
         },
     },
@@ -56,7 +58,7 @@ const siteSpecificStats = siteSpecific(
             "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
             "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacLLMFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion"
         ],
-        questionCountByTag: {},
+        questionCountByBookTag: {},
     }
 );
 
@@ -155,17 +157,19 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                         <h4>Isaac Books</h4>
                         Questions completed correctly, against questions attempted for each of our <a href={"/books"}>books</a>.
                         <Row>
-                            {Object.entries(siteSpecificStats.questionCountByTag).map(([qType, total]) => {
-                                const correct = Math.min(progress?.correctByTag?.[qType] || 0, total);
-                                const attempted = Math.min(progress?.attemptsByTag?.[qType] || 0, total);
+                            {Object.entries(siteSpecificStats.questionCountByBookTag).map(([bookTag, total]) => {
+                                const book = ISAAC_BOOKS_BY_TAG[bookTag as keyof typeof ISAAC_BOOKS_BY_TAG];
+                                const correct = Math.min(progress?.correctByTag?.[bookTag] || 0, total);
+                                const attempted = Math.min(progress?.attemptsByTag?.[bookTag] || 0, total);
                                 const correctPercentage = safePercentage(correct, total) || 0;
                                 const attemptedPercentage = safePercentage(attempted, total) || 0;
-                                return total > 0 && <Col key={qType} lg={12} className="mt-2 type-progress-bar">
+                                const showBook = !!book && total > 0 && (attempted > 0 || book.hidden !== BookHiddenState.HIDDEN);
+                                return showBook &&  <Col key={bookTag} lg={12} className="mt-2 type-progress-bar">
                                     <div className={"px-2"}>
-                                        {HUMAN_QUESTION_TAGS.get(qType)} questions
+                                        {book.title} questions
                                     </div>
                                     <div className={"px-2"}>
-                                        <ProgressBar percentage={correctPercentage} primaryTitle={`${correct} correct out of ${total}`} secondaryPercentage={attemptedPercentage} secondaryTitle={`${attempted} attempted out of ${total}`} type={qType}>
+                                        <ProgressBar percentage={correctPercentage} primaryTitle={`${correct} correct out of ${total}`} secondaryPercentage={attemptedPercentage} secondaryTitle={`${attempted} attempted out of ${total}`} type={bookTag}>
                                             <span aria-hidden>{`${correct} of ${total}`}</span>
                                         </ProgressBar>
                                     </div>
