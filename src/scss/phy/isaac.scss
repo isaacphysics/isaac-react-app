@@ -429,6 +429,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "menu-page-phy";
 @import "quiz";
 @import "glossary";
+@import "stats";
 
 @import "expansion-layout";
 @import "../common/callout";
