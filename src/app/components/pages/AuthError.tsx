@@ -59,7 +59,7 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
                 your password on the log-in page.
             </li>
             <li>
-                Once you&apos;ve regained access, you can start using this {provider} account for signing in to
+                Once you&apos;ve regained access, you can set up this {provider} account for signing in to
                 Isaac. <SSOLink>Learn how.</SSOLink>  
             </li>
         </ul>
