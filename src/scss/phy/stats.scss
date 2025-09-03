@@ -27,9 +27,19 @@
   height: 100%;
 }
 
+section#homepage-images {
+  > .content-chunk {
+    margin: 0 10vw;
+  }
+
+  img {
+    max-height: 70vh;
+  }
+}
+
 .stats-hex-container {
-  width: 120px;
-  height: 128px;
+  width: 150px;
+  height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,8 +53,8 @@
     content: "";
     display: block;
     position: absolute;
-    width: 120px;
-    height: 128px;
+    width: inherit;
+    height: inherit;
     mask: url('/assets/phy/icons/redesign/hexagon.svg') no-repeat center center;
     mask-size: contain;
     background-color: $color-brand-400;

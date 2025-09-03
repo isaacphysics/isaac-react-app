@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Card, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { PageMetadata } from "../elements/PageMetadata";
-import {bb, donut} from "billboard.js";
 import classNames from "classnames";
-import { DOCUMENT_TYPE, specificDoughnutColours, STAGE, TAG_ID, tags } from "../../services";
+import { DOCUMENT_TYPE, STAGE } from "../../services";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentSummaryDTO } from "../../../IsaacApiTypes";
-import { Spacer } from "../elements/Spacer";
+import { PageFragment } from "../elements/PageFragment";
 
 interface AnimatedCounterProps extends React.HTMLAttributes<HTMLSpanElement> {
     limit: number;
@@ -26,36 +25,6 @@ const AnimatedCounter = ({limit, time, increasingRate, ...rest}: AnimatedCounter
     }, [increasingRate]);
 
     return <span {...rest} className={classNames("d-inline-block animated-counter", rest.className)} style={{ "--limit": _limit, "--time": time } as React.CSSProperties} />;
-};
-
-const PieChart = (props: React.HTMLAttributes<HTMLDivElement>) => {
-    // Sample data for the pie chart
-    const data : Partial<Record<TAG_ID, { label: string, value: number }>> = {
-        [TAG_ID.physics]: { label: "Physics", value: 965_172_912 },
-        [TAG_ID.chemistry]: { label: "Chemistry", value: 56_820_007 },
-        [TAG_ID.biology]: { label: "Biology", value: 8_375_424 },
-        [TAG_ID.maths]: { label: "Maths", value: 61_470_881 },
-    };
-
-    const categoryColumns = tags.getSubjectTags(tags.allTagIds).map((tag) => [tag.title, data[tag.id]?.value || 0]);
-
-    useEffect(() => {
-        bb.generate({
-            data: {
-                columns: categoryColumns,
-                colors: Object.fromEntries(Object.entries(specificDoughnutColours).filter(([k]) => Object.values(data).some(d => d.label === k))),
-                type: donut(),
-            },
-            donut: {
-                title: "Attempts\nby subject",
-                label: {format: (value) => `${value}`}
-            },
-            bindto: `#questionsCategoryChart`,
-            size: { width: 320, height: 320 }
-        });
-    }, [categoryColumns]);
-
-    return <div id={`questionsCategoryChart`} {...props} />;
 };
 
 interface StatCardProps {
@@ -83,33 +52,58 @@ export const IsaacStats = () => {
             icon={{"type": "hex", "icon": "icon-progress"}}
         />
         <PageMetadata title={<>Happy <span className="text-brand">11th</span> birthday to Isaac Science!</>} />
-        <Row className="d-flex align-items-center g-5 row-cols-1 row-cols-md-2 row-cols-xl-3 mb-4">
+        
+        <span>
+            The 1st September 2025 marked the 11th anniversary of the first question attempts on the Isaac Physics platform. To celebrate, we&apos;re taking a look back at Isaac&apos;s statistics over this time.
+        </span>
+
+        <Row className="d-flex align-items-center g-5 row-cols-1 row-cols-md-2 row-cols-xl-3 mb-4 mt-0">
             <Col>
                 <StatCard title="Accounts" icon="icon-account" counterProps={{ limit: 750_777, time: 3, increasingRate: 0.002 }} />
             </Col>
             <Col>
-                <StatCard title="Question attempts" icon="icon-question" counterProps={{ limit: 186_125_271, time: 4, increasingRate: 0.53654 }} />
+                <StatCard title="Question attempts" icon="icon-question" counterProps={{ limit: 186_125_271, time: 4, increasingRate: 0.73654 }} />
             </Col>
             <Col className="mx-auto">
                 <StatCard title="Concepts viewed" icon="icon-concept" counterProps={{ limit: 6_456_752, time: 5, increasingRate: 0.0186 }} />
             </Col>
         </Row>
 
-        {/* <section className="d-flex py-9 container-override bg-white position-relative">
-            <div>
-                <p>
-                    Isaac saw more question attempts this year than any other year. With <b>452,397</b> assignments and <b>9,311</b> tests set, you&apos;ve been keeping busy!
-                </p>
-                <p>
-                    
-                </p>
+        <section className="bg-white container-override py-9" id="homepage-images">
+            <PageFragment fragmentId="59be3cdd-f984-4668-a512-29bad2620e3b" />
+        </section>
+
+        <section className="d-flex flex-column flex-md-row align-items-center justify-content-around py-9 container-override row-gap-4">
+            <div className="d-flex gap-4">
+                <i className="icon icon-school icon-xl" />
+                <div className="text-end text-md-start">
+                    <h2>
+                        <AnimatedCounter limit={3674} time={5} />
+                    </h2>
+                    schools using Isaac
+                </div>
             </div>
-            <Spacer />
-            <PieChart className="justify-self-end" />
-        </section> */}
+            <div className="d-flex gap-4">
+                <div className="text-center">
+                    <h2>
+                        <AnimatedCounter limit={16_224} time={6} />
+                    </h2>
+                    teachers using Isaac
+                </div>
+            </div>
+            <div className="d-flex gap-4">
+                <div className="text-start text-md-end">
+                    <h2>
+                        <AnimatedCounter limit={494_509} time={7} />
+                    </h2>
+                    total assignments set
+                </div>
+                <i className="icon icon-question-deck icon-xl" />
+            </div>
+        </section>
 
         <section className="container-override bg-white py-9">
-            <Row className="my-9">
+            <Row className="row-gap-5">
                 <Col xl={6} className="d-flex flex-column">
                     <h3>Most popular question</h3>
                     <ListView type={"item"} items={[{
@@ -169,33 +163,12 @@ export const IsaacStats = () => {
             </Row>
         </section>
 
-        <section className="d-flex justify-content-around py-9 container-override">
-            <div className="d-flex gap-4">
-                <i className="icon icon-school icon-xl" />
-                <div>
-                    <h2>
-                        <AnimatedCounter limit={3674} time={5} />
-                    </h2>
-                    schools using Isaac
-                </div>
-            </div>
-            <div className="d-flex gap-4">
-                <div className="text-end">
-                    <h2>
-                        <AnimatedCounter limit={16_224} time={5} />
-                    </h2>
-                    teachers using Isaac
-                </div>
-                <i className="icon icon-group icon-xl" />
-            </div>
-        </section>
-
-        <section className="d-flex flex-column py-9 container-override align-items-center bg-white">
+        <section className="d-flex flex-column flex-md-row py-9 container-override align-items-center justify-content-around">
             <div className="d-flex gap-3 align-items-center">
-                <h2 className="stats-hex-container text-white m-0">
-                    <AnimatedCounter limit={5_298} time={10} />
+                <h2 className="stats-hex-container text-white m-0 fs-4">
+                    <AnimatedCounter limit={32_261_424} time={10} />
                 </h2>
-                <h5>platform event attendees</h5>
+                <h5>total hint views</h5>
             </div>
             <div className="d-flex gap-3 align-items-center">
                 <h5>longest student streak</h5>
@@ -206,7 +179,7 @@ export const IsaacStats = () => {
             </div>
         </section>
 
-        <section className="py-9 container-override position-relative">
+        <section className="d-flex flex-column py-9 container-override position-relative bg-white">
             <h3>Most <span className="text-danger">difficult</span> question</h3>
             <ListView type={"item"} items={[{
                 "id": "cooling_excalibur",
@@ -231,7 +204,7 @@ export const IsaacStats = () => {
                     }
                 ]
             } as ContentSummaryDTO]} />
-            <span className="me-2 float-end">
+            <span className="me-2 text-end">
                 (<AnimatedCounter limit={115} time={3} />
                 {" "}correct answers)
             </span>
