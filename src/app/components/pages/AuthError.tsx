@@ -36,8 +36,8 @@ const GenericError = ({ state }: { state?: State }) => <>
         An error occurred while attempting to log in.
         <br />
         You may want to return to the <Link to="/"> home page</Link> and try again, {" "}
-        check <Link to="/support/student/general#login_issues">this FAQ</Link>
-        , or <Link to="/contact">contact us</Link> if this keeps happening.
+        check <Link to="/support/student/general#login_issues">this FAQ</Link>,
+        or <ContactUs /> if this keeps happening.
     </p>
 </>;
 
@@ -63,6 +63,7 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
                 <SSOLink>Learn how.</SSOLink>  
             </li>
         </ul>
+        <p>If you need more help signing in, <ContactUs/>.</p>
     </>;
 };
 
@@ -76,7 +77,10 @@ const ConsentMissingMicrosoft = () => <>
         If you&apos;re using a school account and you&apos;re the first person using Isaac from your school, your
         IT department may need to pre-approve Isaac before you can consent. <SSOLink>Read more about signing in with Microsoft.</SSOLink>
     </p>
+    <p>If you need more help signing in, <ContactUs />.</p>
 </>;
 
 const SSOLink = ({ children }: { children: ReactNode}) =>
     <Link to="/pages/single_sign_on" aria-label="Link to SSO documentation">{children}</Link>;
+
+const ContactUs = () => <Link to="/contact" aria-label="Link to contact form">contact us</Link>;

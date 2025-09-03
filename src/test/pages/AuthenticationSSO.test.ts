@@ -1,5 +1,5 @@
 import { http, HttpHandler, HttpResponse } from "msw";
-import { expectH2, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
+import { expectH1, expectH2, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
 import { API_PATH, isPhy } from "../../app/services";
 import { mockUser } from "../../mocks/data";
 import { screen, within } from "@testing-library/react";
@@ -16,6 +16,14 @@ describe("Microsoft SSO Authentication", () => {
         await setUrl({ pathname: '/auth/microsoft/callback', search });
     };
 
+    const testContactLinkPresent = (message: RegExp) => {
+        it('shows a link to the contact form', async () => {
+            expect(authenticationError.element).toHaveTextContent(message);
+            await userEvent.click(authenticationError.contactUsLink);
+            expectH1('Contact us');
+        });
+    };
+
     describe('when the token from the provider belongs to a valid user', () => {
         it('signs them in', async () => {
             await renderProviderCallback(microsoftSignInSuccess);
@@ -24,28 +32,32 @@ describe("Microsoft SSO Authentication", () => {
     });
 
     describe('on a generic error', () => {
-        it('shows a toast message', async () => {
-            await renderProviderCallback(microsoftSignInFailure);
+        beforeEach(async () => await renderProviderCallback(microsoftSignInFailure));
+
+        it('shows a toast message', async () => {    
             expect(toast().children).toHaveLength(1);
         });
 
         it('shows the error and the generic error page', async () => {
-            await renderProviderCallback(microsoftSignInFailure);
             expect(authenticationError.element).toHaveTextContent('CSRF check failed');
             expect(authenticationError.element).toHaveTextContent(/An error occurred while attempting to log in/);
             expect(authenticationError.element).toHaveTextContent(/You may want to return to the home page/);
+            expect(authenticationError.element).toHaveTextContent(/check this FAQ,/);
+            expect(authenticationError.element).toHaveTextContent(/or contact us if this keeps happening/);
         });
+
+        testContactLinkPresent(/or contact us if this keeps happening/);
     });
 
     describe('on specific errors', () => {
         describe('account not linked', () => {
+            beforeEach(async () => await renderProviderCallback(microsoftSignInUnlinked));
+
             it('does not show a toast message', async () => {
-                await renderProviderCallback(microsoftSignInUnlinked);
                 expect(toast().children).toHaveLength(0);
             });
 
             it('shows a specific error message', async () => {
-                await renderProviderCallback(microsoftSignInUnlinked);
                 expect(authenticationError.element).toHaveTextContent("You don't use this Microsoft account to log in");
                 expect(authenticationError.element).toHaveTextContent(/not configured for signing in with this Microsoft account/);
                 expect(authenticationError.element).toHaveTextContent(/either didn't configure sign-in with Microsoft, or used a different Microsoft account/);
@@ -53,36 +65,37 @@ describe("Microsoft SSO Authentication", () => {
             });
 
             it('the log-in link works', async () => {
-                await renderProviderCallback(microsoftSignInUnlinked);
                 await userEvent.click(authenticationError.logInLink);
                 expectH2('Log in or sign up');
             });
 
             it('shows a link to the SSO help page', async () => {
-                await renderProviderCallback(microsoftSignInUnlinked);
                 expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
             });
 
+            testContactLinkPresent(/If you need more help signing in, contact us./);
         });
 
         describe('consent missing', () => {
-            const queryFromProvider = `?error=access_denied&error_subcode=cancel${
-                "&error_description=AADSTS65004%3a+User+declined+to+consent+to+access+the+app."}`;
-
-            it('does not show a toast message', async () => {
+            beforeEach(async () => {
+                const queryFromProvider = `?error=access_denied&error_subcode=cancel${
+                    "&error_description=AADSTS65004%3a+User+declined+to+consent+to+access+the+app."}`;
                 await renderProviderCallback(microsoftSignInDeniedAccess, queryFromProvider);
+            });
+            
+            it('does not show a toast message', async () => {
                 expect(toast().children).toHaveLength(0);
             });
 
             it('shows a specific error message', async () => {
-                await renderProviderCallback(microsoftSignInDeniedAccess, queryFromProvider);
                 expect(authenticationError.element).toHaveTextContent("We need your consent");
             });
 
             it('shows a link to the SSO help page', async () => {
-                await renderProviderCallback(microsoftSignInDeniedAccess, queryFromProvider);
                 expect(authenticationError.ssoLink).toHaveProperty('href', 'http://localhost/pages/single_sign_on');
             });
+
+            testContactLinkPresent(/If you need more help signing in, contact us./);
         });
     });
 });
@@ -119,6 +132,10 @@ const authenticationError = {
 
     get ssoLink() {
         return within(this.element).getByRole('link', { name: 'Link to SSO documentation'});
+    },
+
+    get contactUsLink() {
+        return within(this.element).getByRole('link', { name: 'Link to contact form'});
     },
 
     get element() {
