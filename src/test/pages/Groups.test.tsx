@@ -3,7 +3,7 @@ import { renderTestEnvironment, followHeaderNavLink } from "../utils";
 import {
   mockActiveGroups,
   mockArchivedGroups,
-  buildMockTeacher,
+  // buildMockTeacher,
   mockUser,
   buildMockUserSummary,
   mockGroups,
@@ -13,13 +13,13 @@ import {
 import { API_PATH, isDefined } from "../../app/services";
 import { difference, isEqual } from "lodash";
 import userEvent from "@testing-library/user-event";
-import { ResponseResolver, rest } from "msw";
+import { rest } from "msw";
 import {
   buildAuthTokenHandler,
   buildGroupHandler,
   buildGroupMembershipsHandler,
   buildNewGroupHandler,
-  buildNewManagerHandler,
+  // buildNewManagerHandler,
 } from "../../mocks/handlers";
 
 // --- Helper functions ---
@@ -46,35 +46,35 @@ const switchGroupsTab = async (activeOrArchived: "active" | "archived", expected
 };
 
 // Reusable test for adding a manager in the additional manager modal
-const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver, newManager: any) => {
-  let groupManagersModal: HTMLElement | undefined;
-  await waitFor(() => {
-    groupManagersModal = screen.getByTestId("active-modal");
-    expect(groupManagersModal).toHaveModalTitle("Share your group");
-  });
-  if (!groupManagersModal) fail(); // Shouldn't happen because of the above `waitFor`
-  const addManagerInput = within(groupManagersModal).getByPlaceholderText("Enter email address here");
-  await userEvent.type(addManagerInput, newManager.email);
-  const addManagerButton = within(groupManagersModal).getByRole("button", { name: "Add group manager" });
-  await userEvent.click(addManagerButton);
-  // Expect correct email was sent in request
-  await waitFor(() => {
-    expect(managerHandler).toHaveBeenCalledTimes(1);
-  });
-  expect(managerHandler).toHaveBeenRequestedWith(async (req) => {
-    const { email } = await req.json();
-    return email === newManager.email;
-  });
-  // Expect that new additional manager is shown in modal
-  await waitFor(() => {
-    const managerElements = within(groupManagersModal as HTMLElement).queryAllByTestId("group-manager");
-    expect(managerElements).toHaveLength(1);
-    expect(managerElements[0]).toHaveTextContent(newManager.email);
-    // User should be able to see the remove button, since they are the owner
-    const removeButton = within(managerElements[0]).getByRole("button", { name: "Remove" });
-    expect(removeButton).toBeVisible();
-  });
-};
+// const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver, newManager: any) => {
+//   let groupManagersModal: HTMLElement | undefined;
+//   await waitFor(() => {
+//     groupManagersModal = screen.getByTestId("active-modal");
+//     expect(groupManagersModal).toHaveModalTitle("Share your group");
+//   });
+//   if (!groupManagersModal) fail(); // Shouldn't happen because of the above `waitFor`
+//   const addManagerInput = within(groupManagersModal).getByPlaceholderText("Enter email address here");
+//   await userEvent.type(addManagerInput, newManager.email);
+//   const addManagerButton = within(groupManagersModal).getByRole("button", { name: "Add group manager" });
+//   await userEvent.click(addManagerButton);
+//   // Expect correct email was sent in request
+//   await waitFor(() => {
+//     expect(managerHandler).toHaveBeenCalledTimes(1);
+//   });
+//   expect(managerHandler).toHaveBeenRequestedWith(async (req) => {
+//     const { email } = await req.json();
+//     return email === newManager.email;
+//   });
+//   // Expect that new additional manager is shown in modal
+//   await waitFor(() => {
+//     const managerElements = within(groupManagersModal as HTMLElement).queryAllByTestId("group-manager");
+//     expect(managerElements).toHaveLength(1);
+//     expect(managerElements[0]).toHaveTextContent(newManager.email);
+//     // User should be able to see the remove button, since they are the owner
+//     const removeButton = within(managerElements[0]).getByRole("button", { name: "Remove" });
+//     expect(removeButton).toBeVisible();
+//   });
+// };
 
 describe("Groups", () => {
   const roles = ["TUTOR", "TEACHER"] as const;
