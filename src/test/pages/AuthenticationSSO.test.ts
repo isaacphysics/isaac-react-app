@@ -14,7 +14,6 @@ describe("Microsoft SSO Authentication", () => {
     const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
         renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
         await setUrl({ pathname: '/auth/microsoft/callback', search });
-            
     };
 
     describe('when the token from the provider belongs to a valid user', () => {

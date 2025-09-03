@@ -32,6 +32,7 @@ import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {extractErrorMessage} from '../../services/errors';
 import { StyledCheckbox } from '../elements/inputs/StyledCheckbox';
 import { MicrosoftSignInButton } from '../elements/MicrosoftSignInButton';
+import { Link } from 'react-router-dom';
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -299,9 +300,16 @@ export const LogIn = () => {
                                             <GoogleSignInButton/>
                                         </Col>
                                     </Row>
-                                    {isPhy && <Row className="mb-2 justify-content-center">
+                                    {isPhy && <Row className="mb-3 justify-content-center">
                                         <Col sm={9}>
                                             <MicrosoftSignInButton/>
+                                        </Col>
+                                    </Row>}
+                                    {isPhy && <Row className="mb-2">
+                                        <Col className="justify-content-end d-flex">
+                                            <Link to="/pages/single-sign-on" target='_blank'>
+                                                Learn more about Sigle Sign-On
+                                            </Link>
                                         </Col>
                                     </Row>}
                                 </React.Fragment>
