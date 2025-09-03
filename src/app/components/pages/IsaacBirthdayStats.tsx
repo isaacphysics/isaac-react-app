@@ -152,7 +152,7 @@ export const IsaacStats = () => {
                         subtitle: "Current and voltage circuit laws",
                         summary: "Two important circuit laws pertaining to how voltage and current vary throughout a circuit.",
                         tags: ["physics"],
-                        id: "kirchhoffs-laws",
+                        id: "cp_kirchhoffs_laws",
                         audience: [{stage: [STAGE.GCSE], difficulty: ["challenge_2"]}],
                     } as ContentSummaryDTO]} />
                     <span className="me-2 text-end">
