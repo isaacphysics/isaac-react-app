@@ -62,6 +62,7 @@ describe("Microsoft SSO Authentication", () => {
                 expect(authenticationError.element).toHaveTextContent(/not configured for signing in with this Microsoft account/);
                 expect(authenticationError.element).toHaveTextContent(/either didn't configure sign-in with Microsoft, or used a different Microsoft account/);
                 expect(authenticationError.element).toHaveTextContent(/try logging in using a different Microsoft account, a Google account, or a password/);
+                expect(authenticationError.element).toHaveTextContent(/you can start using this Microsoft account for signing in to Isaac. Learn how./);
             });
 
             it('the log-in link works', async () => {
