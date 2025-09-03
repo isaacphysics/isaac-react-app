@@ -180,17 +180,37 @@ $viewport-sizes: (
 
 @mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
   display: inline-block;
-  mask: url($path) center center no-repeat;
   width: $width;
   height: $height;
   min-width: $width;
   min-height: $height;
-  background-color: black;
-  @if $mask-size != none {
-    mask-size: $mask-size;
+  background-color: black; // this has to be here, not inside the @supports, as that raises the specificity beyond that of background colours specified alongside @include svg-icon
+
+  @supports (mask: url($path) center center no-repeat) {
+    mask: url($path) center center no-repeat;
+    @if $mask-size != none {
+      mask-size: $mask-size;
+    }
+    @if $mask-position != none {
+      mask-position: $mask-position;
+    }
   }
-  @if $mask-position != none {
-    mask-position: $mask-position;
+
+  @supports not (mask: url($path) center center no-repeat) {
+    // TODO this had to be shorthand format to correctly override all background props, surely can simplify though
+    @if $mask-size != none {
+      @if $mask-position != none {
+        background: url($path) $mask-position/$mask-size no-repeat !important;
+      } @else {
+        background: url($path) center center/$mask-size no-repeat !important;
+      }
+    } @else {
+      @if $mask-position != none {
+        background: url($path) $mask-position no-repeat !important;
+      } @else {
+        background: url($path) center center no-repeat !important;
+      }
+    }
   }
 }
 
@@ -203,8 +223,25 @@ $viewport-sizes: (
   min-height: $height;
   &::before {
     content: '';
-    @include svg-icon($bg_path, $width, $height);
+    @include svg-icon($bg_path, $width, $height, $mask-size, $mask-position);
     position: absolute;
+  }
+  &::after {
+    content: '';
+    @include svg-icon($fg_path, $width, $height, $mask-size, $mask-position);
+    position: absolute;
+  }
+}
+
+@mixin svg-color($image, $color, $width, $height, $mask-size: none, $mask-position: none) {
+  width: $width;
+  height: $height;
+  min-width: $width;
+  min-height: $height;
+
+  @supports (mask: $image center center no-repeat) {
+    mask: $image no-repeat center center;
+    background-color: $color;
     @if $mask-size != none {
       mask-size: $mask-size;
     }
@@ -212,28 +249,21 @@ $viewport-sizes: (
       mask-position: $mask-position;
     }
   }
-  &::after {
-    content: '';
-    @include svg-icon($fg_path, $width, $height);
-    position: absolute;
-    @if $mask-size {
-      mask-size: $mask-size;
-    }
-    @if $mask-position != none {
-      mask-position: $mask-position;
-    }
-  }
-}
 
-@mixin svg-color($image, $color, $width, $height, $mask-size: none) {
-  mask: $image no-repeat center center;
-  background-color: $color;
-  width: $width;
-  height: $height;
-  min-width: $width;
-  min-height: $height;
-  @if $mask-size != none {
-    mask-size: $mask-size;
+  @supports not (mask: $image center center no-repeat) {
+    @if $mask-size != none {
+      @if $mask-position != none {
+        background: $image $mask-position/$mask-size no-repeat !important;
+      } @else {
+        background: $image center center/$mask-size no-repeat !important;
+      }
+    } @else {
+      @if $mask-position != none {
+        background: $image $mask-position no-repeat !important;
+      } @else {
+        background: $image center center no-repeat !important;
+      }
+    }
   }
 }
 
@@ -244,13 +274,16 @@ $viewport-sizes: (
 }
 
 @mixin icon-color-override($color) {
-  background-color: var(--layered-icon-parent-bg-override, $color) !important;
-  
-  &::before {
-    background-color: $color !important;
-  }
-  &::after {
-    background-color: $color !important;
+  // only do this if masks are supported
+  @supports (mask-position: center) {
+    background-color: var(--layered-icon-parent-bg-override, $color) !important;
+
+    &::before {
+      background-color: $color !important;
+    }
+    &::after {
+      background-color: $color !important;
+    }
   }
 }
 

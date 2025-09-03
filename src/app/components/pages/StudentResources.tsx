@@ -113,7 +113,7 @@ export const StudentResources = () => {
                     <h2>Further learning</h2>
                     <p>More projects, challenges, and tools from the Raspberry Pi Foundation’s world class range of computer science resources.</p> 
                 </TextBlock>
-                <ColumnSlice>
+                <ColumnSlice className="row-gap-5">
                     <AdaCard card={{
                         title: "Online coding projects",
                         image: {src: "/assets/cs/decor/coding-projects.png"},
@@ -173,7 +173,7 @@ export const StudentResources = () => {
                     <h2>Explore a career in computer science</h2>
                     <p>Read stories from graduates at the early stages of their careers in software development, game design, research, and much more.</p> 
                 </TextBlock>
-                <ColumnSlice>
+                <ColumnSlice className="row-gap-5">
                     <AdaCard card={{
                         title: "Max Fordham",
                         image: {src: "/assets/cs/decor/stories/max-fordham.png"},
@@ -196,7 +196,7 @@ export const StudentResources = () => {
                         clickUrl: "/pages/20240215_lella_halloum"
                     }}/>
                 </ColumnSlice>
-                <div className="d-flex justify-content-center mt-3">
+                <div className="d-flex justify-content-center mt-6">
                     <Link to="/pages/computer_science_stories" target="_blank">
                         <strong className="link-dark-pink">View more stories</strong>
                     </Link>

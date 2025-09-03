@@ -148,7 +148,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     const isOpen = open && !disabled;
 
-    return <div className="accordion">
+    return <div className="isaac-accordion">
         <button 
             className={classNames(
                 "accordion-header d-flex w-100 p-0", 
@@ -207,7 +207,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 </div>}
             </div>
 
-            {accordionState && isPhy && <span className={"accordion-icon d-flex align-items-center gap-2 w-max-content h-100 pb-1 pe-3 align-self-center"}>
+            {accordionState && isPhy && <span className={"accordion-icon d-flex align-items-center gap-2 w-max-content pe-3 align-self-center"}>
                 <StatusDisplay status={accordionState} showText className="flex-row-reverse" aria-label={accordionAltText[accordionState]} />
             </span>}
             {isAda && <>

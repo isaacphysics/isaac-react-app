@@ -107,3 +107,9 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+@for $i from 0 through 5 {
+  .z-10#{$i}0 {
+    z-index: calc(1000 + $i * 10) !important;
+  }
+}

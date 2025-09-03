@@ -7,9 +7,7 @@ import {siteSpecific} from "../../services";
 export const GoogleSignInButton = () => {
     const dispatch = useAppDispatch();
 
-    const logInWithGoogle = () => {
-        dispatch(handleProviderLoginRedirect("GOOGLE"));
-    };
+    const logInWithGoogle = () => dispatch(handleProviderLoginRedirect("GOOGLE"));
 
     return <Button color={siteSpecific("keyline-underline", "keyline")} className="w-100" onClick={logInWithGoogle}>
         <img className="authenticator-logo" src={"/assets/common/logos/google-logo.svg"} height={siteSpecific("20px", "auto")} alt={"Google logo"}/>

@@ -28,20 +28,6 @@
   }
 }
 
-.btn-more-events {
-  background-color: $color-neutral-100;
-  border: 1px solid $color-neutral-200;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  align-content: center;
-  padding: 24px 16px;
-
-  &:hover {
-    background-color: $color-neutral-200;
-  }
-}
-
 // Named class for event titles to avoid
 // styling headings encoded in the markdown
 .event-title {

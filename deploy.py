@@ -348,7 +348,7 @@ if __name__ == '__main__':
 
     check_running_servers(context)
 
-    sites = [Site.ADA, Site.PHY] if context['site'] == Site.BOTH else [context['site']]
+    sites = [Site.ADA, Site.SCI] if context['site'] == Site.BOTH else [context['site']]
     for site in sites:
         context['site'] = site
         if context['env'] == 'test' and volume_exists(context):
@@ -365,10 +365,9 @@ if __name__ == '__main__':
                 deploy_staging_or_dev(context)
             context['env'] = 'live'
             deploy_live(context)
-            if context['site'] in (Site.PHY, Site.ADA):  # FIXME: once PHY goes away, do this unconditionally.
-                context['env'] = 'etl'
-                deploy_etl(context)
-                context['env'] = 'live'
+            context['env'] = 'etl'
+            deploy_etl(context)
+            context['env'] = 'live'
             write_changelog()
         elif context['env'] == 'etl':
             deploy_etl(context)

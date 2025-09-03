@@ -235,7 +235,7 @@ export function ResultsTable<Q extends QuestionType>({
         </SortItemHeader>
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
-                className="pointer-cursor ps-3 wf-10"
+                className="pointer-cursor ps-3 correct-attempted-header"
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -245,7 +245,7 @@ export function ResultsTable<Q extends QuestionType>({
                 Correct
             </SortItemHeader>
             : <SortItemHeader<ProgressSortOrder>
-                className="pointer-cursor ps-3 wf-10"
+                className="pointer-cursor ps-3 correct-attempted-header"
                 defaultOrder={"totalAttemptedQuestionPercentage"}
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -278,9 +278,24 @@ export function ResultsTable<Q extends QuestionType>({
     const classAverages: [number, number][] | undefined = progress ? questions.map((_, index) => {
         // classAverages returns a pair of (numerator, denominator) to be passed into formatMark() for each question.
 
-        // this gives (number of students who got everything correct) / (number of students). this therefore ignores partially correct attempts.
-        const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].every(part => part === "CORRECT") ? 1 : 0), 0);
-        return [studentsWithAllCorrect, progress.length];
+        if (isAssignment) {
+            // this gives (number of students who got everything correct) / (number of students). this therefore ignores partially correct attempts.
+            if (pageSettings?.attemptedOrCorrect === "ATTEMPTED") {
+                const studentsWithAllAttempted = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].every(part => part !== "NOT_ATTEMPTED") ? 1 : 0), 0);
+                return [studentsWithAllAttempted, progress.length];
+            } else {
+                const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (p.questionPartResults?.[index].every(part => part === "CORRECT") ? 1 : 0), 0);
+                return [studentsWithAllCorrect, progress.length];
+            }
+        } else {
+            if (pageSettings?.attemptedOrCorrect === "ATTEMPTED") {
+                const studentsWithAllAttempted = progress.reduce((acc, p) => acc + (isAuthorisedFullAccess(p) && !p.notAttemptedPartResults?.[index] ? 1 : 0), 0);
+                return [studentsWithAllAttempted, progress.length];
+            } else {
+                const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (p.correctPartResults?.[index] ? 1 : 0), 0);
+                return [studentsWithAllCorrect, progress.length];
+            }
+        }
     }) : [];
 
     return <div className="assignment-progress-progress">
@@ -393,10 +408,12 @@ export function ResultsTable<Q extends QuestionType>({
                     </tbody>
                     <tfoot className="sticky-bottom">
                         <tr>
-                            <th className="sticky-left text-start p-3 fw-bold">Total fully correct</th>
-                            <td/>{/* ignore totals per student column */}
+                            <th className="sticky-left text-start p-3 fw-bold">Total fully {pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}</th>
+                            <th/>{/* correct column */}
                             {classAverages.map(([numerator, denominator], index) => (
-                                <td key={index}>{formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}</td>
+                                <td key={index} className={classNames({"selected": index === selectedQuestionIndex})}>
+                                    {formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}
+                                </td>
                             ))}
                         </tr>
                     </tfoot>
@@ -453,10 +470,14 @@ export function ResultsTablePartBreakdown({
         [(reverseOrder ? "desc" : "asc"), "asc"]
     ), [progress, reverseOrder, sortBySelectedSortOrder]);
 
-    const classAverages = sortedProgress[0]?.questionPartResults?.[questionIndex]?.map((_, i) => {
-        const totalCorrect = sortedProgress.reduce((acc, p) => acc + (p.questionPartResults?.[questionIndex][i] === "CORRECT" ? 1 : 0), 0);
-        const total = sortedProgress.length;
-        return [totalCorrect, total] as [number, number];
+    const classAverages = sortedProgress.find(p => !!p.questionPartResults)?.questionPartResults?.[questionIndex]?.map((_, i) => {
+        if (pageSettings?.attemptedOrCorrect === "ATTEMPTED") {
+            const totalAttempted = sortedProgress.reduce((acc, p) => acc + (p.questionPartResults?.[questionIndex][i] !== "NOT_ATTEMPTED" ? 1 : 0), 0);
+            return [totalAttempted, sortedProgress.length];
+        } else {
+            const totalCorrect = sortedProgress.reduce((acc, p) => acc + (p.questionPartResults?.[questionIndex][i] === "CORRECT" ? 1 : 0), 0);
+            return [totalCorrect, sortedProgress.length];
+        }
     }) ?? [];
 
     return sortedProgress?.length
@@ -471,7 +492,27 @@ export function ResultsTablePartBreakdown({
                     >
                         Name
                     </SortItemHeader>
-                    {sortedProgress[0].questionPartResults?.[questionIndex]?.map((_, i) =>
+                    {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
+                        ? <SortItemHeader<ProgressSortOrder>
+                            className="pointer-cursor correct-attempted-header"
+                            defaultOrder={"totalQuestionPercentage"}
+                            reverseOrder={"totalQuestionPercentage"}
+                            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                            label={"Total correct"}
+                        >
+                            Correct
+                        </SortItemHeader>
+                        : <SortItemHeader<ProgressSortOrder>
+                            className="pointer-cursor correct-attempted-header"
+                            defaultOrder={"totalAttemptedQuestionPercentage"}
+                            reverseOrder={"totalAttemptedQuestionPercentage"}
+                            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                            label={"Total attempted"}
+                        >
+                            Attempted
+                        </SortItemHeader>
+                    )}
+                    {sortedProgress.find(p => !!p.questionPartResults)?.questionPartResults?.[questionIndex]?.map((_, i) =>
                         // <th key={i} className="text-center">
                         <SortItemHeader<ProgressSortOrder>
                             defaultOrder={i}
@@ -489,6 +530,7 @@ export function ResultsTablePartBreakdown({
                 <tbody>
                     {sortedProgress.map((studentProgress, studentIndex) => (
                         <tr key={studentIndex}>
+                            {/* student name */}
                             <th className="student-name sticky-left ps-2 py-3 fw-bold">
                                 <div className="d-flex align-items-center gap-2">
                                     <i className="icon icon-person icon-md" color="tertiary"/>
@@ -498,16 +540,37 @@ export function ResultsTablePartBreakdown({
                                     </Link>
                                 </div>
                             </th>
+
+                            {/* total correct/attempted */}
+                            {isPhy && studentProgress.questionPartResults && 
+                                <td>
+                                    {formatMark(
+                                        studentProgress.questionPartResults[questionIndex].reduce((acc, questionPartResult) => {
+                                            if (pageSettings?.attemptedOrCorrect === "CORRECT") {
+                                                return acc + (questionPartResult === "CORRECT" ? 1 : 0);
+                                            } else {
+                                                return acc + (questionPartResult !== "NOT_ATTEMPTED" ? 1 : 0);
+                                            }
+                                        }, 0),
+                                        studentProgress.questionPartResults[questionIndex].length,
+                                        !!pageSettings?.formatAsPercentage
+                                    )}
+                                </td>
+                            }
+
+                            {/* main data */}
                             {studentProgress.questionPartResults &&
                                 studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
                                     <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>
-                                ))}
+                                ))
+                            }
                         </tr>
                     ))}
                 </tbody>
                 <tfoot className="sticky-bottom">
                     <tr>
-                        <th className="sticky-left text-start p-3 fw-bold">Total fully correct</th>
+                        <th className="sticky-left text-start p-3 fw-bold">Total fully {pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}</th>
+                        {isPhy && <th/>}{/* correct column */}
                         {classAverages.map(([numerator, denominator], index) => (
                             <td key={index}>{formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}</td>
                         ))}

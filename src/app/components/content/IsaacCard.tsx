@@ -12,20 +12,20 @@ interface IsaacCardProps extends ContainerProps {
     className?: string;
 }
 
-const PhysicsContentCard = ({doc, imageClassName, className, ...rest}: IsaacCardProps) => {
+const PhysicsContentCard = ({doc, imageClassName, className}: IsaacCardProps) => {
     const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
     const classes = classNames(className + " menu-card", {"disabled": disabled, "isaac-card-vertical": verticalContent});
     const imgSrc = image?.src && apiHelper.determineImageUrl(image.src);
 
-    const link = (clickUrl && isAppLink(clickUrl)) ? <Link to={clickUrl} className={"stretched-link"} aria-label={title} aria-disabled={disabled}/> :
-        <a href={clickUrl} className={"stretched-link"} aria-label={title} aria-disabled={disabled}/>;
+    const link = (clickUrl && isAppLink(clickUrl)) ? <Link to={clickUrl} className="stretched-link" aria-label={title} aria-disabled={disabled}/> :
+        <a href={clickUrl} className="stretched-link" aria-label={title} aria-disabled={disabled}/>;
 
     return <Col className="d-flex h-100 justify-content-center">
         {verticalContent ?
             <Card className={classes}>
                 {image && <Row className={imageClassName}>
                     <Col className="justify-content-md-center">
-                        <img className={[classes, imageClassName].join(" ")} src={imgSrc} alt={image.altText}/>
+                        <img className={classNames(classes, imageClassName)} src={imgSrc} alt={image.altText}/>
                     </Col>
                 </Row>}
                 <CardTitle className="px-3">
@@ -58,11 +58,11 @@ const PhysicsContentCard = ({doc, imageClassName, className, ...rest}: IsaacCard
     </Col>;
 };
 
-const AdaContentCard = ({doc, imageClassName, ...rest}: IsaacCardProps) => {
-    const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
+const AdaContentCard = ({doc, ...rest}: IsaacCardProps) => {
+    const {title, subtitle, image, clickUrl, disabled} = doc;
     const imageSrc = image?.src && apiHelper.determineImageUrl(image.src);
     
-    return <AdaCard card={{
+    return <AdaCard className="px-3 my-3" card={{
         title: title ?? "",
         image: {src: imageSrc ?? "", altText: image?.altText},
         bodyText: subtitle ?? "",
