@@ -147,6 +147,11 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
         </p>;
 };
 
+export const SsoHelpLink = () => 
+    <Link className="justify-content-end d-flex" to="/pages/single_sign_on" target='_blank'>
+        Learn more about Sigle Sign-On
+    </Link>;
+
 interface EmailPasswordInputsProps {
     setEmail: (email: string) => void;
     setPassword: (pass: string) => void;
@@ -300,16 +305,14 @@ export const LogIn = () => {
                                             <GoogleSignInButton/>
                                         </Col>
                                     </Row>
-                                    {isPhy && <Row className="mb-3 justify-content-center">
+                                    {isPhy && <Row className="mb-2 justify-content-center">
                                         <Col sm={9}>
                                             <MicrosoftSignInButton/>
                                         </Col>
                                     </Row>}
                                     {isPhy && <Row className="mb-2">
-                                        <Col className="justify-content-end d-flex">
-                                            <Link to="/pages/single-sign-on" target='_blank'>
-                                                Learn more about Sigle Sign-On
-                                            </Link>
+                                        <Col>
+                                            <SsoHelpLink />
                                         </Col>
                                     </Row>}
                                 </React.Fragment>
