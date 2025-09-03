@@ -48,7 +48,7 @@ const StatCard = ({ title, icon, counterProps }: StatCardProps) => {
 export const IsaacStats = () => {
     return <Container>
         <TitleAndBreadcrumb
-            currentPageTitle="Isaac Stats"
+            currentPageTitle="Isaac 11th birthday stats"
             icon={{"type": "hex", "icon": "icon-progress"}}
         />
         <PageMetadata title={<>Happy <span className="text-brand">11th</span> birthday to Isaac Science!</>} />
