@@ -18,7 +18,6 @@ import {
     tags,
     useNavigation,
     isDefined,
-    HUMAN_STAGES,
     stageLabelMap,
     difficultyShortLabelMap
 } from "../../services";
@@ -118,6 +117,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                         <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/>
                     </Col>
                 </MetadataContainer>
+                {/* One-line version of the question metadata, only used for printing */}
                 <div className="only-print">
                     <div className="d-flex my-2">
                         <span className="me-2 fw-bold">Topic:</span>
@@ -142,7 +142,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
             </>;
 
             return <GameboardContext.Provider value={navigation.currentGameboard}>
-                <Container className={classNames("no-shadow")} data-bs-theme={pageContext?.subject ?? doc.subjectId}>
+                <Container className="no-shadow" data-bs-theme={pageContext?.subject ?? doc.subjectId}>
                     <TitleAndBreadcrumb
                         currentPageTitle={generateQuestionTitle(doc)}
                         displayTitleOverride={siteSpecific("Question", undefined)}
