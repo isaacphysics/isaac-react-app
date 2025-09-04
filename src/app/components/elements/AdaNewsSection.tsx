@@ -1,9 +1,10 @@
 import React from "react";
-import { Row, Button } from "reactstrap";
+import { Row, Button, Container } from "reactstrap";
 import { IsaacPodDTO } from "../../../IsaacApiTypes";
 import { useDeviceSize } from "../../services";
 import { IconCard } from "./cards/IconCard";
 import { NewsCard } from "./cards/NewsCard";
+import classNames from "classnames";
 
 interface AdaNewsSectionProps {
     news?: IsaacPodDTO[];
@@ -14,7 +15,7 @@ interface AdaNewsSectionProps {
 
 export const AdaNewsSection = ({news, showNewsletterPrompts, setLinkedSetting, isHomepage}: AdaNewsSectionProps) => {
     const deviceSize = useDeviceSize();
-    return <>
+    return <Container className={isHomepage ? "homepage-padding mw-1600" : "overview-padding mw-1600"}>
         <h2 className={isHomepage ? "font-size-1-75 mb-4" : ""}>Tips, tools & support</h2>
         {news && news.length > 0 &&
             <>
@@ -26,7 +27,7 @@ export const AdaNewsSection = ({news, showNewsletterPrompts, setLinkedSetting, i
                 </div>
             </>}
         {showNewsletterPrompts &&
-            <div className={"mt-7"}>
+            <Row xs={12} className={classNames({"pt-4": !isHomepage}, "mt-7")}>
                 <IconCard
                     card={{
                         title: "Stay updated",
@@ -38,8 +39,8 @@ export const AdaNewsSection = ({news, showNewsletterPrompts, setLinkedSetting, i
                         className: isHomepage ? "bg-cultured-grey px-0" : "px-0"
                     }}
                 />
-            </div>
+            </Row>
         }
-    </>;
+    </Container>;
 };
     

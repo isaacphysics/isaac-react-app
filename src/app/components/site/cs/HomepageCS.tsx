@@ -197,9 +197,7 @@ export const HomepageCS = () => {
             </section>
 
             {((news && news.length > 0) || showNewsletterPrompts) && <section id="news" className="bg-white">
-                <Container className={"homepage-padding mw-1600"}>
-                    <AdaNewsSection news={news} showNewsletterPrompts={showNewsletterPrompts} setLinkedSetting={setLinkedSetting} isHomepage />
-                </Container>
+                <AdaNewsSection news={news} showNewsletterPrompts={showNewsletterPrompts} setLinkedSetting={setLinkedSetting} isHomepage />
             </section>}
         </div>
     </>;

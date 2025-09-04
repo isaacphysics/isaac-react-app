@@ -90,9 +90,7 @@ export const Overview = () => {
         </section>
 
         <section id="news">
-            <Container className="overview-padding mw-1600">
-                <AdaNewsSection news={news} showNewsletterPrompts={showNewsletterPrompts} setLinkedSetting={setLinkedSetting} />
-            </Container>
+            <AdaNewsSection news={news} showNewsletterPrompts={showNewsletterPrompts} setLinkedSetting={setLinkedSetting} />
         </section>
     </div>;
 };
