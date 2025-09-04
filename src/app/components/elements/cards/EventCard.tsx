@@ -77,11 +77,11 @@ const AdaEventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolea
         className: classnames({'disabled text-muted': hasExpired || isCancelled}),
     }} className="h-100">
         <div>
-            {userBookingStatus === "CONFIRMED" && <>{" "}<Badge color={siteSpecific("success", "perfect")} outline>Booked</Badge></>}
-            {userBookingStatus === "WAITING_LIST" && <>{" "}<Badge color={siteSpecific("warning", "in-progress")} outline>On waiting list</Badge></>}
-            {userBookingStatus === "RESERVED" && <>{" "}<Badge color={siteSpecific("warning", "in-progress")} outline>Reserved</Badge></>}
+            {userBookingStatus === "CONFIRMED" && <>{" "}<Badge color="perfect" outline>Booked</Badge></>}
+            {userBookingStatus === "WAITING_LIST" && <>{" "}<Badge color="in-progress" outline>On waiting list</Badge></>}
+            {userBookingStatus === "RESERVED" && <>{" "}<Badge color="in-progress" outline>Reserved</Badge></>}
             {isCancelled
-                ? <>{" "}<Badge color={siteSpecific("danger", "failed")}>Cancelled</Badge></>
+                ? <>{" "}<Badge color="failed">Cancelled</Badge></>
                 : eventStatus !== "WAITING_LIST_ONLY" && numberOfPlaces == 0 && <>{" "}<Badge>Full</Badge></>
             }
         </div>

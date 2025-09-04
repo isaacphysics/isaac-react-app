@@ -34,30 +34,18 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const filteredViews = filterAudienceViewsByProperties(viewsToUse, AUDIENCE_DISPLAY_FIELDS);
     const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
 
-    return siteSpecific(
-        <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
-            {filteredViews.map((view, i) => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classNames("d-flex d-sm-block", {"ms-sm-2": i > 0})}>
-                {view.stage && view.stage !== STAGE.ALL && <div className={classNames("text-center align-self-center", {"fw-regular": isAda})}>
-                    {stageLabelMap[view.stage]}
+    return <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
+        {/* Show all stage/difficulty combinations for Phy, but just the first difficulty for Ada */}
+        {siteSpecific(filteredViews, [{difficulty: difficulties[0], stage: undefined}]).map((view, i) => {
+            return <div key={`${view.difficulty} ${view.stage}`} className={classNames("d-flex d-sm-block", {"ms-sm-2": i > 0})}>
+                <div className={classNames("text-center align-self-center", {"fw-regular": isAda})}>
+                    {siteSpecific(view.stage && stageLabelMap[view.stage], view.difficulty && simpleDifficultyLabelMap[view.difficulty])}
+                </div>
+                {view.difficulty && <div className="ms-2 ms-sm-0 text-center">
+                    <DifficultyIcons difficulty={view.difficulty}/>
                 </div>}
-                {view.difficulty && <div className={"ms-2 ms-sm-0 text-center"}>
-                    <DifficultyIcons difficulty={view.difficulty} />
-                </div>}
-            </div>)}
-        </div>,
-        <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
-            <div key={`${difficulties[0]}`} className="d-flex d-sm-block">
-                {difficulties.length > 0 && <>
-                    <div className={classNames("text-center align-self-center", {"fw-regular": isAda})}>
-                        {simpleDifficultyLabelMap[difficulties[0]]}
-                    </div>
-                    <div className={"ms-2 ms-sm-0 text-center"}>
-                        <DifficultyIcons difficulty={difficulties[0]} />
-                    </div>
-                </>}
-            </div>
-        </div>
-    );
+            </div>})}
+    </div>;
 }
 
 interface IconPlaceholderProps extends React.HTMLAttributes<HTMLDivElement> {

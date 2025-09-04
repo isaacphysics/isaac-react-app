@@ -4,7 +4,7 @@ import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history, ifKeyIsEnter, isDefined, siteSpecific} from "../../services";
+import {history, ifKeyIsEnter, isAda, isDefined, siteSpecific} from "../../services";
 import fromPairs from "lodash/fromPairs";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
@@ -131,11 +131,12 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
             "teacher": "Got a question about Ada Computer Science? Read our teacher FAQs. Get GCSE and A level support today!",
         });
 
-    const SupportPhy = <Container>
+    return <Container>
         <TitleAndBreadcrumb 
-            currentPageTitle={type[0].toUpperCase() + type.slice(1) + " FAQs"}
+            currentPageTitle={siteSpecific(type[0].toUpperCase() + type.slice(1) + " FAQs", section.title)}
             icon={{type: "hex", icon: "icon-finder"}}
         />  {/* TODO replace this icon */}
+        {isAda && isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
         <SidebarLayout>
             <FAQSidebar hideButton>
                 {Object.values(section.categories).map((category, index) => 
@@ -146,37 +147,26 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
                 )}
             </FAQSidebar>
             <MainContent>
-                <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title} showSidebarButton sidebarButtonText="Select a topic"/>
-                <TabContent activeTab={categoryIndex}>
-                    {Object.values(section.categories).map((category, index) => 
-                        <TabPane key={index} tabId={index}>
-                            <PageFragment fragmentId={`support_${type}_${category.category}`} />
-                        </TabPane>
-                    )}
-                </TabContent>
+                {siteSpecific(
+                    <>
+                        <PageMetadata title={Object.values(section.categories)[categoryIndex]?.title} showSidebarButton sidebarButtonText="Select a topic"/>
+                        <TabContent activeTab={categoryIndex}>
+                            {Object.values(section.categories).map((category, index) => 
+                                <TabPane key={index} tabId={index}>
+                                    <PageFragment fragmentId={`support_${type}_${category.category}`} />
+                                </TabPane>
+                            )}
+                        </TabContent>
+                    </>,
+                    <Tabs className="pt-4 pb-7" activeTabOverride={categoryIndex} onActiveTabChange={activeTabChanged} tabContentClass="pt-4">
+                        {fromPairs(Object.values(section.categories).map((category, index) => {
+                            return [category.title, <PageFragment key={index} fragmentId={`support_${type}_${category.category}`} />];
+                        }))}
+                    </Tabs>
+                )}
             </MainContent>
         </SidebarLayout>
     </Container>;
-
-    const SupportAda = <Container>
-        <Row>
-            <Col>
-                <TitleAndBreadcrumb currentPageTitle={section.title} />
-                {isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
-            </Col>
-        </Row>
-        <Row>
-            <Col className="pt-4 pb-7">
-                <Tabs activeTabOverride={categoryIndex} onActiveTabChange={activeTabChanged} tabContentClass="pt-4">
-                    {fromPairs(Object.values(section.categories).map((category, index) => {
-                        return [category.title, <PageFragment key={index} fragmentId={`support_${type}_${category.category}`} />];
-                    }))}
-                </Tabs>
-            </Col>
-        </Row>
-    </Container>;
-
-    return siteSpecific(SupportPhy, SupportAda);
 };
 
 export const Support = withRouter(SupportPageComponent);

@@ -18,7 +18,6 @@ import {
     BoardLimit,
     BoardViews,
     isAda,
-    isMobile,
     isTutorOrAbove, 
     siteSpecific,
     useGameboards} from "../../services";

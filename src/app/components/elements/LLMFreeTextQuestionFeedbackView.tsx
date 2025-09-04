@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from 'react';
 
 import {LLMFreeTextQuestionValidationResponseDTO} from "../../../IsaacApiTypes";
 import {Button, Table} from "reactstrap";
-import {siteSpecific} from "../../services/siteConstants";
 import {Immutable} from "immer";
 import {Link} from 'react-router-dom';
 import {StyledCheckbox} from './inputs/StyledCheckbox';
@@ -43,7 +42,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
             <Table size='sm' className="mb-0" bordered={false}>
                 <thead>
                     <tr>
-                        <th>{siteSpecific("Mark Scheme", "Mark scheme")}</th>
+                        <th>Mark scheme</th>
                         <th><span className='visually-hidden'>Predicted correct</span></th>
                     </tr>
                 </thead>
