@@ -31,9 +31,9 @@ export const AdaNewsSection = ({news, showNewsletterPrompts, setLinkedSetting, i
                     card={{
                         title: "Stay updated",
                         icon: {src: "/assets/cs/icons/mail.svg"},
-                        bodyText: "Update your preferences and be the first to hear about new features, challenges, topics, and improvements on the platform.",
+                        bodyText: "Get fresh teaching ideas, student study tips, and development news about our tools and resources delivered straight to your inbox.",
                         clickUrl: "/account#notifications",
-                        buttonText: "Join our newsletter",
+                        buttonText: "Get tips and updates",
                         onButtonClick: () => {setLinkedSetting("news-preference");},
                         className: isHomepage ? "bg-cultured-grey px-0" : "px-0"
                     }}
