@@ -116,9 +116,9 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
             <MainContent>
                 <PageMetadata noTitle showSidebarButton helpModalId="help_modal_my_assignments">
                     <PageFragment fragmentId={siteSpecific(
-                        `help_toptext_assignments_${isTutorOrAbove(user) ? "teacher" : "student"}`,
-                        `assignmnents_help_${isTutorOrAbove(user) ? "teacher" : "student"}`)
-                    } ifNotFound={<div className="mt-7"/>} />
+                        isTutorOrAbove(user) ? "help_toptext_assignments_teacher" : "help_toptext_assignments_student",
+                        isTutorOrAbove(user) ? "assignments_help_teacher" : "assignments_help_student"
+                    )} ifNotFound={<div className="mt-7"/>} />
                 </PageMetadata>
                 <div className={classNames({"my-assignments-card card": isAda})}>
                     <div className={classNames({"pt-2 card-body": isAda})}>
