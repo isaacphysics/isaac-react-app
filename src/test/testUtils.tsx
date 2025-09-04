@@ -5,7 +5,7 @@ import {http, HttpResponse, HttpHandler} from "msw";
 import {ACCOUNT_TAB, ACCOUNT_TABS, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
 import {produce} from "immer";
 import {mockUser} from "../mocks/data";
-import {isaacApi, requestCurrentUser, store} from "../app/state";
+import {isaacApi, removeToast, requestCurrentUser, store} from "../app/state";
 import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
@@ -52,6 +52,7 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
     store.dispatch(isaacApi.util.resetApiState());
+    store.getState().toasts?.forEach(toast => toast.id && store.dispatch(removeToast(toast.id)));
     server.resetHandlers();
     if (role || modifyUser) {
         server.use(
@@ -177,7 +178,7 @@ export const expectUrl = (text: string) => waitFor(() => {
     expect(history.location.pathname).toBe(text);
 });
 
-export const expectUrlParams = (text: string) => waitFor(() => {
+export const expectUrlParams = (text: SearchString | '') => waitFor(() => {
     expect(history.location.search).toBe(text);
 });
 
@@ -203,7 +204,8 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
 };
 
 export type PathString = `/${string}`;
-export const setUrl = async (location: { pathname: PathString, search?: string}) => {
+export type SearchString = `?${string}`;
+export const setUrl = async (location: { pathname: PathString, search?: SearchString}) => {
     if (location.pathname.includes('?')) {
         throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
     }

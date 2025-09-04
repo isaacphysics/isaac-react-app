@@ -177,7 +177,7 @@ export const HomepagePhy = () => {
 
     return <>
         <div id="homepage" className="homepage pb-7">
-            <section id="dashboard">
+            <section id="dashboard" aria-label="Dashboard">
                 {isLoggedIn(user) && (isTutorOrAbove(user)
                     ? <TeacherDashboard assignmentsSetByMe={assignmentsSetByMe} quizzesSetByMe={isTutor(user) ? [] : quizzesSetByMe} groups={groups} myAssignments={myAssignments}
                         myQuizAssignments={myQuizAssignments} streakRecord={streakRecord} dashboardView={dashboardView} setDashboardView={setDashboardView} />

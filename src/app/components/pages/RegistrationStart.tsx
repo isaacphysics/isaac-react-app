@@ -6,6 +6,7 @@ import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
 import { MicrosoftSignInButton } from "../elements/MicrosoftSignInButton";
+import { SsoHelpLink } from "./LogIn";
 
 export const RegistrationStart = () => {
 
@@ -43,9 +44,10 @@ export const RegistrationStart = () => {
                                         <RaspberryPiSignInButton />
                                     </div>}
                                     <GoogleSignInButton />
-                                    {isPhy && <div className="mt-2">
+                                    {isPhy && <div className="mt-2 mb-2">
                                         <MicrosoftSignInButton />
                                     </div>}
+                                    {isPhy && <SsoHelpLink />}
                                 </div>
                                 {siteSpecific(<div className="section-divider"/>, <hr/>)}
                                 <div className="mt-7">
