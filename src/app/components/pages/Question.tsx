@@ -87,6 +87,60 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
             const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
             const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
+            const QuestionMetaData = () => <>
+                <MetadataContainer className="d-flex row no-print">
+                    <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
+                        <span>Subject & topics</span>
+                        <div className="d-flex align-items-center">
+                            <i className="icon icon-hexagon me-2"/>
+                            {getTags(doc.tags).map((tag, index, arr) => <>
+                                <span key={tag.title} className="text-theme">{tag.title}</span>
+                                {index !== arr.length - 1 && <span className="mx-2">|</span>}
+                            </>)}
+                        </div>
+                    </Col>
+                    <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0">
+                        <span>Status</span>
+                        {allQuestionsCorrect
+                            ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-correct me-2"/> Correct</div>
+                            : allQuestionsAttempted
+                                // uncomment the lines below if reusing this logic elsewhere!
+                                // ? isPhy
+                                ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-attempted me-2"/> All attempted (some errors)</div>
+                                // : <div className="d-flex align-items-center"><span className="icon icon-raw icon-incorrect me-2"/> Incorrect</div>
+                                : anyQuestionAttempted
+                                    ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-in-progress me-2"/> In progress</div>
+                                    : <div className="d-flex align-items-center"><span className="icon icon-raw icon-not-started me-2"/> Not started</div>
+                        }
+                    </Col>
+                    <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0 pb-sm-0">
+                        <span>Stage & difficulty</span>
+                        <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/>
+                    </Col>
+                </MetadataContainer>
+                <div className="only-print">
+                    <div className="d-flex my-2">
+                        <span className="me-2 fw-bold">Topic:</span>
+                        <div>
+                            {getTags(doc.tags).map((tag, index, arr) => <>
+                                <span key={tag.title}> {tag.title} </span>
+                                {index !== arr.length - 1 && <span className="mx-1">|</span>}
+                            </>)}
+                        </div>
+                        <span className="ms-3 me-2 fw-bold">Status:</span>
+                        {allQuestionsCorrect ? "Correct" : allQuestionsAttempted ? "All attempted" : anyQuestionAttempted ? "In progress" : "Not started"}
+                        <span className="ms-3 me-2 fw-bold">Stage & difficulty:</span>
+                        <div>
+                            {determineAudienceViews(doc.audience, navigation.creationContext).map(((view, i, arr) => 
+                                view.stage && view.difficulty && <span key={`${view.stage} ${view.difficulty}`}>
+                                    {stageLabelMap[view.stage]} {difficultyShortLabelMap[view.difficulty]}
+                                    {i !== arr.length - 1 && <span className="me-1">,</span>}
+                                </span>))}
+                        </div>
+                    </div>
+                </div>
+            </>;
+
             return <GameboardContext.Provider value={navigation.currentGameboard}>
                 <Container className={classNames("no-shadow")} data-bs-theme={pageContext?.subject ?? doc.subjectId}>
                     <TitleAndBreadcrumb
@@ -106,63 +160,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                             {!preview && <CanonicalHrefElement />}
 
                             <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
-                                {isPhy && <>
-                                    <MetadataContainer className="d-flex row no-print">
-                                        <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
-                                            <span>Subject & topics</span>
-                                            <div className="d-flex align-items-center">
-                                                <i className="icon icon-hexagon me-2"/>
-                                                {getTags(doc.tags).map((tag, index, arr) => <>
-                                                    <span key={tag.title} className="text-theme">{tag.title}</span>
-                                                    {index !== arr.length - 1 && <span className="mx-2">|</span>}
-                                                </>)}
-                                            </div>
-                                        </Col>
-                                        <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0">
-                                            <span>Status</span>
-                                            {allQuestionsCorrect
-                                                ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-correct me-2"/> Correct</div>
-                                                : allQuestionsAttempted
-                                                    // uncomment the lines below if reusing this logic elsewhere!
-                                                    // ? isPhy
-                                                    ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-attempted me-2"/> All attempted (some errors)</div>
-                                                    // : <div className="d-flex align-items-center"><span className="icon icon-raw icon-incorrect me-2"/> Incorrect</div>
-                                                    : anyQuestionAttempted
-                                                        ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-in-progress me-2"/> In progress</div>
-                                                        : <div className="d-flex align-items-center"><span className="icon icon-raw icon-not-started me-2"/> Not started</div>
-                                            }
-                                        </Col>
-                                        <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0 pb-sm-0">
-                                            <span>Stage & difficulty</span>
-                                            <StageAndDifficultySummaryIcons audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)} iconClassName="ps-2" stack/>
-                                        </Col>
-                                    </MetadataContainer>
-                                    <div className="only-print">
-                                        <div className="d-flex my-2">
-                                            <span className="me-2"><strong>Topic:</strong></span>
-                                            <div>
-                                                {getTags(doc.tags).map((tag, index, arr) => <>
-                                                    <span key={tag.title}> {tag.title} </span>
-                                                    {index !== arr.length - 1 && <span className="mx-1">|</span>}
-                                                </>)}
-                                            </div>
-                                            <span className="ms-3 me-2"><strong>Status:</strong></span>
-                                            <div>
-                                                {allQuestionsCorrect ? "Correct" : 
-                                                    allQuestionsAttempted ? "All attempted" : 
-                                                        anyQuestionAttempted ? "In progress" : "Not started"}
-                                            </div>
-                                            <span className="ms-3 me-2"><strong>Stage & difficulty:</strong></span>
-                                            <div className="d-flex">
-                                                {determineAudienceViews(doc.audience, navigation.creationContext).map(((view, i, arr) => view.stage && view.difficulty && <div key={`${view.stage} ${view.difficulty}`}>
-                                                    {stageLabelMap[view.stage]} {difficultyShortLabelMap[view.difficulty]}
-                                                    {i !== arr.length - 1 && <span className="me-1">,</span>}
-                                                </div>))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </>
-                                }
+                                {isPhy && <QuestionMetaData/>}
                             </PageMetadata>
 
                             {isAda && pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
