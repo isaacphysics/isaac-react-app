@@ -2,19 +2,18 @@ import React, {useEffect} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, Col, Container, Row} from "reactstrap";
-import {isLoggedIn, isTeacherOrAbove, SITE_TITLE, useDeviceSize} from "../../../services";
-import {NewsCard} from "../../elements/cards/NewsCard";
+import {isLoggedIn, isTeacherOrAbove, SITE_TITLE} from "../../../services";
 import {MetaDescription} from "../../elements/MetaDescription";
 import { ImageBlock } from "../../elements/layout/ImageBlock";
 import { IconCard } from "../../elements/cards/IconCard";
 import { TextBlock } from "../../elements/layout/TextBlock";
 import { ColumnSlice } from "../../elements/layout/ColumnSlice";
 import {useLinkableSetting} from "../../../services/linkableSetting";
+import { AdaNewsSection } from "../../elements/AdaNewsSection";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
-    const deviceSize = useDeviceSize();
     const {setLinkedSetting} = useLinkableSetting();
     const userPreferences = useAppSelector(selectors.user.preferences);
     const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
@@ -199,31 +198,7 @@ export const HomepageCS = () => {
 
             {((news && news.length > 0) || showNewsletterPrompts) && <section id="news" className="bg-white">
                 <Container className={"homepage-padding mw-1600"}>
-                    <h2 className={"font-size-1-75 mb-4"}>News and updates</h2>
-                    {news && news.length > 0 &&
-                        <>
-                            <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around mt-3 mb-1">
-                                {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n} showTitle cardClassName="bg-cultured-grey" />)}
-                            </Row>
-                            <div className={"mt-4 mt-lg-5 w-100 text-center"}>
-                                <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
-                            </div>
-                        </>}
-                    {showNewsletterPrompts &&
-                        <div className={"mt-7"}>
-                            <IconCard
-                                card={{
-                                    title: "Stay updated",
-                                    icon: {src: "/assets/cs/icons/mail.svg"},
-                                    bodyText: "Update your preferences and be the first to hear about new features, challenges, topics, and improvements on the platform.",
-                                    clickUrl: "/account#notifications",
-                                    buttonText: "Join our newsletter",
-                                    onButtonClick: () => {setLinkedSetting("news-preference");},
-                                    className: "bg-cultured-grey px-0"
-                                }}
-                            />
-                        </div>
-                    }
+                    <AdaNewsSection news={news} showNewsletterPrompts={showNewsletterPrompts} setLinkedSetting={setLinkedSetting} isHomepage />
                 </Container>
             </section>}
         </div>
