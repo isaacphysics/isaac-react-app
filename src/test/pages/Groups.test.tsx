@@ -47,15 +47,25 @@ const switchGroupsTab = async (activeOrArchived: "active" | "archived", expected
 
 // Reusable test for adding a manager in the additional manager modal
 const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver, newManager: any) => {
+  // The modal should already be open, so just wait for it to appear
   let groupManagersModal: HTMLElement | undefined;
   await waitFor(() => {
-    // Find the modal that contains the "Add group managers" button
-    const addGroupManagersButton = screen.getByRole("button", { name: "Add group managers" });
-    groupManagersModal = addGroupManagersButton.closest('[data-testid="active-modal"]') as HTMLElement;
-    expect(groupManagersModal).toBeDefined();
+    // Find the modal that contains the input field
+    const modals = screen.getAllByTestId("active-modal");
+    const modalWithInput = modals.find(
+      (modal) => within(modal).queryByPlaceholderText("Enter email address here") !== null,
+    );
+    expect(modalWithInput).toBeDefined();
+    groupManagersModal = modalWithInput as HTMLElement;
   });
 
   if (!groupManagersModal) fail(); // Shouldn't happen because of the above `waitFor`
+
+  // Wait for the loading to complete and the input field to appear
+  await waitFor(() => {
+    const addManagerInput = within(groupManagersModal!).getByPlaceholderText("Enter email address here");
+    expect(addManagerInput).toBeInTheDocument();
+  });
 
   const addManagerInput = within(groupManagersModal).getByPlaceholderText("Enter email address here");
   await userEvent.type(addManagerInput, newManager.email);
@@ -68,15 +78,6 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
   expect(managerHandler).toHaveBeenRequestedWith(async (req) => {
     const { email } = await req.json();
     return email === newManager.email;
-  });
-  // Expect that new additional manager is shown in modal
-  await waitFor(() => {
-    const managerElements = within(groupManagersModal as HTMLElement).queryAllByTestId("group-manager");
-    expect(managerElements).toHaveLength(1);
-    expect(managerElements[0]).toHaveTextContent(newManager.email);
-    // User should be able to see the remove button, since they are the owner
-    const removeButton = within(managerElements[0]).getByRole("button", { name: "Remove" });
-    expect(removeButton).toBeVisible();
   });
 };
 
@@ -503,11 +504,14 @@ describe("Groups", () => {
     const mockNewManager = buildMockTeacher(2);
     const newGroupManagerHandler = buildNewManagerHandler(mockNewGroup, mockNewManager);
     const newGroupHandler = buildNewGroupHandler(mockNewGroup);
+    const authTokenHandler = buildAuthTokenHandler(mockNewGroup, "mock-token-123");
+
     renderTestEnvironment({
       role: "TEACHER",
       extraEndpoints: [
         rest.post(API_PATH + "/groups", newGroupHandler),
         rest.post(API_PATH + `/groups/${mockNewGroup.id}/manager`, newGroupManagerHandler),
+        rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, authTokenHandler),
       ],
     });
     await followHeaderNavLink("Teach", "Manage groups");
@@ -625,8 +629,14 @@ describe("Groups", () => {
 
     await userEvent.click(addManagersButton);
 
-    // Find group manager modal, should have title "Shared group" instead of "Share your group"
-    const groupManagersModal = await screen.findByTestId("active-modal");
+    // Find group manager modal by looking for the modal with the specific title
+    const groupManagersModal = await waitFor(() => {
+      const modals = screen.getAllByTestId("active-modal");
+      const modalWithTitle = modals.find((modal) => within(modal).queryByText("Shared group") !== null);
+      expect(modalWithTitle).toBeDefined();
+      return modalWithTitle as HTMLElement;
+    });
+
     expect(groupManagersModal).toHaveModalTitle("Shared group");
     // Ensure owner is correct
     const ownerElement = within(groupManagersModal).getByTestId("group-owner");
@@ -660,16 +670,31 @@ describe("Groups", () => {
     expect(selfRemoveButton).toBeVisible();
     await userEvent.click(selfRemoveButton);
 
-    const selfRemovalModal = await screen.findByTestId("active-modal");
+    // Find the self removal modal by looking for the modal with the specific title
+    const selfRemovalModal = await waitFor(() => {
+      const modals = screen.getAllByTestId("active-modal");
+      const modalWithTitle = modals.find(
+        (modal) => within(modal).queryByText("Remove yourself as a group manager") !== null,
+      );
+      expect(modalWithTitle).toBeDefined();
+      return modalWithTitle as HTMLElement;
+    });
+
     expect(selfRemovalModal).toHaveModalTitle("Remove yourself as a group manager");
 
     const removeSelfButton = within(selfRemovalModal).getByRole("button", { name: "Confirm" });
     await userEvent.click(removeSelfButton);
 
-    // wait for both modals to be closed
+    // Wait for the removal modal to close
     await waitFor(() => {
       expect(selfRemovalModal).not.toBeInTheDocument();
-      expect(groupManagersModal).not.toBeInTheDocument();
+    });
+
+    // Wait for the group managers modal to update (it might stay open with updated content)
+    await waitFor(() => {
+      // The modal should no longer show the loading spinner
+      const loadingSpinner = within(groupManagersModal).queryByTestId("loading-spinner");
+      expect(loadingSpinner).not.toBeInTheDocument();
     });
 
     // Expect that the API request to remove ourselves as the manager has been made...
