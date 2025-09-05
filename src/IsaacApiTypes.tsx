@@ -143,6 +143,7 @@ export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacLLMFreeTextQuestionDTO extends QuestionDTO {
+    maxMarks?: number;
 }
 
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
