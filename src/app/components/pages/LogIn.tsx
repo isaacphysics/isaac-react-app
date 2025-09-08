@@ -149,7 +149,7 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
 
 export const SsoHelpLink = () => 
     <Link className="justify-content-end d-flex" to="/pages/single_sign_on" target='_blank'>
-        Learn more about Sigle Sign-On
+        Learn more about Single Sign-On
     </Link>;
 
 interface EmailPasswordInputsProps {
