@@ -112,9 +112,7 @@ const QuestionMetaData = (props: QuestionMetaDataProps) => {
                         {index !== arr.length - 1 && <span className="mx-1">|</span>}
                     </>)}
                 </div>
-                <span className="ms-3 me-2 fw-bold">Status:</span>
-                {allQuestionsCorrect ? "Correct" : allQuestionsAttempted ? "All attempted" : anyQuestionAttempted ? "In progress" : "Not started"}
-                <span className="ms-3 me-2 fw-bold">Stage & difficulty:</span>
+                <span className="ms-5 me-2 fw-bold">Stage & difficulty:</span>
                 <div>
                     {audienceViews.map(((view, i, arr) => 
                         view.stage && view.difficulty && <span key={`${view.stage} ${view.difficulty}`}>
