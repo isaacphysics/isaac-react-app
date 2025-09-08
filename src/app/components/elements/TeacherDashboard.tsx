@@ -46,10 +46,10 @@ interface AssignmentsPanelProps {
 const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProps) => {
     const user = useAppSelector(selectors.user.orNull);
     
-    const upcomingAssignments = assignments?.filter(a => !isOverdue(a)); // Filter out past assignments
+    const upcomingAssignments = assignments?.filter(a => a.dueDate && !isOverdue(a) ); // Filter out past assignments
     const sortedAssignments = upcomingAssignments ? sortUpcomingAssignments(upcomingAssignments) : [];
 
-    const upcomingQuizAssignments = quizzes?.filter(a => !isOverdue(a)); // Filter out past quizzes
+    const upcomingQuizAssignments = quizzes?.filter(a => a.dueDate && !isOverdue(a)); // Filter out past quizzes
     const sortedQuizAssignments = upcomingQuizAssignments ? sortUpcomingAssignments(upcomingQuizAssignments) : [];
 
     // Get the 3 most urgent due dates from assignments & quizzes combined
