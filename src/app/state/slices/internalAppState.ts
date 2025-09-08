@@ -12,11 +12,19 @@ export const printingSettingsSlice = createSlice({
     }
 });
 
+export type MainContentIdState = {id: string, priority: number};
 export const mainContentIdSlice = createSlice({
     name: "mainContentId",
-    initialState: null as string | null,
+    initialState: null as MainContentIdState | null,
     reducers: {
-        set: (state, action: PayloadAction<string>) => action.payload
+        set: (state, action: PayloadAction<MainContentIdState>) => (
+            // since various components which can exist simultaneously may want to set the main content ID,
+            // we use a priority system so that higher priority components consistently win.
+            state === null
+                ? action.payload
+                : action.payload.priority > state.priority ? action.payload : state
+        ),
+        clear: () => null
     },
     extraReducers: (builder) => {
         builder.addCase(
