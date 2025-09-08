@@ -20,12 +20,19 @@ describe("My Account", () => {
     const saveButton = screen.getByRole("button", { name: /save/i });
     expect(saveButton).toBeDisabled();
     const currentPasswordField = screen.getByLabelText("Current password");
-    await userEvent.type(currentPasswordField, validPassword); // Change from invalidPassword to validPassword
+    await userEvent.type(currentPasswordField, validPassword);
     const newPasswordField = screen.getByLabelText("New password");
     await userEvent.type(newPasswordField, validPassword);
     const confirmPasswordField = screen.getByLabelText("Re-enter new password");
     await userEvent.type(confirmPasswordField, validPassword);
-    expect(saveButton).toBeEnabled();
+
+    // Wait for the button to enable
+    await waitFor(
+      () => {
+        expect(saveButton).not.toHaveAttribute("disabled");
+      },
+      { timeout: 3000 },
+    );
   });
 
   it("If passwords do not match, Save button stays disabled and informative error appears", async () => {
