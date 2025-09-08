@@ -81,6 +81,6 @@ const ConsentMissingMicrosoft = () => <>
 </>;
 
 const SSOLink = ({ children }: { children: ReactNode}) =>
-    <Link to="/pages/single_sign_on" aria-label="Link to SSO documentation">{children}</Link>;
+    <Link to="/pages/single_sign_on" aria-label="Link to Single Sign-On documentation">{children}</Link>;
 
 const ContactUs = () => <Link to="/contact" aria-label="Link to contact form">contact us</Link>;
