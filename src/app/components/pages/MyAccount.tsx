@@ -260,7 +260,8 @@ const AccountPageComponent = ({
     contextsChanged ||
     userChanged ||
     otherPreferencesChanged ||
-    (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
+    (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences) ||
+    (activeTab === ACCOUNT_TAB.passwordreset && newPassword && newPasswordConfirm);
   useEffect(() => {
     if (accountInfoChanged && !saving) {
       return history.block(
