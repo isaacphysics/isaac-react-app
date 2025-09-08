@@ -120,7 +120,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                             <DropdownToggle color={siteSpecific("tertiary", "solid")} className={siteSpecific("border", "")} caret size={siteSpecific("lg", "sm")} disabled={isUpdatingQuiz}>
                                 {feedbackNames[quizAssignment.quizFeedbackMode as QuizFeedbackMode]}
                             </DropdownToggle>
-                            <DropdownMenu>
+                            <DropdownMenu container={"root"} className="z-1050">
                                 {QuizFeedbackModes.map(mode =>
                                     <DropdownItem key={mode}
                                         onClick={() => setFeedbackMode(mode)}

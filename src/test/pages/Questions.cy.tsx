@@ -10,7 +10,7 @@ it('Question types\' regression test page should have no visual regressions', ()
     cy.get('[data-testid="loading"]').should('not.exist');
 
     // open all accordions (that weren't already open)
-    cy.get('.accordion > button.accordion-header:not(.active)').each(($el) => {
+    cy.get('.isaac-accordion > button.accordion-header:not(.active)').each(($el) => {
         cy.wrap($el).scrollIntoView();
         cy.wrap($el).click();
     });

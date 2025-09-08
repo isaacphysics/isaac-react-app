@@ -59,7 +59,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
         </div>
         {showShareLink && showDuplicateAndEdit && <div className="duplicate-and-edit" style={{width: linkWidth}}>
             <a href={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboardId}`} className={isPhy ? "px-1" : ""}>
-                {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
+                Duplicate and edit
             </a>
         </div>}
         {siteSpecific(

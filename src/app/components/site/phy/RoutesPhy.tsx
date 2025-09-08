@@ -6,7 +6,6 @@ import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} f
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
 import {Concepts} from "../../pages/Concepts";
-import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
 import {QuizDoAssignment} from "../../pages/quizzes/QuizDoAssignment";
 import {QuizAttemptFeedback} from "../../pages/quizzes/QuizAttemptFeedback";
@@ -46,6 +45,7 @@ import {RevisionPage} from "../../pages/RevisionDetailPage";
 import {AnvilAppsListing} from "../../pages/AnvilAppsListing";
 import {AdaCSOverviewPage} from "../../pages/AdaCSOverviewPage";
 import {PhysicsSkills14} from "../../pages/books_old/physics_skills_14";
+import { IsaacStats } from "../../pages/IsaacBirthdayStats";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -183,6 +183,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
     <TrackedRoute key={key++} exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>,
     <TrackedRoute key={key++} exact path="/news" component={News} />,
+    <TrackedRoute key={key++} exact path="/isaac_11" component={IsaacStats} />,
 
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,

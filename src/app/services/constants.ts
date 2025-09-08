@@ -506,7 +506,7 @@ export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) 
     return acc;
 }, {} as {[stage in LEARNING_STAGE]: Exclude<SUBJECTS, SUBJECTS.CS>[]});
 
-type BookTag = "phys_book_step_into" | "phys_book_step_up" | "phys_book_gcse" | "physics_skills_19" | "solving_physics_problems" | "physics_linking_concepts" | "qmp" | "maths_book_gcse" | "maths_book_2e" | "maths_book" | "chemistry_16";
+type BookTag = "phys_book_step_into" | "phys_book_step_up" | "phys_book_gcse" | "physics_skills_14" | "physics_skills_19" | "solving_physics_problems" | "physics_linking_concepts" | "qmp" | "maths_book_gcse" | "maths_book_2e" | "maths_book" | "chemistry_16";
 export enum BookHiddenState {
     BOOKS_LISTING_ONLY = "books_listing_only",
     HIDDEN = "hidden"
@@ -556,6 +556,13 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
             description: "Covers core topics in A level, IB, and equivalent. Helps students practise applying the concepts of A-level Physics and apply them to solve numerical problems.",
         },
         {
+            title: "Essential Pre-University Physics (2nd Edition)", tag: "physics_skills_14",
+            shortTitle: "A Level Physics (2nd edition)", image: "/assets/phy/books/physics_skills_14.jpg",
+            path: "/books/physics_skills_14", subject: "physics", stages: ["a_level"],
+            description: "Covers core topics in A level, IB, and equivalent. Helps students practise applying the concepts of A-level Physics and apply them to solve numerical problems.",
+            hidden: BookHiddenState.HIDDEN,
+        },
+        {
             title: "Pre-University Mathematics for Sciences (2nd edition)", tag: "maths_book_2e",
             shortTitle: "Pre-Uni Maths (2nd edition)", image: "/assets/phy/books/2025_pre_uni_maths_2e.png",
             path: "/books/pre_uni_maths_2e", subject: "maths", stages: ["a_level", "university"],
@@ -565,6 +572,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
             title: "Pre-University Mathematics for Sciences (1st edition)", tag: "maths_book",
             shortTitle: "Pre-Uni Maths (1st edition)", image: "/assets/phy/books/pre_uni_maths.jpg",
             path: "/books/pre_uni_maths", subject: "maths", stages: ["a_level", "university"],
+            description: "Provides questions on mathematical topics that underpin all the sciences, as well as giving practice and fluency for Maths and Further Maths A-levels themselves.",
             hidden: BookHiddenState.HIDDEN,
         },
         {

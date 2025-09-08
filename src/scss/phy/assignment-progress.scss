@@ -62,8 +62,8 @@ $table-selected-border: 2px solid rgb(75, 157, 252);
     }
   }
 
-  thead th:first-child, tfoot th {
-    // this should only be enabled for sticky elements. almost all th are sticky, excepting the thead, so this is not entirely independent of the table structure
+  thead th, tfoot th, tfoot td {
+    // this be enabled for all sticky elements.
     background: $gray-103;
   }
 

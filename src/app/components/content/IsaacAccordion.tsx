@@ -174,7 +174,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
         return invertedStageIndices;
     }, [stageIndices]);
 
-    return <div className="isaac-accordion">
+    return <div className="isaac-accordion-container">
         {sections?.map((section, index) => {
             const intendedAudience = isIntendedAudience(section.audience, userContext, user);
             const audienceString = stringifyAudience(section.audience, userContext, intendedAudience);

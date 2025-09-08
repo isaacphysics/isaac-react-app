@@ -265,6 +265,8 @@ $dropdown-link-hover-bg: $color-neutral-50;
 $dropdown-link-active-bg: var(--subject-color-200, $color-neutral-200);
 $dropdown-link-active-color: inherit;
 
+$accordion-icon-width: 1.125rem;
+
 // Grid Customisation
 $container-max-widths: (
     xl: 100%,
@@ -427,6 +429,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "menu-page-phy";
 @import "quiz";
 @import "glossary";
+@import "stats";
 
 @import "expansion-layout";
 @import "../common/callout";

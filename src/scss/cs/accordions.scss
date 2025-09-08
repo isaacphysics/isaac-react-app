@@ -30,7 +30,7 @@
 
 // Isaac accordions only, not BS
 
-.accordion button.accordion-header {
+.isaac-accordion button.accordion-header {
   span, button, button:hover {
     color: black !important;
     &.stage-label-higher {
@@ -56,7 +56,7 @@ button.accordion-header {
   }
 }
 
-.accordion:not(:has(> .accordion-item)) {
+.isaac-accordion {
   background: $cs-white;
   border-top: 1px solid $cs-cultured;
 
@@ -76,7 +76,7 @@ button.accordion-header {
 
 // BS accordions only, not Isaac
 
-.accordion:has(> .accordion-item) {
+.accordion {
   .accordion-header:not(:has(> .collapsed)) {
     border-bottom: 1px solid $cs-light-gray;
   }

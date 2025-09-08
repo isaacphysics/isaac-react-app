@@ -1,5 +1,5 @@
 import React, { ComponentProps } from "react";
-import { isDefined, siteSpecific } from "../../services";
+import { isDefined } from "../../services";
 import { Spacer } from "./Spacer";
 import { NonUndefined } from "@reduxjs/toolkit/dist/query/tsHelpers";
 import classNames from "classnames";
