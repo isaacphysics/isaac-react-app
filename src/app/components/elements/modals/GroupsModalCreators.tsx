@@ -26,7 +26,7 @@ import {
     SITE_TITLE_SHORT,
     siteSpecific
 } from "../../../services";
-import {Row, Col, Form, Input, Table, Alert, Label, FormFeedback, FormGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown} from "reactstrap";
+import {Row, Col, Form, Input, Table, Alert, Label, FormFeedback, FormGroup, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {ActiveModal, AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
