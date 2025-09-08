@@ -314,10 +314,10 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                     {additionalManagers.map((manager, i) =>
                                         <tr key={manager.email} data-testid={"group-manager"} className={classNames({"border-0 bg-transparent": isAda})}>
                                             <td className={classNames("align-middle p-0", {"border-top-0": i === 0, "border-0 bg-transparent": isAda})}>
-                                                <div className="d-flex flex-fill">
+                                                <div className="d-flex flex-fill my-2">
                                                     {siteSpecific(
-                                                        <i className="icon icon-my-isaac me-2 d-none d-md-inline-block"/>,
-                                                        <span className="icon-group-table-person d-none d-md-inline-block"/>
+                                                        <i className="icon icon-my-isaac me-2"/>,
+                                                        <span className="icon-group-table-person"/>
                                                     )}
                                                     {manager.givenName} {manager.familyName} {manager.id === group.ownerId && "(group owner)"} {user.id === manager.id && "(you)"}
                                                 </div>
