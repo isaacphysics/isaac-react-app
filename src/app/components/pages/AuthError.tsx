@@ -59,10 +59,9 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
                 your password on the log-in page.
             </li>
             <li>
-                Once you&apos;ve regained access, you can set up this {provider} account for signing in to
-                Isaac. Hover on &quot;My Isaac&quot;, and select &quot;My account&quot;. Then, on the
-                &quot;Security&quot; tab, next to &quot;{provider}&quot;, select &quot;Link&quot;. <SSOLink>Read more
-                about signing in with {provider}.</SSOLink>  
+                Once you&apos;ve regained access, you can configure this {provider} account for signing in to
+                Isaac. On the <Link to="/account#security" aria-label="My Account link">My Account</Link> page, next
+                to &quot;{provider}&quot;, click &quot;Link&quot;. <SSOLink>Read more about signing in with {provider}.</SSOLink>  
             </li>
         </ul>
         <p>If you need more help signing in, <ContactUs/>.</p>
