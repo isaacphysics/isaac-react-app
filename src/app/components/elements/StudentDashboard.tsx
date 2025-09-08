@@ -154,7 +154,12 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>
         {toDo.length === 0 
-            ? <div className="mt-3 mt-lg-0 mt-xl-3 text-center">You have no active assignments.</div> 
+            ? <div className="mt-3 mt-lg-0 mt-xl-3 text-center">
+                <span className="mb-2 row d-flex justify-content-center">You have no active assignments.</span>
+                <Link to="/assignments" className="d-inline panel-link">
+                    View older assignments.
+                </Link>
+            </div> 
             : <>
                 <span className="mb-2">You have assignments that are active or due soon:</span>
                 <div className="row overflow-y-auto pt-1 mt-n1">
