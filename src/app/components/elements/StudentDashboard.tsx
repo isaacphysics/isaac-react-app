@@ -131,6 +131,7 @@ interface CurrentWorkPanelProps {
 }
 
 const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPanelProps) => {
+    const twoWeeksAgo = new Date(new Date().valueOf() - (2 * 7 * 24 * 60 * 60 * 1000));
 
     if (!isDefined(assignments) || !isDefined(quizAssignments)) {
         return <div className="dashboard-panel"/>;
@@ -138,11 +139,11 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
 
     const isComplete = (quiz: IAssignmentLike) => convertAssignmentToQuiz(quiz)?.status === QuizStatus.Complete;
 
-    // we can show overdue assignments, as students can still complete them; we cannot show overdue quizzes as you cannot take them after the due date
+    // We can show overdue assignments, as students can still complete them; we cannot show overdue quizzes as you cannot take them after the due date
     const sortedQuizAssignments = quizAssignments ? sortUpcomingAssignments(quizAssignments).filter(quiz => quiz.dueDate && !isOverdue(quiz) && !isComplete(quiz)) : [];
     
     // Any assignments without a due date are old enough that they should never be displayed here
-    const myAssignments = filterAssignmentsByStatus(assignments.filter(a => a.dueDate));
+    const myAssignments = filterAssignmentsByStatus(assignments.filter(a => a.dueDate && (a.dueDate > twoWeeksAgo)));
 
     // Get the 2 most urgent due dates from assignments & quizzes combined
     // To avoid merging & re-sorting entire lists, get the 2 most urgent from each list first
