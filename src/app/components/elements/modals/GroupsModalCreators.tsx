@@ -26,7 +26,7 @@ import {
     SITE_TITLE_SHORT,
     siteSpecific
 } from "../../../services";
-import {Row, Col, Form, Input, Table, Alert, Label, FormFeedback, FormGroup} from "reactstrap";
+import {Row, Col, Form, Input, Table, Alert, Label, FormFeedback, FormGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {ActiveModal, AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
@@ -36,6 +36,8 @@ import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {useDispatch} from "react-redux";
 import {ReadonlyClipboardInput} from "../inputs/ReadonlyClipboardInput";
+import { Spacer } from "../Spacer";
+import { StyledCheckbox } from "../inputs/StyledCheckbox";
 
 const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
@@ -249,41 +251,45 @@ Are you sure you want to promote this manager to group owner?\n
         {!(additionalManagers.length == 0 || (additionalManagers.length == 1 && user && additionalManagers[0].id == user.id)) &&
             <p>The users below have permission to manage this group.</p>}
 
-        <Table className="group-table">
-            <tbody>
-                {additionalManagers && additionalManagers.map(manager =>
-                    <tr key={manager.email} data-testid={"group-manager"}>
-                        <td className={"align-middle"}>
-                            <span className="icon-group-table-person" />{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})
-                        </td>
-                        {userIsOwner && <td className={"text-center"}>
-                            <Button className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
-                                Make owner
-                            </Button>
-                        </td>}
-                        {(userIsOwner || user?.id === manager.id) && <td className={"text-center"}>
-                            <Button className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "secondary")}
-                                onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}
-                            >
-                                Remove
-                            </Button>
-                        </td>}
-                    </tr>
-                )}
-            </tbody>
-        </Table>
+        <ul className="group-table p-0 mb-3">
+            {additionalManagers && additionalManagers.map(manager =>
+                <li key={manager.email} className="d-flex align-items-center py-2" data-testid={"group-manager"}>
+                    {siteSpecific(
+                        <i className="icon icon-my-isaac me-2" />,
+                        <span className="icon-group-table-person" />
+                    )}
+                    <span>{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})</span>
+                    <Spacer />
+                    {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
+                        Make owner
+                    </Button>}
+                    {(userIsOwner || user?.id === manager.id) && <Button className="d-none d-lg-inline ms-2" size="sm" color={siteSpecific("tertiary", "secondary")}
+                        onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}
+                    >
+                        Remove
+                    </Button>}
+
+                    <UncontrolledDropdown className="d-inline d-lg-none ms-2">
+                        <DropdownToggle caret className="d-flex align-items-center">
+                            Actions
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem onClick={() => promoteManager(manager)}>Make owner</DropdownItem>
+                            <DropdownItem onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}>Remove</DropdownItem>
+                        </DropdownMenu>
+                    </UncontrolledDropdown>
+                </li>
+            )}
+        </ul>
 
         {userIsOwner && <Alert className={classNames("px-2 py-2 mb-2", {"my-3": isAda})} color={group.additionalManagerPrivileges ? siteSpecific("danger", "info") : "warning"}>
-            <div>
-                <Input
-                    id="additional-manager-privileges-check"
-                    checked={group.additionalManagerPrivileges}
-                    className={classNames("mb-2", {"checkbox-bold": isAda})}
-                    type="checkbox"
-                    onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
-                />
-                <Label for="additional-manager-privileges-check" className="ms-2 mb-0">Give additional managers extra privileges</Label>
-            </div>
+            <StyledCheckbox
+                id="additional-manager-privileges-check"
+                checked={group.additionalManagerPrivileges}
+                className={classNames("mb-2", {"checkbox-bold": isAda})}
+                onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
+                label={<span>Give additional managers extra privileges</span>}
+            />
             {group.additionalManagerPrivileges
                 ? <>
                     <span className={"fw-bold"}>Caution</span>: All other group managers are allowed to:
