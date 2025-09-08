@@ -76,7 +76,7 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass="", classNa
                     tabIndex={0} onClick={() => changeTab(i + 1)}
                     className={callOrString(tabTitleClass, tabTitle, i + 1)}
                 >
-                    {tabTitle}
+                    <Markup encoding={"latex"}>{tabTitle}</Markup>
                 </Button>
             )}
             <span ref={gliderRef} className={"glider"}/>
@@ -93,7 +93,7 @@ const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass, classNam
                 type: "icon",
                 affixClassName: classNames("ms-2 icon-dropdown-90", {"active icon-color-white": activeTab === i + 1}),
             }}>
-                {tabTitle}
+                <Markup encoding={"latex"}>{tabTitle}</Markup>
             </AffixButton>
         )}
     </div>;
@@ -103,7 +103,7 @@ const CardsNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsPro
     return <div className="d-flex card-tabs">
         {Object.keys(children).map((tabTitle, i) =>
             <button key={i} className={classNames(tabTitleClass, "flex-grow-1 py-3 card-tab", {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} type="button">
-                <span>{tabTitle}</span>
+                <Markup encoding={"latex"}>{tabTitle}</Markup>
             </button>
         )}
     </div>;
