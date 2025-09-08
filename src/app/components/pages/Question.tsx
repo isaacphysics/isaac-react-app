@@ -105,7 +105,7 @@ const QuestionMetaData = (props: QuestionMetaDataProps) => {
         {/* One-line version of the question metadata, only used for printing */}
         <div className="only-print">
             <div className="d-flex my-2">
-                <span className="me-2 fw-bold">Topic:</span>
+                <span className="me-2 fw-bold">Subject & topics:</span>
                 <div>
                     {getTags(doc.tags).map((tag, index, arr) => <>
                         <span key={tag.title}> {tag.title} </span>
