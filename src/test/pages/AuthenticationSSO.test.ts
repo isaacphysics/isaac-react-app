@@ -132,7 +132,7 @@ const authenticationError = {
     },
 
     get ssoLink() {
-        return within(this.element).getByRole('link', { name: 'Link to SSO documentation'});
+        return within(this.element).getByRole('link', { name: 'Link to Single Sign-On documentation'});
     },
 
     get contactUsLink() {
