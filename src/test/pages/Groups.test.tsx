@@ -76,8 +76,9 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
     expect(managerHandler).toHaveBeenCalledTimes(1);
   });
   expect(managerHandler).toHaveBeenRequestedWith(async (req) => {
-    const { email } = await req.json();
-    return email === newManager.email;
+    const body = await req.json();
+    console.log("Request body:", body); // Debug log
+    return body && typeof body === "object" && body.email === newManager.email;
   });
 };
 
@@ -143,7 +144,13 @@ describe("Groups", () => {
         return "groupName" in body && body.groupName === mockNewGroup.groupName;
       });
     });
-    const modal = await screen.findByTestId("active-modal");
+    // Find the specific "Group Created" modal instead of any modal
+    const modal = await waitFor(() => {
+      const modals = screen.getAllByTestId("active-modal");
+      const groupCreatedModal = modals.find((modal) => within(modal).queryByText("Group Created") !== null);
+      expect(groupCreatedModal).toBeDefined();
+      return groupCreatedModal as HTMLElement;
+    });
     // Expect that the auth token GET request is made exactly once
     expect(modal).toHaveModalTitle("Group Created");
     expect(authTokenHandler).toHaveBeenCalledTimes(1);
