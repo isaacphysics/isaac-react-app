@@ -18,8 +18,6 @@ midnightLastNight.setHours(0, 0, 0, 0);
 
 type AssignmentStatus = "inProgressRecent" | "inProgressOld" | "allAttempted" | "allCorrect";
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {
-    const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));
-
     const myAssignments: Record<AssignmentStatus, (AssignmentDTO & {startDate: Date | number})[]> = {
         inProgressRecent: [],
         inProgressOld: [],
@@ -32,9 +30,7 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
             .map(createAssignmentWithStartDate)
             .forEach(assignment => {
                 if (assignment.gameboard?.percentageCorrect !== 100) {
-                    const noDueDateButRecent = !assignment.dueDate && (assignment.startDate > fourWeeksAgo);
-                    const beforeDueDate = assignment.dueDate && (assignment.dueDate >= midnightLastNight);
-                    if (beforeDueDate || noDueDateButRecent) {
+                    if (assignment.dueDate && (assignment.dueDate >= midnightLastNight)) {
                         myAssignments.inProgressRecent.push(assignment);
                     } else if (assignment.gameboard?.percentageAttempted === 100) {
                         myAssignments.allAttempted.push(assignment);
