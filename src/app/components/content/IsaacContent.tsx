@@ -1,4 +1,4 @@
-import React, {lazy} from "react";
+import React, {lazy, Suspense} from "react";
 import {AnvilApp} from "./AnvilApp";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestion} from "./IsaacQuestion";
@@ -74,7 +74,8 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
             case "figure": selectedComponent = <IsaacFigure {...keyedProps} />; break;
             case "image": selectedComponent = <IsaacImage {...keyedProps} />; break;
             case "video": selectedComponent = <IsaacVideo {...keyedProps} />; break;
-            case "codeSnippet": selectedComponent = <IsaacCodeSnippet {...keyedProps} />; break;
+            // IsaacCodeSnippet is lazy loaded, so wrap it in Suspense to prevent reload errors
+            case "codeSnippet": selectedComponent = <Suspense fallback={<div>Loading...</div>}> <IsaacCodeSnippet {...keyedProps} /> </Suspense>; break;
             case "interactiveCodeSnippet": selectedComponent = <IsaacInteractiveCodeSnippet {...keyedProps} />; break;
             case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...keyedProps} />; break;
             case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...keyedProps} />; break;
