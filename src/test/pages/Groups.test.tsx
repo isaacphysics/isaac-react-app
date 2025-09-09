@@ -69,15 +69,19 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
 
   const addManagerInput = within(groupManagersModal).getByPlaceholderText("Enter email address here");
   await userEvent.type(addManagerInput, newManager.email);
+
+  // Wait for the input to be fully processed
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
   const addManagerButton = within(groupManagersModal).getByRole("button", { name: "Add group manager" });
   await userEvent.click(addManagerButton);
+
   // Expect correct email was sent in request
   await waitFor(() => {
     expect(managerHandler).toHaveBeenCalledTimes(1);
   });
   expect(managerHandler).toHaveBeenRequestedWith(async (req) => {
     const body = await req.json();
-    console.log("Request body:", body); // Debug log
     return body && typeof body === "object" && body.email === newManager.email;
   });
 };
@@ -90,17 +94,16 @@ describe("Groups", () => {
     async (role) => {
       renderTestEnvironment({ role });
       await followHeaderNavLink("Teach", "Manage groups");
-      // switchGroupsTab checks that the mock active groups we expect to be there are in fact there
+
       await switchGroupsTab("active", mockActiveGroups);
-      // Now check archived tab, should contain all archived groups
+
       const archivedTabLink = screen.getByText("Archived");
       await userEvent.click(archivedTabLink);
       const archivedGroups = await screen.findAllByTestId("group-item");
       const maybeArchivedGroupNames = archivedGroups.map((g) => within(g).getByTestId("select-group").textContent);
       const archivedGroupNames = maybeArchivedGroupNames.filter(isDefined);
-      // Expect all group names to be defined
+
       expect(archivedGroupNames).toHaveLength(maybeArchivedGroupNames.length);
-      // Expect all active mock groups to be displayed
       expect(
         difference(
           archivedGroupNames,
@@ -239,6 +242,10 @@ describe("Groups", () => {
       const groupNameInput = await within(groupEditor).findByPlaceholderText(/Group [Nn]ame/);
       await userEvent.clear(groupNameInput);
       await userEvent.type(groupNameInput, newGroupName);
+
+      // Wait for the input to be fully processed
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       const updateButton = await within(groupEditor).findByRole("button", { name: "Update" });
       await userEvent.click(updateButton);
       // Make sure the list of groups contains the new name

@@ -504,7 +504,9 @@ const AccountPageComponent = ({
                         value="Save"
                         className="btn btn-block btn-secondary border-0"
                         disabled={
-                          !accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections || !isNewPasswordConfirmed
+                          !accountInfoChanged ||
+                          activeTab === ACCOUNT_TAB.teacherconnections ||
+                          (activeTab === ACCOUNT_TAB.passwordreset && !isNewPasswordConfirmed)
                         }
                       />
                     </Col>

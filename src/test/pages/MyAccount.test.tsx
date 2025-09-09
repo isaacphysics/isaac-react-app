@@ -64,17 +64,24 @@ describe("My Account", () => {
     await userEvent.click(accountSecurityTab);
     const saveButton = screen.getByRole("button", { name: /save/i });
     expect(saveButton).toBeDisabled();
-    const currentPasswordField = screen.getByLabelText("Current password");
-    await userEvent.type(currentPasswordField, validPassword); // Use validPassword for current
-    const newPasswordField = screen.getByLabelText("New password");
-    await userEvent.type(newPasswordField, invalidPassword); // Use invalidPassword
-    const confirmPasswordField = screen.getByLabelText("Re-enter new password");
-    await userEvent.type(confirmPasswordField, invalidPassword); // Use same invalidPassword
 
-    await waitFor(() => {
-      const errorMessage = getById("invalidPassword");
-      expect(errorMessage).toHaveTextContent(invalidPasswordError);
-    });
+    const currentPasswordField = screen.getByLabelText("Current password");
+    await userEvent.type(currentPasswordField, validPassword);
+
+    const newPasswordField = screen.getByLabelText("New password");
+    await userEvent.type(newPasswordField, invalidPassword);
+
+    const confirmPasswordField = screen.getByLabelText("Re-enter new password");
+    await userEvent.type(confirmPasswordField, invalidPassword);
+
+    // Wait for the validation to update and check for the password requirements error
+    await waitFor(
+      () => {
+        const errorMessage = getById("invalidPassword");
+        expect(errorMessage).toHaveTextContent(invalidPasswordError);
+      },
+      { timeout: 5000 },
+    );
 
     expect(saveButton).toBeDisabled();
   });
