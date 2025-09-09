@@ -112,10 +112,13 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                     query={groupsQuery}
                     defaultErrorTitle={"Error fetching groups"}
                     thenRender={groups => {
-                        const groupOptions = groups.map((g: AppGroup) => {return {label: g.groupName as string, value: g.id as number}; });
+                        const groupOptions = groups
+                            .map((g: AppGroup) => {return {label: g.groupName as string, value: g.id as number}; })
+                            .sort((a, b) => a.label.localeCompare(b.label));
 
                         return <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
                             <StyledSelect isMulti placeholder="Select groups"
+                                closeMenuOnSelect={false}
                                 options={groupOptions}
                                 onChange={(s) => {
                                     selectOnChange(setSelectedGroups, false)(s);
