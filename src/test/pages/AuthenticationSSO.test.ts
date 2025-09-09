@@ -1,5 +1,5 @@
 import { http, HttpHandler, HttpResponse } from "msw";
-import { expectH1, expectH2, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
+import { expectH1, renderTestEnvironment, SearchString, setUrl } from "../testUtils";
 import { API_PATH, isPhy } from "../../app/services";
 import { mockUser } from "../../mocks/data";
 import { screen, within } from "@testing-library/react";
@@ -59,16 +59,20 @@ describe("Microsoft SSO Authentication", () => {
 
             it('shows a specific error message', async () => {
                 expect(authenticationError.element).toHaveTextContent("You don't use this Microsoft account to log in");
-                expect(authenticationError.element).toHaveTextContent(/not configured for signing in with this Microsoft account/);
-                expect(authenticationError.element).toHaveTextContent(/either didn't configure sign-in with Microsoft, or used a different Microsoft account/);
-                expect(authenticationError.element).toHaveTextContent(/try logging in using a different Microsoft account, a Google account, or a password/);
-                expect(authenticationError.element).toHaveTextContent(/you can configure this Microsoft account for signing in to Isaac./);
-                expect(authenticationError.element).toHaveTextContent(/next to "Microsoft", click "Link". Read more about signing in with Microsoft./);
-            });
-
-            it('the log-in link works', async () => {
-                await userEvent.click(authenticationError.logInLink);
-                expectH2('Log in or sign up');
+                expect(authenticationError.element).toHaveTextContent(dedent`
+                    We've found an Isaac account with the email address from this Microsoft account. However, the Isaac
+                    account isn't configured to allow access to this Microsoft account. You've either not enabled
+                    sign-in with Microsoft on your Isaac account, or you used a different Microsoft account to log in.`
+                );
+                expect(authenticationError.element).toHaveTextContent(dedent`
+                    If you've not yet enabled sign-in with Microsoft, first log in with another method (e.g. email and
+                    password). Then, on My Account, next to "Microsoft", click "Link". Read more about signing in with
+                    Microsoft.`
+                );
+                expect(authenticationError.element).toHaveTextContent(dedent`
+                    If you'd like to switch which Microsoft account you log in with, follow the same instructions, but
+                    on the My Account page, click "Unlink" on any old Microsoft account first.`
+                );
             });
 
             it('shows a link to the SSO help page', async () => {
@@ -128,10 +132,6 @@ const dashboard = {
 };
 
 const authenticationError = {
-    get logInLink() {
-        return within(this.element).getByRole('link', { name: 'Log in link'});
-    },
-
     get ssoLink() {
         return within(this.element).getByRole('link', { name: 'Link to Single Sign-On documentation'});
     },
@@ -144,3 +144,8 @@ const authenticationError = {
         return screen.getByRole('region', { name: 'Authentication Error' });
     }
 };
+
+const dedent = (s: TemplateStringsArray) => s
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim();

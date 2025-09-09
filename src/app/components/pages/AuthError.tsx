@@ -42,26 +42,26 @@ const GenericError = ({ state }: { state?: State }) => <>
 </>;
 
 const AccountNotLinked  = ({ state }: { state?: State }) => {
-    const [provider, differentProvider] =
-        state?.provider === 'google' ? ["Google", "Microsoft"] : ["Microsoft", 'Google'];
+    const provider = state?.provider === 'google' ? "Google" : "Microsoft";
 
     return <>
         <h3>You don&apos;t use this {provider} account to log in</h3>
         <p>
-            We&apos;ve found an Isaac account with that email address, but it&apos;s not configured for signing in with
-            this {provider} account. You either didn&apos;t configure sign-in with {provider}, or used a
-            different {provider} account.  
+            We&apos;ve found an Isaac account with the email address from this {provider} account. However, the Isaac
+            account isn&apos;t configured to allow access to this {provider} account. You&apos;ve either not enabled
+            sign-in with {provider} on your Isaac account, or you used a different {provider} account to log in.
         </p>
         <ul>
             <li>
-                To get back to your account, try <Link to="/login" aria-label="Log in link">logging in</Link> using
-                a different {provider} account, a {differentProvider} account, or a password. You can also reset
-                your password on the log-in page.
+                If you&apos;ve not yet enabled sign-in with {provider}, first log in with another method (e.g. email and
+                password). Then, on <Link to="/account#security" aria-label="My Account link">My Account</Link>, next
+                to &quot;Microsoft&quot;, click &quot;Link&quot;. <SSOLink>Read more about signing in with {provider}.
+                </SSOLink>
             </li>
             <li>
-                Once you&apos;ve regained access, you can configure this {provider} account for signing in to
-                Isaac. On the <Link to="/account#security" aria-label="My Account link">My Account</Link> page, next
-                to &quot;{provider}&quot;, click &quot;Link&quot;. <SSOLink>Read more about signing in with {provider}.</SSOLink>  
+                If you&apos;d like to switch which {provider} account you log in with, follow the same instructions, but
+                on the <Link to="/account#security" aria-label="My Account link">My Account</Link> page, click
+                &quot;Unlink&quot; on any old {provider} account first.
             </li>
         </ul>
         <p>If you need more help signing in, <ContactUs/>.</p>
