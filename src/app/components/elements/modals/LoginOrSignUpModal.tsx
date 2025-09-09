@@ -5,6 +5,7 @@ import {useLocation} from "react-router-dom";
 import {
     EmailPasswordInputs,
     PasswordResetButton,
+    SsoHelpLink,
     TFAInput,
     useLoginLogic
 } from "../../pages/LogIn";
@@ -114,9 +115,10 @@ const LoginOrSignUpBody = () => {
                             <RaspberryPiSignInButton concise={true} />
                         </div>}
                         <GoogleSignInButton/>
-                        {isPhy && <div className="mt-2">
+                        {isPhy && <div className="mt-2 mb-2">
                             <MicrosoftSignInButton />
                         </div>}
+                        {isPhy && <SsoHelpLink />}
                     </>}
             </Form>
         </Col>

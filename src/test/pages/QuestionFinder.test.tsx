@@ -1,5 +1,5 @@
 import { screen, waitFor, within } from "@testing-library/react";
-import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
+import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, SearchString, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults, mockQuestionFinderResultsWithMultipleStages } from "../../mocks/data";
 import shuffle from "lodash/shuffle";
 import times from "lodash/times";
@@ -232,8 +232,8 @@ describe("QuestionFinder", () => {
             });
 
             describe('initial state: subject, fields and topics selected', () => {
-                const queryParams = '?subjects=physics,maths&fields=skills,mechanics,number,geometry' +
-                    '&topics=sig_figs,statics,arithmetic,shapes';
+                const queryParams = `?subjects=physics,maths&fields=skills,mechanics,number,geometry${
+                    '&topics=sig_figs,statics,arithmetic,shapes'}`;
 
                 it('shows partial subject, partial fields and selected topics', async () => {
                     await renderQuestionFinderPage({ response, queryParams });
@@ -379,11 +379,9 @@ type RenderParameters = {
         randomSeed: string | null;
         startIndex: string | null;
     }) => QuestionFinderResultsResponse;
-    queryParams?: string;
+    queryParams?: SearchString;
     context?: NonNullable<PageContextState>;
 };
-
-const mainContainer = () => screen.findByTestId('main');
 
 const findQuestions = () => screen.findByTestId("question-finder-results").then(e => within(e).findAllByRole('listitem'));
 
