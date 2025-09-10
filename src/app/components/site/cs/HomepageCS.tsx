@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
+import {selectors, useAppSelector} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, Col, Container, Row} from "reactstrap";
 import {isLoggedIn, isTeacherOrAbove, SITE_TITLE} from "../../../services";
@@ -8,15 +8,10 @@ import { ImageBlock } from "../../elements/layout/ImageBlock";
 import { IconCard } from "../../elements/cards/IconCard";
 import { TextBlock } from "../../elements/layout/TextBlock";
 import { ColumnSlice } from "../../elements/layout/ColumnSlice";
-import {useLinkableSetting} from "../../../services/linkableSetting";
 import { AdaNewsSection } from "../../elements/AdaNewsSection";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
-    const {data: news} = useGetNewsPodListQuery({subject: "news"});
-    const {setLinkedSetting} = useLinkableSetting();
-    const userPreferences = useAppSelector(selectors.user.preferences);
-    const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
     const user = useAppSelector(selectors.user.orNull);
 
     return <>
@@ -196,9 +191,9 @@ export const HomepageCS = () => {
                 </Container>
             </section>
 
-            {((news && news.length > 0) || showNewsletterPrompts) && <section id="news" className="bg-white">
-                <AdaNewsSection news={news} showNewsletterPrompts={showNewsletterPrompts} setLinkedSetting={setLinkedSetting} isHomepage />
-            </section>}
+            <section id="news" className="bg-white">
+                <AdaNewsSection containerClassName="homepage-padding mw-1600" />
+            </section>
         </div>
     </>;
 };

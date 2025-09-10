@@ -3,18 +3,12 @@ import {PageTitle} from "../elements/PageTitle";
 import {Container} from "reactstrap";
 import {ColumnSlice} from "../elements/layout/ColumnSlice";
 import {IconCard} from "../elements/cards/IconCard";
-import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../state";
-import {useLinkableSetting} from "../../services/linkableSetting";
 import { useTeacherOnboardingModal } from "../elements/modals/AdaTeacherOnboardingModal";
 import { GetStartedWithAda } from "../elements/panels/GetStartedWithAda";
 import { AdaNewsSection } from "../elements/AdaNewsSection";
 
 export const Overview = () => {
     useTeacherOnboardingModal();    
-    const {data: news} = useGetNewsPodListQuery({subject: "news"});
-    const userPreferences = useAppSelector(selectors.user.preferences);
-    const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
-    const { setLinkedSetting } = useLinkableSetting();
 
     return <div id={"overview"}>
         <section id="get-started">
@@ -90,7 +84,7 @@ export const Overview = () => {
         </section>
 
         <section id="news">
-            <AdaNewsSection news={news} showNewsletterPrompts={showNewsletterPrompts} setLinkedSetting={setLinkedSetting} />
+            <AdaNewsSection containerClassName="overview-padding mw-1600" />
         </section>
     </div>;
 };

@@ -1,22 +1,22 @@
 import React from "react";
 import { Row, Button, Container } from "reactstrap";
-import { IsaacPodDTO } from "../../../IsaacApiTypes";
 import { useDeviceSize } from "../../services";
 import { IconCard } from "./cards/IconCard";
 import { NewsCard } from "./cards/NewsCard";
 import classNames from "classnames";
+import { selectors, useAppSelector, useGetNewsPodListQuery } from "../../state";
+import { useLinkableSetting } from "../../services/linkableSetting";
 
-interface AdaNewsSectionProps {
-    news?: IsaacPodDTO[];
-    showNewsletterPrompts: boolean;
-    setLinkedSetting: (targetId: string) => void;
-    isHomepage?: boolean;
-}
-
-export const AdaNewsSection = ({news, showNewsletterPrompts, setLinkedSetting, isHomepage}: AdaNewsSectionProps) => {
+export const AdaNewsSection = ({containerClassName}: {containerClassName?: string}) => {
     const deviceSize = useDeviceSize();
-    return <Container className={isHomepage ? "homepage-padding mw-1600" : "overview-padding mw-1600"}>
-        <h2 className={isHomepage ? "font-size-1-75 mb-4" : ""}>Tips, tools & support</h2>
+    const {data: news} = useGetNewsPodListQuery({subject: "news"});
+    const userPreferences = useAppSelector(selectors.user.preferences);
+    const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
+    const {setLinkedSetting} = useLinkableSetting();
+    const isHomepage = containerClassName?.includes("homepage");
+
+    return ((news && news.length > 0) || showNewsletterPrompts) && <Container className={containerClassName}>
+        <h2 className={classNames({"font-size-1-75 mb-4": isHomepage})}>Tips, tools & support</h2>
         {news && news.length > 0 &&
             <>
                 <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around mt-3 mb-1">
@@ -36,7 +36,7 @@ export const AdaNewsSection = ({news, showNewsletterPrompts, setLinkedSetting, i
                         clickUrl: "/account#notifications",
                         buttonText: "Get tips and updates",
                         onButtonClick: () => {setLinkedSetting("news-preference");},
-                        className: isHomepage ? "bg-cultured-grey px-0" : "px-0"
+                        className: classNames({"bg-cultured-grey": isHomepage}, "px-0")
                     }}
                 />
             </Row>
