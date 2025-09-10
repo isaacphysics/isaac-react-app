@@ -73,18 +73,6 @@ const AssignGroup = ({ groups, board, allowScheduling }: AssignGroupProps) => {
   const [assignmentNotes, setAssignmentNotes] = useState<string>();
   const user = useAppSelector(selectors.user.orNull);
   const dispatch = useAppDispatch();
-  // Remove these lines:
-  // const [assignmentSuccess, setAssignmentSuccess] = useState<boolean | null>(null);
-
-  // useEffect(() => {
-  //   if (assignmentSuccess === true) {
-  //     setSelectedGroups([]);
-  //     setDueDate(undefined);
-  //     setScheduledStartDate(undefined);
-  //     setAssignmentNotes("");
-  //     setAssignmentSuccess(null);
-  //   }
-  // }, [assignmentSuccess]);
 
   if (!board) return <Loading />;
 

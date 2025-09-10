@@ -1,6 +1,5 @@
 import { server } from "../mocks/server";
 import "./matchers";
-// import { cleanup } from "@testing-library/react";
 
 global.window.scrollTo = jest.fn();
 jest.mock("react-ga4"); // Google Analytics requires a DOM.window which doesn't exist in test
@@ -30,7 +29,6 @@ beforeAll(() => {
 afterEach(() => {
   jest.clearAllMocks();
   server.resetHandlers();
-  // cleanup(); // Clean up DOM after each test
 });
 // Clean up after the tests are finished.
 afterAll(() => server.close());
