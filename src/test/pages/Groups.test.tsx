@@ -59,7 +59,7 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
     groupManagersModal = modalWithInput as HTMLElement;
   });
 
-  if (!groupManagersModal) fail(); // Shouldn't happen because of the above `waitFor`
+  if (!groupManagersModal) fail();
 
   // Wait for the loading to complete and the input field to appear
   await waitFor(() => {
@@ -70,7 +70,6 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
   const addManagerInput = within(groupManagersModal).getByPlaceholderText("Enter email address here");
   await userEvent.type(addManagerInput, newManager.email);
 
-  // Wait for the input to be fully processed
   await new Promise((resolve) => setTimeout(resolve, 100));
 
   const addManagerButton = within(groupManagersModal).getByRole("button", { name: "Add group manager" });
@@ -154,10 +153,8 @@ describe("Groups", () => {
       expect(groupCreatedModal).toBeDefined();
       return groupCreatedModal as HTMLElement;
     });
-    // Expect that the auth token GET request is made exactly once
     expect(modal).toHaveModalTitle("Group Created");
     expect(authTokenHandler).toHaveBeenCalledTimes(1);
-    // Expect the share link and share code to be shown on the modal
     const link = await within(modal).findByTestId("share-link");
     const code = await within(modal).findByTestId("share-code");
     expect(link).toHaveTextContent(`/account?authToken=${mockToken}`);
@@ -189,14 +186,12 @@ describe("Groups", () => {
       ) as HTMLElement;
       expect(groupToDeleteElement).toBeDefined();
       const deleteButton = within(groupToDeleteElement).getByRole("button", { description: "Delete group" });
-      // Set up window.confirm mock - we want to accept the alert so return true in mock implementation
+
       window.confirm = jest.fn(() => true);
       await act(() => userEvent.click(deleteButton));
-      // Make sure window.confirm was called...
       expect(window.confirm).toHaveBeenCalledTimes(1);
-      // ...and that a single DELETE request is sent immediately after.
       expect(correctDeleteRequests).toEqual(1);
-      // Assert that list of active groups has been optimistically updated, with ONLY the group we care about removed
+
       await waitFor(() => {
         const newGroupNames = screen
           .queryAllByTestId("group-item")
@@ -233,9 +228,7 @@ describe("Groups", () => {
         (e) => within(e).getByTestId("select-group").textContent === groupToRename.groupName,
       ) as HTMLElement;
       expect(groupToRenameElement).toBeDefined();
-      // Open group editor for group to rename
       await userEvent.click(within(groupToRenameElement).getByTestId("select-group"));
-      // Wait for "Edit group" panel to be open
       const groupEditor = await screen.findByTestId("group-editor");
       await waitFor(() => within(groupEditor).getByText("Edit group"));
       // Rename the group and click update
@@ -266,7 +259,6 @@ describe("Groups", () => {
         expect(difference(groupNames, newGroupNames)).toEqual([groupToRename.groupName]);
         expect(difference(newGroupNames, groupNames)).toEqual([newGroupName]);
       });
-      // Assert the correct number of update requests were sent
       expect(correctUpdateRequests).toEqual(1);
     });
 
@@ -299,17 +291,12 @@ describe("Groups", () => {
         renderTestEnvironment({
           extraEndpoints: [
             rest.post(API_PATH + "/groups/:groupId", updateGroup),
-            // We need to handle when the Archived tab requests the list of archived groups, because in this case
-            // the optimistic update to the archived list falls flat - RTKQ cache updates can only occur if the
-            // cache entry exists, but in this test the archived tab only gets visited for the first time AFTER
-            // we try to update the cache.
-            // If RTKQ cache gets an "upsert" function, then we can use that instead, and the below request handler
-            // can be removed.
+
             rest.get(API_PATH + "/groups", getGroups),
           ],
         });
         await followHeaderNavLink("Teach", "Manage groups");
-        // Try to flick to the archived tab first, to test whether the cache updates work correctly
+
         if (shouldTryToShowArchivedTabFirst) {
           await switchGroupsTab("archived", mockArchivedGroups);
         }
@@ -320,14 +307,13 @@ describe("Groups", () => {
         expect(groupToModifyElement).toBeDefined();
         const groupToModifyName = within(groupToModifyElement).getByTestId("select-group").textContent;
         await userEvent.click(within(groupToModifyElement).getByTestId("select-group"));
-        // We need to look within the element marked with the "group-editor" test ID, because there are actually
-        // two GroupEditor components in the DOM at once, one is just hidden (depending on screen size).
+
         const groupEditor = await screen.findByTestId("group-editor");
         const archiveButton = await within(groupEditor).findByRole("button", {
           name: `${activeOrArchived === "active" ? "A" : "Una"}rchive this group`,
         });
         await userEvent.click(archiveButton);
-        // Assert that the request was called, and the modified group no longer exists in the initial list of groups
+
         await waitFor(() => {
           expect(updateGroup).toHaveBeenCalledTimes(1);
           const newGroupNames = screen
@@ -336,11 +322,10 @@ describe("Groups", () => {
           expect(newGroupNames).not.toContain(groupToModifyName);
           expect(newGroupNames).toHaveLength(groups.length - 1);
         });
-        // Assert that the request was what we expected
         expect(updateGroup).toHaveBeenRequestedWith(async (req) => {
           const { groupId } = req.params;
           const updatedGroup = await req.json();
-          // Request is correct if and only if the archived status has changed for the group that we expect
+
           return (
             parseInt(groupId as string) === groupToModify.id &&
             updatedGroup.archived === newArchivedValue &&
@@ -350,7 +335,7 @@ describe("Groups", () => {
             })
           );
         });
-        // Assert that the group is now in the other tab, and is the only new one there
+
         const nextTabLink = await screen.findByText(activeOrArchived === "active" ? "Archived" : "Active");
         await userEvent.click(nextTabLink);
         await waitFor(() => {
@@ -363,8 +348,7 @@ describe("Groups", () => {
             ),
           ).toEqual([groupToModifyName]);
         });
-        // Ensure that in any case (whether we switched to the archived tab before doing anything or not), only
-        // two GET requests to the /groups endpoint were made, one for each tab
+
         expect(getGroups).toHaveBeenCalledTimes(2);
         expect(getGroups).toHaveBeenRequestedWith((req) => {
           return req.url.searchParams.get("archived_groups_only") === "true";
@@ -374,35 +358,6 @@ describe("Groups", () => {
         });
       });
     });
-
-    // it(`allows teacher owners of a group to add new group managers to an existing ${activeOrArchived} group`, async () => {
-    //   const mockGroup = {
-    //     ...mockGroups[0],
-    //     ownerId: mockUser.id,
-    //     ownerSummary: buildMockUserSummary(mockUser, false),
-    //   };
-    //   const mockNewManager = buildMockTeacher(2);
-    //   const existingGroupManagerHandler = buildNewManagerHandler(mockGroup, mockNewManager);
-    //   renderTestEnvironment({
-    //     role: "TEACHER",
-    //     extraEndpoints: [
-    //       rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
-    //       rest.post(API_PATH + `/groups/${mockGroup.id}/manager`, existingGroupManagerHandler),
-    //     ],
-    //   });
-    //   await followHeaderNavLink("Teach", "Manage groups");
-    //   const groups = await switchGroupsTab(activeOrArchived, [mockGroup]);
-    //   const selectGroupButton = within(
-    //     groups.find((g) => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement,
-    //   ).getByTestId("select-group");
-    //   await act(async () => {
-    //     await userEvent.click(selectGroupButton);
-    //     const groupEditor = await screen.findByTestId("group-editor");
-    //     const addManagersButton = within(groupEditor).getByRole("button", { name: "Add / remove group managers" });
-    //     await userEvent.click(addManagersButton);
-    //     await testAddAdditionalManagerInModal(existingGroupManagerHandler, mockNewManager);
-    //   });
-    // });
 
     it(`does not allow tutor owners of a group to add new group managers to an existing ${activeOrArchived} group`, async () => {
       const mockGroup = {
