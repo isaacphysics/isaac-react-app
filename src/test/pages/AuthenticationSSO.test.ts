@@ -106,6 +106,41 @@ describe("Microsoft SSO Authentication", () => {
     });
 });
 
+describe("Google SSO Authentication", () => {
+    if (!isPhy) {
+        return it('does not apply', () => {});
+    }
+
+    const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
+        renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
+        await setUrl({ pathname: '/auth/google/callback', search });
+    };
+
+    describe('on specific errors', () => {
+        describe('account not linked', () => {
+            beforeEach(async () => await renderProviderCallback(googleSignInUnlinked));
+            
+            it('shows a specific error message', async () => {
+                expect(authenticationError.element).toHaveTextContent("You don't use this Google account to log in");
+                expect(authenticationError.element).toHaveTextContent(dedent`
+                    We've found an Isaac account with the email address from this Google account. However, the Isaac
+                    account isn't configured to allow access to this Google account. You've either not enabled
+                    sign-in with Google on your Isaac account, or you used a different Google account to log in.`
+                );
+                expect(authenticationError.element).toHaveTextContent(dedent`
+                    If you've not yet enabled sign-in with Google, first log in with another method (e.g. email and
+                    password). Then, on My Account, next to "Google", click "Link". Read more about signing in with
+                    Google.`
+                );
+                expect(authenticationError.element).toHaveTextContent(dedent`
+                    If you'd like to switch which Google account you log in with, follow the same instructions, but
+                    on the My Account page, click "Unlink" on any old Google account first.`
+                );
+            });
+        });
+    });
+});
+
 const microsoftSignInSuccess = http.get(API_PATH + "/auth/microsoft/callback",
     () => HttpResponse.json(mockUser, { status: 200, })
 );
@@ -115,6 +150,10 @@ const microsoftSignInFailure = http.get(API_PATH + "/auth/microsoft/callback",
 );
 
 const microsoftSignInUnlinked = http.get(API_PATH + "/auth/microsoft/callback",
+    () => HttpResponse.json(errorResponses.accountNotLinked403, { status: 403})
+);
+
+const googleSignInUnlinked = http.get(API_PATH + "/auth/google/callback",
     () => HttpResponse.json(errorResponses.accountNotLinked403, { status: 403})
 );
 

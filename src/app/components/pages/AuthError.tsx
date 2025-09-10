@@ -55,7 +55,7 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
             <li>
                 If you&apos;ve not yet enabled sign-in with {provider}, first log in with another method (e.g. email and
                 password). Then, on <Link to="/account#security" aria-label="My Account link">My Account</Link>, next
-                to &quot;Microsoft&quot;, click &quot;Link&quot;. <SSOLink>Read more about signing in with {provider}.
+                to &quot;{provider}&quot;, click &quot;Link&quot;. <SSOLink>Read more about signing in with {provider}.
                 </SSOLink>
             </li>
             <li>
