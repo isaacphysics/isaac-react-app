@@ -507,8 +507,8 @@ export interface ActiveModal {
   closeLabelOverride?: string;
   size?: string;
   title?: string;
-  body: any;
-  buttons?: any[];
+  body: React.ReactNode;
+  buttons?: React.ReactNode[];
   overflowVisible?: boolean;
   isCloseable?: boolean;
 }
