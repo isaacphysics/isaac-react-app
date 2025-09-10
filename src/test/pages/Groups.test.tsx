@@ -241,17 +241,17 @@ describe("Groups", () => {
       // Rename the group and click update
       const groupNameInput = await within(groupEditor).findByPlaceholderText(/Group [Nn]ame/);
 
+      // Clear the input and set the value directly using fireEvent
       await userEvent.clear(groupNameInput);
-
+      fireEvent.input(groupNameInput, { target: { value: newGroupName } });
       fireEvent.change(groupNameInput, { target: { value: newGroupName } });
 
       // Wait for the input to actually contain the full text
       await waitFor(
         () => {
-          // const currentValue = (groupNameInput as HTMLInputElement).value;
           expect(groupNameInput).toHaveValue(newGroupName);
         },
-        { timeout: 5000 }, // Increased timeout
+        { timeout: 5000 },
       );
 
       const updateButton = await within(groupEditor).findByRole("button", { name: "Update" });
