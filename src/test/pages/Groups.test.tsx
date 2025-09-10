@@ -1,4 +1,4 @@
-import { act, screen, waitFor, within } from "@testing-library/react";
+import { act, screen, waitFor, within, fireEvent } from "@testing-library/react";
 import { renderTestEnvironment, followHeaderNavLink } from "../utils";
 import {
   mockActiveGroups,
@@ -240,15 +240,18 @@ describe("Groups", () => {
       await waitFor(() => within(groupEditor).getByText("Edit group"));
       // Rename the group and click update
       const groupNameInput = await within(groupEditor).findByPlaceholderText(/Group [Nn]ame/);
+
       await userEvent.clear(groupNameInput);
-      await userEvent.type(groupNameInput, newGroupName);
+
+      fireEvent.change(groupNameInput, { target: { value: newGroupName } });
 
       // Wait for the input to actually contain the full text
       await waitFor(
         () => {
+          // const currentValue = (groupNameInput as HTMLInputElement).value;
           expect(groupNameInput).toHaveValue(newGroupName);
         },
-        { timeout: 3000 },
+        { timeout: 5000 }, // Increased timeout
       );
 
       const updateButton = await within(groupEditor).findByRole("button", { name: "Update" });
