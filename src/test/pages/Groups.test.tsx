@@ -243,16 +243,23 @@ describe("Groups", () => {
       await userEvent.clear(groupNameInput);
       await userEvent.type(groupNameInput, newGroupName);
 
-      // Wait for the input to be fully processed
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Wait for the input to actually contain the full text
+      await waitFor(
+        () => {
+          expect(groupNameInput).toHaveValue(newGroupName);
+        },
+        { timeout: 3000 },
+      );
 
       const updateButton = await within(groupEditor).findByRole("button", { name: "Update" });
       await userEvent.click(updateButton);
+
       // Make sure the list of groups contains the new name
       await waitFor(() => {
         const newGroups = screen.getAllByTestId("group-item");
         expect(newGroups).toHaveLength(groups.length);
         const newGroupNames = newGroups.map((e) => within(e).getByTestId("select-group").textContent);
+
         expect(difference(groupNames, newGroupNames)).toEqual([groupToRename.groupName]);
         expect(difference(newGroupNames, groupNames)).toEqual([newGroupName]);
       });
