@@ -12,6 +12,7 @@ import {
     useUpgradeToTeacherAccountMutation
 } from "../../state";
 import { useHistory } from "react-router";
+import { scheduleTeacherOnboardingModalForNextOverviewVisit } from "../elements/modals/AdaTeacherOnboardingModal";
 
 
 export const TeacherAccountSelfUpgrade = () => {
@@ -30,12 +31,13 @@ export const TeacherAccountSelfUpgrade = () => {
     };
 
     const upgrade : React.MouseEventHandler<HTMLButtonElement> = async (event) => {
-        await upgradeToTeacherAccount(event).then(async (response) => {
-            if (mutationSucceeded(response)) {
-                await dispatch(requestCurrentUser()); // Refresh user details locally
-                history.push("/dashboard");
-            }
-        });
+        const response = await upgradeToTeacherAccount(event);
+
+        if (mutationSucceeded(response)) {
+            await dispatch(requestCurrentUser()); // Refresh user details locally
+            scheduleTeacherOnboardingModalForNextOverviewVisit();
+            history.push("/dashboard");
+        }
     };
 
     return <Container>
