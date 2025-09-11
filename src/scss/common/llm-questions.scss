@@ -1,9 +1,9 @@
 .llm-indicator {
     position: relative;
     display: flex;
-    background-color: $cyan-700;
-    color: $cs-jet;
-    border: 1px solid $cs-silver;
+    background-color: lightgray;
+    color: black;
+    border: 1px solid silver;
     border-radius:2rem;
     padding: 0.5rem 0.75rem;
     font-weight: 600;
@@ -12,15 +12,15 @@
     height: fit-content;
     align-items: center;
     &.small {
-        border: 1px solid $cs-silver !important;
+        border: 1px solid silver !important;
         font-weight: 600 !important;
     }
 }
 
 .llm-info-banner {
-    background-color: $cyan-700;
-    color: $cs-jet;
-    border: 1px solid $cs-silver;
+    background-color: lightgray;
+    color: black;
+    border: 1px solid silver;
     padding: 2rem 3rem;
     margin-bottom: 2rem;
     border-radius: 0.5rem;
@@ -28,30 +28,30 @@
         font-size: x-large !important;
     }
     p a {
-        color: $dark-pink-300 !important;
+        color: darksalmon !important;
     }
 }
 
 .llm-feedback {
-    color: $cs-jet;
+    color: black;
     h2 {
         font-size: larger !important;
     }
     .prediction {
         display: inline-block;
-        background-color: $cyan-700;
+        background-color: lightgray;
         border-radius: 0.5rem;
         padding: 1rem 1rem;
         margin-bottom: 1rem;
     }
     .curved-table-wrapper {
         border-radius: 0.5rem;
-        border: 2px solid $cs-list-outline-gray;
+        border: 2px solid gray;
         table, thead, tbody {
             border: 0;
         }
         tr {
-            border: 2px solid $cs-list-outline-gray;
+            border: 2px solid gray;
             border-left: 0;
             border-right: 0;
         }
@@ -65,7 +65,7 @@
             table-layout: fixed;
             th {
                 font-family: $primary-font;
-                background-color: $cs-cultured !important;
+                background-color: white !important;
                 border: 0;
                 padding: 0.5rem;
                 font-weight: 600;
@@ -90,7 +90,7 @@
             margin-top: 1rem;
         }
         &.submitted {
-            color: $cs-perfect;
+            color: green;
         }
     }
 }
