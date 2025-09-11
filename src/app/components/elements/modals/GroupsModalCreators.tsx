@@ -439,7 +439,7 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
 
 export const groupArchiveModal = (group: AppGroup, toggleArchived: () => void): ActiveModal => ({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: group.archived ? "Unarchive group" : "Archive group",
+    title: "Archive group",
     body: <GroupArchiveModal group={group} toggleArchived={toggleArchived} />,
     size: "md",
     centered: true
