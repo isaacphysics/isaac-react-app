@@ -297,6 +297,14 @@ describe("Groups", () => {
                 const groupEditor = await screen.findByTestId("group-editor");
                 const archiveButton = await within(groupEditor).findByRole("button", {name: `${activeOrArchived === "active" ? "A" : "Una"}rchive group`});
                 await userEvent.click(archiveButton);
+                if (activeOrArchived === "active") {
+                    const modal = await screen.findByTestId("active-modal");
+                    await waitFor(() => {
+                        expect(modal).toHaveModalTitle("Archive group");
+                    });
+                    const confirmButton = within(modal).getByRole("button", {name: "Archive"});
+                    await userEvent.click(confirmButton);
+                }
                 // Assert that the request was called, and the modified group no longer exists in the initial list of groups
                 await waitFor(() => {
                     expect(updateGroup).toHaveBeenCalledTimes(1);
