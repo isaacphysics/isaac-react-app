@@ -208,6 +208,10 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/gcse" to="/" />,
     <Redirect key={key++} exact from="/alevel" to="/" />,
     <Redirect key={key++} exact from="/s/:shortCode" to="/pages/problem_solving_qs" />,
+    <Redirect key={key++} exact from="/pages/boards_by_topic_bio" to="/biology/a_level/question_decks" />,
+    <Redirect key={key++} exact from="/pages/boards_by_topic_chem" to="/chemistry/a_level/question_decks" />,
+    <Redirect key={key++} exact from="/pages/maths_practice" to="/maths/a_level/question_decks" />,
+    <Redirect key={key++} exact from="/pages/pre_made_gameboards" to="/physics/a_level/question_decks" />,
 
     // Isaac Chemistry redirect
     // TODO: if chemistry is a separate site ever, should move to Chemistry routes.
