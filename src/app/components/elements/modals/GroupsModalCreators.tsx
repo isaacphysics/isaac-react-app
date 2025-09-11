@@ -417,30 +417,29 @@ export const groupCreateModal = (user: RegisteredUserDTO): ActiveModal => ({
     centered: true
 });
 
-const GroupArchiveModal = ({group, toggleArchived, canArchive}: {group: AppGroup; toggleArchived: () => void; canArchive: boolean}) => {
+const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArchived: () => void;}) => {
     const dispatch = useAppDispatch();
-    const siteSpecific = (isaac: React.ReactNode, oak: React.ReactNode) => process.env.ISAAC_APP === "oak" ? oak : isaac;
-    const action = group.archived ? "unarchive" : "archive";
-    const actioning = group.archived ? "unarchiving" : "archiving";
+
     return <div className="d-flex flex-column gap-3">
-        <p>Are you sure you want to {action} the group &quot;{group.groupName}&quot;?{group.archived ? "" : " This will make the group and all its content invisible to its members."}</p>
-        {!canArchive && <Alert color="warning">
-            <strong>Warning:</strong> You cannot {action} this group because it has assignments that have been started by students. Please remove these assignments before {actioning} the group.
-        </Alert>}
+        <p>Are you sure you want to archive &quot;{group.groupName}&quot;? This will ...</p>
         <div className="text-end">
-            <Button color="secondary" className="me-2" onClick={() => dispatch(closeActiveModal())}>Cancel</Button>
+            <Button color="secondary" className="me-2" onClick={() => dispatch(closeActiveModal())}>
+                Cancel
+            </Button>
             <Button color={siteSpecific("danger", "keyline")} onClick={() => {
                 toggleArchived();
                 dispatch(closeActiveModal());
-            }} disabled={!canArchive}>{action.charAt(0).toUpperCase() + action.slice(1)}</Button>
+            }}>
+                Archive
+            </Button>
         </div>
     </div>;
 };
 
-export const groupArchiveModal = (group: AppGroup, toggleArchived: () => void, canArchive: boolean): ActiveModal => ({
+export const groupArchiveModal = (group: AppGroup, toggleArchived: () => void): ActiveModal => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: group.archived ? "Unarchive group" : "Archive group",
-    body: <GroupArchiveModal group={group} toggleArchived={toggleArchived} canArchive={canArchive} />,
+    body: <GroupArchiveModal group={group} toggleArchived={toggleArchived} />,
     size: "md",
     centered: true
 });

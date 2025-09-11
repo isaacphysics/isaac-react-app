@@ -44,9 +44,9 @@ export const showGroupManagersModal = createAsyncThunk<void, {group: AppGroup; u
     }
 );
 
-export const showGroupArchiveModal = createAsyncThunk<void, {group: AppGroup; toggleArchived: () => void; canArchive: boolean}>(
+export const showGroupArchiveModal = createAsyncThunk<void, {group: AppGroup; toggleArchived: () => void}>(
     "groups/modals/archive",
-    async ({group, toggleArchived, canArchive}, {dispatch}) => {
-        dispatch(openActiveModal(groupArchiveModal(group, toggleArchived, canArchive)));
+    async ({group, toggleArchived}, {dispatch}) => {
+        dispatch(openActiveModal(groupArchiveModal(group, toggleArchived)));
     }
 );

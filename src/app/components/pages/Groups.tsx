@@ -397,17 +397,14 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                         </div>}
                     </ShowLoading>
                 </div>
-                {
-                    canArchive &&
-                    <>
-                        {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
-                        <div>
-                            <Button className={"w-100 w-md-auto"} color={siteSpecific("solid", "keyline")} onClick={() => dispatch(showGroupArchiveModal({group, toggleArchived, canArchive}))}>
-                                {`${group.archived ? "Unarchive" : "Archive"} group`}
-                            </Button>
-                        </div>
-                    </>
-                }
+                {canArchive && <>
+                    {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
+                    <div>
+                        <Button className={"w-100 w-md-auto"} color={siteSpecific("solid", "keyline")} onClick={() => dispatch(showGroupArchiveModal({group, toggleArchived}))}>
+                            {`${group.archived ? "Unarchive" : "Archive"} group`}
+                        </Button>
+                    </div>
+                </>}
             </div>
         </CardBody>
     </Card>;
