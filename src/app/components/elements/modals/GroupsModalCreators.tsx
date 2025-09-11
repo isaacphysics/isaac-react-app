@@ -421,7 +421,7 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
     const dispatch = useAppDispatch();
 
     return <div className="d-flex flex-column gap-3">
-        <p>Are you sure you want to archive &quot;{group.groupName}&quot;? You will no longer be able to set assignments or tests to this group, and the group will not be visible on the <strong>&quot;Assignment progress&quot;</strong> or <strong>&quot;Assignment schedule&quot;</strong> pages.</p>
+        <p>Are you sure you want to archive &quot;{group.groupName}&quot;? You will no longer be able to set assignments or {siteSpecific("tests", "quizzes")} to this group, and the group will not be visible {siteSpecific(`on the ${<strong>&quot;Assignment progress&quot;</strong>} or ${<strong>&quot;Assignment schedule&quot;</strong>} pages.`, `in the Markbook.`)}</p>
         <p>A group can be unarchived at any time by navigating to the group in the &quot;Archived&quot; section of this page and clicking &quot;Unarchive group&quot;.</p>
         <div className="text-end">
             <Button color="secondary" className="me-2" onClick={() => dispatch(closeActiveModal())}>
