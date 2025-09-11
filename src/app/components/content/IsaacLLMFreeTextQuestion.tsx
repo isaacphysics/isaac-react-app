@@ -82,6 +82,7 @@ const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
+                {doc.maxMarks && <p><strong>{`[${doc.maxMarks} mark${doc.maxMarks > 1 ? "s" : ""}]`}</strong></p>}
             </div>
             <FormGroup className="mb-4">
                 <Input type="textarea"
