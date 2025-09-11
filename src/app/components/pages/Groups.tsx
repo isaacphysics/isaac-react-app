@@ -400,7 +400,11 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                 {canArchive && <>
                     {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                     <div>
-                        <Button className={"w-100 w-md-auto"} color={siteSpecific("solid", "keyline")} onClick={() => dispatch(showGroupArchiveModal({group, toggleArchived}))}>
+                        <Button className={"w-100 w-md-auto"} color={siteSpecific("solid", "keyline")} 
+                            onClick={() => {
+                                if (group.archived) toggleArchived();
+                                else dispatch(showGroupArchiveModal({group, toggleArchived}));
+                            }}>
                             {`${group.archived ? "Unarchive" : "Archive"} group`}
                         </Button>
                     </div>
