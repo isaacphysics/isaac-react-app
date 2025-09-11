@@ -243,9 +243,9 @@ describe("Assignment categorisation depending on status", () => {
         const result = filterAssignmentsByStatus([assignmentWithAFutreDueDate, assignmentWithADueDateToday, assignmentWithADueDateYesterday]);
 
         // Assert
-        expect(result.inProgressRecent).toContainEqual(createAssignmentWithStartDate(assignmentWithAFutreDueDate));
-        expect(result.inProgressRecent).toContainEqual(createAssignmentWithStartDate(assignmentWithADueDateToday));
-        expect(result.inProgressOld).toContainEqual(createAssignmentWithStartDate(assignmentWithADueDateYesterday));
+        expect(result.inProgress).toContainEqual(createAssignmentWithStartDate(assignmentWithAFutreDueDate));
+        expect(result.inProgress).toContainEqual(createAssignmentWithStartDate(assignmentWithADueDateToday));
+        expect(result.overDue).toContainEqual(createAssignmentWithStartDate(assignmentWithADueDateYesterday));
     });
 
     it("Records an assignment as 'all attempted' if all questions have at least one attempt", () => {
@@ -272,8 +272,8 @@ describe("Assignment categorisation depending on status", () => {
         expect(result.allAttempted.length).toBe(1);
         expect(result.allCorrect).toContainEqual(createAssignmentWithStartDate(assignmentWithAllQuestionsCorrect));
         expect(result.allCorrect.length).toBe(1);
-        expect(result.inProgressOld).toContainEqual(createAssignmentWithStartDate(partiallyAttemptedAssignment));
-        expect(result.inProgressOld.length).toBe(1);
+        expect(result.overDue).toContainEqual(createAssignmentWithStartDate(partiallyAttemptedAssignment));
+        expect(result.overDue.length).toBe(1);
     });
 
     it("Records an assignment as completed if all questions are correct even if due date is in the future", () => {
@@ -303,7 +303,7 @@ describe("Assignment categorisation depending on status", () => {
         ]);
 
         // Assert
-        expect(result.inProgressRecent).toEqual([
+        expect(result.inProgress).toEqual([
             assignmentWithNearDueDate,
             assingmentWithFarDueDateButAssignedRecently,
             assignmentWithFarDueDate,
@@ -323,7 +323,7 @@ describe("Assignment categorisation depending on status", () => {
             expiredAssignmentScheduledYesterday
         ]);
 
-        expect(result.inProgressOld).toEqual([
+        expect(result.overDue).toEqual([
             expiredAssignmentScheduledYesterday,
             expiredAssignmentCreatedLastWeek,
             assignmentWithAVeryOldCreationDate

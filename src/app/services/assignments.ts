@@ -16,11 +16,11 @@ const now = new Date();
 const midnightLastNight = new Date(now);
 midnightLastNight.setHours(0, 0, 0, 0);
 
-type AssignmentStatus = "inProgressRecent" | "inProgressOld" | "allAttempted" | "allCorrect";
+type AssignmentStatus = "overDue" | "inProgress" | "allAttempted" | "allCorrect";
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {
     const myAssignments: Record<AssignmentStatus, (AssignmentDTO & {startDate: Date | number})[]> = {
-        inProgressRecent: [],
-        inProgressOld: [],
+        overDue: [],
+        inProgress: [],
         allAttempted: [],
         allCorrect: []
     };
@@ -31,18 +31,18 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
             .forEach(assignment => {
                 if (assignment.gameboard?.percentageCorrect !== 100) {
                     if (assignment.dueDate && (assignment.dueDate >= midnightLastNight)) {
-                        myAssignments.inProgressRecent.push(assignment);
+                        myAssignments.inProgress.push(assignment);
                     } else if (assignment.gameboard?.percentageAttempted === 100) {
                         myAssignments.allAttempted.push(assignment);
                     } else {
-                        myAssignments.inProgressOld.push(assignment);
+                        myAssignments.overDue.push(assignment);
                     }
                 } else {
                     myAssignments.allCorrect.push(assignment);
                 }
             });
-        myAssignments.inProgressRecent = orderBy(myAssignments.inProgressRecent, ["dueDate", "startDate"], ["asc", "desc"]);
-        myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["startDate"], ["desc"]);
+        myAssignments.inProgress = orderBy(myAssignments.inProgress, ["dueDate", "startDate"], ["asc", "desc"]);
+        myAssignments.overDue = orderBy(myAssignments.overDue, ["startDate"], ["desc"]);
         myAssignments.allAttempted = orderBy(myAssignments.allAttempted, ["startDate"], ["desc"]);
         myAssignments.allCorrect = orderBy(myAssignments.allCorrect, ["startDate"], ["desc"]);
     }
