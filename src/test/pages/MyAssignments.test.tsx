@@ -58,11 +58,11 @@ describe("MyAssignments", () => {
         renderMyAssignments();
         if (isAda) {
             const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
-            await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
+            await userEvent.selectOptions(assignmentTypeFilter, "Overdue");
         }
         else {
             const sidebar = await screen.findByTestId("my-assignments-sidebar");
-            const olderFilter = within(sidebar).getByRole("checkbox", {name: "To do (older)"});
+            const olderFilter = within(sidebar).getByRole("checkbox", {name: "Overdue"});
             await userEvent.click(olderFilter);
         }
         expect(screen.queryAllByTestId("my-assignment")).toHaveLength(0);
@@ -89,11 +89,11 @@ describe("MyAssignments", () => {
         // Select the "Older Assignments" filter
         if (isAda) {
             const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
-            await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
+            await userEvent.selectOptions(assignmentTypeFilter, "Overdue");
         }
         else {
             const sidebar = await screen.findByTestId("my-assignments-sidebar");
-            const olderFilter = within(sidebar).getByRole("checkbox", {name: "To do (older)"});
+            const olderFilter = within(sidebar).getByRole("checkbox", {name: "Overdue"});
             await userEvent.click(olderFilter);
         }
         // Wait for the one old assignment that we expect

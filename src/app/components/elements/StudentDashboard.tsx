@@ -147,7 +147,7 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
 
     // Get the 2 most urgent due dates from assignments & quizzes combined
     // To avoid merging & re-sorting entire lists, get the 2 most urgent from each list first
-    const assignmentsToDo = [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld].slice(0, 2);
+    const assignmentsToDo = [...myAssignments.inProgress, ...myAssignments.overDue].slice(0, 2);
     const quizzesToDo = sortedQuizAssignments.slice(0, 2);
     const toDo = sortUpcomingAssignments([...assignmentsToDo, ...quizzesToDo]).slice(0, 2);
 
