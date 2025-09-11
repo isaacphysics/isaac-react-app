@@ -82,20 +82,16 @@ export interface PageTitleProps {
 }
 export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, help, className, audienceViews, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
-    const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {
         if (preview) return; // Don't set the main content ID if we're in preview mode
-        dispatch(mainContentIdSlice.actions.set("main-heading"));
+        dispatch(mainContentIdSlice.actions.set({id: "main-heading", priority: 1}));
     }, []);
+
     useEffect(() => {
         if (preview) return; // Don't set the document title if we're in preview mode
         document.title = currentPageTitle + " — " + SITE_TITLE;
-        const element = headerRef.current;
-        if (element && (window as any).followedAtLeastOneSoftLink && !openModal) {
-            element.focus();
-        }
     }, [currentPageTitle, preview]);
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-2 mb-0": isPhy}, className)}>

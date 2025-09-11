@@ -113,7 +113,7 @@ function getRelatedUnansweredSupportingQuestions(doc: ApiTypes.QuestionDTO, leve
     }) : [];
 }
 
-interface FastTrackPageProperties {
+export interface FastTrackPageProperties {
     isFastTrackPage: boolean;
     doc: QuestionDTO;
     correct: boolean;
