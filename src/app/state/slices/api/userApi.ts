@@ -1,8 +1,6 @@
 import {isaacApi} from "./baseApi";
 import {onQueryLifecycleEvents} from "./utils";
 import {TOTPSharedSecretDTO} from "../../../../IsaacApiTypes";
-import { scheduleTeacherOnboardingModalForNextOverviewVisit } from "../../../components/elements/modals/AdaTeacherOnboardingModal";
-import { isAda } from "../../../services";
 
 export const userApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
