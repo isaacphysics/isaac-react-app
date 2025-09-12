@@ -410,7 +410,7 @@ export function ResultsTable<Q extends QuestionType>({
                         <tr>
                             <th className="sticky-left text-start p-3 fw-bold">
                                 {siteSpecific(
-                                    `No. of students fully ${pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}`,
+                                    `${pageSettings?.formatAsPercentage ? "%" : "No."} of students fully ${pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}`,
                                     `Total fully ${pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}`
                                 )}
                             </th>
