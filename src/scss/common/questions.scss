@@ -472,7 +472,7 @@ $inline-feedback-padding: 2px;
 }
 
 .cloze-dropdown > button {
-  min-width: unset !important; // Bootstrap thinks its important
+  min-width: 40px !important; // Bootstrap thinks its important
 
   &.empty.empty {
     &, &:hover, &:active, &:focus { // Apply regardless of hover
