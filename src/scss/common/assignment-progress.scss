@@ -484,8 +484,14 @@ $failed-bg-size: 25%;
   }
 
   .progress-table-header-footer .correct-attempted-header {
-    width: 10rem;
-    min-width: 8rem;
+    @include respond-below(md) {
+      width: 6rem;
+      min-width: 4rem;
+    }
+    @include respond-above(lg) {
+      width: 10rem;
+      min-width: 8rem;
+    }
   }
 
   td, th {
@@ -510,15 +516,15 @@ $failed-bg-size: 25%;
 
   @include respond-below(md) {
     .student-name {
-      min-width: 150px;
-      width: 150px;
+      min-width: 12rem;
+      width: 12rem;
     }
   }
 
   @include respond-below(sm) {
     .student-name {
-      min-width: 100px;
-      width: 100px;
+      min-width: 8rem;
+      width: 8rem;
     }
   }
 
