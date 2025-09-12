@@ -493,7 +493,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         await Promise.all([
             dispatch(getUserAuthSettings() as any),
             dispatch(getUserPreferences() as any)
-        ])
+        ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         trackEvent("sign_in_success", { props: { provider: provider.toLowerCase() }});
         if (providerResponse.data.firstLogin) {
