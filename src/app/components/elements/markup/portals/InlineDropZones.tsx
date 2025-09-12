@@ -103,8 +103,8 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
         toggle={() => {setIsOpen(!isOpen);}}
         className="cloze-dropdown"
     >
-        <DropdownToggle className={classNames({"empty": !item, "px-1 py-0": isPhy, "p-2": isAda})} style={{minHeight: height, width: width}} innerRef={zoneRef}>
-            <div className={classNames("d-flex cloze-item feedback-zone", {"cloze-bg": !!item, "feedback-showing": isDefined(isCorrect), "p-2": isAda && !!item})}>
+        <DropdownToggle className={classNames("py-1 px-3", {"empty": !item, "pe-2": isDefined(isCorrect)})} outline={isAda} style={{minHeight: height, width: width}} innerRef={zoneRef}>
+            <div className={classNames("d-flex cloze-item feedback-zone", {"cloze-bg": !!item && isPhy, "feedback-showing": isDefined(isCorrect)})}>
                 <span className={"visually-hidden"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
                 <span aria-hidden={true}>
                     <Markup trusted-markup-encoding={"html"}>
@@ -114,7 +114,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
                 {isDefined(isCorrect) && <div className={"feedback-box"}>
                     <span className={classNames("feedback", isCorrect ? "correct" : "incorrect")}>{isCorrect ? "✔" : "✘"}</span>
                 </div>}
-                {!item && <i className={classNames("icon icon-chevron-down icon-dropdown-180 ms-auto", {"active": isOpen})} aria-hidden="true"/>}
+                {!item && <i className={classNames("icon icon-chevron-down icon-dropdown-180 ms-auto me-n2", {"active": isOpen})} aria-hidden="true"/>}
             </div>
         </DropdownToggle>
         <DropdownMenu container={zoneRef.current?.closest(".question-content") as HTMLElement || "body"} end>
