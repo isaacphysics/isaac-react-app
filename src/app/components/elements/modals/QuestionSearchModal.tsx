@@ -33,7 +33,7 @@ import {
     TAG_LEVEL,
     below,
     useDeviceSize,
-    EXAM_BOARD
+    EXAM_BOARD, QUESTIONS_PER_GAMEBOARD
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -171,7 +171,7 @@ export const QuestionSearchModal = (
 
     const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center mt-2">
         <div className="flex-grow-1 mb-1">
-            <strong className={classNames({"text-danger": selectedQuestions.size > 10})}>
+            <strong className={classNames({"text-danger": selectedQuestions.size > QUESTIONS_PER_GAMEBOARD})}>
                 {`${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`}
             </strong>
         </div>
