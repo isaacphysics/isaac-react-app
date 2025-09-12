@@ -31,6 +31,7 @@ import {
     showAdditionalManagerSelfRemovalModal,
     showCreateGroupModal,
     showErrorToast,
+    showGroupArchiveModal,
     showGroupEmailModal,
     showGroupInvitationModal,
     showGroupManagersModal,
@@ -125,7 +126,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
         <div className="pt-1 d-flex flex-fill">
             {siteSpecific(
                 <i className="d-none d-md-inline-block icon icon-my-isaac me-2"/>,
-                <span className={classNames("d-none d-md-inline-block icon-group-table-person")}/>
+                <span className="d-none d-md-inline-block icon-group-table-person"/>
             )}
             <div>
                 {member.authorisedFullAccess ?
@@ -293,7 +294,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                             />
                             {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <Button
                                 color={siteSpecific("keyline", "solid")}
-                                className={classNames("w-100 w-md-auto")} disabled={newGroupName === "" || (newGroupName === group.groupName)}
+                                className="w-100 w-md-auto" disabled={newGroupName === "" || (newGroupName === group.groupName)}
                                 onClick={saveUpdatedGroup}
                             >
                                 Update
@@ -396,19 +397,18 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                         </div>}
                     </ShowLoading>
                 </div>
-                {
-                    canArchive &&
-                    <>
-
-                        {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
-
-                        <div>
-                            <Button className={"w-100 w-md-auto"} color={siteSpecific("solid", "keyline")} onClick={toggleArchived}>
-                                {`${group.archived ? "Unarchive" : "Archive"} group`}
-                            </Button>
-                        </div>
-                    </>
-                }
+                {canArchive && <>
+                    {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
+                    <div>
+                        <Button className={classNames("w-100 w-md-auto", {"mt-n3 mb-2": isPhy})} color={siteSpecific("solid", "keyline")} 
+                            onClick={async () => {
+                                if (group.archived) toggleArchived();
+                                else await dispatch(showGroupArchiveModal({group, toggleArchived}));
+                            }}>
+                            {`${group.archived ? "Unarchive" : "Archive"} group`}
+                        </Button>
+                    </div>
+                </>}
             </div>
         </CardBody>
     </Card>;
