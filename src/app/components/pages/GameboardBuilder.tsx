@@ -43,7 +43,7 @@ import {
     Item,
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
-    logEvent,
+    logEvent, QUESTIONS_PER_GAMEBOARD,
     selectOnChange,
     siteSpecific,
     STAGE,
@@ -224,7 +224,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const titleIsValid = gameboardTitle != "";
     const tooFewQuestions = selectedQuestions.size == 0;
-    const tooManyQuestions = selectedQuestions.size > 10;
+    const tooManyQuestions = selectedQuestions.size > QUESTIONS_PER_GAMEBOARD;
     const questionSetIsValid = !tooFewQuestions && !tooManyQuestions;
     const allInputIsValid = isValidGameboardId(gameboardURL) && titleIsValid && questionSetIsValid;
 
@@ -411,7 +411,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <div>
                             <span className={classNames("fw-bold form-required")}>Questions</span>
                             <p className={classNames("d-none d-sm-block input-description mb-2")}>
-                                You can add up to 10 questions.
+                                You can add up to {QUESTIONS_PER_GAMEBOARD} questions.
                             </p>
                         </div>
                         <div className={"d-flex flex-row gap-2"}>
@@ -483,7 +483,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         </DragDropContext>
                     </div>
                     <div className={"invalid-feedback"}>
-                        {`${tooManyQuestions ? "Only 10 questions can be added, please remove some." : "Please add some questions."}`}
+                        {`${tooManyQuestions ? `Only ${QUESTIONS_PER_GAMEBOARD} questions can be added, please remove some.` : "Please add some questions."}`}
                     </div>
                     <div className="d-flex flex-column flex-md-row justify-content-end gap-2 mt-3">
                         <ShowLoading
