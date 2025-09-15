@@ -44,7 +44,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
         ? getQuizAssignmentCSVDownloadLink(assignment.id as number)
         : getAssignmentProgressCSVDownloadLink(assignment.id as number);
 
-    const isScheduled = isPhy && assignment.scheduledStartDate && new Date(assignment.scheduledStartDate) > new Date();
+    const isScheduled = assignment.scheduledStartDate && new Date(assignment.scheduledStartDate) > new Date();
 
     return <Link to={quiz ? `/test/assignment/${assignment.id}/feedback` : `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} className="w-100 d-block no-underline mt-2">
         <div className="d-flex align-items-center assignment-progress-group w-100 p-3">
@@ -56,12 +56,12 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
                         <i className="icon icon-new-tab" />
                     </a>
                 </span>
-                <div className="d-flex">
-                    {assignment.scheduledStartDate && new Date(assignment.scheduledStartDate) > new Date() && <Badge className="d-flex align-items-center me-2 text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
+                <div className="d-flex flex-column flex-sm-row align-items-start gap-2 me-2">
+                    {isScheduled && <Badge className="d-flex align-items-center text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                         <i className="icon icon-event-upcoming me-2" color="primary"/>
                         {`Starts: ${formatDate(assignment.scheduledStartDate)}`}
                     </Badge>}
-                    {assignment.dueDate && <Badge className="d-flex align-items-center me-2 text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
+                    {assignment.dueDate && <Badge className="d-flex align-items-center text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                         <i className="icon icon-event-upcoming me-2" color="primary"/>
                         {`Due: ${formatDate(assignment.dueDate)}`}
                     </Badge>}
