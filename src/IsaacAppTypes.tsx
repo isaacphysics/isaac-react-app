@@ -333,7 +333,7 @@ export interface ActiveModalWithoutState {
     bodyContainerClassName?: string;
 }
 
-export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
+export type ProgressSortOrder = number | "name" | "totalPartPercentage" | "totalAttemptedPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
 
 export enum QuizzesBoardOrder {
     "title" = "title",
