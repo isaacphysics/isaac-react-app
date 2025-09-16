@@ -17,8 +17,8 @@ const INITIAL_NO_ASSIGNMENTS = 10;
 const NO_ASSIGNMENTS_INCREMENT = 10;
 export enum AssignmentState {
     ALL = "All",
-    TODO_RECENT = "To do (recent)",
-    TODO_OLDER = "To do (older)",
+    TODO = "To do",
+    OVERDUE = "Overdue",
     ALL_ATTEMPTED = "All attempted",
     ALL_CORRECT = "All correct"
 }
@@ -137,9 +137,9 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                 };
 
                                 const assignmentByStates: Record<AssignmentState, AssignmentDTO[]> = {
-                                    [AssignmentState.ALL]: [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld, ...myAssignments.allAttempted, ...myAssignments.allCorrect],
-                                    [AssignmentState.TODO_RECENT]: myAssignments.inProgressRecent,
-                                    [AssignmentState.TODO_OLDER]: myAssignments.inProgressOld,
+                                    [AssignmentState.ALL]: [...myAssignments.inProgress, ...myAssignments.overDue, ...myAssignments.allAttempted, ...myAssignments.allCorrect],
+                                    [AssignmentState.TODO]: myAssignments.inProgress,
+                                    [AssignmentState.OVERDUE]: myAssignments.overDue,
                                     [AssignmentState.ALL_ATTEMPTED]: myAssignments.allAttempted,
                                     [AssignmentState.ALL_CORRECT]: myAssignments.allCorrect
                                 };

@@ -100,7 +100,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
             setOrder={setBoardOrder} alignment="start">
-            Board name
+            Deck name
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
             <div className="d-flex align-items-center">
@@ -125,9 +125,9 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
             <Row>
                 <Col lg={4}>
                     <Label className="w-100">
-                        Filter boards <Input type="text"
+                        Filter decks <Input type="text"
                             onChange={e => setBoardTitleFilter(e.target.value)}
-                            placeholder="Filter boards by name"/>
+                            placeholder="Filter decks by name"/>
                     </Label>
                 </Col>
                 <Col sm={6} lg={2}>
