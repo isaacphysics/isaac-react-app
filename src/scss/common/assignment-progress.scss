@@ -484,8 +484,10 @@ $failed-bg-size: 25%;
   }
 
   .progress-table-header-footer .correct-attempted-header {
-    @include respond-below(md) {
+    @include respond-between(sm, sm) {
       font-size: 0.9rem;
+    }
+    @include respond-below(md) {
       width: 6rem;
       min-width: 6rem;
     }
