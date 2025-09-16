@@ -28,6 +28,7 @@ import { GameboardsCards, GameboardsCardsProps, GameboardsTable, GameboardsTable
 import classNames from "classnames";
 import { MainContent, MyGameboardsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { PageMetadata } from "../elements/PageMetadata";
+import { useHistoryState } from "../../state/actions/history";
 
 export interface GameboardsDisplaySettingsProps {
     boardView: BoardViews,
@@ -121,8 +122,8 @@ export const MyGameboards = () => {
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
 
     const [selectedBoards, setSelectedBoards] = useState<GameboardDTO[]>([]);
-    const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
-    const [boardCompletion, setBoardCompletion] = useState<BoardCompletions>(BoardCompletions.any);
+    const [boardCreator, setBoardCreator] = useHistoryState<BoardCreators>("boardCreator", BoardCreators.all);
+    const [boardCompletion, setBoardCompletion] = useHistoryState<BoardCompletions>("boardCompletion", BoardCompletions.any);
     const [inProgress, setInProgress] = useState(0);
     const [notStarted, setNotStarted] = useState(0);
     const [showFilters, setShowFilters] = useState(false);

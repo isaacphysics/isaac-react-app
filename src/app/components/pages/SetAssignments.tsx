@@ -60,6 +60,7 @@ import {PromptBanner} from "../elements/cards/PromptBanner";
 import { PageMetadata } from "../elements/PageMetadata";
 import { SetAssignmentsModal } from "../elements/modals/SetAssignmentsModal";
 import { PageFragment } from "../elements/PageFragment";
+import { useHistoryState } from "../../state/actions/history";
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -313,8 +314,8 @@ export const SetAssignments = () => {
     const {data: assignmentsSetByMe} = useGetMySetAssignmentsQuery(undefined);
     const groupsByGameboard = useMemo(() => getAssigneesByBoard(assignmentsSetByMe), [assignmentsSetByMe]);
 
-    const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
-    const [boardSubject, setBoardSubject] = useState<BoardSubjects>(BoardSubjects.all);
+    const [boardCreator, setBoardCreator] = useHistoryState<BoardCreators>("boardCreator", BoardCreators.all);
+    const [boardSubject, setBoardSubject] = useHistoryState<BoardSubjects>("boardSubject", BoardSubjects.all);
 
     const deviceSize = useDeviceSize();
     const {
