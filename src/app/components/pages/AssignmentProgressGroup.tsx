@@ -44,17 +44,24 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
         ? getQuizAssignmentCSVDownloadLink(assignment.id as number)
         : getAssignmentProgressCSVDownloadLink(assignment.id as number);
 
+    const isScheduled = assignment.scheduledStartDate && new Date(assignment.scheduledStartDate) > new Date();
+
     return <Link to={quiz ? `/test/assignment/${assignment.id}/feedback` : `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} className="w-100 d-block no-underline mt-2">
         <div className="d-flex align-items-center assignment-progress-group w-100 p-3">
             <div className="d-flex flex-column">
                 <span className="d-flex">
                     <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
+                    {isScheduled && <em className="mx-1">(scheduled)</em>}
                     <a className="new-tab-link" href={quiz ? assignment.quizSummary?.url : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
                         <i className="icon icon-new-tab" />
                     </a>
                 </span>
-                <div className="d-flex">
-                    {assignment.dueDate && <Badge className="d-flex align-items-center me-2 text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
+                <div className="d-flex flex-column flex-sm-row align-items-start gap-2 me-2">
+                    {isScheduled && <Badge className="d-flex align-items-center text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
+                        <i className="icon icon-event-upcoming me-2" color="primary"/>
+                        {`Starts: ${formatDate(assignment.scheduledStartDate)}`}
+                    </Badge>}
+                    {assignment.dueDate && <Badge className="d-flex align-items-center text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                         <i className="icon icon-event-upcoming me-2" color="primary"/>
                         {`Due: ${formatDate(assignment.dueDate)}`}
                     </Badge>}
@@ -66,11 +73,11 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
                 </div>
             </div>
             <Spacer/>
-            <strong className="align-content-center">
+            {!isScheduled && <strong className="align-content-center">
                 <a href={csvDownloadLink} className="assignment-csv-download-link" target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
                     Download CSV
                 </a>
-            </strong>
+            </strong>}
             <i className="icon icon-chevron-right ms-3" color="tertiary"/>
         </div>
     </Link>;
@@ -144,20 +151,9 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         <Card>
             <CardBody>
                 <Row className="mb-3">
-                    <Col xs={12} lg={8}>
+                    <Col xs={12}>
                         <h3>Assignments and tests</h3>
                         <span>View this group&apos;s progress on assignment and tests.</span>
-                    </Col>
-                    <Col xs={12} sm={6} lg={4} className="d-flex flex-column">
-                        <Label className="m-0 fw-bold mt-2 mt-lg-0">Sort by:</Label>
-                        <StyledDropdown
-                            value={Object.values(AssignmentOrder).findIndex(item => item.type === assignmentOrder.type && item.order === assignmentOrder.order)}
-                            onChange={(e) => setAssignmentOrder(Object.values(AssignmentOrder)[parseInt(e.target.value)])}
-                        >
-                            {Object.values(AssignmentOrder).map((item, index) =>
-                                <option key={item.type + item.order} value={index}>{item.type} ({item.order === SortOrder.ASC ? "ascending" : "descending"})</option>
-                            )}
-                        </StyledDropdown>
                     </Col>
                     <Col xs={12} sm={6} lg={4}>
                         <Label className="m-0 fw-bold mt-2 mt-lg-3">Search:</Label>
@@ -165,6 +161,18 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                             onChange={(e) => setSearchText(e.target.value)}
                             placeholder={`Search for ${activeTab === "assignments" ? "assignments" : "tests"}...`}
                         />
+                    </Col>
+                    <Col xs={12} sm={6} lg={{size: 4, offset: 4}} className="d-flex flex-column">
+                        <Label for="sort-by-dropdown" className="m-0 fw-bold mt-2 mt-lg-3">Sort by:</Label>
+                        <StyledDropdown
+                            value={Object.values(AssignmentOrder).findIndex(item => item.type === assignmentOrder.type && item.order === assignmentOrder.order)}
+                            onChange={(e) => setAssignmentOrder(Object.values(AssignmentOrder)[parseInt(e.target.value)])}
+                            id="sort-by-dropdown"
+                        >
+                            {Object.values(AssignmentOrder).map((item, index) =>
+                                <option key={item.type + item.order} value={index}>{item.type} ({item.order === SortOrder.ASC ? "ascending" : "descending"})</option>
+                            )}
+                        </StyledDropdown>
                     </Col>
                 </Row>
 
