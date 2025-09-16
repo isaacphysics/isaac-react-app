@@ -31,15 +31,21 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
 
     useLayoutEffect(() => {
         if (expanded) {
-            setExpandedHeight(listRef?.current 
+            const containerHeight = listRef?.current 
                 // clientHeight cannot determine margin (nor can any reasonable alternative, since margins can overlap)! this will be smaller than the true height
                 // if margin exists. if this is the case, use additionalOffset to add additional space to the bottom of the list
                 ? Math.max([...listRef.current.children].map(c => c.getAttribute("data-targetheight") 
                     ? parseInt(c.getAttribute("data-targetheight") as string) 
                     : c.clientHeight
-                ).reduce((a, b) => a + b, 0), listRef.current.clientHeight) 
-                : 0
-            );
+                ).reduce((a, b) => a + b, 0), listRef.current.clientHeight)
+                : undefined;
+            
+            if (containerHeight !== 0) {
+                // if children are present in the DOM but have zero clientHeight (e.g. display: none from being on an inactive tab), 
+                // without this condition we would set the target expansion height to 0 if the children update through some external means. 
+                // this would hide the children when their correct height / visibility is restored.
+                setExpandedHeight(containerHeight ?? 0);
+            }
         }
     }, [expanded, props.children]);
 
