@@ -2,7 +2,7 @@ import React, {useContext, useMemo, useState} from "react";
 import { Link } from "react-router-dom";
 import { AssignmentProgressDTO, GameboardItem, CompletionState } from "../../../IsaacApiTypes";
 import { EnhancedAssignmentWithProgress, AssignmentProgressPageSettingsContext, AuthorisedAssignmentProgress } from "../../../IsaacAppTypes";
-import { getAssignmentProgressCSVDownloadLink, getThemeFromTags, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
+import { getAssignmentProgressCSVDownloadLink, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
 import { ICON, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
 import { Badge, Button, Card, CardBody } from "reactstrap";
 import { formatDate } from "../elements/DateString";
@@ -291,6 +291,10 @@ const DetailedMarksTab = ({assignment, progress}: DetailedMarksTabProps) => {
                 <h3>Performance on questions</h3>
             )}
             <span>See the questions your students answered{isPhy && " and which parts they struggled with"}.</span>
+
+            {isPhy && <div className="py-3 mt-2">
+                <AssignmentProgressSettings />
+            </div>}
 
             {questions.map((_, questionIndex) => (
                 <DetailedMarksCard
