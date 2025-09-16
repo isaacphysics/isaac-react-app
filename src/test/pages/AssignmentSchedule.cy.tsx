@@ -8,7 +8,8 @@ describe('Assignment Schedule', () => {
         // @ts-ignore
         cy.mountWithStoreAndRouter(<AssignmentSchedule user={mockUser}/>, ["assignment_schedule"]);
         cy.get('[data-testid="loading"]').should('not.exist');
-        cy.get('.month-label').first().click().blur();
+        cy.get('.month-label').eq(0).click().blur();
+        cy.get('.month-label').eq(1).click().blur();
         cy.matchImage();
     });
 });
