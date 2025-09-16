@@ -1,9 +1,6 @@
 .llm-indicator {
     position: relative;
     display: flex;
-    background-color: lightgray;
-    color: black;
-    border: 1px solid silver;
     border-radius:2rem;
     padding: 0.5rem 0.75rem;
     font-weight: 600;
@@ -11,47 +8,33 @@
     width: fit-content;
     height: fit-content;
     align-items: center;
-    &.small {
-        border: 1px solid silver !important;
-        font-weight: 600 !important;
-    }
 }
 
 .llm-info-banner {
-    background-color: lightgray;
-    color: black;
-    border: 1px solid silver;
     padding: 2rem 3rem;
     margin-bottom: 2rem;
     border-radius: 0.5rem;
     h2 {
         font-size: x-large !important;
     }
-    p a {
-        color: darksalmon !important;
-    }
 }
 
 .llm-feedback {
-    color: black;
     h2 {
         font-size: larger !important;
     }
     .prediction {
         display: inline-block;
-        background-color: lightgray;
         border-radius: 0.5rem;
         padding: 1rem 1rem;
         margin-bottom: 1rem;
     }
     .curved-table-wrapper {
         border-radius: 0.5rem;
-        border: 2px solid gray;
         table, thead, tbody {
             border: 0;
         }
         tr {
-            border: 2px solid gray;
             border-left: 0;
             border-right: 0;
         }
@@ -65,7 +48,6 @@
             table-layout: fixed;
             th {
                 font-family: $primary-font;
-                background-color: white !important;
                 border: 0;
                 padding: 0.5rem;
                 font-weight: 600;
@@ -88,9 +70,6 @@
     .feedback-collection {
         li + li {
             margin-top: 1rem;
-        }
-        &.submitted {
-            color: green;
         }
     }
 }

@@ -1,1 +1,46 @@
 @import '../common/llm-questions.scss';
+
+.llm-indicator {
+    background-color: lightgray;
+    color: black;
+    border: 1px solid silver;
+
+    &.small {
+        border: 1px solid silver !important;
+        font-weight: 600 !important;
+    }
+}
+
+.llm-info-banner {
+    background-color: lightgray;
+    color: black;
+    border: 1px solid silver;
+
+    p a {
+        color: darksalmon !important;
+    }
+}
+
+.llm-feedback {
+    color: black;
+
+    .prediction {
+        background-color: lightgray;
+    }
+    
+    .curved-table-wrapper {
+        border: 2px solid gray;
+        tr {
+            border: 2px solid gray;
+        }
+        table {
+            th {
+                background-color: white !important;
+            }
+        }
+    }
+
+    .feedback-collection.submitted {
+        color: green;
+    }
+}
