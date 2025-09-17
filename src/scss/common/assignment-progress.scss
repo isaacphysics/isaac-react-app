@@ -484,13 +484,16 @@ $failed-bg-size: 25%;
   }
 
   .progress-table-header-footer .correct-attempted-header {
+    @include respond-between(sm, sm) {
+      font-size: 0.9rem;
+    }
     @include respond-below(md) {
       width: 6rem;
-      min-width: 4rem;
+      min-width: 6rem;
     }
-    @include respond-above(lg) {
-      width: 10rem;
-      min-width: 8rem;
+    @include respond-above(md) {
+      width: 8rem;
+      min-width: 7rem;
     }
   }
 
