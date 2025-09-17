@@ -281,8 +281,7 @@ export function ResultsTable<Q extends QuestionType>({
                 >
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
-                            {/* on sci tests only, these make more sense to be called "Questions" even though they are not */}
-                            <span>{!isAssignment ? "Questions" : "Parts"}</span>
+                            <span>Parts</span>
                             <small className="mt-n1 text-muted">(total)</small>
                         </div>,
                         "Correct"
