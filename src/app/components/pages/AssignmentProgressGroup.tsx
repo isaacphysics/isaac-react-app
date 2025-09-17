@@ -99,6 +99,8 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
 
     const assignmentLikeListing = activeTab === "assignments" ? groupBoardAssignments : groupQuizAssignments;
 
+    const filteredAssignments = assignmentLikeListing?.filter(al => (isQuiz(al) ? al.quizSummary?.title : al.gameboard?.title)?.toLowerCase().includes(searchText.toLowerCase()));
+
     return <Container className="mb-5">
         <TitleAndBreadcrumb
             currentPageTitle={group?.groupName ?? "Group progress"}
@@ -117,7 +119,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                 Back to assignment progress
             </Link>}
             {isDefined(group?.id) && <>
-                {above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
+                {isPhy && above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
                 <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupAssignmentProgressCSVDownloadLink(group.id as number))))}>
                     Download assignments CSV
                     <i className="icon icon-download ms-2" color="white"/>
@@ -189,9 +191,11 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                     {isFetching
                         ? <Loading/>
                         : assignmentLikeListing?.length
-                            ? assignmentLikeListing
-                                .filter(al => (isQuiz(al) ? al.quizSummary?.title : al.gameboard?.title)?.toLowerCase().includes(searchText.toLowerCase()))
-                                .map(assignment => <AssignmentLikeLink key={assignment.id} assignment={assignment} />)
+                            ? filteredAssignments?.length
+                                ? filteredAssignments.map(assignment => <AssignmentLikeLink key={assignment.id} assignment={assignment} />)
+                                : <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
+                                    <span>No {activeTab === "assignments" ? "assignments" : "tests"} match your search.</span>
+                                </div>
                             : <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
                                 <span>You haven&apos;t {activeTab === "assignments" ? "set any assignments" : "assigned any tests"} yet.</span>
                                 <strong><Link to={activeTab === "assignments" ? PATHS.SET_ASSIGNMENTS : "/set_tests"} className={classNames("btn btn-link", {"fw-bold": isPhy})}>
