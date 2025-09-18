@@ -11,9 +11,20 @@ const CompetitionButton = ({ buttons }: CompetitionButtonProps) => {
   const history = useHistory();
   const location = useLocation();
 
+  const isExternalLink = (url: string) => {
+    return url.startsWith("http://") || url.startsWith("https://") || url.startsWith("mailto:");
+  };
+
   const handleClick = (to: string) => {
     persistence.save(KEY.AFTER_AUTH_PATH, location.pathname);
-    history.push(to);
+
+    if (isExternalLink(to)) {
+      // For external links, open in the new tab
+      window.open(to, "_blank", "noopener, noreferrer");
+    } else {
+      // For internal links, use React Router
+      history.push(to);
+    }
   };
 
   return (

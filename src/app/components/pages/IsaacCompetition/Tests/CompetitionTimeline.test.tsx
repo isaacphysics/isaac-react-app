@@ -4,9 +4,9 @@ import CompetitionTimeline from "../CompetitionInformation/CompetitionTimeline";
 
 describe("CompetitionTimeline Component", () => {
   const mockEntries = [
-    { event: "Event 1", date: "2024-01-01" },
-    { event: "Event 2", date: "2024-02-01" },
-    { event: "Event 3", date: "2024-03-01" },
+    { event: "Competition Opens", date: "2025-11-02" },
+    { event: "Entry Deadline", date: "2026-01-31" },
+    { event: "Finalists Announced", date: "2026-03-13" },
   ];
 
   const title = "Competition Timeline";

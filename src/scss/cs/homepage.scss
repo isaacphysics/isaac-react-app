@@ -303,12 +303,58 @@
   background-color: #ffdf80;
 
   &-title {
-    font-size: 78px;
+    font-size: 40px;
     color: #120540;
+    
+    @include respond-below(md) {
+      font-size: 48px;
+    }
+    
+    @include respond-below(sm) {
+      font-size: 32px;
+    }
   }
 
   &-sub-title {
     color: #120540;
     font-size: 32px;
+    
+    @include respond-below(md) {
+      font-size: 24px;
+    }
+    
+    @include respond-below(sm) {
+      font-size: 15px;
+    }
+  }
+
+  // Special styling for closed state
+  &.closed-state {
+    .homepage-highlight-title {
+      font-size: 40px;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      
+      @include respond-below(md) {
+        font-size: 40px;
+      }
+      
+      @include respond-below(sm) {
+        font-size: 24px;
+      }
+    }
+    
+    .homepage-highlight-sub-title {
+      font-size: 24px;
+      font-weight: 500;
+      
+      @include respond-below(md) {
+        font-size: 20px;
+      }
+      
+      @include respond-below(sm) {
+        font-size: 18px;
+      }
+    }
   }
 }

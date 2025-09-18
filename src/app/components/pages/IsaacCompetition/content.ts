@@ -7,10 +7,9 @@ export default {
       ],
     },
     note: {
-      heading: "Teachers - good news!",
-      entryDetails:
-        "The deadline has been extended. Make sure to submit your students' project by 7 April at 16:00. Follow our",
-      callToAction: "accounts for updates.",
+      heading: "Please note:",
+      entryDetails: "Competition entries open in November 2025 and last until the end of January 2026. Follow our",
+      callToAction: "accounts for updates and teachers can sign up to our expression of interest form below.",
       xLink: "https://x.com/isaaccompsci",
       facebookLink: "https://www.facebook.com/IsaacComputerScience",
     },
@@ -45,7 +44,7 @@ export default {
         "2. Students and teachers create or log in to an account",
         "3. Boost your knowledge with our Student Boosters and Gameboards",
         "4. Work individually or in a group to develop a project, record a video, and ask your teacher to submit it",
-        "5. Teachers submit students' projects. The finalists will be selected and invited to a final in Birmingham on 19 May 2025.",
+        "5. Teachers submit competition entry! The finalists will be selected and invited to a final in Birmingham in May 2026.",
       ],
     },
     whyJoin: {
@@ -62,27 +61,22 @@ export default {
       description:
         "This competition encourages teamwork, allowing groups of up to 4 students or individual entries with teacher support.",
       requirements:
-        "Eligible participants must be in Year 9, 10, or 11 during the 2024/2025 academic year and attend a state-funded school in England; private, independent, and home-educated students are not eligible.",
+        "Eligible participants must be in Year 9, 10, or 11 during the 2025/2026 academic year and attend a state-funded school in England; private, independent, and home-educated students are not eligible.",
     },
     prizes: {
       title: "🏆 The prizes",
       description: "Finalists from each region will participate in exclusive partner events, which may include:",
-      prizeList: [
-        "£50 Amazon gift vouchers",
-        "industry tours with partners such as Siemens",
-        "a Royal Albert Hall box for a show of your choice",
-        "Isaac Computer Science merchandise to support students",
-      ],
+      prizeList: ["£50 Amazon gift vouchers", "Isaac Computer Science merchandise to support students"],
     },
     timeline: {
       title: "Competition Timeline",
       content:
-        "Save the 2024/25 dates in your calendar and plan time for you or your team to develop your IoE idea before applications close.",
+        "Save the 2025/26 dates in your calendar and plan time for you or your team to develop your IoE idea before applications close.",
       entries: [
-        { event: "Entries open", date: "January" },
-        { event: "Entries close", date: "7th April 16:00" },
-        { event: "Finalist selected", date: "April" },
-        { event: "The final", date: "19 May" },
+        { event: "Entries open", date: "November 2025" },
+        { event: "Entries close", date: "31 January 2026" },
+        { event: "Finalist selected", date: "March 2026" },
+        { event: "The final", date: "May 2026" },
       ],
     },
   },
