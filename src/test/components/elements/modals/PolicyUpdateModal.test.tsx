@@ -108,11 +108,11 @@ describe("PolicyUpdateModal", () => {
       expect(policyUpdateModal.isCloseable).toBe(false);
     });
 
-    it("should contain 2 privacy policy links", () => {
+    it("should contain 1 link to the updated privacy policy page", () => {
       renderModalDirect();
 
       const linkElements = screen.getAllByRole("link");
-      expect(linkElements).toHaveLength(2);
+      expect(linkElements).toHaveLength(1);
 
       linkElements.forEach((link) => {
         expect(link).toHaveAttribute("href", "/privacy");
