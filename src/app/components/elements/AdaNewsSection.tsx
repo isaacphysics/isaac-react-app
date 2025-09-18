@@ -7,15 +7,14 @@ import classNames from "classnames";
 import { selectors, useAppSelector, useGetNewsPodListQuery } from "../../state";
 import { useLinkableSetting } from "../../services/linkableSetting";
 
-export const AdaNewsSection = ({containerClassName}: {containerClassName?: string}) => {
+export const AdaNewsSection = ({isHomepage}: {isHomepage?: boolean}) => {
     const deviceSize = useDeviceSize();
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
     const userPreferences = useAppSelector(selectors.user.preferences);
     const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
     const {setLinkedSetting} = useLinkableSetting();
-    const isHomepage = containerClassName?.includes("homepage");
 
-    return ((news && news.length > 0) || showNewsletterPrompts) && <Container className={containerClassName}>
+    return ((news && news.length > 0) || showNewsletterPrompts) && <Container className={isHomepage ? "homepage-padding mw-1600" : "overview-padding mw-1600"}>
         <h2 className={classNames({"font-size-1-75 mb-4": isHomepage})}>Tips, tools & support</h2>
         {news && news.length > 0 &&
             <>

@@ -192,7 +192,7 @@ export const HomepageCS = () => {
             </section>
 
             <section id="news" className="bg-white">
-                <AdaNewsSection containerClassName="homepage-padding mw-1600" />
+                <AdaNewsSection isHomepage />
             </section>
         </div>
     </>;

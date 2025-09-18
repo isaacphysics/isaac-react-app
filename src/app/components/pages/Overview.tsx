@@ -84,7 +84,7 @@ export const Overview = () => {
         </section>
 
         <section id="news">
-            <AdaNewsSection containerClassName="overview-padding mw-1600" />
+            <AdaNewsSection />
         </section>
     </div>;
 };
