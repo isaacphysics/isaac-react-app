@@ -12,20 +12,13 @@ export const policyUpdateModal = {
   body: (
     <>
       <p>
-        With this update, we have clarified the role of National Center for Computing Education (NCCE), the types of
-        data we collect (such as your school affiliation), how to contact us, and the date we will keep your personal
-        data until for the purposes of evaluation of the Isaac Computer Science Program.
+        We’ve clarified that Isaac Computer Science is part of the National Centre for Computing Education (NCCE), which
+        data we collect (for example, your school), how long we keep it for programme evaluation, and how to contact us.
       </p>
-      <p>
-        To continue using the platform, you&apos;ll need to review and accept the updated{" "}
-        <a href="/privacy" rel="noopener noreferrer">
-          Privacy Policy
-        </a>
-        {"."}
-      </p>
+      <p>To continue using the platform, you&apos;ll need to review and accept the updated Privacy Policy.</p>
       <p>
         <a href="/privacy" rel="noopener noreferrer">
-          View Privacy Policy
+          View the updated Privacy Policy
         </a>
       </p>
     </>
