@@ -5,7 +5,7 @@ import CompetitionButton from "../Buttons/CompetitionButton";
 import { selectors, useAppSelector } from "../../../../state";
 import { isStudent, isTeacher } from "../../../../services";
 import CompetitionWrapper from "../CompetitionWrapper";
-import { BEFORE_COMPETITION_OPEN_MESSAGE, CLOSED_MESSAGE, STUDENT_MESSAGE, TEACHER_MESSAGE } from "../constants";
+import { CLOSED_MESSAGE, STUDENT_MESSAGE, TEACHER_MESSAGE } from "../constants";
 
 const StudentMessage = () => (
   <Container>
@@ -36,6 +36,12 @@ interface EntryFormHandlerProps {
 const EntryFormHandler = ({ buttons, handleTermsClick }: EntryFormHandlerProps) => {
   const user = useAppSelector(selectors.user.orNull);
 
+  // EOI button configuration - same as HomepageHighlight
+  const eoiButton = {
+    to: "https://forms.office.com/e/23bsQuZfjm",
+    label: "Express your interest",
+  };
+
   const renderEntryForm = () => {
     if (isTeacher(user)) {
       return (
@@ -55,7 +61,7 @@ const EntryFormHandler = ({ buttons, handleTermsClick }: EntryFormHandlerProps) 
       beforeCompetitionOpenContent={
         <Container>
           <Col className="d-flex flex-column align-items-start pb-4 pl-0" xs="auto">
-            <p className="pb-3 body-text">{BEFORE_COMPETITION_OPEN_MESSAGE}</p>
+            <CompetitionButton buttons={[eoiButton]} />
           </Col>
         </Container>
       }
