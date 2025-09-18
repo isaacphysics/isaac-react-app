@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2025-06-11 15:44:03.
+// Generated using typescript-generator version 3.2.1263 on 2025-08-14 15:05:51.
 
 export interface AssignmentDTO extends IAssignmentLike {
   gameboardId?: string;
@@ -541,6 +541,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
   registeredContextsLastConfirmed?: EpochTimeStamp;
   firstLogin?: boolean;
   lastUpdated?: EpochTimeStamp;
+  privacyPolicyAcceptedTime?: EpochTimeStamp;
   lastSeen?: EpochTimeStamp;
   emailVerificationStatus?: EmailVerificationStatus;
   id?: number;
@@ -571,6 +572,7 @@ export interface UserSummaryDTO extends AbstractSegueUserDTO {
   emailVerificationStatus?: EmailVerificationStatus;
   teacherPending?: boolean;
   registeredContexts?: UserContext[];
+  privacyPolicyAcceptedTime?: EpochTimeStamp;
   id?: number;
 }
 
@@ -596,10 +598,10 @@ export interface UserSummaryWithGroupMembershipDTO extends UserSummaryDTO {
 
 export interface IAssignmentLike {
   id?: number;
-  creationDate?: EpochTimeStamp;
   groupId?: number;
   ownerUserId?: number;
   dueDate?: EpochTimeStamp;
+  creationDate?: EpochTimeStamp;
 }
 
 export interface GameboardItem {

@@ -239,7 +239,10 @@ const GroupEditor = ({ group, user, createNewGroup, groupNameInputRef }: GroupCr
     } else {
       createNewGroup(newGroupName).then((success) => {
         if (success) {
-          setNewGroupName("");
+          // Defer state update to avoid act() warnings
+          setTimeout(() => {
+            setNewGroupName("");
+          }, 0);
         }
       });
     }
@@ -417,7 +420,10 @@ const MobileGroupCreatorComponent = ({ className, createNewGroup }: GroupCreator
   function saveUpdatedGroup() {
     createNewGroup(newGroupName).then((success) => {
       if (success) {
-        setNewGroupName("");
+        // Defer state update to avoid act() warnings
+        setTimeout(() => {
+          setNewGroupName("");
+        }, 0);
       }
     });
   }
@@ -497,7 +503,10 @@ export const Groups = ({ user }: { user: RegisteredUserDTO }) => {
         const group = result.data;
         if (!group.id) return false;
         dispatch(showGroupInvitationModal({ group, user, firstTime: true }));
-        setSelectedGroupId(group.id);
+        // Defer state update to avoid act() warnings
+        setTimeout(() => {
+          setSelectedGroupId(group.id);
+        }, 0);
         return true;
       }
       return false;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   closeActiveModal,
   showAdditionalManagerSelfRemovalModal,
@@ -157,17 +157,13 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
   ],
 });
 
-const CurrentGroupManagersModal = ({
-  groupId,
-  archived,
-  userIsOwner,
-  user,
-}: {
+interface CurrentGroupManagersModalProps {
   groupId: number;
   archived: boolean;
   userIsOwner: boolean;
   user: RegisteredUserDTO;
-}) => {
+}
+const CurrentGroupManagersModal = ({ groupId, archived, userIsOwner, user }: CurrentGroupManagersModalProps) => {
   const dispatch = useAppDispatch();
   const { data: groups } = isaacApi.endpoints.getGroups.useQuery(archived);
   const group = groups?.find((g) => g.id === groupId);
@@ -181,6 +177,15 @@ const CurrentGroupManagersModal = ({
     [];
 
   const [newManagerEmail, setNewManagerEmail] = useState("");
+  const [shouldClearEmail, setShouldClearEmail] = useState(false);
+
+  // Handle clearing the email field
+  useEffect(() => {
+    if (shouldClearEmail) {
+      setNewManagerEmail("");
+      setShouldClearEmail(false);
+    }
+  }, [shouldClearEmail]);
 
   function addManager(event: any) {
     if (event) {
@@ -189,8 +194,8 @@ const CurrentGroupManagersModal = ({
     if (group?.id) {
       addGroupManager({ groupId: group.id, managerEmail: newManagerEmail }).then((result) => {
         if ("data" in result) {
-          // Successful addition, clear new manager email field
-          setNewManagerEmail("");
+          // Successful addition, trigger email field clearing
+          setShouldClearEmail(true);
         }
       });
     }

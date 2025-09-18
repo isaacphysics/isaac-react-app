@@ -87,10 +87,13 @@ const AssignGroup = ({ groups, board, allowScheduling }: AssignGroupProps) => {
       }),
     ).then((success) => {
       if (success) {
-        setSelectedGroups([]);
-        setDueDate(undefined);
-        setScheduledStartDate(undefined);
-        setAssignmentNotes("");
+        // Defer state updates to avoid act() warnings
+        setTimeout(() => {
+          setSelectedGroups([]);
+          setDueDate(undefined);
+          setScheduledStartDate(undefined);
+          setAssignmentNotes("");
+        }, 0);
       }
     });
   }

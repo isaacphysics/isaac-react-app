@@ -260,7 +260,8 @@ const AccountPageComponent = ({
     contextsChanged ||
     userChanged ||
     otherPreferencesChanged ||
-    (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
+    (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences) ||
+    (activeTab === ACCOUNT_TAB.passwordreset && newPassword && newPasswordConfirm);
   useEffect(() => {
     if (accountInfoChanged && !saving) {
       return history.block(
@@ -503,7 +504,9 @@ const AccountPageComponent = ({
                         value="Save"
                         className="btn btn-block btn-secondary border-0"
                         disabled={
-                          !accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections || !isNewPasswordConfirmed
+                          !accountInfoChanged ||
+                          activeTab === ACCOUNT_TAB.teacherconnections ||
+                          (activeTab === ACCOUNT_TAB.passwordreset && !isNewPasswordConfirmed)
                         }
                       />
                     </Col>

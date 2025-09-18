@@ -76,6 +76,9 @@ export type Action =
   | { type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST }
   | { type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS }
   | { type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE; errorMessage: string }
+  | { type: ACTION_TYPE.USER_PRIVACY_POLICY_UPDATE_REQUEST }
+  | { type: ACTION_TYPE.USER_PRIVACY_POLICY_UPDATE_RESPONSE_SUCCESS }
+  | { type: ACTION_TYPE.USER_PRIVACY_POLICY_UPDATE_RESPONSE_FAILURE; errorMessage: string }
   | { type: ACTION_TYPE.USER_LOG_OUT_REQUEST }
   | { type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS }
   | { type: ACTION_TYPE.MY_PROGRESS_REQUEST }
@@ -507,6 +510,7 @@ export interface ActiveModal {
   body: any;
   buttons?: any[];
   overflowVisible?: boolean;
+  isCloseable?: boolean;
 }
 
 export enum BoardOrder {

@@ -61,5 +61,6 @@ export const notificationModal = (notification: any) => {
     },
     title: notification.title,
     body: <NotificationModalBody notification={notification} />,
+    isCloseable: true as boolean | undefined,
   };
 };

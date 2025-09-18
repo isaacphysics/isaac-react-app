@@ -21,6 +21,8 @@ import { requiredAccountInformationModal } from "../../components/elements/modal
 import { emailConfirmationModal } from "../../components/elements/modals/EmailConfirmationModal";
 import { loginOrSignUpModal } from "../../components/elements/modals/LoginOrSignUpModal";
 import { userContextReconfirmationModal } from "../../components/elements/modals/UserContextReconfirmationModal";
+import { policyUpdateModal } from "../../components/elements/modals/PolicyUpdateModal";
+import { LAST_PRIVACY_POLICY_UPDATE_TIME } from "../../components/elements/modals/inequality/constants";
 
 export const notificationCheckerMiddleware: Middleware =
   (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
@@ -35,6 +37,23 @@ export const notificationCheckerMiddleware: Middleware =
       }
 
       if (isDefined(user)) {
+        // Check if user is currently on the privacy policy page
+        const currentPath = state?.router?.location?.pathname || window.location.pathname;
+        const isOnPrivacyPage = currentPath === "/privacy";
+
+        // privacyPolicyAcceptedTime will be null for new users. If policy is updated then get user to accept it.
+        // Don't show modal if user is on privacy policy page
+        const acceptedTime = user.privacyPolicyAcceptedTime ? new Date(user.privacyPolicyAcceptedTime).getTime() : null;
+
+        if (
+          !isOnPrivacyPage &&
+          isLoggedIn(user) &&
+          (acceptedTime === null || acceptedTime === undefined || acceptedTime <= LAST_PRIVACY_POLICY_UPDATE_TIME)
+        ) {
+          setTimeout(() => {
+            dispatch(openActiveModal(policyUpdateModal));
+          }, 1000);
+        }
         // email confirmation modal to take precedence over other modals, only for teacherPending accounts
         if (
           needToVerifyEmail(user.teacherPending, user.emailVerificationStatus) &&

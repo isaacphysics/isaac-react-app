@@ -122,6 +122,12 @@ describe("SetAssignments", () => {
         }),
       ],
     });
+
+    // Wait for loading to complete
+    await waitFor(() => {
+      expect(screen.queryByTestId("loading-spinner")).not.toBeInTheDocument();
+    });
+
     const gameboards = await screen.findAllByTestId("assignment-gameboard-card");
     const mockGameboard = mockGameboards.results[0];
 

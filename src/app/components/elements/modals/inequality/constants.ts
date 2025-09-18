@@ -96,3 +96,5 @@ export const HYP_FUNCTION_NAMES = [
 export const LOG_FUNCTION_NAMES = ["ln", "log"];
 
 export const DIFFERENTIAL_REGEX = /^(Delta|delta|d)\s*(?:\^([0-9]+))?\s*([a-zA-Z]+(?:(?:_|\^).+)?)/;
+
+export const LAST_PRIVACY_POLICY_UPDATE_TIME = new Date("2025-09-18").getTime();
