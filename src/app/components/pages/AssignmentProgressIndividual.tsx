@@ -145,7 +145,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                 </div>
             </div>
 
-            <div className="d-flex flex-column flex-lg-row mt-2 mb-2 row-gap-2">
+            <div className={classNames("d-flex flex-column flex-lg-row row-gap-2 my-2", {"pt-1": isAda /* increase space for checkbox */})}>
                 {isPhy && <CollapsibleContainer expanded={settingsVisible} className="w-100">
                     <div className="py-3">
                         <AssignmentProgressSettings />
@@ -177,7 +177,7 @@ const AdaKey = () => {
     const context = useContext(AssignmentProgressPageSettingsContext);
 
     const KeyItem = ({icon, label}: {icon: React.ReactNode, label: string}) => (
-        <span className="d-flex align-items-center w-max-content gap-2">
+        <span className="d-flex align-items-center w-max-content gap-2 fw-bold">
             {icon} {label}
         </span>
     );
@@ -206,7 +206,7 @@ const AdaKey = () => {
     </div>;
 };
 
-const QuestionLink = ({questionId, boardId}: {questionId?: string, boardId?: string}) => <a className="new-tab-link" href={`/questions/${questionId}` + (boardId ? `?board=${boardId}` : "")} target="_blank" onClick={(e) => e.stopPropagation()}>
+const QuestionLink = ({questionId, boardId}: {questionId?: string, boardId?: string}) => <a className="new-tab-link" href={`/questions/${questionId}` + (boardId ? `?board=${boardId}` : "")} target="_blank" onClick={(e) => e.stopPropagation()} aria-label="Open question in new tab">
     <i className="icon icon-new-tab" />
 </a>;
 
@@ -359,7 +359,7 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
                 <i className="icon icon-arrow-left me-2"/>
                 Back to group assignments and tests
             </Link>}
-            <Spacer/>
+            {isPhy && <Spacer/>}
             <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getAssignmentProgressCSVDownloadLink(assignment.id))))}>
                 Download CSV
                 <i className="icon icon-download ms-2" color="white"/>

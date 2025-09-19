@@ -40,7 +40,7 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
                 <b data-testid="group-name">{group.groupName}</b>
                 <Spacer/>
                 <strong>
-                    <a className={classNames("d-flex align-items-center pe-3", {"text-brand": isPhy})} href={getGroupAssignmentProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
+                    <a className={classNames("d-flex align-items-center pe-4", {"text-brand": isPhy})} href={getGroupAssignmentProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
                         Download assignments CSV
                         <i className="icon icon-download ms-2"/>
                     </a>
@@ -53,7 +53,7 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
                 </strong>}
             </div>
             <div className="flex-grow-1 flex-lg-grow-0"/>
-            <i className="icon icon-chevron-right ms-lg-3" color="tertiary"/>
+            <i className="icon icon-chevron-right ms-lg-4" color="tertiary"/>
         </div>
 
     </Link>;

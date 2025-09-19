@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
-import {isAuthorisedFullAccess, isPhy, siteSpecific, TODAY} from "../../../services";
+import {isAda, isAuthorisedFullAccess, isPhy, siteSpecific, TODAY} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
@@ -349,7 +349,7 @@ export function ResultsTable<Q extends QuestionType>({
 
     return <div className="assignment-progress-progress">
         {progress && progress.length > 0 ? <>
-            <div className="assignment-progress-table-wrapper border">
+            <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
                 <table ref={tableRef} className="progress-table w-100">
                     <thead className="sticky-top">
                         {tableHeaderFooter}
@@ -551,14 +551,15 @@ export function ResultsTablePartBreakdown({
     }) ?? [];
 
     return sortedProgress?.length
-        ? <div className="assignment-progress-table-wrapper border">
+        ? <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
             <table {...rest} className={classNames("progress-table assignment-progress-progress w-100", rest.className)}>
-                <thead className="progress-table-header-footer">
+                <thead className="progress-table-header-footer fw-bold">
                     <SortItemHeader<ProgressSortOrder>
                         className="student-name sticky-left ps-3 py-3"
                         defaultOrder={"name"}
                         reverseOrder={"name"}
                         currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                        alignment={"start"}
                     >
                         Name
                     </SortItemHeader>
