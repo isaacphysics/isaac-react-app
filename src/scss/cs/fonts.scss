@@ -25,8 +25,8 @@
 
 @font-face {
   font-family: 'poppins';
-  font-weight: normal;
-  font-style: normal;
+  font-weight: bold;
+  font-style: italic;
   src: url('/assets/cs/fonts/poppins-bolditalic.woff2') format('woff2'),
   url('/assets/cs/fonts/poppins-bolditalic.woff') format('woff'),
   url('/assets/cs/fonts/poppins-bolditalic.ttf') format('truetype');
@@ -84,9 +84,9 @@
 }
 
 @font-face {
-  font-family: 'poppins-semibolditalic';
-  font-weight: normal;
-  font-style: normal;
+  font-family: 'poppins';
+  font-weight: 600;
+  font-style: italic;
   src: url('/assets/cs/fonts/poppins-semibolditalic.woff2') format('woff2'),
   url('/assets/cs/fonts/poppins-semibolditalic.woff') format('woff'),
   url('/assets/cs/fonts/poppins-semibolditalic.ttf') format('truetype');
