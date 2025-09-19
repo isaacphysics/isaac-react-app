@@ -50,7 +50,8 @@
 
     &.active {
       .nav-link {
-        font-family: $secondary-font-semi-bold;
+        font-family: $secondary-font;
+        font-weight: 600;
         background-color: var(--tab-active, $black);
         color: $white;
         text-decoration: none;

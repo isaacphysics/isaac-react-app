@@ -28,7 +28,8 @@
   }
 
   .card-title {
-    font-family: $secondary-font-semi-bold;
+    font-family: $secondary-font;
+    font-weight: 600;
     font-size: 1.25rem;
   }
 
@@ -154,7 +155,7 @@
 .action-card {
   height: 100%;
   h2 {
-    font-family: $secondary-font-medium;
+    font-family: $secondary-font;
     font-size: 1.625rem;
   }
   p:first-of-type > span {
@@ -167,7 +168,8 @@
   }
 
   .btn {
-    font-family: $secondary-font-bold;
+    font-family: $secondary-font;
+    font-weight: bold;
     text-decoration: none;
     &:hover {
       text-decoration: underline;

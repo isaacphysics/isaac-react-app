@@ -49,7 +49,7 @@ main {
     color: white;
     text-transform: uppercase;
     font-size: 19px;
-    font-family: $secondary-font-bold;
+    font-family: $secondary-font;
     font-weight: 700;
     span {
       position: absolute;
@@ -66,7 +66,8 @@ main {
     line-height: 60px;
     padding: 0;
     padding-left: 15px;
-    font-family: $secondary-font-bold;
+    font-family: $secondary-font;
+    font-weight: bold;
   }
   td:hover {
     background: $gray-107;

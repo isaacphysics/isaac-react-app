@@ -3,7 +3,8 @@
 .event-type-hex {
     color: white;
     > b {
-      font-family: $secondary-font-semi-bold;
+      font-family: $secondary-font;
+      font-weight: 600;
       position: absolute;
       text-align: center;
       max-width: 75px;
@@ -31,7 +32,8 @@
 // Named class for event titles to avoid
 // styling headings encoded in the markdown
 .event-title {
-  font-family: $secondary-font-bold;
+  font-family: $secondary-font;
+  font-weight: bold;
   margin-bottom: 0;
 }
 
