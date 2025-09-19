@@ -85,7 +85,8 @@ div:has(> .pod) {
       color: white;
 
       > b {
-        font-family: $secondary-font-semi-bold;
+        font-family: $secondary-font;
+        font-weight: 600;
         position: absolute;
         text-align: center;
         font-size: 12px;

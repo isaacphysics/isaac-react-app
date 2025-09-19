@@ -48,7 +48,9 @@
   margin: 18px -0.625rem 0 -0.625rem;
 
   h4 {
-    font-family: exo_2bold_italic, sans-serif;
+    font-family: $secondary-font;
+    font-style: italic;
+    font-weight: bold;    
   }
 
   button {
@@ -58,9 +60,9 @@
     width: 100%;
     color: $primary;
     font-size: 22px;
-    font-family: 'exo_2semi_bold', sans-serif !important;
-    line-height: 1.2;
+    font-family: $secondary-font !important;
     font-weight: 600;
+    line-height: 1.2;
     border-radius: 3px;
     background-color: #e3e3e3;
     padding: 20px 15px 19px 70px;
@@ -91,7 +93,8 @@ svg.book-contents-icon {
   width:40px;
 
   text {
-    font-family: 'exo_2semi_bold', sans-serif;
+    font-family: $secondary-font;
+    font-weight: 600;
     fill: white;
     text-anchor: middle;
   }
@@ -106,7 +109,8 @@ svg.book-page-icon {
   }
 
   text {
-    font-family: 'exo_2semi_bold', sans-serif;
+    font-family: $secondary-font;
+    font-weight: 600;
     fill: white;
     text-anchor: middle;
   }

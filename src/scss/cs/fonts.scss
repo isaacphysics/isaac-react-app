@@ -14,8 +14,8 @@
 }
 
 @font-face {
-  font-family: 'poppins-bold';
-  font-weight: normal;
+  font-family: 'poppins';
+  font-weight: bold;
   font-style: normal;
   src: url('/assets/cs/fonts/poppins-bold.woff2') format('woff2'),
   url('/assets/cs/fonts/poppins-bold.woff') format('woff'),
@@ -24,7 +24,7 @@
 }
 
 @font-face {
-  font-family: 'poppins-bolditalic';
+  font-family: 'poppins';
   font-weight: normal;
   font-style: normal;
   src: url('/assets/cs/fonts/poppins-bolditalic.woff2') format('woff2'),
@@ -34,9 +34,9 @@
 }
 
 @font-face {
-  font-family: 'poppins-italic';
+  font-family: 'poppins';
   font-weight: normal;
-  font-style: normal;
+  font-style: italic;
   src: url('/assets/cs/fonts/poppins-italic.woff2') format('woff2'),
   url('/assets/cs/fonts/poppins-italic.woff') format('woff'),
   url('/assets/cs/fonts/poppins-italic.ttf') format('truetype');
@@ -44,8 +44,8 @@
 }
 
 @font-face {
-  font-family: 'poppins-light';
-  font-weight: normal;
+  font-family: 'poppins';
+  font-weight: 300;
   font-style: normal;
   src: url('/assets/cs/fonts/poppins-light.woff2') format('woff2'),
   url('/assets/cs/fonts/poppins-light.woff') format('woff'),
@@ -54,9 +54,9 @@
 }
 
 @font-face {
-  font-family: 'poppins-lightitalic';
-  font-weight: normal;
-  font-style: normal;
+  font-family: 'poppins';
+  font-weight: 300;
+  font-style: italic;
   src: url('/assets/cs/fonts/poppins-lightitalic.woff2') format('woff2'),
   url('/assets/cs/fonts/poppins-lightitalic.woff') format('woff'),
   url('/assets/cs/fonts/poppins-lightitalic.ttf') format('truetype');
@@ -64,7 +64,7 @@
 }
 
 @font-face {
-  font-family: 'poppins-regular';
+  font-family: 'poppins';
   font-weight: normal;
   font-style: normal;
   src: url('/assets/cs/fonts/poppins-regular.woff2') format('woff2'),
@@ -74,8 +74,8 @@
 }
 
 @font-face {
-  font-family: 'poppins-semibold';
-  font-weight: normal;
+  font-family: 'poppins';
+  font-weight: 600;
   font-style: normal;
   src: url('/assets/cs/fonts/poppins-semibold.woff2') format('woff2'),
   url('/assets/cs/fonts/poppins-semibold.woff') format('woff'),
