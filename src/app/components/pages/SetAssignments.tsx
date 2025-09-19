@@ -60,6 +60,7 @@ import {PromptBanner} from "../elements/cards/PromptBanner";
 import { PageMetadata } from "../elements/PageMetadata";
 import { SetAssignmentsModal } from "../elements/modals/SetAssignmentsModal";
 import { PageFragment } from "../elements/PageFragment";
+import { useHistoryState } from "../../state/actions/history";
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -122,35 +123,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
 
     return <Card className="mt-2 mb-7">
         <CardBody id="boards-table">
-            <Row>
-                <Col lg={4}>
-                    <Label className="w-100">
-                        Filter decks <Input type="text"
-                            onChange={e => setBoardTitleFilter(e.target.value)}
-                            placeholder="Filter decks by name"/>
-                    </Label>
-                </Col>
-                <Col sm={6} lg={2}>
-                    <Label className="w-100">
-                        Subject <Input type="select" value={boardSubject}
-                            onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
-                            {Object.values(BoardSubjects).map(subject => <option key={subject}
-                                value={subject}>{subject}</option>)}
-                        </Input>
-                    </Label>
-                </Col>
-                <Col lg={2}>
-                    <Label className="w-100">
-                        Creator <Input type="select" value={boardCreator}
-                            onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                            {Object.values(BoardCreators).map(creator => <option key={creator}
-                                value={creator}>{creator}</option>)}
-                        </Input>
-                    </Label>
-                </Col>
-            </Row>
-
-            <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false} className="mt-3">
+            <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
                 <Table className="mb-0">
                     <thead>
                         {tableHeader}
@@ -313,8 +286,8 @@ export const SetAssignments = () => {
     const {data: assignmentsSetByMe} = useGetMySetAssignmentsQuery(undefined);
     const groupsByGameboard = useMemo(() => getAssigneesByBoard(assignmentsSetByMe), [assignmentsSetByMe]);
 
-    const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
-    const [boardSubject, setBoardSubject] = useState<BoardSubjects>(BoardSubjects.all);
+    const [boardCreator, setBoardCreator] = useHistoryState<BoardCreators>("boardCreator", BoardCreators.all);
+    const [boardSubject, setBoardSubject] = useHistoryState<BoardSubjects>("boardSubject", BoardSubjects.all);
 
     const deviceSize = useDeviceSize();
     const {
