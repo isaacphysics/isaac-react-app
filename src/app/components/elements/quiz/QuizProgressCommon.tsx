@@ -247,7 +247,7 @@ export function ResultsTable<Q extends QuestionType>({
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
                         <span>Questions</span>
-                        <small className="mt-n1 text-muted">(total)</small>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
                     </div>,
                     "Correct"
                 )}
@@ -263,7 +263,7 @@ export function ResultsTable<Q extends QuestionType>({
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
                         <span>Questions</span>
-                        <small className="mt-n1 text-muted">(total)</small>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
                     </div>,
                     "Attempted"
                 )}
@@ -282,7 +282,7 @@ export function ResultsTable<Q extends QuestionType>({
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
                             <span>Parts</span>
-                            <small className="mt-n1 text-muted">(total)</small>
+                            <small className="mt-n1 text-muted fw-normal">(total)</small>
                         </div>,
                         "Correct"
                     )}
@@ -298,7 +298,7 @@ export function ResultsTable<Q extends QuestionType>({
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
                             <span>Parts</span>
-                            <small className="mt-n1 text-muted">(total)</small>
+                            <small className="mt-n1 text-muted fw-normal">(total)</small>
                         </div>,
                         "Attempted"
                     )}
@@ -573,7 +573,7 @@ export function ResultsTablePartBreakdown({
                             {siteSpecific(
                                 <div className="d-flex flex-column ps-3">
                                     <span>Parts</span>
-                                    <small className="mt-n1 text-muted">(total)</small>
+                                    <small className="mt-n1 text-muted fw-normal">(total)</small>
                                 </div>,
                                 "Correct"
                             )}
@@ -588,7 +588,7 @@ export function ResultsTablePartBreakdown({
                             {siteSpecific(
                                 <div className="d-flex flex-column ps-3">
                                     <span>Parts</span>
-                                    <small className="mt-n1 text-muted">(total)</small>
+                                    <small className="mt-n1 text-muted fw-normal">(total)</small>
                                 </div>,
                                 "Attempted"
                             )}
