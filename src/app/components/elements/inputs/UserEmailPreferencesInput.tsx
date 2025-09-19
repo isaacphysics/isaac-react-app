@@ -98,7 +98,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         ...emailPreferences,
                         NEWS_AND_UPDATES: e.target.checked
                     })}
-                    label={<span><b>News</b></span>}
+                    label={<span><b>Tips and updates</b></span>}
                 />
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.news}</span>
             </WithLinkableSetting>
