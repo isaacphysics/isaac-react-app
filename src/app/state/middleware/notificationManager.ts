@@ -26,6 +26,15 @@ import { LAST_PRIVACY_POLICY_UPDATE_TIME } from "../../components/elements/modal
 
 export const notificationCheckerMiddleware: Middleware =
   (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
+    // Skip all modal checks for any logout-related actions
+    if (action.type && (
+      action.type.includes("LOG_OUT") ||
+      action.type.includes("LOGOUT") ||
+      (action.type === routerPageChange.type && (action as any).payload === '/logout')
+    )) {
+      return dispatch(action);
+    }
+
     const state = middlewareApi.getState();
     if ([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, routerPageChange.type].includes(action.type)) {
       // Get user object either from the action or state
