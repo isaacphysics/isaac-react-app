@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, Col, Row } from "reactstrap";
-import { ACCOUNT_TAB, isLoggedIn, KEY, persistence, useNavigation, useUserConsent } from "../../services";
+import { ACCOUNT_TAB, isAda, isLoggedIn, KEY, persistence, useNavigation, useUserConsent } from "../../services";
 import { Link, useLocation } from "react-router-dom";
 import { selectors, updateCurrentUser, useAppDispatch, useAppSelector } from "../../state";
 import { PotentialUser } from "../../../IsaacAppTypes";
@@ -31,9 +31,9 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
         <p>
             The only data we send to the LLM is your answer; we do not send any personal data.
         </p>
-        <p>
+        {isAda && <p>
             You can read more in our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link>.
-        </p>
+        </p>}
         <Row className="align-items-center mt-4">
             <Col div className="col-12 col-sm-auto me-auto">
                 <Link to="/login" onClick={setAfterAuthPath} className="btn btn-solid me-2 w-100 w-sm-auto">
@@ -64,7 +64,7 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
         <p>
             We use a large language model (LLM) to mark free-text questions like this one.
             The model typically returns a predicted mark in under 10 seconds; however the marks you receive may not be accurate.
-            See our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link> for more information.
+            {isAda && ` See our ${<Link to={locationOfFAQEntry} target="_blank">FAQs</Link>} for more information.`}
         </p>
         <p>
             We only send your answer to OpenAI, we do not send any personal data.
@@ -90,7 +90,8 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
         <h2>Free text questions are marked by a large language model (LLM)</h2>
         <p>
             In our 2024 study, we found that the LLM marks agreed with the marks computer science teachers gave 66% of the time.
-            This means that the marks you receive will not always be accurate. For more information, read our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link>.
+            This means that the marks you receive will not always be accurate.
+            {isAda && ` For more information, read our ${<Link to={locationOfFAQEntry} target="_blank">FAQs</Link>}.`}
         </p>
         <p>
             Do not include personal data in your answer as we send your answer to OpenAI.
@@ -113,7 +114,7 @@ export function LLMFreeTextQuestionInfoBanner({doc}: InfoBannerProps) {
         CopyToDisplay = GeneralInfoCopy;
     }
 
-    return <div className="d-print-none llm-info-banner mt-2">
+    return <div className="d-print-none llm-info-banner mt-2" data-bs-theme="neutral">
         <CopyToDisplay doc={doc} />
     </div>;
 }

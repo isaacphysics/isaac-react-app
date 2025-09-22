@@ -71,6 +71,8 @@ interface QuestionMetaDataProps {
 const QuestionMetaData = (props: QuestionMetaDataProps) => {
     const {doc, allQuestionsCorrect, allQuestionsAttempted, anyQuestionAttempted, audienceViews} = props;
 
+    const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
+
     return <>
         <MetadataContainer className="d-flex row no-print">
             <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
@@ -81,7 +83,8 @@ const QuestionMetaData = (props: QuestionMetaDataProps) => {
                         <span key={tag.title} className="text-theme">{tag.title}</span>
                         {index !== arr.length - 1 && <span className="mx-2">|</span>}
                     </>)}
-                </div>
+                </div>                
+                {isAda && pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
             </Col>
             <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0">
                 <span>Status</span>
