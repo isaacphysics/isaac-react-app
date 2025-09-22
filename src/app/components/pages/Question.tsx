@@ -84,7 +84,6 @@ const QuestionMetaData = (props: QuestionMetaDataProps) => {
                         {index !== arr.length - 1 && <span className="mx-2">|</span>}
                     </>)}
                 </div>                
-                {isAda && pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
             </Col>
             <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0">
                 <span>Status</span>
@@ -173,7 +172,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                         <MainContent>
                             {!preview && <CanonicalHrefElement />}
 
-                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
+                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}>
                                 {isPhy && <QuestionMetaData 
                                     doc={doc} audienceViews={audienceViews} 
                                     allQuestionsCorrect={allQuestionsCorrect} 
@@ -181,8 +180,6 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                     anyQuestionAttempted={anyQuestionAttempted}
                                 />}
                             </PageMetadata>
-
-                            {isAda && pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
 
                             <Row className="question-content-container">
                                 <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>

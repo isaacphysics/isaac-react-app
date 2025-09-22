@@ -195,12 +195,12 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             </span>}
             <div className={classNames("d-flex flex-grow-1", siteSpecific(`flex-column ps-3 ${isConceptPage && audienceString ? "pt-1" : "pt-3"}`, "align-items-center ps-1"))}>
                 {isDefined(index) && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>}
-                <div className={classNames("accordion-title p-3 ps-1", siteSpecific("pt-0", ""))}>
+                <div className={classNames("accordion-title p-3 ps-1", siteSpecific("pt-0 d-flex align-items-center", ""))}>
                     {isConceptPage && audienceString && isPhy && <span className="inline-stage-label">{audienceString}<br/></span>}
                     <Markup encoding={"latex"}>
                         {trustedTitle || (isAda ? "" : (isDefined(index) ? `(${ALPHABET[index % ALPHABET.length].toLowerCase()})` : "Untitled"))}
                     </Markup>
-                    {isAda && accordionQuestionIncludeLLMMarked && !allQuestionsOnPageLLMMarked && <LLMFreeTextQuestionIndicator small={deviceSize === "xs"}/>}
+                    {accordionQuestionIncludeLLMMarked && !allQuestionsOnPageLLMMarked && <LLMFreeTextQuestionIndicator symbol={deviceSize === "xs"} className="ms-2"/>}
                     {isPhy && <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-black mx-2", {"active": isOpen})}/>}
                 </div>
                 {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
