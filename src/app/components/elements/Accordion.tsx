@@ -4,6 +4,7 @@ import {
     above,
     ALPHABET,
     audienceStyle,
+    below,
     calculateQuestionSetCompletionState,
     DOCUMENT_TYPE,
     isAda,
@@ -29,6 +30,7 @@ import { useReducedMotion } from "../../services/accessibility";
 import { Spacer } from "./Spacer";
 import { CompletionState } from "../../../IsaacApiTypes";
 import { StatusDisplay } from "./list-groups/AbstractListViewItem";
+import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -135,7 +137,6 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     const questionsInsideAccordionSection = questionsOnPage?.filter(q => q.accordionClientId === clientId.current);
     
     const accordionState = calculateQuestionSetCompletionState(questionsInsideAccordionSection);
-
     const accordionAltText = {
         [CompletionState.ALL_CORRECT]: "All questions in this part are answered correctly.",
         [CompletionState.ALL_INCORRECT]: "All questions in this part are answered incorrectly.",
@@ -143,6 +144,9 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         [CompletionState.IN_PROGRESS]: "Some questions in this part are answered incorrectly.",
         [CompletionState.NOT_ATTEMPTED]: "No questions in this part have been answered."
     };
+
+    const accordionQuestionIncludeLLMMarked = questionsInsideAccordionSection?.some(q => q.type === "isaacLLMFreeTextQuestion");
+    const allQuestionsOnPageLLMMarked = questionsOnPage?.every(q => q.type === "isaacLLMFreeTextQuestion");
 
     const isConceptPage = page && page != NOT_FOUND && page.type === DOCUMENT_TYPE.CONCEPT;
 
@@ -196,6 +200,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     <Markup encoding={"latex"}>
                         {trustedTitle || (isAda ? "" : (isDefined(index) ? `(${ALPHABET[index % ALPHABET.length].toLowerCase()})` : "Untitled"))}
                     </Markup>
+                    {isAda && accordionQuestionIncludeLLMMarked && !allQuestionsOnPageLLMMarked && <LLMFreeTextQuestionIndicator small={deviceSize === "xs"}/>}
                     {isPhy && <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-black mx-2", {"active": isOpen})}/>}
                 </div>
                 {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
