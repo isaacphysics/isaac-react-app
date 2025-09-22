@@ -47,7 +47,7 @@ export const notificationCheckerMiddleware: Middleware =
 
       if (isDefined(user)) {
         // Check if user is currently on the privacy policy page
-        const currentPath = state?.router?.location?.pathname || window.location.pathname;
+        const currentPath = state?.router?.location?.pathname || globalThis.location.pathname;
         const isOnPrivacyPage = currentPath === "/privacy";
 
         // privacyPolicyAcceptedTime will be null for new users. If policy is updated then get user to accept it.
