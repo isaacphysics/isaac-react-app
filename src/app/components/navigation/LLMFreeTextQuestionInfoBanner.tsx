@@ -94,7 +94,7 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
         <p>
             In our 2024 study, we found that the LLM marks agreed with the marks computer science teachers gave 66% of the time.
             This means that the marks you receive will not always be accurate.
-            {isAda && ` For more information, read our ${<Link to={locationOfFAQEntry} target="_blank">FAQs</Link>}.`}
+            {isAda && <>{` `}For more information, read our {<Link to={locationOfFAQEntry} target="_blank">FAQs</Link>}. </>}
         </p>
         <p>
             Do not include personal data in your answer as we send your answer to OpenAI.

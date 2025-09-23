@@ -49,10 +49,9 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                     id={"consent-to-openai-marking"}
                     removeVerticalOffset
                 />
-                <p>
-                    We use a large language model (LLM) to mark free-text questions on the site.
-                    We only send your answer to OpenAI, we do not send any personal data.
-                    {isAda && `For more information, read our ${<Link to="/support/student/general" target="_blank">FAQs</Link>}.`}
+                <p> 
+                    {`We use a large language model (LLM) to mark free-text questions on the site. We only send your answer to OpenAI, we do not send any personal data.`}
+                    {isAda && <>{` `}For more information, read our <Link to="/support/student/general" target="_blank">FAQs</Link>.</>}
                 </p>
             </WithLinkableSetting>
             <div className="section-divider"/>
