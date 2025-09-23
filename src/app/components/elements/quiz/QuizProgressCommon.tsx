@@ -195,8 +195,10 @@ export function ResultsTable<Q extends QuestionType>({
         switch (sortOrder) {
             case "name":
                 return sortByName(item);
-            case "totalQuestionPartPercentage":
+            case "totalPartPercentage":
                 return -item.correctQuestionPartsCount;
+            case "totalAttemptedPartPercentage":
+                return -(item.correctQuestionPartsCount + item.incorrectQuestionPartsCount);
             case "totalQuestionPercentage":
                 return -item.correctQuestionPagesCount;
             case "totalAttemptedQuestionPercentage":
@@ -235,26 +237,73 @@ export function ResultsTable<Q extends QuestionType>({
         </SortItemHeader>
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
-                className="pointer-cursor correct-attempted-header"
+                className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(undefined)}
-                label={"Total correct"}
+                label={"Total correct questions"}
             >
-                Correct
+                {siteSpecific(
+                    <div className="d-flex flex-column ps-3">
+                        <span>Questions</span>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                    </div>,
+                    "Correct"
+                )}
             </SortItemHeader>
             : <SortItemHeader<ProgressSortOrder>
-                className="pointer-cursor correct-attempted-header"
+                className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
                 defaultOrder={"totalAttemptedQuestionPercentage"}
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(undefined)}
-                label={"Total attempted"}
+                label={"Total attempted questions"}
             >
-                Attempted
+                {siteSpecific(
+                    <div className="d-flex flex-column ps-3">
+                        <span>Questions</span>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                    </div>,
+                    "Attempted"
+                )}
             </SortItemHeader>
         }
+        {isPhy && isAssignment && (
+            pageSettings?.attemptedOrCorrect === "CORRECT"
+                ? <SortItemHeader<ProgressSortOrder>
+                    className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
+                    defaultOrder={"totalPartPercentage"}
+                    reverseOrder={"totalPartPercentage"}
+                    currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                    onClick={() => setSelectedQuestionIndex(undefined)}
+                    label={"Total correct parts"}
+                >
+                    {siteSpecific(
+                        <div className="d-flex flex-column ps-3">
+                            <span>Parts</span>
+                            <small className="mt-n1 text-muted fw-normal">(total)</small>
+                        </div>,
+                        "Correct"
+                    )}
+                </SortItemHeader>
+                : <SortItemHeader<ProgressSortOrder>
+                    className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
+                    defaultOrder={"totalAttemptedPartPercentage"}
+                    reverseOrder={"totalAttemptedPartPercentage"}
+                    currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                    onClick={() => setSelectedQuestionIndex(undefined)}
+                    label={"Total attempted parts"}
+                >
+                    {siteSpecific(
+                        <div className="d-flex flex-column ps-3">
+                            <span>Parts</span>
+                            <small className="mt-n1 text-muted fw-normal">(total)</small>
+                        </div>,
+                        "Attempted"
+                    )}
+                </SortItemHeader>
+        )}
         {questions.map((_, index) =>
             <SortItemHeader<ProgressSortOrder>
                 defaultOrder={index}
@@ -365,7 +414,8 @@ export function ResultsTable<Q extends QuestionType>({
                                         <span>{studentProgress.user?.givenName} {studentProgress.user?.familyName}</span>
                                     }
                                 </th>
-                                <th title={fullAccess ? undefined : "Not Sharing"}>
+                                {/* total questions */}
+                                <th title={fullAccess ? undefined : "Not Sharing"} className={classNames({"sticky-ca-col": isPhy})}>
                                     {fullAccess
                                         ? formatMark(
                                             isAssignment
@@ -381,6 +431,19 @@ export function ResultsTable<Q extends QuestionType>({
                                         : ""
                                     }
                                 </th>
+                                {/* total parts */}
+                                {isPhy && isAssignment && <th title={fullAccess ? undefined : "Not Sharing"} className={classNames({"sticky-ca-col": isPhy})}>
+                                    {fullAccess
+                                        ? formatMark(
+                                            pageSettings?.attemptedOrCorrect === "CORRECT"
+                                                ? studentProgress.correctQuestionPartsCount
+                                                : studentProgress.correctQuestionPartsCount + studentProgress.incorrectQuestionPartsCount,
+                                            assignmentTotalQuestionParts,
+                                            !!pageSettings?.formatAsPercentage
+                                        )
+                                        : ""
+                                    }
+                                </th>}
                                 {questions.map((q, index) =>
                                     <td key={q.id} className={classNames(
                                         {[markQuestionClasses(studentProgress, index)]: isPhy},
@@ -414,7 +477,8 @@ export function ResultsTable<Q extends QuestionType>({
                                     `Total fully ${pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}`
                                 )}
                             </th>
-                            <th/>{/* correct column */}
+                            <th className={classNames({"sticky-ca-col": isPhy})} />{/* questions column */}
+                            {isPhy && isAssignment && <th className={classNames({"sticky-ca-col": isPhy})} />}{/* parts column */}
                             {classAverages.map(([numerator, denominator], index) => (
                                 <td key={index} className={classNames({"selected": index === selectedQuestionIndex})}>
                                     {formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}
@@ -461,7 +525,8 @@ export function ResultsTablePartBreakdown({
         switch (sortOrder) {
             case "name":
                 return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
-            case "totalQuestionPartPercentage":
+            case "totalPartPercentage":
+            case "totalAttemptedPartPercentage":
             case "totalQuestionPercentage":
             case "totalAttemptedQuestionPercentage":
                 return 0; // These sorts are not applicable for part breakdown
@@ -499,22 +564,34 @@ export function ResultsTablePartBreakdown({
                     </SortItemHeader>
                     {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
                         ? <SortItemHeader<ProgressSortOrder>
-                            className="pointer-cursor correct-attempted-header"
+                            className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
                             defaultOrder={"totalQuestionPercentage"}
                             reverseOrder={"totalQuestionPercentage"}
                             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                             label={"Total correct"}
                         >
-                            Correct
+                            {siteSpecific(
+                                <div className="d-flex flex-column ps-3">
+                                    <span>Parts</span>
+                                    <small className="mt-n1 text-muted fw-normal">(total)</small>
+                                </div>,
+                                "Correct"
+                            )}
                         </SortItemHeader>
                         : <SortItemHeader<ProgressSortOrder>
-                            className="pointer-cursor correct-attempted-header"
+                            className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
                             defaultOrder={"totalAttemptedQuestionPercentage"}
                             reverseOrder={"totalAttemptedQuestionPercentage"}
                             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                             label={"Total attempted"}
                         >
-                            Attempted
+                            {siteSpecific(
+                                <div className="d-flex flex-column ps-3">
+                                    <span>Parts</span>
+                                    <small className="mt-n1 text-muted fw-normal">(total)</small>
+                                </div>,
+                                "Attempted"
+                            )}
                         </SortItemHeader>
                     )}
                     {sortedProgress.find(p => !!p.questionPartResults)?.questionPartResults?.[questionIndex]?.map((_, i) =>
@@ -548,7 +625,7 @@ export function ResultsTablePartBreakdown({
 
                             {/* total correct/attempted */}
                             {isPhy && studentProgress.questionPartResults && 
-                                <td>
+                                <td className={classNames({"sticky-ca-col": isPhy})}>
                                     {formatMark(
                                         studentProgress.questionPartResults[questionIndex].reduce((acc, questionPartResult) => {
                                             if (pageSettings?.attemptedOrCorrect === "CORRECT") {
@@ -580,7 +657,7 @@ export function ResultsTablePartBreakdown({
                                 `Total fully ${pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}`
                             )}
                         </th>
-                        {isPhy && <th/>}{/* correct column */}
+                        {isPhy && <th className={classNames({"sticky-ca-col": isPhy})}/> /* correct column */}
                         {classAverages.map(([numerator, denominator], index) => (
                             <td key={index}>{formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}</td>
                         ))}

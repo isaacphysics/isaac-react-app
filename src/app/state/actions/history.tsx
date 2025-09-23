@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 export function useHistoryState<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
@@ -6,7 +6,7 @@ export function useHistoryState<T>(key: string, initialValue: T): [T, React.Disp
     const existingState = (history.location.state as object)?.[key as keyof typeof history.location.state];
     const [state, setState] = useState<T>(existingState ?? initialValue);
 
-    const setHistoryAndState = (value: React.SetStateAction<T>) => {
+    const setHistoryAndState = useCallback((value: React.SetStateAction<T>) => {
         history.replace({
             ...history.location,
             state: {
@@ -15,7 +15,7 @@ export function useHistoryState<T>(key: string, initialValue: T): [T, React.Disp
             }
         });
         setState(value);
-    };
+    }, [history, key]);
 
     return [state, setHistoryAndState];
 }

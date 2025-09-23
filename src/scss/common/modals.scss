@@ -17,7 +17,7 @@
     button {
       &.close {
         color: $black;
-        font-family: $secondary-font-medium;
+        font-family: $secondary-font;
         font-size: 1rem;
         font-weight: 400;
         opacity: 1;
@@ -27,9 +27,9 @@
     }
 
     .modal-title {
-      font-family: $secondary-font-semi-bold;
-      font-size: 2.125rem;
+      font-family: $secondary-font;
       font-weight: 600;
+      font-size: 2.125rem;
     }
   }
 
@@ -40,7 +40,7 @@
   .modal-footer {
     @include respond-below(sm) {
       button, a {
-        font-family: $secondary-font-medium;
+        font-family: $secondary-font;
         margin: 0 0.25rem 1rem;
       }
     }

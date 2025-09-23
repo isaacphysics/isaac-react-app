@@ -307,7 +307,7 @@ export const updateCurrentUser = (
             if (isFirstLogin) {
                 persistence.session.remove(KEY.FIRST_LOGIN);
                 if (redirect) {
-                    continueToAfterAuthPath({loggedIn: true, ...currentUser});
+                    continueToAfterAuthPath({loggedIn: true, ...currentUser.data});
                 }
             } else if (!editingOtherUser) {
                 dispatch(showToast({
