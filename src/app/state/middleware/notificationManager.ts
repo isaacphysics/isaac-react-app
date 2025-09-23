@@ -26,7 +26,6 @@ import { LAST_PRIVACY_POLICY_UPDATE_TIME } from "../../components/elements/modal
 
 export const notificationCheckerMiddleware: Middleware =
   (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
-
     const state = middlewareApi.getState();
     if ([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, routerPageChange.type].includes(action.type)) {
       // Get user object either from the action or state
