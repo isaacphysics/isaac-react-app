@@ -26,14 +26,6 @@ import { LAST_PRIVACY_POLICY_UPDATE_TIME } from "../../components/elements/modal
 
 export const notificationCheckerMiddleware: Middleware =
   (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
-    // Skip all modal checks for any logout-related actions
-    if (action.type && (
-      action.type.includes("LOG_OUT") ||
-      action.type.includes("LOGOUT") ||
-      (action.type === routerPageChange.type && (action as any).payload === '/logout')
-    )) {
-      return dispatch(action);
-    }
 
     const state = middlewareApi.getState();
     if ([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, routerPageChange.type].includes(action.type)) {
@@ -46,12 +38,12 @@ export const notificationCheckerMiddleware: Middleware =
       }
 
       if (isDefined(user)) {
-        // Check if user is currently on the privacy policy page
+        // Check if user is currently on the privacy policy page or log out
+        // Don't show modal if user is on privacy policy page or the user logs out
         const currentPath = state?.router?.location?.pathname || globalThis.location.pathname;
-        const isOnPrivacyPage = currentPath === "/privacy";
+        const isOnPrivacyPage = currentPath === "/privacy" || currentPath === "/logout";
 
         // privacyPolicyAcceptedTime will be null for new users. If policy is updated then get user to accept it.
-        // Don't show modal if user is on privacy policy page
         const acceptedTime = user.privacyPolicyAcceptedTime ? new Date(user.privacyPolicyAcceptedTime).getTime() : null;
 
         if (
