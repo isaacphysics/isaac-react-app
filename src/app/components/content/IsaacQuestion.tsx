@@ -33,7 +33,6 @@ import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
 import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
-import { LLMFreeTextQuestionRemainingAttemptsView } from "../elements/LLMFreeTextQuestionRemainingAttemptsView";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Alert, Button, Col, Form, Row } from "reactstrap";
 
@@ -183,8 +182,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)},
                     {"p-md-7": isAda}
                 )}>
-                
-                {isLLMFreeTextQuestion && <LLMFreeTextQuestionRemainingAttemptsView canAttemptQuestionType={canAttemptQuestionType} />}
 
                 <Suspense fallback={<Loading/>}>
                     <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} readonly={awaitingFeedback} />

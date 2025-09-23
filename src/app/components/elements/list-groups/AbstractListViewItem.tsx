@@ -13,6 +13,7 @@ import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSel
 import { getAssigneesByBoard } from "../../pages/SetAssignments";
 import { SetAssignmentsModal } from "../modals/SetAssignmentsModal";
 import { ExternalLink } from "../ExternalLink";
+import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -204,7 +205,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     }
                     {isItem && <>
                         {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
-                        {isPhy && <div className="d-flex flex-column justify-self-end">
+                        {isPhy && <div className="d-flex flex-column justify-self-end justify-content-center">
                             {typedProps.supersededBy && <a 
                                 className="superseded-tag mx-1 ms-sm-3 align-self-end" 
                                 href={`/questions/${typedProps.supersededBy}`}
@@ -225,6 +226,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 </span>}
                 {isItem && fullWidth && typedProps.audienceViews && <div className="d-flex mt-1"> 
                     <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
+                </div>}
+                {tags?.includes("llm_question_page") && <div className="mt-2">
+                    <LLMFreeTextQuestionIndicator small />
                 </div>}
                 {isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
                     <StatusDisplay status={typedProps.status} showText className="py-1" />

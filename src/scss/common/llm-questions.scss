@@ -1,0 +1,79 @@
+.llm-indicator {
+    position: relative;
+    display: flex;
+    border-radius:2rem;
+    padding: 0.5rem 0.75rem;
+    font-weight: 600;
+    font-size: medium;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+}
+
+.llm-info-banner {
+    padding: 2rem 3rem;
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+    h2 {
+        font-size: x-large !important;
+    }
+}
+
+.llm-feedback {
+    h2 {
+        font-size: larger !important;
+    }
+    .prediction {
+        display: inline-block;
+        border-radius: 0.5rem;
+        padding: 1rem 1rem;
+        margin-bottom: 1rem;
+    }
+    .curved-table-wrapper {
+        border-radius: 0.5rem;
+        table, thead, tbody {
+            border: 0;
+        }
+        tr {
+            border-left: 0;
+            border-right: 0;
+        }
+        table {
+            tr:first-child {
+                border-top: 0;
+            }
+            tr:last-child {
+                border-bottom: 0;
+            }
+            table-layout: fixed;
+            th {
+                font-family: $primary-font;
+                border: 0;
+                padding: 0.5rem;
+                font-weight: 600;
+                &:last-child {
+                    width: 50px;
+                }
+            }
+            td {
+                border: 0;
+                padding: 0.5rem;
+                &:last-child {
+                    text-align: center;
+                    vertical-align: middle;
+                }
+            }
+        }
+        margin-bottom: 1rem;
+    }
+
+    .feedback-collection {
+        li + li {
+            margin-top: 1rem;
+        }
+    }
+}
+
+.attempt-limit-tooltip {
+    max-width: 225px;
+}

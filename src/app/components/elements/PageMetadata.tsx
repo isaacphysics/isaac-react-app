@@ -13,6 +13,7 @@ import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
+import { LLMFreeTextQuestionIndicator } from './LLMFreeTextQuestionIndicator';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -22,6 +23,7 @@ type PageMetadataProps = {
     children?: ReactNode; // any content-type specific metadata that may require information outside of `doc`; e.g. question completion state, event info, etc.
     noTitle?: boolean; // if true, any children (usually text) will be rendered in place of the title, with any action buttons (e.g. share, print, report) rendered to the side
     helpModalId?: string;
+    pageContainsLLMFreeTextQuestion?: boolean;
 } & (
     {
         showSidebarButton: true;
@@ -57,7 +59,7 @@ const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}: Action
 };
 
 export const PageMetadata = (props: PageMetadataProps) => {
-    const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle } = props;
+    const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle, pageContainsLLMFreeTextQuestion } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const isConcept = doc?.type === "isaacConceptPage";
     const location = useLocation();
@@ -75,7 +77,10 @@ export const PageMetadata = (props: PageMetadataProps) => {
                         {children}
                     </div>
                 </div>
-                {isAda && <EditContentButton doc={doc} />}
+                {isAda && <div className="d-flex align-items-center">
+                    {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator className="me-3"/>}
+                    <EditContentButton doc={doc} />
+                </div>}
             </>
             : <>
                 {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
@@ -94,7 +99,10 @@ export const PageMetadata = (props: PageMetadataProps) => {
                         </div>
                         {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
                     </div>}
-                    {isAda && <EditContentButton doc={doc} />}
+                    {isAda && <div className="d-flex align-items-center">
+                        {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator className="me-3"/>}
+                        <EditContentButton doc={doc} />
+                    </div>}
                     <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>
                 </div>
                 {children}
@@ -102,7 +110,8 @@ export const PageMetadata = (props: PageMetadataProps) => {
         }
         {isPhy && showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
         <div className={classNames({"section-divider my-3": isPhy}, {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
-        <div className="d-flex">
+        <div className="d-flex align-items-end">
+            {isPhy && pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator className="me-3"/>}
             {isPhy && <EditContentButton doc={doc} />}
             {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
         </div>

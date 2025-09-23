@@ -125,6 +125,11 @@
   transform: rotate(90deg);
 }
 
+.icon-ai {
+  @include svg-icon('/assets/cs/icons/ai.svg', 24px, 24px);
+}
+
+
 .icon-question {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-question-fg.svg',

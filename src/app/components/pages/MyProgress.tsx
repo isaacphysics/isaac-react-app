@@ -38,7 +38,7 @@ const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAA
     {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion",
-            "isaacClozeQuestion", "isaacReorderQuestion"
+            "isaacClozeQuestion", "isaacReorderQuestion", "isaacLLMFreeTextQuestion"
         ],
         questionCountByBookTag: {
             "phys_book_step_up": 432,

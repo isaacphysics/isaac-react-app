@@ -6,7 +6,7 @@ import {Immutable} from "immer";
 import {Link} from 'react-router-dom';
 import {StyledCheckbox} from './inputs/StyledCheckbox';
 import {logAction, selectors, useAppDispatch, useAppSelector} from '../../state';
-import {NOT_FOUND} from '../../services';
+import {isAda, NOT_FOUND} from '../../services';
 
 const noFeedback = {disagree: false, partlyAgree: false, agree: false};
 
@@ -31,7 +31,10 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
 
     return <div ref={feedbackPanelRef} className='llm-feedback question-component p-md-7'>
         <h2 className="mb-0">Do you agree with the LLM’s predicted marks?</h2>
-        <p className="mb-0">1 in 3 times the predicted mark will be wrong. Find out more in our <Link to="/support/student/general" target="_blank">FAQs</Link></p>
+        <p className="mb-0">
+            1 in 3 times the predicted mark will be wrong. 
+            {isAda && <>{` `}Find out more in our <Link to="/support/student/general" target="_blank">FAQs</Link>.</>}
+        </p>
         <div className="prediction my-4">
             <div className='d-flex'>
                 <span className="icon-ai me-2"/>
@@ -49,11 +52,12 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                 <tbody>
                     {validationResponse.markBreakdown?.map(mark => <tr key={mark.jsonField}>
                         <td className="w-100">{mark.shortDescription}</td>
-                        <td>{
-                            mark.marks > 0 ?
-                                <><span className="visually-hidden">Predicted as awarded</span><span className='icon-feedback-tick' /></> :
-                                <></>
-                        }</td>
+                        <td>
+                            {mark.marks > 0 && <>
+                                <span className="visually-hidden">Predicted as awarded</span>
+                                <span className='icon-feedback-tick' />
+                            </>}
+                        </td>
                     </tr>)}
                 </tbody>
             </Table>
@@ -65,7 +69,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                     <ul className="no-bullet px-2 mb-4">
                         <li>
                             <StyledCheckbox
-                                id="disagree"  label={<p>Disagree</p>}
+                                id="disagree" label={<p>Disagree</p>}
                                 checked={feedback.disagree} onChange={() => setFeedback({...noFeedback, disagree: !feedback.disagree})}
                             />
                         </li>
