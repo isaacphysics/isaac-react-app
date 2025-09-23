@@ -17,7 +17,7 @@ export const policyUpdateModal = {
       </p>
       <p>To continue using the platform, you&apos;ll need to review and accept the updated Privacy Policy.</p>
       <p>
-        <a href="/privacy" rel="noopener noreferrer">
+        <a href="/privacy" target="_blank" rel="noopener noreferrer">
           View the updated Privacy Policy
         </a>
       </p>
