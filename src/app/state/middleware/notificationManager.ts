@@ -37,12 +37,12 @@ export const notificationCheckerMiddleware: Middleware =
       }
 
       if (isDefined(user)) {
-        // Check if user is currently on the privacy policy page
-        const currentPath = state?.router?.location?.pathname || window.location.pathname;
-        const isOnPrivacyPage = currentPath === "/privacy";
+        // Check if user is currently on the privacy policy page or log out
+        // Don't show modal if user is on privacy policy page or the user logs out
+        const currentPath = state?.router?.location?.pathname || globalThis.location.pathname;
+        const isOnPrivacyPage = currentPath === "/privacy" || currentPath === "/logout";
 
         // privacyPolicyAcceptedTime will be null for new users. If policy is updated then get user to accept it.
-        // Don't show modal if user is on privacy policy page
         const acceptedTime = user.privacyPolicyAcceptedTime ? new Date(user.privacyPolicyAcceptedTime).getTime() : null;
 
         if (
