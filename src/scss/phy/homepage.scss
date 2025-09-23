@@ -1,6 +1,7 @@
 .physics-strapline {
   h2 {
-    font-family: $secondary-font-bold;
+    font-family: $secondary-font;
+    font-weight: bold;
     font-size: 40px;
   }
 
@@ -11,7 +12,8 @@
 
 .homepage {
   h3 {
-    font-family: $secondary-font-bold;
+    font-family: $secondary-font;
+    font-weight: bold;
     font-size: 24px;
     display: inline;
     text-wrap: nowrap;
@@ -74,7 +76,8 @@
       border-radius: 8px;
 
       h4 {
-        font-family: $secondary-font-bold;
+        font-family: $secondary-font;
+        font-weight: bold;
         font-size: 24px;
       }
 
@@ -84,7 +87,8 @@
         top: 0;
 
         > b {
-          font-family: $secondary-font-semi-bold;
+          font-family: $secondary-font;
+          font-weight: 600;
           color: white;
           position: absolute;
           font-size: 14px;
@@ -145,7 +149,8 @@ $dashboard-panel-padding: 30px;
   h4 {
     color: $color-brand-700;
     font-size: 18px;
-    font-family: $secondary-font-bold;
+    font-family: $secondary-font;
+    font-weight: bold;
     padding-bottom: 10px;
   }
 
@@ -188,7 +193,8 @@ $dashboard-panel-padding: 30px;
 
   .streak-panel-gauge {
     display: inline-block;
-    font-family: $secondary-font-semi-bold;
+    font-family: $secondary-font;
+    font-weight: 600;
     width: $dashboard-panel-size;
     height: $dashboard-panel-size;
     > b {
@@ -231,7 +237,8 @@ a:has(.assignment-card) {
 
   h5 {
     font-size: 17px;
-    font-family: $secondary-font-semi-bold;
+    font-family: $secondary-font;
+    font-weight: 600;
 
     max-height: 5rem;
     overflow: hidden;

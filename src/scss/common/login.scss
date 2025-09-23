@@ -5,7 +5,7 @@
 
 #login-page {
   button.close {
-    font-family: "exo_2medium",sans-serif;
+    font-family: $secondary-font;
     position: relative;
     z-index: 1;
     background: transparent;
@@ -31,7 +31,7 @@
   margin-top: 25px;
   margin-bottom: 25px;
   &::before {
-    font-family: "exo_2regular", sans-serif;
+    font-family: $secondary-font;
     content: "or";
     bottom: -12px;
     background: white;

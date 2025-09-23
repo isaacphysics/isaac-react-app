@@ -75,7 +75,8 @@
 .isaac-accordion {
   .accordion-header {
     border-radius: 0;
-    font-family: $secondary-font-semi-bold;
+    font-family: $secondary-font;
+    font-weight: 600;
     font-size: 1.25rem !important;
     position: relative;
     display: flex;

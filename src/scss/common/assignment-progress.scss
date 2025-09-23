@@ -493,8 +493,8 @@ $failed-bg-size: 25%;
     text-decoration: line-through;
   }
 
-  th {
-    font-weight: normal;
+  th, tfoot td {
+    font-weight: $font-weight-semibold;
   }
 
   --student-name-width: 16rem;
