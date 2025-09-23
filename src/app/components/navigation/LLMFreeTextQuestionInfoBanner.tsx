@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { selectors, updateCurrentUser, useAppDispatch, useAppSelector } from "../../state";
 import { PotentialUser } from "../../../IsaacAppTypes";
 import { ContentBaseDTO } from "../../../IsaacApiTypes";
+import { useLinkableSetting } from "../../services/linkableSetting";
 
 const locationOfFAQEntry = "/support/student/general#llm_questions";
 
@@ -86,6 +87,8 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
 }
 
 function GeneralInfoCopy(_props: InfoBannerProps) {
+    const {setLinkedSetting} = useLinkableSetting();
+
     return <>
         <h2>Free text questions are marked by a large language model (LLM)</h2>
         <p>
@@ -96,7 +99,7 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
         <p>
             Do not include personal data in your answer as we send your answer to OpenAI.
             We only send your answer, we do not send any personal data with it.
-            You can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`}>account settings</Link>.
+            You can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`} onClick={() => setLinkedSetting("consent-to-openai-marking-feature")}>account settings</Link>.
         </p>
     </>;
 }
