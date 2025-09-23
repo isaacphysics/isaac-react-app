@@ -36,7 +36,6 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
-import { LLMFreeTextQuestionIndicator } from "../elements/LLMFreeTextQuestionIndicator";
 import { GameboardQuestionSidebar, MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StageAndDifficultySummaryIcons } from "../elements/StageAndDifficultySummaryIcons";
 import { skipToken } from "@reduxjs/toolkit/query";

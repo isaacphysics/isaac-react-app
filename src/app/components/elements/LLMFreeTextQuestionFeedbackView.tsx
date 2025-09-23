@@ -52,11 +52,12 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                 <tbody>
                     {validationResponse.markBreakdown?.map(mark => <tr key={mark.jsonField}>
                         <td className="w-100">{mark.shortDescription}</td>
-                        <td>{
-                            mark.marks > 0 ?
-                                <><span className="visually-hidden">Predicted as awarded</span><span className='icon-feedback-tick' /></> :
-                                <></>
-                        }</td>
+                        <td>
+                            {mark.marks > 0 && <>
+                                <span className="visually-hidden">Predicted as awarded</span>
+                                <span className='icon-feedback-tick' />
+                            </>}
+                        </td>
                     </tr>)}
                 </tbody>
             </Table>
@@ -68,7 +69,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                     <ul className="no-bullet px-2 mb-4">
                         <li>
                             <StyledCheckbox
-                                id="disagree"  label={<p>Disagree</p>}
+                                id="disagree" label={<p>Disagree</p>}
                                 checked={feedback.disagree} onChange={() => setFeedback({...noFeedback, disagree: !feedback.disagree})}
                             />
                         </li>
