@@ -1,26 +1,24 @@
 @import '../common/llm-questions.scss';
 
 .llm-indicator {
-    background-color: lightgray;
+    background-color: #eff;
     color: black;
-    border: 1px solid silver;
+    border: 1px solid $color-neutral-700;
 
     &.small {
-        border: 1px solid silver !important;
+        border: 1px solid $color-neutral-700 !important;
         font-weight: 600 !important;
     }
 }
 
 .llm-info-banner {
-    background-color: white;
+    background-color: #eff;
     border: 2px solid black;
 }
 
 .llm-feedback {
-    color: black;
-
     .prediction {
-        background-color: lightgray;
+        background-color: #eff;
     }
     
     .curved-table-wrapper {
