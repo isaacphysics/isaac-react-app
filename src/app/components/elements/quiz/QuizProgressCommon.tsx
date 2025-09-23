@@ -237,7 +237,7 @@ export function ResultsTable<Q extends QuestionType>({
         </SortItemHeader>
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
-                className="pointer-cursor correct-attempted-header"
+                className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -247,13 +247,13 @@ export function ResultsTable<Q extends QuestionType>({
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
                         <span>Questions</span>
-                        <small className="mt-n1 text-muted">(total)</small>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
                     </div>,
                     "Correct"
                 )}
             </SortItemHeader>
             : <SortItemHeader<ProgressSortOrder>
-                className="pointer-cursor correct-attempted-header"
+                className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
                 defaultOrder={"totalAttemptedQuestionPercentage"}
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -263,7 +263,7 @@ export function ResultsTable<Q extends QuestionType>({
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
                         <span>Questions</span>
-                        <small className="mt-n1 text-muted">(total)</small>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
                     </div>,
                     "Attempted"
                 )}
@@ -272,7 +272,7 @@ export function ResultsTable<Q extends QuestionType>({
         {isPhy && isAssignment && (
             pageSettings?.attemptedOrCorrect === "CORRECT"
                 ? <SortItemHeader<ProgressSortOrder>
-                    className="pointer-cursor correct-attempted-header"
+                    className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
                     defaultOrder={"totalPartPercentage"}
                     reverseOrder={"totalPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -282,13 +282,13 @@ export function ResultsTable<Q extends QuestionType>({
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
                             <span>Parts</span>
-                            <small className="mt-n1 text-muted">(total)</small>
+                            <small className="mt-n1 text-muted fw-normal">(total)</small>
                         </div>,
                         "Correct"
                     )}
                 </SortItemHeader>
                 : <SortItemHeader<ProgressSortOrder>
-                    className="pointer-cursor correct-attempted-header"
+                    className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
                     defaultOrder={"totalAttemptedPartPercentage"}
                     reverseOrder={"totalAttemptedPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -298,7 +298,7 @@ export function ResultsTable<Q extends QuestionType>({
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
                             <span>Parts</span>
-                            <small className="mt-n1 text-muted">(total)</small>
+                            <small className="mt-n1 text-muted fw-normal">(total)</small>
                         </div>,
                         "Attempted"
                     )}
@@ -415,7 +415,7 @@ export function ResultsTable<Q extends QuestionType>({
                                     }
                                 </th>
                                 {/* total questions */}
-                                <th title={fullAccess ? undefined : "Not Sharing"}>
+                                <th title={fullAccess ? undefined : "Not Sharing"} className={classNames({"sticky-ca-col": isPhy})}>
                                     {fullAccess
                                         ? formatMark(
                                             isAssignment
@@ -432,7 +432,7 @@ export function ResultsTable<Q extends QuestionType>({
                                     }
                                 </th>
                                 {/* total parts */}
-                                {isPhy && isAssignment && <th title={fullAccess ? undefined : "Not Sharing"}>
+                                {isPhy && isAssignment && <th title={fullAccess ? undefined : "Not Sharing"} className={classNames({"sticky-ca-col": isPhy})}>
                                     {fullAccess
                                         ? formatMark(
                                             pageSettings?.attemptedOrCorrect === "CORRECT"
@@ -477,8 +477,8 @@ export function ResultsTable<Q extends QuestionType>({
                                     `Total fully ${pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}`
                                 )}
                             </th>
-                            <th/>{/* questions column */}
-                            {isPhy && isAssignment && <th/>}{/* parts column */}
+                            <th className={classNames({"sticky-ca-col": isPhy})} />{/* questions column */}
+                            {isPhy && isAssignment && <th className={classNames({"sticky-ca-col": isPhy})} />}{/* parts column */}
                             {classAverages.map(([numerator, denominator], index) => (
                                 <td key={index} className={classNames({"selected": index === selectedQuestionIndex})}>
                                     {formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}
@@ -565,7 +565,7 @@ export function ResultsTablePartBreakdown({
                     </SortItemHeader>
                     {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
                         ? <SortItemHeader<ProgressSortOrder>
-                            className="pointer-cursor correct-attempted-header"
+                            className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
                             defaultOrder={"totalQuestionPercentage"}
                             reverseOrder={"totalQuestionPercentage"}
                             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -574,13 +574,13 @@ export function ResultsTablePartBreakdown({
                             {siteSpecific(
                                 <div className="d-flex flex-column ps-3">
                                     <span>Parts</span>
-                                    <small className="mt-n1 text-muted">(total)</small>
+                                    <small className="mt-n1 text-muted fw-normal">(total)</small>
                                 </div>,
                                 "Correct"
                             )}
                         </SortItemHeader>
                         : <SortItemHeader<ProgressSortOrder>
-                            className="pointer-cursor correct-attempted-header"
+                            className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
                             defaultOrder={"totalAttemptedQuestionPercentage"}
                             reverseOrder={"totalAttemptedQuestionPercentage"}
                             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -589,7 +589,7 @@ export function ResultsTablePartBreakdown({
                             {siteSpecific(
                                 <div className="d-flex flex-column ps-3">
                                     <span>Parts</span>
-                                    <small className="mt-n1 text-muted">(total)</small>
+                                    <small className="mt-n1 text-muted fw-normal">(total)</small>
                                 </div>,
                                 "Attempted"
                             )}
@@ -626,7 +626,7 @@ export function ResultsTablePartBreakdown({
 
                             {/* total correct/attempted */}
                             {isPhy && studentProgress.questionPartResults && 
-                                <td>
+                                <td className={classNames({"sticky-ca-col": isPhy})}>
                                     {formatMark(
                                         studentProgress.questionPartResults[questionIndex].reduce((acc, questionPartResult) => {
                                             if (pageSettings?.attemptedOrCorrect === "CORRECT") {
@@ -658,7 +658,7 @@ export function ResultsTablePartBreakdown({
                                 `Total fully ${pageSettings?.attemptedOrCorrect === "CORRECT" ? "correct" : "attempted"}`
                             )}
                         </th>
-                        {isPhy && <th/>}{/* correct column */}
+                        {isPhy && <th className={classNames({"sticky-ca-col": isPhy})}/> /* correct column */}
                         {classAverages.map(([numerator, denominator], index) => (
                             <td key={index}>{formatMark(numerator, denominator, !!pageSettings?.formatAsPercentage)}</td>
                         ))}

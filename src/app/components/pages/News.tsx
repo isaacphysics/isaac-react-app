@@ -33,7 +33,7 @@ export const News = () => {
         "Get all the latest news about Ada Computer Science, and read the stories of recent graduates who now have exciting careers in computer science.");
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"News"} icon={{type: "hex", icon: "icon-news"}} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("News", "Tips, tools & support")} icon={{type: "hex", icon: "icon-news"}} />
         <MetaDescription description={metaDescription} />
         <SidebarLayout>
             <GenericPageSidebar/>
@@ -52,7 +52,7 @@ export const News = () => {
                             </Col>)}
                         </Row>
                         <div className="w-100 d-flex justify-content-center mb-7">
-                            <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load older news</Button>
+                            <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>{siteSpecific("Load older news", "Load more")}</Button>
                         </div>
                     </>
                 }

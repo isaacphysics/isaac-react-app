@@ -20,6 +20,7 @@ import {
     useAppSelector,
     useLazyGetGameboardsQuery
 } from "../state";
+import { useHistoryState } from "../state/actions/history";
 
 export enum BoardCompletions {
     "any" = "Any",
@@ -235,10 +236,10 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
     const [ loadGameboards ] = useLazyGetGameboardsQuery();
     const boards = useAppSelector(selectors.boards.boards);
 
-    const [boardOrder, setBoardOrder] = useState<AssignmentBoardOrder>(AssignmentBoardOrder.visited);
-    const [boardView, setBoardView] = useState<BoardViews>((boards && boards.boards.length > 6) ? BoardViews.table : initialView);
-    const [boardLimit, setBoardLimit] = useState<BoardLimit>(initialLimit);
-    const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
+    const [boardOrder, setBoardOrder] = useHistoryState<AssignmentBoardOrder>("boardOrder", AssignmentBoardOrder.visited);
+    const [boardView, setBoardView] = useHistoryState<BoardViews>("boardView", (boards && boards.boards.length > 6) ? BoardViews.table : initialView);
+    const [boardLimit, setBoardLimit] = useHistoryState<BoardLimit>("boardLimit", initialLimit);
+    const [boardTitleFilter, setBoardTitleFilter] = useHistoryState<string>("boardTitle", "");
 
     const [loading, setLoading] = useState(false);
 
