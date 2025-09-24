@@ -45,7 +45,7 @@ export const Routes = [
     exact
     path="/topics"
     component={AllTopicsWithoutAStage}
-    userAgent={window.navigator.userAgent}
+    userAgent={globalThis.navigator.userAgent}
   />,
   <TrackedRoute
     key={key++}
@@ -53,13 +53,13 @@ export const Routes = [
     path="/topics/gcse"
     component={AllTopics}
     componentProps={{ stage: STAGE.GCSE }}
-    userAgent={window.navigator.userAgent}
+    userAgent={globalThis.navigator.userAgent}
   />,
   <TrackedRoute
     key={key++}
     exact
     path="/topics/a_level"
-    userAgent={window.navigator.userAgent}
+    userAgent={globalThis.navigator.userAgent}
     component={AllTopics}
     componentProps={{ stage: STAGE.A_LEVEL }}
   />,
@@ -68,12 +68,12 @@ export const Routes = [
     exact
     path="/topics/:topicName"
     ifUser={isLoggedIn}
-    userAgent={window.navigator.userAgent}
+    userAgent={globalThis.navigator.userAgent}
     component={Topic}
   />,
 
   // Glossary:
-  <TrackedRoute key={key++} exact path="/glossary" component={Glossary} userAgent={window.navigator.userAgent} />,
+  <TrackedRoute key={key++} exact path="/glossary" component={Glossary} userAgent={globalThis.navigator.userAgent} />,
 
   // Static pages:
   <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
@@ -85,7 +85,7 @@ export const Routes = [
     path="/gcse_teaching_order"
     component={GCSETeachingOrder}
     componentProps={{ stage: STAGE.GCSE }}
-    userAgent={window.navigator.userAgent}
+    userAgent={globalThis.navigator.userAgent}
   />,
   <TrackedRoute
       key={key++}
@@ -94,7 +94,7 @@ export const Routes = [
       path="/teacher_gcse_revision_page"
       component={GCSETeachingOrder}
       componentProps={{ stage: STAGE.GCSE }}
-      userAgent={window.navigator.userAgent}
+      userAgent={globalThis.navigator.userAgent}
   />,
 
   <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teaching_order" pageId="teaching_order" />,
