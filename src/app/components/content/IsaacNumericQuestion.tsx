@@ -89,7 +89,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
 
     const helpTooltip = useRef(null);
 
-    const tooltip = <UncontrolledTooltip placement="auto" autohide={false} target={helpTooltip}>
+    const tooltip = <UncontrolledTooltip placement="auto" autohide target={helpTooltip}>
         Here are some examples of numbers you can write:<br /><br />
         3.7<br />
         -3x10^14<br />
