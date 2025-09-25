@@ -49,10 +49,9 @@ import {
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
-import {AssignmentProgressSettings, markClassesInternal} from "../AssignmentProgressIndividual";
+import {markClassesInternal, ResultsTableHeader} from "../AssignmentProgressIndividual";
 import classNames from "classnames";
 import {Spacer} from "../../elements/Spacer";
-import {CollapsibleContainer} from "../../elements/CollapsibleContainer";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.
@@ -146,9 +145,8 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-                        {/* <AssignmentProgressLegend showQuestionKey /> */}
                         <Card className="p-4 my-3">
-                            <div className="d-flex mb-3">
+                            <div className={classNames("d-flex", {"mb-3": isPhy})}>
                                 {siteSpecific(
                                     <h4>Group results</h4>,
                                     <h3>Group results</h3>
@@ -159,11 +157,9 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                                     <i className={classNames("icon icon-cog anim-rotate-45", { "active": settingsVisible })}/>
                                 </button>}
                             </div>
-                            {isPhy && <CollapsibleContainer expanded={settingsVisible} className="w-100">
-                                <div className="py-3">
-                                    <AssignmentProgressSettings />
-                                </div>
-                            </CollapsibleContainer>}
+
+                            <ResultsTableHeader settingsVisible={settingsVisible} />
+
                             <QuizProgressDetails assignment={quizAssignment} />
                         </Card>
                     </AssignmentProgressPageSettingsContext.Provider>

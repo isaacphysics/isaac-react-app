@@ -129,7 +129,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
 
     return <Card>
         <CardBody>
-            <div className="d-flex w-100 flex-column flex-md-row align-items-start align-items-md-center">
+            <div className={classNames("d-flex w-100 flex-column flex-md-row align-items-start align-items-md-center", {"mb-3": isPhy})}>
                 <div className="d-flex w-100 align-items-start justify-content-between">
                     <div>
                         {siteSpecific(
@@ -145,24 +145,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                 </div>
             </div>
 
-            <div className={classNames("d-flex flex-column flex-lg-row row-gap-2 my-2", {"pt-1": isAda /* increase space for checkbox */})}>
-                {isPhy && <CollapsibleContainer expanded={settingsVisible} className="w-100">
-                    <div className="py-3">
-                        <AssignmentProgressSettings />
-                    </div>
-                </CollapsibleContainer>}
-
-                {isAda && <>
-                    <StyledCheckbox
-                        checked={assignmentProgressContext?.formatAsPercentage}
-                        onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
-                        label={<span className="text-muted">Show mark as percentages</span>}
-                    />
-                    <Spacer />
-                    <AdaKey />
-                </>}
-            </div>
-
+            <ResultsTableHeader settingsVisible={settingsVisible} />
             {isPhy && <AssignmentProgressLegend id={`${assignment.id ?? ""}`} />}
 
             <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions}
@@ -173,7 +156,31 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
     </Card>;
 };
 
-const AdaKey = () => {
+export const ResultsTableHeader = ({settingsVisible} : {settingsVisible: boolean}) => {
+    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
+
+    return <>
+        <div className={classNames("d-flex flex-column flex-lg-row row-gap-2 my-2", {"pt-1": isAda /* increase space for checkbox */})}>
+            {isPhy && <CollapsibleContainer expanded={settingsVisible} className="w-100">
+                <div className="pb-3">
+                    <AssignmentProgressSettings />
+                </div>
+            </CollapsibleContainer>}
+
+            {isAda && <>
+                <StyledCheckbox
+                    checked={assignmentProgressContext?.formatAsPercentage}
+                    onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
+                    label={<span className="text-muted">Show mark as percentages</span>}
+                />
+                <Spacer />
+                <AdaAssignmentProgressKey />
+            </>}
+        </div>
+    </>;
+};
+
+export const AdaAssignmentProgressKey = () => {
     const context = useContext(AssignmentProgressPageSettingsContext);
 
     const KeyItem = ({icon, label}: {icon: React.ReactNode, label: string}) => (
