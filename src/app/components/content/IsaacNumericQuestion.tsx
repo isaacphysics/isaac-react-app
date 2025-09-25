@@ -158,7 +158,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     </div>}
                 </Col>
                 {!readonly && isPhy && above['md'](deviceSize) && <Col xs={12}>
-                    <Button className="numeric-help d-flex align-items-center m-0 p-0 gap-2 text-muted small" type="button" color="link" size="sm" innerRef={helpTooltip}>
+                    <Button className="numeric-help d-flex align-items-center m-0 p-0 pe-2 gap-2 text-muted small" type="button" color="link" size="sm" innerRef={helpTooltip}>
                         <i className="icon icon-info icon-color-grey"/>
                         What can I type in this box?
                     </Button>
