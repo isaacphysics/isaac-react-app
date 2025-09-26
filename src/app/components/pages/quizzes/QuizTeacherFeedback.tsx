@@ -158,7 +158,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                                 </button>}
                             </div>
 
-                            <ResultsTableHeader settingsVisible={settingsVisible} />
+                            <ResultsTableHeader settingsVisible={settingsVisible} isAssignment={false} />
 
                             <QuizProgressDetails assignment={quizAssignment} />
                         </Card>

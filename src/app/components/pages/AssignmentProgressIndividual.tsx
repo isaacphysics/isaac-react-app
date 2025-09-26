@@ -145,7 +145,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                 </div>
             </div>
 
-            <ResultsTableHeader settingsVisible={settingsVisible} />
+            <ResultsTableHeader settingsVisible={settingsVisible} isAssignment={true} />
             {isPhy && <AssignmentProgressLegend id={`${assignment.id ?? ""}`} />}
 
             <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions}
@@ -156,7 +156,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
     </Card>;
 };
 
-export const ResultsTableHeader = ({settingsVisible} : {settingsVisible: boolean}) => {
+export const ResultsTableHeader = ({settingsVisible, isAssignment} : {settingsVisible: boolean, isAssignment: boolean}) => {
     const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
 
     return <>
@@ -174,13 +174,13 @@ export const ResultsTableHeader = ({settingsVisible} : {settingsVisible: boolean
                     label={<span className="text-muted">Show mark as percentages</span>}
                 />
                 <Spacer />
-                <AdaAssignmentProgressKey />
+                <AdaAssignmentProgressKey isAssignment={isAssignment} />
             </>}
         </div>
     </>;
 };
 
-export const AdaAssignmentProgressKey = () => {
+export const AdaAssignmentProgressKey = ({isAssignment}: {isAssignment: boolean}) => {
     const context = useContext(AssignmentProgressPageSettingsContext);
 
     const KeyItem = ({icon, label}: {icon: React.ReactNode, label: string}) => (
@@ -189,13 +189,13 @@ export const AdaAssignmentProgressKey = () => {
         </span>
     );
 
-    return <div className="d-flex flex-column flex-md-row align-items-md-center column-gap-4 row-gap-2">
+    return <div className={classNames("d-flex flex-column column-gap-4 row-gap-2", isAssignment ? "flex-md-row align-items-md-center" : "flex-sm-row align-items-sm-center")}>
         <span className="d-inline d-lg-none d-xl-inline font-size-1 fw-bold">Key</span>
         {context?.attemptedOrCorrect === "CORRECT"
             ? <>
                 <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
                     <KeyItem icon={ICON.correct} label="Correct" />
-                    <KeyItem icon={ICON.partial} label="Partially correct" />
+                    {isAssignment && <KeyItem icon={ICON.partial} label="Partially correct" />}
                 </div>
                 <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
                     <KeyItem icon={ICON.incorrect} label="Incorrect" />
@@ -205,7 +205,7 @@ export const AdaAssignmentProgressKey = () => {
             : <>
                 <div className="d-flex flex-column flex-md-row column-gap-4 row-gap-2">
                     <KeyItem icon={ICON.correct} label="Fully attempted" />
-                    <KeyItem icon={ICON.partial} label="Partially attempted" />
+                    {isAssignment && <KeyItem icon={ICON.partial} label="Partially attempted" />}
                     <KeyItem icon={ICON.notAttempted} label="Not attempted" />
                 </div>
             </>
