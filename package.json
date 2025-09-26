@@ -136,7 +136,7 @@
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^7.1.2",
-    "cypress": "13.6.4",
+    "cypress": "^14.0.0",
     "dotenv": "^10.0.0",
     "eslint": "^9.18.0",
     "eslint-plugin-jsx-a11y": "^6.9.0",
