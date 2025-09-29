@@ -41,8 +41,8 @@ export const NavigationBar = () => {
             <>
               <LinkItem to="/set_tests">Manage tests</LinkItem>
               <LinkItem to="/gcse_teaching_order">GCSE suggested teaching order</LinkItem>
-              <LinkItem to="/teacher_gcse_revision_page">GCSE revision plan</LinkItem>
               <LinkItem to="/teaching_order">A Level suggested teaching order</LinkItem>
+              <LinkItem to="/teacher_gcse_revision_page">GCSE revision plan</LinkItem>
             </>
           )}
         </NavigationSection>

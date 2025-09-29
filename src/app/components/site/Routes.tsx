@@ -87,19 +87,17 @@ export const Routes = [
     componentProps={{ stage: STAGE.GCSE }}
     userAgent={globalThis.navigator.userAgent}
   />,
-  <TrackedRoute
-    key={key++}
-    exact
-    ifUser={isTutorOrAbove}
-    path="/teacher_gcse_revision_page"
-    component={GCSETeachingOrder}
-    componentProps={{ stage: STAGE.GCSE }}
-    userAgent={globalThis.navigator.userAgent}
-  />,
 
   <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teaching_order" pageId="teaching_order" />,
   <StaticPageRoute key={key++} exact path="/teachcomputing" pageId="teach_computing" />,
   <StaticPageRoute key={key++} exact path="/gcse_programming_challenges" pageId="gcse_programming_challenges" />,
+  <StaticPageRoute
+    key={key++}
+    exact
+    ifUser={isTutorOrAbove}
+    path="/teacher_gcse_revision_page"
+    pageId="teacher_gcse_revision_page"
+  />,
 
   <TrackedRoute key={key++} exact path="/coming_soon" component={ComingSoon} />,
 ];
