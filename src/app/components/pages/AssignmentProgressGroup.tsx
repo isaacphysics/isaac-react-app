@@ -29,6 +29,7 @@ import {StyledDropdown} from '../elements/inputs/DropdownInput';
 import {Loading} from '../handlers/IsaacSpinner';
 import {skipToken} from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
+import { useHistoryState } from '../../state/actions/history';
 
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const dispatch = useAppDispatch();
@@ -49,7 +50,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
     return <Link to={quiz ? `/test/assignment/${assignment.id}/feedback` : `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} className="w-100 d-block no-underline mt-2">
         <div className="d-flex align-items-center assignment-progress-group w-100 p-3">
             <div className="d-flex flex-column">
-                <span className="d-flex">
+                <span className="d-inline-flex flex-wrap">
                     <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
                     {isScheduled && <em className="mx-1">(scheduled)</em>}
                     <a className="new-tab-link" href={quiz ? assignment.quizSummary?.url : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
@@ -73,7 +74,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
                 </div>
             </div>
             <Spacer/>
-            {!isScheduled && <strong className="align-content-center">
+            {!isScheduled && <strong className="align-content-center mw-max-content">
                 <a href={csvDownloadLink} className="assignment-csv-download-link" target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
                     Download CSV
                 </a>
@@ -93,7 +94,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
     const dispatch = useAppDispatch();
 
     const [searchText, setSearchText] = useState("");
-    const [activeTab, setActiveTab] = useState<"assignments" | "tests">("assignments");
+    const [activeTab, setActiveTab] = useHistoryState<"assignments" | "tests">("markbookTab", "assignments");
 
     const deviceSize = useDeviceSize();
 
