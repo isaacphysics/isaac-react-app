@@ -8,14 +8,18 @@
 
 @font-face {
   font-family: 'exo-2';
-  src: url('/assets/phy/fonts/exo-2-variable-wght.ttf') format('truetype');
+  src: url('/assets/phy/fonts/exo-2-variable-wght.woff2') format('woff2');
   font-style: normal;
+  font-weight: 100 900;
+  font-stretch: normal;
 }
 
 @font-face {
   font-family: 'exo-2';
-  src: url('/assets/phy/fonts/exo-2-italic-variable-wght.ttf') format('truetype');
+  src: url('/assets/phy/fonts/exo-2-italic-variable-wght.woff2') format('woff2');
   font-style: italic;
+  font-weight: 100 900;
+  font-stretch: normal;
 }
 
 @font-face {
