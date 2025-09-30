@@ -89,7 +89,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
 
     const helpTooltip = useRef(null);
 
-    const tooltip = <UncontrolledTooltip placement="auto" autohide={false} target={helpTooltip}>
+    const tooltip = <UncontrolledTooltip placement="auto" autohide target={helpTooltip}>
         Here are some examples of numbers you can write:<br /><br />
         3.7<br />
         -3x10^14<br />
@@ -158,7 +158,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     </div>}
                 </Col>
                 {!readonly && isPhy && above['md'](deviceSize) && <Col xs={12}>
-                    <Button className="numeric-help d-flex align-items-center m-0 p-0 gap-2 text-muted small" type="button" color="link" size="sm" innerRef={helpTooltip}>
+                    <Button className="numeric-help d-flex align-items-center m-0 p-0 pe-2 gap-2 text-muted small" type="button" color="link" size="sm" innerRef={helpTooltip}>
                         <i className="icon icon-info icon-color-grey"/>
                         What can I type in this box?
                     </Button>
