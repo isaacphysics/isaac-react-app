@@ -1,9 +1,11 @@
-import React, { ReactNode, useLayoutEffect, useRef, useState } from "react";
-import { Col, ColProps } from "reactstrap";
+import React, { ReactNode, useCallback, useLayoutEffect, useRef, useState } from "react";
+import { Col } from "reactstrap";
 import { Spacer } from "./Spacer";
 import { FilterCount } from "./svg/FilterCount";
 import classNames from "classnames";
 import { isAda, isPhy } from "../../services";
+
+export const CollapsibleContext = React.createContext<{expanded: boolean, recalculateHeight: () => void} | undefined>(undefined);
 
 export interface CollapsibleListProps {
     title?: ReactNode;
@@ -13,49 +15,70 @@ export interface CollapsibleListProps {
     numberSelected?: number;
     children?: React.ReactNode;
     additionalOffset?: string | number; // css value for additional space to add to the bottom of the list when expanded; e.g. 4px, 1rem
-    hasUlTag?: boolean; // if true, don't wrap the result in another <ul> tag
     className?: string;
-    tag?: ColProps['tag'];
+    tag?: React.ElementType;
 }
 
 export const CollapsibleList = (props: CollapsibleListProps) => {
-    const {expanded, toggle} = props;
-    const [expandedHeight, setExpandedHeight] = useState(0);
-    const listRef = useRef<HTMLDivElement>(null);
+    const {expanded, toggle, tag: Tag = Col} = props;
+    const [expandedContainerHeight, setExpandedContainerHeight] = useState(0);
+    const listRef = useRef<HTMLUListElement>(null);
     const headRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLElement>(null);
 
-    useLayoutEffect(() => {
-        if (!listRef.current) return;
-        setExpandedHeight(listRef.current.clientHeight);
-    }, [listRef.current]);
+    const parentCollapsible = React.useContext(CollapsibleContext);
 
-    useLayoutEffect(() => {
+    const recalculateHeight = useCallback(() => {
+        let containerHeight : number | undefined = 0;
+
         if (expanded) {
-            const containerHeight = listRef?.current 
+            containerHeight = listRef?.current 
                 // clientHeight cannot determine margin (nor can any reasonable alternative, since margins can overlap)! this will be smaller than the true height
                 // if margin exists. if this is the case, use additionalOffset to add additional space to the bottom of the list
-                ? Math.max([...listRef.current.children].map(c => c.getAttribute("data-targetheight") 
+                ? [...listRef.current.children].map(c => c.getAttribute("data-targetheight")
                     ? parseInt(c.getAttribute("data-targetheight") as string) 
                     : c.clientHeight
-                ).reduce((a, b) => a + b, 0), listRef.current.clientHeight)
+                ).reduce((a, b) => a + b, 0)
                 : undefined;
             
             if (containerHeight !== 0) {
                 // if children are present in the DOM but have zero clientHeight (e.g. display: none from being on an inactive tab), 
                 // without this condition we would set the target expansion height to 0 if the children update through some external means. 
                 // this would hide the children when their correct height / visibility is restored.
-                setExpandedHeight(containerHeight ?? 0);
+                setExpandedContainerHeight(containerHeight ?? 0);
             }
         }
-    }, [expanded, props.children]);
+        
+        // update targetHeight for use in any recursive call to the parent. we could not do this as a stateful prop on the component as it would be one render out of date 
+        if (containerRef.current) {
+            containerRef.current.setAttribute(
+                "data-targetheight",
+                // container border size + header size + list size
+                ((containerRef.current.offsetHeight - containerRef.current.clientHeight) + (headRef.current?.offsetHeight ?? 0) + (containerHeight ?? 0)).toString()
+            );
+        }
+
+        if (parentCollapsible?.expanded) {
+            // recursively update the height of any parent collapsible lists. separate from the below useEffect as changes to data-targetHeight do not trigger that.
+            parentCollapsible?.recalculateHeight();
+        }
+    }, [expanded, parentCollapsible]);
+
+    useLayoutEffect(() => {
+        // update the height when the list is expanded or children's state changes
+        recalculateHeight();
+    }, [expanded, props.children, recalculateHeight]);
 
     const title = typeof props.title === "string" // auto styling for plain strings; prefer this where possible
         ? <span>{props.title && props.asSubList ? props.title : <b>{props.title}</b>}</span>
         : props.title;
 
-    return <Col tag={props.tag} className={classNames("collapsible-list-container", props.className)} data-targetheight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
+    return <Tag ref={containerRef} className={classNames("collapsible-list-container", props.className)}>
         <div className="row m-0 collapsible-head" ref={headRef}>
-            <button className={classNames("w-100 d-flex align-items-center p-3 text-start", {"bg-white": isAda, "bg-transparent": isPhy, "ps-4": props.asSubList})} onClick={toggle}>
+            <button 
+                className={classNames("w-100 d-flex align-items-center p-3 text-start", {"bg-white": isAda, "bg-transparent": isPhy, "ps-4": props.asSubList})} 
+                onClick={toggle}
+            >
                 {title && <span>{title}</span>}
                 <Spacer/>
                 {(props.numberSelected ?? 0) > 0
@@ -64,13 +87,14 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
             </button>
         </div>
         <div
-            className={`collapsible-body ${expanded ? "open" : "closed"}`} 
-            style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0, marginBottom: expanded ? (props.additionalOffset ?? 0) : 0}}
+            className={classNames("collapsible-body", expanded ? "open" : "closed", {"ms-2": props.asSubList})} 
+            style={{height: expanded ? expandedContainerHeight : 0, maxHeight: expanded ? expandedContainerHeight : 0, marginBottom: expanded ? (props.additionalOffset ?? 0) : 0}}
+            // when react is updated to v19, switch inert definition to regular prop
+            {...{"inert": expanded ? undefined : "true"}} 
         >
-            <div ref={listRef} className={classNames({"ms-2": props.asSubList})} {...{"inert": expanded ? undefined : "true"}}> 
-                {/* when react is updated to v19, switch inert definition to regular prop */}
-                {props.hasUlTag ? props.children : <ul className="ps-0">{props.children}</ul>}
-            </div>
+            <CollapsibleContext.Provider value={{expanded, recalculateHeight}}>
+                <ul className="list-unstyled" ref={listRef}>{props.children}</ul>
+            </CollapsibleContext.Provider>
         </div>
-    </Col>;
+    </Tag>;
 };
