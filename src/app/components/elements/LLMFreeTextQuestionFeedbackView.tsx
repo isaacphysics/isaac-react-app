@@ -6,7 +6,7 @@ import {Immutable} from "immer";
 import {Link} from 'react-router-dom';
 import {StyledCheckbox} from './inputs/StyledCheckbox';
 import {logAction, selectors, useAppDispatch, useAppSelector} from '../../state';
-import {isAda, NOT_FOUND} from '../../services';
+import {isAda, NOT_FOUND, siteSpecific} from '../../services';
 
 const noFeedback = {disagree: false, partlyAgree: false, agree: false};
 
@@ -55,7 +55,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                         <td>
                             {mark.marks > 0 && <>
                                 <span className="visually-hidden">Predicted as awarded</span>
-                                <span className='icon-feedback-tick' />
+                                <span className={siteSpecific("icon-inline icon-correct", "icon-feedback-tick")} />
                             </>}
                         </td>
                     </tr>)}
