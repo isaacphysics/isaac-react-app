@@ -9,7 +9,8 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS, getSearchPlaceholder,
     sortByStringValue,
     SUBJECT_SPECIFIC_CHILDREN_MAP,
-    LEARNING_STAGE} from "../../../services";
+    LEARNING_STAGE,
+    ASSIGNMENT_STATE_MAP} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -804,6 +805,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
         <ShowLoadingQuery query={assignmentQuery} defaultErrorTitle="" thenRender={(assignments: AssignmentDTO[]) => {
             const myAssignments = filterAssignmentsByStatus(assignments);
             const assignmentCountByStatus = myAssignments && Object.fromEntries(Object.entries(myAssignments).map(([key, value]) => [key, value.length]));
+            const totalAssignmentCount = Object.values(assignmentCountByStatus).reduce((a, b) => a + b, 0);
             return <>
                 <div className="section-divider"/>
                 <search data-testid="my-assignments-sidebar">
@@ -822,10 +824,10 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                     <div className="section-divider"/>
                     <h5 className="mb-4">Filter by status</h5>
                     <ul>
-                        <li><AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/></li>
+                        <li><AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={totalAssignmentCount}/></li>
                         <div className="section-divider-small"/>
                         {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <li key={state}>
-                            <AssignmentStatusCheckbox status={state} count={assignmentCountByStatus?.[state]} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
+                            <AssignmentStatusCheckbox status={state} count={assignmentCountByStatus[ASSIGNMENT_STATE_MAP[state]]} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
                         </li>)}
                     </ul>
                     <h5 className="mt-4 mb-3">Filter by group</h5>
