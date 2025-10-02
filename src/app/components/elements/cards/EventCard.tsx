@@ -2,11 +2,12 @@ import React from "react";
 import classnames from "classnames";
 import {Link} from "react-router-dom";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
-import {DateString} from "../DateString";
+import {DateString, formatDate, FRIENDLY_DATE_AND_TIME} from "../DateString";
 import {formatEventCardDate, siteSpecific} from "../../../services";
 import { Card, CardImg, CardBody, CardTitle, Badge, CardText, CardProps } from "reactstrap";
 import { Spacer } from "../Spacer";
 import classNames from "classnames";
+import { AdaCard } from "./AdaCard";
 
 export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & CardProps) => {
     const {id, title, subtitle, eventThumbnail, location, date, hasExpired} = event;
@@ -67,47 +68,40 @@ const AdaEventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolea
     const {id, title, subtitle, eventThumbnail, location, hasExpired, date, numberOfPlaces, eventStatus, isCancelled, userBookingStatus}
         = event;
 
-    return <Card data-testid="event-card" className={classnames("card-neat", {'disabled text-muted': hasExpired || isCancelled, 'm-4': pod, 'mb-4': !pod})}>
-        {eventThumbnail && <div className={'event-card-image text-center'}>
-            <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
-        </div>}
-        <CardBody className="d-flex flex-column">
-            {title && <CardTitle tag="h3">
-                {title}
-                <div>
-                    {userBookingStatus === "CONFIRMED" && <>{" "}<Badge color={siteSpecific("success", "perfect")} outline>Booked</Badge></>}
-                    {userBookingStatus === "WAITING_LIST" && <>{" "}<Badge color={siteSpecific("warning", "in-progress")} outline>On waiting list</Badge></>}
-                    {userBookingStatus === "RESERVED" && <>{" "}<Badge color={siteSpecific("warning", "in-progress")} outline>Reserved</Badge></>}
-                    {isCancelled
-                        ? <>{" "}<Badge color={siteSpecific("danger", "failed")}>Cancelled</Badge></>
-                        : eventStatus !== "WAITING_LIST_ONLY" && numberOfPlaces == 0 && <>{" "}<Badge>Full</Badge></>
-                    }
-                </div>
-            </CardTitle>}
-            {subtitle && <CardText className='m-0 my-auto card-date-time'>{subtitle}</CardText>}
-            <CardText className="m-0 my-auto card-date-time">
-                <span className="d-block my-2">
-                    <span className="fw-bold">When:</span>
-                    <span className="d-block">
-                        {formatEventCardDate(event, pod)}
-                    </span>
+    return <AdaCard card={{
+        title: title || "Untitled event",
+        image: {src: eventThumbnail?.src ?? ""},
+        buttonText: "View details",
+        buttonAltText: `View details of the event: ${title} - ${formatDate(date, FRIENDLY_DATE_AND_TIME)}`,
+        clickUrl: `/events/${id}`,
+        className: classnames({'disabled text-muted': hasExpired || isCancelled}),
+    }} className="h-100">
+        <div>
+            {userBookingStatus === "CONFIRMED" && <>{" "}<Badge color="perfect" outline>Booked</Badge></>}
+            {userBookingStatus === "WAITING_LIST" && <>{" "}<Badge color="in-progress" outline>On waiting list</Badge></>}
+            {userBookingStatus === "RESERVED" && <>{" "}<Badge color="in-progress" outline>Reserved</Badge></>}
+            {isCancelled
+                ? <>{" "}<Badge color="failed">Cancelled</Badge></>
+                : eventStatus !== "WAITING_LIST_ONLY" && numberOfPlaces == 0 && <>{" "}<Badge>Full</Badge></>
+            }
+        </div>
+        {subtitle && <CardText className='m-0 my-auto card-date-time'>{subtitle}</CardText>}
+        <CardText className="m-0 my-auto card-date-time">
+            <span className="d-block my-2">
+                <span className="fw-bold">When:</span>
+                <span className="d-block">
+                    {formatEventCardDate(event, pod)}
                 </span>
-                {location && location.address && <span className='d-block my-2'>
-                    <span className="fw-bold">Location:</span> {" "}
-                    {!event.isVirtual ?
-                        <span>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</span> :
-                        <span>Online</span>
-                    }
-                </span>}
-            </CardText>
-            <CardText className="d-flex">
-                <Link className="focus-target" to={`/events/${id}`}>
-                    View details
-                    <span className='visually-hidden'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
-                </Link>
-            </CardText>
-        </CardBody>
-    </Card>;
+            </span>
+            {location && location.address && <span className='d-block my-2'>
+                <span className="fw-bold">Location:</span> {" "}
+                {!event.isVirtual ?
+                    <span>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</span> :
+                    <span>Online</span>
+                }
+            </span>}
+        </CardText>
+    </AdaCard>;
 };
 
 export const EventCard = siteSpecific(PhysicsEventCard, AdaEventCard);

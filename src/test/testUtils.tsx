@@ -5,7 +5,7 @@ import {http, HttpResponse, HttpHandler} from "msw";
 import {ACCOUNT_TAB, ACCOUNT_TABS, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
 import {produce} from "immer";
 import {mockUser} from "../mocks/data";
-import {isaacApi, requestCurrentUser, store} from "../app/state";
+import {isaacApi, removeToast, requestCurrentUser, store} from "../app/state";
 import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
@@ -46,11 +46,13 @@ interface RenderTestEnvironmentOptions {
 // Provider with the global store.
 // When called, the Redux store will be cleaned completely, and other the MSW server handlers will be reset to
 // defaults (those in handlers.ts).
-export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {    
+export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
+    history.replace({ pathname: '/', search: '' });
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
     store.dispatch(isaacApi.util.resetApiState());
+    store.getState().toasts?.forEach(toast => toast.id && store.dispatch(removeToast(toast.id)));
     server.resetHandlers();
     if (role || modifyUser) {
         server.use(
@@ -86,7 +88,7 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     }
     render(<Provider store={store}>
         {/* #root usually exists in index-{phy|ada}.html, but this is not loaded in Jest */}
-        <div id="root" className="d-flex flex-column overflow-clip min-vh-100" data-bs-theme="neutral"> 
+        <div id="root" className="d-flex flex-column overflow-clip min-vh-100" data-bs-theme="neutral">
             {PageComponent
                 ? <MemoryRouter initialEntries={initalRouteEntries ?? []}>
                     <PageComponent/>
@@ -176,7 +178,7 @@ export const expectUrl = (text: string) => waitFor(() => {
     expect(history.location.pathname).toBe(text);
 });
 
-export const expectUrlParams = (text: string) => waitFor(() => {
+export const expectUrlParams = (text: SearchString | '') => waitFor(() => {
     expect(history.location.search).toBe(text);
 });
 
@@ -202,11 +204,12 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
 };
 
 export type PathString = `/${string}`;
-export const setUrl = (location: { pathname: PathString, search?: string}) => {
+export type SearchString = `?${string}`;
+export const setUrl = async (location: { pathname: PathString, search?: SearchString}) => {
     if (location.pathname.includes('?')) {
         throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
     }
-    return history.push(location);
+    return await act(async () => history.push(location));
 };
 
 export const goBack = () => history.goBack();
@@ -238,6 +241,8 @@ export const withMockedDate = async (date: number, fn: () => Promise<void>) => {
 const expectHeading = (n: number) => (txt?: string) => expect(screen.getByRole('heading', { level: n })).toHaveTextContent(`${txt}`);
 
 export const expectH1 = expectHeading(1);
+
+export const expectH2 = expectHeading(2);
 
 export const expectH4 = expectHeading(4);
 

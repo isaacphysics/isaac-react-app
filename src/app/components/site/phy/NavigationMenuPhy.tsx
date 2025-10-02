@@ -186,7 +186,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                 let sharedTheme = undefined;
                 let quickSwitcher: {subject: Subject, stage: LearningStage} | undefined = undefined;
 
-                if (category.subcategories.every((sub, _j, arr) => sub.subject === arr[0].subject)) {
+                if (category.subcategories.every((sub, _j, arr) => sub.subject === arr[0].subject) && category.subcategories.length > 1) {
                     sharedTheme = category.subcategories[0].subject;
                 }
 

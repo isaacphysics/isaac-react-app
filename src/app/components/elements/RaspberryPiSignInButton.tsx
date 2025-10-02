@@ -5,9 +5,7 @@ import {handleProviderLoginRedirect, useAppDispatch} from "../../state";
 export const RaspberryPiSignInButton = ({isSignup, concise}: {isSignup?: boolean, concise?: boolean}) => {
     const dispatch = useAppDispatch();
 
-    const logInWithRaspberryPi = () => {
-        dispatch(handleProviderLoginRedirect("RASPBERRYPI", isSignup));
-    };
+    const logInWithRaspberryPi = () => dispatch(handleProviderLoginRedirect("RASPBERRYPI", isSignup));
 
     return <Button color="keyline" className="w-100" onClick={logInWithRaspberryPi}>
         <img className="authenticator-logo" src={"/assets/common/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>

@@ -12,6 +12,7 @@ import { HelpButton } from './HelpButton';
 import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
+import { UserContextPicker } from './inputs/UserContextPicker';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -58,6 +59,7 @@ const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}: Action
 export const PageMetadata = (props: PageMetadataProps) => {
     const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
+    const isConcept = doc?.type === "isaacConceptPage";
     const location = useLocation();
     const deviceSize = useDeviceSize();
 
@@ -98,11 +100,12 @@ export const PageMetadata = (props: PageMetadataProps) => {
                 {children}
             </>
         }
-        {isPhy && <>
-            {showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
-            <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
-            <EditContentButton doc={doc} />
-            <TeacherNotes notes={doc?.teacherNotes} />
-        </>}
+        {isPhy && showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
+        <div className={classNames({"section-divider my-3": isPhy}, {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
+        <div className="d-flex">
+            {isPhy && <EditContentButton doc={doc} />}
+            {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
+        </div>
+        {isPhy && <TeacherNotes notes={doc?.teacherNotes} />}
     </>;
 };

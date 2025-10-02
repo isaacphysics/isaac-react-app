@@ -4,7 +4,7 @@
     padding-left: 100px !important;
     padding-right: 100px !important;
   }
-  @extend .py-7;
+  @extend .py-4;
   @include media-breakpoint-up(xl) {
     padding-top: 2rem !important;
     padding-bottom: 2rem !important;
@@ -27,8 +27,8 @@
   background-size: cover;
   height: 1000px;
   width: 800px;
-  top: -20%;
-  left: 70%;
+  top: -550px;
+  right: -300px;
   transform: rotate(210deg);
 }
 

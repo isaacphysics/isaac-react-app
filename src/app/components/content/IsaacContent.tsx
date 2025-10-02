@@ -1,4 +1,4 @@
-import React, {lazy} from "react";
+import React, {lazy, Suspense} from "react";
 import {AnvilApp} from "./AnvilApp";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestion} from "./IsaacQuestion";
@@ -43,7 +43,7 @@ export interface IsaacContentProps extends RouteComponentProps {
 export const IsaacContent = withRouter((props: IsaacContentProps) => {
     const {doc: {type, layout, encoding, value, children}, match} = props;
     const keyedProps = {...props, key: props.doc.id};
-    {/* 
+    {/*
         Each IsaacContent is assumed to be independent, not sharing state with any other.
         However, React will reuse components if they are the same type, have the same key (or undefined), and exist in the same place in the DOM.
         If two components A and B meet these criteria, if you switch from component A to component B, any e.g. useStates in B will not
@@ -74,7 +74,8 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
             case "figure": selectedComponent = <IsaacFigure {...keyedProps} />; break;
             case "image": selectedComponent = <IsaacImage {...keyedProps} />; break;
             case "video": selectedComponent = <IsaacVideo {...keyedProps} />; break;
-            case "codeSnippet": selectedComponent = <IsaacCodeSnippet {...keyedProps} />; break;
+            // IsaacCodeSnippet is lazy loaded, so wrap it in Suspense to prevent reload errors
+            case "codeSnippet": selectedComponent = <Suspense fallback={<div>Loading...</div>}> <IsaacCodeSnippet {...keyedProps} /> </Suspense>; break;
             case "interactiveCodeSnippet": selectedComponent = <IsaacInteractiveCodeSnippet {...keyedProps} />; break;
             case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...keyedProps} />; break;
             case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...keyedProps} />; break;

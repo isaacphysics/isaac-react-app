@@ -11,7 +11,7 @@ footer {
     list-style-image: none;
   }
 
-  a:not(:has(img)) {
+  a:not(.img-link) {
     @extend .py-2;
     font-size: 14px;
     color: $color-neutral-200;

@@ -198,6 +198,7 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path={PATHS.SET_ASSIGNMENTS} ifUser={isTutorOrAbove} component={SetAssignments} />
                         <TrackedRoute exact path={[
                             PATHS.ASSIGNMENT_PROGRESS,
+                            `${PATHS.ASSIGNMENT_PROGRESS}/:assignmentId`,
                             `${PATHS.ASSIGNMENT_PROGRESS}/group/:groupId`,
                         ]} ifUser={isTutorOrAbove} component={AssignmentProgress} />
 

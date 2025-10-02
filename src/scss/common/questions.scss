@@ -84,7 +84,7 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
     input {
       margin-top: 0.5rem;
     }
-    
+
     &:has(.katex) {
       align-items: center;
       input {
@@ -126,7 +126,7 @@ $inline-feedback-padding: 2px;
   border-radius: $border-radius-lg;
   width: 100%;
   background-color: white;
-  
+
   .feedback-wrapper {
     // wraps around a SINGLE component that can be marked as valid/invalid/unanswered, to allow multiple parts of one question to have different feedback states
     // requires that correctnessClass(...) is applied to the child, as to colour the component
@@ -239,7 +239,7 @@ $inline-feedback-padding: 2px;
 .inline-multi-choice-container {
   @extend .inline-container;
 
-  
+
   button.btn {
     min-width: unset;
     font-family: $primary-font !important;
@@ -472,12 +472,18 @@ $inline-feedback-padding: 2px;
 }
 
 .cloze-dropdown > button {
-  min-width: unset !important; // Bootstrap thinks its important
+  min-width: 40px !important; // Bootstrap thinks its important
+
   &.empty.empty {
     &, &:hover, &:active, &:focus { // Apply regardless of hover
       border: grey solid 1px !important;
       background-color: transparent !important;
     }
+  }
+
+  &:has(.katex) {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
   }
 }
 
@@ -491,7 +497,7 @@ $inline-feedback-padding: 2px;
 }
 
 // outer katex display elements by default have a large margin, which clips overflowing content (e.g. cloze entries).
-// this reduces the outer margin by 0.5rem and "gives it" to the inner katex element's padding, which allows this content more space to overflow visibly. 
+// this reduces the outer margin by 0.5rem and "gives it" to the inner katex element's padding, which allows this content more space to overflow visibly.
 .katex-display:has(> .katex) {
   margin: 0.5rem 0;
 
@@ -503,7 +509,7 @@ $inline-feedback-padding: 2px;
   }
 }
 
-p > .katex, .katex-display { 
+p > .katex, .katex-display {
   overflow: auto hidden;
 
   .katex .vlist-t2 {
@@ -514,7 +520,7 @@ p > .katex, .katex-display {
     -webkit-appearance: none;
     height: $cloze-scrollbar-height;
   }
-    
+
   &::-webkit-scrollbar-thumb {
     border-radius: 4px;
     background-color: rgba(0, 0, 0, .3);

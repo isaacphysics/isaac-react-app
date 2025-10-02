@@ -15,6 +15,7 @@ DOCKER_REPO = "ghcr.io/isaacphysics"
 
 class Site(object):
     PHY = 'phy'
+    SCI =  'sci'
     ADA = 'ada'
     BOTH = 'both'
 
@@ -32,7 +33,7 @@ def check_repos_are_up_to_date():
 
 def parse_command_line_arguments():
     parser = argparse.ArgumentParser(description='Deploy the site')
-    parser.add_argument('site', choices=[Site.ADA, Site.PHY, Site.BOTH])
+    parser.add_argument('site', choices=[Site.ADA, Site.PHY, Site.SCI, Site.BOTH])
     parser.add_argument('env', choices=['test', 'staging', 'dev', 'live', 'etl'])
     parser.add_argument('app', help="The app version target for this deployment. Examples master or v1.2.3")
     parser.add_argument('api', help="⚠️DEPRECATED The api version target for this deployment", nargs='?', default=None)
@@ -170,7 +171,7 @@ def run_db_migrations(ctx):
     print("# Print migration SQL to terminal (to copy)?")
     ask_to_run_command(f"cd /local/src/isaac-api && git diff --name-only {ctx['old_api']} {ctx['api']} -- src/main/resources/db_scripts/migrations | xargs cat")
     print("# If there are any DB migrations, run them (in a transaction with a BEGIN; ROLLBACK; or COMMIT;). The following should be run in a separate terminal:")
-    print(f"docker exec -it {ctx['site']}-pg-{ctx['env']} psql -U rutherford")
+    print(f"docker exec -it {ctx['subject']}-pg-{ctx['env']} psql -U rutherford")
 
 
 def write_changelog():
@@ -219,14 +220,14 @@ def volume_exists(ctx):
     print("\n# Determining whether necessary containers exist\nMay return exit code 1.")
 
     volume_grep = ask_to_run_command(
-        "docker volume list | " + f"grep {ctx['site']}-pg-{ctx['env']}",
+        "docker volume list | " + f"grep {ctx['subject']}-pg-{ctx['env']}",
         expected_nonzero_exit_codes=[1],
         run_anyway=True
     )
     volume_exists = volume_grep != ""
 
     if not volume_exists:
-        print(f"\n# Could not find necessary volume {ctx['site']}-pg-{ctx['env']}.")
+        print(f"\n# Could not find necessary volume {ctx['subject']}-pg-{ctx['env']}.")
         print(f"Create this volume if you want to deploy {ctx['env']}.")
 
     return volume_exists
@@ -286,7 +287,8 @@ def deploy_live(ctx):
         ask_to_run_command(f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-api-live-{ctx['api']}")
 
         print("# Wait until the api is up:")
-        api_endpoint = f"https://{'adacomputerscience' if ctx['site'] == Site.ADA else 'isaacphysics'}.org/api/{ctx['api']}/api/info/segue_environment"
+        domain = {Site.PHY: 'isaacphysics', Site.ADA: 'adacomputerscience', Site.SCI: 'isaacscience'}[ctx['site']]
+        api_endpoint = f"https://{domain}.org/api/{ctx['api']}/api/info/segue_environment"
         expected_response = '\'{"segueEnvironment":"PROD"}\''
         ask_to_run_command(f'while [ "$(curl --silent {api_endpoint})" != {expected_response} ]; do echo "Waiting for API..."; sleep 1; done && echo "The API is up!"')
 
@@ -324,10 +326,10 @@ def deploy_etl(ctx):
 
 def get_target_api_version_from_app_image(ctx):
     print(f"# Pull App image for {ctx['app']}")
-    ask_to_run_command(f"docker pull {DOCKER_REPO}/isaac-{ctx['site']}-app:{ctx['app']}")
+    ask_to_run_command(f"docker pull {DOCKER_REPO}/isaac-{ctx['subject']}-app:{ctx['app']}")
 
     print(f"# Get target API version from App image")
-    ctx['api'] = ask_to_run_command(f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' {DOCKER_REPO}/isaac-{ctx['site']}-app:{ctx['app']}", run_anyway=True)
+    ctx['api'] = ask_to_run_command(f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' {DOCKER_REPO}/isaac-{ctx['subject']}-app:{ctx['app']}", run_anyway=True)
 
 
 if __name__ == '__main__':
@@ -338,6 +340,7 @@ if __name__ == '__main__':
     EXEC = context['exec']
 
     context['live'] = context['env'] == 'live' # As env changes during live deployment
+    context['subject'] = 'ada' if context['site'] == Site.ADA else 'phy'
 
     get_target_api_version_from_app_image(context)
 
@@ -345,7 +348,7 @@ if __name__ == '__main__':
 
     check_running_servers(context)
 
-    sites = [Site.ADA, Site.PHY] if context['site'] == Site.BOTH else [context['site']]
+    sites = [Site.ADA, Site.SCI] if context['site'] == Site.BOTH else [context['site']]
     for site in sites:
         context['site'] = site
         if context['env'] == 'test' and volume_exists(context):

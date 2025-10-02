@@ -194,13 +194,9 @@ $fully-attempted-fill: $cs-perfect; // Ada don't use these colours, but given ti
 
 
 // fonts
-$primary-font: "poppins-regular", sans-serif;
-$secondary-font: 'poppins-regular', sans-serif;
-$secondary-font-bold: 'poppins-bold', sans-serif;
-$secondary-font-semi-bold: 'poppins-semibold', sans-serif;
-$secondary-font-italic: 'poppins-italic', sans-serif;
-$secondary-font-medium: $secondary-font;
-$tertiary-font: 'poppins-light', sans-serif;
+$primary-font: "poppins", sans-serif;
+$secondary-font: 'poppins', sans-serif;
+$tertiary-font: 'poppins', sans-serif;
 
 $question-line-height: 1.5rem;
 $question-padding: 3rem;
@@ -262,6 +258,10 @@ $warning-bg-subtle: #fffef3;
 $warning-border-subtle: #fffeee;
 $toast-padding-x: 1.5rem;
 $border-color: $cs-light-gray;
+
+$accordion-button-active-bg: $cs-white;
+$accordion-border-radius: 1rem;
+$accordion-inner-border-radius: 1rem;
 
 // all Bootstrap !default overrides must appear before this; anything that uses the defaults must come after
 @import "~bootstrap/scss/variables"; 
@@ -337,6 +337,10 @@ $card-border-width: 0;
 $card-border-radius: 1rem;
 $card-spacer-x: 1.5rem;
 $card-spacer-y: 1.5rem;
+$accordion-border-width: 0;
+$accordion-border-radius: 1rem;
+
+$badge-font-weight: $font-weight-medium;
 
 // all Bootstrap overrides must appear before this
 @import "~bootstrap/scss/bootstrap"; 
@@ -359,7 +363,7 @@ $card-spacer-y: 1.5rem;
 // Atoms
 @import "fonts";
 @import "typography";
-@import "../common/modals";
+@import "modals";
 @import "page-title";
 @import "questions";
 @import "forms";
@@ -410,7 +414,7 @@ $card-spacer-y: 1.5rem;
 @import "assignment-progress";
 @import "../common/books";
 @import "groups";
-@import "../common/events";
+@import "events";
 @import "../common/glossary";
 @import "quiz";
 @import "../common/callout";
@@ -419,6 +423,7 @@ $card-spacer-y: 1.5rem;
 @import "resources";
 @import "groups";
 @import "overview";
+@import "modals";
 
 @import "expansion-layout";
 
@@ -441,14 +446,6 @@ a.disabled {
 
 p small {
     border: 0;
-}
-
-.bg-light-grey {
-    > div {
-        background: $cs-cultured;
-        position: relative;
-        z-index: 1;
-    }
 }
 
 // Double class to give this more specificity

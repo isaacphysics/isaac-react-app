@@ -2,6 +2,7 @@ import React, {FormEvent, useCallback, useContext, useEffect, useLayoutEffect, u
 import {Inequality, WidgetSpec} from "inequality";
 import {
     isDefined,
+    isStaff,
     parsePseudoSymbolicAvailableSymbols,
     sanitiseInequalityState, siteSpecific
 } from "../../../../services";
@@ -18,7 +19,7 @@ import {
     MenuItemProps,
     MenuItems
 } from "./constants";
-import {closeActiveModal, openActiveModal, store, useAppDispatch} from "../../../../state";
+import {closeActiveModal, openActiveModal, selectors, store, useAppDispatch, useAppSelector} from "../../../../state";
 import {PageFragment} from "../../PageFragment";
 import uniq from "lodash/uniq";
 import {
@@ -327,6 +328,8 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const disableLetters = availableSymbols?.includes("_no_alphabet") ?? false;
 
+    const user = useAppSelector(selectors.user.orNull);
+
     // Setting up the Inequality `sketch` object
     const sketch = useRef<Nullable<Inequality>>(null);
     const [editorState, setEditorState] = useState<any>({});
@@ -354,6 +357,12 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             }
         };
     }, [onEditorStateChange]);
+
+    useEffect(() => {
+        if (sketch.current) {
+            sketch.current.isUserPrivileged = () => isStaff(user);
+        }
+    }, [sketch, user]);
 
     // Help modal logic
     const dispatch = useAppDispatch();

@@ -60,7 +60,7 @@ export const selectors = {
     },
 
     mainContentId: {
-        orDefault: (state: AppState) => state?.mainContentId || "main",
+        orDefault: (state: AppState) => state?.mainContentId?.id || "main",
     },
 
     sidebar: {

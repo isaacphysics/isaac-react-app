@@ -29,7 +29,7 @@ export const IsaacCardDeck = ({doc, className, containerClassName}: IsaacCardDec
                     </Container>)}
                 </Row>
                 ,
-                <Row className={classNames(`d-flex flex-row card-deck row-cols-1 row-cols-md-2 justify-content-between my-3`, className ?? "")}>
+                <Row className={classNames(`d-flex flex-row card-deck row-cols-1 row-cols-md-2 justify-content-between my-3`, className)}>
                     {doc?.cards?.map((props, i) => <IsaacCard key={i} doc={props}/>)}
                 </Row>
             )

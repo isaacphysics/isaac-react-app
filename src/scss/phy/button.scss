@@ -77,6 +77,8 @@
 
   &:disabled, &.disabled {
     color: var(--buttons-light-disabled-text);
+    border-color: var(--buttons-keyline-disabled-border);
+    --buttons-light-icon: #{$color-neutral-400};
   }
 
   i.icon {
@@ -446,12 +448,4 @@ button.close { // default <button class="close"/> components;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-color: transparent;
-}
-
-.invert-underline {
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
 }

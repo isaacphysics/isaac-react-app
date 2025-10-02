@@ -33,7 +33,7 @@ import {
     TAG_LEVEL,
     below,
     useDeviceSize,
-    EXAM_BOARD
+    EXAM_BOARD, QUESTIONS_PER_GAMEBOARD
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -169,9 +169,9 @@ export const QuestionSearchModal = (
         );
     }, [questions, user, searchTopics, isBookSearch, questionsSort, creationContext]);
 
-    const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center">
+    const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center mt-2">
         <div className="flex-grow-1 mb-1">
-            <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
+            <strong className={classNames({"text-danger": selectedQuestions.size > QUESTIONS_PER_GAMEBOARD})}>
                 {`${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`}
             </strong>
         </div>
@@ -245,14 +245,14 @@ export const QuestionSearchModal = (
                             inputId: "question-search-topic", tier: 0, index: TAG_LEVEL.subject,
                             choices: topicChoices, selections: topicSelections, setSelections: setTopicSelections}}/>
                     </div>}
-                    <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
+                    <div className={classNames("mb-2", {"d-none": isBookSearch})}>
                         <Label htmlFor="question-search-difficulty">Difficulty</Label>
                         <StyledSelect
                             inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
                             options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                         />
                         {isAda && <>
-                            <Label htmlFor="question-search-exam-board">Exam Board</Label>
+                            <Label className="mt-2" htmlFor="question-search-exam-board">Exam Board</Label>
                             <StyledSelect
                                 inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
                                 value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
@@ -262,7 +262,7 @@ export const QuestionSearchModal = (
                         </>}
                     </div>
                     <Label htmlFor="question-search-title">Search</Label>
-                    <Input id="question-search-title" className="mb-2"
+                    <Input id="question-search-title" className="mb-3"
                         type="text"
                         placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -307,7 +307,7 @@ export const QuestionSearchModal = (
                         <tbody>
                             {isSearching ? <tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr> : sortedQuestions?.map(question =>
                                 <GameboardBuilderRow
-                                    key={`question-search-modal-row-${question.id}`} 
+                                    key={`question-search-modal-row-${question.id}`}
                                     question={question}
                                     currentQuestions={modalQuestions}
                                     undoStack={undoStack}

@@ -7,9 +7,7 @@ import { siteSpecific } from "../../services";
 export const MicrosoftSignInButton = () => {
     const dispatch = useAppDispatch();
 
-    const logInWithMicrosoft = () => {
-        dispatch(handleProviderLoginRedirect("MICROSOFT"));
-    };
+    const logInWithMicrosoft = () => dispatch(handleProviderLoginRedirect("MICROSOFT"));
 
     return <Button color={siteSpecific("keyline-underline", "keyline")} className="w-100" onClick={logInWithMicrosoft}>
         <img className="authenticator-logo" src={"/assets/common/logos/microsoft-logo.svg"} alt={"Microsoft logo"}/>

@@ -148,17 +148,17 @@ def check_app_and_api_are_clean(update_description):
     for service_name in ['app', 'api']:
         if update_description[service_name] != 'none':
             branch = subprocess.run("git rev-parse --abbrev-ref HEAD", **subprocess_options[service_name]).stdout.strip()
-            if branch != 'master':
-                prompt_user(f'The {service_name} repo is not on the "master" branch.')
+            if branch != 'main':
+                prompt_user(f'The {service_name} repo is not on the "main" branch.')
 
             build_conclusion, build_link = get_build_results_from_github(service_name, branch)
             if build_conclusion != 'success':
                 prompt_user(f'The last remote build for branch "{branch}" of {service_name} finished with status "{build_conclusion}"!: {build_link}')
 
             subprocess.run("git fetch", **subprocess_options[service_name])
-            diff_with_remote = subprocess.run("git diff origin/master --name-only", **subprocess_options[service_name]).stdout.strip()
+            diff_with_remote = subprocess.run("git diff origin/main --name-only", **subprocess_options[service_name]).stdout.strip()
             if len(diff_with_remote) > 0:
-                prompt_user(f'The {service_name} repo does not have the latest changes from the remote branch (i.e. you are not on master or you need to `git pull`).')
+                prompt_user(f'The {service_name} repo does not have the latest changes from the remote branch (i.e. you are not on main or you need to `git pull`).')
 
             status = subprocess.run("git status --short", **subprocess_options[service_name]).stdout.strip()
             if len(status) > 0:
@@ -204,7 +204,7 @@ def commit_and_push_changes(versions, update_description):
         if update_description[service_name] != 'none':
             subprocess.run(f'git add {changed_files[service_name]}', **subprocess_options[service_name])
             subprocess.run('git commit -m "Increment version"', **subprocess_options[service_name])
-            subprocess.run('git push origin master', **subprocess_options[service_name])
+            subprocess.run('git push origin main', **subprocess_options[service_name])
             subprocess.run(f'git push origin {versions[service_name]}', **subprocess_options[service_name])
 
 

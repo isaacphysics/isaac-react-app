@@ -18,7 +18,8 @@ import {
     mockRubrics,
     mockAttempts,
     mockPreviews,
-    mockConceptsResults
+    mockConceptsResults,
+    mockProgress
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -26,6 +27,12 @@ import {School} from "../IsaacAppTypes";
 import { errorResponses } from "../test/test-factory";
 
 export const handlers = [
+    http.get(API_PATH + "/content/units", () => {
+        return HttpResponse.json(["m", "cm", "mm"], {
+            status: 200,
+        });
+    }),
+    
     http.get(API_PATH + "/gameboards/user_gameboards", ({request}) => {
         const url = new URL(request.url);
         const startIndexStr = url.searchParams.get("start_index");
@@ -68,37 +75,54 @@ export const handlers = [
             status: 200,
         });
     }),
+    http.get(API_PATH + "/quiz/assigned", () => {
+        return HttpResponse.json([], {
+            status: 200,
+        });
+    }),
     http.get(API_PATH + "/quiz/:quizId/rubric", ({ params }) => {
         const quizId = params.quizId as string;
         if (quizId in mockRubrics) {
             return HttpResponse.json(mockRubrics[quizId], { status: 200 });
-        } 
+        }
         return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.get(API_PATH + "/quiz/:quizId/preview", ({ params }) => {
         const quizId = params.quizId as string;
         if (quizId in mockPreviews) {
             return HttpResponse.json(mockPreviews[quizId], { status: 200 });
-        } 
+        }
         return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
+    }),
+    http.post(API_PATH + "/quiz/attempt/:quizId/log", () => {
+        return HttpResponse.json(null, { status: 204 });
     }),
     http.post(API_PATH + "/quiz/:quizId/attempt", ({ params }) => {
         const quizId = params.quizId as string;
         if (quizId in mockAttempts) {
             return HttpResponse.json(mockAttempts[quizId], { status: 200 });
-        } 
+        }
         return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.get(API_PATH + "/assignments/assign/:assignmentId", ({params}) => {
         const {assignmentId: _assignmentId} = params;
         const assignmentId = parseInt(_assignmentId as string);
-        // FIXME augment the returned assignment like in the API
         const assignments = mockSetAssignments.filter(a => a.id === assignmentId);
         if (assignments.length === 1) {
             return HttpResponse.json(assignments[0]);
         }
         // FIXME this is probably the wrong format for errors
         return HttpResponse.json({error: `Assignment with id ${_assignmentId} not found.`}, {
+            status: 404,
+        });
+    }),
+    http.get(API_PATH + "/assignments/assign/:assignmentId/progress", ({params}) => {
+        const {assignmentId: _assignmentId} = params;
+        const assignmentId = parseInt(_assignmentId as string);
+        if (assignmentId in mockProgress) {
+            return HttpResponse.json(mockProgress[assignmentId as keyof typeof mockProgress]);
+        }
+        return HttpResponse.json({error: `Assignment progress for assignment ${_assignmentId} not found.`}, {
             status: 404,
         });
     }),
@@ -180,7 +204,7 @@ export const handlers = [
     http.get(API_PATH + "/pages/questions/_regression_test_", () => {
         return HttpResponse.json(mockRegressionTestQuestions, {
             status: 200,
-        });   
+        });
     }),
     http.get(API_PATH + "/pages/questions/", () => {
         return HttpResponse.json(mockQuestionFinderResults, {

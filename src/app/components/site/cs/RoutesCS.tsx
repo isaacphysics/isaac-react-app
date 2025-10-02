@@ -64,7 +64,6 @@ export const RoutesCS = [
 
     // Assignments
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,
-    <TrackedRoute key={key++} exact path="/my_markbook/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress/:assignmentId" to="/my_markbook/:assignmentId" />,
 
     // Teacher test pages
@@ -88,7 +87,7 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
     <TrackedRoute key={key++} exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
     <TrackedRoute key={key++} exact path="/test/view/:quizId" ifUser={isLoggedIn} component={QuizView} />,
-    
+
 
     // Topics and content
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,

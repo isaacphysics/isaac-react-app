@@ -273,7 +273,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                                 Extend Due Date
                                             </DropdownItem>
                                             <DropdownItem color="tertiary" size="sm" onClick={cancel} disabled={isCancelling}>
-                                                {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
+                                                {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : "Cancel test"}
                                             </DropdownItem>
                                         </DropdownMenu>
                                     </UncontrolledButtonDropdown>

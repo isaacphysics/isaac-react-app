@@ -1,5 +1,4 @@
-import { act } from "@testing-library/react";
-import { expectH1, type PathString, renderTestEnvironment, setUrl } from "../testUtils";
+import { expectH1, type PathString, renderTestEnvironment, SearchString, setUrl, waitForLoaded } from "../testUtils";
 import { isAda } from "../../app/services";
 import { PartialCheckboxState, SelectState, expectPartialCheckBox, expectSelect, Filter, toggleFilter } from "../../mocks/filters";
 import { PageContextState } from "../../IsaacAppTypes";
@@ -8,12 +7,12 @@ describe("Concepts", () => {
     if (isAda) {
         it('has no such page', () => {});
     } else {
-        const renderConceptsPage = async ({context, query}: {context?: NonNullable<PageContextState>, query?: string} = {}) => {
-            await act(async () => {
-                renderTestEnvironment();
-                const url: PathString = context ? `/${context.subject}/${context.stage?.[0]}/concepts` : '/concepts';
-                setUrl({ pathname: url, search: query });
-            });
+        const renderConceptsPage = async ({context, query}: {context?: NonNullable<PageContextState>, query?: SearchString} = {}) => {
+            renderTestEnvironment();
+            await waitForLoaded();
+            const url: PathString = context ? `/${context.subject}/${context.stage?.[0]}/concepts` : '/concepts';
+            await setUrl(query ? { pathname: url, search: query } : {pathname: url});
+            await waitForLoaded();
         };
 
         it('renders the concepts header', async () => {
@@ -39,19 +38,19 @@ describe("Concepts", () => {
             });
 
             it('partial-checks parents, and checks children after selecting children', async () => {
-                await renderConceptsPage({query: "types=physics,maths"});
+                await renderConceptsPage({query: "?types=physics,maths"});
                 await toggleFilter([Skills, Number]);
                 expectPartialCheckBox([Physics, Skills, Maths, Number]).toBe([Partial, Selected, Partial, Selected]);
             });
 
             it('checks parents after deselecting children', async () => {
-                await renderConceptsPage({ query: "types=skills,number"});
+                await renderConceptsPage({ query: "?types=skills,number"});
                 await toggleFilter([Skills, Number]);
                 expectPartialCheckBox([Physics, Skills, Maths, Number]).toBe([Selected, Deselected, Selected, Deselected]);
             });
 
             it('hides children after deselecting parents', async () => {
-                await renderConceptsPage({ query: "types=physics,maths"});
+                await renderConceptsPage({ query: "?types=physics,maths"});
                 await toggleFilter([Physics, Maths]);
                 expectPartialCheckBox([Physics, Skills, Maths, Number]).toBe([Deselected, Hidden, Deselected, Hidden]);
             });
@@ -76,7 +75,7 @@ describe("Concepts", () => {
                 it('reselects "All" when all other filters are deselected', async () => {
                     await renderConceptsPage({
                         context: {subject: "maths", stage: ["a_level"] },
-                        query: "types=number,geometry"
+                        query: "?types=number,geometry"
                     });
                     await toggleFilter([Number, Geometry]);
                     expectSelect([All, Number, Geometry]).toBe([Checked, NotChecked, NotChecked]);
@@ -85,7 +84,7 @@ describe("Concepts", () => {
                 it('deselects other filters when "All" is selected', async () => {
                     await renderConceptsPage({
                         context: {subject: "maths", stage: ["a_level"] },
-                        query: "types=number,geometry"
+                        query: "?types=number,geometry"
                     });
                     await toggleFilter([All]);
                     expectSelect([All, Number, Geometry]).toBe([Checked, NotChecked, NotChecked]);

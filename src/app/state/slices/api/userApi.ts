@@ -49,8 +49,8 @@ export const userApi = isaacApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 successTitle: "Account upgraded",
                 successMessage: "You have upgraded to a teacher account!",
-                errorTitle: "Failed to upgrade account"
-            })
+                errorTitle: "Failed to upgrade account",
+            }),
         })
     })
 });

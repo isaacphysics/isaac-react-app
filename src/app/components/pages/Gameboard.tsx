@@ -5,7 +5,8 @@ import {
     selectors,
     setAssignBoardPath,
     useAppDispatch,
-    useAppSelector, useGetGameboardByIdQuery,
+    useAppSelector,
+    useGetGameboardByIdQuery,
     useGetMyAssignmentsQuery
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
@@ -24,7 +25,8 @@ import {
     isFound,
     isNotPartiallyLoggedIn,
     isPhy,
-    isTutorOrAbove, PATHS,
+    isTutorOrAbove,
+    PATHS,
     SEARCH_RESULT_TYPE,
     showWildcard,
     siteSpecific,
@@ -39,9 +41,9 @@ import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import { GameboardSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { PageMetadata } from "../elements/PageMetadata";
-import { ListView } from "../elements/list-groups/ListView";
+import {GameboardSidebar, MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
+import {PageMetadata} from "../elements/PageMetadata";
+import {ListView} from "../elements/list-groups/ListView";
 
 export const getProgressIcon = (state?: CompletionState) => {
     const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
@@ -180,9 +182,9 @@ export const Gameboard = withRouter(({ location }) => {
     }, [dispatch, gameboard]);
 
     const notFoundComponent = <>
-        <TitleAndBreadcrumb 
-            breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")} 
-            currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`} 
+        <TitleAndBreadcrumb
+            breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")}
+            currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`}
             icon={{type: "hex", icon: "icon-error"}}
         />
         <h3 className="my-4">
@@ -200,7 +202,7 @@ export const Gameboard = withRouter(({ location }) => {
                 ifNotFound={notFoundComponent}
                 thenRender={(gameboard) => {
                     return <>
-                        <TitleAndBreadcrumb 
+                        <TitleAndBreadcrumb
                             currentPageTitle={siteSpecific("Question deck", gameboard && gameboard.title || "Filter Generated Quiz")} icon={{type: "hex", icon: "icon-question-deck"}}
                             intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: "Assignments", to: "/assignments"}] : []}
                         />
@@ -208,9 +210,9 @@ export const Gameboard = withRouter(({ location }) => {
                             <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />
                             <MainContent>
                                 <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
-                                {isPhy 
+                                {isPhy
                                     ? <ListView type="item" items={displayQuestions} linkedBoardId={gameboardId} className="mt-3"/>
-                                    : <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-7" /> 
+                                    : <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-7" />
                                 }
                                 {user && isTutorOrAbove(user)
                                     ? <Row>

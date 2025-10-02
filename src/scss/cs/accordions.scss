@@ -28,7 +28,9 @@
   background-image: url(/assets/cs/icons/flag-black.svg);
 }
 
-.accordion button.accordion-header {
+// Isaac accordions only, not BS
+
+.isaac-accordion button.accordion-header {
   span, button, button:hover {
     color: black !important;
     &.stage-label-higher {
@@ -54,7 +56,7 @@ button.accordion-header {
   }
 }
 
-.accordion {
+.isaac-accordion {
   background: $cs-white;
   border-top: 1px solid $cs-cultured;
 
@@ -71,3 +73,12 @@ button.accordion-header {
     margin-bottom: 1rem;
   }
 }
+
+// BS accordions only, not Isaac
+
+.accordion {
+  .accordion-header:not(:has(> .collapsed)) {
+    border-bottom: 1px solid $cs-light-gray;
+  }
+}
+

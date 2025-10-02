@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Container, Form, FormGroup, FormProps, Input, Label } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { isTutorOrAbove, siteSpecific, useQueryParams } from "../../services";
+import { isTutorOrAbove, useQueryParams } from "../../services";
 import { selectors, useAppSelector, useDeleteAccountMutation } from "../../state";
 import { Link } from "react-router-dom";
 import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
@@ -47,7 +47,7 @@ export const AccountDeletion = () => {
 
     return <Container className="pb-7">
         <TitleAndBreadcrumb 
-            currentPageTitle={siteSpecific("Account Deletion", "Account deletion")} className="mb-4"
+            currentPageTitle={"Account deletion"} className="mb-4"
             icon={{"type": "hex", "icon": "icon-account"}}
         />
         {!user ? <p>You must be logged in to delete your account.</p> :

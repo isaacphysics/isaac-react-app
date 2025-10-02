@@ -71,8 +71,8 @@ describe("QuizPreview", () => {
     });
 
     describe('for students', () => {
-        const studentPreviewsQuiz = () => rederQuizPreview({ role: 'STUDENT', quizId: 'some_non_existent_test'}); 
-        
+        const studentPreviewsQuiz = () => rederQuizPreview({ role: 'STUDENT', quizId: 'some_non_existent_test'});
+
         it('redirects to account upgrade', async () => {
             await studentPreviewsQuiz();
             await expectUrl(siteSpecific('/pages/contact_us_teacher', '/teacher_account_request'));
@@ -80,8 +80,8 @@ describe("QuizPreview", () => {
     });
 
     describe('for unregistered users', () => {
-        const anonymousAttemptsMissingQuiz = () => rederQuizPreview({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'}); 
-        
+        const anonymousAttemptsMissingQuiz = () => rederQuizPreview({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'});
+
         it('redirects to log in', async () => {
             await anonymousAttemptsMissingQuiz();
             await expectUrl('/login');
@@ -98,7 +98,7 @@ describe("QuizPreview", () => {
                 () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "My tests"}, "Test Preview"])
             )();
         });
-        
+
         it('shows error', async () => {
             await teacherPreviewsMissingQuiz();
             expectH1('Test Preview');
@@ -114,7 +114,7 @@ describe("QuizPreview", () => {
         });
 
         describe('shows the redesigned sidebar', sideBarTestCases(teacherPreviewsQuiz));
-        
+
         it('sidebar toggle is called "Sections"', async () => {
             await teacherPreviewsQuiz();
             await expectSidebarToggle("Sections");

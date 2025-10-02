@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useState } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
@@ -48,10 +48,10 @@ export const MainContent = (props: ColProps) => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(mainContentIdSlice.actions.set("page-content"));
+        dispatch(mainContentIdSlice.actions.set({id: "page-content", priority: 2}));
     }, [dispatch]);
 
-    return siteSpecific(<Col id="page-content" xs={12} lg={8} xl={9} {...rest} className={classNames(className, "order-0 order-lg-1")} />, props.children);
+    return siteSpecific(<Col id="page-content" xs={12} lg={8} xl={9} {...rest} tabIndex={-1} className={classNames(className, "order-0 order-lg-1")} />, props.children);
 };
 
 interface QuestionLinkProps {
@@ -1105,17 +1105,15 @@ interface GroupsSidebarProps extends ContentSidebarProps {
     setSelectedGroupId: React.Dispatch<React.SetStateAction<number | undefined>>;
     showArchived: boolean;
     setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
-    groupNameInputRef: RefObject<HTMLInputElement>;
-    createNewGroup: (newGroupName: string) => Promise<boolean>;
 }
 
 export const GroupsSidebar = (props: GroupsSidebarProps) => {
-    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, ...rest } = props;
+    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, createNewGroup, ...rest } = props;
     return <ContentSidebar buttonTitle="Select or create a group" {...rest}>
         <div className="section-divider"/>
-        <h5>Select a group</h5>
+        <h5>Select or create a group</h5>
         <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
-            setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true} sidebarStyle={true}/>
+            setShowArchived={setShowArchived} showCreateGroup={true} sidebarStyle={true}/>
     </ContentSidebar>;
 };
 

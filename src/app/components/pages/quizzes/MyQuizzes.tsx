@@ -55,34 +55,60 @@ interface QuizAssignmentProps {
 }
 
 const QuizButton = ({quiz}: QuizAssignmentProps) => {
-    return <>{quiz.isAssigned ? <>
+    return quiz.isAssigned ? <>
         {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={quiz.link}>
-            {siteSpecific("Start Test", "Start test")}
+            Start test
         </Button>}
         {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-            {siteSpecific("Continue Test", "Continue test")}
+            Continue test
         </Button>}
         {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
-            {siteSpecific("Overdue", "Overdue")}
+            Overdue
         </Button>}
         {quiz.status === QuizStatus.Complete && (
             <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-                {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
+                {quiz.quizFeedbackMode === "NONE" ? "No feedback" : "View feedback"}
             </Button>
         )}
-    </> : quiz.attempt && <>
-        {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
-            {siteSpecific("Continue Test", "Continue test")}
-        </Button>}
-        {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
-            {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
-        </Button>
-        }
-    </>}</>;
+    </> : 
+        quiz.attempt && <>
+            {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
+                Continue test
+            </Button>}
+            {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
+                {quiz.quizFeedbackMode === "NONE" ? "No feedback" : "View feedback"}
+            </Button>
+            }
+        </>;
+};
+
+const QuizInfo = ({quiz}: QuizAssignmentProps) => {
+    const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
+    const siteFormatDate = (date: number | Date) => <strong>{`${siteSpecific(getFriendlyDaysUntil(date), formatDate(date))}`}</strong>;
+    return <>
+        {<p>
+            {quiz.isAssigned ? 
+                quiz.dueDate && <> Due date: {siteFormatDate(quiz.dueDate)} </> : 
+                quiz.attempt && siteSpecific(
+                    `Freely ${quiz.status === QuizStatus.Started ? "attempting" : "attempted"}`,
+                    `${quiz.status === QuizStatus.Started ? "Attempting" : "Attempted"} independently`
+                )
+            }
+        </p>}
+        {quiz.isAssigned && <p>
+            {assignmentStartDate && <> Set: {siteFormatDate(assignmentStartDate)} </>}
+            {quiz.assignerSummary && `by ${extractTeacherName(quiz.assignerSummary)}`}
+        </p>}
+        {quiz.attempt && <p>
+            {quiz.status === QuizStatus.Complete ?
+                quiz.attempt.completedDate && <> Completed: {siteFormatDate(quiz.attempt.completedDate)} </> :
+                quiz.attempt.startDate && <> Started: {siteFormatDate(quiz.attempt.startDate)} </>
+            }
+        </p>}
+    </>;
 };
 
 const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
-    const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
     const deviceSize = useDeviceSize();
     const determineQuizSubject = (quizSummary?: DisplayableQuiz) => {
         return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `${tag.toLowerCase()}`, "");
@@ -106,20 +132,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                         </div>
                     </Col>
                     <Col className="d-flex flex-column justify-content-between col-sm-4">
-                        {quiz.isAssigned
-                            ? quiz.dueDate && <p>Due date: <strong>{getFriendlyDaysUntil(quiz.dueDate)}</strong></p>
-                            : quiz.attempt && <p>Freely {quiz.status === QuizStatus.Started ? "attempting" : "attempted"}</p>
-                        }
-                        {quiz.isAssigned && <p>
-                            Set: <strong>{getFriendlyDaysUntil(assignmentStartDate as Date)}</strong>
-                            {quiz.assignerSummary && <> by {extractTeacherName(quiz.assignerSummary)}</>}
-                        </p>}
-                        {quiz.attempt && <p>
-                            {quiz.status === QuizStatus.Complete
-                                ? <>Completed: <strong>{getFriendlyDaysUntil(quiz.attempt.completedDate as Date)}</strong></>
-                                : <>Started: <strong>{getFriendlyDaysUntil(quiz.attempt.startDate as Date)}</strong></>
-                            }
-                        </p>}
+                        <QuizInfo quiz={quiz}/>
                         <QuizButton quiz={quiz}/>
                     </Col>
                 </Row>
@@ -129,25 +142,11 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
 };
 
 const AdaQuizItem = ({quiz}: QuizAssignmentProps) => {
-    const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
     return <div className="p-2">
         <Card className="card-neat my-quizzes-card">
             <CardBody className="d-flex flex-column">
-                <h4 className="border-bottom pb-3 mb-3">{quiz.title || quiz.id }</h4>
-                {quiz.isAssigned
-                    ? quiz.dueDate && <p>Due date: <strong>{formatDate(quiz.dueDate)}</strong></p>
-                    : quiz.attempt && <p>{quiz.status === QuizStatus.Started ? "Attempting" : "Attempted"} independently</p>
-                }
-                {quiz.isAssigned && <p>
-                    Set: {formatDate(assignmentStartDate)}
-                    {quiz.assignerSummary && <> by {extractTeacherName(quiz.assignerSummary)}</>}
-                </p>}
-                {quiz.attempt && <p>
-                    {quiz.status === QuizStatus.Complete ?
-                        `Completed: ${formatDate(quiz.attempt.completedDate)}`
-                        : `Started: ${formatDate(quiz.attempt.startDate)}`
-                    }
-                </p>}
+                <h4 className="border-bottom pb-3 mb-3">{quiz.title || quiz.id}</h4>
+                <QuizInfo quiz={quiz}/>
                 <Spacer/>
                 <div className="text-center mt-4">
                     <QuizButton quiz={quiz}/>
@@ -180,7 +179,6 @@ function QuizGrid({quizzes, emptyMessage}: AssignmentGridProps) {
 
 // To avoid the chaos of QuizProgressCommon, this and PracticeQuizTable are **separate components**. Despite this repeating some code, please don't try to merge them.
 const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void, emptyMessage: ReactNode}) => {
-
     return <HorizontalScroller enabled={quizzes.length > 6}>
         <Table className="my-quizzes-table mb-0">
             <colgroup>
@@ -351,7 +349,6 @@ export const PastTestsToggle = ({showCompleted, setShowCompleted, setQuizStatusF
 };
 
 const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
-
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
     const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
 
@@ -466,7 +463,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
             />
             <MainContent>
                 <PageMetadata noTitle showSidebarButton>
-                    <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-7"}/>} />
+                    <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_tests_teacher" : "help_toptext_tests_student"} ifNotFound={<div className={"mt-7"}/>} />
                 </PageMetadata>
                 <Tabs style="tabs" className="mb-7 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
                     history.replace({...history.location, hash: tabAnchors[index - 1]});

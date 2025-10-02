@@ -9,7 +9,7 @@ export const FooterPhy = () => (
     <footer className="d-print-none px-7">
         <Row className="pt-7">
             <Col xl={{size: 3, offset: 0}}>
-                <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="mt-2 mb-1">
+                <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="mt-2 mb-1 img-link">
                     <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='footer-org-logo' />
                 </a>
                 <div className="logo-text">

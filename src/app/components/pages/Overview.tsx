@@ -1,25 +1,26 @@
 import React from "react";
 import {PageTitle} from "../elements/PageTitle";
-import {Button, Container, Row} from "reactstrap";
+import {Container} from "reactstrap";
 import {ColumnSlice} from "../elements/layout/ColumnSlice";
 import {IconCard} from "../elements/cards/IconCard";
-import {useDeviceSize} from "../../services";
-import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../state";
-import {useLinkableSetting} from "../../services/linkableSetting";
-import {NewsCard} from "../elements/cards/NewsCard";
+import { useTeacherOnboardingModal } from "../elements/modals/AdaTeacherOnboardingModal";
+import { GetStartedWithAda } from "../elements/panels/GetStartedWithAda";
+import { AdaNewsSection } from "../elements/AdaNewsSection";
 
 export const Overview = () => {
-    const {data: news} = useGetNewsPodListQuery({subject: "news"});
-    const deviceSize = useDeviceSize();
-    const userPreferences = useAppSelector(selectors.user.preferences);
-    const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
-    const {setLinkedSetting} = useLinkableSetting();
+    useTeacherOnboardingModal();    
+
     return <div id={"overview"}>
-        <section id="browse">
+        <section id="get-started">
             <Container className="overview-padding mw-1600">
                 <div id={"page-title"} className={"py-3"}>
                     <PageTitle currentPageTitle={"Overview"} />
                 </div>
+                <GetStartedWithAda />
+            </Container>
+        </section>
+        <section id="browse">
+            <Container className="overview-padding mw-1600">
                 <h2>Browse Ada CS</h2>
                 <ColumnSlice className={"row-cols-lg-4 row-cols-md-2"}>
                     <IconCard className={"without-margin"} card={{
@@ -83,41 +84,7 @@ export const Overview = () => {
         </section>
 
         <section id="news">
-            <Container className="overview-padding mw-1600">
-                {news && news.length > 0 && <>
-                    <h2>News</h2>
-                    <Row xs={12}
-                        className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around my-3">
-                        {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n}
-                            showTitle
-                            cardClassName="bg-cultured-grey"/>)}
-                    </Row>
-                    <div className={"mt-4 mt-lg-7 w-100 text-center"}>
-                        <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
-                    </div>
-                </>}
-            </Container>
-        </section>
-
-        <section id="newsletter">
-            <Container className="overview-padding mw-1600">
-                {showNewsletterPrompts &&
-                    <Row xs={12} className="mt-3">
-                        <IconCard
-                            card={{
-                                title: "Stay updated",
-                                icon: {src: "/assets/cs/icons/mail.svg"},
-                                bodyText: "Update your preferences and be the first to hear about new features, challenges, topics, and improvements on the platform.",
-                                clickUrl: "/account#notifications",
-                                buttonText: "Join our newsletter",
-                                onButtonClick: () => {
-                                    setLinkedSetting("news-preference");
-                                }
-                            }}
-                        />
-                    </Row>
-                }
-            </Container>
+            <AdaNewsSection />
         </section>
     </div>;
 };

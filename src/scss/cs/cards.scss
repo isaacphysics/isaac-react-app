@@ -137,14 +137,13 @@ a.icon-card, a.cs-card {
   }
 }
 
-.cs-card, .icon-card, .prompt-banner {
+.cs-card, .icon-card, .prompt-banner, .text-block {
   .card-footer {
     .btn-link::after {
       content: "";
       display: inline-flex;
-      @include svg-color(url('/assets/common/icons/chevron-right.svg'), $dark-pink-300, 12px, 12px);
+      @include svg-color(url('/assets/common/icons/chevron-right.svg'), $dark-pink-300, 12px, 12px, cover);
       margin-left: 10px;
-      mask-size: cover;
     }
   }
 
@@ -172,30 +171,6 @@ a.icon-card, a.cs-card {
     left: 24px;
     z-index: 2;
     background-repeat: no-repeat;
-  }
-
-  &.backslash-1 {
-    &::before {
-      height: 56px;
-      width: 28px;
-      background-image: url(/assets/cs/decor/backslash-outline-1.svg);
-    }
-  }
-
-  &.backslash-2 {
-    &::before {
-      height: 56px;
-      width: 46px;
-      background-image: url(/assets/cs/decor/backslash-outline-2.svg);
-    }
-  }
-
-  &.backslash-3 {
-    &::before {
-      height: 56px;
-      width: 64px;
-      background-image: url(/assets/cs/decor/backslash-outline-3.svg);
-    }
   }
 
   .card-img, .card-img-top {

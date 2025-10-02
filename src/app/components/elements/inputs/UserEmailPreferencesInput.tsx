@@ -31,7 +31,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
         )
     };
 
-    return <FormGroup className={classNames("form-group overflow-auto", {"pt-4": isPhy})}>
+    return <FormGroup className={classNames("form-group", {"pt-4": isPhy})}>
         {isPhy && submissionAttempted !== undefined ? <> {/* submissionAttempted should always exist on phy, just here for typing */}
             <Table className="mb-0">
                 <thead>
@@ -98,7 +98,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         ...emailPreferences,
                         NEWS_AND_UPDATES: e.target.checked
                     })}
-                    label={<span><b>News</b></span>}
+                    label={<span><b>Tips and updates</b></span>}
                 />
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.news}</span>
             </WithLinkableSetting>

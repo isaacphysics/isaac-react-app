@@ -14,7 +14,7 @@ export type ArrayElement<T extends readonly any[]> = T extends readonly (infer U
 
 /**
  * This function is used to check if a string contains all the words in a search phease, in any order.
- * 
+ *
  * @param text The text to check.
  * @param searchPhrase The search phrase from which words are checked for in the text.
  * @returns Whether the text contains all the words in the phrase, in any order, or not.
@@ -25,7 +25,7 @@ export function matchesAllWordsInAnyOrder(text: string | undefined, searchPhrase
 
 /**
  * This function is used to match a string against a search phrase, in a case-insensitive manner.
- * 
+ *
  * @param text The text to check.
  * @param searchPhrase The search phrase to check for in the text.
  * @returns Whether the text contains the search phrase or not.
@@ -133,7 +133,7 @@ export function useOutsideCallback(ref: RefObject<any>, callback : () => void, d
     }, [...deps, ref]);
 }
 
- 
+
 export function noop(_: never) {}
 
 // Confirms (currently using `window.confirm`, but we could change that to a more Isaac/Ada-themed thing moving

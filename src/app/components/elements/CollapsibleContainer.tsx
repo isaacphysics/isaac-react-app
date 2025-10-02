@@ -12,10 +12,18 @@ export const CollapsibleContainer = (props: CollapsibleContainerProps) => {
     const divRef = useRef<HTMLDivElement>(null);
 
     useLayoutEffect(() => {
+        // see CollapsibleList for explanation of this logic
         if (expanded) {
-            setExpandedHeight(divRef?.current ? [...divRef.current.children].map(c => 
-                c.getAttribute("data-targetheight") ? parseInt(c.getAttribute("data-targetheight") as string) : c.clientHeight
-            ).reduce((a, b) => a + b, 0) : 0);
+            const containerHeight = divRef?.current 
+                ? Math.max([...divRef.current.children].map(c => c.getAttribute("data-targetheight") 
+                    ? parseInt(c.getAttribute("data-targetheight") as string) 
+                    : c.clientHeight
+                ).reduce((a, b) => a + b, 0), divRef.current.clientHeight)
+                : undefined;
+            
+            if (containerHeight !== 0) {
+                setExpandedHeight(containerHeight ?? 0);
+            }
         }
     }, [expanded, props.children]);
 

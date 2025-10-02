@@ -67,10 +67,7 @@ $input-btn-padding-x-lg: 3rem;
 
 // fonts
 $primary-font: 'hanken-grotesk', Arial, 'Helvetica Neue', Helvetica, sans-serif;
-$secondary-font: 'exo_2regular', sans-serif;
-$secondary-font-bold: 'exo_2bold', sans-serif;
-$secondary-font-semi-bold: 'exo_2semi_bold', sans-serif;
-$secondary-font-medium: 'exo_2medium', sans-serif;
+$secondary-font: 'exo-2', sans-serif;
 $tertiary-font: 'arconrounded-regular', sans-serif;
 
 $question-line-height: 1.6;
@@ -252,6 +249,8 @@ $typography-font-weights-text-semibold: 600;
 $table-border-color: $gray-107;
 $table-bg: #0000; // This gets in the way of our colouring
 
+$badge-font-weight: $font-weight-medium;
+
 $border-color: #dee2e6;
 $border-width: 1px;
 $border-color-translucent: rgba(0, 0, 0, 0.1);
@@ -267,6 +266,8 @@ $tooltip-max-width: 370px;
 $dropdown-link-hover-bg: $color-neutral-50;
 $dropdown-link-active-bg: var(--subject-color-200, $color-neutral-200);
 $dropdown-link-active-color: inherit;
+
+$accordion-icon-width: 1.125rem;
 
 // Grid Customisation
 $container-max-widths: (
@@ -372,7 +373,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "sidebar";
 @import "table";
 @import "../common/headings";
-@import "../common/modals";
+@import "modals";
 @import "forms";
 @import "elements";
 @import "breadcrumbs";
@@ -430,6 +431,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "menu-page-phy";
 @import "quiz";
 @import "glossary";
+@import "stats";
 
 @import "expansion-layout";
 @import "../common/callout";
@@ -458,7 +460,7 @@ p small {
 
 body {
     color: $black;
-    font-family: 'hanken-grotesk', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    font-family: $primary-font;
     line-height: 1.625;
     display: -ms-flexbox;
     -ms-flex-direction: column;
