@@ -39,9 +39,7 @@ const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): Li
     icon: {type: "hex", icon: "icon-question-deck"},
     subject: context.subject,
     linkTags: [{tag: "View topic question decks", url: extendUrl(context, 'question_decks')}],
-    state: (context.stage.includes("gcse") && context.subject === "maths") || context.stage.includes("university")
-        ? AbstractListViewItemState.COMING_SOON
-        : undefined,
+    state: context.stage.includes("university") ? AbstractListViewItemState.COMING_SOON : undefined,
 });
 
 // TODO: replace the link tags with links to lessons by *field* (see designs)

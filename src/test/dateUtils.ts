@@ -19,3 +19,6 @@ export const DAYS_AGO = (date: Date = new Date(NOW), delta_days: number, roundDo
 
 export const SOME_FIXED_FUTURE_DATE_AS_STRING = '15 Jan 2050 12:00:00 GMT';
 export const SOME_FIXED_FUTURE_DATE = Date.parse(SOME_FIXED_FUTURE_DATE_AS_STRING);
+
+export const SOME_FIXED_PAST_DATE_AS_STRING = '15 Jan 2000 12:00:00 GMT';
+export const SOME_FIXED_PAST_DATE = Date.parse(SOME_FIXED_PAST_DATE_AS_STRING);
