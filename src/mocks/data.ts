@@ -1,6 +1,6 @@
 import {isDefined, siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
-import {DAYS_AGO, SOME_FIXED_FUTURE_DATE} from "../test/dateUtils";
+import {DAYS_AGO, SOME_FIXED_FUTURE_DATE, SOME_FIXED_PAST_DATE} from "../test/dateUtils";
 import {
     BookingStatus,
     CompletionState,
@@ -5942,9 +5942,9 @@ export const mockSetAssignments = [
         groupId: 2,
         groupName: "Test Group 1",
         ownerId: mockUser.id,
-        creationDate: DAYS_AGO(new Date(), 5),
+        creationDate: new Date(SOME_FIXED_PAST_DATE),
         dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
-        scheduledStartDate: DAYS_AGO(new Date(), 5),
+        scheduledStartDate: new Date(SOME_FIXED_PAST_DATE),
         gameboard: gameboardContents[37],
     },
     {
