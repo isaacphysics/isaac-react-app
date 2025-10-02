@@ -84,8 +84,8 @@ describe("MyAssignments", () => {
                 });
             })
         ]);
-        // Wait for the default ("All") assignments to show up
-        expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.length);
+        // Wait for the default ("To do") assignments to show up
+        expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.filter(a => a.gameboard.contents[0].state === "IN_PROGRESS").length);
         // Select the "Older Assignments" filter
         if (isAda) {
             const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");

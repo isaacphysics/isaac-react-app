@@ -2462,10 +2462,10 @@ export const mockMyAssignments = [
                     questionPartsNotAttempted: 2,
                     questionPartsTotal: 2,
                     passMark: 75.0,
-                    state: "NOT_ATTEMPTED",
+                    state: "IN_PROGRESS",
                     questionPartStates: [
-                        "NOT_ATTEMPTED",
-                        "NOT_ATTEMPTED"
+                        "IN_PROGRESS",
+                        "IN_PROGRESS"
                     ]
                 },
                 {
