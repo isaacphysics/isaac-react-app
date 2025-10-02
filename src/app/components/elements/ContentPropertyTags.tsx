@@ -17,6 +17,7 @@ export const QuestionPropertyTags = ({ supersededBy, tags, ...rest }: QuestionPr
             className="pill-tag-outline" 
             href={`/questions/${supersededBy}`}
             onClick={(e) => e.stopPropagation()}
+            target="_blank"
         >SUPERSEDED</a>}
         {tags?.includes("nofilter") && isStaff(user) && <span
             className="pill-tag-outline" 
