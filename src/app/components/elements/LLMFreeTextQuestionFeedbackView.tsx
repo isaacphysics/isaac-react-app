@@ -6,7 +6,7 @@ import {Immutable} from "immer";
 import {Link} from 'react-router-dom';
 import {StyledCheckbox} from './inputs/StyledCheckbox';
 import {logAction, selectors, useAppDispatch, useAppSelector} from '../../state';
-import {isAda, isPhy, NOT_FOUND, siteSpecific} from '../../services';
+import {isAda, NOT_FOUND, siteSpecific} from '../../services';
 import classNames from 'classnames';
 
 const noFeedback = {disagree: false, partlyAgree: false, agree: false};

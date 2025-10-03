@@ -70,8 +70,6 @@ interface QuestionMetaDataProps {
 const QuestionMetaData = (props: QuestionMetaDataProps) => {
     const {doc, allQuestionsCorrect, allQuestionsAttempted, anyQuestionAttempted, audienceViews} = props;
 
-    const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
-
     return <>
         <MetadataContainer className="d-flex row no-print">
             <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
