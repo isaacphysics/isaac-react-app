@@ -1,9 +1,8 @@
 @import "../common/tooltip.scss";
 
 div.fade .tooltip {
-  backdrop-filter: blur(3px);
-
   .tooltip-inner {
+    backdrop-filter: blur(1px);
     font-family: $primary-font;
     text-align: start;
   }

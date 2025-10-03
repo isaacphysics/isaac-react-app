@@ -112,11 +112,6 @@
     font-family: $secondary-font;
     font-weight: $font-weight-semibold;
   }
-  
-  .question-link-title, .question-link-title + div {
-    // owing to whitespace at the top of a text span, move the text (and adjacent tags list) up
-    margin-top: -5px;
-  }
 
   li.list-group-item.correct {
     background-color: $color-misc-correct;

@@ -195,7 +195,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
             </div>
             <div className="align-content-center text-overflow-ellipsis pe-2">
-                <div className="d-flex text-wrap">
+                <div className="d-flex text-wrap mt-n1">
                     {url && !isDisabled
                         ? (url.startsWith("http")
                             ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
