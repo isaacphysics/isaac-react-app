@@ -4,7 +4,6 @@ import tseslint, { parser as tsParser } from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginJsxA11y from "eslint-plugin-jsx-a11y";
-import diff from "eslint-plugin-diff";
 import { fixupPluginRules } from "@eslint/compat";
 import path from 'path';
 
@@ -19,9 +18,7 @@ export default [
     {
         plugins: {
             "react-hooks": fixupPluginRules(pluginReactHooks),
-            diff
         },
-        ...(process.env.CI ? { processor: diff.processors.diff} : {}  ),
         settings: {
             react: {
                 version: "detect"
