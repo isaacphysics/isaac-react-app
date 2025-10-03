@@ -2,7 +2,7 @@
 
 .llm-indicator {
     background-color: #eff;
-    color: black;
+    color: $black;
     border: 1px solid $color-neutral-700;
 
     &.small {
@@ -13,7 +13,7 @@
 
 .llm-info-banner {
     background-color: #eff;
-    border: 2px solid black;
+    border: 2px solid $black;
 }
 
 .llm-feedback {
@@ -22,9 +22,9 @@
     }
     
     .curved-table-wrapper {
-        border: 2px solid gray;
+        border: 2px solid $gray-160;
         tr {
-            border-bottom: 2px solid gray;
+            border-bottom: 2px solid $gray-160;
         }
         table {
             th {
@@ -34,6 +34,6 @@
     }
 
     .feedback-collection.submitted {
-        color: green;
+        color: $color-brand-700;
     }
 }
