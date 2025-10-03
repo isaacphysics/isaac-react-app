@@ -6,7 +6,8 @@ import {Immutable} from "immer";
 import {Link} from 'react-router-dom';
 import {StyledCheckbox} from './inputs/StyledCheckbox';
 import {logAction, selectors, useAppDispatch, useAppSelector} from '../../state';
-import {isAda, NOT_FOUND, siteSpecific} from '../../services';
+import {isAda, isPhy, NOT_FOUND, siteSpecific} from '../../services';
+import classNames from 'classnames';
 
 const noFeedback = {disagree: false, partlyAgree: false, agree: false};
 
@@ -29,7 +30,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
         }
     }, [hasSubmitted]);
 
-    return <div ref={feedbackPanelRef} className='llm-feedback question-component p-md-7'>
+    return <div ref={feedbackPanelRef} className={classNames("llm-feedback question-component p-md-7", {"pt-md-0": isPhy})}>
         <h2 className="mb-0">Do you agree with the LLM’s predicted marks?</h2>
         <p className="mb-0">
             1 in 3 times the predicted mark will be wrong. 

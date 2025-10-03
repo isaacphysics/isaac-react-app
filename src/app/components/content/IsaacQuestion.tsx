@@ -168,6 +168,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const validationFeedback = invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
         <IsaacContent doc={validationResponse?.explanation as ContentDTO}/>;
 
+    const possibleLLMFreeTextQuestionFeedbackView = isLLMFreeTextQuestion && showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit ?
+        <LLMFreeTextQuestionFeedbackView {...{validationResponse, hasSubmitted, sentFeedback, setSentFeedback}} /> :
+        null;
+
     return <ConfidenceContext.Provider value={{recordConfidence}}>
         <Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
@@ -280,13 +284,12 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                         </div>
                 }
             </div>
-            {/* Physics Hints */}
+            {/* Physics Hints and LLM free-text response */}
             {isPhy && <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />}
+            {isPhy && possibleLLMFreeTextQuestionFeedbackView}
         </Form>
 
-        {/* LLM free-text question validation response */}
-        {isLLMFreeTextQuestion && showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit &&
-            <LLMFreeTextQuestionFeedbackView {...{validationResponse, hasSubmitted, sentFeedback, setSentFeedback}} />
-        }
+        {/* Ada LLM free-text question validation response */}
+        {isAda && possibleLLMFreeTextQuestionFeedbackView}
     </ConfidenceContext.Provider>;
 });
