@@ -141,7 +141,7 @@ export const TeacherResources = () => {
                         title: "Teacher mentoring",
                         image: {src: "/assets/cs/decor/teacher-3.png"},
                         bodyText: "Get support through our online programme for newly qualified and non-specialist computer science teachers.",
-                        clickUrl: "/pages/teacher_mentoring_2024",
+                        clickUrl: "/pages/teacher_mentoring_2025",
                         buttonText: "Learn more",
                         className: "bg-cultured-grey",
                     }}/>

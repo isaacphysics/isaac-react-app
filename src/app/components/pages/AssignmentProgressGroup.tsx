@@ -29,6 +29,7 @@ import {StyledDropdown} from '../elements/inputs/DropdownInput';
 import {Loading} from '../handlers/IsaacSpinner';
 import {skipToken} from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
+import { useHistoryState } from '../../state/actions/history';
 
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const dispatch = useAppDispatch();
@@ -49,7 +50,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
     return <Link to={quiz ? `/test/assignment/${assignment.id}/feedback` : `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} className="w-100 d-block no-underline mt-2">
         <div className="d-flex align-items-center assignment-progress-group w-100 p-3">
             <div className="d-flex flex-column">
-                <span className="d-flex">
+                <span className="d-inline-flex flex-wrap">
                     <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
                     {isScheduled && <em className="mx-1">(scheduled)</em>}
                     <a className="new-tab-link" href={quiz ? assignment.quizSummary?.url : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
@@ -73,7 +74,7 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
                 </div>
             </div>
             <Spacer/>
-            {!isScheduled && <strong className="align-content-center">
+            {!isScheduled && <strong className="align-content-center mw-max-content">
                 <a href={csvDownloadLink} className="assignment-csv-download-link" target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
                     Download CSV
                 </a>
@@ -93,11 +94,13 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
     const dispatch = useAppDispatch();
 
     const [searchText, setSearchText] = useState("");
-    const [activeTab, setActiveTab] = useState<"assignments" | "tests">("assignments");
+    const [activeTab, setActiveTab] = useHistoryState<"assignments" | "tests">("markbookTab", "assignments");
 
     const deviceSize = useDeviceSize();
 
     const assignmentLikeListing = activeTab === "assignments" ? groupBoardAssignments : groupQuizAssignments;
+
+    const filteredAssignments = assignmentLikeListing?.filter(al => (isQuiz(al) ? al.quizSummary?.title : al.gameboard?.title)?.toLowerCase().includes(searchText.toLowerCase()));
 
     return <Container className="mb-5">
         <TitleAndBreadcrumb
@@ -117,7 +120,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                 Back to assignment progress
             </Link>}
             {isDefined(group?.id) && <>
-                {above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
+                {isPhy && above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
                 <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupAssignmentProgressCSVDownloadLink(group.id as number))))}>
                     Download assignments CSV
                     <i className="icon icon-download ms-2" color="white"/>
@@ -189,9 +192,11 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                     {isFetching
                         ? <Loading/>
                         : assignmentLikeListing?.length
-                            ? assignmentLikeListing
-                                .filter(al => (isQuiz(al) ? al.quizSummary?.title : al.gameboard?.title)?.toLowerCase().includes(searchText.toLowerCase()))
-                                .map(assignment => <AssignmentLikeLink key={assignment.id} assignment={assignment} />)
+                            ? filteredAssignments?.length
+                                ? filteredAssignments.map(assignment => <AssignmentLikeLink key={assignment.id} assignment={assignment} />)
+                                : <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
+                                    <span>No {activeTab === "assignments" ? "assignments" : "tests"} match your search.</span>
+                                </div>
                             : <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
                                 <span>You haven&apos;t {activeTab === "assignments" ? "set any assignments" : "assigned any tests"} yet.</span>
                                 <strong><Link to={activeTab === "assignments" ? PATHS.SET_ASSIGNMENTS : "/set_tests"} className={classNames("btn btn-link", {"fw-bold": isPhy})}>
