@@ -43,4 +43,4 @@ export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryI
             </div>
         </div>,
     );
-}
+};

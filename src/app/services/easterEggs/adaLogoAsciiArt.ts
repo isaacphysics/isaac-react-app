@@ -17,6 +17,6 @@ const logoAsciiArt: string = `%c                                      \xA0
                                       \xA0`;
 
 export function printAsciiArtLogoToConsoleAda() {
-    // eslint-disable-next-line no-console
+     
     console.log(logoAsciiArt, "font: 8pt \"Courier New\", monospace; line-height: 1.3; color: #05FFE7; background: black;");
 }

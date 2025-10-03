@@ -44,7 +44,7 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
                 {view.difficulty && <div className="ms-2 ms-sm-0 text-center">
                     <DifficultyIcons difficulty={view.difficulty}/>
                 </div>}
-            </div>})}
+            </div>;})}
     </div>;
 }
 

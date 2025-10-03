@@ -289,7 +289,7 @@ export function generateMathsDerivativeAndLetters(symbol: string): { derivative:
 
 export function generateMathsDifferentialAndLetters(symbol: string): { differential?: MenuItemProps | null; letters?: MenuItemProps[] | null } {
     // We wouldn't be here if the regex didn't parse in the first place, so the assertion is justified
-    const parsedDifferential = DIFFERENTIAL_REGEX.exec(symbol)!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    const parsedDifferential = DIFFERENTIAL_REGEX.exec(symbol)!;  
     const differentialType = parsedDifferential[1];
     const differentialOrder = parsedDifferential[2] || 0;
     const differentialArgument = parsedDifferential[3] || null;
@@ -483,7 +483,7 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                     customMenuItems.otherFunctions.push(generateMathsLogFunctionItem(functionName));
                 } else {
                     // What
-                    // eslint-disable-next-line no-console
+                     
                     console.warn(`Could not parse available symbol "${availableSymbol} as a function"`);
                 }
             } else if (availableSymbol.startsWith('Derivative')) {

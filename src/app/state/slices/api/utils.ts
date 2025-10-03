@@ -51,13 +51,13 @@ export const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQ
         } else {
             api.dispatch(errorSlice.actions.apiServerError());
         }
-        // eslint-disable-next-line no-console
+         
         console.warn("Error from API:", result.error);
     } else {
         const status = result.meta?.response?.status;
         if (!status) return result;
         if (status >= 500) {
-            // eslint-disable-next-line no-console
+             
             console.warn("Uncaught error from API:", result.meta?.response);
         } else if ([NOT_FOUND, NO_CONTENT].includes(status)) {
             result.data = NOT_FOUND;
