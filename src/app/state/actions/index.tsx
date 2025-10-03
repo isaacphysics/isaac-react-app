@@ -483,7 +483,7 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider, is
         dispatch(showAxiosErrorToastIfNeeded("Login redirect failed", e));
     }
     // TODO MT handle case when user is already logged in
-}
+};
 
 export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
