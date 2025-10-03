@@ -13,11 +13,12 @@ const noFeedback = {disagree: false, partlyAgree: false, agree: false};
 
 interface LLMFreeTextQuestionFeedbackViewProps {
     validationResponse: Immutable<LLMFreeTextQuestionValidationResponseDTO>;
+    maxMarks: number;
     hasSubmitted: boolean;
     sentFeedback: boolean;
     setSentFeedback: (value: boolean) => void;
 }
-export default function LLMFreeTextQuestionFeedbackView({validationResponse, hasSubmitted, sentFeedback, setSentFeedback}: LLMFreeTextQuestionFeedbackViewProps) {
+export default function LLMFreeTextQuestionFeedbackView({validationResponse, maxMarks, hasSubmitted, sentFeedback, setSentFeedback}: LLMFreeTextQuestionFeedbackViewProps) {
     const dispatch = useAppDispatch();
     const page = useAppSelector(selectors.doc.get);
     const accordion = useContext(AccordionSectionContext);
@@ -40,7 +41,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
         <div className="prediction my-4">
             <div className='d-flex'>
                 <span className="icon-ai me-2"/>
-                <strong>{`Prediction: ${validationResponse.marksAwarded} out of ${validationResponse.maxMarks} marks`}</strong>
+                <strong>{`Prediction: ${validationResponse.marksAwarded} out of ${maxMarks} marks`}</strong>
             </div>
         </div>
         <div className="table-responsive card curved-table-wrapper mb-4">
