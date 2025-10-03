@@ -76,7 +76,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const hidingAttempts = useAppSelector(selectors.user.preferences)?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS ?? false;
 
-
     const {confidenceState, setConfidenceState, validationPending, setValidationPending, confidenceDisabled, recordConfidence, showQuestionFeedback} = useConfidenceQuestionsValues(
         currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD"),
         "question",
@@ -289,7 +288,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
         {/* LLM free-text question validation response */}
         {isLLMFreeTextQuestion && showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit &&
-            <LLMFreeTextQuestionFeedbackView {...{validationResponse, hasSubmitted, sentFeedback, setSentFeedback}} />
+            <LLMFreeTextQuestionFeedbackView maxMarks={(doc as ApiTypes.IsaacLLMFreeTextQuestionDTO).maxMarks ?? 0} {...{validationResponse, hasSubmitted, sentFeedback, setSentFeedback}} />
         }
     </ConfidenceContext.Provider>;
 });
