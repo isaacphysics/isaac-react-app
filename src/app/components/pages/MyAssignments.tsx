@@ -86,7 +86,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     // that require refetching.
     const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
 
-    const [statusFilter, setStatusFilter] = useState<AssignmentState[]>([AssignmentState.TODO]);
+    const [statusFilter, setStatusFilter] = useState<AssignmentState[]>(siteSpecific([AssignmentState.TODO], [AssignmentState.ALL]));
     const [titleFilter, setTitleFilter] = useState<string>("");
     const [groupFilter, setGroupFilter] = useState<string>("All");
     const [setByFilter, setSetByFilter] = useState<string>("All");
