@@ -1,13 +1,13 @@
-import React, {useEffect, useRef, useState} from 'react';
-
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {LLMFreeTextQuestionValidationResponseDTO} from "../../../IsaacApiTypes";
 import {Button, Table} from "reactstrap";
 import {Immutable} from "immer";
 import {Link} from 'react-router-dom';
 import {StyledCheckbox} from './inputs/StyledCheckbox';
 import {logAction, selectors, useAppDispatch, useAppSelector} from '../../state';
-import {isAda, NOT_FOUND, siteSpecific} from '../../services';
+import {isAda, isPhy, NOT_FOUND, siteSpecific} from '../../services';
 import classNames from 'classnames';
+import { AccordionSectionContext } from '../../../IsaacAppTypes';
 
 const noFeedback = {disagree: false, partlyAgree: false, agree: false};
 
@@ -20,6 +20,7 @@ interface LLMFreeTextQuestionFeedbackViewProps {
 export default function LLMFreeTextQuestionFeedbackView({validationResponse, hasSubmitted, sentFeedback, setSentFeedback}: LLMFreeTextQuestionFeedbackViewProps) {
     const dispatch = useAppDispatch();
     const page = useAppSelector(selectors.doc.get);
+    const accordion = useContext(AccordionSectionContext);
     const pageId = page && page !== NOT_FOUND && page.id || undefined;
     const [feedback, setFeedback] = useState(noFeedback);
 
@@ -30,7 +31,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
         }
     }, [hasSubmitted]);
 
-    return <div ref={feedbackPanelRef} className={classNames("llm-feedback question-component", siteSpecific("p-xl-7 pt-xl-0 p-5 pt-0", "p-md-7"))}>
+    return <div ref={feedbackPanelRef} className={classNames("llm-feedback question-component", {"pt-xl-0 pt-0": isPhy && accordion.open === null}, siteSpecific("p-xl-7 p-5", "p-md-7"))}>
         <h2 className="mb-0">Do you agree with the LLM’s predicted marks?</h2>
         <p className="mb-0">
             1 in 3 times the predicted mark will be wrong. 
