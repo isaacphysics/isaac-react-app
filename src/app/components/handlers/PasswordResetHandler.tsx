@@ -11,12 +11,19 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
 
     const [newPassword, setNewPassword] = useState("");
     const [passwordValid, setPasswordValid] = useState(false);
+    const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
     // Check the password reset token is valid
     useEffect(() => {dispatch(verifyPasswordReset(urlToken));}, [dispatch, urlToken]);
 
     function submit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
+        setSubmissionAttempted(true);
+
+        if (!passwordValid) {
+            return;
+        }
 
         // todo: submit
     }
@@ -29,9 +36,10 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
                     <CardBody>
                         <SetPasswordInput
                             className="my-4"
+                            password={newPassword}
                             onChange={setNewPassword}
                             onValidityChange={setPasswordValid}
-                            submissionAttempted={false} // todo
+                            submissionAttempted={submissionAttempted}
                             required={true}
                         />
                     </CardBody>

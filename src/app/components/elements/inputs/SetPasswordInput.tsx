@@ -51,7 +51,7 @@ export const SetPasswordInput = ({
             <TogglablePasswordInput
                 id={`${idPrefix}-password-set`} name="password" type="password"
                 aria-describedby="invalidPassword"
-                feedbackText={(!valid || confirmed) ? `Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long.` : "Please ensure your passwords match."}
+                feedbackText={confirmed ? `Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long.` : "Please ensure your passwords match."}
                 value={password as string | undefined}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     onChange(e.target.value);
@@ -75,7 +75,7 @@ export const SetPasswordInput = ({
             </Label>
             <TogglablePasswordInput
                 id="password-confirm" name="password-confirm" type="password"
-                disabled={!required && submissionAttempted || !password}
+                disabled={!password}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setConfirmationPassword(e.target.value);
                 }}
