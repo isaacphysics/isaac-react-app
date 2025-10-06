@@ -62,8 +62,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         })
     );
 
-    const [passwordConfirmed, setPasswordConfirmed] = useState(false);
-    const [passwordValid, setpasswordValid] = useState(false);
+    const [passwordValid, setPasswordValid] = useState(false);
     const [tosAccepted, setTosAccepted] = useState(false);
 
     const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
@@ -164,8 +163,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                     className="my-4"
                                     password={registrationUser.password}
                                     onChange={(password) => setRegistrationUser(Object.assign({}, registrationUser, {password: password}))}
-                                    onConfirmationChange={setPasswordConfirmed}
-                                    onValidityChange={setpasswordValid}
+                                    onValidityChange={setPasswordValid}
                                     submissionAttempted={attemptedSignUp}
                                     required={true}
                                 />

@@ -16,7 +16,6 @@ interface SetPasswordInputProps {
     className?: string;
     password?: string | null;
     onChange: (password: string) => void;
-    onConfirmationChange: (confirmed: boolean) => void;
     onValidityChange: (valid: boolean) => void;
     submissionAttempted: boolean;
     idPrefix?: string;
@@ -28,7 +27,6 @@ export const SetPasswordInput = ({
     className,
     password,
     onChange,
-    onConfirmationChange,
     onValidityChange,
     required,
     submissionAttempted,
@@ -38,17 +36,13 @@ export const SetPasswordInput = ({
     const [confirmationPassword, setConfirmationPassword] = useState<string | null>(null);
 
     const confirmed = isAda || (password === confirmationPassword);
-    const valid = !!password && validatePassword(password);
+    const valid = !!password && validatePassword(password) && confirmed;
 
     loadZxcvbnIfNotPresent();
 
     useEffect(() => {
         onValidityChange(valid);
     }, [onValidityChange, valid]);
-
-    useEffect(() => {
-        onConfirmationChange(confirmed);
-    }, [onConfirmationChange, confirmed]);
 
     return <div className={className}>
         <FormGroup className="form-group">

@@ -1,18 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {AppState, handlePasswordReset, useAppDispatch, useAppSelector, verifyPasswordReset} from "../../state";
-import {Button, Card, CardBody, CardFooter, Container, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
-import {PasswordFeedback} from "../../../IsaacAppTypes";
-import {
-    isAda,
-    isPhy,
-    loadZxcvbnIfNotPresent,
-    MINIMUM_PASSWORD_LENGTH,
-    passwordDebounce,
-    validatePassword
-} from "../../services";
+import {useAppDispatch, verifyPasswordReset} from "../../state";
+import {Button, Card, CardBody, CardFooter, Container, Form} from "reactstrap";
 import {RouteComponentProps} from "react-router";
-import { extractErrorMessage } from '../../services/errors';
-import {TogglablePasswordInput} from "../elements/inputs/TogglablePasswordInput";
 import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 
 
@@ -21,39 +10,38 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
     const urlToken = match.params.token || null;
 
     const [newPassword, setNewPassword] = useState("");
-    const [confirmationPassword, setConfirmationPassword] = useState("");
+    const [passwordValid, setPasswordValid] = useState(false);
 
-    const passwordIsValid = validatePassword(newPassword);
-    const passwordsMatch = (isAda || confirmationPassword === newPassword);
-
+    // Check the password reset token is valid
     useEffect(() => {dispatch(verifyPasswordReset(urlToken));}, [dispatch, urlToken]);
+
+    function submit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        // todo: submit
+    }
 
     return <Container id="email-verification">
         <div>
             <h3>Reset your password</h3>
-            <Card>
-                <CardBody>
-                    <Form name="passwordReset">
+            <Form onSubmit={submit}>
+                <Card>
+                    <CardBody>
                         <SetPasswordInput
                             className="my-4"
                             onChange={setNewPassword}
-                            // passwordValid={passwordIsValid}
-                            // passwordsMatch={passwordsMatch}
-                            // setConfirmedPassword={setConfirmationPassword}
+                            onValidityChange={setPasswordValid}
                             submissionAttempted={false} // todo
-                            required={true} onConfirmationChange={function (confirmed: boolean): void {
-                                throw new Error('Function not implemented.');
-                            }} onValidityChange={function (valid: boolean): void {
-                                throw new Error('Function not implemented.');
-                            }}                        />
-                    </Form>
-                </CardBody>
-                <CardFooter>
-                    <Button color="secondary" className="mb-2" block id="change-password">
-                        Change Password
-                    </Button>
-                </CardFooter>
-            </Card>
+                            required={true}
+                        />
+                    </CardBody>
+                    <CardFooter>
+                        <Button type={"submit"} color="secondary" className="mb-2" block id="change-password">
+                            Change Password
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </Form>
         </div>
     </Container>;
 };
