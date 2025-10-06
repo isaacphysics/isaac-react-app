@@ -1,0 +1,81 @@
+.content-metadata-container {
+  background-color: $color-neutral-100;
+  border: 1px solid $color-neutral-200;
+  border-radius: 4px;
+  padding: 1rem 0.5rem;
+  margin: 1rem 0;
+  font-size: 14px;
+  row-gap: 0.5rem;
+}
+
+.content-metadata-container.question-metadata {
+  container: question-metadata / inline-size;
+  &:has(> :first-child:nth-last-child(4)) { // are there 4 children?
+    // this :has isn't supported in older browsers, but the regular question-metadata layout for 4 is acceptable
+    container: question-metadata-access / inline-size;
+  }
+
+  > div > span:first-child {
+    color: $color-neutral-800;
+    margin-bottom: 0.4rem;
+  }
+
+  > div {
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+    flex-grow: 0;
+  }
+}
+
+@container question-metadata (min-width: 690px) {
+  #metadata-subject-topics {
+    flex-grow: 1;
+  }
+
+  div + div {
+    border-left: 1px solid $color-neutral-200;
+  }
+}
+
+@container question-metadata (max-width: 689.98px) {
+  #metadata-subject-topics {
+    flex-basis: 100%;
+  }
+
+  div:not(:first-child) + div {
+    border-left: 1px solid $color-neutral-200;
+  }
+}
+
+
+@container question-metadata-access (min-width: 876px) {
+  #metadata-subject-topics {
+    flex-grow: 1;
+  }
+
+  div + div {
+    border-left: 1px solid $color-neutral-200;
+  }
+}
+
+@container question-metadata-access (max-width: 875.98px) and (min-width: 576px) {
+  $rhs-width: 200px;
+
+  #metadata-subject-topics {
+    flex-basis: calc(100% - #{$rhs-width});
+    flex-grow: 1;
+    border-right: 1px solid $color-neutral-200;
+  }
+
+  #metadata-status, #metadata-accessibility {
+    flex-basis: $rhs-width;
+  }
+  
+  #metadata-stage-difficulty {
+    margin-right: auto;
+  }  
+
+  #metadata-accessibility {
+    border-left: 1px solid $color-neutral-200;
+  }
+}

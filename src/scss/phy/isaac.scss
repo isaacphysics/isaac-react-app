@@ -403,6 +403,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "cards";
 @import "checkbox";
 @import "featured-profile";
+@import "metadata-container";
 @import "../common/code";
 
 // Navigation
