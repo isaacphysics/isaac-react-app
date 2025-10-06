@@ -373,7 +373,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
         [...`${user.givenName[0]}${user.familyName[0]}`.toUpperCase()].filter(c => c.match(/[\p{L}]/u)) : undefined;
 
     const title = <div className="d-flex align-items-center">
-        <div className="d-flex flex-column justify-content-center align-items-center me-2">
+        <div className="d-flex flex-column justify-content-center align-items-center me-2" aria-hidden="true">
             {userInitials?.length
                 ? <>
                     <i className="icon-initials"/>
