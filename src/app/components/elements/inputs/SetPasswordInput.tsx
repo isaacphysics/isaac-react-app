@@ -1,27 +1,54 @@
 import {FormFeedback, FormGroup, Label} from "reactstrap";
-import React, {useState} from "react";
-import {isPhy, loadZxcvbnIfNotPresent, MINIMUM_PASSWORD_LENGTH, passwordDebounce} from "../../../services";
+import React, {useEffect, useMemo, useState} from "react";
+import {
+    isAda,
+    isPhy,
+    loadZxcvbnIfNotPresent,
+    MINIMUM_PASSWORD_LENGTH,
+    passwordDebounce,
+    validatePassword
+} from "../../../services";
 import {Immutable} from "immer";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {TogglablePasswordInput} from "./TogglablePasswordInput";
 
 interface SetPasswordInputProps {
     className?: string;
-    userToUpdate: Immutable<ValidationUser>;
-    setUserToUpdate: (user: Immutable<ValidationUser>) => void;
-    passwordValid: boolean;
-    passwordsMatch: boolean;
-    setConfirmedPassword: (password: string) => void;
+    password?: string | null;
+    onChange: (password: string) => void;
+    onConfirmationChange: (confirmed: boolean) => void;
+    onValidityChange: (valid: boolean) => void;
     submissionAttempted: boolean;
     idPrefix?: string;
     required: boolean;
 }
 
 
-export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, submissionAttempted, passwordValid, passwordsMatch, setConfirmedPassword, required, idPrefix="account"}: SetPasswordInputProps) => {
+export const SetPasswordInput = ({
+    className,
+    password,
+    onChange,
+    onConfirmationChange,
+    onValidityChange,
+    required,
+    submissionAttempted,
+    idPrefix="account"
+}: SetPasswordInputProps) => {
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
+    const [confirmationPassword, setConfirmationPassword] = useState<string | null>(null);
+
+    const confirmed = isAda || (password === confirmationPassword);
+    const valid = !!password && validatePassword(password);
 
     loadZxcvbnIfNotPresent();
+
+    useEffect(() => {
+        onValidityChange(valid);
+    }, [onValidityChange, valid]);
+
+    useEffect(() => {
+        onConfirmationChange(confirmed);
+    }, [onConfirmationChange, confirmed]);
 
     return <div className={className}>
         <FormGroup className="form-group">
@@ -30,13 +57,13 @@ export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, subm
             <TogglablePasswordInput
                 id={`${idPrefix}-password-set`} name="password" type="password"
                 aria-describedby="invalidPassword"
-                feedbackText={(!passwordValid || passwordsMatch) ? `Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long.` : "Please ensure your passwords match."}
-                value={userToUpdate.password ? userToUpdate.password : undefined}
+                feedbackText={(!valid || confirmed) ? `Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long.` : "Please ensure your passwords match."}
+                value={password as string | undefined}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {password: e.target.value} : {password: null}));
+                    onChange(e.target.value);
                     passwordDebounce(e.target.value, setPasswordFeedback);
                 }}
-                invalid={required && submissionAttempted && !(passwordValid && passwordsMatch) }
+                invalid={required && submissionAttempted && !(valid && confirmed)}
             />
             {passwordFeedback &&
                 <span className='float-end small mt-1'>
@@ -54,9 +81,9 @@ export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, subm
             </Label>
             <TogglablePasswordInput
                 id="password-confirm" name="password-confirm" type="password"
-                disabled={!required && submissionAttempted || !userToUpdate.password}
+                disabled={!required && submissionAttempted || !password}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setConfirmedPassword(e.target.value);
+                    setConfirmationPassword(e.target.value);
                 }}
             />
             <FormFeedback>

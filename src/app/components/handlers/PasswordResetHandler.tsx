@@ -2,81 +2,54 @@ import React, {useEffect, useState} from 'react';
 import {AppState, handlePasswordReset, useAppDispatch, useAppSelector, verifyPasswordReset} from "../../state";
 import {Button, Card, CardBody, CardFooter, Container, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
 import {PasswordFeedback} from "../../../IsaacAppTypes";
-import {loadZxcvbnIfNotPresent, MINIMUM_PASSWORD_LENGTH, passwordDebounce} from "../../services";
+import {
+    isAda,
+    isPhy,
+    loadZxcvbnIfNotPresent,
+    MINIMUM_PASSWORD_LENGTH,
+    passwordDebounce,
+    validatePassword
+} from "../../services";
 import {RouteComponentProps} from "react-router";
 import { extractErrorMessage } from '../../services/errors';
+import {TogglablePasswordInput} from "../elements/inputs/TogglablePasswordInput";
+import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 
 
 export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: string}>) => {
     const dispatch = useAppDispatch();
-    const error = useAppSelector((state: AppState) => state?.error || null);
     const urlToken = match.params.token || null;
 
-    const [isValidPassword, setValidPassword] = useState(true);
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmationPassword, setConfirmationPassword] = useState("");
 
-    loadZxcvbnIfNotPresent();
-
-    const validateAndSetPassword = (event: any) => {
-        setValidPassword(
-            (event.target.value == (document.getElementById("password") as HTMLInputElement).value) &&
-            ((document.getElementById("password") as HTMLInputElement).value != undefined) &&
-            ((document.getElementById("password") as HTMLInputElement).value.length > 5)
-        );
-    };
+    const passwordIsValid = validatePassword(newPassword);
+    const passwordsMatch = (isAda || confirmationPassword === newPassword);
 
     useEffect(() => {dispatch(verifyPasswordReset(urlToken));}, [dispatch, urlToken]);
 
     return <Container id="email-verification">
         <div>
-            <h3>Password change</h3>
+            <h3>Reset your password</h3>
             <Card>
                 <CardBody>
                     <Form name="passwordReset">
-                        <FormGroup className="form-group">
-                            <Label htmlFor="password">New password</Label>
-                            <Input id="password" type="password" name="password-new"
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    passwordDebounce(e.target.value, setPasswordFeedback);
-                                }}
-                                onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    passwordDebounce(e.target.value, setPasswordFeedback);
-                                }}
-                                required/>
-                            {passwordFeedback &&
-                            <span className='float-end small mt-1'>
-                                <strong>Password strength: </strong>
-                                <span id="password-strength-feedback">
-                                    {passwordFeedback.feedbackText}
-                                </span>
-                            </span>
-                            }
-                        </FormGroup>
-                        <FormGroup className="form-group">
-                            <Label htmlFor="password-confirm">Re-enter new password</Label>
-                            <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password-new-confirm" onBlur={e => {
-                                validateAndSetPassword(e);
-                                if (e.target.value == (document.getElementById("password") as HTMLInputElement).value) {
-                                    setCurrentPassword(e.target.value);
-                                }
-                            }} aria-describedby="invalidPassword" required/>
-                            <FormFeedback id="invalidPassword">{(!isValidPassword) ? `Passwords must match and be at least ${MINIMUM_PASSWORD_LENGTH} characters long` : null}</FormFeedback>
-                        </FormGroup>
+                        <SetPasswordInput
+                            className="my-4"
+                            onChange={setNewPassword}
+                            // passwordValid={passwordIsValid}
+                            // passwordsMatch={passwordsMatch}
+                            // setConfirmedPassword={setConfirmationPassword}
+                            submissionAttempted={false} // todo
+                            required={true} onConfirmationChange={function (confirmed: boolean): void {
+                                throw new Error('Function not implemented.');
+                            }} onValidityChange={function (valid: boolean): void {
+                                throw new Error('Function not implemented.');
+                            }}                        />
                     </Form>
                 </CardBody>
                 <CardFooter>
-                    <h4 role="alert" className="text-danger text-center mb-0">
-                        {extractErrorMessage(error)}
-                    </h4>
-                    <Button color="secondary" className="mb-2" block
-                        onClick={() => {
-                            if (isValidPassword && !error && urlToken) {
-                                dispatch(handlePasswordReset({token: urlToken, password: currentPassword}));
-                            }
-                        }}
-                        id="change-password"
-                    >
+                    <Button color="secondary" className="mb-2" block id="change-password">
                         Change Password
                     </Button>
                 </CardFooter>
