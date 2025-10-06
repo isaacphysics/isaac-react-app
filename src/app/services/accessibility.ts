@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { AppState, useAppSelector } from "../state";
-import { TAG_ID } from "./constants";
 import { isTeacherOrAbove } from "./user";
 
 export const useReducedMotion = () => {
