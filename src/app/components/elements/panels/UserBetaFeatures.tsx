@@ -22,6 +22,7 @@ export const RevisionModeInput = ({displaySettings, setDisplaySettings}: Revisio
         color={siteSpecific("primary", "")}
         label={<p>Hide previous question attempts</p>}
         id={"hide-previous-q-attempts"}
+        aria-describedby="revision-helptext"
     />;
 };
 
@@ -34,7 +35,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
         rightColumn={<>
             <>
                 <b><RevisionModeInput {...{displaySettings, setDisplaySettings}}/></b>
-                <p>{`This feature lets you answer questions ${siteSpecific("that you have answered before, without seeing your old answer.", "again, even if you've answered them before.")} It's useful if you are reviewing a topic before a test or exam.`}</p>
+                <p id="revision-helptext">{`This feature lets you answer questions ${siteSpecific("that you have answered before, without seeing your old answer.", "again, even if you've answered them before.")} It's useful if you are reviewing a topic before a test or exam.`}</p>
             </>
             {isAda && <>
                 <StyledCheckbox checked={consentSettings.OPENAI ?? false}
@@ -43,8 +44,9 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                     }}
                     label={<p><b>Consent to sending free-text answers to OpenAI for marking</b></p>}
                     id={"consent-to-openai-marking"}
+                    aria-describedby="llm-helptext"
                 />
-                <p>
+                <p id="llm-helptext">
                     We use a large language model (LLM) to mark free-text questions on the site.
                     We only send your answer to OpenAI, we do not send any personal data.
                     For more information, read our <Link to="/support/student/general" target="_blank">FAQs</Link>.
@@ -59,8 +61,9 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                     color={siteSpecific("primary", "")}
                     label={<p>Prefer reduced motion</p>}
                     id={"reduced-motion"}
+                    aria-describedby="reduced-motion-helptext"
                 /></b>
-                <p>{`Enabling this will reduce motion effects on the platform. Browser preference will take priority over this setting.`}</p>
+                <p id="reduced-motion-helptext">{`Enabling this will reduce motion effects on the platform. Browser preference will take priority over this setting.`}</p>
             </>
             <>
                 <b><StyledCheckbox checked={displaySettings.PREFER_MATHML ?? false}
@@ -70,8 +73,9 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                     color={siteSpecific("primary", "")}
                     label={<p>Use MathML for accessible maths</p>}
                     id={"prefer-mathml"}
+                    aria-describedby="mathml-helptext"
                 /></b>
-                <p>{`With this setting you can toggle between using alternative text or MathML for mathematical equations.`}</p>
+                <p id="mathml-helptext">{`With this setting you can toggle between using alternative text or MathML for mathematical equations.`}</p>
             </>
         </>}
     />;
