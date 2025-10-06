@@ -39,6 +39,7 @@ import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
 import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
 import { QuestionMetaData } from "../elements/QuestionMetadata";
+import { getAccessibilityTags } from "../../services/accessibility";
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
     match: match & { params: { questionId: string } };
@@ -101,7 +102,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                             </PageMetadata>
 
                             {isAda && pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
-                            {doc.tags?.includes("vi_inaccessible") && accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && <InaccessibleContentWarningBanner />}
+                            {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningBanner key={tag} type={tag} />)}
 
                             <Row className="question-content-container">
                                 <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>
