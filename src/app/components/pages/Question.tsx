@@ -39,7 +39,7 @@ import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
 import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
 import { QuestionMetaData } from "../elements/QuestionMetadata";
-import { getAccessibilityTags } from "../../services/accessibility";
+import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
     match: match & { params: { questionId: string } };
@@ -60,7 +60,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
     const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
 
     const dispatch = useAppDispatch();
-    const accessibilitySettings = useAppSelector(state => state?.userPreferences?.ACCESSIBILITY) || {};
+    const accessibilitySettings = useAccessibilitySettings();
 
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
     const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);

@@ -2,7 +2,8 @@ import React from "react";
 import { AccessibilitySettings } from "../../../../IsaacAppTypes";
 import { MyAccountTab } from "./MyAccountTab";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
-import { siteSpecific } from "../../../services";
+import { isTeacherOrAbove, siteSpecific } from "../../../services";
+import { useAppSelector } from "../../../state";
 
 interface UserAccessibilitySettingsProps {
     accessibilitySettings: AccessibilitySettings;
@@ -10,6 +11,8 @@ interface UserAccessibilitySettingsProps {
 }
 
 export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibilitySettings }: UserAccessibilitySettingsProps) => {
+    const user = useAppSelector(state => state?.user);
+
     return <MyAccountTab
         leftColumn={<>
             <h3>Accessibility settings</h3>
@@ -29,7 +32,8 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
             </>
             <div className="section-divider" />
             <>
-                <b><StyledCheckbox checked={accessibilitySettings.SHOW_INACCESSIBLE_WARNING ?? false}
+                <b><StyledCheckbox 
+                    checked={accessibilitySettings.SHOW_INACCESSIBLE_WARNING ?? isTeacherOrAbove(user)}
                     onChange={e => {
                         setAccessibilitySettings((oldDs) => ({...oldDs, SHOW_INACCESSIBLE_WARNING: e.target.checked}));
                     }}

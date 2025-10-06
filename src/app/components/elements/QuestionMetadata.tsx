@@ -5,8 +5,7 @@ import { DocumentSubject, ViewingContext } from "../../../IsaacAppTypes";
 import { stageLabelMap, difficultyShortLabelMap, isPhy, TAG_ID, tags } from "../../services";
 import { MetadataContainer } from "./panels/MetadataContainer";
 import { StageAndDifficultySummaryIcons } from "./StageAndDifficultySummaryIcons";
-import { ACCESSIBILITY_WARNINGS, getAccessibilityTags } from "../../services/accessibility";
-import { useAppSelector } from "../../state";
+import { ACCESSIBILITY_WARNINGS, getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 
 function getTags(docTags?: string[]) {
     if (!isPhy) {
@@ -28,8 +27,7 @@ interface QuestionMetaDataProps {
 
 export const QuestionMetaData = (props: QuestionMetaDataProps) => {
     const {doc, allQuestionsCorrect, allQuestionsAttempted, anyQuestionAttempted, audienceViews} = props;
-    const accessibilitySettings = useAppSelector(state => state?.userPreferences?.ACCESSIBILITY) || {};
-
+    const accessibilitySettings = useAccessibilitySettings();
     const accessibilityTags = getAccessibilityTags(doc?.tags);
 
     return <>

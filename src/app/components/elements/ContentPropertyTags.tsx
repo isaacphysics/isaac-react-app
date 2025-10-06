@@ -4,7 +4,7 @@ import { selectors, useAppSelector } from "../../state";
 import classNames from "classnames";
 import {v4 as uuid_v4} from "uuid";
 import { UncontrolledTooltip } from "reactstrap";
-import { ACCESSIBILITY_WARNINGS, getAccessibilityTags } from "../../services/accessibility";
+import { ACCESSIBILITY_WARNINGS, getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 
 interface QuestionPropertyTagsProps extends React.HTMLAttributes<HTMLDivElement> {
     supersededBy?: string;
@@ -13,7 +13,7 @@ interface QuestionPropertyTagsProps extends React.HTMLAttributes<HTMLDivElement>
 
 export const QuestionPropertyTags = ({ supersededBy, tags, ...rest }: QuestionPropertyTagsProps) => {
     const user = useAppSelector(selectors.user.orNull);
-    const accessibilitySettings = useAppSelector(state => state?.userPreferences?.ACCESSIBILITY) || {};
+    const accessibilitySettings = useAccessibilitySettings();
 
     return <div {...rest} className={classNames("d-flex gap-2 align-items-center", rest.className)}>
         {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(tags)?.map(tag => {

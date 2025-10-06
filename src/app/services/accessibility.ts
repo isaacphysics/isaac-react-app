@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AppState, useAppSelector } from "../state";
 import { TAG_ID } from "./constants";
+import { isTeacherOrAbove } from "./user";
 
 export const useReducedMotion = () => {
     const { ACCESSIBILITY: accessibilitySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
@@ -45,3 +46,11 @@ export const getAccessibilityTags = (tags?: string[]) : typeof ACCESSIBILITY_TAG
     return (tags?.filter(tag => tag.startsWith("access:")) || []) as typeof ACCESSIBILITY_TAGS[number][];
 };
 
+export const useAccessibilitySettings = () => {
+    // since SHOW_INACCESSIBLE_WARNING must default to true for teachers in spite of potentially being undefined, we must use this hook over accessing the state directly
+    const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
+    const user = useAppSelector((state: AppState) => state?.user);
+
+    accessibilitySettings.SHOW_INACCESSIBLE_WARNING = accessibilitySettings?.SHOW_INACCESSIBLE_WARNING ?? isTeacherOrAbove(user);
+    return accessibilitySettings;
+};
