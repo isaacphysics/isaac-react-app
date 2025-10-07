@@ -32,17 +32,17 @@ export const SetPasswordInput = ({
     submissionAttempted,
     idPrefix="account"
 }: SetPasswordInputProps) => {
-    const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
-    const [confirmationPassword, setConfirmationPassword] = useState<string | null>(null);
+    const [isValid, setIsValid] = useState(false);
+    const [strengthFeedback, setStrengthFeedback] = useState<PasswordFeedback | null>(null);
+    const [confirmation, setConfirmation] = useState<string | null>(null);
 
-    const confirmed = isAda || (password === confirmationPassword);
-    const valid = !!password && validatePassword(password) && confirmed;
+    const isConfirmed = isAda || (password === confirmation);
 
     loadZxcvbnIfNotPresent();
 
     useEffect(() => {
-        onValidityChange(valid);
-    }, [onValidityChange, valid]);
+        onValidityChange(isValid && isConfirmed);
+    }, [onValidityChange, isValid, isConfirmed]);
 
     return <div className={className}>
         <FormGroup className="form-group">
@@ -51,34 +51,39 @@ export const SetPasswordInput = ({
             <TogglablePasswordInput
                 id={`${idPrefix}-password-set`} name="password" type="password"
                 aria-describedby="invalidPassword"
-                feedbackText={confirmed ? `Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long.` : "Please ensure your passwords match."}
+                feedbackText={`Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long.`}
                 value={password as string | undefined}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     onChange(e.target.value);
-                    passwordDebounce(e.target.value, setPasswordFeedback);
+                    passwordDebounce(e.target.value, setStrengthFeedback);
                 }}
-                invalid={required && submissionAttempted && !(valid && confirmed)}
+                onBlur={() => {
+                    setIsValid(!!password && validatePassword(password) );
+                }}
+                invalid={required && submissionAttempted && !isValid}
             />
-            {passwordFeedback &&
+            {strengthFeedback &&
                 <span className='float-end small mt-1'>
                     <strong>Password strength: </strong>
                     <span id="password-strength-feedback">
-                        {passwordFeedback.feedbackText}
+                        {strengthFeedback.feedbackText}
                     </span>
                 </span>
             }
         </FormGroup>
 
         {isPhy && <FormGroup className="form-group">
-            <Label htmlFor="password-confirm">
+            <Label className={"fw-bold form-required"} htmlFor="password-confirm">
                 Re-enter password
             </Label>
             <TogglablePasswordInput
                 id="password-confirm" name="password-confirm" type="password"
-                disabled={!password}
+                disabled={!isValid}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setConfirmationPassword(e.target.value);
+                    setConfirmation(e.target.value);
                 }}
+                feedbackText={"Please ensure your passwords match."}
+                invalid={submissionAttempted && isValid && !isConfirmed}
             />
             <FormFeedback>
                 Passwords must match and be at least {MINIMUM_PASSWORD_LENGTH} characters long.
