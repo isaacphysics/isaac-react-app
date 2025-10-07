@@ -3,7 +3,7 @@ import {logAction, useAppDispatch, useGetMyAssignmentsQuery} from "../../state";
 import {AssignmentDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {Button, Col, Container, Input, Label, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {filterAssignmentsByProperties, filterAssignmentsByStatus, getDistinctAssignmentGroups, getDistinctAssignmentSetters, isAda, isTutorOrAbove, siteSpecific} from "../../services";
+import {filterAssignmentsByProperties, filterAssignmentsByStatus, getDistinctAssignmentGroups, getDistinctAssignmentSetters, isAda, isPhy, isTutorOrAbove, siteSpecific} from "../../services";
 import {Assignments} from "../elements/Assignments";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {PageFragment} from "../elements/PageFragment";
@@ -90,6 +90,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const [titleFilter, setTitleFilter] = useState<string>("");
     const [groupFilter, setGroupFilter] = useState<string>("All");
     const [setByFilter, setSetByFilter] = useState<string>("All");
+    const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [sortOrder, setSortOrder] = useState<MyAssignmentsOrder>(MyAssignmentsOrder["-startDate"]);
 
     const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
@@ -148,6 +149,11 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                     statusFilter.includes(AssignmentState.ALL) ? assignmentByStates[AssignmentState.ALL] : statusFilter.flatMap(f => assignmentByStates[f]),
                                     titleFilter, groupFilter, setByFilter
                                 );
+
+                                if (isPhy && isFirstLoad && filteredAssignments.length === 0) {
+                                    setStatusFilter([AssignmentState.ALL]);
+                                }
+                                setIsFirstLoad(false);
 
                                 const orderNegative = sortOrder.at(0) == "-";
                                 const orderKind = (orderNegative ? sortOrder.slice(1) : sortOrder) as "startDate" | "dueDate" | "attempted" | "correct";
