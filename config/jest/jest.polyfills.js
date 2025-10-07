@@ -21,6 +21,11 @@ Object.defineProperties(globalThis, {
     performance: { value: performance, writable: true }, // writeable for jest fake timers
 });
 
+globalThis.ResizeObserver = class MockResizeObserver {
+    observe() {}
+    disconnect() {}
+}
+
 import { Blob, File } from 'node:buffer';
 import { fetch, Headers, FormData, Request, Response } from 'undici';
  
