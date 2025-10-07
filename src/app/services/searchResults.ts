@@ -192,6 +192,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Isaac Physics",
         terms: ["physics", "isaac physics", "phy"],
         summary: "Isaac Physics resources",
+        tags: ["physics"],
         url: "/physics",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -199,6 +200,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Isaac Maths",
         terms: ["maths", "isaac maths", "math", "isaac math"],
         summary: "Isaac Maths resources",
+        tags: ["maths"],
         url: "/maths",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -206,6 +208,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Isaac Chemistry",
         terms: ["chemistry", "isaac chemistry", "chem"],
         summary: "Isaac Chemistry resources",
+        tags: ["chemistry"],
         url: "/chemistry",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -213,6 +216,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Isaac Biology",
         terms: ["biology", "isaac biology", "bio"],
         summary: "Isaac Biology resources",
+        tags: ["biology"],
         url: "/biology",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -248,6 +252,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Physics practice admissions tests",
         terms: ["pat", "esat"],
         summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
+        tags: ["physics"],
         url: "/physics/university/practice_tests",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -255,6 +260,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Maths practice admissions tests",
         terms: ["tmua", "esat"],
         summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
+        tags: ["maths"],
         url: "/maths/university/practice_tests",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -262,6 +268,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Chemistry practice admissions tests",
         terms: ["esat"],
         summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
+        tags: ["chemistry"],
         url: "/chemistry/university/practice_tests",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -269,6 +276,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         title: "Biology practice admissions tests",
         terms: ["esat"],
         summary: "Use tests to practise a range of topics. These tests are available for you to freely attempt.",
+        tags: ["biology"],
         url: "/biology/a_level/practice_tests",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -335,6 +343,7 @@ export function shortcuts(term: string) {
                 id: `${learningStage} ${subject}`,
                 title: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]}`,
                 summary: `${HUMAN_STAGES[learningStage]} ${HUMAN_SUBJECTS[subject]} resources`,
+                tags: [subject],
                 url: `/${subject}/${learningStage}`,
                 type: SEARCH_RESULT_TYPE.SHORTCUT
             });
