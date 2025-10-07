@@ -1,5 +1,5 @@
 import {FormFeedback, FormGroup, Label} from "reactstrap";
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     isAda,
     isPhy,
@@ -8,8 +8,7 @@ import {
     passwordDebounce,
     validatePassword
 } from "../../../services";
-import {Immutable} from "immer";
-import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
+import {PasswordFeedback} from "../../../../IsaacAppTypes";
 import {TogglablePasswordInput} from "./TogglablePasswordInput";
 
 interface SetPasswordInputProps {
