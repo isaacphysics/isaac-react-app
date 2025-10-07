@@ -49,7 +49,7 @@ const searchList: SearchShortcut[] = [
         summary: `Click here to register for an ${SITE_TITLE} account.`,
         url: "/register",
         type: SEARCH_RESULT_TYPE.SHORTCUT
-    },  {
+    }, {
         id: "teacher_support",
         title: "Teacher support",
         terms: ["teacher", "teacher support", "teaching", "teachers", "help", "teacher account",
@@ -223,11 +223,74 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         url: "/computer_science",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
+        id: "further_maths",
+        title: "Further Maths question decks (pure)",
+        terms: ["further maths", "further math", "further", "fm"],
+        summary: "Question decks for pure topics in A Level Further Maths",
+        url: "/maths/a_level/question_decks#further",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "further_stats",
+        title: "Further Maths question decks (statistics)",
+        terms: ["further maths", "further math", "further", "fm", "further stats", "stats", "statistics"],
+        summary: "Question decks for statistics topics in A Level Further Maths",
+        url: "/maths/a_level/question_decks#further_stats",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
         id: "books",
         title: "Isaac Books",
         terms: ["books", "book", "isaac books"],
         summary: "Isaac books: in print and online",
         url: "/books",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "phy_tests",
+        title: "Physics practice admissions tests",
+        terms: ["pat", "esat"],
+        summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
+        url: "/physics/university/practice_tests",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "maths_tests",
+        title: "Maths practice admissions tests",
+        terms: ["tmua", "esat"],
+        summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
+        url: "/maths/university/practice_tests",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "chem_tests",
+        title: "Chemistry practice admissions tests",
+        terms: ["esat"],
+        summary: "Use tests to prepare for university admissions tests. These tests are available for you to freely attempt.",
+        url: "/chemistry/university/practice_tests",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "bio_tests",
+        title: "Biology practice admissions tests",
+        terms: ["esat"],
+        summary: "Use tests to practise a range of topics. These tests are available for you to freely attempt.",
+        url: "/biology/a_level/practice_tests",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "teacher_features",
+        title: "Teacher features",
+        terms: ["teacher", "teaching", "teachers", "teacher account", "teacher features"],
+        summary: "View teacher features on Isaac Science.",
+        url: "/teacher_features",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "tutor_support",
+        title: "Tutor support",
+        terms: ["tutor", "tutor support", "tutoring", "tutors", "tutor account", "help", "support"],
+        summary: "View tutor FAQs for using Isaac Science.",
+        url: "/support/tutor/general",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "tutor_features",
+        title: "Tutor features",
+        terms: ["tutor", "tutoring", "tutors", "tutor account", "tutor features"],
+        summary: "View tutor features on Isaac Science.",
+        url: "/tutor_features",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }
 ],
