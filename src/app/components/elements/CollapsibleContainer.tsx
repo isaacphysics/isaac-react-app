@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CollapsibleContext } from "./CollapsibleList";
 
 export interface CollapsibleContainerProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -43,9 +43,11 @@ export const CollapsibleContainer = (props: CollapsibleContainerProps) => {
         }
     }, [expanded, parentCollapsible]);
 
-    useLayoutEffect(() => {
-        recalculateHeight();
-    }, [expanded, props.children, recalculateHeight]);
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver(() => recalculateHeight());
+        resizeObserver.observe(divRef.current as Element);
+        return () => resizeObserver.disconnect();
+    }, [recalculateHeight]);
 
     return <div {...rest} 
         className={classNames("collapsible-body", rest.className)} 

@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useLayoutEffect, useRef, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Col } from "reactstrap";
 import { Spacer } from "./Spacer";
 import { FilterCount } from "./svg/FilterCount";
@@ -64,10 +64,12 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         }
     }, [expanded, parentCollapsible]);
 
-    useLayoutEffect(() => {
-        // update the height when the list is expanded or children's state changes
-        recalculateHeight();
-    }, [expanded, props.children, recalculateHeight]);
+    useEffect(() => {
+        // update the height when children's height changes in some way (expansion, collapse, child state change, etc)
+        const resizeObserver = new ResizeObserver(() => recalculateHeight());
+        resizeObserver.observe(listRef.current as Element);
+        return () => resizeObserver.disconnect();
+    }, [recalculateHeight]);
 
     const title = typeof props.title === "string" // auto styling for plain strings; prefer this where possible
         ? <span>{props.title && props.asSubList ? props.title : <b>{props.title}</b>}</span>
