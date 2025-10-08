@@ -30,7 +30,6 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                 /></b>
                 <p>{`Enabling this will reduce motion effects on the platform. Browser preference will take priority over this setting.`}</p>
             </>
-            <div className="section-divider" />
             <>
                 <b><StyledCheckbox 
                     checked={accessibilitySettings.SHOW_INACCESSIBLE_WARNING ?? isTeacherOrAbove(user)}
@@ -43,6 +42,7 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                 /></b>
                 <p>{`Enabling this will display warnings on certain content that may be inaccessible to assistive technologies.`}</p>
             </>
+            <div className="section-divider" />
             <>
                 <b><StyledCheckbox checked={accessibilitySettings.PREFER_MATHML ?? false}
                     onChange={e => {
