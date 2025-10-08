@@ -37,7 +37,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
         </p>
         <div className="prediction my-4">
             <div className='d-flex'>
-                <span className="icon-ai me-2"/>
+                <span className="icon icon-ai mt-1 me-2"/>
                 <strong>{`Prediction: ${validationResponse.marksAwarded} out of ${validationResponse.maxMarks} marks`}</strong>
             </div>
         </div>
