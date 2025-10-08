@@ -55,7 +55,7 @@ export const SetPasswordInput = ({
                 value={password as string | undefined}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     onChange(e.target.value);
-                    setIsValid(!!password && validatePassword(password));
+                    setIsValid(validatePassword(e.target.value));
                     passwordDebounce(e.target.value, setStrengthFeedback);
                 }}
                 invalid={required && submissionAttempted && !isValid}

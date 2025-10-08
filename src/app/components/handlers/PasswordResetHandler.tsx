@@ -16,7 +16,10 @@ import {extractErrorMessage} from "../../services/errors";
 export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: string}>) => {
     const dispatch = useAppDispatch();
     const error = useAppSelector((state: AppState) => state?.error || null);
+
     const urlToken = match.params.token || null;
+    // todo: We will soon stop using the "general error" here. For now this is the easiest way to check if it's relevant.
+    const urlTokenValid = extractErrorMessage(error) != "Invalid password reset token.";
 
     const [newPassword, setNewPassword] = useState("");
     const [passwordValid, setPasswordValid] = useState(false);
@@ -60,7 +63,7 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
                         />
                     </CardBody>
                     <CardFooter>
-                        <Button disabled={!!error} type={"submit"} color="secondary" className="mb-2" block id="change-password">
+                        <Button disabled={!urlTokenValid} type={"submit"} color="secondary" className="mb-2" block id="change-password">
                             Change Password
                         </Button>
                     </CardFooter>
