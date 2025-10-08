@@ -49,15 +49,14 @@ export const SetPasswordInput = ({
             <p className="d-block input-description">Your password must be at least {MINIMUM_PASSWORD_LENGTH} characters long.</p>
             <TogglablePasswordInput
                 id={`${idPrefix}-password-set`} name="password" type="password"
+                data-testid={`${idPrefix}-password-set`}
                 aria-describedby="invalidPassword"
                 feedbackText={`Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long.`}
                 value={password as string | undefined}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     onChange(e.target.value);
+                    setIsValid(!!password && validatePassword(password));
                     passwordDebounce(e.target.value, setStrengthFeedback);
-                }}
-                onBlur={() => {
-                    setIsValid(!!password && validatePassword(password) );
                 }}
                 invalid={required && submissionAttempted && !isValid}
             />
@@ -72,11 +71,12 @@ export const SetPasswordInput = ({
         </FormGroup>
 
         {isPhy && <FormGroup className="form-group">
-            <Label className={"fw-bold form-required"} htmlFor="password-confirm">
+            <Label className={"fw-bold form-required"} htmlFor={`${idPrefix}-password-confirm`}>
                 Re-enter password
             </Label>
             <TogglablePasswordInput
-                id="password-confirm" name="password-confirm" type="password"
+                id={`${idPrefix}-password-confirm`} name="password-confirm" type="password"
+                data-testid={`${idPrefix}-password-confirm`}
                 disabled={!isValid}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setConfirmation(e.target.value);
@@ -84,9 +84,6 @@ export const SetPasswordInput = ({
                 feedbackText={"Please ensure your passwords match."}
                 invalid={submissionAttempted && isValid && !isConfirmed}
             />
-            <FormFeedback>
-                Passwords must match and be at least {MINIMUM_PASSWORD_LENGTH} characters long.
-            </FormFeedback>
         </FormGroup>}
     </div>;
 };

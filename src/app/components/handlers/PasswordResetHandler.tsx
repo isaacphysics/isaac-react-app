@@ -1,12 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {useAppDispatch, verifyPasswordReset} from "../../state";
+import {
+    AppState,
+    handlePasswordReset,
+    useAppDispatch,
+    useAppSelector,
+    verifyPasswordReset
+} from "../../state";
 import {Button, Card, CardBody, CardFooter, Container, Form} from "reactstrap";
 import {RouteComponentProps} from "react-router";
 import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
+import {ExigentAlert} from "../elements/ExigentAlert";
+import {extractErrorMessage} from "../../services/errors";
 
 
 export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: string}>) => {
     const dispatch = useAppDispatch();
+    const error = useAppSelector((state: AppState) => state?.error || null);
     const urlToken = match.params.token || null;
 
     const [newPassword, setNewPassword] = useState("");
@@ -21,21 +30,28 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
 
         setSubmissionAttempted(true);
 
-        if (!passwordValid) {
+        if (!passwordValid || !urlToken) {
             return;
         }
 
-        // todo: submit
+        dispatch(handlePasswordReset({token: urlToken, password: newPassword}));
     }
 
     return <Container id="email-verification">
         <div>
             <h3>Reset your password</h3>
+            {!!error &&
+                // todo: Stop using the general error from Redux here.
+                <ExigentAlert data-testid={"warning-invalid-token"} color={"warning"}>
+                    {extractErrorMessage(error)}
+                </ExigentAlert>
+            }
             <Form onSubmit={submit}>
                 <Card>
                     <CardBody>
                         <SetPasswordInput
                             className="my-4"
+                            idPrefix={"reset"}
                             password={newPassword}
                             onChange={setNewPassword}
                             onValidityChange={setPasswordValid}
@@ -44,7 +60,7 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
                         />
                     </CardBody>
                     <CardFooter>
-                        <Button type={"submit"} color="secondary" className="mb-2" block id="change-password">
+                        <Button disabled={!!error} type={"submit"} color="secondary" className="mb-2" block id="change-password">
                             Change Password
                         </Button>
                     </CardFooter>
