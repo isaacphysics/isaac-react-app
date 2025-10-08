@@ -258,7 +258,8 @@ export const DateInput = (props: DateInputProps) => {
                     {preSelectedYear && !yearRange.includes(preSelectedYear) && <option className="d-none">{preSelectedYear}</option>}
                 </Input>
             </div>
-            {(props.noClear === undefined || !props.noClear) && <button {...controlPropsWithValidationStripped} className="btn-close mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />}
+            {(props.noClear === undefined || !props.noClear) && <button {...controlPropsWithValidationStripped} className="btn-close mx-1" 
+                aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={(e) => {e.preventDefault(); clear(e);}} />}
         </InputGroup>
         <Input data-testid='date-input' innerRef={hiddenRef} type="hidden" name={props.name} value={calculateHiddenValue()} {...controlProps} />
     </React.Fragment>;
