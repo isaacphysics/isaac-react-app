@@ -11,6 +11,7 @@ import {RouteComponentProps} from "react-router";
 import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {extractErrorMessage} from "../../services/errors";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 
 export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: string}>) => {
@@ -40,9 +41,9 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
         dispatch(handlePasswordReset({token: urlToken, password: newPassword}));
     }
 
-    return <Container id="email-verification">
+    return <Container id="password-reset">
+        <TitleAndBreadcrumb breadcrumbTitleOverride="Password reset" currentPageTitle="Reset your password" icon={{type: "hex", icon: "icon-account"}} className="mb-4" />
         <div>
-            <h3>Reset your password</h3>
             {!!error &&
                 // todo: Stop using the general error from Redux here.
                 <ExigentAlert data-testid={"warning-invalid-token"} color={"warning"}>
