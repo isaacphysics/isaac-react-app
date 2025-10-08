@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {LLMFreeTextQuestionValidationResponseDTO} from "../../../IsaacApiTypes";
 import {Button, Table} from "reactstrap";
 import {Immutable} from "immer";
@@ -7,7 +7,6 @@ import {StyledCheckbox} from './inputs/StyledCheckbox';
 import {logAction, selectors, useAppDispatch, useAppSelector} from '../../state';
 import {isAda, NOT_FOUND, siteSpecific} from '../../services';
 import classNames from 'classnames';
-import { AccordionSectionContext } from '../../../IsaacAppTypes';
 
 const noFeedback = {disagree: false, partlyAgree: false, agree: false};
 
