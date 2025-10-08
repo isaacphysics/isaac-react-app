@@ -117,12 +117,6 @@ const GameboardAssign = ({board}: {board?: GameboardDTO}) => {
     </Button>;
 };
 
-const getSRText = (tags?: string[]) => {
-    if (tags?.includes("vi_inaccessible")) {
-        return "Note - this content may be difficult to access through non-visual means.";
-    }
-};
-
 export enum AbstractListViewItemState {
     COMING_SOON = "coming-soon",
     DISABLED = "disabled",
@@ -200,11 +194,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         ? (url.startsWith("http")
                             ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                                 <Markup encoding="latex">{title}</Markup>
-                                <span className="visually-hidden">{getSRText(tags)}</span>
                             </ExternalLink>
                             : <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                                 <Markup encoding="latex">{title}</Markup>
-                                <span className="visually-hidden">{getSRText(tags)}</span>
                             </Link>
                         )
                         : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
