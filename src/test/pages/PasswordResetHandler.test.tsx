@@ -1,6 +1,6 @@
 import {renderTestEnvironment, setUrl} from "../testUtils";
 import {handlerThatReturns} from "../../mocks/handlers";
-import {API_PATH} from "../../app/services";
+import {API_PATH, isPhy} from "../../app/services";
 import {http} from "msw";
 import {act, screen, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -11,8 +11,11 @@ async function enterAndConfirmPassword(password: string) {
     const passwordInput = await screen.findByLabelText("Password");
     await userEvent.type(passwordInput, password);
 
-    const confirmInput = await screen.findByLabelText("Re-enter password");
-    await userEvent.type(confirmInput, password);
+    if (isPhy) {
+        // Confirmation is only required on Isaac Science
+        const confirmInput = await screen.findByLabelText("Re-enter password");
+        await userEvent.type(confirmInput, password);
+    }
 }
 
 async function assertFeedbackShown(feedback: string) {
@@ -135,44 +138,48 @@ describe('PasswordResetHandler', () => {
         // Feedback is shown
         await assertFeedbackShown("Passwords must be at least 8 characters long.");
 
-        // Confirm field is disabled until password is valid
-        const confirmInput = await screen.findByLabelText("Re-enter password");
-        expect(confirmInput).toBeDisabled();
+        if(isPhy) {
+            // Confirmation field is disabled until password is valid
+            const confirmInput = await screen.findByLabelText("Re-enter password");
+            expect(confirmInput).toBeDisabled();
+        }
 
         await assertSuccessToastShown(false);
     });
 
-    it("should show password confirmation feedback if passwords do not match", async () => {
-        renderTestEnvironment({
-            role: 'ANONYMOUS',
-            extraEndpoints: [
-                http.get(API_PATH + '/users/resetpassword/some_valid_token', handlerThatReturns({
-                    data: {},
-                    status: 200
-                })),
-            ]
+    if(isPhy) {
+        it("should show password confirmation feedback if passwords do not match", async () => {
+            renderTestEnvironment({
+                role: 'ANONYMOUS',
+                extraEndpoints: [
+                    http.get(API_PATH + '/users/resetpassword/some_valid_token', handlerThatReturns({
+                        data: {},
+                        status: 200
+                    })),
+                ]
+            });
+
+            // Act
+            // Navigate to reset page
+            act(() => {
+                history.push("resetpassword/some_valid_token");
+            });
+
+            // Enter new password, then attempt to submit
+            const passwordInput = await screen.findByLabelText("Password");
+            await userEvent.type(passwordInput, "validnewpassword");
+
+            const confirmInput = await screen.findByLabelText("Re-enter password");
+            await userEvent.type(confirmInput, "val1dnewpassword");
+
+            const submitButton = await screen.findByRole("button", {name: "Change Password"});
+            await userEvent.click(submitButton);
+
+            // Assert
+            // Feedback is shown
+            await assertFeedbackShown("Please ensure your passwords match.");
+            await assertSuccessToastShown(false);
         });
-
-        // Act
-        // Navigate to reset page
-        act(() => {
-            history.push("resetpassword/some_valid_token");
-        });
-
-        // Enter new password, then attempt to submit
-        const passwordInput = await screen.findByLabelText("Password");
-        await userEvent.type(passwordInput, "validnewpassword");
-
-        const confirmInput = await screen.findByLabelText("Re-enter password");
-        await userEvent.type(confirmInput, "val1dnewpassword");
-
-        const submitButton = await screen.findByRole("button", {name: "Change Password"});
-        await userEvent.click(submitButton);
-
-        // Assert
-        // Feedback is shown
-        await assertFeedbackShown("Please ensure your passwords match.");
-        await assertSuccessToastShown(false);
-    });
+    }
 });
 
