@@ -16,7 +16,7 @@ import {
 import {AdminSearchEndpointParams, EmailVerificationStatus, UserRole} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ADMIN_CRUMB, isAdmin, isAdminOrEventManager, isDefined} from "../../services";
+import {ADMIN_CRUMB, isAdmin, isDefined} from "../../services";
 import {Link} from "react-router-dom";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {produce} from "immer";
@@ -284,7 +284,7 @@ export const AdminUserManager = () => {
                                 )}
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
-                        {isDefined(currentUser) && isAdminOrEventManager(currentUser) && <UncontrolledButtonDropdown>
+                        {isDefined(currentUser) && currentUser.role === 'ADMIN' && <UncontrolledButtonDropdown>
                             <DropdownToggle caret disabled={userBeingModified} color="keyline" className="ms-3">Email Status</DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem header>Change email verification status for users to:</DropdownItem>

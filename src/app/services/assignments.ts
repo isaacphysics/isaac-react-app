@@ -2,7 +2,6 @@ import {AssignmentDTO, IAssignmentLike} from "../../IsaacApiTypes";
 import orderBy from "lodash/orderBy";
 import {EnhancedAssignment} from "../../IsaacAppTypes";
 import {extractTeacherName, matchesAllWordsInAnyOrder} from "./";
-import { AssignmentState } from "../components/pages/MyAssignments";
 
 export function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedAssignment {
     return assignment.gameboard != undefined;
@@ -16,14 +15,6 @@ function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO
 const now = new Date();
 const midnightLastNight = new Date(now);
 midnightLastNight.setHours(0, 0, 0, 0);
-
-export const ASSIGNMENT_STATE_MAP: {[key in AssignmentState]: string} = {
-    [AssignmentState.ALL]: "all", // Just for typing, not used
-    [AssignmentState.TODO]: "inProgress",
-    [AssignmentState.OVERDUE]: "overDue",
-    [AssignmentState.ALL_ATTEMPTED]: "allAttempted",
-    [AssignmentState.ALL_CORRECT]: "allCorrect",
-};
 
 type AssignmentStatus = "overDue" | "inProgress" | "allAttempted" | "allCorrect";
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {

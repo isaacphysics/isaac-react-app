@@ -36,7 +36,7 @@
 //   }
 // }
 
-import {mount, MountOptions} from 'cypress/react';
+import {mount, MountOptions} from 'cypress/react18';
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
