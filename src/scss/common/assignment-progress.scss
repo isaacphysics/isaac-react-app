@@ -325,7 +325,9 @@ $failed-bg-size: 25%;
 }
 
 .assignment-progress-table-wrapper {
-  overflow: auto hidden;
+  overflow: auto;
+  display: block;
+  max-height: max(200px, 65vh);
 }
 
 .group-progress-summary {

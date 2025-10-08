@@ -13,6 +13,7 @@ export const CollapsibleContainer = (props: CollapsibleContainerProps) => {
     const parentCollapsible = React.useContext(CollapsibleContext);
 
     const divRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
     
     // see CollapsibleList for explanation of this logic; this version is simplified as there is no header to account for
     const recalculateHeight = useCallback(() => {
@@ -45,7 +46,7 @@ export const CollapsibleContainer = (props: CollapsibleContainerProps) => {
 
     useEffect(() => {
         const resizeObserver = new ResizeObserver(() => recalculateHeight());
-        resizeObserver.observe(divRef.current as Element);
+        resizeObserver.observe(contentRef.current as Element);
         return () => resizeObserver.disconnect();
     }, [recalculateHeight]);
 
@@ -55,7 +56,9 @@ export const CollapsibleContainer = (props: CollapsibleContainerProps) => {
         ref={divRef}
     >
         <CollapsibleContext.Provider value={{expanded, recalculateHeight}}>
-            {children}
+            <div ref={contentRef}>
+                {children}
+            </div>
         </CollapsibleContext.Provider>
     </div>;
 };
