@@ -5,7 +5,7 @@ import {Immutable} from "immer";
 import {Link} from 'react-router-dom';
 import {StyledCheckbox} from './inputs/StyledCheckbox';
 import {logAction, selectors, useAppDispatch, useAppSelector} from '../../state';
-import {isAda, isPhy, NOT_FOUND, siteSpecific} from '../../services';
+import {isAda, NOT_FOUND, siteSpecific} from '../../services';
 import classNames from 'classnames';
 import { AccordionSectionContext } from '../../../IsaacAppTypes';
 
@@ -20,7 +20,6 @@ interface LLMFreeTextQuestionFeedbackViewProps {
 export default function LLMFreeTextQuestionFeedbackView({validationResponse, hasSubmitted, sentFeedback, setSentFeedback}: LLMFreeTextQuestionFeedbackViewProps) {
     const dispatch = useAppDispatch();
     const page = useAppSelector(selectors.doc.get);
-    const accordion = useContext(AccordionSectionContext);
     const pageId = page && page !== NOT_FOUND && page.id || undefined;
     const [feedback, setFeedback] = useState(noFeedback);
 
@@ -31,8 +30,8 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
         }
     }, [hasSubmitted]);
 
-    return <div ref={feedbackPanelRef} className={classNames("llm-feedback question-component", {"pt-xl-0 pt-0": isPhy && accordion.open === null}, siteSpecific("p-xl-7 p-5", "p-md-7"))}>
-        <h2 className="mb-0">Do you agree with the LLM’s predicted marks?</h2>
+    return <div ref={feedbackPanelRef} className={classNames("llm-feedback question-component", siteSpecific("p-xl-7 p-5", "p-md-7"))}>
+        <h4 className="mb-0">Do you agree with the LLM’s predicted marks?</h4>
         <p className="mb-0">
             1 in 3 times the predicted mark will be wrong. 
             {isAda && <>{` `}Find out more in our <Link to="/support/student/general" target="_blank">FAQs</Link>.</>}
@@ -43,7 +42,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                 <strong>{`Prediction: ${validationResponse.marksAwarded} out of ${validationResponse.maxMarks} marks`}</strong>
             </div>
         </div>
-        <div className="table-responsive card curved-table-wrapper mb-4">
+        <div className="card table-responsive llm-mark-table-wrapper mb-4 rounded-2">
             <Table size='sm' className="mb-0" bordered={false}>
                 <thead>
                     <tr>

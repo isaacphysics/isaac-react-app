@@ -125,10 +125,6 @@
   transform: rotate(90deg);
 }
 
-.icon-ai {
-  @include svg-icon('/assets/cs/icons/ai.svg', 24px, 24px);
-}
-
 .icon-feedback-tick {
   @include svg-icon-raw('/assets/cs/icons/tick-rp-green.svg', 20px, 20px);
   margin-bottom: -5px;

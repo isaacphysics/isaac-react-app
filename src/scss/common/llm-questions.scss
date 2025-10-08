@@ -1,54 +1,37 @@
 .llm-indicator {
     position: relative;
     display: flex;
-    border-radius:2rem;
-    padding: 0.5rem 0.75rem;
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
     font-weight: 600;
-    font-size: medium;
     width: fit-content;
     height: fit-content;
     align-items: center;
+
+    &.small {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
 }
 
 .llm-info-banner {
-    padding: 2rem 3rem;
+    padding: 2rem;
     margin-bottom: 2rem;
     border-radius: 0.5rem;
-    h2 {
-        font-size: x-large !important;
-    }
 }
 
 .llm-feedback {
-    h2 {
-        font-size: larger !important;
-    }
     .prediction {
         display: inline-block;
         border-radius: 0.5rem;
         padding: 1rem 1rem;
         margin-bottom: 1rem;
     }
-    .curved-table-wrapper {
-        border-radius: 0.5rem;
-        table, thead, tbody {
-            border: 0;
-        }
-        tr {
-            border-left: 0;
-            border-right: 0;
-        }
+    .llm-mark-table-wrapper {
         table {
-            tr:first-child {
-                border-top: 0;
-            }
-            tr:last-child {
-                border-bottom: 0;
-            }
             table-layout: fixed;
             th {
                 font-family: $primary-font;
-                border: 0;
                 padding: 0.5rem;
                 font-weight: 600;
                 &:last-child {
@@ -56,7 +39,6 @@
                 }
             }
             td {
-                border: 0;
                 padding: 0.5rem;
                 &:last-child {
                     text-align: center;
@@ -64,7 +46,6 @@
                 }
             }
         }
-        margin-bottom: 1rem;
     }
 
     .feedback-collection {
