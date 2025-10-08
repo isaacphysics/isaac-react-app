@@ -12,13 +12,14 @@ import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {extractErrorMessage} from "../../services/errors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {useParams} from "react-router-dom";
 
 
-export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: string}>) => {
+export const ResetPasswordHandler = () => {
     const dispatch = useAppDispatch();
     const error = useAppSelector((state: AppState) => state?.error || null);
 
-    const urlToken = match.params.token || null;
+    const {token} = useParams<{token: string}>();
     // todo: We will soon stop using the "general error" here. For now this is the easiest way to check if it's relevant.
     const urlTokenValid = extractErrorMessage(error) != "Invalid password reset token.";
 
@@ -27,18 +28,18 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
     // Check the password reset token is valid
-    useEffect(() => {dispatch(verifyPasswordReset(urlToken));}, [dispatch, urlToken]);
+    useEffect(() => {dispatch(verifyPasswordReset(token));}, [dispatch, token]);
 
     function submit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         setSubmissionAttempted(true);
 
-        if (!passwordValid || !urlToken) {
+        if (!passwordValid || !token) {
             return;
         }
 
-        dispatch(handlePasswordReset({token: urlToken, password: newPassword}));
+        dispatch(handlePasswordReset({token: token, password: newPassword}));
     }
 
     return <Container id="password-reset">
