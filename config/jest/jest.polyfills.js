@@ -22,6 +22,7 @@ Object.defineProperties(globalThis, {
 });
 
 globalThis.ResizeObserver = class MockResizeObserver {
+    constructor(_callback) {}
     observe() {}
     disconnect() {}
 }
