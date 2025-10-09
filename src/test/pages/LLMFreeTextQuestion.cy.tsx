@@ -8,5 +8,10 @@ it('LLM-marked question page should have no visual regressions', () => {
 
     cy.get('[data-testid="loading"]').should('not.exist');
 
+    cy.get('textarea').type('Hello world');
+    cy.get('input').contains('Check my answer').click();
+
+    cy.scrollTo('top');
+
     cy.matchImage();
 });

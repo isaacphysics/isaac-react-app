@@ -213,7 +213,12 @@ export const handlers = [
             status: 200,
         });
     }),
-    http.post(API_PATH + "/questions/_llm_marked_regression_test_|INSERTID/answer", () => {
+    http.get(API_PATH + "/questions/isaacLLMFreeTextQuestion/can_attempt", () => {
+        return HttpResponse.json({"remainingAttempts": 30}, { 
+            status: 200, 
+        });
+    }),
+    http.post(API_PATH + "/questions/_regression_test_llm_/answer", () => {
         return HttpResponse.json(mockLLMMarkedValidationResponse, { 
             status: 200, 
         });
