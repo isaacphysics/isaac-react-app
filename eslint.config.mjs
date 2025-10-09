@@ -6,6 +6,7 @@ import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginJsxA11y from "eslint-plugin-jsx-a11y";
 import { fixupPluginRules } from "@eslint/compat";
 import path from 'path';
+import stylistic from '@stylistic/eslint-plugin'
 
 
 export default [
@@ -18,6 +19,7 @@ export default [
     {
         plugins: {
             "react-hooks": fixupPluginRules(pluginReactHooks),
+            '@stylistic': stylistic
         },
         settings: {
             react: {
@@ -28,7 +30,7 @@ export default [
             "no-prototype-builtins": "off",
             "prefer-const": "error",
             "semi": "error",
-            "indent": ["error", 4, {"SwitchCase": 1}],
+            "@stylistic/indent": ["error", 4, {"SwitchCase": 1}],
             "jsx-a11y/no-static-element-interactions": "error",
             "react-hooks/rules-of-hooks": "error",
             "react-hooks/exhaustive-deps": "error",

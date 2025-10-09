@@ -5,6 +5,9 @@
     }
   },
   "src/IsaacAppTypes.tsx": {
+    "@stylistic/indent": {
+      "count": 2
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 8
     }
@@ -101,6 +104,9 @@
     }
   },
   "src/app/components/content/IsaacSymbolicChemistryQuestion.tsx": {
+    "@stylistic/indent": {
+      "count": 3
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 4
     },
@@ -156,6 +162,11 @@
       "count": 1
     },
     "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/app/components/elements/AccountTypeMessage.tsx": {
+    "@stylistic/indent": {
       "count": 1
     }
   },
@@ -267,11 +278,17 @@
     }
   },
   "src/app/components/elements/StudentDashboard.tsx": {
+    "@stylistic/indent": {
+      "count": 2
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
   "src/app/components/elements/TitleAndBreadcrumb.tsx": {
+    "@stylistic/indent": {
+      "count": 1
+    },
     "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
@@ -299,12 +316,20 @@
       "count": 1
     }
   },
+  "src/app/components/elements/cards/NewsCard.tsx": {
+    "@stylistic/indent": {
+      "count": 2
+    }
+  },
   "src/app/components/elements/inputs/BooleanNotationInput.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
   "src/app/components/elements/inputs/ConfidenceQuestions.tsx": {
+    "@stylistic/indent": {
+      "count": 6
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     },
@@ -352,6 +377,9 @@
     }
   },
   "src/app/components/elements/layout/SidebarLayout.tsx": {
+    "@stylistic/indent": {
+      "count": 1
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 4
     },
@@ -360,6 +388,11 @@
     },
     "react-hooks/exhaustive-deps": {
       "count": 3
+    }
+  },
+  "src/app/components/elements/list-groups/AbstractListViewItem.tsx": {
+    "@stylistic/indent": {
+      "count": 69
     }
   },
   "src/app/components/elements/markup/index.tsx": {
@@ -411,6 +444,9 @@
     }
   },
   "src/app/components/elements/modals/GroupsModalCreators.tsx": {
+    "@stylistic/indent": {
+      "count": 1
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     },
@@ -523,7 +559,15 @@
       "count": 1
     }
   },
+  "src/app/components/elements/panels/QuestionFinderFilterPanel.tsx": {
+    "@stylistic/indent": {
+      "count": 2
+    }
+  },
   "src/app/components/elements/panels/TeacherConnections.tsx": {
+    "@stylistic/indent": {
+      "count": 3
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     },
@@ -559,6 +603,9 @@
     }
   },
   "src/app/components/elements/panels/UserPassword.tsx": {
+    "@stylistic/indent": {
+      "count": 3
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     },
@@ -576,6 +623,11 @@
   },
   "src/app/components/elements/quiz/QuizAttemptFooter.tsx": {
     "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/app/components/elements/quiz/QuizContentsComponent.tsx": {
+    "@stylistic/indent": {
       "count": 1
     }
   },
@@ -659,7 +711,15 @@
       "count": 1
     }
   },
+  "src/app/components/navigation/BetaSiteBanner.tsx": {
+    "@stylistic/indent": {
+      "count": 2
+    }
+  },
   "src/app/components/navigation/EmailVerificationBanner.tsx": {
+    "@stylistic/indent": {
+      "count": 1
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
@@ -839,6 +899,9 @@
     }
   },
   "src/app/components/pages/GameboardBuilder.tsx": {
+    "@stylistic/indent": {
+      "count": 5
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 4
     },
@@ -871,6 +934,9 @@
     }
   },
   "src/app/components/pages/Groups.tsx": {
+    "@stylistic/indent": {
+      "count": 3
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     },
@@ -882,6 +948,9 @@
     }
   },
   "src/app/components/pages/LogIn.tsx": {
+    "@stylistic/indent": {
+      "count": 1
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     },
@@ -945,6 +1014,9 @@
     }
   },
   "src/app/components/pages/RegistrationGroupInvite.tsx": {
+    "@stylistic/indent": {
+      "count": 1
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     },
@@ -956,6 +1028,9 @@
     }
   },
   "src/app/components/pages/RegistrationSetDetails.tsx": {
+    "@stylistic/indent": {
+      "count": 1
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
@@ -992,7 +1067,16 @@
     }
   },
   "src/app/components/pages/SetAssignments.tsx": {
+    "@stylistic/indent": {
+      "count": 5
+    },
     "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    },
+    "react-hooks/exhaustive-deps": {
       "count": 1
     }
   },
@@ -1018,11 +1102,17 @@
     }
   },
   "src/app/components/pages/TeacherOrTutorRequest.tsx": {
+    "@stylistic/indent": {
+      "count": 8
+    },
     "react/no-unescaped-entities": {
       "count": 4
     }
   },
   "src/app/components/pages/TeacherRequest.tsx": {
+    "@stylistic/indent": {
+      "count": 1
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 3
     },
@@ -1031,6 +1121,9 @@
     }
   },
   "src/app/components/pages/TutorRequest.tsx": {
+    "@stylistic/indent": {
+      "count": 1
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 2
     }
@@ -1063,6 +1156,11 @@
       "count": 1
     }
   },
+  "src/app/components/site/cs/HomepageCS.tsx": {
+    "@stylistic/indent": {
+      "count": 3
+    }
+  },
   "src/app/components/site/cs/RoutesCS.tsx": {
     "@typescript-eslint/no-unused-vars": {
       "count": 1
@@ -1087,6 +1185,9 @@
     }
   },
   "src/app/services/api.ts": {
+    "@stylistic/indent": {
+      "count": 1
+    },
     "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
@@ -1174,6 +1275,11 @@
       "count": 4
     }
   },
+  "src/app/services/reactRouterExtension.ts": {
+    "@stylistic/indent": {
+      "count": 1
+    }
+  },
   "src/app/services/scrollManager.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -1207,6 +1313,11 @@
       "count": 1
     },
     "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    }
+  },
+  "src/app/state/actions/groups.ts": {
+    "@stylistic/indent": {
       "count": 3
     }
   },
@@ -1314,6 +1425,9 @@
     }
   },
   "src/react-app-env.d.ts": {
+    "@stylistic/indent": {
+      "count": 29
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 5
     },
