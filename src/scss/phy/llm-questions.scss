@@ -1,34 +1,42 @@
 @import '../common/llm-questions.scss';
 
 .llm-indicator {
-    background-color: #eff;
-    color: $black;
-    border: 1px solid $color-neutral-700;
+    background-color: $color-misc-llm;
+    color: $color-neutral-900;
+    border: 2px solid $color-neutral-900;
 
     &.small {
-        border: 1px solid $color-neutral-700 !important;
+        border: 1px solid $color-neutral-900 !important;
         font-weight: 600 !important;
     }
 }
 
 .llm-info-banner {
-    background-color: #eff;
-    border: 2px solid $black;
+    background-color: $color-misc-llm;
+    border: 2px solid $color-neutral-900;
 }
 
 .llm-feedback {
+    border-top: 2px solid $color-neutral-200;
+    background-color: $color-neutral-50;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+
     .prediction {
-        background-color: #eff;
+        background-color: $color-misc-llm;
     }
     
-    .curved-table-wrapper {
-        border: 2px solid $gray-160;
-        tr {
-            border-bottom: 2px solid $gray-160;
+    .llm-mark-table-wrapper {
+        border: 2px solid $color-neutral-700;
+        tr:not(:last-child) {
+            border-bottom: 2px solid $color-neutral-700;
         }
         table {
-            th, tr {
-                background-color: white !important;
+            th {
+                background-color: $color-neutral-100;
+            }
+            td {
+                background-color: $color-neutral-white;
             }
         }
     }
