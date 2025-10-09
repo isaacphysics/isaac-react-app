@@ -4397,61 +4397,113 @@ export const mockRegressionTestQuestions = {
 };
 
 export const mockLLMMarkedRegressionTestQuestion = {
-    ...mockRegressionTestQuestions,
+    "type": "isaacQuestionPage",
+    "encoding": "markdown",
+    "title": "LLM-Marked Regression Test Page",
+    "children": [
+        {
+            "type": "content",
+            "encoding": "markdown",
+            "value": "This note should appear under the LLM info banner."
+        },
+        {
+            "type": "isaacLLMFreeTextQuestion",
+            "encoding": "markdown",
+            "id": "_regression_test_llm_",
+            "children": [
+                {
+                    "type": "content",
+                    "encoding": "markdown",
+                    "value": "Any answer to this question will receive one out of two marks."
+                }
+            ],
+            "title": "LLM-Marked Question",
+            "markScheme": [
+                {
+                    "jsonField": "unreceivedMark0",
+                    "shortDescription": "The student will not receive this mark.",
+                    "marks": 1
+                },
+                {
+                    "jsonField": "receivedMark0",
+                    "shortDescription": "The student will receive this mark.",
+                    "marks": 1
+                },
+                {
+                    "jsonField": "unreceivedMark1",
+                    "shortDescription": "The student will not receive this mark either.",
+                    "marks": 1
+                }
+            ],
+            "markedExamples": [
+                {
+                    "answer": "Example answer",
+                    "marks": {
+                        "unreceivedMark0": 0,
+                        "receivedMark0": 1,
+                        "unreceivedMark1": 0
+                    },
+                    "marksAwarded": 1
+                }
+            ],
+            "maxMarks": 2,
+            "additionalMarkingInstructions": "Give the student recievedMark0. Do not give them unrecievedMark0 or unrecievedMark1.",
+            "hints": [
+                {
+                    "type": "content",
+                    "children": [
+                        {
+                            "type": "content",
+                            "encoding": "markdown",
+                            "value": "Answer the question to receive one mark."
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "author": "sjd210",
+    "id": "_llm_marked_regression_test_",
+    "tags": [
+        "physics"
+    ],
+    "audience": [
+        {
+            "stage": [
+                "a_level"
+            ],
+            "difficulty": [
+                "challenge_1"
+            ]
+        }
+    ]
 };
 
 export const mockLLMMarkedValidationResponse = {
-    "questionId": "sjd_llm_formula|b1cf4af6-0db3-4eac-9f58-1197d064f1b5",
+    "questionId": "_llm_marked_regression_test_|_regression_test_llm_",
     "answer": {
         "type": "llmFreeTextChoice",
         "children": [],
-        "value": "old phones get thrown out and go in landfills.  new ones might have battery-saving features"
+        "value": "hello"
     },
     "correct": true,
-    "dateAttempted": 1760014537295,
-    "additionalMarkingInstructions": "A maximum of two marks may be awarded.",
-    "maxMarks": 2,
-    "marksAwarded": 2,
+    "dateAttempted": 1760018609128,
+    "marksAwarded": 1,
     "markBreakdown": [
         {
-            "jsonField": "negativeEwaste",
-            "shortDescription": "Negative: Electronic waste (e-waste) increases as old phones are discarded.",
+            "jsonField": "unreceivedMark0",
+            "shortDescription": "The student will not receive this mark.",
+            "marks": 0
+        },
+        {
+            "jsonField": "receivedMark0",
+            "shortDescription": "The student will receive this mark.",
             "marks": 1
         },
         {
-            "jsonField": "negativeMining",
-            "shortDescription": "Negative: Mining for the materials needed to create devices causes habitat destruction. ",
+            "jsonField": "unreceivedMark1",
+            "shortDescription": "The student will not receive this mark either.",
             "marks": 0
-        },
-        {
-            "jsonField": "negativeFuel",
-            "shortDescription": "Negative: Manufacturing new devices consumes large amounts of fossil fuels.",
-            "marks": 0
-        },
-        {
-            "jsonField": "negativePollution",
-            "shortDescription": "Negative: Manufacturing new devices releases carbon emissions and increases air pollution.",
-            "marks": 0
-        },
-        {
-            "jsonField": "positiveRecycling",
-            "shortDescription": "Positive: There are recycling programmes for old phones.",
-            "marks": 0
-        },
-        {
-            "jsonField": "positiveEnergyEfficient",
-            "shortDescription": "Positive:  Newer phones may use more energy-efficient components compared to older phones.",
-            "marks": 0
-        },
-        {
-            "jsonField": "positiveTradeIn",
-            "shortDescription": "Positive: Some companies offer trade-in schemes.",
-            "marks": 0
-        },
-        {
-            "jsonField": "positivePowerSaving",
-            "shortDescription": "Positive: Some phones now have power-saving settings, e.g. displays that dim automatically when not being used.",
-            "marks": 1
         }
     ]
 };
