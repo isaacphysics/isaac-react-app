@@ -31,7 +31,7 @@ export const endpoint = axios.create({
 
 endpoint.interceptors.response.use((response) => {
     if (response.status >= 500) {
-         
+        // eslint-disable-next-line no-console
         console.warn("Uncaught error from API:", response);
     }
     return response;
@@ -43,7 +43,7 @@ endpoint.interceptors.response.use((response) => {
         } else {
             handleServerError();
         }
-         
+        // eslint-disable-next-line no-console
         console.warn("Error from API:", error);
     }
     return Promise.reject(error);

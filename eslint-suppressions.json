@@ -216,6 +216,9 @@
     },
     "react-hooks/exhaustive-deps": {
       "count": 1
+    },
+    "semi": {
+      "count": 1
     }
   },
   "src/app/components/elements/RelatedContent.tsx": {
@@ -257,6 +260,9 @@
   },
   "src/app/components/elements/StageAndDifficultySummaryIcons.tsx": {
     "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    },
+    "semi": {
       "count": 1
     }
   },
@@ -1351,6 +1357,11 @@
   },
   "src/test/pages/MyAssignments.test.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/test/pages/SetAssignments.test.tsx": {
+    "semi": {
       "count": 1
     }
   },

@@ -22,7 +22,7 @@ export const IsaacFeaturedProfile = ({doc, contentIndex}: IsaacFeaturedProfilePr
             <Col>
                 <div className="profile-title">
                     {doc.homepage ?
-                         
+                        // eslint-disable-next-line react/jsx-no-target-blank
                         <a href={doc.homepage} target="_blank" rel="noopener"><b>{doc.title}</b></a>
                         :
                         <div><b>{doc.title}</b></div>

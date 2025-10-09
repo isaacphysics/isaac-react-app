@@ -34,6 +34,6 @@ const colours = [
 ].flat();
 
 export function printAsciiArtLogoToConsolePhy() {
-     
+    // eslint-disable-next-line no-console
     console.log(logoAsciiArt, ...colours);
 }
