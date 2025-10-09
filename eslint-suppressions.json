@@ -104,9 +104,6 @@
     }
   },
   "src/app/components/content/IsaacSymbolicChemistryQuestion.tsx": {
-    "@stylistic/indent": {
-      "count": 3
-    },
     "@typescript-eslint/no-explicit-any": {
       "count": 4
     },
@@ -779,11 +776,6 @@
       "count": 1
     }
   },
-  "src/app/components/pages/AssignmentProgressIndividual.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
   "src/app/components/pages/AssignmentSchedule.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 4
@@ -998,6 +990,9 @@
     }
   },
   "src/app/components/pages/QuestionFinder.tsx": {
+    "@stylistic/indent": {
+      "count": 1
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 2
     },
@@ -1185,9 +1180,6 @@
     }
   },
   "src/app/services/api.ts": {
-    "@stylistic/indent": {
-      "count": 1
-    },
     "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
