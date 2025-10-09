@@ -42,7 +42,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
             </div>
         </div>
         <div className="card table-responsive llm-mark-table-wrapper mb-4 rounded-2">
-            <Table size='sm' className="mb-0" bordered={false}>
+            <Table size='sm' className="mb-0" bordered={false} borderless={isAda}>
                 <thead>
                     <tr>
                         <th>Mark scheme</th>
