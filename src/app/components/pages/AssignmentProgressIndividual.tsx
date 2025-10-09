@@ -2,7 +2,7 @@ import React, {useContext, useMemo, useState} from "react";
 import { Link } from "react-router-dom";
 import { AssignmentProgressDTO, GameboardItem, CompletionState } from "../../../IsaacApiTypes";
 import { EnhancedAssignmentWithProgress, AssignmentProgressPageSettingsContext, AuthorisedAssignmentProgress } from "../../../IsaacAppTypes";
-import { getAssignmentProgressCSVDownloadLink, getThemeFromTags, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
+import { getAssignmentProgressCSVDownloadLink, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
 import { ICON, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
 import { Badge, Button, Card, CardBody } from "reactstrap";
 import { formatDate } from "../elements/DateString";
@@ -129,7 +129,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
 
     return <Card>
         <CardBody>
-            <div className="d-flex w-100 flex-column flex-md-row align-items-start align-items-md-center">
+            <div className={classNames("d-flex w-100 flex-column flex-md-row align-items-start align-items-md-center", {"mb-3": isPhy})}>
                 <div className="d-flex w-100 align-items-start justify-content-between">
                     <div>
                         {siteSpecific(
@@ -145,24 +145,7 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
                 </div>
             </div>
 
-            <div className="d-flex flex-column flex-lg-row mt-2 mb-2 row-gap-2">
-                {isPhy && <CollapsibleContainer expanded={settingsVisible} className="w-100">
-                    <div className="py-3">
-                        <AssignmentProgressSettings />
-                    </div>
-                </CollapsibleContainer>}
-
-                {isAda && <>
-                    <StyledCheckbox
-                        checked={assignmentProgressContext?.formatAsPercentage}
-                        onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
-                        label={<span className="text-muted">Show mark as percentages</span>}
-                    />
-                    <Spacer />
-                    <AdaKey />
-                </>}
-            </div>
-
+            <ResultsTableHeader settingsVisible={settingsVisible} isAssignment={true} />
             {isPhy && <AssignmentProgressLegend id={`${assignment.id ?? ""}`} />}
 
             <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions}
@@ -173,22 +156,46 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
     </Card>;
 };
 
-const AdaKey = () => {
+export const ResultsTableHeader = ({settingsVisible, isAssignment} : {settingsVisible: boolean, isAssignment: boolean}) => {
+    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
+
+    return <>
+        <div className={classNames("d-flex flex-column flex-lg-row row-gap-2 my-2", {"pt-1": isAda /* increase space for checkbox */})}>
+            {isPhy && <CollapsibleContainer expanded={settingsVisible} className="w-100">
+                <div className="pb-3">
+                    <AssignmentProgressSettings />
+                </div>
+            </CollapsibleContainer>}
+
+            {isAda && <>
+                <StyledCheckbox
+                    checked={assignmentProgressContext?.formatAsPercentage}
+                    onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
+                    label={<span className="text-muted">Show mark as percentages</span>}
+                />
+                <Spacer />
+                <AdaAssignmentProgressKey isAssignment={isAssignment} />
+            </>}
+        </div>
+    </>;
+};
+
+export const AdaAssignmentProgressKey = ({isAssignment}: {isAssignment: boolean}) => {
     const context = useContext(AssignmentProgressPageSettingsContext);
 
     const KeyItem = ({icon, label}: {icon: React.ReactNode, label: string}) => (
-        <span className="d-flex align-items-center w-max-content gap-2">
+        <span className="d-flex align-items-center w-max-content gap-2 fw-bold">
             {icon} {label}
         </span>
     );
 
-    return <div className="d-flex flex-column flex-md-row align-items-md-center column-gap-4 row-gap-2">
+    return <div className={classNames("d-flex flex-column column-gap-4 row-gap-2", isAssignment ? "flex-md-row align-items-md-center" : "flex-sm-row align-items-sm-center")}>
         <span className="d-inline d-lg-none d-xl-inline font-size-1 fw-bold">Key</span>
         {context?.attemptedOrCorrect === "CORRECT"
             ? <>
                 <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
                     <KeyItem icon={ICON.correct} label="Correct" />
-                    <KeyItem icon={ICON.partial} label="Partially correct" />
+                    {isAssignment && <KeyItem icon={ICON.partial} label="Partially correct" />}
                 </div>
                 <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
                     <KeyItem icon={ICON.incorrect} label="Incorrect" />
@@ -198,7 +205,7 @@ const AdaKey = () => {
             : <>
                 <div className="d-flex flex-column flex-md-row column-gap-4 row-gap-2">
                     <KeyItem icon={ICON.correct} label="Fully attempted" />
-                    <KeyItem icon={ICON.partial} label="Partially attempted" />
+                    {isAssignment && <KeyItem icon={ICON.partial} label="Partially attempted" />}
                     <KeyItem icon={ICON.notAttempted} label="Not attempted" />
                 </div>
             </>
@@ -206,7 +213,7 @@ const AdaKey = () => {
     </div>;
 };
 
-const QuestionLink = ({questionId, boardId}: {questionId?: string, boardId?: string}) => <a className="new-tab-link" href={`/questions/${questionId}` + (boardId ? `?board=${boardId}` : "")} target="_blank" onClick={(e) => e.stopPropagation()}>
+const QuestionLink = ({questionId, boardId}: {questionId?: string, boardId?: string}) => <a className="new-tab-link" href={`/questions/${questionId}` + (boardId ? `?board=${boardId}` : "")} target="_blank" onClick={(e) => e.stopPropagation()} aria-label="Open question in new tab">
     <i className="icon icon-new-tab" />
 </a>;
 
@@ -292,6 +299,10 @@ const DetailedMarksTab = ({assignment, progress}: DetailedMarksTabProps) => {
             )}
             <span>See the questions your students answered{isPhy && " and which parts they struggled with"}.</span>
 
+            {isPhy && <div className="py-3 mt-2">
+                <AssignmentProgressSettings />
+            </div>}
+
             {questions.map((_, questionIndex) => (
                 <DetailedMarksCard
                     key={questionIndex}
@@ -355,7 +366,7 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
                 <i className="icon icon-arrow-left me-2"/>
                 Back to group assignments and tests
             </Link>}
-            <Spacer/>
+            {isPhy && <Spacer/>}
             <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getAssignmentProgressCSVDownloadLink(assignment.id))))}>
                 Download CSV
                 <i className="icon icon-download ms-2" color="white"/>

@@ -483,17 +483,6 @@ $failed-bg-size: 25%;
     opacity: 1;
   }
 
-  .progress-table-header-footer .correct-attempted-header {
-    @include respond-below(md) {
-      width: 6rem;
-      min-width: 4rem;
-    }
-    @include respond-above(lg) {
-      width: 10rem;
-      min-width: 8rem;
-    }
-  }
-
   td, th {
     vertical-align: middle;
     text-align: center;
@@ -504,39 +493,47 @@ $failed-bg-size: 25%;
     text-decoration: line-through;
   }
 
-  th {
-    font-weight: normal;
+  th, tfoot td {
+    font-weight: $font-weight-semibold;
   }
 
-  .student-name {
-    min-width: 195px;
-    word-break: break-word;
-    width: 195px;
-  }
+  --student-name-width: 16rem;
+  --correct-attempted-width: 7rem;
 
   @include respond-below(md) {
-    .student-name {
-      min-width: 12rem;
-      width: 12rem;
-    }
+    --student-name-width: 12rem;
+    --correct-attempted-width: 6rem;
   }
 
   @include respond-below(sm) {
-    .student-name {
-      min-width: 8rem;
-      width: 8rem;
-    }
+    --student-name-width: 8rem;
   }
 
-  .total-column {
-    @include table-sticky;
-    right: 0;
-    top: 0;
-    &:after {
-      @include after-border;
-      border-right: 1px solid $gray-118;
-      border-left: 1px solid $gray-118;
-      pointer-events: none; // don't intercept clicks as we want links in the th element
+  .student-name {
+    min-width: var(--student-name-width);
+    width: var(--student-name-width);
+    word-break: break-word;
+  }
+
+  .progress-table-header-footer .correct-attempted-header {
+    @include respond-between(sm, sm) {
+      font-size: 0.9rem;
+    }
+    width: var(--correct-attempted-width);
+    min-width: var(--correct-attempted-width);
+  }
+
+  .sticky-ca-col {
+    @include respond-above(lg) {
+      position: sticky;
+      z-index: 2;
+      &:nth-child(2) {
+        left: var(--student-name-width);
+      }
+      
+      &:nth-child(3) {
+        left: calc(var(--student-name-width) + var(--correct-attempted-width));
+      }
     }
   }
 }

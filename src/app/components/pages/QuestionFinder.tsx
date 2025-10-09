@@ -139,7 +139,7 @@ export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: Filte
             {t.label}
             <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label="Close"/>
         </div>)}
-        {filterTags.length > 0 && <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
+        {filterTags.length > 0 && <button className="text-black py-0 mt-1 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
             Clear all filters
         </button>}
     </div>;

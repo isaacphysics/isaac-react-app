@@ -96,6 +96,8 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
                 }
                 invalid={isNaN(Number(mfaVerificationCode))}
                 required
+                // eslint-disable-next-line jsx-a11y/no-autofocus
+                autoFocus
             />
             <FormFeedback id="verification-code-validation-message">
                 {isNaN(Number(mfaVerificationCode)) && "Please enter a valid verification code"}
