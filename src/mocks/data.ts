@@ -4396,6 +4396,66 @@ export const mockRegressionTestQuestions = {
     ]
 };
 
+export const mockLLMMarkedRegressionTestQuestion = {
+    ...mockRegressionTestQuestions,
+};
+
+export const mockLLMMarkedValidationResponse = {
+    "questionId": "sjd_llm_formula|b1cf4af6-0db3-4eac-9f58-1197d064f1b5",
+    "answer": {
+        "type": "llmFreeTextChoice",
+        "children": [],
+        "value": "old phones get thrown out and go in landfills.  new ones might have battery-saving features"
+    },
+    "correct": true,
+    "dateAttempted": 1760014537295,
+    "additionalMarkingInstructions": "A maximum of two marks may be awarded.",
+    "maxMarks": 2,
+    "marksAwarded": 2,
+    "markBreakdown": [
+        {
+            "jsonField": "negativeEwaste",
+            "shortDescription": "Negative: Electronic waste (e-waste) increases as old phones are discarded.",
+            "marks": 1
+        },
+        {
+            "jsonField": "negativeMining",
+            "shortDescription": "Negative: Mining for the materials needed to create devices causes habitat destruction. ",
+            "marks": 0
+        },
+        {
+            "jsonField": "negativeFuel",
+            "shortDescription": "Negative: Manufacturing new devices consumes large amounts of fossil fuels.",
+            "marks": 0
+        },
+        {
+            "jsonField": "negativePollution",
+            "shortDescription": "Negative: Manufacturing new devices releases carbon emissions and increases air pollution.",
+            "marks": 0
+        },
+        {
+            "jsonField": "positiveRecycling",
+            "shortDescription": "Positive: There are recycling programmes for old phones.",
+            "marks": 0
+        },
+        {
+            "jsonField": "positiveEnergyEfficient",
+            "shortDescription": "Positive:  Newer phones may use more energy-efficient components compared to older phones.",
+            "marks": 0
+        },
+        {
+            "jsonField": "positiveTradeIn",
+            "shortDescription": "Positive: Some companies offer trade-in schemes.",
+            "marks": 0
+        },
+        {
+            "jsonField": "positivePowerSaving",
+            "shortDescription": "Positive: Some phones now have power-saving settings, e.g. displays that dim automatically when not being used.",
+            "marks": 1
+        }
+    ]
+};
+
 export const mockQuestionFinderResults = {
     "results": [
         {
