@@ -4418,36 +4418,7 @@ export const mockLLMMarkedRegressionTestQuestion = {
                 }
             ],
             "title": "LLM-Marked Question",
-            "markScheme": [
-                {
-                    "jsonField": "unreceivedMark0",
-                    "shortDescription": "The student will not receive this mark.",
-                    "marks": 1
-                },
-                {
-                    "jsonField": "receivedMark0",
-                    "shortDescription": "The student will receive this mark.",
-                    "marks": 1
-                },
-                {
-                    "jsonField": "unreceivedMark1",
-                    "shortDescription": "The student will not receive this mark either.",
-                    "marks": 1
-                }
-            ],
-            "markedExamples": [
-                {
-                    "answer": "Example answer",
-                    "marks": {
-                        "unreceivedMark0": 0,
-                        "receivedMark0": 1,
-                        "unreceivedMark1": 0
-                    },
-                    "marksAwarded": 1
-                }
-            ],
             "maxMarks": 2,
-            "additionalMarkingInstructions": "Give the student recievedMark0. Do not give them unrecievedMark0 or unrecievedMark1.",
             "hints": [
                 {
                     "type": "content",
