@@ -102,7 +102,6 @@ export async function checkPwnedPasswords(password: string, callback: (feedback:
             callback(feedback);
         }
     } catch (error) {
-        // eslint-disable-next-line no-console
         console.error("Failed to get Pwned Passwords response, skipping!");
     }
 }
