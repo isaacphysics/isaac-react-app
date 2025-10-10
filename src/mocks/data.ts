@@ -4396,6 +4396,89 @@ export const mockRegressionTestQuestions = {
     ]
 };
 
+export const mockLLMMarkedRegressionTestQuestion = {
+    "type": "isaacQuestionPage",
+    "encoding": "markdown",
+    "title": "LLM-Marked Regression Test Page",
+    "children": [
+        {
+            "type": "content",
+            "encoding": "markdown",
+            "value": "This note should appear under the LLM info banner."
+        },
+        {
+            "type": "isaacLLMFreeTextQuestion",
+            "encoding": "markdown",
+            "id": "_regression_test_llm_",
+            "children": [
+                {
+                    "type": "content",
+                    "encoding": "markdown",
+                    "value": "Any answer to this question will receive one out of two marks."
+                }
+            ],
+            "title": "LLM-Marked Question",
+            "maxMarks": 2,
+            "hints": [
+                {
+                    "type": "content",
+                    "children": [
+                        {
+                            "type": "content",
+                            "encoding": "markdown",
+                            "value": "Answer the question to receive one mark."
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "author": "sjd210",
+    "id": "_llm_marked_regression_test_",
+    "tags": [
+        "physics"
+    ],
+    "audience": [
+        {
+            "stage": [
+                "a_level"
+            ],
+            "difficulty": [
+                "challenge_1"
+            ]
+        }
+    ]
+};
+
+export const mockLLMMarkedValidationResponse = {
+    "questionId": "_llm_marked_regression_test_|_regression_test_llm_",
+    "answer": {
+        "type": "llmFreeTextChoice",
+        "children": [],
+        "value": "hello"
+    },
+    "correct": true,
+    "dateAttempted": 1760018609128,
+    "marksAwarded": 1,
+    "markBreakdown": [
+        {
+            "jsonField": "unreceivedMark0",
+            "shortDescription": "The student will not receive this mark.",
+            "marks": 0
+        },
+        {
+            "jsonField": "receivedMark0",
+            "shortDescription": "The student will receive this mark.",
+            "marks": 1
+        },
+        {
+            "jsonField": "unreceivedMark1",
+            "shortDescription": "The student will not receive this mark either.",
+            "marks": 0
+        }
+    ]
+};
+
 export const mockQuestionFinderResults = {
     "results": [
         {
