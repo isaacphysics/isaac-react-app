@@ -3,6 +3,7 @@ import {Col, Row} from "reactstrap";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {formatGlossaryTermId} from "../pages/Glossary";
+import classNames from 'classnames';
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
@@ -11,22 +12,22 @@ interface IsaacGlossaryTermProps {
 }
 
 const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossaryTermProps, ref: Ref<any>) => {
-    const termContents = <>
-        <Col md={3} className="glossary_term_name">
-            <p ref={ref}>
-                {linkToGlossary && <a href={`#${(doc.id && formatGlossaryTermId(doc.id)) ?? ""}`}>
-                    <strong>{doc.value}</strong>
-                </a>}
-                {!linkToGlossary && <strong>{doc.value}</strong>}
+    return <div className={classNames("glossary_term d-md-flex", {"row": !inPortal})} key={doc.id}>
+        <div className={classNames("glossary_term_name", {"col-md-3": !inPortal, "me-4": inPortal})}>
+            <p ref={ref} className={classNames({"fw-bold": !inPortal, "mb-1 mb-md-3": inPortal})}>
+                {linkToGlossary ? 
+                    <a href={`#${(doc.id && formatGlossaryTermId(doc.id)) ?? ""}`}>
+                        {doc.value}
+                    </a> : 
+                    doc.value
+                }
                 <span className="only-print">: </span>
             </p>
-        </Col>
-        <Col md={7}>
+        </div>
+        <div className={classNames("glossary_term_definition", {"col-md-7": !inPortal})}>
             {doc.explanation && <IsaacContent doc={doc.explanation} />}
-        </Col>
-    </>;
-
-    return (inPortal === true) ? termContents : <Row className="glossary_term" key={doc.id}>{termContents}</Row>;
+        </div>
+    </div>;
 };
 
 export const IsaacGlossaryTerm = React.forwardRef(IsaacGlossaryTermComponent);
