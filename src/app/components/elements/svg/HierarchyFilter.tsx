@@ -25,9 +25,10 @@ interface HierarchyFilterProps {
     root?: boolean;
 }
 
-export function HierarchyFilterTreeList({tier, index, choices, selections, questionFinderFilter, className, root, setSelections}: HierarchyFilterProps) {  
+export const HierarchyFilterTreeContents = ({tier, index, choices, selections, questionFinderFilter, root, setSelections}: Omit<HierarchyFilterProps, 'className'>) => {
     const pageContext = useAppSelector(selectors.pageContext.context);
-    return <ul className={classNames("plain-list", className)}>
+
+    return <>
         {choices[tier] && choices[tier][index] && choices[tier][index].map((choice) => {
             const isSelected = selections[tier] && selections[tier][index]?.map(s => s.value).includes(choice.value);
             const isLeaf = getChoiceTreeLeaves(selections).map(l => l.value).includes(choice.value);
@@ -71,5 +72,11 @@ export function HierarchyFilterTreeList({tier, index, choices, selections, quest
             </>;
         }
         )}
+    </>;
+};
+
+export function HierarchyFilterTreeList({className, ...rest}: HierarchyFilterProps) {  
+    return <ul className={classNames("plain-list", className)}>
+        <HierarchyFilterTreeContents {...rest} />
     </ul>;
 }
