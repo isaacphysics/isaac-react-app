@@ -44,19 +44,12 @@ div:has(> .pod) {
 }
 
 .pod {
-  background-color: transparent;
+  background-color: white;
+  box-shadow: 2px 4px 10px 0 $shadow-08;
+  border-radius: 1rem;
   border: none;
   height: 100%;
   width: 100%;
-
-  .card-body {
-    padding-top: 0.25rem;
-  }
-
-  .pod-title {
-    font-size: 16px;
-    font-weight: 700;
-  }
   
   a:has(> img) {
     height: min-content;
@@ -64,8 +57,6 @@ div:has(> .pod) {
       width: 100%;
       aspect-ratio: 16/9;
       object-fit: cover;
-      border: 1px solid $color-neutral-200;
-      border-radius: 8px;
     }
   }
 
