@@ -295,7 +295,7 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         const topics = (tags.getTopicTags(gameboardTags).length > 0
             ? tags.getTopicTags(gameboardTags)
             : tags.getFieldTags(gameboardTags)
-        ).map(tag => tag.title).sort();
+        ).map(tag => tag.alias ?? tag.title).sort();
 
         return <>
             <div className="mb-2">
@@ -999,7 +999,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const subjects = tagsService.getSubjectTags(tags as TAG_ID[]);
     const topics = tagsService.getTopicTags(tags as TAG_ID[]);
     const fields = tagsService.getFieldTags(tags as TAG_ID[]);
-    const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A"}];
+    const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A", alias: undefined}];
 
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon icon-raw icon-correct"
@@ -1026,7 +1026,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
             </div>
             <div className="mb-2">
                 Topic{topicsAndFields?.length > 1 && "s"}:
-                <ul className="d-inline ms-1">{topicsAndFields.map(e => <li className="d-inline" key={e.id}><Pill title={e.title} theme="neutral"/></li>)}</ul>
+                <ul className="d-inline ms-1">{topicsAndFields.map(e => <li className="d-inline" key={e.id}><Pill title={e.alias ?? e.title} theme="neutral"/></li>)}</ul>
             </div>
 
             {hasSections && <>

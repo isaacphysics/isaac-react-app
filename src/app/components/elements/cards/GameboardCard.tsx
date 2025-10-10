@@ -38,7 +38,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
             return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
         }
         return a;
-    }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
+    }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.alias ?? tag.title).sort();
 
     const boardSubjects = determineGameboardSubjects(gameboard);
 
