@@ -21,6 +21,8 @@ import { useGetConceptQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
+import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
+import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -38,6 +40,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     
     const userContext = useUserViewingContext();
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
+    const accessibilitySettings = useAccessibilitySettings();
 
     useEffect(() => {
         if (pageContext) {
@@ -78,6 +81,8 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                         <ConceptSidebar relatedContent={doc.relatedContent} />
                         <MainContent>
                             <PageMetadata doc={doc} />
+
+                            {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningBanner key={tag} type={tag} />)}
 
                             <Row className="concept-content-container">
                                 <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>

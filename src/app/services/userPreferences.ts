@@ -10,7 +10,7 @@ interface UseUserPreferencesReturnType {
 export function useUserPreferences(): UseUserPreferencesReturnType {
     const examBoard = useUserViewingContext().contexts[0].examBoard;
 
-    const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} =
+    const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, ACCESSIBILITY: accessibilitySettings} =
         useAppSelector((state: AppState) => state?.userPreferences) || {};
 
     // Programming language preference -
@@ -30,7 +30,7 @@ export function useUserPreferences(): UseUserPreferencesReturnType {
     }
 
     // Accessibility preferences:
-    const preferMathML = displaySettings?.PREFER_MATHML;
+    const preferMathML = accessibilitySettings?.PREFER_MATHML;
 
     return {
         preferredProgrammingLanguage,

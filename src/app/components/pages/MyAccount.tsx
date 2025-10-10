@@ -19,6 +19,7 @@ import {
     useAppDispatch
 } from "../../state";
 import {
+    AccessibilitySettings,
     BooleanNotation,
     DisplaySettings,
     PotentialUser,
@@ -60,6 +61,7 @@ import {UserContent} from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {MainContent, MyAccountSidebar, SidebarLayout} from '../elements/layout/SidebarLayout';
 import {Loading} from '../handlers/IsaacSpinner';
+import { UserAccessibilitySettings } from '../elements/panels/UserAccessibilitySettings';
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
@@ -241,6 +243,15 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
         }));
     }
 
+    function setAccessibilitySettings(newAccessibilitySettings: AccessibilitySettings | ((oldAS?: AccessibilitySettings) => AccessibilitySettings)) {
+        setMyUserPreferences(oldPref => ({
+            ...oldPref,
+            ACCESSIBILITY: typeof newAccessibilitySettings === "function"
+                ? newAccessibilitySettings(oldPref?.ACCESSIBILITY)
+                : newAccessibilitySettings
+        }));
+    }
+
     function setConsentSettings(newConsentSettings: UserConsent | ((oldCS?: UserConsent) => UserConsent)) {
         setMyUserPreferences(oldPref => ({
             ...oldPref,
@@ -384,6 +395,11 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                         <UserEmailPreferencesPanel
                                             emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                                             submissionAttempted={attemptedAccountUpdate}
+                                        />
+                                    </TabPane>}
+                                    {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.accessibility}>
+                                        <UserAccessibilitySettings
+                                            accessibilitySettings={myUserPreferences?.ACCESSIBILITY ?? {}} setAccessibilitySettings={setAccessibilitySettings}
                                         />
                                     </TabPane>}
                                     {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>

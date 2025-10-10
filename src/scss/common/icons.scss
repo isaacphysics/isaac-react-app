@@ -172,6 +172,14 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/redo.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-access-visual {
+  @include svg-icon('/assets/common/icons/access-visual.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-access-motor {
+  @include svg-icon('/assets/common/icons/access-motor.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 // Icon sizing
 .icon {
   --icon-size: 16px;
