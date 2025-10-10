@@ -43,7 +43,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                 <p>{`This feature lets you answer questions ${siteSpecific("that you have answered before, without seeing your old answer.", "again, even if you've answered them before.")} It's useful if you are reviewing a topic before a test or exam.`}</p>
             </WithLinkableSetting>
             {/* Temporarily staff-only until LLM-marked questions are properly configured (and won't work for staff immediately regardless) */}
-            {isStaff(user) || isAda && <>
+            {(isStaff(user) || isAda) && <>
                 <div className="pt-2"/>
                 <WithLinkableSetting className={"beta-feature"} id={"consent-to-openai-marking-feature"}>
                     <StyledCheckbox checked={consentSettings.OPENAI ?? false}
