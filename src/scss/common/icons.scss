@@ -140,6 +140,10 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-event {
+  @include svg-icon('/assets/common/icons/event.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 .icon-event-upcoming {
   @include svg-icon('/assets/common/icons/event-upcoming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
@@ -170,6 +174,14 @@ img[aria-disabled="true"] {
 
 .icon-redo {
   @include svg-icon('/assets/common/icons/redo.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-done, .icon-tick {
+  @include svg-icon('/assets/common/icons/tick.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-close, .icon-cross {
+  @include svg-icon('/assets/common/icons/cross.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 // Icon sizing
