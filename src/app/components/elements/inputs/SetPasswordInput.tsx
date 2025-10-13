@@ -18,6 +18,7 @@ interface SetPasswordInputProps {
     onValidityChange: (valid: boolean) => void;
     submissionAttempted: boolean;
     idPrefix?: string;
+    label?: string;
     required: boolean;
 }
 
@@ -25,7 +26,7 @@ interface SetPasswordInputProps {
 export const SetPasswordInput = ({
     className,
     password,
-    onChange,
+    label, onChange,
     onValidityChange,
     required,
     submissionAttempted,
@@ -45,7 +46,7 @@ export const SetPasswordInput = ({
 
     return <div className={className}>
         <FormGroup className="form-group">
-            <Label htmlFor={`${idPrefix}-password-set`} className={"fw-bold form-required"}>Password</Label>
+            <Label htmlFor={`${idPrefix}-password-set`} className={"fw-bold form-required"}>{label ?? "Password"}</Label>
             <p className="d-block input-description">Your password must be at least {MINIMUM_PASSWORD_LENGTH} characters long.</p>
             <TogglablePasswordInput
                 id={`${idPrefix}-password-set`} name="password" type="password"

@@ -8,7 +8,7 @@ import {history} from "../../app/services";
 
 
 async function enterAndConfirmPassword(password: string) {
-    const passwordInput = await screen.findByLabelText("Password");
+    const passwordInput = await screen.findByLabelText("New password");
     await userEvent.type(passwordInput, password);
 
     if (isPhy) {
@@ -63,7 +63,7 @@ describe('PasswordResetHandler', () => {
         // Enter and confirm new password, then submit
         await enterAndConfirmPassword("validnewpassword");
 
-        const submitButton = await screen.findByRole("button", {name: "Change Password"});
+        const submitButton = await screen.findByRole("button", {name: "Change password"});
         await userEvent.click(submitButton);
 
         // Assert
@@ -100,7 +100,7 @@ describe('PasswordResetHandler', () => {
         // Enter and confirm new password, then attempt to submit (even though we expect the button to be disabled)
         await enterAndConfirmPassword("validnewpassword");
 
-        const submitButton = await screen.findByRole("button", {name: "Change Password"});
+        const submitButton = await screen.findByRole("button", {name: "Change password"});
         await userEvent.click(submitButton);
 
         // Assert
@@ -128,10 +128,10 @@ describe('PasswordResetHandler', () => {
         });
 
         // Enter new password, then attempt to submit
-        const passwordInput = await screen.findByLabelText("Password");
+        const passwordInput = await screen.findByLabelText("New password");
         await userEvent.type(passwordInput, "2short");
 
-        const submitButton = await screen.findByRole("button", {name: "Change Password"});
+        const submitButton = await screen.findByRole("button", {name: "Change password"});
         await userEvent.click(submitButton);
 
         // Assert
@@ -166,13 +166,13 @@ describe('PasswordResetHandler', () => {
             });
 
             // Enter new password, then attempt to submit
-            const passwordInput = await screen.findByLabelText("Password");
+            const passwordInput = await screen.findByLabelText("New password");
             await userEvent.type(passwordInput, "validnewpassword");
 
             const confirmInput = await screen.findByLabelText("Re-enter password");
             await userEvent.type(confirmInput, "val1dnewpassword");
 
-            const submitButton = await screen.findByRole("button", {name: "Change Password"});
+            const submitButton = await screen.findByRole("button", {name: "Change password"});
             await userEvent.click(submitButton);
 
             // Assert
