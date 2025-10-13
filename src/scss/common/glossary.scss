@@ -110,3 +110,11 @@
     }
   }
 }
+
+:not(.glossary-page) {
+  .glossary-term-name {
+    @include respond-below(sm) {
+      text-decoration: underline;
+    }
+  }
+}

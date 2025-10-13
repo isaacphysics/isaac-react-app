@@ -2,7 +2,8 @@ import React, {Ref} from 'react';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {formatGlossaryTermId} from "../pages/Glossary";
-import classNames from 'classnames';
+import { Spacer } from '../elements/Spacer';
+import { Col, Row } from 'reactstrap';
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
@@ -11,8 +12,8 @@ interface IsaacGlossaryTermProps {
 }
 
 const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossaryTermProps, ref: Ref<any>) => {
-    return <div className={classNames("glossary-term d-md-flex", {"row": !inPortal})} key={doc.id}>
-        <div className={classNames("glossary-term-name", inPortal ? "me-6" : "col-md-3")}>
+    return <Row className={"glossary-term d-inline-flex d-md-flex row"} key={doc.id}>
+        <Col md={inPortal ? 2 : 3} className={"glossary-term-name"}>
             <p ref={ref} className={inPortal ? "mb-0 mb-md-3" : "fw-bold"}>
                 {linkToGlossary ? 
                     <a href={`#${(doc.id && formatGlossaryTermId(doc.id)) ?? ""}`}>
@@ -22,11 +23,12 @@ const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossa
                 }
                 <span className="only-print">: </span>
             </p>
-        </div>
-        <div className={classNames("glossary-term-definition", {"col-md-7": !inPortal})}>
+            <Spacer/>
+        </Col>
+        <Col size={inPortal ? 10 : 7} className={"glossary-term-definition"}>
             {doc.explanation && <IsaacContent doc={doc.explanation} />}
-        </div>
-    </div>;
+        </Col>
+    </Row>;
 };
 
 export const IsaacGlossaryTerm = React.forwardRef(IsaacGlossaryTermComponent);
