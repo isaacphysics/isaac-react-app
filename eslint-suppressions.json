@@ -180,11 +180,6 @@
       "count": 4
     }
   },
-  "src/app/components/elements/CollapsibleList.tsx": {
-    "react-hooks/exhaustive-deps": {
-      "count": 1
-    }
-  },
   "src/app/components/elements/DateString.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
