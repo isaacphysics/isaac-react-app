@@ -42,7 +42,7 @@ export const ResetPasswordHandler = () => {
         dispatch(handlePasswordReset({token: token, password: newPassword}));
     }
 
-    return <Container id="password-reset">
+    return <Container id="password-reset" className={"mb-7"}>
         <TitleAndBreadcrumb breadcrumbTitleOverride="Password reset" currentPageTitle="Reset your password" icon={{type: "hex", icon: "icon-account"}} className="mb-4" />
         <div>
             {!!error &&
@@ -55,7 +55,6 @@ export const ResetPasswordHandler = () => {
                 <Card>
                     <CardBody>
                         <SetPasswordInput
-                            className="my-4"
                             idPrefix={"reset"}
                             password={newPassword}
                             label={"New password"}
