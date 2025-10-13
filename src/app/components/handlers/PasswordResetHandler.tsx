@@ -7,7 +7,6 @@ import {
     verifyPasswordReset
 } from "../../state";
 import {Button, Card, CardBody, CardFooter, Container, Form} from "reactstrap";
-import {RouteComponentProps} from "react-router";
 import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {extractErrorMessage} from "../../services/errors";

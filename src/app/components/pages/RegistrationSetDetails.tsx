@@ -18,7 +18,6 @@ import {
     validateCountryCode,
     validateEmail,
     validateName,
-    validatePassword,
     validateUserSchool
 } from "../../services";
 import {errorSlice, registerNewUser, selectors, useAppDispatch, useAppSelector} from "../../state";
