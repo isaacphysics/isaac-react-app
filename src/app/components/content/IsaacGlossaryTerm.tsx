@@ -11,9 +11,9 @@ interface IsaacGlossaryTermProps {
 }
 
 const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossaryTermProps, ref: Ref<any>) => {
-    return <div className={classNames("glossary_term d-md-flex", {"row": !inPortal})} key={doc.id}>
-        <div className={classNames("glossary_term_name", inPortal ? "me-6" : "col-md-3")}>
-            <p ref={ref} className={inPortal ? "mb-1 mb-md-3" : "fw-bold"}>
+    return <div className={classNames("glossary-term d-md-flex", {"row": !inPortal})} key={doc.id}>
+        <div className={classNames("glossary-term-name", inPortal ? "me-6" : "col-md-3")}>
+            <p ref={ref} className={inPortal ? "mb-0 mb-md-3" : "fw-bold"}>
                 {linkToGlossary ? 
                     <a href={`#${(doc.id && formatGlossaryTermId(doc.id)) ?? ""}`}>
                         {doc.value}
@@ -23,7 +23,7 @@ const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossa
                 <span className="only-print">: </span>
             </p>
         </div>
-        <div className={classNames("glossary_term_definition", {"col-md-7": !inPortal})}>
+        <div className={classNames("glossary-term-definition", {"col-md-7": !inPortal})}>
             {doc.explanation && <IsaacContent doc={doc.explanation} />}
         </div>
     </div>;

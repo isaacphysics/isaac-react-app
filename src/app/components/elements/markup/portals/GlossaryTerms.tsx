@@ -55,7 +55,7 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
             const uniqueId = `${termId}-${componentUuid}-${i}`;
             if (termElements[i].dataset.type === "full") {
                 const fullTermDiv = document.createElement('div');
-                fullTermDiv.setAttribute("class", "glossary_term row");
+                fullTermDiv.setAttribute("class", "glossary-term row");
                 fullTermDiv.setAttribute("id", uniqueId);
                 termElements[i].parentNode?.replaceChild(fullTermDiv, termElements[i]);
                 fullTermContainers.push({id: fullTermDiv.id, term: {...term}});
