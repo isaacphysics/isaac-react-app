@@ -9,10 +9,17 @@ export const useReserveUsersOnCompetition = () => {
     eventId: string,
     userIds: number[],
     submissionLink: string,
+    projectTitle: string,
     groupName?: string,
   ) => {
     try {
-      await api.eventBookings.reserveUsersOnCompetition(eventId, userIds, submissionLink, groupName ?? "");
+      await api.eventBookings.reserveUsersOnCompetition(
+        eventId,
+        userIds,
+        submissionLink,
+        groupName ?? "",
+        projectTitle,
+      );
       dispatch(showSuccessToast("Competition Entry Success", "Competition entry was successful."));
     } catch (error) {
       dispatch(showErrorToast("Competition Entry Failed", "Failed to make the competiton entry."));

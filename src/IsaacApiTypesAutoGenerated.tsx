@@ -491,6 +491,7 @@ export interface CompetitionEntryDTO {
   entrantIds?: number[];
   submissionURL?: string;
   groupName?: string;
+  projectTitle?: string;
 }
 
 export interface DetailedEventBookingDTO extends EventBookingDTO {

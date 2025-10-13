@@ -471,11 +471,18 @@ export const api = {
     reserveUsersOnEvent: (eventId: string, userIds: number[]) => {
       return endpoint.post(`/events/${eventId}/reservations`, userIds);
     },
-    reserveUsersOnCompetition: (eventId: string, userIds: number[], submissionLink: string, groupName: string) => {
+    reserveUsersOnCompetition: (
+      eventId: string,
+      userIds: number[],
+      submissionLink: string,
+      groupName: string,
+      projectTitle: string,
+    ) => {
       return endpoint.post(`/events/${eventId}/competitionEntries`, {
         entrantIds: userIds,
         submissionURL: submissionLink,
         groupName: groupName,
+        projectTitle: projectTitle,
       });
     },
     cancelUsersReservationsOnEvent: (eventId: string, userIds: number[]) => {

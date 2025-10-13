@@ -163,6 +163,12 @@
     font-size: 36px;
   }
 
+  &-section-title {
+    font-size: 24px;
+    color: #120540;
+    font-weight: 500;
+  }
+
   &-sub-title {
     color: #130019;
     font-size: 18px;
@@ -170,13 +176,17 @@
   }
 
   &-button {
-    background-color: #d60265;
-    color: white !important;
+    background-color: #ff4aa0 !important;
+    color: #212529 !important;
     border: none !important;
-    width: 109px;
+    width: auto;
     height: 48px;
     font-size: 18px;
     font-family: "dm-sans-light", DMSans-Light, sans-serif;
+
+    @media (min-width: 1024px) {
+      min-width: 500px;
+    }
   }
 
   &-button-label {
@@ -189,5 +199,78 @@
 
   &-asterisk{
     color: red;
+  }
+
+  &-validation-tooltip { 
+    position: relative;
+    top: -5px;
+    
+    
+    .tooltip-content {
+      position: relative;
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      max-width: 100%;
+      padding: 8px 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .tooltip-arrow {
+      position: absolute;
+      top: -6px;
+      left: 120px;
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 6px solid #e0e0e0;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 1px;
+        left: -5px;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 5px solid white;
+      }
+    }
+    
+    .tooltip-icon {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      background-color: #ff6b35;
+      color: white;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 1px;
+    }
+    
+    .tooltip-text {
+      flex: 1;
+      color: #dc3545;
+      font-size: 14px;
+      line-height: 1.4;
+      
+      a {
+        color: #dc3545;
+        text-decoration: underline;
+        
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
   }
 }
