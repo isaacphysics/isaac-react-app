@@ -689,9 +689,6 @@
     }
   },
   "src/app/components/handlers/PasswordResetHandler.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
     "@typescript-eslint/no-floating-promises": {
       "count": 2
     }
