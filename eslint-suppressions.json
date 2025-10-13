@@ -160,6 +160,9 @@
     },
     "@typescript-eslint/no-floating-promises": {
       "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
   "src/app/components/elements/AccountTypeMessage.tsx": {
@@ -389,7 +392,7 @@
   },
   "src/app/components/elements/list-groups/AbstractListViewItem.tsx": {
     "@stylistic/indent": {
-      "count": 69
+      "count": 72
     }
   },
   "src/app/components/elements/markup/index.tsx": {
