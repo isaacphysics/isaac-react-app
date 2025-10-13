@@ -1,5 +1,4 @@
 import React, {Ref} from 'react';
-import {Col, Row} from "reactstrap";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {formatGlossaryTermId} from "../pages/Glossary";

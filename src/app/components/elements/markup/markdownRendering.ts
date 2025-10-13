@@ -1,4 +1,5 @@
-import {dropZoneRegex, inlineQuestionRegex, isDefined, isPhy, MARKDOWN_RENDERER} from "../../../services";
+import { PageContextState } from "../../../../IsaacAppTypes";
+import {dropZoneRegex, inlineQuestionRegex, isDefined, isPhy, MARKDOWN_RENDERER, Subject} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
 
@@ -79,10 +80,19 @@ export const renderInlineGlossaryTerms = (markdown: string) => {
 };
 
 // RegEx replacements to match Latex inspired Isaac Physics functionality
-export const regexProcessMarkdown = (markdown: string) => {
+export const regexProcessMarkdown = (pageContext?: PageContextState) => (markdown: string) => {
     const regexRules = {
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
     };
+    if (isPhy) {
+        let glossaryLink = "/glossary";
+        if (pageContext?.subject && isDefined(pageContext?.stage) && pageContext.stage.length === 1) {
+            glossaryLink = `/${pageContext.subject}/${pageContext.stage[0]}/glossary`;
+        }
+        Object.assign(regexRules, {
+            [`[**Glossary**](${glossaryLink})`]: /\*\*Glossary\*\*/g,
+        });
+    }
     Object.entries(regexRules).forEach(([replacement, rule]) =>
         markdown = markdown.replace(rule, replacement)
     );

@@ -5,7 +5,8 @@ import {renderRemarkableMarkdown, regexProcessMarkdown, renderInlineGlossaryTerm
 import {utils} from "remarkable";
 import {usePortalsInHtml, useStatefulElementRef} from "./portals/utils";
 import {compose} from "redux";
-import {isDefined} from "../../../services";
+import {isDefined, Subject} from "../../../services";
+import { selectors, useAppSelector } from "../../../state";
 
 // This component renders the HTML given to it inside a React element.
 //
@@ -29,17 +30,18 @@ const TrustedHtml = ({html, className}: {html: string; className?: string}) => {
 // so that it doesn't get incorrectly rendered with Remarkable (the markdown renderer we use).
 const TrustedMarkdown = ({markdown, className}: {markdown: string, renderParagraphs?: boolean, className?: string}) => {
     const renderKatex = useRenderKatex();
+    const pageContext = useAppSelector(selectors.pageContext.context);
 
     // This combines all of the above functions for markdown processing.
     const html = compose<string>(
-        renderClozeDropZones,      // ^
-        renderInlineQuestionPartZones,
-        renderKatex,               // |
-        renderRemarkableMarkdown,  // | Remarkable markdown renderer, processes standard markdown syntax
-        regexProcessMarkdown,      // |
-        renderInlineGlossaryTerms, // |
-        renderGlossaryBlocks       // |
-    )(markdown);                   // control flow
+        renderClozeDropZones,              // ^
+        renderInlineQuestionPartZones,     // |
+        renderKatex,                       // |
+        renderRemarkableMarkdown,          // | Remarkable markdown renderer, processes standard markdown syntax
+        regexProcessMarkdown(pageContext), // |
+        renderInlineGlossaryTerms,         // |
+        renderGlossaryBlocks               // |
+    )(markdown);                           // control flow
 
     return <TrustedHtml html={html} className={className}/>;
 };
