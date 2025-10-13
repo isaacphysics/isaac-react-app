@@ -112,9 +112,19 @@
 }
 
 :not(.glossary-page) {
-  .glossary-term-name {
-    @include respond-below(sm) {
-      text-decoration: underline;
+  .glossary-term {
+    .glossary-term-name {
+      @include respond-below(sm) {
+        text-decoration: underline;
+      }
+    }
+
+    // If this is a solitary glossary term, give it a small fixed amount of padding rather than a percentage
+    &:not(& + .glossary-term):not(:has(+ .glossary-term))  {
+      .glossary-term-name {
+        max-width: fit-content;
+        padding-right: 1.5rem;
+      }
     }
   }
 }
