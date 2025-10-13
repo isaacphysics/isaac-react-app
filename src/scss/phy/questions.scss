@@ -138,10 +138,16 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   margin-bottom: 1rem;
 
   > .question-component > div:first-child {
-    padding: 2rem 2rem 0.5rem;
+    &:not(.freetext-question) {
+      padding: 2rem 2rem 0.5rem;
 
-    &:last-child {
-      padding-bottom: 3rem;
+      &:last-child:not(.quick-question) {
+        padding-bottom: 3rem;
+      }
+    }
+
+    &.freetext-question {
+      padding: 2rem 2rem 0rem;
     }
   }
 

@@ -9,7 +9,8 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS, getSearchPlaceholder,
     sortByStringValue,
     SUBJECT_SPECIFIC_CHILDREN_MAP,
-    LEARNING_STAGE} from "../../../services";
+    LEARNING_STAGE,
+    ASSIGNMENT_STATE_MAP} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -294,7 +295,7 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         const topics = (tags.getTopicTags(gameboardTags).length > 0
             ? tags.getTopicTags(gameboardTags)
             : tags.getFieldTags(gameboardTags)
-        ).map(tag => tag.title).sort();
+        ).map(tag => tag.alias ?? tag.title).sort();
 
         return <>
             <div className="mb-2">
@@ -804,6 +805,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
         <ShowLoadingQuery query={assignmentQuery} defaultErrorTitle="" thenRender={(assignments: AssignmentDTO[]) => {
             const myAssignments = filterAssignmentsByStatus(assignments);
             const assignmentCountByStatus = myAssignments && Object.fromEntries(Object.entries(myAssignments).map(([key, value]) => [key, value.length]));
+            const totalAssignmentCount = Object.values(assignmentCountByStatus).reduce((a, b) => a + b, 0);
             return <>
                 <div className="section-divider"/>
                 <search data-testid="my-assignments-sidebar">
@@ -822,10 +824,10 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                     <div className="section-divider"/>
                     <h5 className="mb-4">Filter by status</h5>
                     <ul>
-                        <li><AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/></li>
+                        <li><AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={totalAssignmentCount}/></li>
                         <div className="section-divider-small"/>
                         {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <li key={state}>
-                            <AssignmentStatusCheckbox status={state} count={assignmentCountByStatus?.[state]} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
+                            <AssignmentStatusCheckbox status={state} count={assignmentCountByStatus[ASSIGNMENT_STATE_MAP[state]]} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
                         </li>)}
                     </ul>
                     <h5 className="mt-4 mb-3">Filter by group</h5>
@@ -997,7 +999,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const subjects = tagsService.getSubjectTags(tags as TAG_ID[]);
     const topics = tagsService.getTopicTags(tags as TAG_ID[]);
     const fields = tagsService.getFieldTags(tags as TAG_ID[]);
-    const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A"}];
+    const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A", alias: undefined}];
 
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon icon-raw icon-correct"
@@ -1024,7 +1026,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
             </div>
             <div className="mb-2">
                 Topic{topicsAndFields?.length > 1 && "s"}:
-                <ul className="d-inline ms-1">{topicsAndFields.map(e => <li className="d-inline" key={e.id}><Pill title={e.title} theme="neutral"/></li>)}</ul>
+                <ul className="d-inline ms-1">{topicsAndFields.map(e => <li className="d-inline" key={e.id}><Pill title={e.alias ?? e.title} theme="neutral"/></li>)}</ul>
             </div>
 
             {hasSections && <>

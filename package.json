@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "4.0.6-SNAPSHOT",
+  "version": "4.0.7-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=18",
@@ -72,6 +72,7 @@
     "test-ada-visual": "python3 vrt-in-docker.py ada",
     "test-ada-visual-update-baseline": "python3 vrt-in-docker.py ada --update-baselines",
     "lint": "eslint -c eslint.config.mjs src/",
+    "lint:ci": "CI=true yarn run lint --max-warnings=0",
     "build-stats-phy": "webpack --env prod --config config/webpack.config.physics.js --profile --json > bundle-stats-phy.json",
     "analyse-bundle-phy": "webpack-bundle-analyzer bundle-stats-phy.json build-phy",
     "build-stats-ada": "webpack --env prod --config config/webpack.config.ada.js --profile --json > bundle-stats-ada.json",
@@ -100,6 +101,7 @@
     "@eslint/compat": "^1.1.1",
     "@eslint/js": "^9.9.1",
     "@frsource/cypress-plugin-visual-regression-diff": "^3.3.10",
+    "@stylistic/eslint-plugin": "^5.4.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
@@ -136,7 +138,7 @@
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^7.1.2",
-    "cypress": "13.6.4",
+    "cypress": "^14.0.0",
     "dotenv": "^10.0.0",
     "eslint": "^9.18.0",
     "eslint-plugin-jsx-a11y": "^6.9.0",
@@ -169,7 +171,7 @@
     "webpack": "^5.94.0",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^4.15.2"
+    "webpack-dev-server": "^5.2.2"
   },
   "msw": {
     "workerDirectory": "public"
