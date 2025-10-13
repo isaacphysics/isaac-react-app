@@ -85,12 +85,14 @@ export const regexProcessMarkdown = (pageContext?: PageContextState) => (markdow
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
     };
     if (isPhy) {
-        let glossaryLink = "/glossary";
+        let linkContext = "";
         if (pageContext?.subject && isDefined(pageContext?.stage) && pageContext.stage.length === 1) {
-            glossaryLink = `/${pageContext.subject}/${pageContext.stage[0]}/glossary`;
+            linkContext = `/${pageContext.subject}/${pageContext.stage[0]}`;
         }
+        
         Object.assign(regexRules, {
-            [`[**Glossary**](${glossaryLink})`]: /\*\*Glossary\*\*/g,
+            [`[**Glossary**](${linkContext}/glossary)`]: /\*\*Glossary\*\*/g,
+            [`[**Concepts**](${linkContext}/concepts)`]: /\*\*Concepts\*\*/g,
         });
     }
     Object.entries(regexRules).forEach(([replacement, rule]) =>
