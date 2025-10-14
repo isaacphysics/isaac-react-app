@@ -2,7 +2,6 @@ import React, {Ref} from 'react';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {formatGlossaryTermId} from "../pages/Glossary";
-import { Spacer } from '../elements/Spacer';
 import { Col, Row } from 'reactstrap';
 
 interface IsaacGlossaryTermProps {
@@ -11,7 +10,7 @@ interface IsaacGlossaryTermProps {
     linkToGlossary?: boolean;
 }
 
-const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossaryTermProps, ref: Ref<any>) => {
+const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossaryTermProps, ref: Ref<HTMLParagraphElement>) => {
     return <Row className={"d-inline-flex d-md-flex"} key={doc.id}>
         <Col md={inPortal ? 2 : 3} className={"glossary-term-name"}>
             <p ref={ref} className={inPortal ? "mb-0 mb-md-3" : "fw-bold"}>
@@ -23,9 +22,8 @@ const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossa
                 }
                 <span className="only-print">: </span>
             </p>
-            <Spacer/>
         </Col>
-        <Col xs={inPortal ? 10 : 7} className={"glossary-term-definition"}>
+        <Col md={inPortal ? 10 : 7} className={"glossary-term-definition"}>
             {doc.explanation && <IsaacContent doc={doc.explanation} />}
         </Col>
     </Row>;

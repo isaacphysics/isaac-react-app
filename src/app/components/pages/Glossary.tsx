@@ -424,7 +424,7 @@ export const Glossary = () => {
                             <Col>
                                 {terms.map(term => <IsaacGlossaryTerm
                                     key={term.id}
-                                    ref={(el: HTMLElement) => {
+                                    ref={(el: HTMLParagraphElement) => {
                                         glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
                                     }}
                                     doc={term}

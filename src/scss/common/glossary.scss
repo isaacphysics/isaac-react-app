@@ -120,7 +120,7 @@
     }
 
     // If this is a solitary glossary term, give it a small fixed amount of padding rather than a percentage
-    &:not(& + .glossary-term):not(:has(+ .glossary-term))  {
+    &:not(& + .glossary-term, :has(+ .glossary-term)) {
       .glossary-term-name {
         max-width: fit-content;
         padding-right: 1.5rem;
