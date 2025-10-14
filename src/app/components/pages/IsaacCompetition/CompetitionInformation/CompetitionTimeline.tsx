@@ -13,7 +13,7 @@ interface CompetitionTimelineProps {
 }
 
 const CompetitionTimeline = ({ title, content, entries }: CompetitionTimelineProps) => (
-  <section className="competition-timeline">
+  <section className="competition-timeline mt-4 mb-2">
     <h3 className="competition-timeline-title">{title}</h3>
     <p className="competition-timeline-content">{content}</p>
     <Row className="p-4">

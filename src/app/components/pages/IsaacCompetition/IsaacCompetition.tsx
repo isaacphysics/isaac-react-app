@@ -4,14 +4,12 @@ import { BreadcrumbTrail } from "../../elements/TitleAndBreadcrumb";
 import { Col, Container, Row } from "reactstrap";
 import content from "./content";
 import "../../../../scss/cs/competition.scss";
-import IoECard from "./InternetOfEverything/IoECard";
-import TestimonialComment from "../../elements/TestimonialComment";
 import Accordion from "./Accordion/Accordion";
 import InformationCard from "./CompetitionInformation/InformationCard";
 import CompetitionTimeline from "./CompetitionInformation/CompetitionTimeline";
 import EntryFormHandler from "./EntryForm/EntryFormHandler";
 
-const { section1, internetOfEverything, section3, accordion } = content;
+const { section1, section3, accordion } = content;
 
 export const IsaacCompetition = () => {
   useEffect(() => {
@@ -42,12 +40,14 @@ export const IsaacCompetition = () => {
   };
 
   const accordionSections = [
-    { id: "0", title: accordion.projectIdeas.title, section: accordion.projectIdeas.section },
-    { id: "1", title: accordion.availableSupport.title, section: accordion.availableSupport.section },
-    { id: "2", title: accordion.video.title, section: accordion.video.section },
-    { id: "3", title: accordion.groupEntry.title, section: accordion.groupEntry.section },
-    { id: "4", title: accordion.industry.title, section: accordion.industry.section },
-    { id: "5", title: accordion.termsAndConditions.title, section: accordion.termsAndConditions.section },
+    { id: "0", title: accordion.internetOfEverything.title, section: accordion.internetOfEverything.section },
+    { id: "1", title: accordion.projectIdeas.title, section: accordion.projectIdeas.section },
+    { id: "2", title: accordion.availableSupport.title, section: accordion.availableSupport.section },
+    { id: "3", title: accordion.video.title, section: accordion.video.section },
+    { id: "4", title: accordion.groupEntry.title, section: accordion.groupEntry.section },
+    { id: "5", title: accordion.assessmentCriteria.title, section: accordion.assessmentCriteria.section },
+    { id: "6", title: accordion.industry.title, section: accordion.industry.section },
+    { id: "7", title: accordion.termsAndConditions.title, section: accordion.termsAndConditions.section },
   ];
 
   return (
@@ -99,7 +99,7 @@ export const IsaacCompetition = () => {
       </section>
       <section id="internetOfEverything" className="event-section">
         <div className="event-section-background-img">
-          <Container>
+          {/* <Container>
             <Row className="py-4">
               <Col xs={12} lg={6}>
                 <IoECard title={internetOfEverything.ioe.title} content={internetOfEverything.ioe.section} />
@@ -119,7 +119,7 @@ export const IsaacCompetition = () => {
                 text={internetOfEverything.testamonial.text}
               />
             </div>
-          </Container>
+          </Container> */}
         </div>
       </section>
 

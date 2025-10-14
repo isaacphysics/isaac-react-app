@@ -14,28 +14,7 @@ export default {
       facebookLink: "https://www.facebook.com/IsaacComputerScience",
     },
   },
-  internetOfEverything: {
-    ioe: {
-      title: "What is the Internet of Everything?",
-      section: [
-        "Imagine a world where everything around you is connected to the internet. Not just your phone or computer, but your watch, your shoes, your fridge, even your toothbrush! This is what we call the Internet of Everything.",
-        "The IoE is like a giant invisible web that connects all things, people, data, and processes. It’s like a big team where everyone and everything works together, sharing information and making decisions.",
-        "The IoE is made up of four main parts: people, things, data, and processes. When these parts work together, they can make our lives easier, safer, and more enjoyable.",
-      ],
-    },
-    examples: {
-      title: "Real-life examples of IoE include:",
-      section: [
-        "smart homes: imagine your alarm clock wakes you up and then automatically tells your coffee maker to start brewing coffee",
-        "wearable devices: devices like smartwatches can monitor your health, track your location if you’re lost, and even let you make phone calls or send messages",
-        "smart cities: streetlights that turn off when it is light outside, or traffic lights that adjust based on road conditions",
-        "connected cars: cars can communicate with each other to avoid accidents. They can also tell you when they need repairs or even call for help if there’s an emergency",
-      ],
-    },
-    testamonial: {
-      text: "The Internet of Everything isn’t just about smart devices; it’s about connecting everything to make life easier, safer, and more enjoyable. It’s like a superpower that lets us make objects work together — but we must use this power responsibly and safely.",
-    },
-  },
+
   section3: {
     howItWorks: {
       title: "How does it work?",
@@ -81,6 +60,23 @@ export default {
     },
   },
   accordion: {
+    internetOfEverything: {
+      title: "What is the Internet of Everything?",
+      section: [
+        "Imagine a world where everything around you is connected to the internet. Not just your phone or computer, but your watch, your shoes, your fridge, even your toothbrush! This is what we call the Internet of Everything.",
+        "The IoE is like a giant invisible web that connects all things, people, data, and processes. It’s like a big team where everyone and everything works together, sharing information and making decisions.",
+        "The IoE is made up of four main parts: people, things, data, and processes. When these parts work together, they can make our lives easier, safer, and more enjoyable.",
+
+        "Real-life examples of IoE include:",
+        [
+          "smart homes: imagine your alarm clock wakes you up and then automatically tells your coffee maker to start brewing coffee",
+          "wearable devices: devices like smartwatches can monitor your health, track your location if you’re lost, and even let you make phone calls or send messages",
+          "smart cities: streetlights that turn off when it is light outside, or traffic lights that adjust based on road conditions",
+          "connected cars: cars can communicate with each other to avoid accidents. They can also tell you when they need repairs or even call for help if there’s an emergency",
+        ],
+        "The Internet of Everything isn’t just about smart devices; it’s about connecting everything to make life easier, safer, and more enjoyable. It’s like a superpower that lets us make objects work together — but we must use this power responsibly and safely.",
+      ],
+    },
     projectIdeas: {
       title: "Project ideas to get started",
       section: [
@@ -184,6 +180,54 @@ export default {
           "From the dropdown, select a group that you created for this competition",
         ],
         "If you have any questions or run into problems, contact <a href='https://isaaccomputerscience.org/contact?examBoard=all&stage=all'>here</a>.",
+      ],
+    },
+    assessmentCriteria: {
+      title: "Assessment criteria",
+      section: [
+        "When working on your project, don’t forget to consider all assessment criteria. Ask yourself the following questions:",
+        "1. Internet of Everything (IOE) device:",
+        [
+          "Connectivity – Can the device connect to the internet or other devices so it can send and receive information automatically?",
+          "People – Can the device help, interact with, or provide useful information to people?",
+          "Things – Is the device or system something that can collect information, notice what’s happening, or take action?",
+          "Data – Can the device collect, record, or generate information about itself, its surroundings, or its users?",
+          "Processes – Does the device integrate with other systems, networks, or processes to improve efficiency, safety, or decisions?",
+          "Value / Insights – Does the device provide useful insights or make life easier or better for people?",
+        ],
+        "",
+        "2. Creativity and Originality:",
+        [
+          "Is the idea something new or different from what already exists?",
+          "Does the project include creative features that make it stand out?",
+          "Does the idea combine existing technologies in a new way?",
+          "Does the project show creative problem-solving?",
+        ],
+        "",
+        "3. Practicality and feasibility:",
+        [
+          "Is implementation realistic? Is it cost-effective?",
+          "Is it scalable?",
+          "Can the project be built using technology available today or soon?",
+          "Would it work in the real world?",
+          "Is it easy to maintain or update the device?",
+        ],
+        "",
+        "4. Impact on society:",
+        [
+          "What big problem in the world does your project try to solve?",
+          "Could it improve people’s lives?",
+          "Could it help people in different countries or communities?",
+        ],
+        "",
+        "5. Presentation quality:",
+        [
+          "Does the video clearly show the main problem the device solves?",
+          "Does the video clearly show how your IoE device works?",
+          "Does it use visuals to make it interesting?",
+          "Is the video clear and easy to watch?",
+          "Does the video explain why your idea is a good solution?",
+        ],
       ],
     },
     industry: {
