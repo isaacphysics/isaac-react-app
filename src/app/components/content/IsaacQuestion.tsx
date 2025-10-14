@@ -33,7 +33,6 @@ import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
 import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
-import { LLMFreeTextQuestionRemainingAttemptsView } from "../elements/LLMFreeTextQuestionRemainingAttemptsView";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Alert, Button, Col, Form, Row } from "reactstrap";
 
@@ -168,6 +167,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const validationFeedback = invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
         <IsaacContent doc={validationResponse?.explanation as ContentDTO}/>;
 
+    const possibleLLMFreeTextQuestionFeedbackView = isLLMFreeTextQuestion && showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit ?
+        <LLMFreeTextQuestionFeedbackView maxMarks={(doc as ApiTypes.IsaacLLMFreeTextQuestionDTO).maxMarks ?? 0} {...{validationResponse, hasSubmitted, sentFeedback, setSentFeedback}} /> :
+        null;
+
     return <ConfidenceContext.Provider value={{recordConfidence}}>
         <Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
@@ -182,8 +185,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)},
                     {"p-md-7": isAda}
                 )}>
-                
-                {isLLMFreeTextQuestion && <LLMFreeTextQuestionRemainingAttemptsView canAttemptQuestionType={canAttemptQuestionType} />}
 
                 <Suspense fallback={<Loading/>}>
                     <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} readonly={awaitingFeedback} />
@@ -282,13 +283,12 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                         </div>
                 }
             </div>
-            {/* Physics Hints */}
+            {/* Physics Hints and LLM free-text response */}
             {isPhy && <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />}
+            {isPhy && possibleLLMFreeTextQuestionFeedbackView}
         </Form>
 
-        {/* LLM free-text question validation response */}
-        {isLLMFreeTextQuestion && showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit &&
-            <LLMFreeTextQuestionFeedbackView maxMarks={(doc as ApiTypes.IsaacLLMFreeTextQuestionDTO).maxMarks ?? 0} {...{validationResponse, hasSubmitted, sentFeedback, setSentFeedback}} />
-        }
+        {/* Ada LLM free-text question validation response */}
+        {isAda && possibleLLMFreeTextQuestionFeedbackView}
     </ConfidenceContext.Provider>;
 });
