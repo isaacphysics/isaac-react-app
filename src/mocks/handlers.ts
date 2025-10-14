@@ -19,7 +19,9 @@ import {
     mockAttempts,
     mockPreviews,
     mockConceptsResults,
-    mockProgress
+    mockProgress,
+    mockLLMMarkedRegressionTestQuestion,
+    mockLLMMarkedValidationResponse
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -204,6 +206,21 @@ export const handlers = [
     http.get(API_PATH + "/pages/questions/_regression_test_", () => {
         return HttpResponse.json(mockRegressionTestQuestions, {
             status: 200,
+        });
+    }),
+    http.get(API_PATH + "/pages/questions/_llm_marked_regression_test_", () => {
+        return HttpResponse.json(mockLLMMarkedRegressionTestQuestion, {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/questions/isaacLLMFreeTextQuestion/can_attempt", () => {
+        return HttpResponse.json({"remainingAttempts": 30}, { 
+            status: 200, 
+        });
+    }),
+    http.post(API_PATH + "/questions/_regression_test_llm_/answer", () => {
+        return HttpResponse.json(mockLLMMarkedValidationResponse, { 
+            status: 200, 
         });
     }),
     http.get(API_PATH + "/pages/questions/", () => {
