@@ -55,7 +55,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                         id={"consent-to-openai-marking"}
                         removeVerticalOffset
                         aria-describedby="llm-helptext"
-                />
+                    />
                     <p id="llm-helptext"> 
                         {`We use a large language model (LLM) to mark free-text questions on the site. We only send your answer to OpenAI, we do not send any personal data.`}
                         {isAda && <>{` `}For more information, read our <Link to="/support/student/general" target="_blank">FAQs</Link>.</>}
