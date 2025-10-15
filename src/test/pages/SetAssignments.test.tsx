@@ -296,7 +296,7 @@ describe("SetAssignments", () => {
                 await renderModal();
                 const modal = await screen.findByTestId("active-modal");
                 const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
-                await userEvent.click(within(dueDateContainer).getByRole("button", {name: "close"}));
+                await userEvent.click(within(dueDateContainer).getByRole("button", {name: "Clear date"}));
 
                 await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
                 expect(dueDateContainer).toHaveTextContent(`Due dates are required for assignments`);
