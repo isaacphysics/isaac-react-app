@@ -40,11 +40,6 @@
       "count": 1
     }
   },
-  "src/app/components/content/IsaacGlossaryTerm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/app/components/content/IsaacGraphSketcherQuestion.tsx": {
     "@typescript-eslint/no-unused-expressions": {
       "count": 1
