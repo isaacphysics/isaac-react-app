@@ -61,6 +61,10 @@ div:has(> .pod) {
       width: 100%;
       aspect-ratio: 16/9;
       object-fit: cover;
+
+      &.programme-img {
+        aspect-ratio: 16/7;
+      }
     }
   }
 

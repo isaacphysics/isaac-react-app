@@ -46,6 +46,7 @@ import {AnvilAppsListing} from "../../pages/AnvilAppsListing";
 import {AdaCSOverviewPage} from "../../pages/AdaCSOverviewPage";
 import {PhysicsSkills14} from "../../pages/books_old/physics_skills_14";
 import { IsaacStats } from "../../pages/IsaacBirthdayStats";
+import Programmes from "../../pages/Programmes";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -182,6 +183,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/tutor_features" component={TutorFeatures}/>,
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
     <TrackedRoute key={key++} exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>,
+    <TrackedRoute key={key++} exact path="/programmes" component={Programmes} />,
     <TrackedRoute key={key++} exact path="/news" component={News} />,
     <TrackedRoute key={key++} exact path="/isaac_11" component={IsaacStats} />,
 
