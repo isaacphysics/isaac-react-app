@@ -23,18 +23,22 @@ div:has(> .pod) {
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: min-content;
+    padding: $card-spacer-x;
     
-    a:has(> img) {
-      margin-right: 1.5rem;
-
+    > a.card-img-container {
+      width: 35%;
+      min-width: 35%;
+      height: 100%;
+      padding-right: $card-spacer-x;
+    
       > img {
-        width: 200px;
+        border-radius: $card-inner-border-radius;
       }
     }
 
     .card-body {
-      padding-top: 0;
+      padding: 0;
+      padding-left: $card-spacer-x;
     }
 
     .pod-title {

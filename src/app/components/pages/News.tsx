@@ -48,7 +48,6 @@ export const News = () => {
                         <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1", "row-cols-lg-3 mt-4")}`}>
                             {allNews.map((n, i) => <Col key={i} className={`my-3 ${siteSpecific("px-3", "px-0 justify-content-center")}`}>
                                 <NewsCard key={n.id} newsItem={n} showTitle />
-                                {isPhy && above["md"](deviceSize) && <div className="section-divider"/>}
                             </Col>)}
                         </Row>
                         <div className="w-100 d-flex justify-content-center mb-7">

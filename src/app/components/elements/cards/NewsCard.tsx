@@ -15,16 +15,16 @@ interface NewsCardProps extends CardProps {
 
 const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassName, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
-    return <Card data-testid={"news-pod"} {...props} className={classNames("pod news-card", props.className)}>
-        {image && <a href={url} className="focus-target">
+    return <Card data-testid={"news-pod"} {...props} className={classNames("pod", props.className)}>
+        {image && <a href={url} className="focus-target card-img-container">
             <CardImg
                 top
                 src={image.src && apiHelper.determineImageUrl(image.src)}
                 alt={image.altText || `Illustration for ${title}`}
             />
         </a>}
-        <CardBody className="d-flex flex-column ps-0">
-            {showTitle && <CardTitle className="mb-0 pod-title">{title}</CardTitle>}
+        <CardBody className="d-flex flex-column">
+            {showTitle && <h5>{title}</h5>}
             {value && <CardText>
                 {value}
             </CardText>}
