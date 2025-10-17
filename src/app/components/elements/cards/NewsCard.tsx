@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {Card, CardBody, CardImg, CardProps, CardText, CardTitle} from "reactstrap";
-import {IsaacPodDTO} from "../../../../IsaacApiTypes";
+import {ImageDTO, IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper, siteSpecific} from "../../../services";
 import {AdaCard} from "./AdaCard";
 import classNames from "classnames";
@@ -15,14 +15,25 @@ interface NewsCardProps extends CardProps {
 
 const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassName, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
+
+    const CardImage = (image: ImageDTO) => {
+        return <CardImg
+            top
+            src={image.src && apiHelper.determineImageUrl(image.src)}
+            alt={image.altText || `Illustration for ${title}`}
+        />;
+    };
+
     return <Card data-testid={"news-pod"} {...props} className={classNames("pod news-card", props.className)}>
-        {image && <a href={url} className="focus-target">
-            <CardImg
-                top
-                src={image.src && apiHelper.determineImageUrl(image.src)}
-                alt={image.altText || `Illustration for ${title}`}
-            />
-        </a>}
+        {image && (!url?.startsWith("http") ?
+            <Link to={`${url}`} className="focus-target">
+                <CardImage {...image}/>
+            </Link>
+            :
+            <a href={url} className="focus-target">
+                <CardImage {...image}/>
+            </a>
+        )}
         <CardBody className="d-flex flex-column ps-0">
             {showTitle && <CardTitle className="mb-0 pod-title">{title}</CardTitle>}
             {value && <CardText>

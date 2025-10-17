@@ -51,13 +51,10 @@ export const HorizontalScroller = ({ children, enabled, className }: HorizontalS
     };
 
     useEffect(() => {
-        handleResize();
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    });
+        const resizeObserver = new ResizeObserver(() => handleResize());
+        resizeObserver.observe(topScrollbarRef.current as Element);
+        return () => resizeObserver.disconnect();
+    }, [handleResize]);
 
     return (
         <div className={className}>

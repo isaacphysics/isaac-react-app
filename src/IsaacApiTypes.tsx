@@ -370,9 +370,6 @@ export interface InlineRegionValidationResponseDTO extends QuestionValidationRes
 }
 
 export interface LLMFreeTextQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
-    markCalculationInstructions?: string;
-    additionalMarkingInstructions?: string;
-    maxMarks?: number;
     marksAwarded?: number;
     markBreakdown?: LLMFreeTextMarkSchemeEntryDTO[];
 }

@@ -14,6 +14,7 @@ import { getAssigneesByBoard } from "../../pages/SetAssignments";
 import { SetAssignmentsModal } from "../modals/SetAssignmentsModal";
 import { ExternalLink } from "../ExternalLink";
 import { QuestionPropertyTags } from "../ContentPropertyTags";
+import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -216,6 +217,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 </span>}
                 {isItem && fullWidth && typedProps.audienceViews && <div className="d-flex mt-1"> 
                     <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
+                </div>}
+                {tags?.includes("llm_question_page") && <div className="mt-2">
+                    <LLMFreeTextQuestionIndicator small />
                 </div>}
                 {isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
                     <StatusDisplay status={typedProps.status} showText className="py-1" />

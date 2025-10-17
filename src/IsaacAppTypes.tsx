@@ -693,6 +693,7 @@ export interface BaseTag {
     new?: boolean;
     hidden?: boolean;
     stageOverride?: {[s in STAGE]?: TagInstruction};
+    alias?: string;
 }
 
 export interface Tag extends BaseTag {

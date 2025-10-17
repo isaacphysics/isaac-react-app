@@ -31,7 +31,6 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
-import { LLMFreeTextQuestionIndicator } from "../elements/LLMFreeTextQuestionIndicator";
 import { GameboardQuestionSidebar, MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
@@ -92,7 +91,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                         <MainContent>
                             {!preview && <CanonicalHrefElement />}
 
-                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
+                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}>
                                 {isPhy && <QuestionMetaData 
                                     doc={doc} audienceViews={audienceViews} 
                                     allQuestionsCorrect={allQuestionsCorrect} 
@@ -100,8 +99,6 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                     anyQuestionAttempted={anyQuestionAttempted}
                                 />}
                             </PageMetadata>
-
-                            {isAda && pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
                             {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningBanner key={tag} type={tag} />)}
 
                             <Row className="question-content-container">

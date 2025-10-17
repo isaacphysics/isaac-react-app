@@ -180,6 +180,10 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/access-motor.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-ai {
+  @include svg-icon('/assets/common/icons/ai.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 // Icon sizing
 .icon {
   --icon-size: 16px;

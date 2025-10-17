@@ -158,6 +158,7 @@ $color-misc-navy: #001f47;
 $color-misc-red: #b40c0c;
 $color-misc-pale-yellow: #f9fdd5;
 $color-misc-correct: #ecf7e9;
+$color-misc-llm: #eeffff;
 
 $color-wildcard-orange: #ff7800;
 
@@ -425,6 +426,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "groups";
 @import "events";
 @import "../common/fasttrack";
+@import "llm-questions";
 @import "scroll";
 @import "assignments";
 @import "assignment-progress";
