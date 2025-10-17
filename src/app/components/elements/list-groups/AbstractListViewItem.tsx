@@ -173,8 +173,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isDisabled = state && [AbstractListViewItemState.COMING_SOON, AbstractListViewItemState.DISABLED].includes(state);
     
     fullWidth = fullWidth || below["sm"](deviceSize) || (isItem && !(typedProps.status || typedProps.audienceViews));
-    const cardBody =
-    <div className="w-100 d-flex flex-row">
+    const cardBody = <div className="w-100 d-flex flex-row">
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
             <div className="position-relative">
                 {icon && (
