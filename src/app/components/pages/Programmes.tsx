@@ -8,66 +8,64 @@ import { ContentDTO } from "../../../IsaacApiTypes";
 
 const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
     new Promise((resolve) =>
-        setTimeout(() => {
-            resolve([
-                {
-                    id: "01_stem_smart",
-                    title: "STEM SMART",
-                    children: [
-                        {
-                            encoding: "markdown",
-                            value: "A free, **16 month** STEM tutoring and mentoring programme which supports students from state schools who may have experienced educational hardship or are in a group statistically less likely to go on to higher education.",
-                        },
-                        {
-                            encoding: "markdown",
-                            value: "The application deadline for the 2026-27 programme closes on **31st October 2025!**",
-                        }
-                    ] as ContentDTO[],
-                    url: "/pages/stem_smart",
-                    image: {
-                        src: "/assets/phy/programmes/stem_smart.jpg",
+        resolve([
+            {
+                id: "01_stem_smart",
+                title: "STEM SMART",
+                children: [
+                    {
+                        encoding: "markdown",
+                        value: "A free, **16 month** STEM tutoring and mentoring programme which supports students from state schools who may have experienced educational hardship or are in a group statistically less likely to go on to higher education.",
                     },
-                    date: "January (year 12) – April (year 13)",
-                    applicableTo: "Sixth form",
-                    location: "Online, with an in-person residential",
+                    {
+                        encoding: "markdown",
+                        value: "The application deadline for the 2026-27 programme closes on **31st October 2025!**",
+                    }
+                ] as ContentDTO[],
+                url: "/pages/stem_smart",
+                image: {
+                    src: "/assets/phy/programmes/stem_smart.jpg",
                 },
-                {
-                    id: "02_spc",
-                    title: "Senior Physics Challenge",
-                    value: "A 4-day residential in July for UK students in year 12 or equivalent. Students are invited based on performance on the Isaac Science platform.",
-                    url: "/pages/spc",
-                    image: {
-                        src: "/assets/phy/programmes/spc.jpg",
-                    },
-                    date: "July, annually",
-                    applicableTo: "Year 12",
-                    location: "University of Cambridge",
+                date: "January (year 12) – April (year 13)",
+                applicableTo: "Sixth form",
+                location: "Online, with an in-person residential",
+            },
+            {
+                id: "02_spc",
+                title: "Senior Physics Challenge",
+                value: "A 4-day residential in July for UK students in year 12 or equivalent. Students are invited based on performance on the Isaac Science platform.",
+                url: "/pages/spc",
+                image: {
+                    src: "/assets/phy/programmes/spc.jpg",
                 },
-                {
-                    id: "03_pms",
-                    title: "Physics Mentoring Scheme",
-                    value: "Weekly assignments in physics and maths to develop problem solving skills, supported by an online weekly tutorial led by the Isaac team. There is a year 11, a year 12 and year 13 scheme.",
-                    url: "/pages/isaac_mentor",
-                    image: {
-                        src: "/assets/phy/programmes/pms.jpg",
-                    },
-                    date: "September – July, annually",
-                    applicableTo: "Years 11-13",
-                    location: "Online",
+                date: "July, annually",
+                applicableTo: "Year 12",
+                location: "University of Cambridge",
+            },
+            {
+                id: "03_pms",
+                title: "Physics Mentoring Scheme",
+                value: "Weekly assignments in physics and maths to develop problem solving skills, supported by an online weekly tutorial led by the Isaac team. There is a year 11, a year 12 and year 13 scheme.",
+                url: "/pages/isaac_mentor",
+                image: {
+                    src: "/assets/phy/programmes/pms.jpg",
                 },
-                {
-                    id: "04_biology_challenges",
-                    title: "Biology Monthly Challenges",
-                    value: "A series of monthly online challenges to develop problem solving skills in biology. Certificates are awarded termly.",
-                    url: "/pages/biology_challenges",
-                    image: {
-                        src: "/assets/phy/programmes/biology_challenges.jpg",
-                    },
-                    applicableTo: "A Level",
-                    location: "Online",
-                }
-            ]);
-        }, 500)
+                date: "September – July, annually",
+                applicableTo: "Years 11-13",
+                location: "Online",
+            },
+            {
+                id: "04_biology_challenges",
+                title: "Biology Monthly Challenges",
+                value: "A series of monthly online challenges to develop problem solving skills in biology. Certificates are awarded termly.",
+                url: "/pages/biology_challenges",
+                image: {
+                    src: "/assets/phy/programmes/biology_challenges.jpg",
+                },
+                applicableTo: "A Level",
+                location: "Online",
+            }
+        ])
     );
 
 const Programmes: React.FC = () => {
