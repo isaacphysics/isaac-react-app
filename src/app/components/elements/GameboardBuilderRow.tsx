@@ -25,6 +25,7 @@ import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
 import { StyledCheckbox } from "./inputs/StyledCheckbox";
 import { Markup } from "./markup";
 import { Button } from "reactstrap";
+import { QuestionPropertyTags } from "./ContentPropertyTags";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -114,17 +115,8 @@ const GameboardBuilderRow = (
                                 <img src="/assets/common/icons/new-tab.svg" alt="Preview question" />
                             </button>
                             <Spacer />
-                            {isPhy && <div className="d-flex flex-column justify-self-end">
-                                {question.supersededBy && <a 
-                                    className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
-                                    href={`/questions/${question.supersededBy}`}
-                                    onClick={(e) => e.stopPropagation()}
-                                >SUPERSEDED</a>}
-                                {question.tags?.includes("nofilter") && <span
-                                    className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
-                                >NO-FILTER</span>}
-                            </div>}
                         </div>
+                        {isPhy && <QuestionPropertyTags className="my-1" supersededBy={question.supersededBy} tags={question.tags} />}
 
                         {question.subtitle && <>
                             <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>

@@ -354,10 +354,6 @@ iframe.email-html {
   }
 }
 
-.superseded-tag.superseded-tag {
-  @include pill-tag($gray-160, white, $gray-194)
-}
-
 // mirror of bootstrap's .dropdown-divider (+ equiv for the y-axis), using always-defined props
 
 .section-divider {

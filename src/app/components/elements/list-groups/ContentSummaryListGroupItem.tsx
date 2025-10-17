@@ -10,8 +10,6 @@ import {
     isAda,
     isIntendedAudience,
     isPhy,
-    isStaff,
-    isTeacherOrAbove,
     notRelevantMessage,
     SEARCH_RESULT_TYPE,
     siteSpecific,
@@ -32,6 +30,7 @@ import classNames from "classnames";
 import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 import { CSSModule } from "reactstrap/types/lib/utils";
 import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
+import { QuestionPropertyTags } from "../ContentPropertyTags";
 
 export enum ContentTypeVisibility {
     SHOWN, // default if not specified
@@ -173,14 +172,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                         {isPhy && typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ms-2 mb-1"}>
                             ({typeLabel})
                         </span>}
-                        {isPhy && item.supersededBy && isTeacherOrAbove(user) ? <a 
-                            className="superseded-tag mx-1 ms-sm-3" 
-                            href={`/questions/${item.supersededBy}`}
-                            onClick={(e) => e.stopPropagation()}
-                        >SUPERSEDED</a> : null}
-                        {isPhy && item.tags && item.tags.includes("nofilter") && isStaff(user) ? <span
-                            className="superseded-tag mx-1 ms-sm-3"
-                        >NO-FILTER</span> : null}
+                        <QuestionPropertyTags className="ms-2" supersededBy={item.supersededBy} tags={item.tags} />
                     </div>
                     {(isPhy && item.summary) && <div className="small text-muted d-none d-sm-block">
                         {item.summary}

@@ -1009,7 +1009,7 @@ export enum MEMBERSHIP_STATUS {
     INACTIVE = "INACTIVE",
 }
 
-export enum ACCOUNT_TAB {account, customise, passwordreset, teacherconnections, emailpreferences, betafeatures}
+export enum ACCOUNT_TAB {account, customise, passwordreset, teacherconnections, emailpreferences, accessibility, betafeatures}
 
 export interface AccountTabs {
     tab: ACCOUNT_TAB,
@@ -1025,6 +1025,7 @@ export const ACCOUNT_TABS : AccountTabs[] = [
     {tab: ACCOUNT_TAB.passwordreset, title: "Security"},
     {tab: ACCOUNT_TAB.teacherconnections, title: "Teacher connections", titleShort: "Connections"},
     {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", hiddenIfEditingOtherUser: true},
+    {tab: ACCOUNT_TAB.accessibility, title: "Accessibility", hiddenIfEditingOtherUser: true},
     {tab: ACCOUNT_TAB.betafeatures, title: "Beta", hiddenIfEditingOtherUser: true},
 ];
 
