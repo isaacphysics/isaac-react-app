@@ -47,8 +47,14 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
     const stageFilter = useMemo(() => query.show_stage_only?.split(',') as STAGE[] || [STAGE.ALL], [query.show_stage_only]);
 
     useEffect(() => {
-        getEventsList({startIndex: 0, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
-    }, [typeFilter, statusFilter, stageFilter]);
+        void getEventsList({
+            startIndex: 0, 
+            limit: EVENTS_PER_PAGE, 
+            typeFilter, 
+            statusFilter, 
+            stageFilter
+        });
+    }, [typeFilter, statusFilter, stageFilter, getEventsList]);
 
     const pageHelp = <span>
         Follow the links below to find out more about our FREE events.

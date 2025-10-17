@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery, useLazyGetGroupsQuery, useLazyGetMyAssignmentsQuery, useLazyGetMySetAssignmentsQuery, useLazyGetQuizAssignmentsAssignedToMeQuery, useLazyGetQuizAssignmentsSetByMeQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardProps, CardText, CardTitle, Col, Container, Row} from "reactstrap";
-import {above, EventStatusFilter, EventTypeFilter, HUMAN_STAGES, HUMAN_SUBJECTS, isDefined, isLoggedIn, isTutor, isTutorOrAbove, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, Subject, useDeviceSize} from "../../../services";
+import {above, EventStatusFilter, EventTypeFilter, HUMAN_STAGES, HUMAN_SUBJECTS, isDefined, isLoggedIn, isStudent, isTutor, isTutorOrAbove, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, Subject, useDeviceSize} from "../../../services";
 import { NewsCard } from "../../elements/cards/NewsCard";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { EventCard } from "../../elements/cards/EventCard";
@@ -172,8 +172,14 @@ export const HomepagePhy = () => {
 
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
     useEffect(() => {
-        getEventsList({startIndex: 0, limit: 2, typeFilter: EventTypeFilter["All groups"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
-    }, []);
+        void getEventsList({
+            startIndex: 0,
+            limit: 2,
+            typeFilter: isStudent(user) ? EventTypeFilter["Student events"] : EventTypeFilter["All groups"],
+            statusFilter: EventStatusFilter["Upcoming events"],
+            stageFilter: [STAGE.ALL]
+        });
+    }, [getEventsList, user]);
 
     return <>
         <div id="homepage" className="homepage pb-7">

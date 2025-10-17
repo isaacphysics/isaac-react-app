@@ -861,12 +861,6 @@
   "src/app/components/pages/Events.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
-    },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 1
     }
   },
   "src/app/components/pages/FreeTextBuilder.tsx": {
@@ -1072,13 +1066,10 @@
   },
   "src/app/components/pages/SubjectLandingPage.tsx": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unused-vars": {
       "count": 1
     },
     "react-hooks/exhaustive-deps": {
-      "count": 2
+      "count": 1
     }
   },
   "src/app/components/pages/SubjectOverviewPage.tsx": {
@@ -1158,10 +1149,10 @@
   },
   "src/app/components/site/phy/HomepagePhy.tsx": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 6
+      "count": 5
     },
     "react-hooks/exhaustive-deps": {
-      "count": 2
+      "count": 1
     }
   },
   "src/app/components/site/phy/NavigationMenuPhy.tsx": {
