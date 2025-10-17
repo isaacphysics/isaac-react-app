@@ -46,7 +46,7 @@ import {AnvilAppsListing} from "../../pages/AnvilAppsListing";
 import {AdaCSOverviewPage} from "../../pages/AdaCSOverviewPage";
 import {PhysicsSkills14} from "../../pages/books_old/physics_skills_14";
 import { IsaacStats } from "../../pages/IsaacBirthdayStats";
-import Programmes from "../../pages/Programmes";
+import { Programmes } from "../../pages/Programmes";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));

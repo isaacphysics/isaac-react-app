@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { GenericPageSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { GenericPageSidebar, MainContent, ProgrammesSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { IsaacProgrammeDTO, ProgrammeCard } from "../elements/cards/ProgrammeCard";
 import { ContentDTO } from "../../../IsaacApiTypes";
@@ -15,7 +15,7 @@ const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
                 children: [
                     {
                         encoding: "markdown",
-                        value: "A free, **16 month** STEM tutoring and mentoring programme which supports students from state schools who may have experienced educational hardship or are in a group statistically less likely to go on to higher education.",
+                        value: "A free, **16-month** STEM tutoring and mentoring programme which supports students from state schools who may have experienced educational hardship or are in a group statistically less likely to go on to higher education.",
                     },
                     {
                         encoding: "markdown",
@@ -68,7 +68,8 @@ const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
         ])
     );
 
-const Programmes: React.FC = () => {
+
+export const Programmes = () => {
     const [programmes, setProgrammes] = useState<IsaacProgrammeDTO[]>([]);
 
     useEffect(() => {
@@ -80,7 +81,7 @@ const Programmes: React.FC = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "hex", icon: "icon-events"}} />
         <SidebarLayout>
-            <GenericPageSidebar/>
+            <ProgrammesSidebar programmes={programmes} />
             <MainContent>
                 <ShowLoading until={programmes} thenRender={(programmes) => {
                     return <ul className="list-unstyled mt-4">
@@ -93,5 +94,3 @@ const Programmes: React.FC = () => {
         </SidebarLayout>
     </Container>;
 };
-
-export default Programmes;
