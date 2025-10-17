@@ -8,16 +8,16 @@ import {
     useAppSelector
 } from "../../../state";
 import React, {useEffect, useState} from "react";
-import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
+import {ActiveModalWithoutState, BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
     isAda,
     isDefined,
     isLoggedIn,
-    isMobile,
+    isMobile, isPhy,
     isTutor,
-    SITE_TITLE,
-    siteSpecific,
+    SITE_TITLE, SITE_TITLE_SHORT,
+    siteSpecific, validateCountryCode,
     validateEmailPreferences,
     validateUserContexts,
     validateUserGender,
@@ -30,6 +30,8 @@ import {Immutable} from "immer";
 import { AccountTypeMessage } from "../AccountTypeMessage";
 import {useEmailPreferenceState, UserEmailPreferencesInput} from "../inputs/UserEmailPreferencesInput";
 import { Form, CardBody, Row, Col, Button } from "reactstrap";
+import {CountryInput} from "../inputs/CountryInput";
+import {SignupTab} from "../panels/SignupTab";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -48,6 +50,8 @@ const RequiredAccountInfoBody = () => {
 
     const initialUserContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
+
+    const initialCountryCode = user?.loggedIn && user.countryCode;
 
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
@@ -93,29 +97,27 @@ const RequiredAccountInfoBody = () => {
             </div>
             <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage/>
             <Row className="d-flex flex-wrap my-2">
-                {((isAda && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <Col lg={6}>
-                    {isAda && !validateUserGender(initialUserValue) && <div className="mb-3">
-                        <GenderInput
-                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                            submissionAttempted={submissionAttempted} idPrefix="modal"
-                            required
-                        />
-                    </div>}
-                    {!validateUserContexts(initialUserContexts) && <div>
+                <Col lg={6}>
+                    {isAda && !validateCountryCode(initialCountryCode as string | undefined) && <CountryInput
+                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                        submissionAttempted={submissionAttempted} idPrefix="modal"
+                        required countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
+                    />}
+                    {isPhy && !validateUserContexts(initialUserContexts) && <div>
                         <UserContextAccountInput
                             user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
                             displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                             setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
                         />
                     </div>}
-                </Col>}
-                {isAda && !validateUserSchool(initialUserValue) && <Col>
-                    <SchoolInput
+                </Col>
+                <Col>
+                    {isAda && !validateUserSchool(initialUserValue) && <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
-                        required={!("role" in userToUpdate && isTutor(userToUpdate))}
-                    />
-                </Col>}
+                        required
+                    />}
+                </Col>
             </Row>
             <div className="text-muted small pb-2">
                 Providing a few extra pieces of information helps us understand the usage of {SITE_TITLE} across the UK and beyond.
@@ -156,7 +158,8 @@ const RequiredAccountInfoBody = () => {
     </Form>;
 };
 
-export const requiredAccountInformationModal = {
+export const requiredAccountInformationModal: ActiveModalWithoutState = {
     title: "Required account information",
     body: <RequiredAccountInfoBody />,
+    size: "lg"
 };
