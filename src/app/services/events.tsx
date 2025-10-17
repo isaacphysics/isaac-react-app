@@ -6,7 +6,7 @@ import {
     zeroOrLess
 } from "./";
 import {AugmentedEvent, PotentialUser} from "../../IsaacAppTypes";
-import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
+import {DateString, FRIENDLY_DATE, SHORT_FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
 import React from "react";
 import {Link} from "react-router-dom";
 import {Immutable} from "immer";
@@ -43,6 +43,22 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
         </>;
     }
 };
+
+export const formatEventCardDateSlim = (event: AugmentedEvent) => {
+    // no recurring events – these have moved to programs
+    if (event.isMultiDay) {
+        return <>
+            <DateString formatter={SHORT_FRIENDLY_DATE}>{event.date}</DateString> — <DateString formatter={SHORT_FRIENDLY_DATE}>{event.endDate}</DateString>
+        </>;
+    } else {
+        return <>
+            <DateString formatter={FRIENDLY_DATE}>{event.date}</DateString>
+            {/* <br/>
+            <DateString formatter={TIME_ONLY}>{event.date}</DateString> — <DateString formatter={TIME_ONLY}>{event.endDate}</DateString> */}
+        </>;
+
+    }
+};       
 
 export const formatAvailabilityMessage = (event: AugmentedEvent) => {
     if (event.isWaitingListOnly) {

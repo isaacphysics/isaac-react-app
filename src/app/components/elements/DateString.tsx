@@ -6,6 +6,8 @@ const dateLocale = "en-GB";
 export const TIME_ONLY = new Intl.DateTimeFormat(dateLocale, {hour: "numeric", minute: "2-digit", hour12: false});
 // 22/01/2020
 export const NUMERIC_DATE = new Intl.DateTimeFormat(dateLocale);
+// 22 Jan 2020
+export const SHORT_FRIENDLY_DATE = new Intl.DateTimeFormat(dateLocale, {day: "numeric", month: "short", year: "numeric"});
 // Wed, 22 Jan 2020
 export const FRIENDLY_DATE = new Intl.DateTimeFormat(dateLocale, {weekday: "short", day: "numeric", month: "short", year: "numeric"});
 // 22/01/2020, 13:00:00
@@ -71,4 +73,4 @@ export function getFriendlyDaysUntil(date: number | Date) : NonNullable<ReactNod
     if (result) return <HoverableTooltip tooltip={formatDate(date, FRIENDLY_DATE)}>{result}</HoverableTooltip>;
 
     return `on ${FRIENDLY_DATE.format(new Date(date))}`;
-}
+};
