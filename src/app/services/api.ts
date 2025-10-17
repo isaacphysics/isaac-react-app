@@ -31,7 +31,6 @@ export const endpoint = axios.create({
 
 endpoint.interceptors.response.use((response) => {
     if (response.status >= 500) {
-        // eslint-disable-next-line no-console
         console.warn("Uncaught error from API:", response);
     }
     return response;
@@ -43,7 +42,6 @@ endpoint.interceptors.response.use((response) => {
         } else {
             handleServerError();
         }
-        // eslint-disable-next-line no-console
         console.warn("Error from API:", error);
     }
     return Promise.reject(error);
@@ -84,7 +82,7 @@ export const api = {
             return endpoint.post(`/users/resetpassword/${params.token}`, securePadPasswordReset({password: params.password}));
         },
         updateCurrent: (registeredUser: Immutable<ValidationUser>, userPreferences: UserPreferencesDTO, passwordCurrent: string | null, registeredUserContexts?: UserContext[])
-            :  AxiosPromise<Immutable<ApiTypes.RegisteredUserDTO>> =>
+        :  AxiosPromise<Immutable<ApiTypes.RegisteredUserDTO>> =>
         {
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent, registeredUserContexts});
         },

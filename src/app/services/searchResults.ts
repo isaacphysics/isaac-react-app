@@ -233,15 +233,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
 ],
 // Ada:
 [
-    {
-        id: "quiz",
-        title: "My quizzes",
-        terms: ["quiz", "quizzes"],
-        summary: "View the quizzes that you have made.",
-        url: "/quizzes",
-        hash: "quizzes",
-        type: SEARCH_RESULT_TYPE.SHORTCUT
-    }
+    // No Ada-specific shortcuts currently
 ]);
 searchList.push(...siteShortcuts);
 

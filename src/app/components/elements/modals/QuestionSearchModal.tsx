@@ -205,21 +205,26 @@ export const QuestionSearchModal = (
         <Col className="col-12 col-xl-3 mt-4">
             <Row>
                 <Col className={isPhy && !isBookSearch ? "col-12 col-lg-6 col-xl-12" : ""}>
-                    {isAda && <CollapsibleList title={<span className="ms-n3">Topic</span>} expanded={listState.topics.state} className="mb-3"
-                        toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}>
+                    {isAda && <CollapsibleList 
+                        title={<span className="ms-n3">Topic</span>} 
+                        expanded={listState.topics.state} 
+                        className="mb-3"
+                        toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
+                    >
                         {groupBaseTagOptions.map((tag, index) => (
-                            <li key={index} style={{listStyle: "none"}}>
-                                <CollapsibleList title={tag.label} asSubList
-                                    expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
-                                    toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}>
-                                    {tag.options.map((topic, index) => (
-                                        <li className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} style={{listStyle: "none"}} key={index}>
-                                            <StyledCheckbox color="primary" checked={searchTopics.includes(topic.value)}
-                                                onChange={() => setSearchTopics(s => s.includes(topic.value) ? s.filter(v => v !== topic.value) : [...s, topic.value])}
-                                                label={<span>{topic.label}</span>} className="ps-3"/>
-                                        </li>))}
-                                </CollapsibleList>
-                            </li>))}
+                            <CollapsibleList title={tag.label} asSubList
+                                expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
+                                toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
+                                key={index} tag={"li"}
+                            >
+                                {tag.options.map((topic, index) => (
+                                    <li className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} style={{listStyle: "none"}} key={index}>
+                                        <StyledCheckbox color="primary" checked={searchTopics.includes(topic.value)}
+                                            onChange={() => setSearchTopics(s => s.includes(topic.value) ? s.filter(v => v !== topic.value) : [...s, topic.value])}
+                                            label={<span>{topic.label}</span>} className="ps-3"/>
+                                    </li>))}
+                            </CollapsibleList>
+                        ))}
                     </CollapsibleList>}
                     {isPhy && <div className="mb-2">
                         <Label htmlFor="question-search-book">Book</Label>

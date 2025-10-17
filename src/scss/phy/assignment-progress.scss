@@ -18,12 +18,6 @@ $table-selected-border: 2px solid rgb(75, 157, 252);
   text-align: center;
 }
 
-.assignment-progress-table-wrapper {
-  display: block;
-  max-height: 65vh;
-  overflow-y: auto;
-}
-
 .progress-table {
   .selected {
     border-left: $table-selected-border;

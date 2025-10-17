@@ -15,7 +15,6 @@
  * when read by a screenreader.
  */
 
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import katex from "katex";
 import {dropZoneRegex} from "./";
 
