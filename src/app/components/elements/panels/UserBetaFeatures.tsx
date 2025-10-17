@@ -39,14 +39,14 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
         </>}
         rightColumn={<>
             <div className="pt-2"/>
-            <WithLinkableSetting className={"beta-feature"} id={"hide-previous-q-attempts-feature"}>
+            <WithLinkableSetting id={"hide-previous-q-attempts-feature"}>
                 <b><RevisionModeInput {...{displaySettings, setDisplaySettings}}/></b>
                 <p id="revision-helptext">{`This feature lets you answer questions ${siteSpecific("that you have answered before, without seeing your old answer.", "again, even if you've answered them before.")} It's useful if you are reviewing a topic before a test or exam.`}</p>
             </WithLinkableSetting>
             {/* Temporarily staff-only until LLM-marked questions are properly configured (and won't work for staff immediately regardless) */}
             {(isStaff(user) || isAda) && <>
                 <div className="pt-2"/>
-                <WithLinkableSetting className={"beta-feature"} id={"consent-to-openai-marking-feature"}>
+                <WithLinkableSetting id={"consent-to-openai-marking-feature"}>
                     <StyledCheckbox checked={consentSettings.OPENAI ?? false}
                         onChange={e => {
                             setConsentSettings((oldCS) => ({...oldCS, OPENAI: e.target.checked}));
