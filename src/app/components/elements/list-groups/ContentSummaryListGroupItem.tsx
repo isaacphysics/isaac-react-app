@@ -10,8 +10,6 @@ import {
     isAda,
     isIntendedAudience,
     isPhy,
-    isStaff,
-    isTeacherOrAbove,
     notRelevantMessage,
     SEARCH_RESULT_TYPE,
     siteSpecific,
