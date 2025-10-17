@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Card, CardBody, CardImg, CardProps, CardText, CardTitle} from "reactstrap";
+import {Card, CardBody, CardImg, CardProps, CardText} from "reactstrap";
 import {IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper, siteSpecific} from "../../../services";
 import {AdaCard} from "./AdaCard";

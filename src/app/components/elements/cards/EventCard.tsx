@@ -38,10 +38,10 @@ const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
                             : <IconText icon="icon-cross">Booking closed</IconText>
         }
     </>;
-}
+};
 
 export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & CardProps) => {
-    const {id, title, subtitle, eventThumbnail, location, date, hasExpired} = event;
+    const {id, title, eventThumbnail, date, hasExpired} = event;
 
     const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
