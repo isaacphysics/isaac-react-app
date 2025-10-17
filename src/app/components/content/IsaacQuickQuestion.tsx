@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from "react";
-import {Alert, Button, Col, Row} from "reactstrap";
+import {Button, Col, Row} from "reactstrap";
 import {ContentDTO, IsaacQuickQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {logAction, useAppDispatch} from "../../state";
@@ -7,6 +7,8 @@ import {determineFastTrackSecondaryAction, FastTrackPageProperties, isAda, isPhy
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import classNames from "classnames";
 import {useLocation} from "react-router-dom";
+
+const elemID = (doc: IsaacQuickQuestionDTO) => { return doc.id?.split("|")[doc.id?.split("|").length - 1]; };
 
 // We have 3 possible styles for the Show/Hide options (default, fast-track and confidence questions)
 
@@ -18,17 +20,17 @@ interface OptionsProps {
     fastTrackInfo: FastTrackPageProperties;
 }
 
-function DefaultOptions({isVisible, toggle}: OptionsProps) {
+function DefaultOptions({isVisible, toggle, doc}: OptionsProps) {
     return <Row>
         <Col sm={12} md={siteSpecific({size: 10, offset: 1}, {size: 12})}>
-            <Button color="secondary" block className={classNames({"active": isVisible})} onClick={toggle}>
+            <Button color="secondary" block className={classNames({"active": isVisible})} onClick={toggle} id={`toggle-${elemID(doc)}`}>
                 {isVisible ? "Hide answer" : "Show answer"}
             </Button>
         </Col>
     </Row>;
 }
 
-function FastTrackOptions({isVisible, toggle, fastTrackInfo}: OptionsProps) {
+function FastTrackOptions({isVisible, toggle, doc, fastTrackInfo}: OptionsProps) {
     const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
 
     return <div
@@ -39,7 +41,7 @@ function FastTrackOptions({isVisible, toggle, fastTrackInfo}: OptionsProps) {
         </div>}
         <div className={"m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ps-sm-2 ps-md-0 ps-lg-3"}>
             <input
-                onClick={toggle} value={isVisible ? "Hide answer" : "Show answer"}
+                onClick={toggle} value={isVisible ? "Hide answer" : "Show answer"} id={`toggle-${elemID(doc)}`}
                 className={classNames("h-100 btn btn-secondary w-100", {"active": isVisible})}
             />
         </div>
@@ -67,7 +69,7 @@ function ConfidenceOptions({isVisible, setVisible, doc, fastTrackInfo}: OptionsP
         />
         {isVisible && <Row className="mt-3 no-print">
             <Col sm={12} md={!fastTrackInfo.isFastTrackPage ? siteSpecific({size: 10, offset: 1}, {size: 12}) : {}}>
-                <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isAda})} onClick={hideAnswer}>
+                <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isAda})} onClick={hideAnswer} id={`toggle-${elemID(doc)}`}>
                     Hide answer
                 </Button>
             </Col>
@@ -118,9 +120,9 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
                 {<Options isVisible={isVisible} setVisible={setVisible} toggle={toggle} fastTrackInfo={fastTrackInfo} doc={doc} />}
                 {isVisible && <Row>
                     <Col sm={12} md={!fastTrackInfo.isFastTrackPage ? siteSpecific({size: 10, offset: 1}, {size: 12}) : {}}>
-                        <Alert className={classNames("quick-q-alert", {"pb-0": isPhy})} color={isAda ? "hide" : "secondary"}>
+                        <output htmlFor={`toggle-${elemID(doc)}`} role="alert" className={classNames("alert-secondary quick-q-alert", {"p-3 pb-0": isPhy})} color={isAda ? "hide" : "secondary"}>
                             <IsaacContentValueOrChildren {...answer} />
-                        </Alert>
+                        </output>
                     </Col>
                 </Row>}
             </div>
