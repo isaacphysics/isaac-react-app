@@ -32,11 +32,11 @@ const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassNam
             <CardText>
                 {!url?.startsWith("http") ?
                     <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`${url}`}>
-                            Read more
+                        Read more
                     </Link>
                     :
                     <a className="focus-target btn btn-keyline" href={url} target="_blank" rel="noopener">
-                            Find out more
+                        Find out more
                     </a>
                 }
             </CardText>

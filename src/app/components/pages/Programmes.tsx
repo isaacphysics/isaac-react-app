@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { GenericPageSidebar, MainContent, ProgrammesSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, ProgrammesSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { IsaacProgrammeDTO, ProgrammeCard } from "../elements/cards/ProgrammeCard";
 import { ContentDTO } from "../../../IsaacApiTypes";
