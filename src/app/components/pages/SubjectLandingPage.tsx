@@ -5,11 +5,11 @@ import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { below, BookInfo, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, nextSeed, STAGE, STAGE_TO_LEARNING_STAGE, useDeviceSize } from "../../services";
+import { below, BookInfo, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, isStudent, nextSeed, STAGE, STAGE_TO_LEARNING_STAGE, useDeviceSize } from "../../services";
 import { AugmentedEvent, PageContextState } from "../../../IsaacAppTypes";
 import { Link } from "react-router-dom";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
-import { searchQuestions, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery } from "../../state";
+import { searchQuestions, selectors, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery } from "../../state";
 import { EventCard } from "../elements/cards/EventCard";
 import debounce from "lodash/debounce";
 import { IsaacSpinner } from "../handlers/IsaacSpinner";
@@ -155,9 +155,17 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
 
 export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
+    const user = useAppSelector(selectors.user.loggedInOrNull);
+
     useEffect(() => {
-        getEventsList({startIndex: 0, limit: 10, typeFilter: EventTypeFilter["All groups"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
-    }, []);
+        void getEventsList({
+            startIndex: 0,
+            limit: 10,
+            typeFilter: isStudent(user) ? EventTypeFilter["Student events"] : EventTypeFilter["All groups"],
+            statusFilter: EventStatusFilter["Upcoming events"],
+            stageFilter: [STAGE.ALL],
+        });
+    }, [getEventsList, user]);
 
     const books = getBooksForContext(context);
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
@@ -169,7 +177,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     />;
 };
 
-export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
+export const SubjectLandingPage = withRouter((_props: RouteComponentProps) => {
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
 
