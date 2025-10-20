@@ -59,7 +59,7 @@
 }
 
 @container question-metadata-access (max-width: 875.98px) and (min-width: 576px) {
-  $rhs-width: 200px;
+  $rhs-width: 227px;
 
   #metadata-subject-topics {
     flex-basis: calc(100% - #{$rhs-width});
