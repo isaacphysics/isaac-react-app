@@ -117,7 +117,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                         <h4 className="m-0">Interactive online books</h4>
                         <div className="section-divider-bold flex-grow-1"/>
                     </div>
-                    <div className={classNames("d-flex book-listing-container", {"flex-column col": !fullWidthBooks}, {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
+                    <div className={classNames("d-flex item-list-container", {"flex-column col": !fullWidthBooks}, {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
                         {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
                         {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-7">View more books</Button>}
                     </div>
@@ -142,7 +142,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
                 <h4 className="m-0">Events</h4>
                 <div className="section-divider-bold flex-grow-1"/>
             </div>
-            <Row className="h-100">
+            <Row className="h-100 item-list-container">
                 {relevantEvents.map((event, i) =>
                     <Col xs={12} md={6} lg={12} key={i}>
                         {event && <EventCard event={event} className={classNames("p-2", {"force-horizontal": !["md", "xs"].includes(deviceSize)})} />}

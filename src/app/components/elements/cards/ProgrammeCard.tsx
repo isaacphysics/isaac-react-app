@@ -21,7 +21,7 @@ interface ProgrammeCardProps extends CardProps {
 export const ProgrammeCard = ({ programme, ...rest}: ProgrammeCardProps) => {
     const {title, value, children, image, url} = programme;
     return <Card data-testid={"programme-pod"} {...rest} className={classNames("pod", rest.className)}>
-        {image && <a href={url} className="focus-target card-img-container">
+        {image && <a href={url} className="focus-target pod-img">
             <CardImg
                 top
                 src={image.src && apiHelper.determineImageUrl(image.src)}
