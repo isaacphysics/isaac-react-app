@@ -85,15 +85,24 @@ export const regexProcessMarkdown = (pageContext?: PageContextState) => (markdow
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
     };
     if (isPhy) {
-        let linkContext = "";
-        if (pageContext?.subject && isDefined(pageContext?.stage) && pageContext.stage.length === 1) {
-            linkContext = `/${pageContext.subject}/${pageContext.stage[0]}`;
+         if (pageContext?.subject && !isSingleStageContext(pageContext)) {
+            Object.assign(regexRules, {
+                [`[**Glossary**](/glossary?subjects=${pageContext.subject})`]: /\*\*Glossary\*\*/g,
+                [`[**Concepts**](/concepts?types=${pageContext.subject})`]: /\*\*Concepts\*\*/g,
+            });
         }
+        else {
+            let linkContext = "";
+            
+            if (pageContext?.subject && isSingleStageContext(pageContext)) {
+                linkContext = `/${pageContext.subject}/${pageContext.stage![0]}`;
+            }
 
-        Object.assign(regexRules, {
-            [`[**Glossary**](${linkContext}/glossary)`]: /\*\*Glossary\*\*/g,
-            [`[**Concepts**](${linkContext}/concepts)`]: /\*\*Concepts\*\*/g,
-        });
+            Object.assign(regexRules, {
+                [`[**Glossary**](${linkContext}/glossary)`]: /\*\*Glossary\*\*/g,
+                [`[**Concepts**](${linkContext}/concepts)`]: /\*\*Concepts\*\*/g,
+            });
+        }
     }
     Object.entries(regexRules).forEach(([replacement, rule]) =>
         markdown = markdown.replace(rule, replacement)
