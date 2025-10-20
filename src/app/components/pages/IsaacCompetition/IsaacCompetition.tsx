@@ -39,6 +39,14 @@ export const IsaacCompetition = () => {
     }
   };
 
+  const handleFaqClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault();
+    if (accordionRef.current) {
+      accordionRef.current.scrollIntoView({ behavior: "smooth" });
+      setOpen("4");
+    }
+  };
+
   const accordionSections = [
     { id: "0", title: accordion.internetOfEverything.title, section: accordion.internetOfEverything.section },
     { id: "1", title: accordion.projectIdeas.title, section: accordion.projectIdeas.section },
@@ -60,10 +68,10 @@ export const IsaacCompetition = () => {
           <Row>
             <h1 className="primary-heading pl-3">National Computer Science Competition</h1>
             <Col xs={12} md={6} lg={8} className="pb-3">
-              <p className="mt-4 body-text">{section1.header.section}</p>
+              <p className="mt-4 body-text">{section1.header.section1}</p>
+              <p className="mt-4 body-text">{section1.header.section2}</p>
               <p className="mt-4 mb-0 body-text">
-                <span style={{ fontWeight: 700 }}>{section1.note.heading}</span>
-                {` ${section1.note.entryDetails} `}
+                <span>{section1.note.entryDetails} </span>
                 <a
                   href={section1.note.xLink}
                   target="_blank"
@@ -98,29 +106,7 @@ export const IsaacCompetition = () => {
         <EntryFormHandler buttons={buttons} handleTermsClick={handleTermsClick} />
       </section>
       <section id="internetOfEverything" className="event-section">
-        <div className="event-section-background-img">
-          {/* <Container>
-            <Row className="py-4">
-              <Col xs={12} lg={6}>
-                <IoECard title={internetOfEverything.ioe.title} content={internetOfEverything.ioe.section} />
-              </Col>
-              <Col xs={12} lg={6} className="mt-4 mt-lg-0">
-                <IoECard
-                  title={internetOfEverything.examples.title}
-                  content={internetOfEverything.examples.section}
-                  isList
-                />
-              </Col>
-            </Row>
-            <div className="pb-4">
-              <TestimonialComment
-                imageSrc="/assets/star.svg"
-                altText="Star"
-                text={internetOfEverything.testamonial.text}
-              />
-            </div>
-          </Container> */}
-        </div>
+        <div className="event-section-background-img"></div>
       </section>
 
       <section id="competition-information-section">
@@ -131,13 +117,14 @@ export const IsaacCompetition = () => {
                 title={section3.howItWorks.title}
                 content={section3.howItWorks.steps}
                 className="competition-information-default-background"
+                onFaqClick={handleFaqClick}
               />
             </Col>
             <Col xs={12} lg={6} className="mt-4 mt-lg-0">
               <InformationCard
                 title={section3.whyJoin.title}
-                description={section3.whyJoin.description}
                 content={section3.whyJoin.benefits}
+                isList
                 className="competition-information-default-background"
               />
             </Col>

@@ -250,7 +250,7 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
             <h2 className="pt-3 pb-2 entry-form-section-title mb-0">Your students</h2>
             <Row>
               <Col lg={12}>
-                <a href="/groups" className="mb-4" style={{ color: "#1D70B8", textDecoration: "underline" }}>
+                <a href="/groups" className="mb-4 manage-group-link">
                   Manage students and groups here
                 </a>
               </Col>

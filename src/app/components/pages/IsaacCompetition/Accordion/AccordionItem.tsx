@@ -18,7 +18,7 @@ const renderSectionContent = (section: NestedStringArray[]) => {
         <li key={`nested-list-item-${level}-${index}`}>
           {Array.isArray(item) ? (
             renderNestedList(item, level + 1)
-          ) : typeof item === "string" && item.includes("<a") ? (
+          ) : typeof item === "string" && item.includes("<") ? (
             <span dangerouslySetInnerHTML={{ __html: item }} />
           ) : (
             item
@@ -36,7 +36,7 @@ const renderSectionContent = (section: NestedStringArray[]) => {
         } else {
           return (
             <p key={`item-${index}`}>
-              {typeof item === "string" && item.includes("<a") ? (
+              {typeof item === "string" && (item.includes("<") || item.includes("&lt;")) ? (
                 <span dangerouslySetInnerHTML={{ __html: item }} />
               ) : (
                 item
