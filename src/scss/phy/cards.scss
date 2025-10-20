@@ -23,13 +23,32 @@ div:has(> .pod) {
     display: flex;
     flex-direction: row;
     width: 100%;
-    padding: $card-spacer-x;
+    padding: $card-spacer-y $card-spacer-x;
+
+    &.pod-clickable {
+      background-color: transparent;
+      box-shadow: none;
+      padding-top: 0;
+
+      a::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      a:hover ~ div .pod-title {
+        text-decoration: underline;
+      }
+    }
     
     > a.pod-img {
       width: 35%;
       min-width: 35%;
       height: 100%;
-      padding-right: $card-spacer-x;
     
       > img {
         border-radius: $card-inner-border-radius;
@@ -54,6 +73,7 @@ div:has(> .pod) {
   border: none;
   height: 100%;
   width: 100%;
+  position: relative;
   
   a:has(> img) {
     height: min-content;
@@ -69,7 +89,6 @@ div:has(> .pod) {
   }
 
   .event-pod-img {
-    position: relative;
     height: min-content;
 
     .event-pod-badge {
@@ -79,8 +98,8 @@ div:has(> .pod) {
 
     .event-pod-hex {
       position: absolute;
-      top: 1px;
-      right: 5%;
+      top: 0;
+      left: 7%;
       color: white;
 
       > b {
@@ -96,5 +115,9 @@ div:has(> .pod) {
 
   .expired {
     filter: grayscale(1);
+  }
+
+  .fixed-height {
+    @include fixed-text-height(1.5rem, 2);
   }
 }

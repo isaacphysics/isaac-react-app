@@ -114,7 +114,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             {books?.length
                 ? <>
                     <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                        <h4 className="m-0">Interactive online books</h4>
+                        <h4 className="m-0">Interactive online books <span className="text-theme">({books.length})</span></h4>
                         <div className="section-divider-bold flex-grow-1"/>
                     </div>
                     <div className={classNames("d-flex item-list-container", {"flex-column col": !fullWidthBooks}, {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
@@ -139,13 +139,13 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
         </div>
         {!!relevantEvents?.length && <div className="d-flex flex-column mt-3">
             <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                <h4 className="m-0">Events</h4>
+                <h4 className="m-0">Events <span className="text-theme">({relevantEvents.length})</span></h4>
                 <div className="section-divider-bold flex-grow-1"/>
             </div>
             <Row className="h-100 item-list-container">
                 {relevantEvents.map((event, i) =>
-                    <Col xs={12} md={6} lg={12} key={i}>
-                        {event && <EventCard event={event} className={classNames("p-2", {"force-horizontal": !["md", "xs"].includes(deviceSize)})} />}
+                    <Col xs={12} key={i}>
+                        {event && <EventCard event={event} layout={"landing-page"} className={classNames({"force-horizontal": !['xs', 'md'].includes(deviceSize)})} />}
                     </Col>
                 )}
             </Row>

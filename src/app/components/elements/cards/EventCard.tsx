@@ -40,8 +40,8 @@ const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
     </>;
 };
 
-export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & CardProps) => {
-    const {id, title, eventThumbnail, date, hasExpired} = event;
+export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEvent, layout?: "landing-page"} & CardProps) => {
+    const {id, title, subtitle, eventThumbnail, date, hasExpired} = event;
 
     const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
@@ -49,7 +49,7 @@ export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & Car
 
     const subject = getThemeFromTags(event.tags) !== "neutral" ? getThemeFromTags(event.tags) : "physics";
 
-    return <Card {...rest} className={classNames("pod", rest.className)} data-bs-theme={subject}>
+    return <Card {...rest} className={classNames("pod", rest.className, {"pod-clickable": layout === "landing-page"})} data-bs-theme={subject}>
         {eventThumbnail &&
             <a className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} href={`/events/${id}`}>
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby="event-title" />
@@ -72,21 +72,21 @@ export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & Car
                         <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
                     </div>}
             </a>}
-        <CardBody className="d-flex flex-column p-3">
+        <CardBody className="d-flex flex-column">
             {title && <CardTitle className="mb-0 pod-title" id="event-title"><h5>{title}</h5></CardTitle>}
-            {/* {subtitle && <CardText className="mb-0">
+            {subtitle && <CardText className="mb-2 fixed-height">
                 {subtitle}
-            </CardText>} */}
+            </CardText>}
             <Spacer/>
             <CardText tag="div" className="d-flex flex-column gap-2 mt-2 mb-3">
                 <PhysicsCardContents event={event} />
             </CardText>
-            <CardText>
+            {layout !== "landing-page" && <CardText>
                 <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`/events/${id}`}>
                     Read more
                     <span className='visually-hidden'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
                 </Link>
-            </CardText>
+            </CardText>}
         </CardBody>
     </Card>;
 };
