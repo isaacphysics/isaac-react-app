@@ -9,7 +9,7 @@ import { useActiveGroups } from "./useActiveGroups";
 import Select from "react-select";
 import CustomTooltip from "../../../elements/CustomTooltip";
 
-const COMPETITON_ID = "20250131_isaac_competition";
+const COMPETITON_ID = "20251103_isaac_competition";
 interface CompetitionEntryFormProps {
   handleTermsClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
@@ -19,7 +19,8 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
   const [projectTitle, setProjectTitle] = useState("");
   const [projectLink, setProjectLink] = useState("");
-  const [submissionAttempted, setSubmissionAttempted] = useState(false); // Add this state
+  const [submissionAttempted, setSubmissionAttempted] = useState(false);
+  const [isLoadingMembers, setIsLoadingMembers] = useState(false);
   const activeGroups = useActiveGroups();
   const [getGroupMembers] = isaacApi.endpoints.getGroupMembers.useLazyQuery();
   const targetUser = useAppSelector(selectors.user.orNull);
@@ -27,38 +28,42 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
   const [memberSelectionError, setMemberSelectionError] = useState<string>("");
   const [userToUpdate, setUserToUpdate] = useState(targetUser ? { ...targetUser, password: null } : { password: null });
 
-  // Create a wrapper function for setUserToUpdate
   const handleUserUpdate = (user: any) => {
     setUserToUpdate(user);
   };
 
-  // Create a custom school validation for the competition
   const isSchoolValidForCompetition = () => {
     if (!userToUpdate) return false;
 
-    // Check if user has explicitly selected "not associated with school"
     if ((userToUpdate as any).schoolOther === "N/A") {
-      return false; // Competition requires a school
+      return false;
     }
 
-    // Check if user has a valid school ID or manually entered school
     return !!(
       (userToUpdate as any).schoolId ||
       ((userToUpdate as any).schoolOther && (userToUpdate as any).schoolOther !== "N/A")
     );
   };
 
-  // Get the selected group from activeGroups (which gets updated with members from Redux)
   const selectedGroup = selectedGroupId ? activeGroups.find((group) => group.id === selectedGroupId) || null : null;
 
   useEffect(() => {
     if (selectedGroup?.id && !selectedGroup.members) {
-      getGroupMembers(selectedGroup.id);
+      setIsLoadingMembers(true);
+      getGroupMembers(selectedGroup.id)
+        .unwrap()
+        .then(() => {
+          setIsLoadingMembers(false);
+        })
+        .catch(() => {
+          setIsLoadingMembers(false);
+        });
+    } else if (selectedGroup?.members) {
+      setIsLoadingMembers(false);
     }
   }, [selectedGroup, getGroupMembers]);
 
   useEffect(() => {
-    // Clear selected members when group changes
     setSelectedMembers([]);
   }, [selectedGroupId]);
 
@@ -68,7 +73,6 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
     if (selectedValues.length > 4) {
       setMemberSelectionError("You can only select up to 4 students");
 
-      // Clear the error after 3 seconds
       setTimeout(() => {
         setMemberSelectionError("");
       }, 3000);
@@ -80,18 +84,16 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
     setSelectedMembers(selectedValues);
   };
 
-  // Update the validation logic to use the custom validation
   const isSchoolValid = isSchoolValidForCompetition();
   const isSubmitDisabled =
     !projectTitle || !projectLink || !selectedGroup || selectedMembers.length === 0 || !isSchoolValid;
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    setSubmissionAttempted(true); // Set this when form is submitted
+    setSubmissionAttempted(true);
 
-    // Check if school is valid before proceeding
     if (!isSchoolValid) {
-      return; // Don't submit if school is not valid
+      return;
     }
 
     const selectedGroupObj = activeGroups.find((group) => group.id === selectedGroupId);
@@ -105,17 +107,19 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
       reserveUsersOnCompetition(COMPETITON_ID, reservableIds, projectLink, projectTitle, groupName);
     }
 
-    // Reset form state
     setProjectTitle("");
     setProjectLink("");
     setSelectedMembers([]);
     setSelectedGroupId(null);
   };
 
-  // Extract the nested ternary into a function
   const getPlaceholderText = () => {
     if (memberSelectionError) {
       return memberSelectionError;
+    }
+
+    if (isLoadingMembers) {
+      return "Loading students...";
     }
 
     if (selectedGroup) {
@@ -139,14 +143,16 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
       : null;
   }
 
+  const showNoMembersWarning =
+    selectedGroup && selectedGroup.members !== undefined && !isLoadingMembers && selectedGroup.members.length === 0;
+
   return (
-    <div className="py-5">
+    <div className="pt-5">
       <div className="entry-form-background-img entry-form-section">
         <Container className="pb-2">
           <Form onSubmit={handleSubmit}>
             <h1 className="py-4 entry-form-title">Enter the competition</h1>
 
-            {/* Your account information section */}
             <h2 className="py-3 entry-form-section-title">
               Your account information (
               <a href="/account" style={{ color: "#FF3A6E", textDecoration: "underline" }}>
@@ -165,22 +171,22 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                   defaultValue={targetUser?.loggedIn ? targetUser.givenName || "" : ""}
                 />
                 <FormInput
-                  label="Last name"
-                  type="text"
-                  id="lastName"
-                  required
-                  disabled={true}
-                  defaultValue={targetUser?.loggedIn ? targetUser?.familyName || "" : ""}
-                />
-              </Col>
-              <Col lg={6}>
-                <FormInput
                   label="Email address"
                   type="email"
                   id="email"
                   required
                   disabled={true}
                   defaultValue={targetUser?.loggedIn ? targetUser?.email || "" : ""}
+                />
+              </Col>
+              <Col lg={6}>
+                <FormInput
+                  label="Last name"
+                  type="text"
+                  id="lastName"
+                  required
+                  disabled={true}
+                  defaultValue={targetUser?.loggedIn ? targetUser?.familyName || "" : ""}
                 />
                 {targetUser && (
                   <FormGroup>
@@ -190,12 +196,11 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                     <SchoolInput
                       userToUpdate={userToUpdate}
                       setUserToUpdate={handleUserUpdate}
-                      submissionAttempted={submissionAttempted} // Pass the submission state
+                      submissionAttempted={submissionAttempted}
                       disableInput={true}
                       required={true}
                       showLabel={false}
                     />
-                    {/* Tooltip using competition-specific CSS classes */}
                     {!isSchoolValid && (
                       <div className="entry-form-validation-tooltip">
                         <div className="tooltip-content">
@@ -213,7 +218,6 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
               </Col>
             </Row>
 
-            {/* Project details section */}
             <h2 className="py-3 entry-form-section-title">Project details</h2>
             <Row>
               <Col lg={6}>
@@ -243,7 +247,6 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
               </Col>
             </Row>
 
-            {/* Your students section */}
             <h2 className="pt-3 pb-2 entry-form-section-title mb-0">Your students</h2>
             <Row>
               <Col lg={12}>
@@ -336,6 +339,8 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                     required
                     isClearable
                     placeholder={getPlaceholderText()}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
                     value={
                       selectedGroup?.members
                         ? selectedGroup.members
@@ -361,16 +366,18 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                           }))
                         : []
                     }
-                    isDisabled={!selectedGroup?.members?.length}
+                    isDisabled={!selectedGroup || isLoadingMembers || !selectedGroup?.members?.length}
                     closeMenuOnSelect={false}
                     maxMenuHeight={200}
+                    isLoading={isLoadingMembers}
                     styles={{
                       control: (provided) => ({
                         ...provided,
                         border: "1px solid #ced4da",
                         borderRadius: "0.375rem",
                         minHeight: "38px",
-                        backgroundColor: !selectedGroup?.members?.length ? "#f8f9fa" : "white",
+                        backgroundColor:
+                          !selectedGroup || isLoadingMembers || !selectedGroup?.members?.length ? "#f8f9fa" : "white",
                       }),
                       menu: (provided) => ({
                         ...provided,
@@ -378,7 +385,7 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                       }),
                     }}
                   />
-                  {selectedGroup && (!selectedGroup.members || selectedGroup.members.length === 0) && (
+                  {showNoMembersWarning && (
                     <div className="entry-form-validation-tooltip" style={{ marginTop: "12px" }}>
                       <div className="tooltip-content">
                         <div className="tooltip-arrow"></div>

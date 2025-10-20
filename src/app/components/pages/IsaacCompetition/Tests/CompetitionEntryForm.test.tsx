@@ -1,5 +1,5 @@
 import React from "react";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 import { API_PATH } from "../../../../services";
@@ -219,11 +219,15 @@ describe("CompetitionEntryForm", () => {
       ];
       setupTest(undefined, groupsWithNoMembers);
 
-      const groupSelect = screen.getByText("Choose from the groups you've created or create one first");
+      const groupSelect = await screen.getByText("Choose from the groups you've created or create one first");
       await user.click(groupSelect);
-      await user.click(screen.getByText("Empty Group"));
 
-      expect(screen.getByText("No members found in this group")).toBeInTheDocument();
+      const emptyGroupOption = await screen.findByText("Empty Group");
+      await user.click(emptyGroupOption);
+
+      await waitFor(() => {
+        expect(screen.getByText("No members found in this group")).toBeInTheDocument();
+      });
     });
 
     it("should show member selection error when more than 4 students selected", async () => {

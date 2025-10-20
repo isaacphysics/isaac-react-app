@@ -124,7 +124,7 @@ export const IsaacCompetition = () => {
       </section>
 
       <section id="competition-information-section">
-        <Container className="pt-4 pb-4 z1">
+        <Container className="pt-5 pb-4 z1">
           <Row className="py-4">
             <Col xs={12} lg={6}>
               <InformationCard
