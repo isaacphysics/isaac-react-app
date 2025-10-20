@@ -34,7 +34,7 @@ const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassNam
                 <CardImage {...image}/>
             </a>
         )}
-        <CardBody className="d-flex flex-column ps-0">
+        <CardBody className="d-flex flex-column">
             {showTitle && <h5>{title}</h5>}
             {value && <CardText>
                 {value}
