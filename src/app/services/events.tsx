@@ -51,11 +51,7 @@ export const formatEventCardDateSlim = (event: AugmentedEvent) => {
             <DateString formatter={SHORT_FRIENDLY_DATE}>{event.date}</DateString> — <DateString formatter={SHORT_FRIENDLY_DATE}>{event.endDate}</DateString>
         </>;
     } else {
-        return <>
-            <DateString formatter={FRIENDLY_DATE}>{event.date}</DateString>
-            {/* <br/>
-            <DateString formatter={TIME_ONLY}>{event.date}</DateString> — <DateString formatter={TIME_ONLY}>{event.endDate}</DateString> */}
-        </>;
+        return <DateString formatter={FRIENDLY_DATE}>{event.date}</DateString>;
 
     }
 };       
