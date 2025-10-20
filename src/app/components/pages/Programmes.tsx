@@ -86,7 +86,7 @@ export const Programmes = () => {
                 <ShowLoading until={programmes} thenRender={(programmes) => {
                     return <ul className="list-unstyled mt-4">
                         {programmes.map((programme) => (
-                            <ProgrammeCard tag={"li"} key={programme.id} className="mb-4" programme={programme} />
+                            <ProgrammeCard id={programme.id?.slice(programme.id?.indexOf("_") + 1)} tag={"li"} key={programme.id} className="mb-4" programme={programme} />
                         ))}
                     </ul>;
                 }} />

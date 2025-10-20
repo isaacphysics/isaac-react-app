@@ -1679,7 +1679,12 @@ export const ProgrammesSidebar = ({programmes, ...rest}: ProgrammesSidebarProps)
                         key={programme.id}
                         checkboxTitle={programme.title}
                         checked={false}
-                        onClick={() => programme.url && history.push(programme.url)}
+                        onClick={() => {
+                            if (programme.id) {
+                                history.replace({pathname: history.location.pathname, hash: `${programme.id.slice(programme.id.indexOf("_") + 1)}`});
+                                document.getElementById(programme.id.slice(programme.id.indexOf("_") + 1))?.scrollIntoView({behavior: "smooth"});
+                            }
+                        }}
                     />
                 )}
             </li>
