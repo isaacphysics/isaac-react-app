@@ -12,7 +12,7 @@ interface IsaacGlossaryTermProps {
 
 const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossaryTermProps, ref: Ref<HTMLParagraphElement>) => {
     return <Row className={"d-inline-flex d-md-flex"} key={doc.id}>
-        <Col md={inPortal ? 2 : 3} className={"glossary-term-name"}>
+        <Col md={3} className={"glossary-term-name"}>
             <p ref={ref} className={inPortal ? "mb-0 mb-md-3" : "fw-bold"}>
                 {linkToGlossary ? 
                     <a href={`#${(doc.id && formatGlossaryTermId(doc.id)) ?? ""}`}>
@@ -23,7 +23,7 @@ const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossa
                 <span className="only-print">: </span>
             </p>
         </Col>
-        <Col md={inPortal ? 10 : 7} className={"glossary-term-definition"}>
+        <Col md={inPortal ? 9 : 7} className={"glossary-term-definition"}>
             {doc.explanation && <IsaacContent doc={doc.explanation} />}
         </Col>
     </Row>;
