@@ -50,6 +50,7 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                 <p id="show-inaccessible-helptext">{`Enabling this will display warnings on certain content that may be inaccessible to assistive technologies.`}</p>
             </WithLinkableSetting>
             <div className="section-divider" />
+            <div className="pt-2"/>
             <WithLinkableSetting id={"prefer-mathml-feature"}>
                 <b><StyledCheckbox checked={accessibilitySettings.PREFER_MATHML ?? false}
                     onChange={e => {
