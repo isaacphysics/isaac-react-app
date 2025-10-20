@@ -1,5 +1,5 @@
 import { PageContextState } from "../../../../IsaacAppTypes";
-import {dropZoneRegex, inlineQuestionRegex, isDefined, isPhy, MARKDOWN_RENDERER} from "../../../services";
+import {dropZoneRegex, inlineQuestionRegex, isDefined, isPhy, isSingleStageContext, MARKDOWN_RENDERER} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
 
@@ -85,7 +85,7 @@ export const regexProcessMarkdown = (pageContext?: PageContextState) => (markdow
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
     };
     if (isPhy) {
-         if (pageContext?.subject && !isSingleStageContext(pageContext)) {
+        if (pageContext?.subject && !isSingleStageContext(pageContext)) {
             Object.assign(regexRules, {
                 [`[**Glossary**](/glossary?subjects=${pageContext.subject})`]: /\*\*Glossary\*\*/g,
                 [`[**Concepts**](/concepts?types=${pageContext.subject})`]: /\*\*Concepts\*\*/g,
@@ -93,7 +93,6 @@ export const regexProcessMarkdown = (pageContext?: PageContextState) => (markdow
         }
         else {
             let linkContext = "";
-            
             if (pageContext?.subject && isSingleStageContext(pageContext)) {
                 linkContext = `/${pageContext.subject}/${pageContext.stage![0]}`;
             }
