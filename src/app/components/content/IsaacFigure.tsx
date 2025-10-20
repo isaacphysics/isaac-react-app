@@ -47,7 +47,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                     `Figure\u00A0${figureNumbers[figId]}` : "Figure";
                 return <figure>
                     <div className="text-center position-relative">
-                        <button className="figure-fullscreen" onClick={() => {
+                        <button className="figure-fullscreen" aria-label="Expand figure" onClick={() => {
                             dispatch(openActiveModal(FigureModal({
                                 path, 
                                 altText: doc.altText,

@@ -51,8 +51,8 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
 
     return <Card {...rest} className={classNames("pod", rest.className, {"pod-clickable": layout === "landing-page"})} data-bs-theme={subject}>
         {eventThumbnail &&
-            <a className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} href={`/events/${id}`}>
-                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby="event-title" />
+            <Link className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} to={`/events/${id}`}>
+                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`} />
                 {hasExpired &&
                     <div className="event-pod-badge">
                         <Badge className="badge rounded-pill">EXPIRED</Badge>
@@ -71,9 +71,9 @@ export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEven
                         <b>STUDENT EVENT</b>
                         <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
                     </div>}
-            </a>}
+            </Link>}
         <CardBody className="d-flex flex-column">
-            {title && <CardTitle className="mb-0 pod-title" id="event-title"><h5>{title}</h5></CardTitle>}
+            {title && <CardTitle className="mb-0 pod-title" id={`event-title-${id}`}><h5>{title}</h5></CardTitle>}
             {subtitle && <CardText className="mb-2 fixed-height">
                 {subtitle}
             </CardText>}

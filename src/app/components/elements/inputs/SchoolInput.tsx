@@ -127,7 +127,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 onChange={handleSetSchool}
                 loadOptions={searchSchoolsFn}
                 filterOption={() => true}
-                formatCreateLabel={(input) => <span>Use &quot;{input}&quot; as your school name</span>}
+                formatCreateLabel={(input) => `Use "${input}" as your school name`}
             />
         </React.Fragment>}
 
