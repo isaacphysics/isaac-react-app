@@ -58,7 +58,7 @@ const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
                 id: "04_biology_challenges",
                 title: "Biology Monthly Challenges",
                 value: "A series of monthly online challenges to develop problem solving skills in biology. Certificates are awarded termly.",
-                url: "/pages/biology_challenges",
+                url: "/pages/biology_extension_questions",
                 image: {
                     src: "/assets/phy/programmes/biology_challenges.jpg",
                 },
@@ -77,6 +77,15 @@ export const Programmes = () => {
             setProgrammes(data);
         });
     }, []);
+
+    useEffect(() => {
+        // scroll to the selected programme, if it exists
+        // this needs to be in its own useEffect to ensure programmes have been rendered first
+        if (window.location.hash) {
+            const programmeId = window.location.hash.substring(1);
+            document.getElementById(programmeId)?.scrollIntoView({behavior: "smooth"});
+        }
+    }, [programmes]);
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "hex", icon: "icon-events"}} />
