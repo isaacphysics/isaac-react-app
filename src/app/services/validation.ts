@@ -7,14 +7,14 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, isAda, isPhy, isStudent, isTeacherOrAbove, isTutor, siteSpecific, STAGE} from "./";
+import {EXAM_BOARD, isAda, isPhy, isStudent, isTutor, siteSpecific, STAGE} from "./";
 import {Immutable} from "immer";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0;}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0;}
 
 export function validateName(userName?: string | null) {
-    return userName && userName.length > 0 && userName.length <= 255 && !userName.includes('*');
+    return !!userName && userName.length > 0 && userName.length <= 255 && !userName.includes('*');
 }
 
 export function validateCountryCode(countryCode: string | undefined) {
@@ -22,7 +22,7 @@ export function validateCountryCode(countryCode: string | undefined) {
 }
 
 export const validateEmail = (email?: string) => {
-    return email && email.length > 0 && /.*@.+\.[^.]+$/.test(email);
+    return !!email && email.length > 0 && /.*@.+\.[^.]+$/.test(email);
 };
 
 export const isValidGameboardId = (gameboardId?: string) => {
@@ -50,7 +50,7 @@ export const validatePassword = (password: string) => {
 };
 
 export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences | null) => {
-    return emailPreferences && [
+    return !!emailPreferences && [
         emailPreferences.ASSIGNMENTS,
         emailPreferences.NEWS_AND_UPDATES
     ].concat(siteSpecific([emailPreferences.EVENTS], [])).reduce(
@@ -62,7 +62,15 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
 
 export function validateUserContexts(userContexts?: UserContext[], defaultIsValid=false): boolean {
     if (userContexts === undefined) {return false;}
-    if (defaultIsValid && userContexts.length === 1 && Object.keys(userContexts[0]).length === 0) {return true;}
+    if (defaultIsValid) {
+        if (userContexts.length === 1 && Object.keys(userContexts[0]).length === 0) {
+            // Old default
+            return true;
+        } else if (userContexts.length === 0) {
+            // New default
+            return true;
+        }
+    }
     if (userContexts.length === 0) {return false;}
     return userContexts.every(uc =>
         Object.values(STAGE).includes(uc.stage as STAGE) && //valid stage
@@ -106,11 +114,24 @@ const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
 export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 export const withinLast2Hours = withinLastNMinutes.bind(null, 120);
 
-export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser> | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
-    return user && userPreferences && validateName(user.givenName) && validateName(user.familyName)
-        && validateUserContexts(userContexts, isAda)
-        && (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE))
-        && (isPhy || (!isTeacherOrAbove(user) || validateUserSchool(user)));
+export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser> | null, userPreferences?: UserPreferencesDTO | null, registeredContexts?: UserContext[]) {
+    const validity = validateRequiredFields({...user, password: null} , userPreferences, registeredContexts);
+    return Object.values(validity).every(v => v);
+}
+
+/* Returns the validity of each potentially required user field. True is valid or not applicable, false is invalid.*/
+export function validateRequiredFields(user?: Immutable<ValidationUser> | null, userPreferences?: UserPreferencesDTO | null, registeredContexts?: UserContext[]) {
+    type Field = "givenName" | "familyName" | "email" | "emailPreferences" | "userContexts" | "school" | "countryCode";
+    const fields: {[field in Field]: boolean} = {
+        givenName: validateName(user?.givenName),
+        familyName: validateName(user?.familyName),
+        email: validateEmail(user?.email),
+        school: isPhy || isStudent(user) || isTutor(user) || validateUserSchool(user),
+        countryCode: isPhy || validateCountryCode(user?.countryCode),
+        emailPreferences: (userPreferences?.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences?.EMAIL_PREFERENCE)) as boolean,
+        userContexts: validateUserContexts(registeredContexts, isAda)
+    };
+    return fields;
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: Immutable<UserSummaryWithEmailAddressDTO>, additionalInformation: AdditionalInformation) {

@@ -11,27 +11,21 @@ import React, {useEffect, useState} from "react";
 import {ActiveModalWithoutState, BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
-    isAda,
     isDefined,
     isLoggedIn,
-    isMobile, isPhy,
-    isTutor,
-    SITE_TITLE, SITE_TITLE_SHORT,
+    isMobile,
+    SITE_TITLE,
     siteSpecific, validateCountryCode,
-    validateEmailPreferences,
-    validateUserContexts,
-    validateUserGender,
-    validateUserSchool
+    validateRequiredFields,
 } from "../../../services";
 import {SchoolInput} from "../inputs/SchoolInput";
-import {GenderInput} from "../inputs/GenderInput";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {Immutable} from "immer";
 import { AccountTypeMessage } from "../AccountTypeMessage";
 import {useEmailPreferenceState, UserEmailPreferencesInput} from "../inputs/UserEmailPreferencesInput";
 import { Form, CardBody, Row, Col, Button } from "reactstrap";
 import {CountryInput} from "../inputs/CountryInput";
-import {SignupTab} from "../panels/SignupTab";
+import {ExigentAlert} from "../ExigentAlert";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -51,10 +45,10 @@ const RequiredAccountInfoBody = () => {
     const initialUserContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
 
-    const initialCountryCode = user?.loggedIn && user.countryCode;
-
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
+
+    const validity = validateRequiredFields(initialUserValue, userPreferences, initialUserContexts);
 
     // If the base user or user preferences objects change outside of this modal, reinitialise the local state. This
     // shouldn't really happen, but it solves a race condition between this modal rendering and the user object being
@@ -85,34 +79,32 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    const allUserFieldsAreValid = siteSpecific(
-        validateUserContexts(initialUserContexts),
-        validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts),
-    );
-
     return <Form onSubmit={formSubmission}>
-        {!allUserFieldsAreValid && <CardBody className="py-0">
-            <div className="text-end text-muted required-before">
-                Required
-            </div>
+        <CardBody className="py-0">
+            {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) &&
+                <ExigentAlert color="warning">
+                    <p className="alert-heading fw-bold">Unable to update your account</p>
+                    <p>Please fill in all required fields.</p>
+                </ExigentAlert>
+            }
             <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage/>
             <Row className="d-flex flex-wrap my-2">
                 <Col lg={6}>
-                    {isAda && !validateCountryCode(initialCountryCode as string | undefined) && <CountryInput
+                    {!validity.countryCode && <CountryInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                         required countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
                     />}
-                    {isPhy && !validateUserContexts(initialUserContexts) && <div>
+                    {!validity.userContexts &&
                         <UserContextAccountInput
                             user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
                             displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                             setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
                         />
-                    </div>}
+                    }
                 </Col>
                 <Col>
-                    {isAda && !validateUserSchool(initialUserValue) && <SchoolInput
+                    {!validity.school && <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                         required
@@ -123,30 +115,27 @@ const RequiredAccountInfoBody = () => {
                 Providing a few extra pieces of information helps us understand the usage of {SITE_TITLE} across the UK and beyond.
                 Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
             </div>
-        </CardBody>}
+        </CardBody>
 
-        {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <CardBody>
-            <hr className="text-center" />
-        </CardBody>}
-
-        {!validateEmailPreferences(initialEmailPreferencesValue) && <div>
-            <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
-            <UserEmailPreferencesInput
-                emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
-                submissionAttempted={submissionAttempted} idPrefix="modal-"
-            />
-            <div>
-                <small>
-                    <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
-                </small>
-            </div>
-        </div>}
-
-        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) && <div>
-            <h4 role="alert" className="text-danger text-center mb-4">
-                Not all required fields have been correctly filled.
-            </h4>
-        </div>}
+        {!validity.emailPreferences &&
+            <>
+                <CardBody>
+                    <hr className="text-center" />
+                </CardBody>
+                <div>
+                    <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
+                    <UserEmailPreferencesInput
+                        emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
+                        submissionAttempted={submissionAttempted} idPrefix="modal-"
+                    />
+                    <div>
+                        <small>
+                            <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
+                        </small>
+                    </div>
+                </div>
+            </>
+        }
 
         <CardBody className="py-0">
             <Row className="text-center pb-3">
