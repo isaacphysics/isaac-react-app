@@ -44,7 +44,6 @@ import {BooksOverview} from "../../pages/BooksOverview";
 import {RevisionPage} from "../../pages/RevisionDetailPage";
 import {AnvilAppsListing} from "../../pages/AnvilAppsListing";
 import {AdaCSOverviewPage} from "../../pages/AdaCSOverviewPage";
-import {PhysicsSkills14} from "../../pages/books_old/physics_skills_14";
 import { IsaacStats } from "../../pages/IsaacBirthdayStats";
 
 const Equality = lazy(() => import('../../pages/Equality'));
@@ -65,7 +64,6 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
 
 // TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
 const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
-    "/books/physics_skills_14": PhysicsSkills14,
     "/books/pre_uni_maths": PreUniMaths,
     "/books/solve_physics_problems": SolvingPhysProblems,
     "/books/phys_book_yr9": PhysBookYrNine,
@@ -129,6 +127,7 @@ export const RoutesPhy = [
         <TrackedRoute key={key++} exact path={path} component={component} />,
         <TrackedRoute key={key++} exact path={`${path}/:pageId`} component={component} />,
     ]).flat()),
+    <Redirect key={key++} exact from="/books/physics_skills_14" to="/books/physics_skills_19" />,
 
     // Books (new)
     <TrackedRoute key={key++} exact path={"/books/:bookId"} component={Book} />,
@@ -195,8 +194,8 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/board/:id" to={`${PATHS.GAMEBOARD}#:id`} />,
     <Redirect key={key++} exact from="/gameboards" to={{pathname: PATHS.GAMEBOARD, hash: window.location.hash}} />,
     <Redirect key={key++} exact from="/gcsebook" to="/books/phys_book_gcse" />,
-    <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_14" />,
-    <Redirect key={key++} exact from="/book" to="/books/physics_skills_14" />,
+    <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_19" />,
+    <Redirect key={key++} exact from="/book" to="/books/physics_skills_19" />,
     <Redirect key={key++} exact from="/qmp" to="/books/quantum_mechanics_primer" />,
     <Redirect key={key++} exact from="/solve_physics_problems" to="/books/solve_physics_problems" />,
     <Redirect key={key++} exact from="/answers" to="/support/student/questions#answers" />,
