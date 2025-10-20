@@ -114,9 +114,7 @@
 :not(.glossary-page) {
   .glossary-term {
     .glossary-term-name {
-      @include respond-below(sm) {
-        text-decoration: underline;
-      }
+      font-weight: bold;
     }
 
     // If this is a solitary glossary term, give it a small fixed amount of padding rather than a percentage
