@@ -25,6 +25,7 @@ export const mockUser = {
     registrationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 100),
     role: "ADMIN" as UserRole,
     schoolOther: "N/A",
+    countryCode: "GB-SCT",
     registeredContexts: [
         {
             stage: "all",
@@ -50,6 +51,7 @@ export const buildMockStudent = <T extends number>(id: T extends (typeof mockUse
         gender: id as number % 2 === 0 ? "MALE" : "FEMALE",
         registrationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 50),
         role: "STUDENT",
+        countryCode: "GB-SCT",
         schoolOther: "N/A",
         registeredContexts: [{
             stage: "all",
@@ -76,6 +78,7 @@ export const buildMockTeacher = <T extends number>(id: T extends (typeof mockUse
         registrationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 50),
         role: "TEACHER",
         schoolOther: "N/A",
+        countryCode: "GB-SCT",
         registeredContexts: [{
             stage: "all",
             examBoard: "all"
