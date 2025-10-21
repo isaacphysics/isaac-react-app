@@ -55,3 +55,16 @@ div.dashboard.dashboard-outer {
     // reusing the question page container. in these cases, ignore the above padding.
     padding: 0;
 }
+
+
+// Component containers
+
+.item-list-container {
+  @include no-print {
+    max-height: 462px;
+    overflow-y: auto;
+    @include vertical-scroll-shadow($color-neutral-50, rgba(0, 0, 0, 0.2));
+  }
+  border-radius: 4px;
+  flex: 1 0 content;
+}

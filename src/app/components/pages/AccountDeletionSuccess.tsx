@@ -20,7 +20,7 @@ export const AccountDeletionSuccess = () => {
                 <Row className="justify-content-center">
                     <Col>
                         {siteSpecific(
-                            <img className="img-fluid mx-auto mt-3 mb-4" src="/assets/common/icons/tick.svg" alt="" id="account-deletion-tick" />,
+                            <img className="img-fluid mx-auto mt-3 mb-4" src="/assets/common/icons/check.svg" alt="" id="account-deletion-tick" />,
                             <img className="img-fluid mx-auto my-7 w-md-50" src="/assets/cs/decor/verify_done.png" alt="" />
                         )}
                     </Col>

@@ -48,8 +48,8 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
     subtitle: "Revise with our summary videos, topic tests and question decks.",
     icon: {type: "hex", icon: "icon-revision"},
     subject: context.subject,
-    linkTags: [{tag: "List of revision areas", url: extendUrl(context, 'revision')}],
-    state: AbstractListViewItemState.COMING_SOON,
+    linkTags: [{tag: "List of revision areas", url: `/pages/revision_${context.subject}_${context.stage}`}],
+    state: (context.subject.includes("physics") && ["gcse", "a_level"].includes(context.stage[0])) ? undefined : AbstractListViewItemState.COMING_SOON,
 });
 
 const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({

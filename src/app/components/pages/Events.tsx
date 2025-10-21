@@ -47,8 +47,14 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
     const stageFilter = useMemo(() => query.show_stage_only?.split(',') as STAGE[] || [STAGE.ALL], [query.show_stage_only]);
 
     useEffect(() => {
-        getEventsList({startIndex: 0, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
-    }, [typeFilter, statusFilter, stageFilter]);
+        void getEventsList({
+            startIndex: 0, 
+            limit: EVENTS_PER_PAGE, 
+            typeFilter, 
+            statusFilter, 
+            stageFilter
+        });
+    }, [typeFilter, statusFilter, stageFilter, getEventsList]);
 
     const pageHelp = <span>
         Follow the links below to find out more about our FREE events.
@@ -127,8 +133,8 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                                     Showing {numberOfLoadedEvents} of {total}
                                 </div>
 
-                                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1 row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
-                                    {events.map(event => <Col key={event.id} className={siteSpecific("my-2 px-3", "p-3")}>
+                                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
+                                    {events.map(event => <Col key={event.id} className={siteSpecific("g-4", "p-3")}>
                                         {deviceSize==="md" && <div className="section-divider mb-4"/>}
                                         <EventCard event={event} />
                                     </Col>)}

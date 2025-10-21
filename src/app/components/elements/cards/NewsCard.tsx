@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Card, CardBody, CardImg, CardProps, CardText, CardTitle} from "reactstrap";
+import {Card, CardBody, CardImg, CardProps, CardText} from "reactstrap";
 import {ImageDTO, IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper, siteSpecific} from "../../../services";
 import {AdaCard} from "./AdaCard";
@@ -26,16 +26,16 @@ const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassNam
 
     return <Card data-testid={"news-pod"} {...props} className={classNames("pod news-card", props.className)}>
         {image && (!url?.startsWith("http") ?
-            <Link to={`${url}`} className="focus-target">
+            <Link to={`${url}`} className="focus-target pod-img">
                 <CardImage {...image}/>
             </Link>
             :
-            <a href={url} className="focus-target">
+            <a href={url} className="focus-target pod-img">
                 <CardImage {...image}/>
             </a>
         )}
-        <CardBody className="d-flex flex-column ps-0">
-            {showTitle && <CardTitle className="mb-0 pod-title">{title}</CardTitle>}
+        <CardBody className="d-flex flex-column">
+            {showTitle && <h5>{title}</h5>}
             {value && <CardText>
                 {value}
             </CardText>}
@@ -43,11 +43,11 @@ const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassNam
             <CardText>
                 {!url?.startsWith("http") ?
                     <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`${url}`}>
-                            Read more
+                        Read more
                     </Link>
                     :
                     <a className="focus-target btn btn-keyline" href={url} target="_blank" rel="noopener">
-                            Find out more
+                        Find out more
                     </a>
                 }
             </CardText>

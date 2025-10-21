@@ -3,20 +3,53 @@ import classnames from "classnames";
 import {Link} from "react-router-dom";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {DateString, formatDate, FRIENDLY_DATE_AND_TIME} from "../DateString";
-import {formatEventCardDate, siteSpecific} from "../../../services";
+import {formatEventCardDate, formatEventCardDateSlim, getThemeFromTags, siteSpecific} from "../../../services";
 import { Card, CardImg, CardBody, CardTitle, Badge, CardText, CardProps } from "reactstrap";
 import { Spacer } from "../Spacer";
 import classNames from "classnames";
 import { AdaCard } from "./AdaCard";
 
-export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & CardProps) => {
-    const {id, title, subtitle, eventThumbnail, location, date, hasExpired} = event;
+const IconText = ({icon, children}: {icon: string, children: React.ReactNode}) => {
+    return <div className="d-inline-flex">
+        <i className={classNames("icon icon-md me-2", icon)} aria-hidden="true" />
+        <span>{children}</span>
+    </div>;
+};
+
+const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
+    const {location} = event;
+    return <>
+        <IconText icon="icon-event">
+            <span>{formatEventCardDateSlim(event)}</span>
+        </IconText>
+        {location && location.address && <IconText icon="icon-location">
+            {!event.isVirtual ? <>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</> : "Online"}
+        </IconText>}
+        {event.userBookingStatus === "CONFIRMED"
+            ? <IconText icon="icon-tick">You are booked on this event.</IconText>
+            : event.userBookingStatus === "RESERVED"
+                ? <IconText icon="icon-tick">You have a reservation for this event.</IconText>
+                : event.userBookingStatus === "WAITING_LIST"
+                    ? <IconText icon="icon-tick">You are on the waiting list for this event.</IconText>
+                    : event.hasExpired 
+                        ? <IconText icon="icon-cross">Event has expired</IconText> 
+                        : event.isWithinBookingDeadline 
+                            ? <IconText icon="icon-tick">Available to book</IconText>
+                            : <IconText icon="icon-cross">Booking closed</IconText>
+        }
+    </>;
+};
+
+export const PhysicsEventCard = ({event, layout, ...rest}: {event: AugmentedEvent, layout?: "landing-page"} & CardProps) => {
+    const {id, title, subtitle, eventThumbnail, date, hasExpired} = event;
 
     const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
     const isStudentEvent = event.tags?.includes("student") && !event.tags?.includes("teacher");
 
-    return <Card {...rest} className={classNames("pod", rest.className)}>
+    const subject = getThemeFromTags(event.tags) !== "neutral" ? getThemeFromTags(event.tags) : "physics";
+
+    return <Card {...rest} className={classNames("pod", rest.className, {"pod-clickable": layout === "landing-page"})} data-bs-theme={subject}>
         {eventThumbnail &&
             <Link className={classNames("pod-img event-pod-img d-flex", {"expired": hasExpired})} to={`/events/${id}`}>
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={""} aria-labelledby={`event-title-${id}`} />
@@ -39,27 +72,21 @@ export const PhysicsEventCard = ({event, ...rest}: {event: AugmentedEvent} & Car
                         <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
                     </div>}
             </Link>}
-        <CardBody className="d-flex flex-column ps-0">
-            {title && <CardTitle className="mb-0 pod-title" id={`event-title-${id}`}>{title}</CardTitle>}
-            {subtitle && <CardText className="mb-0">
+        <CardBody className="d-flex flex-column">
+            {title && <CardTitle className="mb-0 pod-title" id={`event-title-${id}`}><h5>{title}</h5></CardTitle>}
+            {subtitle && <CardText className="mb-2 fixed-height">
                 {subtitle}
             </CardText>}
             <Spacer/>
-            <div className="section-divider"/>
-            <CardText>
-                <b>When: </b>{formatEventCardDate(event)}
-                {location && location.address &&
-                    <span className='d-block my-1'>
-                        <b>Location: </b>
-                        {!event.isVirtual ? <>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</> : "Online"}
-                    </span>}
+            <CardText tag="div" className="d-flex flex-column gap-2 mt-2 mb-3">
+                <PhysicsCardContents event={event} />
             </CardText>
-            <CardText>
+            {layout !== "landing-page" && <CardText>
                 <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`/events/${id}`}>
                     Read more
                     <span className='visually-hidden'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
                 </Link>
-            </CardText>
+            </CardText>}
         </CardBody>
     </Card>;
 };

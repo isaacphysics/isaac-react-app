@@ -5,11 +5,11 @@ import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
 import { ListView, ListViewCards } from "../elements/list-groups/ListView";
 import { getBooksForContext, getLandingPageCardsForContext } from "./subjectLandingPageComponents";
-import { below, BookInfo, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, nextSeed, STAGE, STAGE_TO_LEARNING_STAGE, useDeviceSize } from "../../services";
+import { below, BookInfo, DOCUMENT_TYPE, EventStatusFilter, EventTypeFilter, isStudent, nextSeed, STAGE, STAGE_TO_LEARNING_STAGE, useDeviceSize } from "../../services";
 import { AugmentedEvent, PageContextState } from "../../../IsaacAppTypes";
 import { Link } from "react-router-dom";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
-import { searchQuestions, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery } from "../../state";
+import { searchQuestions, selectors, useAppDispatch, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery } from "../../state";
 import { EventCard } from "../elements/cards/EventCard";
 import debounce from "lodash/debounce";
 import { IsaacSpinner } from "../handlers/IsaacSpinner";
@@ -114,10 +114,10 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             {books?.length
                 ? <>
                     <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                        <h4 className="m-0">Interactive online books</h4>
+                        <h4 className="m-0">Interactive online books <span className="text-theme">({books.length})</span></h4>
                         <div className="section-divider-bold flex-grow-1"/>
                     </div>
-                    <div className={classNames("d-flex book-listing-container", {"flex-column col": !fullWidthBooks}, {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
+                    <div className={classNames("d-flex item-list-container", {"flex-column col": !fullWidthBooks}, {"row-cols-1 row-cols-md-2 row": fullWidthBooks})}>
                         {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
                         {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mx-7">View more books</Button>}
                     </div>
@@ -139,13 +139,13 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
         </div>
         {!!relevantEvents?.length && <div className="d-flex flex-column mt-3">
             <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-                <h4 className="m-0">Events</h4>
+                <h4 className="m-0">Events <span className="text-theme">({relevantEvents.length})</span></h4>
                 <div className="section-divider-bold flex-grow-1"/>
             </div>
-            <Row className="h-100">
+            <Row className="h-100 item-list-container">
                 {relevantEvents.map((event, i) =>
-                    <Col xs={12} md={6} lg={12} key={i}>
-                        {event && <EventCard event={event} className={classNames("p-2", {"force-horizontal": !["md", "xs"].includes(deviceSize)})} />}
+                    <Col xs={12} key={i}>
+                        {event && <EventCard event={event} layout={"landing-page"} className={classNames({"force-horizontal": !['xs', 'md'].includes(deviceSize)})} />}
                     </Col>
                 )}
             </Row>
@@ -155,9 +155,17 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
 
 export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
+    const user = useAppSelector(selectors.user.loggedInOrNull);
+
     useEffect(() => {
-        getEventsList({startIndex: 0, limit: 10, typeFilter: EventTypeFilter["All groups"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
-    }, []);
+        void getEventsList({
+            startIndex: 0,
+            limit: 10,
+            typeFilter: isStudent(user) ? EventTypeFilter["Student events"] : EventTypeFilter["All groups"],
+            statusFilter: EventStatusFilter["Upcoming events"],
+            stageFilter: [STAGE.ALL],
+        });
+    }, [getEventsList, user]);
 
     const books = getBooksForContext(context);
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
@@ -169,7 +177,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     />;
 };
 
-export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
+export const SubjectLandingPage = withRouter((_props: RouteComponentProps) => {
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
 
