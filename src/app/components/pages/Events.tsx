@@ -133,8 +133,8 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                                     Showing {numberOfLoadedEvents} of {total}
                                 </div>
 
-                                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1 row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
-                                    {events.map(event => <Col key={event.id} className={siteSpecific("my-2 px-3", "p-3")}>
+                                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
+                                    {events.map(event => <Col key={event.id} className={siteSpecific("g-4", "p-3")}>
                                         {deviceSize==="md" && <div className="section-divider mb-4"/>}
                                         <EventCard event={event} />
                                     </Col>)}

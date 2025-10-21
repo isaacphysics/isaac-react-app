@@ -366,3 +366,12 @@ $viewport-sizes: (
   background-clip:  padding-box !important;
   z-index: 2;
 }
+
+@mixin fixed-text-height($line-height: 1.5rem, $lines: 2) {
+  max-height: calc(#{$line-height} * #{$lines});
+  overflow: hidden;
+  display: -webkit-box !important;
+  -webkit-line-clamp: $lines;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
