@@ -239,66 +239,13 @@ $typography-font-weights-text-light: 300;
 $typography-font-weights-text-regular: 400;
 $typography-font-weights-text-semibold: 600;
 
-// ISAAC
-// Node module imports
+// Bootstrap
+
+// functions and variables are imported first to provide functions and !default values
 @import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
 
-// all Bootstrap !default overrides must appear before this; anything that uses the defaults must come after
-@import "~bootstrap/scss/variables"; 
-
-// borders
-$table-border-color: $gray-107;
-$table-bg: #0000; // This gets in the way of our colouring
-
-$badge-font-weight: $font-weight-medium;
-
-$border-color: #dee2e6;
-$border-width: 1px;
-$border-color-translucent: rgba(0, 0, 0, 0.1);
-
-$input-border-radius: 0.5rem;
-
-$tooltip-bg: rgba($color-neutral-700, 0.98);
-$tooltip-opacity: 1;
-$tooltip-padding-x: 0.6rem;
-$tooltip-padding-y: 0.6rem;
-$tooltip-max-width: 370px;
-
-$dropdown-link-hover-bg: $color-neutral-50;
-$dropdown-link-active-bg: var(--subject-color-200, $color-neutral-200);
-$dropdown-link-active-color: inherit;
-
-$card-border-radius: 1rem;
-$card-inner-border-radius: 1rem;
-
-$accordion-icon-width: 1.125rem;
-
-// Grid Customisation
-$container-max-widths: (
-    xl: 100%,
-);
-
-$grid-breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  xxl: 1400px,
-);
-
-$element-sizes: (
-    5: 5%, 
-    10: 10%,
-    20: 20%,
-    30: 30%,
-    40: 40%,
-    50: 50%,
-    60: 60%,
-    70: 70%,
-    80: 80%,
-    90: 90%,
-);
+// any overrides to Bootstrap variables must appear here
 
 $spacer: 1rem !default;
 $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
@@ -327,7 +274,62 @@ $theme-colour-overrides: (
 );
 $theme-colors: map-merge($theme-colors, $theme-colour-overrides);
 
-@import "~bootstrap/scss/bootstrap-utilities"; 
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+);
+
+$element-sizes: (
+    5: 5%, 
+    10: 10%,
+    20: 20%,
+    30: 30%,
+    40: 40%,
+    50: 50%,
+    60: 60%,
+    70: 70%,
+    80: 80%,
+    90: 90%,
+);
+
+// Grid Customisation
+$container-max-widths: (
+    xl: 100%,
+);
+
+$enable-negative-margins: true;
+
+$border-color: #dee2e6;
+$border-width: 1px;
+$border-color-translucent: rgba(0, 0, 0, 0.1);
+
+$table-border-color: $gray-107;
+$table-bg: #0000; // This gets in the way of our colouring
+
+$card-border-radius: 1rem;
+$card-inner-border-radius: 1rem;
+
+$accordion-icon-width: 1.125rem;
+
+$dropdown-link-hover-bg: $color-neutral-50;
+$dropdown-link-active-bg: var(--subject-color-200, $color-neutral-200);
+$dropdown-link-active-color: inherit;
+
+$input-border-radius: 0.5rem;
+
+$tooltip-bg: rgba($color-neutral-700, 0.98);
+$tooltip-opacity: 1;
+$tooltip-padding-x: 0.6rem;
+$tooltip-padding-y: 0.6rem;
+$tooltip-max-width: 370px;
+
+$badge-font-weight: $font-weight-medium;
+
+@import "~bootstrap/scss/maps";
 
 $custom-colors-text: (
     physics: $phy_purple,
@@ -353,7 +355,14 @@ $theme-colors-bg-subtle: map-merge($theme-colors-bg-subtle, $custom-colors-bg-su
 $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colors-border-subtle);
 
 // all Bootstrap overrides must appear before this
-@import "~bootstrap/scss/bootstrap"; 
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/utilities";
+@import "../common/bootstrap-contents";
+// See https://getbootstrap.com/docs/5.3/customize/sass/#importing; using Option A ("@import "~bootstrap/scss/bootstrap";") is not feasible as we need the default overrides above.
+// Instead, import contents of ~bootstrap/scss/bootstrap.scss manually *without the utilities imports*.
+
+// Node module imports
+
 @import "~katex/dist/katex.min.css";
 @import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 @import "~billboard.js/dist/theme/insight.css";
