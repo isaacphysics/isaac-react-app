@@ -48,7 +48,7 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
     subtitle: "Revise with our summary videos, topic tests and question decks.",
     icon: {type: "hex", icon: "icon-revision"},
     subject: context.subject,
-    linkTags: [{tag: "List of revision areas", url: `/pages/revision_${context.subject}_${context.stage}`}],
+    linkTags: [{tag: "List of revision areas", url: `/pages/revision_${context.stage[0].replace("_", "")}_${context.subject}`}],
     state: (context.subject.includes("physics") && ["gcse", "a_level"].includes(context.stage[0])) ? undefined : AbstractListViewItemState.COMING_SOON,
 });
 
