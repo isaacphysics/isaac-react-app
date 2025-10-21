@@ -248,3 +248,8 @@ a {
   }
 }
 
+.tabbed-hints {
+  a.a-link:has(> i.icon) {
+    font-weight: normal;
+  }
+}

@@ -1,17 +1,9 @@
 .inline-glossary-term {
-    text-decoration-line: underline;
-    text-decoration-style: dotted;
-  }
-
-.glossary_term .topics {
-  margin-top: -1em;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
 }
 
 .inline-glossary-definition {
-  .inline-glossary-term {
-    text-decoration: none;
-  }
-
   .a-link {
     color: white;
     text-decoration: none;
@@ -117,26 +109,20 @@
       }
     }
   }
+}
 
-  .glossary_term_name {
-    position: relative;
-    margin-left: 15px;
-
-    img {
-      position: absolute;
-      top: 0.3rem;
-      left: -0.25rem;
-      height: 1em;
-      display: block;
+:not(.glossary-page) {
+  .glossary-term {
+    .glossary-term-name {
+      font-weight: bold;
     }
 
-    strong {
-      text-decoration: underline;
-      display: block;
-      float: left;
-      top: 0;
-      left: 2em;
+    // If this is a solitary glossary term, give it a small fixed amount of padding rather than a percentage
+    &:not(& + .glossary-term, :has(+ .glossary-term)) {
+      .glossary-term-name {
+        max-width: fit-content;
+        padding-right: 1.5rem;
+      }
     }
   }
 }
-

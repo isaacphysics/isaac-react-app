@@ -7,7 +7,7 @@ import {
 import React, {useContext, useMemo} from "react";
 import {selectors} from "../../state";
 import {Link} from "react-router-dom";
-import {useDeviceSize} from "../../services";
+import {DeviceSize, useDeviceSize} from "../../services";
 import {Hexagon} from "./svg/Hexagon";
 import {HexagonConnection} from "./svg/HexagonConnection";
 import {Markup} from "./markup";
@@ -70,7 +70,8 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         return qhs ? qhs.split(",") : [];
     }, [search]);
 
-    const deviceSize = useDeviceSize();
+    const rawDeviceSize = useDeviceSize();
+    const deviceSize = rawDeviceSize === DeviceSize.XXXL ? DeviceSize.XXL : rawDeviceSize; // Treat "xxxl" as "xxl" for layout purposes
     const hexagonUnitLength = {xxl: 28, xl: 28, lg: 26, md: 22, sm: 22, xs: 12.5}[deviceSize];
     const hexagonPadding = {xxl: 4, xl: 4, lg: 4, md: 3, sm: 3, xs: 2}[deviceSize];
     const hexagonHalfWidth = hexagonUnitLength;
