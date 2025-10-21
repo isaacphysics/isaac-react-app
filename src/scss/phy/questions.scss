@@ -179,42 +179,4 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   > .tabbed-hints, > .question-component > .quick-question:first-child {
     padding: 0;
   }
-  
-}
-
-.content-metadata-container {
-  background-color: $color-neutral-100;
-  border: 1px solid $color-neutral-200;
-  border-radius: 4px;
-  padding: 1rem 0.5rem;
-  margin: 1rem 0;
-  font-size: 14px;
-
-  > div > span:first-child {
-    color: $color-neutral-800;
-    margin-bottom: 0.4rem;
-  }
-
-  @include media-breakpoint-up(md) {
-    > div + div {
-      border-left: 1px solid $color-neutral-200;
-    }
-  }
-
-  @include media-breakpoint-only(sm) {
-    > div:first-child {
-      border-bottom: 1px solid $color-neutral-200;
-    }
-
-    > div.col-sm-6 + div {
-      border-left: 1px solid $color-neutral-200;
-    }
-  }
-
-  @include media-breakpoint-only(xs) {
-    > div:has(+ div) {
-      border-bottom: 1px solid $color-neutral-200;
-    }
-  }
-  
 }

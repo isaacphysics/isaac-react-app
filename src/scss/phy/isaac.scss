@@ -149,9 +149,12 @@ $color-neutral-700: #545461;
 $color-neutral-800: #3c3e47;
 $color-neutral-900: #23272c;
 
+$color-misc-orange-50: #f9efe8;
+$color-misc-orange-300: #fea102;
+$color-misc-orange-500: #bd5a00;
+$color-misc-orange-600: #aa5100;
+
 $color-misc-navy: #001f47;
-$color-misc-orange-dark: #bd5a00;
-$color-misc-orange-light: #fea102;
 $color-misc-red: #b40c0c;
 $color-misc-pale-yellow: #f9fdd5;
 $color-misc-correct: #ecf7e9;
@@ -404,6 +407,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "cards";
 @import "checkbox";
 @import "featured-profile";
+@import "metadata-container";
 @import "../common/code";
 
 // Navigation

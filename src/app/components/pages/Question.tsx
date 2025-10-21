@@ -14,19 +14,14 @@ import {
     isStudent,
     siteSpecific,
     Subject,
-    TAG_ID,
-    tags,
     useNavigation,
-    isDefined,
-    stageLabelMap,
-    difficultyShortLabelMap
-} from "../../services";
+    isDefined} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
-import {DocumentSubject, GameboardContext, ViewingContext} from "../../../IsaacAppTypes";
+import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import queryString from "query-string";
@@ -37,92 +32,18 @@ import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
 import { GameboardQuestionSidebar, MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { StageAndDifficultySummaryIcons } from "../elements/StageAndDifficultySummaryIcons";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
-import { MetadataContainer } from "../elements/panels/MetadataContainer";
-
-function getTags(docTags?: string[]) {
-    if (!isPhy) {
-        return [];
-    }
-    if (!docTags) return [];
-
-    return tags.getByIdsAsHierarchy(docTags as TAG_ID[])
-        .map(tag => ({title: tag.title}));
-}
+import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
+import { QuestionMetaData } from "../elements/QuestionMetadata";
+import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
     match: match & { params: { questionId: string } };
     preview?: boolean;
 }
-
-interface QuestionMetaDataProps {
-    doc: IsaacQuestionPageDTO & DocumentSubject;
-    audienceViews: ViewingContext[];
-    allQuestionsCorrect: boolean;
-    allQuestionsAttempted: boolean;
-    anyQuestionAttempted: boolean;
-}
-
-const QuestionMetaData = (props: QuestionMetaDataProps) => {
-    const {doc, allQuestionsCorrect, allQuestionsAttempted, anyQuestionAttempted, audienceViews} = props;
-
-    return <>
-        <MetadataContainer className="d-flex row no-print">
-            <Col xs={12} md={"auto"} className="d-flex flex-column flex-grow-1 px-3 pb-3 pb-md-0">
-                <span>Subject & topics</span>
-                <div className="d-flex align-items-center">
-                    <i className="icon icon-hexagon me-2"/>
-                    {getTags(doc.tags).map((tag, index, arr) => <>
-                        <span key={tag.title} className="text-theme">{tag.title}</span>
-                        {index !== arr.length - 1 && <span className="mx-2">|</span>}
-                    </>)}
-                </div>                
-            </Col>
-            <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 pb-3 mt-md-0">
-                <span>Status</span>
-                {allQuestionsCorrect
-                    ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-correct me-2"/> Correct</div>
-                    : allQuestionsAttempted
-                        // uncomment the lines below if reusing this logic elsewhere!
-                        // ? isPhy
-                        ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-attempted me-2"/> All attempted (some errors)</div>
-                        // : <div className="d-flex align-items-center"><span className="icon icon-raw icon-incorrect me-2"/> Incorrect</div>
-                        : anyQuestionAttempted
-                            ? <div className="d-flex align-items-center"><span className="icon icon-raw icon-in-progress me-2"/> In progress</div>
-                            : <div className="d-flex align-items-center"><span className="icon icon-raw icon-not-started me-2"/> Not started</div>
-                }
-            </Col>
-            <Col xs={12} sm={6} md={"auto"} className="d-flex flex-column flex-grow-0 px-3 mt-3 mt-md-0 pb-sm-0">
-                <span>Stage & difficulty</span>
-                <StageAndDifficultySummaryIcons audienceViews={audienceViews} iconClassName="ps-2" stack/>
-            </Col>
-        </MetadataContainer>
-        {/* One-line version of the question metadata, only used for printing */}
-        <div className="only-print">
-            <div className="d-flex my-2">
-                <span className="me-2 fw-bold">Subject & topics:</span>
-                <div>
-                    {getTags(doc.tags).map((tag, index, arr) => <>
-                        <span key={tag.title}> {tag.title} </span>
-                        {index !== arr.length - 1 && <span className="mx-1">|</span>}
-                    </>)}
-                </div>
-                <span className="ms-5 me-2 fw-bold">Stage & difficulty:</span>
-                <div>
-                    {audienceViews.map(((view, i, arr) => 
-                        view.stage && view.difficulty && <span key={`${view.stage} ${view.difficulty}`}>
-                            {stageLabelMap[view.stage]} {difficultyShortLabelMap[view.difficulty]}
-                            {i !== arr.length - 1 && <span className="me-1">,</span>}
-                        </span>))}
-                </div>
-            </div>
-        </div>
-    </>;
-};
 
 export const Question = withRouter(({questionIdOverride, match, location, preview}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
@@ -138,6 +59,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
     const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
 
     const dispatch = useAppDispatch();
+    const accessibilitySettings = useAccessibilitySettings();
 
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
     const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
@@ -177,6 +99,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                                     anyQuestionAttempted={anyQuestionAttempted}
                                 />}
                             </PageMetadata>
+                            {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(doc.tags).map(tag => <InaccessibleContentWarningBanner key={tag} type={tag} />)}
 
                             <Row className="question-content-container">
                                 <Col className={classNames("py-4 question-panel", {"px-0 px-sm-2": isPhy}, {"mw-760": isAda})}>

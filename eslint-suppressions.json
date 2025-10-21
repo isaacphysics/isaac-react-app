@@ -377,7 +377,7 @@
   },
   "src/app/components/elements/list-groups/AbstractListViewItem.tsx": {
     "@stylistic/indent": {
-      "count": 72
+      "count": 62
     }
   },
   "src/app/components/elements/markup/index.tsx": {

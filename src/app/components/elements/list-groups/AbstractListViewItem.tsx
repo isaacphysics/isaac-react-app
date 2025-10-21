@@ -5,7 +5,7 @@ import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Badge, Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
-import { below, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
+import { below, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
@@ -13,6 +13,7 @@ import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSel
 import { getAssigneesByBoard } from "../../pages/SetAssignments";
 import { SetAssignmentsModal } from "../modals/SetAssignmentsModal";
 import { ExternalLink } from "../ExternalLink";
+import { QuestionPropertyTags } from "../ContentPropertyTags";
 import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
@@ -189,7 +190,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
             </div>
             <div className="align-content-center text-overflow-ellipsis pe-2">
-                <div className="d-flex text-wrap">
+                <div className="d-flex text-wrap mt-n1">
                     {url && !isDisabled
                         ? (url.startsWith("http")
                             ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
@@ -205,17 +206,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     }
                     {isItem && <>
                         {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
-                        {isPhy && <div className="d-flex flex-column justify-self-end justify-content-center">
-                            {typedProps.supersededBy && <a 
-                                className="superseded-tag mx-1 ms-sm-3 align-self-end" 
-                                href={`/questions/${typedProps.supersededBy}`}
-                                onClick={(e) => e.stopPropagation()}
-                                target="_blank"
-                            >SUPERSEDED</a>}
-                            {tags?.includes("nofilter") && isStaff(user) && <span
-                                className="superseded-tag mx-1 ms-sm-3 align-self-end" 
-                            >NO-FILTER</span>}
-                        </div>}
+                        {isPhy && <QuestionPropertyTags className="ms-2 justify-self-end" supersededBy={typedProps.supersededBy} tags={tags} />}
                     </>}
                 </div>
                 {subtitle && <div className="small text-muted text-wrap">

@@ -1,20 +1,55 @@
 import { useEffect, useState } from "react";
 import { AppState, useAppSelector } from "../state";
+import { isTeacherOrAbove } from "./user";
 
 export const useReducedMotion = () => {
-    const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
-    const [reducedMotion, setReducedMotion] = useState<boolean>(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || (displaySettings?.REDUCED_MOTION ?? false));
+    const { ACCESSIBILITY: accessibilitySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
+    const [reducedMotion, setReducedMotion] = useState<boolean>(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || (accessibilitySettings?.REDUCED_MOTION ?? false));
 
     useEffect(() => {
         const mediaQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
         const listener = (e: MediaQueryListEvent) => {
-            setReducedMotion(e.matches || (displaySettings?.REDUCED_MOTION ?? false));
+            setReducedMotion(e.matches || (accessibilitySettings?.REDUCED_MOTION ?? false));
         };
         mediaQuery?.addEventListener('change', listener);
         return () => {
             mediaQuery?.removeEventListener('change', listener);
         };
-    }, [displaySettings?.REDUCED_MOTION]);
+    }, [accessibilitySettings?.REDUCED_MOTION]);
 
     return reducedMotion;
+};
+
+export const ACCESSIBILITY_TAGS = ["access:visual", "access:motor"] as const;
+
+interface AccessibilityWarning {
+    label: string;
+    description: string;
+    icon: string;
+}
+
+export const ACCESSIBILITY_WARNINGS: Record<typeof ACCESSIBILITY_TAGS[number], AccessibilityWarning> = {
+    "access:visual": {
+        label: "Visual interpretation",
+        description: "This content uses visual elements that may be inaccessible to screen readers.",
+        icon: "icon-access-visual",
+    },
+    "access:motor": {
+        label: "Fine motor skills",
+        description: "This content uses interactive elements that may be inaccessible to some users.",
+        icon: "icon-access-motor",
+    },
+};
+
+export const getAccessibilityTags = (tags?: string[]) : typeof ACCESSIBILITY_TAGS[number][] => {
+    return (tags?.filter(tag => tag.startsWith("access:")) || []) as typeof ACCESSIBILITY_TAGS[number][];
+};
+
+export const useAccessibilitySettings = () => {
+    // since SHOW_INACCESSIBLE_WARNING must default to true for teachers in spite of potentially being undefined, we must use this hook over accessing the state directly
+    const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
+    const user = useAppSelector((state: AppState) => state?.user);
+
+    accessibilitySettings.SHOW_INACCESSIBLE_WARNING = accessibilitySettings?.SHOW_INACCESSIBLE_WARNING ?? isTeacherOrAbove(user);
+    return accessibilitySettings;
 };
