@@ -3,7 +3,6 @@ import {
     API_PATH,
     IMAGE_PATH,
     securePadCredentials,
-    securePadPasswordReset,
     TAG_ID
 } from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
@@ -15,7 +14,6 @@ import {
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     Choice,
-    Concepts,
     CredentialsAuthDTO,
     QuestionSearchQuery,
     UserPreferencesDTO,

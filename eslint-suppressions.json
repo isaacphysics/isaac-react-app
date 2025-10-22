@@ -678,11 +678,6 @@
       "count": 1
     }
   },
-  "src/app/components/handlers/PasswordResetHandler.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    }
-  },
   "src/app/components/handlers/ProviderCallbackHandler.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
@@ -1152,11 +1147,6 @@
       "count": 4
     }
   },
-  "src/app/services/api.ts": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
   "src/app/services/assignments.ts": {
     "@typescript-eslint/no-unused-expressions": {
       "count": 2
@@ -1288,7 +1278,7 @@
   },
   "src/app/state/actions/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 45
+      "count": 42
     },
     "@typescript-eslint/no-floating-promises": {
       "count": 2
