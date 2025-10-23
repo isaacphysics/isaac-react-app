@@ -1,13 +1,62 @@
-import React, {lazy, useEffect, useRef, useState} from "react";
+import React, {lazy, useEffect, useMemo, useRef, useState} from "react";
 import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
-import {CODE_EDITOR_BASE_URL, CODE_EDITOR_IFRAME_HEIGHT_LARGE, CODE_EDITOR_IFRAME_HEIGHT_SMALL, CODE_EDITOR_RUN_BUTTON_SPACING, SITE_TITLE_SHORT, useIFrameMessages} from "../../services";
+import {CODE_EDITOR_BASE_URL, CODE_EDITOR_IFRAME_HEIGHT_LARGE, CODE_EDITOR_IFRAME_HEIGHT_SMALL, CODE_EDITOR_RUN_BUTTON_SPACING, SITE_TITLE_SHORT, trackEvent, useIFrameMessages} from "../../services";
 import {v4 as uuid_v4} from "uuid";
-import {logAction, useAppDispatch, useGetSegueEnvironmentQuery} from "../../state";
+import {logAction, selectors, useAppDispatch, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {Alert, Button} from "reactstrap";
 import {Loading} from "../handlers/IsaacSpinner";
 import {Link} from "react-router-dom";
 
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
+
+const InteractiveCodeSnippetTimeoutError = ({doc}: {doc: InteractiveCodeSnippetDTO}) => {
+    const user = useAppSelector(selectors.user.orNull);
+    const faqLink = doc.language === "sql" ? "/support/student/code#sql-editor" : "/support/student/code#code-editor";
+
+    const usefulInformation = useMemo(() => ({
+        userId: user?.loggedIn && user.id || "Not currently logged in",
+        location: window.location.href,
+        userAgent: window.navigator.userAgent,
+    }), [user]);
+
+    const usefulInformationLabels: {[k in keyof typeof usefulInformation]: string} = {
+        userId: "User ID",
+        location: "Location",
+        userAgent: "User Agent",
+    };
+
+    const plainTextUsefulInformation = "\n\n---- Useful Error Information ----\n\n" + Object.entries(usefulInformation)
+        .map(([key, value]) => `${usefulInformationLabels[key as keyof typeof usefulInformation]}: ${value}`).join("\n\n");
+
+    useEffect(() => {
+        trackEvent("exception", {
+            props: { 
+                description: `code_editor: timeout`,
+                fatal: false 
+            }
+        });
+    }, [doc]);
+
+    return <>
+        <Alert color={"warning"}>
+            <p>
+                Sorry! The {SITE_TITLE_SHORT} code editor doesn&apos;t seem to be working at the moment.
+                This is usually due to a network issue blocking the editor from loading; please <Button tag={Link} to={faqLink} color={"link"}>check our support page</Button> for more information.
+            </p>
+            <p>
+                If this doesn&apos;t help, <Button tag={Link} to={`/contact?subject=Code%20editor%20issue&message=${encodeURIComponent(plainTextUsefulInformation)}`} color={"link"}>report this to us</Button> and try again later.
+            </p>
+            <p>
+                <h5>Useful information to include in your email:</h5>
+                <small>
+                    {Object.entries(usefulInformation).map(([key, value]) => (
+                        <p className="mb-1" key={key}><strong>{usefulInformationLabels[key as keyof typeof usefulInformation]}: </strong>{value}</p>
+                    ))}
+                </small>
+            </p>
+        </Alert>
+    </>;
+};
 
 interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 
@@ -71,7 +120,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
                 if (segueEnvironment !== "PROD") {
                     console.error(`IsaacInteractiveCodeSnippet ${receivedData.type === "setupFail" ? "setup code" : "checker"} error: ${receivedData.message}`);
                 } else {
-                    dispatch(logAction({
+                    void dispatch(logAction({
                         type: "ISAAC_INTERACTIVE_CODE_SNIPPET_ERROR",
                         questionId: doc.id,
                         error: `IsaacInteractiveCodeSnippet ${receivedData.type === "setupFail" ? "setup code" : "checker"} error: ${receivedData.message}`
@@ -116,7 +165,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
     return iframeState === "timeout"
         ? <>
             <IsaacCodeSnippet doc={doc} />
-            <Alert color={"warning"}>Sorry! The {SITE_TITLE_SHORT} code editor doesn't seem to be working at the moment. Please <Button tag={Link} to={"/contact?subject=Code%20editor%20issue"} color={"link"}>report this to us</Button> and try again later.</Alert>
+            <InteractiveCodeSnippetTimeoutError doc={doc} />
         </>
         : <>
             {iframeState !== "initialised" && <Loading className={"my-4"}/>}

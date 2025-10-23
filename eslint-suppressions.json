@@ -70,14 +70,8 @@
     }
   },
   "src/app/components/content/IsaacInteractiveCodeSnippet.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
     "react-hooks/exhaustive-deps": {
       "count": 2
-    },
-    "react/no-unescaped-entities": {
-      "count": 1
     },
     "react/no-unknown-property": {
       "count": 1
