@@ -2,7 +2,7 @@ import {SITE_TITLE} from "../../services";
 import React from "react";
 import {Button, Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useSessionExpired} from "../../services/useSessionExpired";
+import {useSessionExpired} from "../../services";
 
 export const ConsistencyError = () => {
 
