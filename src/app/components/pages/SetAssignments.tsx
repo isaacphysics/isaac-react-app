@@ -460,7 +460,7 @@ export const SetAssignments = () => {
                         <Row>
                             {boardView === BoardViews.card && <Col sm={6} lg={3}>
                                 <Label className="w-100">
-                                Display in <Input type="select" value={boardView} onChange={switchView}>
+                                    Display in <Input type="select" value={boardView} onChange={switchView}>
                                         {Object.values(BoardViews).map(view => <option key={view}
                                             value={view}>{view}</option>)}
                                     </Input>
@@ -469,7 +469,7 @@ export const SetAssignments = () => {
                             {boardView === BoardViews.card && <>
                                 <Col xs={6} lg={{size: 2, offset: 3}}>
                                     <Label className="w-100">
-                                    Show <Input disabled={forceAllBoards} type="select" value={boardLimit}
+                                        Show <Input disabled={forceAllBoards} type="select" value={boardLimit}
                                             onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                             {Object.values(BoardLimit).map(limit => <option key={limit}
                                                 value={limit}>{limit}</option>)}
@@ -478,7 +478,7 @@ export const SetAssignments = () => {
                                 </Col>
                                 <Col xs={6} lg={4}>
                                     <Label className="w-100">
-                                    Sort by <Input type="select" value={boardOrder}
+                                        Sort by <Input type="select" value={boardOrder}
                                             onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
                                             {Object.values(AssignmentBoardOrder).map(order => <option key={order}
                                                 value={order}>{BOARD_ORDER_NAMES[order]}</option>)}

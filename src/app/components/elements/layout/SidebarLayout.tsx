@@ -856,10 +856,11 @@ interface MyGameboardsSidebarProps extends ContentSidebarProps {
     setBoardCreatorFilter: React.Dispatch<React.SetStateAction<BoardCreators>>;
     boardCompletionFilter: BoardCompletions;
     setBoardCompletionFilter: React.Dispatch<React.SetStateAction<BoardCompletions>>;
+    forceAllBoards?: boolean;
 }
 
 export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
-    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, boardCreatorFilter, setBoardCreatorFilter, boardCompletionFilter, setBoardCompletionFilter, ...rest } = props;
+    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, boardCreatorFilter, setBoardCreatorFilter, boardCompletionFilter, setBoardCompletionFilter, forceAllBoards, ...rest } = props;
 
     const deviceSize = useDeviceSize();
 
@@ -891,7 +892,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
                 </Input>
                 {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
                 <div className="select-pretext me-2">Limit:</div>
-                <Input className="w-auto" type="select" aria-label="Set display limit" data-testid="limit-select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                <Input disabled={forceAllBoards} className="w-auto" type="select" aria-label="Set display limit" data-testid="limit-select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </div>

@@ -167,6 +167,13 @@ export const MyGameboards = () => {
         }
     }, [boards]);
 
+    const forceAllBoards = !!boardTitleFilter || boardCreator !== BoardCreators.all || boardCompletion !== BoardCompletions.any;
+    useEffect(() => {
+        if (boardLimit !== BoardLimit.All && forceAllBoards) {
+            setBoardLimit(BoardLimit.All);
+        }
+    }, [boardLimit, forceAllBoards, setBoardLimit]);
+
     const pageHelp = <span>
         A summary of your {siteSpecific("question decks", "quizzes")}
     </span>;
@@ -192,6 +199,7 @@ export const MyGameboards = () => {
                 boardTitleFilter={boardTitleFilter} setBoardTitleFilter={setBoardTitleFilter}
                 boardCreatorFilter={boardCreator} setBoardCreatorFilter={setBoardCreator}
                 boardCompletionFilter={boardCompletion} setBoardCompletionFilter={setBoardCompletion}
+                forceAllBoards={forceAllBoards}
                 hideButton
             />
             <MainContent>
