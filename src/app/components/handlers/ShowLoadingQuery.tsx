@@ -7,7 +7,7 @@ import {getRTKQueryErrorMessage} from "../../state";
 import {Alert} from "reactstrap";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 
-const loadingPlaceholder = <div className="w-100 text-center pb-2">
+export const LoadingPlaceholder = () => <div className="w-100 text-center pb-2">
     <h2 aria-hidden="true" className="pt-7">Loading...</h2>
     <IsaacSpinner />
 </div>;

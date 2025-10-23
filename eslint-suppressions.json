@@ -1021,11 +1021,6 @@
       "count": 1
     }
   },
-  "src/app/components/pages/RevisionDetailPage.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 3
-    }
-  },
   "src/app/components/pages/Search.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
