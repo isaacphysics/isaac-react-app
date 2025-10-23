@@ -1254,14 +1254,6 @@
       "count": 2
     }
   },
-  "src/app/services/useSessionExpired.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 1
-    }
-  },
   "src/app/services/userViewingContext.ts": {
     "@typescript-eslint/no-unused-vars": {
       "count": 1
