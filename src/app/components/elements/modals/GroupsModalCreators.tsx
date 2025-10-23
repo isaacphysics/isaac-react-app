@@ -100,7 +100,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                     <h3>Generate a QR Code</h3>
                     <p>Students can scan a QR code on their device to join your group:</p>
                     {showQR
-                        ? <GroupQRPanel link={`${location.origin}/account?authToken=${token?.token}`} />
+                        ? <GroupQRPanel link={`${location.origin}/account?authToken=${token?.token}`} groupName={group.groupName} />
                         : <Button color={siteSpecific("primary", "keyline")} onClick={() => {
                             startTransition(() => {
                                 setShowQR(true);

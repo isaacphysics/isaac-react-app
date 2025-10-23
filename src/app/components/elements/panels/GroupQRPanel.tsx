@@ -2,46 +2,73 @@ import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import { siteSpecific } from '../../../services';
 
-const GroupQRCodePanel = ({link}: {link: string}) => {
-    const [qrCodeStringBase64SVG, setQrCodeStringBase64SVG] = useState<string | undefined>(undefined);
+const SITE_ICON = siteSpecific(
+    `<svg xmlns="http://www.w3.org/2000/svg" x="43.5%" viewBox="0 0 42 61" fill="none" width="13%"><path d="M18.7887 11.7235C14.3903 -1.82218 7.71312 0.376998 4.78088 1.22161C1.7849 2.06622 1.32275 1.68376 1.32275 1.68376C5.89641 16.5362 17.8007 12.1856 17.8007 12.1856C17.8007 12.1856 11.2669 11.8032 7.55376 5.33312L18.7887 11.7235Z" fill="#4E9934"/><path d="M20.7168 11.8352C20.7965 11.3252 20.7965 5.52451 25.9438 1.25364C25.9438 1.25364 29.2904 -1.56705 29.4816 1.25364C29.6729 4.07432 29.0992 2.33729 25.9757 4.87113C22.8522 7.40496 21.9917 11.8352 21.9917 11.8352H20.7168Z" fill="#100C08"/><path d="M41.3382 48.6791L20.701 60.6312L0 48.6791V24.8388L20.6691 12.8867L41.3382 24.8069V48.6791Z" fill="#4E9934"/><path d="M41.3382 48.6791L20.701 60.6312L0 48.6791V24.8388L20.6691 12.8867L41.3382 24.8069V48.6791Z" fill="#4E9934"/><path d="M5.84833 29.1893C5.8802 29.9542 5.41805 30.4642 4.65312 30.4642C4.03162 30.4642 3.5376 29.9542 3.5376 29.1893C3.5376 28.4244 4.04755 27.9144 4.70093 27.9144C5.35431 27.8985 5.84833 28.4244 5.84833 29.1893ZM3.72883 44.6632V32.3765H5.67303V44.6632H3.72883Z" fill="white"/><path d="M7.44195 42.6389C7.87222 42.9099 8.63715 43.2605 9.43396 43.2605C10.5495 43.2605 11.2507 42.5752 11.2507 41.4915C11.2507 40.5354 10.9319 39.9139 9.673 39.1011C8.06346 38.0653 7.20291 37.0294 7.20291 35.5952C7.20291 33.6032 8.7009 32.1689 10.5814 32.1689C11.5535 32.1689 12.2706 32.4877 12.7805 32.7905L12.2387 34.2884C11.8084 33.9857 11.2666 33.7466 10.6132 33.7466C9.54551 33.7466 9.00368 34.5115 9.00368 35.2924C9.00368 36.137 9.30647 36.5992 10.5335 37.4438C11.9519 38.3681 13.0833 39.4517 13.0833 41.2047C13.0833 43.6748 11.426 44.8541 9.41802 44.8541C8.49373 44.8541 7.52163 44.5831 6.96387 44.1529L7.44195 42.6389Z" fill="white"/><path d="M19.7129 44.6631L19.6014 43.3564H19.5217C18.9799 44.3125 18.1353 44.8544 17.0994 44.8544C15.4421 44.8544 14.1831 43.4679 14.1831 41.3484C14.1831 38.2409 16.6532 36.8863 19.4101 36.8545V36.472C19.4101 34.8146 18.9958 33.6672 17.45 33.6672C16.6851 33.6672 16.0158 33.9382 15.4421 34.2888L15.0118 32.9342C15.5217 32.5517 16.6691 32.1533 17.8962 32.1533C20.3663 32.1533 21.434 33.7788 21.434 36.5517V41.8584C21.434 42.8146 21.434 43.8663 21.5456 44.6631H19.7129ZM19.442 38.2887C18.438 38.2887 16.0636 38.4799 16.0636 41.1413C16.0636 42.7508 16.8444 43.3404 17.5934 43.3404C18.4699 43.3404 19.203 42.7189 19.442 41.4919C19.4898 41.2528 19.4898 41.0297 19.4898 40.8066V38.2887H19.442Z" fill="white"/><path d="M28.3023 44.6631L28.1907 43.3564H28.111C27.5692 44.3125 26.7246 44.8544 25.6888 44.8544C24.0314 44.8544 22.7725 43.4679 22.7725 41.3484C22.7725 38.2409 25.2426 36.8863 27.9995 36.8545V36.472C27.9995 34.8146 27.5852 33.6672 26.0394 33.6672C25.2744 33.6672 24.6051 33.9382 24.0314 34.2888L23.6011 32.9342C24.1111 32.5517 25.2585 32.1533 26.4856 32.1533C28.9557 32.1533 30.0234 33.7788 30.0234 36.5517V41.8584C30.0234 42.8146 30.0234 43.8663 30.1349 44.6631H28.366C28.3023 44.6313 28.3023 44.6631 28.3023 44.6631ZM28.0314 38.2887C27.0274 38.2887 24.6529 38.4799 24.6529 41.1413C24.6529 42.7508 25.4338 43.3404 26.1828 43.3404C27.0593 43.3404 27.7923 42.7189 28.0314 41.4919C28.0792 41.2528 28.0792 41.0297 28.0792 40.8066V38.2887H28.0314Z" fill="white"/><path d="M38.0711 44.3607C37.6408 44.6316 36.9077 44.7909 36.0631 44.7909C33.3699 44.7909 31.5532 42.6077 31.5532 38.5599C31.5532 35.0221 33.3221 32.1377 36.4137 32.1377C37.0671 32.1377 37.7683 32.3289 38.1348 32.5202L37.7524 34.1297C37.4814 34.0182 36.9874 33.811 36.3659 33.811C34.4058 33.811 33.5134 36.1536 33.5134 38.5759C33.5134 41.4603 34.597 43.1655 36.4297 43.1655C36.9715 43.1655 37.4018 43.0539 37.848 42.8467L38.0711 44.3607Z" fill="white"/></svg>`, 
+    `<svg xmlns="http://www.w3.org/2000/svg" x="41%" viewBox="0 0 101.4 101.4" style="enable-background:new 0 0 101.4 101.4;" width="18%"><style type="text/css">.st0{fill:#0AFFE7;}</style><g><path class="st0" d="M96.8,0H4.6C2.1,0,0,2.1,0,4.6v92.2c0,2.5,2.1,4.6,4.6,4.6h92.2c2.5,0,4.6-2.1,4.6-4.6V4.6   C101.4,2.1,99.3,0,96.8,0z"/></g><g><path d="M85.4,43.3v4.6l-0.3-0.5c-0.7-1.3-1.8-2.4-3.2-3.2c-1.4-0.9-3.1-1.3-5.1-1.3c-1.9,0-3.8,0.4-5.4,1.4   c-1.6,0.9-2.9,2.3-3.8,4c-0.9,1.8-1.4,3.8-1.4,6.1s0.5,4.3,1.4,6.1c0.9,1.8,2.2,3.2,3.8,4.2c1.6,1,3.4,1.5,5.4,1.5   c1.9,0,3.6-0.4,5.1-1.3c1.5-0.9,2.6-2,3.3-3.3l0.3-0.5v4.7H89V43.3H85.4z M84.4,59.1c-0.7,1.3-1.7,2.3-2.9,3c-1.2,0.6-2.6,1-4,1   c-1.5,0-2.8-0.3-4-1c-1.2-0.7-2.2-1.7-2.9-3c-0.7-1.3-1.1-2.8-1.1-4.6s0.4-3.3,1.1-4.6c0.8-1.3,1.7-2.3,2.9-3s2.6-1,4-1   c1.5,0,2.8,0.3,4,1s2.2,1.7,2.9,3c0.7,1.3,1,2.8,1.1,4.6C85.5,56.2,85.1,57.8,84.4,59.1z"/><path d="M59.7,35.2v12.7l-0.3-0.5c-0.7-1.3-1.9-2.4-3.4-3.2S52.8,43,51.1,43c-2,0-3.9,0.4-5.5,1.4c-1.6,0.9-2.9,2.3-3.8,4   c-0.9,1.8-1.4,3.8-1.4,6.1s0.5,4.3,1.4,6.1c0.1,0.1,0.1,0.2,0.2,0.3L41.9,61c-0.5,0.4-1.1,0.9-1.7,1.3c-0.6,0.5-1.3,0.7-2.1,0.7   c-0.6,0-1.1-0.1-1.6-0.4c-0.5-0.3-0.9-0.6-1.3-1c-0.3-0.4-0.6-0.8-0.9-1.3c-0.2-0.5-0.5-1-0.7-1.4c0.8-1.2,1.5-2.4,2.2-3.7   s1.3-2.6,1.8-3.9c0.5-1.3,1-2.6,1.3-3.8c0.3-1.2,0.6-2.4,0.8-3.4h-4.9c0,1.5-0.2,3.3-0.6,5.3c-0.5,2-1.1,4.1-2,6.2   c-0.2-0.6-0.4-1.4-0.6-2.2c-0.2-0.9-0.4-1.8-0.6-2.8c-0.3-1.2-0.6-2.3-1-3.3c-0.4-0.9-0.9-1.7-1.5-2.4s-1.3-1.2-2.2-1.5   c-0.9-0.3-2-0.5-3.2-0.5c-1.5,0-3,0.3-4.3,0.9c-1.4,0.5-2.5,1.4-3.5,2.5c-1,1.1-1.7,2.5-2.3,4.1c-0.5,1.6-0.8,3.5-0.8,5.6   c0,1.5,0.3,2.9,0.8,4.1c0.6,1.2,1.3,2.3,2.3,3.2c1,0.9,2.1,1.6,3.4,2.1s2.7,0.8,4.2,0.8s3-0.4,4.4-1.2c1.4-0.8,2.7-1.8,3.9-3.2   l0.7,1.2c0.5,0.8,1,1.6,1.7,2.2c0.7,0.7,1.4,1,2.2,1c0.6,0,1.2-0.2,1.8-0.5c0.6-0.3,1.2-0.7,1.8-1.2c0.6-0.5,1.2-1,1.7-1.5   c0.6-0.5,1-1,1.4-1.4c0.8,1.3,1.9,2.3,3.2,3.1c1.6,1,3.4,1.5,5.4,1.5c1.9,0,3.7-0.4,5.1-1.3c1.5-0.9,2.6-2,3.3-3.3l0.3-0.5v4.7h3.5   l-0.1-30.6H59.7z M27.3,62.9c-1.2,1-2.4,1.5-3.6,1.5c-2,0-3.6-0.8-4.6-2.5c-1.1-1.6-1.6-3.8-1.6-6.6c0-1.5,0.1-2.9,0.3-4.2   c0.2-1.3,0.6-2.4,1-3.4c0.4-1,1-1.7,1.7-2.3c0.7-0.5,1.5-0.8,2.5-0.8c1.2,0,2.3,0.4,3.3,1.4s1.8,2.7,2.3,5.3c0.4,1.6,0.7,3.1,1,4.3   c0.2,1.4,0.5,2.6,0.8,3.6C29.5,60.7,28.4,61.9,27.3,62.9z M58.7,59.1c-0.7,1.3-1.7,2.3-2.9,3c-1.2,0.6-2.5,1-4,1s-2.8-0.3-4-1   c-1.2-0.7-2.2-1.7-2.9-3c-0.7-1.3-1.1-2.8-1.1-4.6s0.4-3.3,1.1-4.6c0.8-1.3,1.7-2.3,2.9-3s2.6-1,4-1c1.5,0,2.8,0.3,4,1   s2.2,1.7,2.9,3c0.8,1.3,1.1,2.8,1.1,4.6C59.8,56.2,59.4,57.8,58.7,59.1z"/></g></svg>`
+);
 
-    function generateSVG(qrcode: QRCode.QRCode): string {
-        const fgCol = siteSpecific('#1a6600', '#6C0A48'); // phy=brand-700, ada=theme-200
-        const bgCol = '#ffffff';
-        const s = qrcode.modules.size;
+interface QRIcon {
+    src: string;
+    iconArea: number; // the *total* fractional size of the icon area; iconArea^2 must be (ideally significantly) less than the error correction capability (M=15%)
+}
 
-        // draw the 3 squares separately (as to be solid)
-        // can't use qrcode's reserved areas this includes various timing patterns that we don't want to draw differently
-        const squareStarts = ["4 4.5", `4 ${s - 2.5}`, `${s - 3} 4.5`];
-        const reservedStr = squareStarts.reduce((acc, curr) => {
-            return acc + `<path stroke="${fgCol}" d="M${curr}h6.5v6h-6v-6.5m1.5 2.5h2.5v2h-2v-2m0 1h2" style="stroke-width: 1px;" fill="${bgCol}"/>`;
-        }, '');
-        let dataStr = '';
-        for (let r = 0; r < s; r++) {
-            for (let c = 0; c < s; c++) {
-                if (qrcode.modules.get(r, c)) {
-                    dataStr += `<circle cx="${c + 4.5}" cy="${r + 4.5}" r="0.5" fill="${fgCol}"/>`;
-                }
+function generateSVG(qrcode: QRCode.QRCode, icon?: QRIcon): string {
+    const fgCol = siteSpecific('#143a04', '#000'); // phy-brand-800 / cs-black
+    const bgCol = '#ffffff';
+    const s = qrcode.modules.size;
+
+    const isInIconArea = (r: number, c: number) => {
+        // the -0.02 is correction for the circles not being drawn at exactly (c, r)
+        return icon &&
+            ((0.5 - (icon.iconArea / 2)) * s) < r && r < ((0.5 + (icon.iconArea / 2) - 0.02) * s) &&
+            ((0.5 - (icon.iconArea / 2)) * s) < c && c < ((0.5 + (icon.iconArea / 2) - 0.02) * s);
+    };
+
+    // draw the 3 squares separately (as to be solid)
+    // can't use qrcode's reserved areas this includes the timing patterns that we don't want to draw differently
+    const squareStarts = ["4 4.5", `4 ${s - 2.5}`, `${s - 3} 4.5`];
+    const reservedStr = squareStarts.reduce((acc, curr) => {
+        return acc + `<path stroke="${fgCol}" d="M${curr}h6.5v6h-6v-6.5m1.5 2.5h2.5v2h-2v-2m0 1h2" style="stroke-width: 1px;" fill="${bgCol}"/>`;
+    }, '');
+
+    // draw every data module as a circle
+    let dataStr = '';
+    for (let r = 0; r < s; r++) {
+        for (let c = 0; c < s; c++) {
+            if (qrcode.modules.get(r, c) && !isInIconArea(r, c)) {
+                dataStr += `<circle cx="${c + 4.5}" cy="${r + 4.5}" r="0.5" fill="${fgCol}"/>`;
             }
         }
-        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${s + 8} ${s + 8}" shape-rendering="crispEdges"><path fill="${bgCol}" d="M0 0h${s + 8}v${s + 8}H0z"/>${reservedStr}<g>${dataStr}</g></svg>`;
     }
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${s + 8} ${s + 8}" shape-rendering="crispEdges"><path fill="${bgCol}" d="M0 0h${s + 8}v${s + 8}H0z"/>${reservedStr}<g>${dataStr}</g>${icon?.src}</svg>`;
+};
+
+const GroupQRCodePanel = ({link, groupName}: {link: string, groupName?: string}) => {
+    const [qrCodeStringBase64SVG, setQrCodeStringBase64SVG] = useState<string | undefined>(undefined);
 
     useEffect(() => {
-        // QRCode does have a toString => svg method but it isn't very customisable; instead, build SVG ourselves
+        // QRCode does have a toString => svg method but it isn't very customisable; instead, build SVG ourselves using the QR object
         const code = QRCode.create(link, {
             errorCorrectionLevel: 'M',
         });
 
-        setQrCodeStringBase64SVG(window.btoa(generateSVG(code)));
+        setQrCodeStringBase64SVG(window.btoa(
+            generateSVG(code, {
+                src: SITE_ICON,
+                iconArea: 0.3,
+            })
+        ));
     }, [link]);
 
     return <div className="vertical-center">
-        {qrCodeStringBase64SVG && <img
-            className="wf-20"
-            src={'data:image/svg+xml;base64,' + qrCodeStringBase64SVG}
-            alt={"Follow this URL to join the group: " + link}
-        />}
+        {qrCodeStringBase64SVG && <figure>
+            <img
+                className="wf-20 pb-0"
+                src={'data:image/svg+xml;base64,' + qrCodeStringBase64SVG}
+                alt={"Follow this URL to join the group: " + link}
+            />
+            <figcaption className="text-center pb-3">Scan to join {groupName ? <b>{groupName}</b> : "the group"}!</figcaption>
+        </figure>}
     </div>;
 };
 
