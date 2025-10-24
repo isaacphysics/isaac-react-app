@@ -276,7 +276,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     tag={"li"}
                 >
                     <>
-                        <li>
+                        <li className="pb-2">
                             <CheckboxWrapper active={excludeBooks}>
                                 <StyledCheckbox
                                     color="primary"
@@ -286,7 +286,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 />
                             </CheckboxWrapper>
                         </li>
-                        <div className="section-divider ms-3 my-2"/>
+                        <div className="section-divider ms-3 my-0 pb-2"/> {/* this cannot use margin as spacing as it is inside a collapsible region, which cannot count child margin towards the total height */}
                         {bookOptions.map((book, index) => (
                             <li key={index}>
                                 <CheckboxWrapper active={searchBooks.includes(book.tag) && !excludeBooks}>
