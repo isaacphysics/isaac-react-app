@@ -72,7 +72,7 @@
     "test-ada-visual": "python3 vrt-in-docker.py ada",
     "test-ada-visual-update-baseline": "python3 vrt-in-docker.py ada --update-baselines",
     "lint": "eslint -c eslint.config.mjs src/",
-    "lint:ci": "CI=true yarn run lint --max-warnings=0 --prune-suppressions",
+    "lint:ci": "CI=true yarn run lint --max-warnings=0 --pass-on-unpruned-suppressions",
     "build-stats-phy": "webpack --env prod --config config/webpack.config.physics.js --profile --json > bundle-stats-phy.json",
     "analyse-bundle-phy": "webpack-bundle-analyzer bundle-stats-phy.json build-phy",
     "build-stats-ada": "webpack --env prod --config config/webpack.config.ada.js --profile --json > bundle-stats-ada.json",
