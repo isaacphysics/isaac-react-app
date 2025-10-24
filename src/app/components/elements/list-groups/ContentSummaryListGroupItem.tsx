@@ -70,20 +70,20 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
     switch(item.state) {
         case CompletionState.IN_PROGRESS:
             questionIconLabel = "In progress question icon";
-            questionIcon = <img src="/assets/cs/icons/status-in-progress.svg" alt={questionIconLabel}/>;
+            questionIcon = <img src="/assets/cs/icons/status-in-progress.svg" alt={questionIconLabel} />;
             break;
         case CompletionState.ALL_CORRECT:
             questionIconLabel = "Complete question icon";
-            questionIcon = <img src="/assets/cs/icons/status-correct.svg" alt={questionIconLabel}/>;
+            questionIcon = <img src="/assets/cs/icons/status-correct.svg" alt={questionIconLabel} />;
             break;
         case CompletionState.ALL_INCORRECT:
             questionIconLabel = "Incorrect question icon";
-            questionIcon = <img src="/assets/cs/icons/status-incorrect.svg" alt={questionIconLabel} width={"24px"}/>;
+            questionIcon = <img src="/assets/cs/icons/status-incorrect.svg" alt={questionIconLabel} />;
             break;
         case CompletionState.NOT_ATTEMPTED:
         default:
             questionIconLabel = "Not attempted question icon";
-            questionIcon = <img src="/assets/cs/icons/status-not-started.svg" alt={questionIconLabel}/>;
+            questionIcon = <img src="/assets/cs/icons/status-not-started.svg" alt={questionIconLabel} />;
             break;
     }
 
