@@ -68,6 +68,13 @@
 
   &-prizes-background {
     background-color: #ffdf80;
+    strong, b {
+      font-weight: normal !important;
+    }
+
+    .competition-information-text::before {
+      font-weight: normal !important;
+    }
   }
 
   &-no-border {
@@ -299,4 +306,8 @@ ul .competition-information-text {
     content: attr(data-title);
     font-weight: bold;
   }
+}
+
+.prizesCard li {
+  margin-bottom: 0 !important;
 }

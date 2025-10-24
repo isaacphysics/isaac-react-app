@@ -35,7 +35,7 @@ export const IsaacCompetition = () => {
     event.preventDefault();
     if (accordionRef.current) {
       accordionRef.current.scrollIntoView({ behavior: "smooth" });
-      setOpen("5");
+      setOpen("7");
     }
   };
 
@@ -143,7 +143,7 @@ export const IsaacCompetition = () => {
                 description={section3.prizes.description}
                 content={section3.prizes.prizeList}
                 isList
-                className="competition-information-prizes-background"
+                className="competition-information-prizes-background prizesCard"
               />
             </Col>
           </Row>

@@ -20,10 +20,9 @@ export default {
     howItWorks: {
       title: "How does it work?",
       steps: [
-        "1. Students ask their teacher to get involved and work on their projects",
-        "2. Create or log in to an account",
+        "1. Students ask their teacher to get involved and log in or create an account",
         {
-          text: "3. Join our ",
+          text: "2. Join our ",
           link1: {
             text: "live Q&A session",
             href: "https://isaaccomputerscience.org/events/20251113_national_competition_q_and_a",
@@ -34,8 +33,9 @@ export default {
           link3: { text: "Gameboards", href: "https://isaaccomputerscience.org/gameboards/new" },
           text4: " (optional)",
         },
-        "4. Work individually or in a group to develop a project, record a video, and ask your teacher to submit it",
-        "5. Teachers submit competition entry! The finalists will be selected and invited to a final in Birmingham in May 2026.",
+        "3. Students create a project, record a video, and ask their teacher to submit it",
+        "4. Teachers create (or use) a student group and submit the entry form with a cloud storage link to the project",
+        "5. Shortlisted finalists will be invited to Birmingham in May 2026!",
         {
           text5: "Teachers, see our ",
           link5: { text: "FAQ guide", href: "#" },
@@ -75,7 +75,7 @@ export default {
       entries: [
         { event: "Entries open", date: "November 2025" },
         { event: "Entries close", date: "31 January 2026" },
-        { event: "Finalist selected", date: "March 2026" },
+        { event: "Finalists selected", date: "March 2026" },
         { event: "The final", date: "18 May 2026" },
       ],
     },
@@ -175,7 +175,7 @@ export default {
       ],
     },
     groupEntry: {
-      title: "How to create a group and submit your entry",
+      title: "How to create a group and submit your entry (for teachers)",
       section: [
         "<strong>How to create a group:</strong>",
         [
@@ -252,15 +252,15 @@ export default {
       ],
     },
     industry: {
-      title: "Industry Partners",
+      title: "Industry partners",
       section: [
         "<strong>Birmingham City University</strong> is once again a key partner of the competition and will proudly host the <strong>final at their Innovation Fest in Birmingham this May.</strong> This event offers students and teachers an excellent chance to take part in an exciting showcase of creativity, innovation, and future talent.",
       ],
     },
     termsAndConditions: {
-      title: "Terms and Conditions – National Computing Competition 2025/26",
+      title: "Terms and Conditions – 2025/26",
       section: [
-        "The National Computing Competition (Competition) is run by the Department for Education’s National Centre for Computing Education (run by STEM Learning Limited (company number 05081097) hosted on the Isaac Computer Science platform (“Organiser”, “We” “Us” and “Our”), in partnership with the industry companies.",
+        "The National Computer Science Competition (Competition) is run by the Department for Education’s National Centre for Computing Education (run by STEM Learning Limited (company number 05081097) hosted on the Isaac Computer Science platform (“Organiser”, “We” “Us” and “Our”), in partnership with the industry companies.",
         "“You” and “Your” refer to the Teacher(s) entering the Competition on behalf of a group of students or an individual student who meets the eligibility requirements.",
         "1.0 Introduction",
         [

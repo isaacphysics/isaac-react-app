@@ -9,7 +9,7 @@ import { useActiveGroups } from "./useActiveGroups";
 import Select from "react-select";
 import CustomTooltip from "../../../elements/CustomTooltip";
 
-const COMPETITON_ID = "20251103_isaac_competition";
+const COMPETITON_ID = "20251020_isaac_competition_form";
 interface CompetitionEntryFormProps {
   handleTermsClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }

@@ -25,7 +25,7 @@ const CompetitionTimeline = ({ title, content, entries }: CompetitionTimelinePro
           className={`competition-timeline-box-container competition-timeline-background-${index + 1}`}
         >
           <Card className={`h-100 competition-timeline-background-${index + 1} competition-information-no-border`}>
-            <CardTitle tag="h3" className="competition-timeline-header pt-4 px-3">
+            <CardTitle tag="h3" className="competition-timeline-header pt-4 pl-3">
               {entry.event}
             </CardTitle>
             <CardBody>

@@ -21,19 +21,32 @@ const InformationCard = ({
   const renderStepWithLinks = (step: any, index: number) => (
     <CardText key={index} className="competition-information-text">
       {step.text}
-      {step.link1 && <a href={step.link1.href}>{step.link1.text}</a>}
+      {step.link1 && (
+        <a href={step.link1.href} target="_blank" rel="noopener noreferrer">
+          {step.link1.text}
+        </a>
+      )}
       {step.text2}
       {step.link2 && (
-        <a href={step.link2.href} style={{ color: "#1D70B8" }}>
+        <a href={step.link2.href} target="_blank" rel="noopener noreferrer" style={{ color: "#1D70B8" }}>
           {step.link2.text}
         </a>
       )}
       {step.text3}
-      {step.link3 && <a href={step.link3.href}>{step.link3.text}</a>}
+      {step.link3 && (
+        <a href={step.link3.href} target="_blank" rel="noopener noreferrer">
+          {step.link3.text}
+        </a>
+      )}
       {step.text4}
       {step.text5}
       {step.link5 && (
-        <a href={step.link5.href} onClick={step.link5.text === "FAQ guide" ? onFaqClick : undefined}>
+        <a
+          href={step.link5.href}
+          target={step.link5.text === "FAQ guide" ? undefined : "_blank"}
+          rel={step.link5.text === "FAQ guide" ? undefined : "noopener noreferrer"}
+          onClick={step.link5.text === "FAQ guide" ? onFaqClick : undefined}
+        >
           {step.link5.text}
         </a>
       )}
@@ -51,12 +64,25 @@ const InformationCard = ({
         {isList ? (
           <ul>
             {content.map((item, index) => {
-              const [title, description] = item.split(": ");
-              return (
-                <li key={index} className="competition-information-text" data-title={title + ": "}>
-                  {description}
-                </li>
-              );
+              const isLast = index === content.length - 1;
+              if (item.includes(": ")) {
+                const [title, description] = item.split(": ");
+                return (
+                  <li
+                    key={item}
+                    className={`competition-information-text ${isLast ? "" : "mb-3"}`}
+                    data-title={title + ": "}
+                  >
+                    {description}
+                  </li>
+                );
+              } else {
+                return (
+                  <li key={item} className={`competition-information-text ${isLast ? "" : "mb-3"}`}>
+                    {item}
+                  </li>
+                );
+              }
             })}
           </ul>
         ) : (
