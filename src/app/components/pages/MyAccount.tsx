@@ -311,7 +311,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                 true
             )).then(() => setSaving(false)).catch(() => setSaving(false));
             return;
-        } else if (activeTab == ACCOUNT_TAB.emailpreferences) {
+        } else if (activeTab !== ACCOUNT_TAB.account) {
             dispatch(showErrorToast("Account update failed", "Please make sure that all required fields in the \"Profile\" tab have been filled in."));
         }
         setSaving(false);
