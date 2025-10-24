@@ -385,11 +385,6 @@
       "count": 3
     }
   },
-  "src/app/components/elements/list-groups/AbstractListViewItem.tsx": {
-    "@stylistic/indent": {
-      "count": 72
-    }
-  },
   "src/app/components/elements/markup/index.tsx": {
     "no-case-declarations": {
       "count": 1
