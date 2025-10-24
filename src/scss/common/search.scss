@@ -14,11 +14,6 @@
     }
   }
 
-  .search-item-icon {
-    max-width: 2rem;
-    max-height: 2rem;
-  }
-
   .search-filters label {
     @include respond-above(xs) {
       margin-left: 0.5rem;
