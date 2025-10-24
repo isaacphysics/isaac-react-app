@@ -22,7 +22,7 @@ const defaultMiddlewareOptions = {
     // Make local dev actually responsive?
     // serializableCheck: false,
     // immutableCheck: false,
-};
+}
 
 export const store = configureStore({
     reducer: rootReducer,
