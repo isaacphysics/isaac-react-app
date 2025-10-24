@@ -40,11 +40,6 @@
     }
   }
 
-  .search-item-icon {
-    max-width: 2rem;
-    max-height: 2rem;
-  }
-
   .finder-filters {
     @include respond-above(sm) {
       justify-content: flex-end;

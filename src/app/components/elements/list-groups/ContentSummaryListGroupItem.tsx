@@ -63,7 +63,6 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
     if (itemSubject) {
         titleClasses += itemSubject.id;
     }
-    const iconClasses = `search-item-icon ${itemSubject?.id}-fill`;
     const hierarchyTags = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[])
         .filter((_t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
@@ -71,25 +70,20 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
     switch(item.state) {
         case CompletionState.IN_PROGRESS:
             questionIconLabel = "In progress question icon";
-            questionIcon = siteSpecific(
-                <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/incomplete-hex.svg#icon`} xlinkHref={`/assets/phy/icons/incomplete-hex.svg#icon`}/></svg>,
-                <img src="/assets/common/icons/incorrect.svg" alt={questionIconLabel}/>
-            );
+            questionIcon = <img src="/assets/common/icons/incorrect.svg" alt={questionIconLabel}/>;
             break;
         case CompletionState.ALL_CORRECT:
             questionIconLabel = "Complete question icon";
-            questionIcon = siteSpecific(
-                <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/tick-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/></svg>,
-                <img src="/assets/common/icons/completed.svg" alt={questionIconLabel}/>
-            );
+            questionIcon = <img src="/assets/common/icons/completed.svg" alt={questionIconLabel}/>;
+            break;
+        case CompletionState.ALL_INCORRECT:
+            questionIconLabel = "Incorrect question icon";
+            questionIcon = <img src="/assets/phy/icons/redesign/status-incorrect.svg" alt={questionIconLabel} width={"24px"}/>;
             break;
         case CompletionState.NOT_ATTEMPTED:
         default:
             questionIconLabel = "Not attempted question icon";
-            questionIcon = siteSpecific(
-                <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/question-hex.svg#icon`} xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/></svg>,
-                <img src="/assets/common/icons/not-started.svg" alt={questionIconLabel}/>
-            );
+            questionIcon = <img src="/assets/common/icons/not-started.svg" alt={questionIconLabel}/>;
             break;
     }
 
