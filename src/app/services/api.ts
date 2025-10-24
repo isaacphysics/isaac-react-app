@@ -3,7 +3,6 @@ import {
     API_PATH,
     IMAGE_PATH,
     securePadCredentials,
-    securePadPasswordReset,
     TAG_ID
 } from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
@@ -15,7 +14,6 @@ import {
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     Choice,
-    Concepts,
     CredentialsAuthDTO,
     QuestionSearchQuery,
     UserPreferencesDTO,
@@ -74,12 +72,6 @@ export const api = {
         },
         passwordReset: (params: {email: string}) => {
             return endpoint.post(`/users/resetpassword`, params);
-        },
-        verifyPasswordReset: (token: string | null) => {
-            return endpoint.get(`/users/resetpassword/${token}`);
-        },
-        handlePasswordReset: (params: {token: string; password: string}) => {
-            return endpoint.post(`/users/resetpassword/${params.token}`, securePadPasswordReset({password: params.password}));
         },
         updateCurrent: (registeredUser: Immutable<ValidationUser>, userPreferences: UserPreferencesDTO, passwordCurrent: string | null, registeredUserContexts?: UserContext[])
         :  AxiosPromise<Immutable<ApiTypes.RegisteredUserDTO>> =>

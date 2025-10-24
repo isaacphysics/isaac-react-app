@@ -1,35 +1,27 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
-    AppState,
-    handlePasswordReset,
-    useAppDispatch,
-    useAppSelector,
-    verifyPasswordReset
+    getRTKQueryErrorMessage,
+    useHandlePasswordResetMutation,
+    useVerifyPasswordResetQuery,
 } from "../../state";
 import {Button, Card, CardBody, CardFooter, Container, Form} from "reactstrap";
 import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 import {ExigentAlert} from "../elements/ExigentAlert";
-import {extractErrorMessage} from "../../services/errors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useParams} from "react-router-dom";
 
 
 export const ResetPasswordHandler = () => {
-    const dispatch = useAppDispatch();
-    const error = useAppSelector((state: AppState) => state?.error || null);
 
     const {token} = useParams<{token: string}>();
-    // todo: We will soon stop using the "general error" here. For now this is the easiest way to check if it's relevant.
-    const urlTokenValid = extractErrorMessage(error) != "Invalid password reset token.";
-
     const [newPassword, setNewPassword] = useState("");
-    const [passwordValid, setPasswordValid] = useState(false);
+    const [passwordValid, setPasswordValid] = useState(true);
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
-    // Check the password reset token is valid
-    useEffect(() => {dispatch(verifyPasswordReset(token));}, [dispatch, token]);
+    const {isSuccess: urlTokenValid, isLoading, error: tokenVerifyError} = useVerifyPasswordResetQuery(token ?? '', {skip: !token});
+    const [handlePasswordReset, {error: passwordResetError}] = useHandlePasswordResetMutation();
 
-    function submit(event: React.FormEvent<HTMLFormElement>) {
+    async function submit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         setSubmissionAttempted(true);
@@ -38,16 +30,18 @@ export const ResetPasswordHandler = () => {
             return;
         }
 
-        dispatch(handlePasswordReset({token: token, password: newPassword}));
+        await handlePasswordReset({token, password: newPassword});
     }
 
     return <Container id="password-reset" className={"mb-7"}>
         <TitleAndBreadcrumb breadcrumbTitleOverride="Password reset" currentPageTitle="Reset your password" icon={{type: "hex", icon: "icon-account"}} className="mb-4" />
+        {isLoading && <div>Verifying reset token...</div>}
         <div>
-            {!!error &&
-                // todo: Stop using the general error from Redux here.
+            {(!!tokenVerifyError || !!passwordResetError) &&
                 <ExigentAlert data-testid={"warning-invalid-token"} color={"warning"}>
-                    {extractErrorMessage(error)}
+                    <p className="alert-heading fw-bold">Unable to reset your password</p>
+                    {tokenVerifyError ?
+                        getRTKQueryErrorMessage(tokenVerifyError).message : getRTKQueryErrorMessage(passwordResetError).message}
                 </ExigentAlert>
             }
             <Form onSubmit={submit}>
