@@ -48,7 +48,7 @@ import {ListView} from "../elements/list-groups/ListView";
 export const getProgressIcon = (state?: CompletionState) => {
     const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
     let backgroundColor = "white";
-    let icon = siteSpecific("icon icon-raw icon-not-started", "/assets/cs/icons/question-not-started.svg");
+    let icon = siteSpecific("icon icon-raw icon-not-started", "/assets/cs/icons/status-not-started.svg");
     let message = siteSpecific("", "Not started");
     switch (state) {
         case CompletionState.ALL_CORRECT:
@@ -56,26 +56,26 @@ export const getProgressIcon = (state?: CompletionState) => {
                 backgroundColor = "correct";
             }
             message = "Correct";
-            icon = siteSpecific("icon icon-raw icon-correct", "/assets/cs/icons/question-correct.svg");
+            icon = siteSpecific("icon icon-raw icon-correct", "/assets/cs/icons/status-correct.svg");
             break;
         case CompletionState.ALL_INCORRECT:
             if (isAda) {
                 backgroundColor = "incorrect";
                 message = "Incorrect";
-                icon = siteSpecific("icon icon-raw icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
+                icon = "/assets/cs/icons/status-incorrect.svg";
                 break;
             }
             // fallthrough if isPhy
         case CompletionState.ALL_ATTEMPTED:
             if (isPhy) {
                 message = "All attempted (some errors)";
-                icon = siteSpecific("icon icon-raw icon-attempted", "/assets/cs/icons/question-attempted.svg");
+                icon = "icon icon-raw icon-attempted";
                 break;
             }
             // fallthrough if isAda
         case CompletionState.IN_PROGRESS:
             message = "In progress";
-            icon = siteSpecific("icon icon-raw icon-in-progress", "/assets/cs/icons/question-in-progress.svg");
+            icon = siteSpecific("icon icon-raw icon-in-progress", "/assets/cs/icons/status-in-progress.svg");
             break;
     }
     return {itemClasses: classNames(itemClasses, `bg-${backgroundColor}`), icon, message};

@@ -332,7 +332,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                     </div>,
                                     <div>
                                         Not attempted
-                                        <img className="ps-2 icon-status" src="/assets/cs/icons/question-not-started.svg" alt="Not attempted" />
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-not-started.svg" alt="Not attempted" />
                                     </div>
                                 )}
                             />
@@ -351,7 +351,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                     </div>,
                                     <div>
                                         Completed
-                                        <img className="ps-2 icon-status" src="/assets/cs/icons/question-correct.svg" alt="Completed" />
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-correct.svg" alt="Completed" />
                                     </div>
                                 )}
                             />
@@ -400,7 +400,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                     </div>,
                                     <div>
                                         Try again
-                                        <img className="ps-2 icon-status" src="/assets/cs/icons/question-in-progress.svg" alt="Try again" />
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-in-progress.svg" alt="Try again" />
                                     </div>
                                 )}
                             />
