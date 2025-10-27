@@ -7,7 +7,7 @@ import {getRTKQueryErrorMessage} from "../../state";
 import {Alert} from "reactstrap";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 
-const loadingPlaceholder = <div className="w-100 text-center pb-2">
+export const LoadingPlaceholder = () => <div className="w-100 text-center pb-2">
     <h2 aria-hidden="true" className="pt-7">Loading...</h2>
     <IsaacSpinner />
 </div>;
@@ -52,6 +52,7 @@ interface ShowLoadingQueryBaseProps<T> {
     placeholder?: JSX.Element | JSX.Element[];
     query: ShowLoadingQueryInfo<T>;
     ifNotFound?: JSX.Element | JSX.Element[];
+    maintainOnRefetch?: boolean;
 }
 type ShowLoadingQueryErrorProps<T> = ShowLoadingQueryBaseProps<T> & ({
     ifError: (error?: FetchBaseQueryError | SerializedError) => JSX.Element | JSX.Element[];
@@ -61,7 +62,7 @@ type ShowLoadingQueryErrorProps<T> = ShowLoadingQueryBaseProps<T> & ({
     defaultErrorTitle: string;
 });
 type ShowLoadingQueryProps<T> = ShowLoadingQueryErrorProps<T> & ({
-    thenRender: (t: NonNullable<T>) => JSX.Element | JSX.Element[];
+    thenRender: (t: NonNullable<T>, stale?: boolean) => JSX.Element | JSX.Element[];
     children?: undefined;
 } | {
     thenRender?: undefined;
@@ -71,17 +72,22 @@ type ShowLoadingQueryProps<T> = ShowLoadingQueryErrorProps<T> & ({
 //  - Either: `children` or `thenRender` (a function that takes the query data and returns a React element)
 //  - Either: `defaultErrorTitle` (the title for the default error component) or `ifError` (a function that takes the query error and produces a React element)
 //  - `placeholder` (React element to show while loading)
+//  - `maintainOnRefetch` (boolean indicating whether to keep showing the current data while refetching. use second parameter of `thenRender` to modify render tree accordingly)
 //  - `query` (the object returned by a RTKQ useQuery hook)
-export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, ifError, ifNotFound, defaultErrorTitle}: ShowLoadingQueryProps<T>) {
+export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, ifError, ifNotFound, defaultErrorTitle, maintainOnRefetch}: ShowLoadingQueryProps<T>) {
     const {data, isLoading, isFetching, isError, error} = query;
     const renderError = () => ifError ? <>{ifError(error)}</> : <DefaultQueryError error={error} title={defaultErrorTitle}/>;
     if (isError && error) {
         return "status" in error && typeof error.status === "number" && [NOT_FOUND, NO_CONTENT].includes(error.status) && ifNotFound ? <>{ifNotFound}</> : renderError();
     }
-    if (isLoading || isFetching) {
-        return placeholder ? <>{placeholder}</> : loadingPlaceholder;
+
+    const isStale = (isLoading || isFetching) && isFound<T>(data);
+    const showPlaceholder = (isLoading || isFetching) && (!maintainOnRefetch || !isDefined(data));
+
+    if (showPlaceholder) {
+        return placeholder ? <>{placeholder}</> : <LoadingPlaceholder />;
     }
     return isDefined(data)
-        ? (isFound<T>(data) ? <>{thenRender ? thenRender(data) : children}</> : (ifNotFound ? <>{ifNotFound}</> : renderError()))
+        ? (isFound<T>(data) ? <>{thenRender ? thenRender(data, isStale) : children}</> : (ifNotFound ? <>{ifNotFound}</> : renderError()))
         : renderError();
 }

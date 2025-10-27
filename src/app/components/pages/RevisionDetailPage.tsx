@@ -4,14 +4,11 @@ import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getThemeFromTags } from "../../services/pageContext";
 import { useGetRevisionPageQuery } from "../../state/slices/api/revisionApi";
 import { ContentControlledSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { LoadingPlaceholder, ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { IsaacRevisionDetailPageDTO, QuizSummaryDTO } from "../../../IsaacApiTypes";
-import { EditContentButton } from "../elements/EditContentButton";
-import { TeacherNotes } from "../elements/TeacherNotes";
 import { convertToALVIGameboards, ListView } from "../elements/list-groups/ListView";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 import { MetadataContainer, MetadataContainerLink } from "../elements/panels/MetadataContainer";
-import { Markup } from "../elements/markup";
 import { PageMetadata } from "../elements/PageMetadata";
 
 interface RevisionProps {
@@ -33,11 +30,12 @@ export const RevisionPage = ({match: {params: {pageId}}}: RevisionProps) => {
         <ShowLoadingQuery
             query={revisionPageQuery}
             defaultErrorTitle="Unable to load revision page."
-            thenRender={(page) => {
+            maintainOnRefetch // allows keeping sidebar content intact while refetching
+            thenRender={(page, isStale) => {
                 return <SidebarLayout>
                     <ContentControlledSidebar sidebar={revisionPageQuery.data?.sidebar} />
                     <MainContent>
-                        <RevisionPageInternal page={page} />
+                        {isStale ? <LoadingPlaceholder /> : <RevisionPageInternal page={page} />}
                     </MainContent>
                 </SidebarLayout>;
             }}
