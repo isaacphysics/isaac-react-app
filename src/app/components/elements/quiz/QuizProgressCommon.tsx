@@ -442,9 +442,9 @@ export function ResultsTable<Q extends QuestionType>({
                                                 ? siteSpecific(
                                                     formatMark(
                                                         pageSettings?.attemptedOrCorrect === "CORRECT"
-                                                            ? (studentProgress.correctPartResults || [])[index]
-                                                            : (studentProgress.correctPartResults || [])[index] + (studentProgress.incorrectPartResults || [])[index],
-                                                        questions[index].questionPartsTotal as number,
+                                                            ? (studentProgress.correctMarkResults || [])[index].reduce((a, b) => a + b, 0)
+                                                            : (studentProgress.correctMarkResults || [])[index].concat((studentProgress.incorrectMarkResults || [])[index]).reduce((a, b) => a + b, 0),
+                                                        studentProgress.markTotals![index].reduce((a, b) => a + b, 0) ?? 0,
                                                         !!pageSettings?.formatAsPercentage
                                                     ),
                                                     getAssignmentQuestionCorrectnessIcon((studentProgress.questionResults || [])[index], pageSettings?.attemptedOrCorrect || "CORRECT"))

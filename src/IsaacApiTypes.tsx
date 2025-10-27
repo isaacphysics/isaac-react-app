@@ -49,6 +49,7 @@ export interface AssignmentProgressDTO {
     correctPartResults?: number[];
     incorrectPartResults?: number[];
     correctMarkResults?: number[][];
+    incorrectMarkResults?: number[][];
     markTotals?: number[][];
     questionResults?: CompletionState[];
     questionPartResults?: QuestionPartState[][];
