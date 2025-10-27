@@ -30,18 +30,6 @@ export function formatMark(numerator: number, denominator: number, formatAsPerce
     return result;
 }
 
-export const generateCorrectnessIcon = (correct: number, incorrect: number, notAttempted: number, totalParts: number) => {
-    if (correct === totalParts) {
-        return ICON.correct;
-    } else if (notAttempted === totalParts) {
-        return ICON.notAttempted;
-    } else if (correct === 0) {
-        return ICON.incorrect;
-    } else {
-        return ICON.partial;
-    }
-};
-
 const getAssignmentQuestionCorrectnessIcon = (state: CompletionState, attemptedOrCorrect: "ATTEMPTED" | "CORRECT") => {
     if (attemptedOrCorrect === "CORRECT") {
         switch (state) {
