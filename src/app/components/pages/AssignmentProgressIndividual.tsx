@@ -340,20 +340,23 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
 
         const ret = (p.questionResults || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
             const correctQuestionsCount  = [CompletionState.ALL_CORRECT].includes(results) ? oldP.correctQuestionPagesCount + 1 : oldP.correctQuestionPagesCount;
-            const questions = assignment.gameboard.contents;
+            // const questions = assignment.gameboard.contents;
+            const correctMarkTotal = (p.correctMarkResults || [])[i].reduce((a, b) => a + b, 0);
+            const incorrectMarkTotal = (p.incorrectMarkResults || [])[i].reduce((a, b) => a + b, 0);
+            const markTotal = (p.markTotals || [])[i].reduce((a, b) => a + b, 0);
             return {
                 ...oldP,
                 correctQuestionPagesCount: correctQuestionsCount,
-                correctQuestionMarksCount: oldP.correctQuestionMarksCount + (p.correctPartResults || [])[i],
-                incorrectQuestionMarksCount: oldP.incorrectQuestionMarksCount + (p.incorrectPartResults || [])[i],
+                correctQuestionMarksCount: oldP.correctQuestionMarksCount + correctMarkTotal,
+                incorrectQuestionMarksCount: oldP.incorrectQuestionMarksCount + incorrectMarkTotal,
                 notAttemptedPartResults: [
                     ...oldP.notAttemptedPartResults,
-                    (questions[i].questionPartsTotal - (p.correctPartResults || [])[i] - (p.incorrectPartResults || [])[i])
+                    (markTotal - correctMarkTotal - incorrectMarkTotal)
                 ]
             };
         }, initialState);
         return [ret, questions.length === ret.correctQuestionPagesCount];
-    }), [assignment.gameboard.contents, assignment.progress, questions.length]);
+    }), [assignment.progress, questions.length]);
 
     const progress = progressData.map(pd => pd[0]);
 

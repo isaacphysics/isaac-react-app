@@ -419,14 +419,14 @@ export function ResultsTable<Q extends QuestionType>({
                                         : ""
                                     }
                                 </th>
-                                {/* total parts */}
+                                {/* total marks */}
                                 {isPhy && isAssignment && <th title={fullAccess ? undefined : "Not Sharing"} className={classNames({"sticky-ca-col": isPhy})}>
                                     {fullAccess
                                         ? formatMark(
                                             pageSettings?.attemptedOrCorrect === "CORRECT"
                                                 ? studentProgress.correctQuestionMarksCount
                                                 : studentProgress.correctQuestionMarksCount + studentProgress.incorrectQuestionMarksCount,
-                                            assignmentTotalQuestionParts,
+                                            studentProgress.markTotals?.reduce((acc, arr) => acc + arr.reduce((a, b) => a + b, 0), 0) ?? 0,
                                             !!pageSettings?.formatAsPercentage
                                         )
                                         : ""
@@ -616,14 +616,8 @@ export function ResultsTablePartBreakdown({
                             {isPhy && studentProgress.questionPartResults && 
                                 <td className={classNames({"sticky-ca-col": isPhy})}>
                                     {formatMark(
-                                        studentProgress.questionPartResults[questionIndex].reduce((acc, questionPartResult) => {
-                                            if (pageSettings?.attemptedOrCorrect === "CORRECT") {
-                                                return acc + (questionPartResult === "CORRECT" ? 1 : 0);
-                                            } else {
-                                                return acc + (questionPartResult !== "NOT_ATTEMPTED" ? 1 : 0);
-                                            }
-                                        }, 0),
-                                        studentProgress.questionPartResults[questionIndex].length,
+                                        studentProgress.correctMarkResults![questionIndex].reduce((a, b) => a + b, 0), 
+                                        studentProgress.markTotals![questionIndex].reduce((a, b) => a + b, 0),
                                         !!pageSettings?.formatAsPercentage
                                     )}
                                 </td>
