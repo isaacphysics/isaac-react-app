@@ -338,7 +338,7 @@ export interface ActiveModalWithoutState {
     bodyContainerClassName?: string;
 }
 
-export type ProgressSortOrder = number | "name" | "totalPartPercentage" | "totalAttemptedPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
+export type ProgressSortOrder = number | "name" | "totalMarkPercentage" | "totalAttemptedMarkPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
 
 export enum QuizzesBoardOrder {
     "title" = "title",
@@ -497,14 +497,14 @@ export const AssignmentScheduleContext = React.createContext<{
     collapsed: boolean;
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
-        }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+}>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 export const ContentSidebarContext = React.createContext<{ toggle: () => void; close: () => void; } | undefined>(undefined);
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
     completed?: boolean;
     correctQuestionPagesCount: number;
-    correctQuestionPartsCount: number;
-    incorrectQuestionPartsCount: number;
+    correctQuestionMarksCount: number;
+    incorrectQuestionMarksCount: number;
     notAttemptedPartResults: number[];
 }
 

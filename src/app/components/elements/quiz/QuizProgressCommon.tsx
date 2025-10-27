@@ -195,10 +195,10 @@ export function ResultsTable<Q extends QuestionType>({
         switch (sortOrder) {
             case "name":
                 return sortByName(item);
-            case "totalPartPercentage":
-                return -item.correctQuestionPartsCount;
-            case "totalAttemptedPartPercentage":
-                return -(item.correctQuestionPartsCount + item.incorrectQuestionPartsCount);
+            case "totalMarkPercentage":
+                return -item.correctQuestionMarksCount;
+            case "totalAttemptedMarkPercentage":
+                return -(item.correctQuestionMarksCount + item.incorrectQuestionMarksCount);
             case "totalQuestionPercentage":
                 return -item.correctQuestionPagesCount;
             case "totalAttemptedQuestionPercentage":
@@ -273,35 +273,29 @@ export function ResultsTable<Q extends QuestionType>({
             pageSettings?.attemptedOrCorrect === "CORRECT"
                 ? <SortItemHeader<ProgressSortOrder>
                     className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
-                    defaultOrder={"totalPartPercentage"}
-                    reverseOrder={"totalPartPercentage"}
+                    defaultOrder={"totalMarkPercentage"}
+                    reverseOrder={"totalMarkPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={"Total correct parts"}
+                    label={"Total marks awarded"}
                 >
-                    {siteSpecific(
-                        <div className="d-flex flex-column ps-3">
-                            <span>Parts</span>
-                            <small className="mt-n1 text-muted fw-normal">(total)</small>
-                        </div>,
-                        "Correct"
-                    )}
+                    <div className="d-flex flex-column ps-3">
+                        <span>Marks</span>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                    </div>
                 </SortItemHeader>
                 : <SortItemHeader<ProgressSortOrder>
                     className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
-                    defaultOrder={"totalAttemptedPartPercentage"}
-                    reverseOrder={"totalAttemptedPartPercentage"}
+                    defaultOrder={"totalAttemptedMarkPercentage"}
+                    reverseOrder={"totalAttemptedMarkPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={"Total attempted parts"}
+                    label={"Total marks awarded"}
                 >
-                    {siteSpecific(
-                        <div className="d-flex flex-column ps-3">
-                            <span>Parts</span>
-                            <small className="mt-n1 text-muted fw-normal">(total)</small>
-                        </div>,
-                        "Attempted"
-                    )}
+                    <div className="d-flex flex-column ps-3">
+                        <span>Marks</span>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                    </div>
                 </SortItemHeader>
         )}
         {questions.map((_, index) =>
