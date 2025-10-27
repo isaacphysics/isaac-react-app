@@ -102,8 +102,8 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
             return "revoked";
         }
 
-        const correctParts = studentProgress.correctQuestionPartsCount;
-        const incorrectParts = studentProgress.incorrectQuestionPartsCount;
+        const correctParts = studentProgress.correctQuestionMarksCount;
+        const incorrectParts = studentProgress.incorrectQuestionMarksCount;
         const status = null;
 
         return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, status, correctParts, incorrectParts, totalParts);
@@ -333,8 +333,8 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
         const initialState = {
             ...p,
             correctQuestionPagesCount: 0,
-            correctQuestionPartsCount: 0,
-            incorrectQuestionPartsCount: 0,
+            correctQuestionMarksCount: 0,
+            incorrectQuestionMarksCount: 0,
             notAttemptedPartResults: []
         };
 
@@ -344,8 +344,8 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
             return {
                 ...oldP,
                 correctQuestionPagesCount: correctQuestionsCount,
-                correctQuestionPartsCount: oldP.correctQuestionPartsCount + (p.correctPartResults || [])[i],
-                incorrectQuestionPartsCount: oldP.incorrectQuestionPartsCount + (p.incorrectPartResults || [])[i],
+                correctQuestionMarksCount: oldP.correctQuestionMarksCount + (p.correctPartResults || [])[i],
+                incorrectQuestionMarksCount: oldP.incorrectQuestionMarksCount + (p.incorrectPartResults || [])[i],
                 notAttemptedPartResults: [
                     ...oldP.notAttemptedPartResults,
                     (questions[i].questionPartsTotal - (p.correctPartResults || [])[i] - (p.incorrectPartResults || [])[i])

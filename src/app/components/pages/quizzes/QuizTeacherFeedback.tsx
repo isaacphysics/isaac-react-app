@@ -197,8 +197,8 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
             return "revoked";
         }
 
-        const correctParts = studentProgress.correctQuestionPartsCount;
-        const incorrectParts = studentProgress.incorrectQuestionPartsCount;
+        const correctParts = studentProgress.correctQuestionMarksCount;
+        const incorrectParts = studentProgress.incorrectQuestionMarksCount;
         const total = questions.reduce((acc, q) => acc + (q.questionPartsTotal ?? 0), 0);
 
         return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, null, correctParts, incorrectParts, total);
@@ -218,7 +218,7 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
 
     const totalParts = questions.length;
 
-    const progress : AuthorisedAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
+    const progress: AuthorisedAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
         const partsCorrect = questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? -1]?.correct ?? 0), 0);
         return {
             user: user.user as UserSummaryDTO,
@@ -232,8 +232,8 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
                 : questions.map(q => q.questionPartsTotal ?? 0),
             questionResults: [],
             correctQuestionPagesCount: partsCorrect,  // quizzes don't have pages, but QuizProgressCommon expects this key to be the "Correct" column value for sorting
-            correctQuestionPartsCount: partsCorrect,
-            incorrectQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0), 0),
+            correctQuestionMarksCount: partsCorrect,
+            incorrectQuestionMarksCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0), 0),
         };
     });
 

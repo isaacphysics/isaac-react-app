@@ -48,6 +48,8 @@ export interface AssignmentProgressDTO {
     user?: UserSummaryDTO;
     correctPartResults?: number[];
     incorrectPartResults?: number[];
+    correctMarkResults?: number[][];
+    markTotals?: number[][];
     questionResults?: CompletionState[];
     questionPartResults?: QuestionPartState[][];
 }

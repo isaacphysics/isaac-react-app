@@ -279,10 +279,13 @@ export function ResultsTable<Q extends QuestionType>({
                     onClick={() => setSelectedQuestionIndex(undefined)}
                     label={"Total marks awarded"}
                 >
-                    <div className="d-flex flex-column ps-3">
-                        <span>Marks</span>
-                        <small className="mt-n1 text-muted fw-normal">(total)</small>
-                    </div>
+                    {siteSpecific(
+                        <div className="d-flex flex-column ps-3">
+                            <span>Marks</span>
+                            <small className="mt-n1 text-muted fw-normal">(total)</small>
+                        </div>,
+                        "Correct"
+                    )}
                 </SortItemHeader>
                 : <SortItemHeader<ProgressSortOrder>
                     className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
@@ -292,10 +295,13 @@ export function ResultsTable<Q extends QuestionType>({
                     onClick={() => setSelectedQuestionIndex(undefined)}
                     label={"Total marks awarded"}
                 >
-                    <div className="d-flex flex-column ps-3">
-                        <span>Marks</span>
-                        <small className="mt-n1 text-muted fw-normal">(total)</small>
-                    </div>
+                    {siteSpecific(
+                        <div className="d-flex flex-column ps-3">
+                            <span>Marks</span>
+                            <small className="mt-n1 text-muted fw-normal">(total)</small>
+                        </div>,
+                        "Attempted"
+                    )}
                 </SortItemHeader>
         )}
         {questions.map((_, index) =>
@@ -417,8 +423,8 @@ export function ResultsTable<Q extends QuestionType>({
                                                     ? studentProgress.correctQuestionPagesCount
                                                     : studentProgress.questionResults?.filter(r => r !== CompletionState.NOT_ATTEMPTED).length ?? 0
                                                 : pageSettings?.attemptedOrCorrect === "CORRECT"
-                                                    ? studentProgress.correctQuestionPartsCount
-                                                    : studentProgress.correctQuestionPartsCount + studentProgress.incorrectQuestionPartsCount,
+                                                    ? studentProgress.correctQuestionMarksCount
+                                                    : studentProgress.correctQuestionMarksCount + studentProgress.incorrectQuestionMarksCount,
                                             questions.length,
                                             !!pageSettings?.formatAsPercentage
                                         )
@@ -430,8 +436,8 @@ export function ResultsTable<Q extends QuestionType>({
                                     {fullAccess
                                         ? formatMark(
                                             pageSettings?.attemptedOrCorrect === "CORRECT"
-                                                ? studentProgress.correctQuestionPartsCount
-                                                : studentProgress.correctQuestionPartsCount + studentProgress.incorrectQuestionPartsCount,
+                                                ? studentProgress.correctQuestionMarksCount
+                                                : studentProgress.correctQuestionMarksCount + studentProgress.incorrectQuestionMarksCount,
                                             assignmentTotalQuestionParts,
                                             !!pageSettings?.formatAsPercentage
                                         )
@@ -445,15 +451,15 @@ export function ResultsTable<Q extends QuestionType>({
                                     )}>
                                         {isAssignment
                                             ? (fullAccess
-                                                ? isPhy
-                                                    ? formatMark(
+                                                ? siteSpecific(
+                                                    formatMark(
                                                         pageSettings?.attemptedOrCorrect === "CORRECT"
                                                             ? (studentProgress.correctPartResults || [])[index]
                                                             : (studentProgress.correctPartResults || [])[index] + (studentProgress.incorrectPartResults || [])[index],
                                                         questions[index].questionPartsTotal as number,
                                                         !!pageSettings?.formatAsPercentage
-                                                    )
-                                                    : getAssignmentQuestionCorrectnessIcon((studentProgress.questionResults || [])[index], pageSettings?.attemptedOrCorrect || "CORRECT")
+                                                    ),
+                                                    getAssignmentQuestionCorrectnessIcon((studentProgress.questionResults || [])[index], pageSettings?.attemptedOrCorrect || "CORRECT"))
                                                 : ""
                                             )
                                             : getQuizQuestionCorrectnessIcon(pageSettings?.attemptedOrCorrect || "CORRECT", studentProgress, index)
@@ -519,8 +525,8 @@ export function ResultsTablePartBreakdown({
         switch (sortOrder) {
             case "name":
                 return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
-            case "totalPartPercentage":
-            case "totalAttemptedPartPercentage":
+            case "totalMarkPercentage":
+            case "totalAttemptedMarkPercentage":
             case "totalQuestionPercentage":
             case "totalAttemptedQuestionPercentage":
                 return 0; // These sorts are not applicable for part breakdown
@@ -567,7 +573,7 @@ export function ResultsTablePartBreakdown({
                         >
                             {siteSpecific(
                                 <div className="d-flex flex-column ps-3">
-                                    <span>Parts</span>
+                                    <span>Marks</span>
                                     <small className="mt-n1 text-muted fw-normal">(total)</small>
                                 </div>,
                                 "Correct"
@@ -582,7 +588,7 @@ export function ResultsTablePartBreakdown({
                         >
                             {siteSpecific(
                                 <div className="d-flex flex-column ps-3">
-                                    <span>Parts</span>
+                                    <span>Marks</span>
                                     <small className="mt-n1 text-muted fw-normal">(total)</small>
                                 </div>,
                                 "Attempted"
@@ -637,9 +643,11 @@ export function ResultsTablePartBreakdown({
 
                             {/* main data */}
                             {studentProgress.questionPartResults &&
-                                studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
-                                    <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>
-                                ))
+                                studentProgress.questionPartResults[questionIndex].map((_q, questionPartIndex) => {
+                                    const correctMarkResult = studentProgress.correctMarkResults ? studentProgress.correctMarkResults[questionIndex][questionPartIndex] ?? 0 : 0;
+                                    const markTotal = studentProgress.markTotals ? studentProgress.markTotals[questionIndex][questionPartIndex] ?? 0 : 0;
+                                    return <td key={questionPartIndex}>{formatMark(correctMarkResult, markTotal, !!pageSettings?.formatAsPercentage)}</td>;
+                                })
                             }
                         </tr>
                     ))}
