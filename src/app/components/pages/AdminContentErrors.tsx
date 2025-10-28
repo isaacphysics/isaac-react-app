@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useGetContentErrorsQuery} from "../../state";
 import {Col, Container, Input, Label, Row, Table} from "reactstrap";
-import {EDITOR_URL, matchesAllWordsInAnyOrder, selectOnChange} from "../../services";
+import {EDITOR_URL, matchesAllWordsInAnyOrder, selectOnChange, useQueryParams} from "../../services";
 import {ContentErrorItem, ContentErrorsResponse} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
@@ -56,6 +56,9 @@ enum CRITICAL_FILTER {
 export const AdminContentErrors = () => {
     const errorsQuery = useGetContentErrorsQuery();
 
+    const params = useQueryParams(true);
+
+    const [pathFilter, setPathFilter] = useState<string>(params.path || "");
     const [errorFilter, setErrorFilter] = useState<string>("");
     const errorReducer = (show: boolean, errorStr: string) => show || matchesAllWordsInAnyOrder(errorStr, errorFilter);
 
@@ -105,12 +108,18 @@ export const AdminContentErrors = () => {
                     </Row>
                     <Row>
                         <Col lg={4} className="mb-2">
+                            <Label htmlFor="file-path-filter" className="w-100">
+                                Filter by file path
+                            </Label>
+                            <Input id="file-path-filter" type="text" defaultValue={pathFilter} onChange={(e) => setPathFilter(e.target.value)} placeholder="Filter errors by file path"/>
+                        </Col>
+                        <Col lg={8} className="mb-2">
                             <Label htmlFor="error-message-filter" className="w-100">
                                 Filter by error message
                             </Label>
                             <Input id="error-message-filter" type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error message"/>
                         </Col>
-                        <Col lg={3} className="mb-2">
+                        <Col lg={6} className="mb-2">
                             <Label htmlFor="critical-filter-select">Filter by severity</Label>
                             <StyledSelect
                                 inputId="critical-filter-select"
@@ -124,7 +133,7 @@ export const AdminContentErrors = () => {
                                 onChange={selectOnChange(setCriticalFilter, true)}
                             />
                         </Col>
-                        <Col lg={3} className="mb-2">
+                        <Col lg={6} className="mb-2">
                             <Label htmlFor="published-filter-select">Filter by published status</Label>
                             <StyledSelect
                                 inputId="published-filter-select"
@@ -154,6 +163,7 @@ export const AdminContentErrors = () => {
                                             <th>List of Error Messages</th>
                                         </tr>
                                         {errors.errorsList
+                                            .filter((error) => ((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(pathFilter))
                                             .filter((error) => error.listOfErrors.reduce(errorReducer, false))
                                             .filter(
                                                 (error) =>
