@@ -349,7 +349,6 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
 
         const ret = (p.questionResults || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
             const correctQuestionsCount  = [CompletionState.ALL_CORRECT].includes(results) ? oldP.correctQuestionPagesCount + 1 : oldP.correctQuestionPagesCount;
-            // const questions = assignment.gameboard.contents;
             const correctMarkTotal = (p.correctMarkResults || [])[i].reduce((a, b) => a + b, 0);
             const incorrectMarkTotal = (p.incorrectMarkResults || [])[i].reduce((a, b) => a + b, 0);
             const markTotal = (p.markTotals || [])[i].reduce((a, b) => a + b, 0);

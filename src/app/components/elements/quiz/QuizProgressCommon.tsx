@@ -265,15 +265,12 @@ export function ResultsTable<Q extends QuestionType>({
                     reverseOrder={"totalMarkPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={"Total marks awarded"}
+                    label={pageSettings?.displayIndividualMarks ? "Total marks awarded" : "Total correct parts"}
                 >
-                    {siteSpecific(
-                        <div className="d-flex flex-column ps-3">
-                            <span>Marks</span>
-                            <small className="mt-n1 text-muted fw-normal">(total)</small>
-                        </div>,
-                        "Correct"
-                    )}
+                    <div className="d-flex flex-column ps-3">
+                        <span>{pageSettings?.displayIndividualMarks ? "Marks" : "Parts"}</span>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                    </div>
                 </SortItemHeader>
                 : <SortItemHeader<ProgressSortOrder>
                     className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
@@ -281,15 +278,12 @@ export function ResultsTable<Q extends QuestionType>({
                     reverseOrder={"totalAttemptedMarkPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={"Total marks awarded"}
+                    label={pageSettings?.displayIndividualMarks ? "Total marks awarded" : "Total correct parts"}
                 >
-                    {siteSpecific(
-                        <div className="d-flex flex-column ps-3">
-                            <span>Marks</span>
-                            <small className="mt-n1 text-muted fw-normal">(total)</small>
-                        </div>,
-                        "Attempted"
-                    )}
+                    <div className="d-flex flex-column ps-3">
+                        <span>{pageSettings?.displayIndividualMarks ? "Marks" : "Parts"}</span>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                    </div>
                 </SortItemHeader>
         )}
         {questions.map((_, index) =>
@@ -599,8 +593,23 @@ export function ResultsTablePartBreakdown({
                     )}
                 </thead>
                 <tbody>
-                    {sortedProgress.map((studentProgress, studentIndex) => (
-                        <tr key={studentIndex}>
+                    {sortedProgress.map((studentProgress, studentIndex) => {
+                        const markPartNumerator: number[] = pageSettings?.displayIndividualMarks
+                            ? pageSettings?.attemptedOrCorrect === "CORRECT" 
+                                ? studentProgress.correctMarkResults![questionIndex]
+                                : studentProgress.correctMarkResults![questionIndex].map((mark, partIndex) => 
+                                    mark + studentProgress.incorrectMarkResults![questionIndex][partIndex]
+                                )
+                            : studentProgress.questionPartResults![questionIndex].map(part => 
+                                (pageSettings?.attemptedOrCorrect === "CORRECT" 
+                                    ? part === "CORRECT" 
+                                    : part !== "NOT_ATTEMPTED"
+                                ) ? 1 : 0
+                            );
+                        const markPartDenominator: number[] = studentProgress.markTotals && pageSettings?.displayIndividualMarks
+                            ? studentProgress.markTotals[questionIndex]
+                            : Array(studentProgress.markTotals![questionIndex]?.length).fill(1);
+                        return <tr key={studentIndex}>
                             {/* student name */}
                             <th className="student-name sticky-left ps-2 py-3 fw-bold">
                                 <div className="d-flex align-items-center gap-2">
@@ -616,8 +625,8 @@ export function ResultsTablePartBreakdown({
                             {isPhy && studentProgress.questionPartResults && 
                                 <td className={classNames({"sticky-ca-col": isPhy})}>
                                     {formatMark(
-                                        studentProgress.correctMarkResults![questionIndex].reduce((a, b) => a + b, 0), 
-                                        studentProgress.markTotals![questionIndex].reduce((a, b) => a + b, 0),
+                                        markPartNumerator.reduce((a, b) => a + b, 0), 
+                                        markPartDenominator.reduce((a, b) => a + b, 0),
                                         !!pageSettings?.formatAsPercentage
                                     )}
                                 </td>
@@ -626,13 +635,13 @@ export function ResultsTablePartBreakdown({
                             {/* main data */}
                             {studentProgress.questionPartResults &&
                                 studentProgress.questionPartResults[questionIndex].map((_q, questionPartIndex) => {
-                                    const correctMarkResult = studentProgress.correctMarkResults ? studentProgress.correctMarkResults[questionIndex][questionPartIndex] ?? 0 : 0;
-                                    const markTotal = studentProgress.markTotals ? studentProgress.markTotals[questionIndex][questionPartIndex] ?? 0 : 0;
+                                    const correctMarkResult = markPartNumerator[questionPartIndex] ?? 0;
+                                    const markTotal = markPartDenominator[questionPartIndex] ?? 0;
                                     return <td key={questionPartIndex}>{formatMark(correctMarkResult, markTotal, !!pageSettings?.formatAsPercentage)}</td>;
                                 })
                             }
-                        </tr>
-                    ))}
+                        </tr>;
+                    })}
                 </tbody>
                 <tfoot className="sticky-bottom">
                     <tr>
