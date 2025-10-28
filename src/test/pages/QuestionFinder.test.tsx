@@ -10,7 +10,7 @@ import userEvent from "@testing-library/user-event";
 import { PageContextState } from "../../IsaacAppTypes";
 import { expectPhyBreadCrumbs } from "../helpers/quiz";
 import { IsaacQuestionPageDTO } from "../../IsaacApiTypes";
-import { toggleFilter, PartialCheckboxState, Filter, expectPartialCheckBox } from "../../mocks/filters";
+import { toggleFilter, PartialCheckboxState, Filter as F, expectPartialCheckBox } from "../../mocks/filters";
 
 type QuestionFinderResultsResponse = {
     results: IsaacQuestionPageDTO[];
@@ -46,7 +46,7 @@ describe("QuestionFinder", () => {
 
     it('should render results in alphabetical order', async () => {
         await renderQuestionFinderPage({ response: () => resultsResponse });
-        await toggleFilter(Filter.GCSE);
+        await toggleFilter(F.GCSE);
         await expectQuestions(questions.slice(0, 30));
     });
 
@@ -72,7 +72,7 @@ describe("QuestionFinder", () => {
                 randomSequence([1 * 10 ** -6]);
                 await renderQuestionFinderPage({ response });
 
-                await toggleFilter(Filter.GCSE);
+                await toggleFilter(F.GCSE);
                 await expectQuestions(questions.slice(0, 30));
 
                 await clickOn("Shuffle");
@@ -85,7 +85,7 @@ describe("QuestionFinder", () => {
                 randomSequence([1 * 10 ** -6]);
 
                 await renderQuestionFinderPage({ response });
-                await toggleFilter(Filter.GCSE);
+                await toggleFilter(F.GCSE);
                 await clickOn("Shuffle");
                 await expectUrlParams("?randomSeed=1&stages=gcse");
             });
@@ -94,7 +94,7 @@ describe("QuestionFinder", () => {
         describe('returning to alphabetical order from a randomised screen', () => {
             it('when applying filters', async () => {
                 await renderQuestionFinderPage({ response, queryParams: "?randomSeed=1" });
-                await toggleFilter(Filter.GCSE);
+                await toggleFilter(F.GCSE);
                 await expectUrlParams("?stages=gcse");
                 await expectQuestions(questions.slice(0, 30));
             });
@@ -137,7 +137,7 @@ describe("QuestionFinder", () => {
                         default: throw new Error('Unexpected seed');
                     }
                 }});
-                await toggleFilter(Filter.GCSE);
+                await toggleFilter(F.GCSE);
                 await expectQuestions(questions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
 
@@ -160,9 +160,9 @@ describe("QuestionFinder", () => {
             // Maths    -> Number    -> Arithmetic
             //          -> Geometry  -> Shapes
             const [subjectFilters, fieldFilters, topicFilters] = [
-                [Filter.Physics, Filter.Maths],
-                [Filter.Skills, Filter.Mechanics, Filter.Number, Filter.Geometry],
-                [Filter.SigFigs, Filter.Statics, Filter.Arithmetic, Filter.Shapes]
+                [F.Physics, F.Maths],
+                [F.Skills, F.Mechanics, F.Number, F.Geometry],
+                [F.SigFigs, F.Statics, F.Arithmetic, F.Shapes]
             ];
             const testedFilters = flatten([subjectFilters, fieldFilters, topicFilters]);
             const checkboxStates = (n: number) => (state: PartialCheckboxState) => times(n, () => state);
@@ -265,8 +265,8 @@ describe("QuestionFinder", () => {
                 // Geometry  -> Shapes
                 const context = { subject: "maths", stage: ["a_level"] } as RenderParameters['context'];
                 const [fieldFilters, topicFilters] = [
-                    [Filter.Number, Filter.Geometry],
-                    [Filter.Arithmetic, Filter.Shapes]
+                    [F.Number, F.Geometry],
+                    [F.Arithmetic, F.Shapes]
                 ];
                 const testedFilters = [...fieldFilters, ...topicFilters];
                 const [fields, topics] = [checkboxStates(2), checkboxStates(2)];
@@ -329,9 +329,9 @@ describe("QuestionFinder", () => {
         });
     }
 
-    describe('Context-specific question finders', () => {
+    describe('Context-specific question finder', () => {
         if (isPhy) {
-            it('Context-specific question finders should lead back to the relevant landing page in the breadcrumb', async () => {
+            it('breadcrumb leads back to the landing page for the context', async () => {
                 await renderQuestionFinderPage({
                     response: () => resultsResponse,
                     context: { subject: "physics", stage: ["gcse"] },
@@ -339,7 +339,7 @@ describe("QuestionFinder", () => {
                 expectPhyBreadCrumbs({href: "/physics/gcse", text: "GCSE Physics"});
             });
 
-            it('Context-specific question finders should only load questions for that context', async () => {
+            it('only fetches questions for the context', async () => {
                 const getQuestionsWithMultipleStages = jest.fn(() => resultsResponseWithMultipleStages);
 
                 await renderQuestionFinderPage({
@@ -353,7 +353,7 @@ describe("QuestionFinder", () => {
                 })));
             });
 
-            it('"Load more" on a context-specific question finder should still only load questions for that context', async () => {
+            it('"Load more" only fetches questions for the context', async () => {
                 const getQuestionsWithMultipleStages = jest.fn(() => resultsResponseWithMultipleStages);
 
                 await renderQuestionFinderPage({
@@ -367,6 +367,33 @@ describe("QuestionFinder", () => {
                     tags: "physics",
                     stages: "a_level,further_a",
                 })));
+            });
+
+            describe('A-level Maths question finder', () => {
+                it('contains A-level fields and topics', async () => {
+                    await renderQuestionFinderPage({
+                        response: () => resultsResponse,
+                        context: { subject: "maths", stage: ["a_level"] },
+                    });
+                    await toggleFilter(
+                        [F.Number, F.Algebra, F.Geometry, F.Functions, F.Calculus, F.Statistics, F.Mechanics]
+                    );
+
+                    const numberTopics = [F.Arithmetic, F.RationalNumbers, F.FactorsPowers, F.ComplexNumbers];
+                    const algebraTopics = [F.Manipulation, F.Quadratics, F.SimultaneousEquations, F.Series, F.Matrices];
+                    const geometryTopics = [F.Shapes, F.Trigonometry, F.Vectors, F.Planes, F.Coordinates];
+                    const functionTopics = [F.GeneralFunctions, F.GraphSketching];
+                    const calculusTopics = [F.Differentiation, F.Integration, F.DifferentialEquations];
+                    const statisticsTopics = [F.DataAnalysis, F.Probablity, F.RandomVariables, F.HypothesisTests];
+                    const mechanicsTopics = [
+                        F.Statics, F.Kinematics, F.Dynamics, F.CircularMotion, F.Oscillations, F.Materials
+                    ];
+                    expect(queryFilters()).toEqual([
+                        F.Number, ...numberTopics, F.Algebra, ...algebraTopics,
+                        F.Geometry, ...geometryTopics, F.Functions, ...functionTopics, F.Calculus, ...calculusTopics,
+                        F.Statistics, ...statisticsTopics, F.Mechanics, ...mechanicsTopics
+                    ]);
+                });
             });
         }
     });
@@ -401,4 +428,16 @@ const clearFilterTag = async (tagId: string) => {
     const tag = await screen.findByTestId(`filter-tag-${tagId}`);
     const button = await within(tag).findByRole('button');
     await userEvent.click(button);
+};
+
+const queryFilters = () => {
+    const topicFilters = screen.getByRole('button', { name: /Topic.*/ }).parentElement?.parentElement;
+    if (!topicFilters) {
+        throw new Error("Topic filters not found");
+    }
+    return within(topicFilters).getAllByRole('checkbox').map(e => isInput(e) && e.labels![0].textContent);
+};
+
+const isInput = (element: HTMLElement): element is HTMLInputElement => {
+    return element.tagName.toLowerCase() === 'input';
 };
