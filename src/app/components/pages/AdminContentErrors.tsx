@@ -7,7 +7,6 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { HorizontalScroller } from "../elements/inputs/HorizontalScroller";
-import { useParams } from "react-router";
 
 const sortBySourcePath = (error1: ContentErrorItem, error2: ContentErrorItem) => {
     const path1 = error1.partialContent?.canonicalSourceFile;
