@@ -438,6 +438,8 @@ export interface AssignmentProgressPageSettings {
     setFormatAsPercentage: (formatAsPercentage: boolean) => void;
     attemptedOrCorrect: "ATTEMPTED" | "CORRECT";
     setAttemptedOrCorrect: (attemptedOrCorrect: "ATTEMPTED" | "CORRECT") => void;
+    displayIndividualMarks: boolean;
+    setDisplayIndividualMarks: (displayIndividualMarks: boolean) => void;
     assignmentOrder: AssignmentOrderSpec;
     setAssignmentOrder: (assignmentOrder: AssignmentOrderSpec) => void;
     groupSortOrder: GroupSortOrder;
@@ -741,6 +743,8 @@ export interface PageSettings {
     assignmentOrder?: AssignmentOrderSpec;
     attemptedOrCorrect?: "ATTEMPTED" | "CORRECT";
     setAttemptedOrCorrect?: (newValue: "ATTEMPTED" | "CORRECT") => void;
+    displayIndividualMarks: boolean;
+    setDisplayIndividualMarks: (displayIndividualMarks: boolean) => void;
 }
 
 export interface GameboardBuilderQuestions {

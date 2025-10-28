@@ -47,6 +47,15 @@ export const AssignmentProgressSettings = () => {
                 onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")}
             />
         </div>}
+
+        {isPhy && <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
+            <span>Marks display mode</span>
+            <Spacer />
+            <StyledToggle falseLabel="Parts" trueLabel="Marks"
+                checked={assignmentProgressContext?.displayIndividualMarks}
+                onChange={(e) => assignmentProgressContext?.setDisplayIndividualMarks?.(e.currentTarget.checked)}
+            />
+        </div>}
     </div>;
 };
 
