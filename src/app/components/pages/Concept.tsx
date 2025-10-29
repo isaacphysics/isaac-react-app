@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import {withRouter} from "react-router-dom";
-import {selectors, useAppSelector} from "../../state";
+import {selectors, useAppSelector, useGetGameboardByIdQuery} from "../../state";
 import {Col, Container, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
-import {Subject, usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES} from "../../services";
+import {Subject, usePreviousPageContext, isAda, useNavigation, siteSpecific, useUserViewingContext, isFullyDefinedContext, isSingleStageContext, LEARNING_STAGE_TO_STAGES, isDefined} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -16,13 +16,15 @@ import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDepreca
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
-import { ConceptSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import queryString from "query-string";
+import { ConceptSidebar, GameboardQuestionSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { useGetConceptQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -41,6 +43,10 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     const userContext = useUserViewingContext();
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
     const accessibilitySettings = useAccessibilitySettings();
+
+    const query = queryString.parse(search);
+    const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
+    const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
 
     useEffect(() => {
         if (pageContext) {
@@ -78,7 +84,10 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                         <CanonicalHrefElement />
                     </>}
                     <SidebarLayout>
-                        <ConceptSidebar relatedContent={doc.relatedContent} />
+                        {isDefined(gameboardId) 
+                            ? <GameboardQuestionSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentQuestionId={doc.id}/>
+                            : <ConceptSidebar relatedContent={doc.relatedContent} />
+                        }
                         <MainContent>
                             <PageMetadata doc={doc} />
 

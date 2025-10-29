@@ -2,7 +2,7 @@ import React, { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useSt
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, Stage } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
@@ -10,7 +10,8 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     sortByStringValue,
     SUBJECT_SPECIFIC_CHILDREN_MAP,
     LEARNING_STAGE,
-    ASSIGNMENT_STATE_MAP} from "../../../services";
+    ASSIGNMENT_STATE_MAP,
+    isAppLink} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -38,6 +39,7 @@ import { calculateSidebarLink, containsActiveTab, isSidebarGroup } from "../../.
 import { SidebarButton } from "../SidebarButton";
 import { GlossarySearch } from "../../pages/Glossary";
 import { IsaacProgrammeDTO } from "../cards/ProgrammeCard";
+import { ExternalLink } from "../ExternalLink";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -256,18 +258,46 @@ interface GameboardQuestionSidebarProps extends SidebarProps {
     id: string;
     title: string;
     questions: GameboardItem[];
-    currentQuestionId: string;
+    wildCard?: IsaacWildcard;
+    currentQuestionId?: string;
 }
 
 export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) => {
     // For questions in the context of a gameboard
-    const {id, title, questions, currentQuestionId} = props;
+    const {id, title, questions, wildCard, currentQuestionId} = props;
+
+    const wildCardContents = useMemo(() => {
+        if (!wildCard?.url) return null;
+
+        const isExternal = !isAppLink(wildCard.url);
+        const externalUrl = isExternal && wildCard.url?.replace(/^https?:\/\//, '').split('/')[0];
+
+        return <>
+            <i className="icon icon-concept-thick ms-2"/>
+            <div className="d-flex flex-column w-100 overflow-hidden">
+                <span className="hover-underline link-title"><Markup encoding="latex">{wildCard?.title}</Markup></span>
+                <span className="text-muted small text-overflow-ellipsis">
+                    {isExternal
+                        ? <>External link (<em>{externalUrl}</em>)</>
+                        : wildCard.description
+                    }
+                </span>
+            </div>
+        </>;
+    }, [wildCard]);
+
     return <NavigationSidebar>
         <div className="section-divider"/>
         <Link to={`${PATHS.GAMEBOARD}#${id}`} style={{textDecoration: "none"}}>
             <h5 className="mb-3">Question deck: {title}</h5>
         </Link>
         <ul>
+            {wildCard && wildCard.url && <li className={classNames("board-sidebar-question", {"selected-question": wildCard.url === window.location.href})}>
+                {isAppLink(wildCard.url)
+                    ? <Link className="py-2" to={`${wildCard.url}?board=${id}`}>{wildCardContents}</Link>
+                    : <ExternalLink className="py-2" href={wildCard.url}>{wildCardContents}</ExternalLink>
+                }
+            </li>}
             {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={classNames("board-sidebar-question", {"selected-question": q.id === currentQuestionId})}/></li>)}
         </ul>
         <div className="section-divider"/>
