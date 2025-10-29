@@ -17,7 +17,7 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
 import queryString from "query-string";
-import { ConceptSidebar, GameboardQuestionSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { ConceptSidebar, GameboardContentSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { useGetConceptQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
@@ -85,7 +85,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     </>}
                     <SidebarLayout>
                         {isDefined(gameboardId) 
-                            ? <GameboardQuestionSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentQuestionId={doc.id}/>
+                            ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentContentId={doc.id}/>
                             : <ConceptSidebar relatedContent={doc.relatedContent} />
                         }
                         <MainContent>

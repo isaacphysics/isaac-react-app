@@ -254,17 +254,17 @@ export const GenericSidebarWithRelatedContent = (props: RelatedContentSidebarPro
     return <RelatedContentSidebar {...props} pageType="page" />;
 };
 
-interface GameboardQuestionSidebarProps extends SidebarProps {
+interface GameboardContentSidebarProps extends SidebarProps {
     id: string;
     title: string;
     questions: GameboardItem[];
     wildCard?: IsaacWildcard;
-    currentQuestionId?: string;
+    currentContentId?: string;
 }
 
-export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) => {
+export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => {
     // For questions in the context of a gameboard
-    const {id, title, questions, wildCard, currentQuestionId} = props;
+    const {id, title, questions, wildCard, currentContentId} = props;
 
     const wildCardContents = useMemo(() => {
         if (!wildCard?.url) return null;
@@ -292,13 +292,13 @@ export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) =
             <h5 className="mb-3">Question deck: {title}</h5>
         </Link>
         <ul>
-            {wildCard && wildCard.url && <li className={classNames("board-sidebar-question", {"selected-question": wildCard.url === window.location.href})}>
+            {wildCard && wildCard.url && <li className={classNames("board-sidebar-content", {"selected-content": wildCard.url === window.location.href})}>
                 {isAppLink(wildCard.url)
                     ? <Link className="py-2" to={`${wildCard.url}?board=${id}`}>{wildCardContents}</Link>
                     : <ExternalLink className="py-2" href={wildCard.url}>{wildCardContents}</ExternalLink>
                 }
             </li>}
-            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={classNames("board-sidebar-question", {"selected-question": q.id === currentQuestionId})}/></li>)}
+            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={classNames("board-sidebar-content", {"selected-content": q.id === currentContentId})}/></li>)}
         </ul>
         <div className="section-divider"/>
         <CompletionKey/>
