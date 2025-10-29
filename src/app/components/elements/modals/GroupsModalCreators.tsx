@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {lazy, startTransition, useState} from "react";
 import {
     closeActiveModal,
     showAdditionalManagerSelfRemovalModal,
@@ -39,6 +39,9 @@ import {ReadonlyClipboardInput} from "../inputs/ReadonlyClipboardInput";
 import { Spacer } from "../Spacer";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 
+// Avoid loading the (large) QRCode library unless necessary:
+const GroupQRPanel = lazy(() => import("../panels/GroupQRPanel"));
+
 const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
     &apos;Assignment progress&apos; page or on the &apos;Manage groups&apos; page.  You will still have student connections with the
@@ -77,6 +80,7 @@ interface CurrentGroupInviteModalProps {
 }
 const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProps) => {
     const tokenQuery = useGetGroupTokenQuery(group.id as number);
+    const [showQR, setShowQR] = useState(false);
     return <div>
         <ShowLoadingQuery
             query={tokenQuery}
@@ -91,6 +95,20 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                     <h3>Share this link</h3>
                     <p>Share this link with students so they can join your group:</p>
                     <ReadonlyClipboardInput data-testid={"share-link"} value={`${location.origin}/account?authToken=${token?.token}`} />
+                </div>
+                <div>
+                    <h3>Generate a QR Code</h3>
+                    <p>Students can scan a QR code on their device to join your group:</p>
+                    {showQR
+                        ? <GroupQRPanel link={`${location.origin}/account?authToken=${token?.token}`} groupName={group.groupName} />
+                        : <Button color={siteSpecific("primary", "keyline")} onClick={() => {
+                            startTransition(() => {
+                                setShowQR(true);
+                            });
+                        }}>
+                            Generate QR Code
+                        </Button>
+                    }
                 </div>
                 <div>
                     <h3>Or use this code</h3>
