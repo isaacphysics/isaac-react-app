@@ -4,7 +4,7 @@ import { isPhy } from "./siteConstants";
 import { ChoiceTree } from "../components/elements/panels/QuestionFinderFilterPanel";
 import { itemiseTag } from "./filter";
 import { tags } from "./tags";
-import { SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, TAG_LEVEL } from "./constants";
+import { STAGE, SUBJECT_SPECIFIC_CHILDREN_MAP, SUBJECTS, TAG_ID, TAG_LEVEL } from "./constants";
 import { PageContextState } from "../../IsaacAppTypes";
 
 export const sublistDelimiter = " >>> ";
@@ -102,10 +102,7 @@ export const updateTopicChoices = (
             pageContext.subject ? choices[1][pageContext?.subject]?.push(itemiseTag(tags.getById(tag))) : null
         );
     }
-    if (allowedTags) {
-        return choices.map(c => filterChoice(c, allowedTags));
-    }
-    return choices;
+    return allowedTags ? choices.map(choice => filterChoice(choice, allowedTags)) : choices;
 };
 
 function filterChoice(c: ChoiceTree, t: TAG_ID[]): ChoiceTree; 
@@ -117,4 +114,13 @@ function filterChoice(choice: ChoiceTree | Item<TAG_ID>[], allowedTags: TAG_ID[]
     return Object.fromEntries(
         Object.entries(choice).map(([key, value]) => [key, filterChoice(value, allowedTags)])
     );
+};
+
+export const getAllowedTags = (pageContext?: PageContextState): TAG_ID[] | undefined => {
+    if (pageContext?.subject === SUBJECTS.MATHS && pageContext.stage?.[0] === STAGE.GCSE) {
+        const gcseExclusions = [TAG_ID.complexNumbers, TAG_ID.matrices, TAG_ID.planes, TAG_ID.calculus,
+            TAG_ID.randomVariables, TAG_ID.hypothesisTests];
+        return tags.allTagIds.filter(tagId => !gcseExclusions.includes(tagId));
+    }
+    return undefined;
 };

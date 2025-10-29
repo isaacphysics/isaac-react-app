@@ -6,6 +6,7 @@ import {
     BookInfo,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
+    getAllowedTags,
     getFilteredExamBoardOptions,
     getHumanContext,
     getQuestionPlaceholder,
@@ -203,7 +204,7 @@ export const QuestionFinder = withRouter(() => {
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
     const choices = useMemo(() => {
-        return updateTopicChoices(selections, pageContext);
+        return updateTopicChoices(selections, pageContext, getAllowedTags(pageContext));
     }, [selections, pageContext]);
 
     const isEmptySearch = (query: string, topics: string[], books: string[], stages: string[], difficulties: string[], examBoards: string[], selections: ChoiceTree[]) => {

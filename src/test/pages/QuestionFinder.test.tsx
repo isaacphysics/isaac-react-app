@@ -369,8 +369,8 @@ describe("QuestionFinder", () => {
                 })));
             });
 
-            describe('A-level Maths question finder', () => {
-                it('contains A-level fields and topics', async () => {
+            describe('fields and topics', () => {
+                it('are specific to A-level maths', async () => {
                     await renderQuestionFinderPage({
                         response: () => resultsResponse,
                         context: { subject: "maths", stage: ["a_level"] },
@@ -392,6 +392,24 @@ describe("QuestionFinder", () => {
                         F.Number, ...numberTopics, F.Algebra, ...algebraTopics,
                         F.Geometry, ...geometryTopics, F.Functions, ...functionTopics, F.Calculus, ...calculusTopics,
                         F.Statistics, ...statisticsTopics, F.Mechanics, ...mechanicsTopics
+                    ]);
+                });
+
+                it('are specific to GCSE maths', async () => {
+                    await renderQuestionFinderPage({
+                        response: () => resultsResponse,
+                        context: { subject: "maths", stage: ["gcse"] },
+                    });
+                    await toggleFilter( [F.Number, F.Algebra, F.Geometry, F.Functions, F.Statistics]);
+
+                    const numberTopics = [F.Arithmetic, F.RationalNumbers, F.FactorsPowers];
+                    const algebraTopics = [F.Manipulation, F.Quadratics, F.SimultaneousEquations, F.Series];
+                    const geometryTopics = [F.Shapes, F.Trigonometry, F.Vectors, F.Coordinates];
+                    const functionTopics = [F.GeneralFunctions, F.GraphSketching];
+                    const statisticsTopics = [F.DataAnalysis, F.Probablity];
+                    expect(queryFilters()).toEqual([
+                        F.Number, ...numberTopics, F.Algebra, ...algebraTopics, F.Geometry, ...geometryTopics,
+                        F.Functions, ...functionTopics, F.Statistics, ...statisticsTopics
                     ]);
                 });
             });
@@ -435,7 +453,7 @@ const queryFilters = () => {
     if (!topicFilters) {
         throw new Error("Topic filters not found");
     }
-    return within(topicFilters).getAllByRole('checkbox').map(e => isInput(e) && e.labels![0].textContent);
+    return within(topicFilters).getAllByRole('checkbox').map(e => isInput(e) && e.labels && e.labels.length > 0 && e.labels[0].textContent);
 };
 
 const isInput = (element: HTMLElement): element is HTMLInputElement => {
