@@ -79,7 +79,11 @@ export function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsS
     };
 }
 
-export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>>[], pageContext?: PageContextState) => {
+export const updateTopicChoices = (
+    topicSelections: Partial<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>>[],
+    pageContext?: PageContextState,
+    allowedTags?: TAG_ID[]
+): ChoiceTree[] => {
     const subject = pageContext?.subject ? [tags.getById(pageContext?.subject as TAG_ID)] : tags.allSubjectTags; 
     const choices: ChoiceTree[] = [ { subject: subject.map(itemiseTag) } ];
 
@@ -98,5 +102,19 @@ export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_
             pageContext.subject ? choices[1][pageContext?.subject]?.push(itemiseTag(tags.getById(tag))) : null
         );
     }
+    if (allowedTags) {
+        return choices.map(c => filterChoice(c, allowedTags));
+    }
     return choices;
+};
+
+function filterChoice(c: ChoiceTree, t: TAG_ID[]): ChoiceTree; 
+function filterChoice(c: Item<TAG_ID>[], t: TAG_ID[]): Item<TAG_ID>[];
+function filterChoice(choice: ChoiceTree | Item<TAG_ID>[], allowedTags: TAG_ID[] ): ChoiceTree | Item<TAG_ID>[] {  
+    if (Array.isArray(choice)) {
+        return choice.filter((tag => allowedTags.includes(tag.value)));
+    }
+    return Object.fromEntries(
+        Object.entries(choice).map(([key, value]) => [key, filterChoice(value, allowedTags)])
+    );
 };

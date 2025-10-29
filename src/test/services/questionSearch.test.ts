@@ -147,6 +147,37 @@ describe('updateTopicChoices', () => {
             });
         });
     });
+
+    describe('when a list of allowed tags is given', () => {
+        const pageContext = { subject: undefined, stage: [] };
+
+        it('filters the subjects', () => {
+            const allowedTags = [TAG_ID.physics, TAG_ID.chemistry, TAG_ID.bonding];
+            const choices = updateTopicChoices([{}, {}, {}], pageContext, allowedTags); 
+            expect(choices).toEqual([subject(TAG_ID.physics, TAG_ID.chemistry)]);
+        });
+
+        it('filters the fields', () => {
+            const allowedTags = [TAG_ID.physics, TAG_ID.chemistry, TAG_ID.thermal];
+            const choices = updateTopicChoices([subject(TAG_ID.physics), {}, {}], pageContext, allowedTags); 
+            expect(choices).toEqual([
+                subject(TAG_ID.physics, TAG_ID.chemistry),
+                physics(TAG_ID.thermal)
+            ]);
+        });
+
+        it('filters the topics', () => {
+            const allowedTags = [TAG_ID.physics, TAG_ID.chemistry, TAG_ID.thermal, TAG_ID.thermalRadiation];
+            const choices = updateTopicChoices([
+                subject(TAG_ID.physics), physics(TAG_ID.thermal), {}
+            ], pageContext, allowedTags); 
+            expect(choices).toEqual([
+                subject(TAG_ID.physics, TAG_ID.chemistry),
+                physics(TAG_ID.thermal),
+                thermal(TAG_ID.thermalRadiation)
+            ]);
+        });
+    });
 });
 
 const subject = (...choices: TAG_ID[]): ChoiceTree => ({ subject: choices.map(choice) });
