@@ -69,22 +69,15 @@ describe('updateTopicChoices', () => {
     });
 
     describe('on a context-specific question finder', () => {
-        // The interface on context-specific finders is pretty bad.
-        // - the topicSelections argument needlessly contains empty array, such as in `returns just the fields when no
-        //   selections are made`
-        // - the result duplicates the fields, but from the behavior on the A-level maths finder we learn that only the 
-        //   second element is actually used.
-        //
-        // These tests are not meant to endorse this behavior. They're written this way to reflect how the component
-        // currently uses the service.
+        // These would also work if we didn't pass empty arrays in the `topicSelections` argument, but this is what the 
+        // component currently does. I wanted the tests to reflect the actual usage.
 
         const pageContext: PageContextState = {subject: TAG_ID.physics, stage: [STAGE.GCSE]};
         
         it('returns just the fields when no selections are made', () => {
             const choices = updateTopicChoices([subject(TAG_ID.physics), physics()], pageContext);
             expect(choices).toEqual([
-                physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                    TAG_ID.thermal),
+                subject(TAG_ID.physics),
                 physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
                     TAG_ID.thermal),
                 {}
@@ -94,8 +87,7 @@ describe('updateTopicChoices', () => {
         it('shows the topics when field is selected', () => {
             const choices = updateTopicChoices([subject(TAG_ID.physics), physics(TAG_ID.thermal)], pageContext);
             expect(choices).toEqual([
-                physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                    TAG_ID.thermal),
+                subject(TAG_ID.physics),
                 physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
                     TAG_ID.thermal),
                 thermal(TAG_ID.heatCapacity, TAG_ID.gases, TAG_ID.thermalRadiation)
@@ -107,8 +99,7 @@ describe('updateTopicChoices', () => {
                 subject(TAG_ID.physics), physics(TAG_ID.thermal), thermal(TAG_ID.heatCapacity)
             ], pageContext);
             expect(choices).toEqual([
-                physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                    TAG_ID.thermal),
+                subject(TAG_ID.physics),
                 physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
                     TAG_ID.thermal),
                 thermal(TAG_ID.heatCapacity, TAG_ID.gases, TAG_ID.thermalRadiation)
@@ -121,8 +112,7 @@ describe('updateTopicChoices', () => {
             ], pageContext);
 
             expect(choices).toEqual([
-                physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                    TAG_ID.thermal),
+                subject(TAG_ID.physics),
                 physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
                     TAG_ID.thermal),
                 {
@@ -135,11 +125,10 @@ describe('updateTopicChoices', () => {
         describe('on the A-level maths question finder', () => {
             const pageContext: PageContextState = {subject: TAG_ID.maths, stage: [STAGE.A_LEVEL]};
 
-            it('also shows the mechanics field, which is normally a physics topic', () => {
+            it('also shows the mechanics field, which is normally shown on physics', () => {
                 const choices = updateTopicChoices([subject(TAG_ID.maths), maths()], pageContext);
                 expect(choices).toEqual([
-                    maths(TAG_ID.number, TAG_ID.algebra, TAG_ID.geometry, TAG_ID.functions, TAG_ID.calculus,
-                        TAG_ID.statistics),
+                    subject(TAG_ID.maths),
                     maths(TAG_ID.number, TAG_ID.algebra, TAG_ID.geometry, TAG_ID.functions, TAG_ID.calculus,
                         TAG_ID.statistics, TAG_ID.mechanics),
                     {}
@@ -149,8 +138,7 @@ describe('updateTopicChoices', () => {
             it('shows mechanics topics when mechanics field is selected', () => {
                 const choices = updateTopicChoices([subject(TAG_ID.maths), maths(TAG_ID.mechanics), mechanics()], pageContext);
                 expect(choices).toEqual([
-                    maths(TAG_ID.number, TAG_ID.algebra, TAG_ID.geometry, TAG_ID.functions, TAG_ID.calculus,
-                        TAG_ID.statistics),
+                    subject(TAG_ID.maths),
                     maths(TAG_ID.number, TAG_ID.algebra, TAG_ID.geometry, TAG_ID.functions, TAG_ID.calculus,
                         TAG_ID.statistics, TAG_ID.mechanics),
                     mechanics(TAG_ID.statics, TAG_ID.kinematics, TAG_ID.dynamics, TAG_ID.circularMotion,

@@ -80,13 +80,9 @@ export function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsS
 }
 
 export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>>[], pageContext?: PageContextState) => {
-    const choices: ChoiceTree[] = [];
-    if (!pageContext?.subject) {
-        choices.push({"subject": tags.allSubjectTags.map(itemiseTag)});
-    } else {
-        choices.push({});
-        choices[0][pageContext.subject] = tags.getChildren(pageContext.subject as TAG_ID).map(itemiseTag);
-    }
+    const subject = pageContext?.subject ? [tags.getById(pageContext?.subject as TAG_ID)] : tags.allSubjectTags; 
+    const choices: ChoiceTree[] = [ { subject: subject.map(itemiseTag) } ];
+
     for (let tierIndex = 0; tierIndex < topicSelections.length && tierIndex < 2; tierIndex++) {
         if (Object.keys(topicSelections[tierIndex]).length > 0) {
             choices[tierIndex+1] = {};
