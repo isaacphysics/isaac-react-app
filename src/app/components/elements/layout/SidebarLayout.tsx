@@ -292,7 +292,7 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
             <h5 className="mb-3">Question deck: {title}</h5>
         </Link>
         <ul>
-            {wildCard && wildCard.url && <li className={classNames("board-sidebar-content", {"selected-content": wildCard.url === window.location.href})}>
+            {wildCard && wildCard.url && <li className={classNames("board-sidebar-content", {"selected-content": wildCard.url === window.location.pathname})}>
                 {isAppLink(wildCard.url)
                     ? <Link className="py-2" to={`${wildCard.url}?board=${id}`}>{wildCardContents}</Link>
                     : <ExternalLink className="py-2" href={wildCard.url}>{wildCardContents}</ExternalLink>
