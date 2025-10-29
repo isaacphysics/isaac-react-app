@@ -108,13 +108,13 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
     }
     return <>
         <Label for='header-search' className='visually-hidden'>Search</Label>
-        <InputGroup id={"header-search-group"}>
+        <InputGroup id={"header-search-group"} className="d-flex flex-nowrap">
             <Input
-                id="header-search" {...inputProps}
+                id="header-search" {...inputProps} style={{minWidth: "3rem"}}
                 value={searchText} onChange={setSearchTextAsValue}
             />
             <button>
-                <img src={"/assets/cs/icons/search-jet.svg"}/>
+                <img src={"/assets/cs/icons/search-jet.svg"} alt={"search icon"}/>
             </button>
         </InputGroup>
     </>;
