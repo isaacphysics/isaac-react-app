@@ -55,8 +55,8 @@ describe('updateTopicChoices', () => {
             expect(choices).toEqual([
                 subject(TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology),
                 {
-                    ...physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                        TAG_ID.thermal),
+                    ...physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles,
+                        TAG_ID.fields, TAG_ID.thermal),
                     ...maths(TAG_ID.number, TAG_ID.algebra, TAG_ID.geometry, TAG_ID.functions, TAG_ID.calculus,
                         TAG_ID.statistics)
                 },
@@ -160,10 +160,7 @@ describe('updateTopicChoices', () => {
         it('filters the fields', () => {
             const allowedTags = [TAG_ID.physics, TAG_ID.chemistry, TAG_ID.thermal];
             const choices = updateTopicChoices([subject(TAG_ID.physics), {}, {}], pageContext, allowedTags); 
-            expect(choices).toEqual([
-                subject(TAG_ID.physics, TAG_ID.chemistry),
-                physics(TAG_ID.thermal)
-            ]);
+            expect(choices).toEqual([subject(TAG_ID.physics, TAG_ID.chemistry), physics(TAG_ID.thermal)]);
         });
 
         it('filters the topics', () => {
@@ -172,9 +169,7 @@ describe('updateTopicChoices', () => {
                 subject(TAG_ID.physics), physics(TAG_ID.thermal), {}
             ], pageContext, allowedTags); 
             expect(choices).toEqual([
-                subject(TAG_ID.physics, TAG_ID.chemistry),
-                physics(TAG_ID.thermal),
-                thermal(TAG_ID.thermalRadiation)
+                subject(TAG_ID.physics, TAG_ID.chemistry), physics(TAG_ID.thermal), thermal(TAG_ID.thermalRadiation)
             ]);
         });
     });
