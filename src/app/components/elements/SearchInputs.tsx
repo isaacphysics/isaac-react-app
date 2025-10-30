@@ -110,7 +110,7 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
         <Label for='header-search' className='visually-hidden'>Search</Label>
         <InputGroup id={"header-search-group"} className="d-flex flex-nowrap">
             <Input
-                id="header-search" {...inputProps} style={{minWidth: "3rem"}}
+                id="header-search" {...inputProps}
                 value={searchText} onChange={setSearchTextAsValue}
             />
             <button>
