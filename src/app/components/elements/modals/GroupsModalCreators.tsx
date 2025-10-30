@@ -40,7 +40,7 @@ import { Spacer } from "../Spacer";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 
 // Avoid loading the (large) QRCode library unless necessary:
-const GroupQRPanel = lazy(() => import("../panels/GroupQRPanel"));
+const GroupQRPanel = lazy(() => import("../panels/GroupQRPanel").catch(() => ({default: () => <i>Failed to load QR code panel.</i>})));
 
 const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
