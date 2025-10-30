@@ -2,7 +2,7 @@ import {AbstractBaseTagService, subject, TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag} from "../../IsaacAppTypes";
 import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 
-const softHyphen = "\u00AD";
+export const softHyphen = "\u00AD";
 
 export class PhysicsTagService extends AbstractBaseTagService {
     private static readonly tagHierarchy = [TAG_LEVEL.subject, TAG_LEVEL.field, TAG_LEVEL.topic];

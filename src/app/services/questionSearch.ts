@@ -4,8 +4,9 @@ import { isPhy } from "./siteConstants";
 import { ChoiceTree } from "../components/elements/panels/QuestionFinderFilterPanel";
 import { itemiseTag } from "./filter";
 import { tags } from "./tags";
-import { SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, TAG_LEVEL } from "./constants";
+import { STAGE, SUBJECT_SPECIFIC_CHILDREN_MAP, SUBJECTS, TAG_ID, TAG_LEVEL } from "./constants";
 import { PageContextState } from "../../IsaacAppTypes";
+import { mapObject } from "./miscUtils";
 
 export const sublistDelimiter = " >>> ";
 
@@ -79,14 +80,14 @@ export function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsS
     };
 }
 
-export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>>[], pageContext?: PageContextState) => {
-    const choices: ChoiceTree[] = [];
-    if (!pageContext?.subject) {
-        choices.push({"subject": tags.allSubjectTags.map(itemiseTag)});
-    } else {
-        choices.push({});
-        choices[0][pageContext.subject] = tags.getChildren(pageContext.subject as TAG_ID).map(itemiseTag);
-    }
+export const updateTopicChoices = (
+    topicSelections: Partial<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>>[],
+    pageContext?: PageContextState,
+    allowedTags?: TAG_ID[]
+): ChoiceTree[] => {
+    const subject = pageContext?.subject ? [tags.getById(pageContext?.subject as TAG_ID)] : tags.allSubjectTags; 
+    const choices: ChoiceTree[] = [ { subject: subject.map(itemiseTag) } ];
+
     for (let tierIndex = 0; tierIndex < topicSelections.length && tierIndex < 2; tierIndex++) {
         if (Object.keys(topicSelections[tierIndex]).length > 0) {
             choices[tierIndex+1] = {};
@@ -102,5 +103,21 @@ export const updateTopicChoices = (topicSelections: Partial<Record<TAG_ID | TAG_
             pageContext.subject ? choices[1][pageContext?.subject]?.push(itemiseTag(tags.getById(tag))) : null
         );
     }
-    return choices;
+    return allowedTags ? filterChoices(choices, allowedTags) : choices;
+};
+
+const filterChoices = (choices: ChoiceTree[], allowedTags: TAG_ID[]): ChoiceTree[] => 
+    choices.map(tree => 
+        mapObject(tree, tags => 
+            tags && tags.filter(tag => allowedTags.includes(tag.value))
+        )
+    );
+
+export const getAllowedTags = (pageContext?: PageContextState): TAG_ID[] | undefined => {
+    if (pageContext?.subject === SUBJECTS.MATHS && pageContext.stage?.[0] === STAGE.GCSE) {
+        const gcseExclusions = [TAG_ID.complexNumbers, TAG_ID.matrices, TAG_ID.planes, TAG_ID.calculus,
+            TAG_ID.randomVariables, TAG_ID.hypothesisTests];
+        return tags.allTagIds.filter(tagId => !gcseExclusions.includes(tagId));
+    }
+    return undefined;
 };
