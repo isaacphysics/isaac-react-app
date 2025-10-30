@@ -58,17 +58,27 @@ const getAssignmentQuestionCorrectnessIcon = (state: CompletionState, attemptedO
 
 };
 
+export function markResultsToPartResults(markResults: number[][] = [], markTotals: number[][] = []): number[] {
+    return markResults.map((marks, i) => {
+        const markTotal = markTotals[i].reduce((acc, curr) => acc + curr, 0);
+        const markObtained = marks.reduce((acc, curr) => acc + curr, 0);
+        return Math.floor(markTotal / markObtained);
+    });
+};
+
 const getQuizQuestionCorrectnessIcon = (attemptedOrCorrect: "ATTEMPTED" | "CORRECT", studentProgress: AssignmentProgressDTO, questionIndex: number) => {
+    const questionCorrect = (markResultsToPartResults(studentProgress.correctMarkResults, studentProgress.markTotals))[questionIndex] === 1;
+    const questionIncorrect = (markResultsToPartResults(studentProgress.incorrectMarkResults, studentProgress.markTotals))[questionIndex] === 1;
     if (attemptedOrCorrect === "CORRECT") {
-        if ((studentProgress.correctPartResults || [])[questionIndex] === 1) {
+        if (questionCorrect) {
             return ICON.correct;
         }
-        else if ((studentProgress.incorrectPartResults || [])[questionIndex] === 1) {
+        else if (questionIncorrect) {
             return ICON.incorrect;
         }
         return ICON.notAttempted;
     } else {
-        if ((studentProgress.correctPartResults || [])[questionIndex] === 1 || (studentProgress.incorrectPartResults || [])[questionIndex] === 1) {
+        if (questionCorrect || questionIncorrect) {
             return ICON.correct;
         }
         return ICON.notAttempted;
@@ -194,7 +204,7 @@ export function ResultsTable<Q extends QuestionType>({
                 return item.notAttemptedPartResults?.reduce((acc, curr) => acc + curr, 0) || 0;
             default:
                 if (pageSettings?.attemptedOrCorrect === "CORRECT") {
-                    return -(item.correctPartResults || [])[sortOrder];
+                    return -(item.correctMarkResults || [])[sortOrder];
                 } else {
                     return (item.notAttemptedPartResults || [])[sortOrder];
                 }
@@ -323,7 +333,7 @@ export function ResultsTable<Q extends QuestionType>({
                 const studentsWithAllAttempted = progress.reduce((acc, p) => acc + (isAuthorisedFullAccess(p) && !p.notAttemptedPartResults?.[index] ? 1 : 0), 0);
                 return [studentsWithAllAttempted, progress.length];
             } else {
-                const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (p.correctPartResults?.[index] ? 1 : 0), 0);
+                const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (markResultsToPartResults(p.correctMarkResults, p.markTotals)?.[index] ? 1 : 0), 0);
                 return [studentsWithAllCorrect, progress.length];
             }
         }

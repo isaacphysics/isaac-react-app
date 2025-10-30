@@ -34,7 +34,7 @@ import {
 } from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizContentsComponent";
 import {formatDate} from "../../elements/DateString";
-import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
+import {markResultsToPartResults, ResultsTable} from "../../elements/quiz/QuizProgressCommon";
 import {
     Alert,
     Button,
@@ -209,8 +209,8 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
             return "revoked";
         }
 
-        const correctParts = (studentProgress.correctPartResults || [])[index];
-        const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
+        const correctParts = markResultsToPartResults(studentProgress.correctMarkResults, studentProgress.markTotals)[index];
+        const incorrectParts = markResultsToPartResults(studentProgress.incorrectMarkResults, studentProgress.markTotals)[index];
         const totalParts = questions[index].questionPartsTotal ?? 0;
 
         return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, null, correctParts, incorrectParts, totalParts);
@@ -224,8 +224,8 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
             user: user.user as UserSummaryDTO,
             completed: user.feedback?.complete ?? false,
             // a list of the correct parts of an answer, one list for each question
-            correctPartResults:      questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.correct ?? 0),
-            incorrectPartResults:    questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0),
+            correctMarkResults:      [questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.correct ?? 0)],
+            incorrectMarkResults:    [questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.incorrect ?? 0)],
             notAttemptedPartResults: user.feedback?.complete || user.feedback?.questionMarks !== undefined
                 ? questions.map(q => user.feedback?.questionMarks?.[q?.id ?? -1]?.notAttempted ?? 0)
                 // if the quiz has not been completed (i.e. submitted), then all parts are not attempted

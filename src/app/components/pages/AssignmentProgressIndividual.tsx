@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AssignmentProgressDTO, GameboardItem, CompletionState } from "../../../IsaacApiTypes";
 import { EnhancedAssignmentWithProgress, AssignmentProgressPageSettingsContext, AuthorisedAssignmentProgress } from "../../../IsaacAppTypes";
 import { getAssignmentProgressCSVDownloadLink, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
-import { ICON, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
+import { ICON, markResultsToPartResults, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
 import { Badge, Button, Card, CardBody } from "reactstrap";
 import { formatDate } from "../elements/DateString";
 import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
@@ -123,12 +123,11 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
             return "revoked";
         }
 
-
         const question = questions[index];
 
         const totalParts = question.questionPartsTotal;
-        const correctParts = (studentProgress.correctPartResults || [])[index];
-        const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
+        const correctParts = markResultsToPartResults(studentProgress.correctMarkResults, studentProgress.markTotals)[index];
+        const incorrectParts = markResultsToPartResults(studentProgress.incorrectMarkResults, studentProgress.markTotals)[index];
         const status = (studentProgress.questionResults || [])[index];
 
         return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, status, correctParts, incorrectParts, totalParts);
