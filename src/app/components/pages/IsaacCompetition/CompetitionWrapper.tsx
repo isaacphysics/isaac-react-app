@@ -4,12 +4,14 @@ import {
   isAfterCompetitionEndDateAndBeforeEntriesClosedBannerEndDate,
   ENTRIES_CLOSED_BANNER_END_DATE,
 } from "./dateUtils";
+import { selectors, useAppSelector } from "../../../state";
+import { isAdmin } from "../../../services";
 
 interface CompetitionWrapperProps {
   children: React.ReactNode;
   beforeCompetitionOpenContent?: React.ReactNode;
   closedCompetitionContent?: React.ReactNode;
-  currentDate?: Date; // Add this for testing
+  currentDate?: Date;
 }
 
 const CompetitionWrapper = ({
@@ -18,6 +20,14 @@ const CompetitionWrapper = ({
   closedCompetitionContent,
   currentDate = new Date(), // Use provided date or current date
 }: CompetitionWrapperProps) => {
+  const user = useAppSelector(selectors.user.orNull);
+
+  // ADMIN users always see the Competition form
+  if (isAdmin(user)) {
+    return <>{children}</>;
+  }
+
+  // For non-admin users, apply the date restrictions
   // Hide entry form before competition opens (before Nov 2 midnight)
   if (isBeforeCompetitionOpenDate(currentDate)) {
     return <>{beforeCompetitionOpenContent}</>;

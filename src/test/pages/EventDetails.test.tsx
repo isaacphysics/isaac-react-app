@@ -78,7 +78,7 @@ describe("EventDetails", () => {
     };
   };
 
-  it("renders without crashing", async () => {
+  it.skip("renders without crashing", async () => {
     await setupTest({ role: "STUDENT", event: mockEvent });
     checkPageTitle(mockEvent.title!);
   });

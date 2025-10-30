@@ -3,7 +3,7 @@ import { Container, Col } from "reactstrap";
 import CompetitionEntryForm from "./CompetitionEntryForm";
 import CompetitionButton from "../Buttons/CompetitionButton";
 import { selectors, useAppSelector } from "../../../../state";
-import { isStudent, isTeacher } from "../../../../services";
+import { isStudent, isAdmin, isTeacher } from "../../../../services";
 import CompetitionWrapper from "../CompetitionWrapper";
 import { CLOSED_MESSAGE, STUDENT_MESSAGE, TEACHER_MESSAGE } from "../constants";
 
@@ -43,7 +43,8 @@ const EntryFormHandler = ({ buttons, handleTermsClick }: EntryFormHandlerProps) 
   };
 
   const renderEntryForm = () => {
-    if (isTeacher(user)) {
+    // Revert this: Only ADMIN users can see and submit the competition form
+    if (isAdmin(user) || isTeacher(user)) {
       return (
         <CompetitionWrapper>
           <CompetitionEntryForm handleTermsClick={handleTermsClick} />
