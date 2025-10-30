@@ -6,6 +6,7 @@ import { itemiseTag } from "./filter";
 import { tags } from "./tags";
 import { STAGE, SUBJECT_SPECIFIC_CHILDREN_MAP, SUBJECTS, TAG_ID, TAG_LEVEL } from "./constants";
 import { PageContextState } from "../../IsaacAppTypes";
+import { mapObject } from "./miscUtils";
 
 export const sublistDelimiter = " >>> ";
 
@@ -102,19 +103,15 @@ export const updateTopicChoices = (
             pageContext.subject ? choices[1][pageContext?.subject]?.push(itemiseTag(tags.getById(tag))) : null
         );
     }
-    return allowedTags ? choices.map(choice => filterChoice(choice, allowedTags)) : choices;
+    return allowedTags ? filterChoices(choices, allowedTags) : choices;
 };
 
-function filterChoice(c: ChoiceTree, t: TAG_ID[]): ChoiceTree; 
-function filterChoice(c: Item<TAG_ID>[], t: TAG_ID[]): Item<TAG_ID>[];
-function filterChoice(choice: ChoiceTree | Item<TAG_ID>[], allowedTags: TAG_ID[] ): ChoiceTree | Item<TAG_ID>[] {  
-    if (Array.isArray(choice)) {
-        return choice.filter((tag => allowedTags.includes(tag.value)));
-    }
-    return Object.fromEntries(
-        Object.entries(choice).map(([key, value]) => [key, filterChoice(value, allowedTags)])
+const filterChoices = (choices: ChoiceTree[], allowedTags: TAG_ID[]): ChoiceTree[] => 
+    choices.map(tree => 
+        mapObject(tree, tags => 
+            tags && tags.filter(tag => allowedTags.includes(tag.value))
+        )
     );
-};
 
 export const getAllowedTags = (pageContext?: PageContextState): TAG_ID[] | undefined => {
     if (pageContext?.subject === SUBJECTS.MATHS && pageContext.stage?.[0] === STAGE.GCSE) {
