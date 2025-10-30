@@ -279,7 +279,7 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
                 <span className="text-muted small text-overflow-ellipsis">
                     {isExternal
                         ? <>External link (<em>{externalUrl}</em>)</>
-                        : wildCard.description
+                        : wildCard.description ?? wildCard.subtitle
                     }
                 </span>
             </div>
