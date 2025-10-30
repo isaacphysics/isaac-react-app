@@ -54,4 +54,4 @@ const safeScrollTo = (...props: any) => {
             window.scrollTo(0, 0);
         }
     }, 10);
-}
+};
