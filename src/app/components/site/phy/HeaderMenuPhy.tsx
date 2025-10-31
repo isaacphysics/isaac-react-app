@@ -24,10 +24,13 @@ export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
         <NavigationSection topLevelLink to="/questions" title={"Question finder"}/>
         <NavigationSection topLevelLink to="/concepts" title={"Concepts"}/>
         <NavigationSection topLevelLink to="/news" title={"News"}/>
-        <NavigationSection topLevelLink to="/events" title={"Events"}/>
+        <NavigationSection to="/events" title={"Events"}>
+            <LinkItem to="/events">Events</LinkItem>
+            <LinkItem to="/programmes">Programmes</LinkItem>
+        </NavigationSection>
         <NavigationSection topLevelLink to="/books" title={"Books"}/>
         <NavigationSection title={"Help"} className={classNames({"border-end" : !isOffcanvas})}>
-            <LinkItem to="/pages/how_to_videos">How-to videos</LinkItem>
+            {/* <LinkItem to="/pages/how_to_videos">How-to videos</LinkItem> -- bring back when updated content created! */}
             <LinkItem to="/solving_problems">Problem-solving guide</LinkItem>
             <LinkItem to="/support/student">Student FAQ</LinkItem>
             {isTutor(user)

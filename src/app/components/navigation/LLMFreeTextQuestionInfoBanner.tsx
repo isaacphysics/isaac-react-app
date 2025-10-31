@@ -1,11 +1,12 @@
 import React from "react";
 
 import { Button, Col, Row } from "reactstrap";
-import { ACCOUNT_TAB, isLoggedIn, KEY, persistence, useNavigation, useUserConsent } from "../../services";
+import { ACCOUNT_TAB, isAda, isLoggedIn, KEY, persistence, useNavigation, useUserConsent } from "../../services";
 import { Link, useLocation } from "react-router-dom";
 import { selectors, updateCurrentUser, useAppDispatch, useAppSelector } from "../../state";
 import { PotentialUser } from "../../../IsaacAppTypes";
 import { ContentBaseDTO } from "../../../IsaacApiTypes";
+import { useLinkableSetting } from "../../services/linkableSetting";
 
 const locationOfFAQEntry = "/support/student/general#llm_questions";
 
@@ -22,7 +23,7 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <h2><span className="icon-lock"/> You must be logged in to answer this question</h2>
+        <h4><span className="icon-lock"/> You must be logged in to answer this question</h4>
         <p>
             We use a large language model (LLM) to mark free-text questions like this one.
             The model typically returns a predicted mark in under 10 seconds, along with the mark scheme.
@@ -31,9 +32,9 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
         <p>
             The only data we send to the LLM is your answer; we do not send any personal data.
         </p>
-        <p>
+        {isAda && <p>
             You can read more in our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link>.
-        </p>
+        </p>}
         <Row className="align-items-center mt-4">
             <Col div className="col-12 col-sm-auto me-auto">
                 <Link to="/login" onClick={setAfterAuthPath} className="btn btn-solid me-2 w-100 w-sm-auto">
@@ -60,11 +61,11 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <h2>Do you consent to sending your answers to OpenAI for marking?</h2>
+        <h4>Do you consent to sending your answers to OpenAI for marking?</h4>
         <p>
             We use a large language model (LLM) to mark free-text questions like this one.
             The model typically returns a predicted mark in under 10 seconds; however the marks you receive may not be accurate.
-            See our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link> for more information.
+            {isAda && ` See our ${<Link to={locationOfFAQEntry} target="_blank">FAQs</Link>} for more information.`}
         </p>
         <p>
             We only send your answer to OpenAI, we do not send any personal data.
@@ -86,16 +87,19 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
 }
 
 function GeneralInfoCopy(_props: InfoBannerProps) {
+    const {setLinkedSetting} = useLinkableSetting();
+
     return <>
-        <h2>Free text questions are marked by a large language model (LLM)</h2>
+        <h4>Free text questions are marked by a large language model (LLM)</h4>
         <p>
             In our 2024 study, we found that the LLM marks agreed with the marks computer science teachers gave 66% of the time.
-            This means that the marks you receive will not always be accurate. For more information, read our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link>.
+            This means that the marks you receive will not always be accurate.
+            {isAda && <>{` `}For more information, read our {<Link to={locationOfFAQEntry} target="_blank">FAQs</Link>}. </>}
         </p>
         <p>
             Do not include personal data in your answer as we send your answer to OpenAI.
             We only send your answer, we do not send any personal data with it.
-            You can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`}>account settings</Link>.
+            You can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`} onClick={() => setLinkedSetting("consent-to-openai-marking-feature")}>account settings</Link>.
         </p>
     </>;
 }
@@ -113,7 +117,7 @@ export function LLMFreeTextQuestionInfoBanner({doc}: InfoBannerProps) {
         CopyToDisplay = GeneralInfoCopy;
     }
 
-    return <div className="d-print-none llm-info-banner mt-2">
+    return <div className="d-print-none llm-info-banner mt-2" data-bs-theme="neutral">
         <CopyToDisplay doc={doc} />
     </div>;
 }

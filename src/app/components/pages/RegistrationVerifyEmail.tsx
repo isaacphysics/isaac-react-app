@@ -13,6 +13,7 @@ import {
 import {history, useQueryParams} from "../../services";
 import {Link} from "react-router-dom";
 import {ExigentAlert} from "../elements/ExigentAlert";
+import {useCheckCurrentUserOnActivity} from "../../services/useCheckCurrentUserOnActivity";
 
 
 export const RegistrationVerifyEmail = () => {
@@ -26,6 +27,8 @@ export const RegistrationVerifyEmail = () => {
     const verifyingCurrentUser = user && user.loggedIn && (user.id === Number(userIdFromParams) || userIdFromParams == undefined);
     const currentUserAlreadyVerified = user != null && user.loggedIn && (user.emailVerificationStatus === "VERIFIED");
     const emailVerified = (currentUserAlreadyVerified || userFromParamVerificationSucceeded);
+
+    useCheckCurrentUserOnActivity(!!user && user.loggedIn && !user.teacherAccountPending);
 
     useEffect(() => {
         dispatch(errorSlice.actions.clearError());

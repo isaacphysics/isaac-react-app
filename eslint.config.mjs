@@ -5,6 +5,8 @@ import pluginReact from "eslint-plugin-react";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginJsxA11y from "eslint-plugin-jsx-a11y";
 import { fixupPluginRules } from "@eslint/compat";
+import path from 'path';
+import stylistic from '@stylistic/eslint-plugin'
 
 
 export default [
@@ -17,6 +19,7 @@ export default [
     {
         plugins: {
             "react-hooks": fixupPluginRules(pluginReactHooks),
+            '@stylistic': stylistic
         },
         settings: {
             react: {
@@ -25,20 +28,21 @@ export default [
         },
         rules: {
             "no-prototype-builtins": "off",
-            "prefer-const": "warn",
-            "semi": "warn",
-            "indent": ["warn", 4, {"SwitchCase": 1}],
-            "jsx-a11y/no-static-element-interactions": "warn",
+            "prefer-const": "error",
+            "semi": "error",
+            "@stylistic/indent": ["error", 4, {"SwitchCase": 1}],
+            "jsx-a11y/no-static-element-interactions": "error",
             "react-hooks/rules-of-hooks": "error",
-            "react-hooks/exhaustive-deps": "warn",
-            "@typescript-eslint/no-unused-vars": ["warn", {
+            "react-hooks/exhaustive-deps": "error",
+            "@typescript-eslint/no-unused-vars": ["error", {
                 "argsIgnorePattern": "^_",
                 "varsIgnorePattern": "^_"
             }],
             "@typescript-eslint/ban-ts-comment": "off",
             "@typescript-eslint/explicit-function-return-type": "off",
-            "@typescript-eslint/no-empty-interface": "warn",
+            "@typescript-eslint/no-empty-interface": "error",
             "@typescript-eslint/explicit-module-boundary-types": "off",
+            "@typescript-eslint/no-floating-promises": "error",
             "react/jsx-no-target-blank": "off", // https://github.com/isaacphysics/isaac-react-app/pull/1134#discussion_r1774839755
         },
         languageOptions: {
@@ -46,8 +50,10 @@ export default [
             parserOptions: {
                 ecmaFeatures: {
                     "jsx": true
-                }
-            }
+                },
+                projectService: true,
+                tsconfigRootDir: path.__dirname,
+            },
         }
     }
 ];

@@ -2,7 +2,7 @@
 import {Remarkable} from "remarkable";
 // @ts-ignore
 import {linkify} from "remarkable/linkify";
-import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {BooleanNotation, NOT_FOUND_TYPE, UserEmailPreferences} from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
     BookingStatus,
@@ -35,8 +35,6 @@ if (document.location.hostname === "localhost") {
     apiPath = "http://localhost:8080/isaac-api/api";
 } else if (EDITOR_PREVIEW) {
     apiPath = `${STAGING_URL}/api/any/api`;
-} else if (document.location.hostname.endsWith(".ngrok.isaacscience.org")) {
-    apiPath = "https://isaac-api.ngrok.isaacscience.org/isaac-api/api";
 }
 let imagePath = `${apiPath}/images`;
 if (apiPath.indexOf(`/api/${API_VERSION}/api`) > -1) {
@@ -141,10 +139,6 @@ export enum ACTION_TYPE {
     USER_PASSWORD_RESET_REQUEST= "USER_PASSWORD_RESET_REQUEST",
     USER_PASSWORD_RESET_RESPONSE_SUCCESS ="USER_PASSWORD_RESET_RESPONSE_SUCCESS",
     USER_PASSWORD_RESET_RESPONSE_FAILURE = "USER_PASSWORD_RESET_RESPONSE_FAILURE",
-
-    USER_INCOMING_PASSWORD_RESET_REQUEST = "USER_INCOMING_PASSWORD_RESET_REQUEST",
-    USER_INCOMING_PASSWORD_RESET_SUCCESS = "USER_INCOMING_PASSWORD_RESET_SUCCESS",
-    USER_INCOMING_PASSWORD_RESET_FAILURE = "USER_INCOMING_PASSWORD_RESET_FAILURE",
 
     USER_LOG_OUT_REQUEST = "USER_LOG_OUT_REQUEST",
     USER_LOG_OUT_RESPONSE_SUCCESS = "USER_LOG_OUT_RESPONSE_SUCCESS",
@@ -508,7 +502,7 @@ export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) 
     return acc;
 }, {} as {[stage in LEARNING_STAGE]: Exclude<SUBJECTS, SUBJECTS.CS>[]});
 
-type BookTag = "phys_book_step_into" | "phys_book_step_up" | "phys_book_gcse" | "physics_skills_19" | "solving_physics_problems" | "physics_linking_concepts" | "qmp" | "maths_book_gcse" | "maths_book_2e" | "maths_book" | "chemistry_16";
+type BookTag = "phys_book_step_into" | "phys_book_step_up" | "phys_book_gcse" | "physics_skills_14" | "physics_skills_19" | "solving_physics_problems" | "physics_linking_concepts" | "qmp" | "maths_book_gcse" | "maths_book_2e" | "maths_book" | "chemistry_16";
 export enum BookHiddenState {
     BOOKS_LISTING_ONLY = "books_listing_only",
     HIDDEN = "hidden"
@@ -558,6 +552,13 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
             description: "Covers core topics in A level, IB, and equivalent. Helps students practise applying the concepts of A-level Physics and apply them to solve numerical problems.",
         },
         {
+            title: "Essential Pre-University Physics (2nd Edition)", tag: "physics_skills_14",
+            shortTitle: "A Level Physics (2nd edition)", image: "/assets/phy/books/physics_skills_14.jpg",
+            path: "/books/physics_skills_14", subject: "physics", stages: ["a_level"],
+            description: "Covers core topics in A level, IB, and equivalent. Helps students practise applying the concepts of A-level Physics and apply them to solve numerical problems.",
+            hidden: BookHiddenState.HIDDEN,
+        },
+        {
             title: "Pre-University Mathematics for Sciences (2nd edition)", tag: "maths_book_2e",
             shortTitle: "Pre-Uni Maths (2nd edition)", image: "/assets/phy/books/2025_pre_uni_maths_2e.png",
             path: "/books/pre_uni_maths_2e", subject: "maths", stages: ["a_level", "university"],
@@ -567,6 +568,7 @@ export const ISAAC_BOOKS: BookInfo[] = siteSpecific(
             title: "Pre-University Mathematics for Sciences (1st edition)", tag: "maths_book",
             shortTitle: "Pre-Uni Maths (1st edition)", image: "/assets/phy/books/pre_uni_maths.jpg",
             path: "/books/pre_uni_maths", subject: "maths", stages: ["a_level", "university"],
+            description: "Provides questions on mathematical topics that underpin all the sciences, as well as giving practice and fluency for Maths and Further Maths A-levels themselves.",
             hidden: BookHiddenState.HIDDEN,
         },
         {
@@ -606,7 +608,7 @@ export const ISAAC_BOOKS_BY_TAG: {[tag in BookTag]: BookInfo} = ISAAC_BOOKS.redu
 
 export const BOOK_DETAIL_ID_SEPARATOR = "__";
 
-export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNING_STAGE, string>>>> = { 
+export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNING_STAGE, string>>>> = {
     "physics": {
         [LEARNING_STAGE["11_TO_14"]]: "app_page_overview_ks3_phys",
         [LEARNING_STAGE.GCSE]: "app_page_overview_gcse_phys_fragment",
@@ -1003,7 +1005,7 @@ export enum MEMBERSHIP_STATUS {
     INACTIVE = "INACTIVE",
 }
 
-export enum ACCOUNT_TAB {account, customise, passwordreset, teacherconnections, emailpreferences, betafeatures}
+export enum ACCOUNT_TAB {account, customise, passwordreset, teacherconnections, emailpreferences, accessibility, betafeatures}
 
 export interface AccountTabs {
     tab: ACCOUNT_TAB,
@@ -1019,6 +1021,7 @@ export const ACCOUNT_TABS : AccountTabs[] = [
     {tab: ACCOUNT_TAB.passwordreset, title: "Security"},
     {tab: ACCOUNT_TAB.teacherconnections, title: "Teacher connections", titleShort: "Connections"},
     {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", hiddenIfEditingOtherUser: true},
+    {tab: ACCOUNT_TAB.accessibility, title: "Accessibility", hiddenIfEditingOtherUser: true},
     {tab: ACCOUNT_TAB.betafeatures, title: "Beta", hiddenIfEditingOtherUser: true},
 ];
 
@@ -1208,6 +1211,8 @@ export const FEATURED_NEWS_TAG = "featured";
 
 export const NEWS_PODS_PER_PAGE = 12; // <= api.MAX_PODS_TO_RETURN (if lower, the backend will still return the maximum number of pods, but they won't be displayed in the frontend)
 
+export const QUESTIONS_PER_GAMEBOARD = siteSpecific(10, 30);
+
 export const PATHS = {
     // Site-specific paths
     ...siteSpecific({
@@ -1269,7 +1274,7 @@ export const AUTHENTICATOR_PROVIDERS : AuthenticationProvider[] = siteSpecific([
 
 export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023
 
-export const EMAIL_PREFERENCE_DEFAULTS = siteSpecific(
+export const EMAIL_PREFERENCE_DEFAULTS: UserEmailPreferences = siteSpecific(
     {
         ASSIGNMENTS: true,
         NEWS_AND_UPDATES: undefined,

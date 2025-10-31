@@ -1,0 +1,60 @@
+.llm-indicator {
+    position: relative;
+    display: flex;
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+
+    &.small {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+.llm-info-banner {
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+}
+
+.llm-feedback {
+    .prediction {
+        display: inline-block;
+        border-radius: 0.5rem;
+        padding: 1rem 1rem;
+        margin-bottom: 1rem;
+    }
+    .llm-mark-table-wrapper {
+        table {
+            table-layout: fixed;
+            th {
+                font-family: $primary-font;
+                padding: 0.5rem;
+                font-weight: 600;
+                &:last-child {
+                    width: 50px;
+                }
+            }
+            td {
+                padding: 0.5rem;
+                &:last-child {
+                    text-align: center;
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
+
+    .feedback-collection {
+        li + li {
+            margin-top: 1rem;
+        }
+    }
+}
+
+.attempt-limit-tooltip {
+    max-width: 225px;
+}

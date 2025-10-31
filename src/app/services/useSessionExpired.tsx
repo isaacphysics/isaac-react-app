@@ -1,44 +1,22 @@
-import {useCallback, useEffect, useState} from "react";
-import {getUserId, redirectTo, requestCurrentUser, selectors, useAppDispatch, useAppSelector} from "../state";
+import {useEffect, useState} from "react";
+import {getUserId, redirectTo, selectors, useAppSelector} from "../state";
 import {KEY, persistence} from "./localStorage";
-import throttle from "lodash/throttle";
+import {useCheckCurrentUserOnActivity} from "./useCheckCurrentUserOnActivity";
 
 export const setAfterRenewPath = () => {
     persistence.session.save(KEY.AFTER_SESSION_RENEW_PATH, window.location.pathname);
 };
 
 export const useSessionExpired = (): [string, () => void] => {
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
+    const loggedBackIn = !!user && user.loggedIn && getUserId();
 
     const [target, setTarget] = useState<string>("/login");
+    useCheckCurrentUserOnActivity(loggedBackIn);
 
     const clearRenewPath = () => {
         persistence.session.remove(KEY.AFTER_SESSION_RENEW_PATH);
     };
-
-    const throttledCheckLoginStatus = useCallback(
-        throttle(() => {
-            dispatch(requestCurrentUser());
-        }, 20000, {leading: true}),
-        []
-    );
-
-    useEffect(() => {
-        // Register callbacks so we can detect when the user is on the tab, and then check if we're logged in.
-        const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
-
-        events.forEach(event => {
-            document.addEventListener(event, throttledCheckLoginStatus);
-        });
-
-        return () => {
-            throttledCheckLoginStatus.cancel();
-            events.forEach(event => {
-                document.removeEventListener(event, throttledCheckLoginStatus);
-            });
-        };
-    }, [throttledCheckLoginStatus]);
 
     useEffect(() => {
         const targetFromSessionStorage = persistence.session.load(KEY.AFTER_SESSION_RENEW_PATH);
@@ -46,13 +24,13 @@ export const useSessionExpired = (): [string, () => void] => {
         if(targetFromSessionStorage) {
             setTarget(targetFromSessionStorage);
 
-            if(user && user.loggedIn && getUserId()) {
+            if(loggedBackIn) {
                 // If the user has logged back in elsewhere, automatically restore the page
                 clearRenewPath();
                 redirectTo(targetFromSessionStorage);
             }
         }
-    }, [user]);
+    }, [loggedBackIn]);
 
     return [target, clearRenewPath];
 };

@@ -18,7 +18,7 @@
 
 .hierarchy-tags {
   font-size: 0.8125rem;
-  color: $color-neutral-500;
+  color: $color-neutral-600;
   min-width: max-content;
 }
 
@@ -42,6 +42,7 @@
   .table.table-bordered {
     thead {
       @include table-sticky();
+      background: $gray-103;
     }
     tr {
       &.disabled {

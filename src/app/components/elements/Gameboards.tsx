@@ -95,7 +95,7 @@ const CSTable = (props: GameboardsTableProps) => {
     </tr>;
 
     const filteredBoards = boards && boards.boards
-        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter) || board.id === boardTitleFilter)
         .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
         .filter(board => boardCompletionSelection(board, boardCompletion));
 
@@ -130,7 +130,7 @@ const Cards = (props: GameboardsCardsProps) => {
     } = props;
 
     const filteredBoards = boards && boards.boards && boards.boards
-        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter) || board.id === boardTitleFilter)
         .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
         .filter(board => boardCompletionSelection(board, boardCompletion));
 

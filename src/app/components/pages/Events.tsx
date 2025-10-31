@@ -17,7 +17,7 @@ import {
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import { Container, Row, Button, Form, Input, Label } from "reactstrap";
+import { Container, Row, Button, Form, Input, Label, Col } from "reactstrap";
 import { EventsSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 export interface EventsPageQueryParams {
@@ -47,8 +47,14 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
     const stageFilter = useMemo(() => query.show_stage_only?.split(',') as STAGE[] || [STAGE.ALL], [query.show_stage_only]);
 
     useEffect(() => {
-        getEventsList({startIndex: 0, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
-    }, [typeFilter, statusFilter, stageFilter]);
+        void getEventsList({
+            startIndex: 0, 
+            limit: EVENTS_PER_PAGE, 
+            typeFilter, 
+            statusFilter, 
+            stageFilter
+        });
+    }, [typeFilter, statusFilter, stageFilter, getEventsList]);
 
     const pageHelp = <span>
         Follow the links below to find out more about our FREE events.
@@ -64,7 +70,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
         return <div className="my-4">
             <Form className="form-inline d-flex justify-content-end">
                 <Label>Filter by
-                    <Input id="event-status-filter" className="ms-2 me-3" type="select" value={statusFilter} onChange={e => {
+                    <Input id="event-status-filter" className="ms-3" type="select" value={statusFilter} onChange={e => {
                         const selectedFilter = e.target.value as EventStatusFilter;
                         query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
                         query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
@@ -80,7 +86,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                             )
                         }
                     </Input>
-                    <Input id="event-type-filter" className="ms-2 me-3" type="select" value={typeFilter} onChange={e => {
+                    <Input id="event-type-filter" className="ms-3" type="select" value={typeFilter} onChange={e => {
                         const selectedType = e.target.value as EventTypeFilter;
                         query.types = selectedType !== EventTypeFilter["All groups"] ? selectedType : undefined;
                         history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
@@ -89,7 +95,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                             <option key={typeValue} value={typeValue}>{typeLabel}</option>
                         )}
                     </Input>
-                    <Input id="event-stage-filter" className="ms-2" type="select" style={{minWidth: "140px"}}
+                    {Object.keys(EventStageMap).length > 1 && <Input id="event-stage-filter" className="ms-3" type="select" style={{minWidth: "140px"}}
                         value={query.show_stage_only && Object.keys(reverseEventsMap).includes(query.show_stage_only) ? query.show_stage_only : STAGE.ALL}
                         onChange={e => {
                             const selectedStage = e.target.value as STAGE;
@@ -99,7 +105,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                         {Object.entries(EventStageMap).map(([label, value]) =>
                             <option key={value} value={value}>{label}</option>
                         )}
-                    </Input>
+                    </Input>}
                 </Label>
             </Form>
         </div>;
@@ -127,17 +133,19 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
                                     Showing {numberOfLoadedEvents} of {total}
                                 </div>
 
-                                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1 row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
-                                    {events.map(event => <div key={event.id} className="my-2 px-3">
+                                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
+                                    {events.map(event => <Col key={event.id} className={siteSpecific("g-4", "p-3")}>
                                         {deviceSize==="md" && <div className="section-divider mb-4"/>}
                                         <EventCard event={event} />
-                                    </div>)}
+                                    </Col>)}
                                 </Row>
 
                                 {/* Load More Button */}
                                 {numberOfLoadedEvents < total && <div className="text-center mt-4 mb-7">
                                     <Button color="solid"
-                                        onClick={() => {getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});}}>
+                                        onClick={() => {
+                                            void getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
+                                        }}>
                                         Load more events
                                     </Button>
                                 </div>}

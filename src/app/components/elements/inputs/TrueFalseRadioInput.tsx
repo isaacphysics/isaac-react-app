@@ -5,19 +5,20 @@ interface TrueFalseRadioProps {
     id: string;
     stateObject: Nullable<Record<string, Nullable<boolean>>>;
     propertyName: string;
+    accessibleName?: string;
     setStateFunction: (stateObject: Record<string, Nullable<boolean>>) => void;
     submissionAttempted: boolean;
     error?: string;
     trueLabel?: string;
     falseLabel?: string;
 }
-export function TrueFalseRadioInput({id, stateObject, propertyName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"}: TrueFalseRadioProps) {
+export function TrueFalseRadioInput({id, stateObject, propertyName, accessibleName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"}: TrueFalseRadioProps) {
     const invalid = submissionAttempted && (typeof stateObject?.[propertyName] !== "boolean");
 
     return <FormGroup>
         <div className="d-flex flex-nowrap">
             <Label htmlFor={`${id}-t`} className="w-50 text-end text-nowrap pe-2">
-                {trueLabel}<span className='visually-hidden'> for {propertyName}</span>
+                {trueLabel}<span className='visually-hidden'> for {accessibleName ?? propertyName}</span>
             </Label>
             <Input
                 id={`${id}-t`} type="radio" name={id} color="primary" className="d-inline"
@@ -30,7 +31,7 @@ export function TrueFalseRadioInput({id, stateObject, propertyName, setStateFunc
         </div>
         <div className="d-flex flex-nowrap">
             <Label htmlFor={`${id}-f`} className="w-50 text-end text-nowrap pe-2">
-                {falseLabel}<span className='visually-hidden'> for {propertyName}</span>
+                {falseLabel}<span className='visually-hidden'> for {accessibleName ?? propertyName}</span>
             </Label>
             <Input
                 id={`${id}-f`} type="radio" name={id} color="primary" className="d-inline"

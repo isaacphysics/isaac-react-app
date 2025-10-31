@@ -29,18 +29,21 @@ describe("MyAssignments", () => {
         expect(assignments).toHaveLength(mockMyAssignments.length);
     });
 
-    it('should render with "All" assignment filter selected by default', async () => {
-        renderMyAssignments();
-        if (isAda) {
+    if (isAda) {
+        it('should render with "All" assignment filter selected by default', async () => {
+            renderMyAssignments();
             const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
             expect(assignmentTypeFilter).toHaveValue("All");
-        }
-        else {
+        });
+    }
+    else {
+        it('should render with "To do" assignment filter selected by default', async () => {
+            renderMyAssignments();
             const sidebar = await screen.findByTestId("my-assignments-sidebar");
-            const allFilter = within(sidebar).getByRole("checkbox", {name: "All"});
+            const allFilter = within(sidebar).getByRole("checkbox", {name: `To do ${mockMyAssignments.length}`});
             expect(allFilter).toHaveProperty("checked", true);
-        }
-    });
+        });
+    }
 
     it('should allow users to filter assignments on gameboard title', async () => {
         renderMyAssignments();
@@ -54,16 +57,19 @@ describe("MyAssignments", () => {
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.length);
     });
 
-    it('should filter to only display "Older" assignments when that filter type is selected, this should not display any assignments', async () => {
+    it('should filter to only display "Overdue" assignments when that filter type is selected, this should not display any assignments', async () => {
         renderMyAssignments();
         if (isAda) {
             const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
-            await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
+            await userEvent.selectOptions(assignmentTypeFilter, "Overdue");
         }
         else {
             const sidebar = await screen.findByTestId("my-assignments-sidebar");
-            const olderFilter = within(sidebar).getByRole("checkbox", {name: "To do (older)"});
+            const olderFilter = within(sidebar).getByRole("checkbox", {name: "Overdue 0"});
             await userEvent.click(olderFilter);
+            // Deselect the "To do" filter (selected by default on phy)
+            const toDoFilter = within(sidebar).getByRole("checkbox", {name: `To do ${mockMyAssignments.length}`});
+            await userEvent.click(toDoFilter);
         }
         expect(screen.queryAllByTestId("my-assignment")).toHaveLength(0);
     });
@@ -84,17 +90,26 @@ describe("MyAssignments", () => {
                 });
             })
         ]);
-        // Wait for the default ("All") assignments to show up
-        expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.length);
+        // Wait for the default assignments to show up ("All" on Ada, "To do" on phy)
+        if (isAda) {
+            expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.length);
+        }
+        else {
+            // On phy the "To do" filter is selected by default, so exclude the one old assignment
+            expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.length - 1);
+        }
         // Select the "Older Assignments" filter
         if (isAda) {
             const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
-            await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
+            await userEvent.selectOptions(assignmentTypeFilter, "Overdue");
         }
         else {
             const sidebar = await screen.findByTestId("my-assignments-sidebar");
-            const olderFilter = within(sidebar).getByRole("checkbox", {name: "To do (older)"});
+            const olderFilter = within(sidebar).getByRole("checkbox", {name: "Overdue 1"});
             await userEvent.click(olderFilter);
+            // Deselect the "To do" filter
+            const toDoFilter = within(sidebar).getByRole("checkbox", {name: `To do ${mockMyAssignments.length - 1}`});
+            await userEvent.click(toDoFilter);
         }
         // Wait for the one old assignment that we expect
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(1);

@@ -68,6 +68,9 @@ const assignments: AssignmentDTO[] = [assignmentA, assignmentB, assignmentC, ass
 const nextWeek = new Date();
 nextWeek.setDate(nextWeek.getDate() + 7);
 
+const twoWeeksAway = new Date();
+twoWeeksAway.setDate(twoWeeksAway.getDate() + 14);
+
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 
@@ -230,19 +233,6 @@ describe("Correct assignments are filtered out based on properties", () => {
 });
 
 describe("Assignment categorisation depending on status", () => {
-    it("Records an assignment as 'in progress' if it has no due date and its creation date is within the last month, otherwise it is considered 'old'", () => {
-        // Arrange
-        const recentAssignmentWithoutDueDate: AssignmentDTO = {...assignmentA, creationDate: yesterday};
-        const oldAssignmentWithoutDueDate: AssignmentDTO = {...assignmentA, creationDate: lastMonth};
-
-        // Act
-        const result = filterAssignmentsByStatus([recentAssignmentWithoutDueDate, oldAssignmentWithoutDueDate]);
-
-        // Assert
-        expect(result.inProgressRecent).toContainEqual(createAssignmentWithStartDate(recentAssignmentWithoutDueDate));
-        expect(result.inProgressOld).toContainEqual(createAssignmentWithStartDate(oldAssignmentWithoutDueDate));
-    });
-
     it("Records an assignment as 'in progress' if it has a due date is today or in the future, othersie it is condidered 'old'", () => {
         // Arrange
         const assignmentWithAFutreDueDate: AssignmentDTO = {...assignmentA, dueDate: tomorrow};
@@ -253,9 +243,9 @@ describe("Assignment categorisation depending on status", () => {
         const result = filterAssignmentsByStatus([assignmentWithAFutreDueDate, assignmentWithADueDateToday, assignmentWithADueDateYesterday]);
 
         // Assert
-        expect(result.inProgressRecent).toContainEqual(createAssignmentWithStartDate(assignmentWithAFutreDueDate));
-        expect(result.inProgressRecent).toContainEqual(createAssignmentWithStartDate(assignmentWithADueDateToday));
-        expect(result.inProgressOld).toContainEqual(createAssignmentWithStartDate(assignmentWithADueDateYesterday));
+        expect(result.inProgress).toContainEqual(createAssignmentWithStartDate(assignmentWithAFutreDueDate));
+        expect(result.inProgress).toContainEqual(createAssignmentWithStartDate(assignmentWithADueDateToday));
+        expect(result.overDue).toContainEqual(createAssignmentWithStartDate(assignmentWithADueDateYesterday));
     });
 
     it("Records an assignment as 'all attempted' if all questions have at least one attempt", () => {
@@ -282,8 +272,8 @@ describe("Assignment categorisation depending on status", () => {
         expect(result.allAttempted.length).toBe(1);
         expect(result.allCorrect).toContainEqual(createAssignmentWithStartDate(assignmentWithAllQuestionsCorrect));
         expect(result.allCorrect.length).toBe(1);
-        expect(result.inProgressOld).toContainEqual(createAssignmentWithStartDate(partiallyAttemptedAssignment));
-        expect(result.inProgressOld.length).toBe(1);
+        expect(result.overDue).toContainEqual(createAssignmentWithStartDate(partiallyAttemptedAssignment));
+        expect(result.overDue.length).toBe(1);
     });
 
     it("Records an assignment as completed if all questions are correct even if due date is in the future", () => {
@@ -301,23 +291,23 @@ describe("Assignment categorisation depending on status", () => {
         // Arrange
         const assignmentWithNearDueDate: AssignmentDTO = {...assignmentA, dueDate: tomorrow, creationDate: yesterday};
         const assignmentWithFarDueDate: AssignmentDTO = {...assignmentA, dueDate: nextWeek, creationDate: lastWeek};
-        const assignmentWithoutADueDateAndRecentCreationDate: AssignmentDTO = {...assignmentA, creationDate: yesterday};
-        const assignmentWithoutADueDateAndAnOlderCreationDate: AssignmentDTO = {...assignmentA, creationDate: lastWeek};
+        const assingmentWithFarDueDateButAssignedRecently: AssignmentDTO = {...assignmentA, dueDate: nextWeek, creationDate: yesterday};
+        const assignmentWithFurtherDueDate: AssignmentDTO = {...assignmentA, dueDate: twoWeeksAway, creationDate: lastMonth};
 
         // Act
         const result = filterAssignmentsByStatus([
+            assingmentWithFarDueDateButAssignedRecently,
             assignmentWithNearDueDate,
-            assignmentWithoutADueDateAndRecentCreationDate,
+            assignmentWithFurtherDueDate,
             assignmentWithFarDueDate,
-            assignmentWithoutADueDateAndAnOlderCreationDate,
         ]);
 
         // Assert
-        expect(result.inProgressRecent).toEqual([
+        expect(result.inProgress).toEqual([
             assignmentWithNearDueDate,
+            assingmentWithFarDueDateButAssignedRecently,
             assignmentWithFarDueDate,
-            assignmentWithoutADueDateAndRecentCreationDate,
-            assignmentWithoutADueDateAndAnOlderCreationDate
+            assignmentWithFurtherDueDate
         ].map(createAssignmentWithStartDate));
     });
 
@@ -333,7 +323,7 @@ describe("Assignment categorisation depending on status", () => {
             expiredAssignmentScheduledYesterday
         ]);
 
-        expect(result.inProgressOld).toEqual([
+        expect(result.overDue).toEqual([
             expiredAssignmentScheduledYesterday,
             expiredAssignmentCreatedLastWeek,
             assignmentWithAVeryOldCreationDate

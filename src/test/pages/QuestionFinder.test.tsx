@@ -1,5 +1,5 @@
 import { screen, waitFor, within } from "@testing-library/react";
-import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
+import { clickOn, enterInput, expectUrlParams, renderTestEnvironment, SearchString, setUrl, waitForLoaded, withMockedRandom} from "../testUtils";
 import { mockQuestionFinderResults, mockQuestionFinderResultsWithMultipleStages } from "../../mocks/data";
 import shuffle from "lodash/shuffle";
 import times from "lodash/times";
@@ -66,15 +66,15 @@ describe("QuestionFinder", () => {
             await renderQuestionFinderPage({ response, queryParams: '?randomSeed=1&stages=gcse' });
             await expectQuestions(shuffledQuestions.slice(0, 30));
         });
-            
+
         it('button should shuffle questions', async () => {
             await withMockedRandom(async (randomSequence) => {
                 randomSequence([1 * 10 ** -6]);
                 await renderQuestionFinderPage({ response });
-                   
+
                 await toggleFilter(Filter.GCSE);
                 await expectQuestions(questions.slice(0, 30));
-                    
+
                 await clickOn("Shuffle");
                 await expectQuestions(shuffledQuestions.slice(0, 30));
             });
@@ -83,7 +83,7 @@ describe("QuestionFinder", () => {
         it('button stores the seed in a URL parameter', () => {
             return withMockedRandom(async (randomSequence) => {
                 randomSequence([1 * 10 ** -6]);
-                   
+
                 await renderQuestionFinderPage({ response });
                 await toggleFilter(Filter.GCSE);
                 await clickOn("Shuffle");
@@ -91,14 +91,14 @@ describe("QuestionFinder", () => {
             });
         });
 
-        describe('returning to alphabetical order from a randomised screen', () => {                
+        describe('returning to alphabetical order from a randomised screen', () => {
             it('when applying filters', async () => {
                 await renderQuestionFinderPage({ response, queryParams: "?randomSeed=1" });
                 await toggleFilter(Filter.GCSE);
                 await expectUrlParams("?stages=gcse");
                 await expectQuestions(questions.slice(0, 30));
             });
-    
+
             it('when searching for a question', async () => {
                 await renderQuestionFinderPage({ response, queryParams: "?randomSeed=1" });
                 await enterInput(siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST"), "A bag");
@@ -107,12 +107,13 @@ describe("QuestionFinder", () => {
             });
 
             if (isPhy) {
-                // On Ada, clearing filters only has an affect after clicking the "Apply" button, so same case as above 
+                // On Ada, clearing filters only has an affect after clicking the "Apply" button, so same case as above
                 it('when clearing all filters', async () => {
                     await renderQuestionFinderPage({ response, queryParams: "?randomSeed=1&stages=gcse" });
                     await clickOn(siteSpecific("Clear all filters", "Clear all"));
                     await expectUrlParams('');
                 });
+
 
                 it('when clearing a filter tag', async () => {
                     await renderQuestionFinderPage({ response, queryParams: "?randomSeed=1&stages=gcse" });
@@ -121,14 +122,14 @@ describe("QuestionFinder", () => {
                 });
             }
         });
-            
+
         it('"Load more" should avoid duplicate questions by fetching next page using same seed', () => {
             const resultsResponsePage2 = buildMockQuestionFinderResults(questions, 30);
             const shuffledResultsResponsePage2 = buildMockQuestionFinderResults(shuffledQuestions, 30);
 
             return withMockedRandom(async (randomSequence) => {
                 randomSequence([1 * 10 ** -6]);
-                   
+
                 await renderQuestionFinderPage({ response: ({ randomSeed, startIndex }) => {
                     switch (randomSeed) {
                         case null: return startIndex === '0' ? resultsResponse : resultsResponsePage2;;
@@ -139,7 +140,7 @@ describe("QuestionFinder", () => {
                 await toggleFilter(Filter.GCSE);
                 await expectQuestions(questions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
-                    
+
                 await clickOn("Shuffle");
                 await expectQuestions(shuffledQuestions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
@@ -168,7 +169,7 @@ describe("QuestionFinder", () => {
             const [subjects, fields, topics] = [checkboxStates(2), checkboxStates(4), checkboxStates(4)];
             const response = () => resultsResponse;
             const { Selected, Partial, Deselected, Hidden } = PartialCheckboxState;
-            
+
             describe('initial state: no selections', () => {
                 it('show unchecked subjects, hides others', async () => {
                     await renderQuestionFinderPage({ response });
@@ -195,12 +196,12 @@ describe("QuestionFinder", () => {
                     await toggleFilter(fieldFilters);
                     expectPartialCheckBox(testedFilters).toBe([subjects(Partial), fields(Selected), topics(Deselected)]);
                 });
-                
+
                 it('DESELECT: subjects', async () => {
                     await renderQuestionFinderPage({ response, queryParams });
                     await toggleFilter(subjectFilters);
                     expectPartialCheckBox(testedFilters).toBe([subjects(Deselected), fields(Hidden), topics(Hidden)]);
-                });  
+                });
             });
 
             describe('initial state: subject and fields selected', () => {
@@ -231,8 +232,8 @@ describe("QuestionFinder", () => {
             });
 
             describe('initial state: subject, fields and topics selected', () => {
-                const queryParams = '?subjects=physics,maths&fields=skills,mechanics,number,geometry' +
-                    '&topics=sig_figs,statics,arithmetic,shapes';
+                const queryParams = `?subjects=physics,maths&fields=skills,mechanics,number,geometry${
+                    '&topics=sig_figs,statics,arithmetic,shapes'}`;
 
                 it('shows partial subject, partial fields and selected topics', async () => {
                     await renderQuestionFinderPage({ response, queryParams });
@@ -331,8 +332,8 @@ describe("QuestionFinder", () => {
     describe('Context-specific question finders', () => {
         if (isPhy) {
             it('Context-specific question finders should lead back to the relevant landing page in the breadcrumb', async () => {
-                await renderQuestionFinderPage({ 
-                    response: () => resultsResponse, 
+                await renderQuestionFinderPage({
+                    response: () => resultsResponse,
                     context: { subject: "physics", stage: ["gcse"] },
                 });
                 expectPhyBreadCrumbs({href: "/physics/gcse", text: "GCSE Physics"});
@@ -341,8 +342,8 @@ describe("QuestionFinder", () => {
             it('Context-specific question finders should only load questions for that context', async () => {
                 const getQuestionsWithMultipleStages = jest.fn(() => resultsResponseWithMultipleStages);
 
-                await renderQuestionFinderPage({ 
-                    response: getQuestionsWithMultipleStages, 
+                await renderQuestionFinderPage({
+                    response: getQuestionsWithMultipleStages,
                     context: { subject: "physics", stage: ["a_level"] },
                 });
 
@@ -355,8 +356,8 @@ describe("QuestionFinder", () => {
             it('"Load more" on a context-specific question finder should still only load questions for that context', async () => {
                 const getQuestionsWithMultipleStages = jest.fn(() => resultsResponseWithMultipleStages);
 
-                await renderQuestionFinderPage({ 
-                    response: getQuestionsWithMultipleStages, 
+                await renderQuestionFinderPage({
+                    response: getQuestionsWithMultipleStages,
                     context: { subject: "physics", stage: ["a_level"] },
                 });
 
@@ -378,10 +379,9 @@ type RenderParameters = {
         randomSeed: string | null;
         startIndex: string | null;
     }) => QuestionFinderResultsResponse;
-    queryParams?: string;
+    queryParams?: SearchString;
     context?: NonNullable<PageContextState>;
 };
-
 
 const findQuestions = () => screen.findByTestId("question-finder-results").then(e => within(e).findAllByRole('listitem'));
 

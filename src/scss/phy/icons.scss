@@ -80,9 +80,6 @@
   @include svg-icon('/assets/phy/icons/redesign/menu.svg', 16px, 16px, 14px 12px);
 }
 
-.icon-close {
-  @include svg-icon('/assets/phy/icons/redesign/close.svg', 16px, 16px, 14px 12px);
-}
 
 .icon-cog {
   @include svg-icon('/assets/phy/icons/redesign/cog.svg', 16px, 16px);
@@ -124,6 +121,12 @@
   @include svg-icon('/assets/common/icons/arrow-right.svg', 16px, 16px);
   transform: rotate(90deg);
 }
+
+.icon-feedback-tick {
+  @include svg-icon-raw('/assets/cs/icons/tick-rp-green.svg', 20px, 20px);
+  margin-bottom: -5px;
+}
+
 
 .icon-question {
   @include svg-icon-layered(

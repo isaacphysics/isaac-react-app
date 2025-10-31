@@ -53,7 +53,7 @@
   .card-title {
     font-size: 1.4rem;
     font-weight: 600;
-    font-family: exo_2regular, 'sans-serif';
+    font-family: $secondary-font;
     line-height: 1.8rem;
     padding-top: 10px;
   }
@@ -182,7 +182,7 @@
   div.hexagon-title {
     font-size: 1.6rem;
     font-weight: 600;
-    font-family: exo_2regular, 'sans-serif';
+    font-family: $secondary-font;
     text-align: center;
     margin-top: 10px;
     margin-left: 20px;

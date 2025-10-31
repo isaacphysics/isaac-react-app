@@ -4,6 +4,10 @@
   tbody > *:last-child > * {
     border-bottom: none;
   }
+
+  &:is(ul) > li:not(:last-child) {
+    border-bottom: $table-border-color solid 1px;
+  }
 }
 
 .member-info-item {

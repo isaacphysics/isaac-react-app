@@ -1,76 +1,72 @@
 #homepage {
-  //section {padding: 2rem 0;}
-
-  .bg-hero {
-    position: absolute;
-    top: 0;
-    left: 0;
-    filter: opacity(70%) blur(1px);
-  }
-
-  h1#homepageName {
-    text-shadow: 0 0 4px $gray-103, 0 0 5px $gray-103, 0 0 10px $gray-103, 0 0 10px $gray-103, 0 0 20px $gray-103;
-  }
-
   section#call-to-action {
+    padding-top: 5rem;
     background-color: $cs-black;
+    background-image: url("/assets/cs/decor/hero.svg");
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: bottom;
     color: $cs-white;
-  }
 
-  img#homepageHeroImg {
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: -15%;
-    z-index: -1;
-    position: absolute;
-    @include media-breakpoint-only(sm) {
-      margin-bottom: -50%;
+    h1 {
+      max-width: 980px;
     }
-    opacity: 0.6;
   }
 
-  section#news-and-updates {
-    background-color: $cs-white;
-    color: $cs-black;
-    background-image: url(/assets/cs/decor/swirls.svg);
+  #cta-container {
+    margin-bottom: -40%;
+    @include media-breakpoint-only(sm) {
+      margin-bottom: -20%;
+    }
+    @include media-breakpoint-up(md) {
+      margin-bottom: 0;
+    }
   }
 
-  section#scotland-slice {
-    background-color: $cs-white;
-    #scotland-slice-card {
-      background-color: $cs-cultured;
-      border-radius: 24px;
-      &:before {
-        content: " ";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        background-image: url(/assets/cs/decor/fingerprint-stage-slice.svg);
-        background-repeat: no-repeat;
-        background-position-x: 100%;
-        background-position-y: 50%;
-        background-size: 50%;
-        filter: opacity(7%);
-        @include media-breakpoint-down(lg) {
-          background-size: 90%;
-          background-position-x: 300%;
-        }
+  #cta-features-card {
+    position: relative;
+    font-weight: bold;
+    transform: translateY(75%);
+
+    @include media-breakpoint-only(md) {
+      // Give every other element a left border
+      & .row > :nth-child(even) {
+        border-left: 2px solid $cs-light-gray;
+      }
+    }
+
+    @include media-breakpoint-up(lg) {
+      transform: translateY(50%);
+
+      // Give all but first child a left border
+      & .row > * + * {
+        border-left: 2px solid $cs-light-gray;
       }
     }
   }
 
-  section#benefits-for-teachers-and-students {
+  section#teach-and-learn{
+    padding-top: 18rem;
+
+    @include media-breakpoint-up(sm) {
+      padding-top: 15rem;
+    }
+
+    @include media-breakpoint-up(md) {
+      padding-top: 10rem;
+    }
+
+    @include media-breakpoint-up(lg) {
+      padding-top: 3rem;
+    }
+
     ul {
       padding-inline-start: 20px;
       li {
         margin: 1rem 0;
+        padding-left: 0.25rem;
       }
-      li::marker {
-        color: $primary;
-      }
+      list-style-image: url("/assets/cs/icons/stroke.svg");
     }
   }
 
@@ -81,74 +77,34 @@
     }
   }
 
-  section#computer-science-stories {
-    .container {
-      position: relative;
-      .row {
-        @include media-breakpoint-down(md) {
-          padding-bottom: 40vw !important;
-        }
-        #cs-stories-text {
-          background: radial-gradient(rgba(255, 255, 255, .9) 0, rgba(255, 255, 255, .8) 60%, transparent 80%, transparent 100%);
-          z-index: 1;
-        }
-      }
-      &:before {
-        content: " ";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        // Hand-tuned background positioning to make this particular SVG look nice on different screen sizes
-        background-image: url(/assets/cs/decor/fingerprint-cs-stories.svg);
-        background-repeat: no-repeat;
-        background-position-x: 100%;
-        background-position-y: 40%;
-        background-size: auto 120%;
-        @include media-breakpoint-down(lg) {
-          left: 11vw;
-        }
-        @include media-breakpoint-down(md) {
-          left: 0;
-          width: 100%;
-          background-position-x: 100%;
-          background-position-y: 150%;
-          background-size: 100% 80%;
-        }
-      }
-    }
-    background-color: $cs-white;
-    position: relative;
-  }
-
   section#news {
     background-color: $cs-cultured;
-
-    @include media-breakpoint-only(lg) {
-      .card-deck .news-card:nth-child(4) {
-        display: none !important;
-      }
-    }
   }
 
-  section#search {
-    background-color: $dark-pink-300;
+  section#account {
+    background-color: $cyan-200;
   }
 }
 
-.homepage-padding {
+.homepage-padding-x {
   @extend .px-md-4;
   @include media-breakpoint-up(lg) {
-    padding-left: 28px !important;
-    padding-right: 28px !important;
+    padding-left: 56px !important;
+    padding-right: 56px !important;
   }
+}
+
+.homepage-padding-y {
   @extend .py-7;
   @include media-breakpoint-up(lg) {
     padding-top: 5rem !important;
     padding-bottom: 5rem !important;
   }
+}
 
+.homepage-padding {
+  @extend .homepage-padding-x;
+  @extend .homepage-padding-y;
 }
 
 .ada-pink {

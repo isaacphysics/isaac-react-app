@@ -1,5 +1,5 @@
 import React, { ComponentProps } from "react";
-import { isDefined, siteSpecific } from "../../services";
+import { isDefined } from "../../services";
 import { Spacer } from "./Spacer";
 import { NonUndefined } from "@reduxjs/toolkit/dist/query/tsHelpers";
 import classNames from "classnames";
@@ -59,7 +59,7 @@ export const SortItemHeader = <T,>(props: SortItemHeaderProps<NonUndefined<T>>) 
         ...rest
     } = props;
 
-    const justify = alignment ? "justify-content-" + alignment : siteSpecific("justify-content-center", "justify-content-start");
+    const justify = alignment ? "justify-content-" + alignment : "justify-content-center";
 
     const sortArrow = <button
         className="sort"

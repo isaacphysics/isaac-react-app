@@ -1,86 +1,69 @@
-import React, {useEffect, useState} from 'react';
-import {AppState, handlePasswordReset, useAppDispatch, useAppSelector, verifyPasswordReset} from "../../state";
-import {Button, Card, CardBody, CardFooter, Container, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
-import {PasswordFeedback} from "../../../IsaacAppTypes";
-import {loadZxcvbnIfNotPresent, MINIMUM_PASSWORD_LENGTH, passwordDebounce} from "../../services";
-import {RouteComponentProps} from "react-router";
-import { extractErrorMessage } from '../../services/errors';
+import React, {useState} from 'react';
+import {
+    getRTKQueryErrorMessage,
+    useHandlePasswordResetMutation,
+    useVerifyPasswordResetQuery,
+} from "../../state";
+import {Button, Card, CardBody, CardFooter, Container, Form} from "reactstrap";
+import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
+import {ExigentAlert} from "../elements/ExigentAlert";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {useParams} from "react-router-dom";
 
 
-export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: string}>) => {
-    const dispatch = useAppDispatch();
-    const error = useAppSelector((state: AppState) => state?.error || null);
-    const urlToken = match.params.token || null;
+export const ResetPasswordHandler = () => {
 
-    const [isValidPassword, setValidPassword] = useState(true);
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
+    const {token} = useParams<{token: string}>();
+    const [newPassword, setNewPassword] = useState("");
+    const [passwordValid, setPasswordValid] = useState(true);
+    const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
-    loadZxcvbnIfNotPresent();
+    const {isSuccess: urlTokenValid, isLoading, error: tokenVerifyError} = useVerifyPasswordResetQuery(token ?? '', {skip: !token});
+    const [handlePasswordReset, {error: passwordResetError}] = useHandlePasswordResetMutation();
 
-    const validateAndSetPassword = (event: any) => {
-        setValidPassword(
-            (event.target.value == (document.getElementById("password") as HTMLInputElement).value) &&
-            ((document.getElementById("password") as HTMLInputElement).value != undefined) &&
-            ((document.getElementById("password") as HTMLInputElement).value.length > 5)
-        );
-    };
+    async function submit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
 
-    useEffect(() => {dispatch(verifyPasswordReset(urlToken));}, [dispatch, urlToken]);
+        setSubmissionAttempted(true);
 
-    return <Container id="email-verification">
+        if (!passwordValid || !token) {
+            return;
+        }
+
+        await handlePasswordReset({token, password: newPassword});
+    }
+
+    return <Container id="password-reset" className={"mb-7"}>
+        <TitleAndBreadcrumb breadcrumbTitleOverride="Password reset" currentPageTitle="Reset your password" icon={{type: "hex", icon: "icon-account"}} className="mb-4" />
+        {isLoading && <div>Verifying reset token...</div>}
         <div>
-            <h3>Password change</h3>
-            <Card>
-                <CardBody>
-                    <Form name="passwordReset">
-                        <FormGroup className="form-group">
-                            <Label htmlFor="password">New password</Label>
-                            <Input id="password" type="password" name="password-new"
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    passwordDebounce(e.target.value, setPasswordFeedback);
-                                }}
-                                onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    passwordDebounce(e.target.value, setPasswordFeedback);
-                                }}
-                                required/>
-                            {passwordFeedback &&
-                            <span className='float-end small mt-1'>
-                                <strong>Password strength: </strong>
-                                <span id="password-strength-feedback">
-                                    {passwordFeedback.feedbackText}
-                                </span>
-                            </span>
-                            }
-                        </FormGroup>
-                        <FormGroup className="form-group">
-                            <Label htmlFor="password-confirm">Re-enter new password</Label>
-                            <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password-new-confirm" onBlur={e => {
-                                validateAndSetPassword(e);
-                                if (e.target.value == (document.getElementById("password") as HTMLInputElement).value) {
-                                    setCurrentPassword(e.target.value);
-                                }
-                            }} aria-describedby="invalidPassword" required/>
-                            <FormFeedback id="invalidPassword">{(!isValidPassword) ? `Passwords must match and be at least ${MINIMUM_PASSWORD_LENGTH} characters long` : null}</FormFeedback>
-                        </FormGroup>
-                    </Form>
-                </CardBody>
-                <CardFooter>
-                    <h4 role="alert" className="text-danger text-center mb-0">
-                        {extractErrorMessage(error)}
-                    </h4>
-                    <Button color="secondary" className="mb-2" block
-                        onClick={() => {
-                            if (isValidPassword && !error && urlToken) {
-                                dispatch(handlePasswordReset({token: urlToken, password: currentPassword}));
-                            }
-                        }}
-                        id="change-password"
-                    >
-                        Change Password
-                    </Button>
-                </CardFooter>
-            </Card>
+            {(!!tokenVerifyError || !!passwordResetError) &&
+                <ExigentAlert data-testid={"warning-invalid-token"} color={"warning"}>
+                    <p className="alert-heading fw-bold">Unable to reset your password</p>
+                    {tokenVerifyError ?
+                        getRTKQueryErrorMessage(tokenVerifyError).message : getRTKQueryErrorMessage(passwordResetError).message}
+                </ExigentAlert>
+            }
+            <Form onSubmit={submit}>
+                <Card>
+                    <CardBody>
+                        <SetPasswordInput
+                            idPrefix={"reset"}
+                            password={newPassword}
+                            label={"New password"}
+                            onChange={setNewPassword}
+                            onValidityChange={setPasswordValid}
+                            submissionAttempted={submissionAttempted}
+                            required={true}
+                        />
+                    </CardBody>
+                    <CardFooter>
+                        <Button disabled={!urlTokenValid} type={"submit"} color="secondary" className="mb-2" block id="change-password">
+                            Change password
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </Form>
         </div>
     </Container>;
 };

@@ -1,6 +1,13 @@
-import {screen, within } from "@testing-library/react";
-import { expectTextInElementWithId, renderTestEnvironment, withSizedWindow, setUrl, waitForLoaded, type PathString } from "../testUtils";
-import { UserRole } from "../../IsaacApiTypes";
+import {screen, within} from "@testing-library/react";
+import {
+    expectTextInElementWithId,
+    type PathString,
+    renderTestEnvironment,
+    setUrl,
+    waitForLoaded,
+    withSizedWindow
+} from "../testUtils";
+import {UserRole} from "../../IsaacApiTypes";
 
 export const renderQuizPage = (baseUrl: PathString) => async ({role, quizId}: {role: UserRole | "ANONYMOUS", quizId: string}) => {
     renderTestEnvironment({ role });

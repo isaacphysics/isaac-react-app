@@ -4,6 +4,7 @@ import {
     above,
     ALPHABET,
     audienceStyle,
+    below,
     calculateQuestionSetCompletionState,
     DOCUMENT_TYPE,
     isAda,
@@ -29,6 +30,7 @@ import { useReducedMotion } from "../../services/accessibility";
 import { Spacer } from "./Spacer";
 import { CompletionState } from "../../../IsaacApiTypes";
 import { StatusDisplay } from "./list-groups/AbstractListViewItem";
+import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -135,7 +137,6 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     const questionsInsideAccordionSection = questionsOnPage?.filter(q => q.accordionClientId === clientId.current);
     
     const accordionState = calculateQuestionSetCompletionState(questionsInsideAccordionSection);
-
     const accordionAltText = {
         [CompletionState.ALL_CORRECT]: "All questions in this part are answered correctly.",
         [CompletionState.ALL_INCORRECT]: "All questions in this part are answered incorrectly.",
@@ -144,11 +145,15 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         [CompletionState.NOT_ATTEMPTED]: "No questions in this part have been answered."
     };
 
+    const accordionQuestionIncludeLLMMarked = questionsInsideAccordionSection?.some(q => q.type === "isaacLLMFreeTextQuestion");
+    const allQuestionsOnPageLLMMarked = questionsOnPage?.every(q => q.type === "isaacLLMFreeTextQuestion");
+    const includeLLMMarkedQuestionIndicator = accordionQuestionIncludeLLMMarked && !allQuestionsOnPageLLMMarked;
+
     const isConceptPage = page && page != NOT_FOUND && page.type === DOCUMENT_TYPE.CONCEPT;
 
     const isOpen = open && !disabled;
 
-    return <div className="accordion">
+    return <div className="isaac-accordion">
         <button 
             className={classNames(
                 "accordion-header d-flex w-100 p-0", 
@@ -191,11 +196,12 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             </span>}
             <div className={classNames("d-flex flex-grow-1", siteSpecific(`flex-column ps-3 ${isConceptPage && audienceString ? "pt-1" : "pt-3"}`, "align-items-center ps-1"))}>
                 {isDefined(index) && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>}
-                <div className={classNames("accordion-title p-3 ps-1", siteSpecific("pt-0", ""))}>
+                <div className={classNames("accordion-title p-3 ps-1", {"pt-0": isPhy, "d-flex align-items-center": isPhy && includeLLMMarkedQuestionIndicator})}>
                     {isConceptPage && audienceString && isPhy && <span className="inline-stage-label">{audienceString}<br/></span>}
                     <Markup encoding={"latex"}>
                         {trustedTitle || (isAda ? "" : (isDefined(index) ? `(${ALPHABET[index % ALPHABET.length].toLowerCase()})` : "Untitled"))}
                     </Markup>
+                    {includeLLMMarkedQuestionIndicator && <LLMFreeTextQuestionIndicator symbol={deviceSize === "xs"} className="ms-2"/>}
                     {isPhy && <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-black mx-2", {"active": isOpen})}/>}
                 </div>
                 {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
@@ -207,7 +213,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 </div>}
             </div>
 
-            {accordionState && isPhy && <span className={"accordion-icon d-flex align-items-center gap-2 w-max-content h-100 pb-1 pe-3 align-self-center"}>
+            {accordionState && isPhy && <span className={"accordion-icon d-flex align-items-center gap-2 w-max-content pe-3 align-self-center"}>
                 <StatusDisplay status={accordionState} showText className="flex-row-reverse" aria-label={accordionAltText[accordionState]} />
             </span>}
             {isAda && <>

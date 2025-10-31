@@ -1,15 +1,27 @@
-import { expectLinkWithEnabledBackwardsNavigation, expectH1, expectH4, expectUrl } from "../testUtils";
+import {expectH1, expectH4, expectLinkWithEnabledBackwardsNavigation, expectUrl} from "../testUtils";
 import {mockRubrics} from "../../mocks/data";
-import { editButton,  expectAdaBreadCrumbs,  expectErrorMessage, expectPhyBreadCrumbs, expectRubric, expectSidebarToggle, previewButton, renderQuizPage, setTestButton, sideBarTestCases, testSectionsHeader } from "../helpers/quiz";
-import { isPhy, siteSpecific } from "../../app/services";
-import {screen } from "@testing-library/react";
+import {
+    editButton,
+    expectAdaBreadCrumbs,
+    expectErrorMessage,
+    expectPhyBreadCrumbs,
+    expectRubric,
+    expectSidebarToggle,
+    previewButton,
+    renderQuizPage,
+    setTestButton,
+    sideBarTestCases,
+    testSectionsHeader
+} from "../helpers/quiz";
+import {isPhy, siteSpecific} from "../../app/services";
+import {screen} from "@testing-library/react";
 
 describe("QuizView", () => {
     const quizId = Object.keys(mockRubrics)[0];
     const rubric = mockRubrics[quizId];
 
     const renderQuizView = renderQuizPage('/test/view');
-    const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', quizId }); 
+    const studentViewsQuiz = () => renderQuizView({ role: 'STUDENT', quizId });
 
     it('shows quiz title on the breadcrumbs', async () => {
         await studentViewsQuiz();
@@ -55,8 +67,8 @@ describe("QuizView", () => {
     });
 
     describe('for teachers', () => {
-        const teacherViewsQuiz = () => renderQuizView({ role: 'TEACHER', quizId }); 
-        
+        const teacherViewsQuiz = () => renderQuizView({ role: 'TEACHER', quizId });
+
         it('shows Set Test button', async () => {
             await teacherViewsQuiz();
             expect(setTestButton()).toBeInTheDocument();
@@ -91,8 +103,8 @@ describe("QuizView", () => {
     });
 
     describe('for unregistered users', () => {
-        const anonymousViewsMissingQuiz = () => renderQuizView({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'}); 
-        
+        const anonymousViewsMissingQuiz = () => renderQuizView({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'});
+
         it('redirects to log in', async () => {
             await anonymousViewsMissingQuiz();
             await expectUrl('/login');
@@ -109,7 +121,7 @@ describe("QuizView", () => {
                 () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/practice_tests", text: "Practice tests"}, "Unknown Test"])
             )();
         });
-        
+
         it('shows error', async () => {
             await studentViewsMissingQuiz();
             expectH1('Unknown Test');

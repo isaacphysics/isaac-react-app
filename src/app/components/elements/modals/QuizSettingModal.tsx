@@ -2,6 +2,7 @@ import React, {ChangeEvent, useState} from "react";
 import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {
     AppDispatch,
+    changePage,
     closeActiveModal,
     selectors,
     useAppDispatch,
@@ -86,6 +87,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 setScheduledStartDate(null);
                 setFeedbackMode(null);
                 dispatch(closeActiveModal());
+                changePage("/set_tests#manage");
             }
         });
     }
@@ -110,10 +112,13 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                     query={groupsQuery}
                     defaultErrorTitle={"Error fetching groups"}
                     thenRender={groups => {
-                        const groupOptions = groups.map((g: AppGroup) => {return {label: g.groupName as string, value: g.id as number}; });
+                        const groupOptions = groups
+                            .map((g: AppGroup) => {return {label: g.groupName as string, value: g.id as number}; })
+                            .sort((a, b) => a.label.localeCompare(b.label));
 
                         return <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
                             <StyledSelect isMulti placeholder="Select groups"
+                                closeMenuOnSelect={false}
                                 options={groupOptions}
                                 onChange={(s) => {
                                     selectOnChange(setSelectedGroups, false)(s);
@@ -163,7 +168,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         <FormGroup>
             <Label className="w-100">
                 <div className={siteSpecific("d-flex align-items-center", "")}>
-                    Set an optional start date:
+                    <span className="form-optional">Start date:</span>
                     <i id={scheduledQuizHelpTooltipId} className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help")}/>
                 </div>
                 <DateInput 

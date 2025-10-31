@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Card, CardBody, CardImg, CardProps, CardText, CardTitle} from "reactstrap";
-import {IsaacPodDTO} from "../../../../IsaacApiTypes";
+import {Card, CardBody, CardImg, CardProps, CardText} from "reactstrap";
+import {ImageDTO, IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper, siteSpecific} from "../../../services";
 import {AdaCard} from "./AdaCard";
 import classNames from "classnames";
@@ -15,16 +15,27 @@ interface NewsCardProps extends CardProps {
 
 const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassName, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
+
+    const CardImage = (image: ImageDTO) => {
+        return <CardImg
+            top
+            src={image.src && apiHelper.determineImageUrl(image.src)}
+            alt={image.altText || `Illustration for ${title}`}
+        />;
+    };
+
     return <Card data-testid={"news-pod"} {...props} className={classNames("pod news-card", props.className)}>
-        {image && <a href={url} className="focus-target">
-            <CardImg
-                top
-                src={image.src && apiHelper.determineImageUrl(image.src)}
-                alt={image.altText || `Illustration for ${title}`}
-            />
-        </a>}
-        <CardBody className="d-flex flex-column ps-0">
-            {showTitle && <CardTitle className="mb-0 pod-title">{title}</CardTitle>}
+        {image && (!url?.startsWith("http") ?
+            <Link to={`${url}`} className="focus-target pod-img">
+                <CardImage {...image}/>
+            </Link>
+            :
+            <a href={url} className="focus-target pod-img">
+                <CardImage {...image}/>
+            </a>
+        )}
+        <CardBody className="d-flex flex-column">
+            {showTitle && <h5>{title}</h5>}
             {value && <CardText>
                 {value}
             </CardText>}
@@ -32,11 +43,11 @@ const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassNam
             <CardText>
                 {!url?.startsWith("http") ?
                     <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`${url}`}>
-                            Read more
+                        Read more
                     </Link>
                     :
                     <a className="focus-target btn btn-keyline" href={url} target="_blank" rel="noopener">
-                            Find out more
+                        Find out more
                     </a>
                 }
             </CardText>
@@ -46,7 +57,7 @@ const PhysicsNewsCard = ({newsItem, showTitle=true, cardClassName: _cardClassNam
 
 const AdaNewsCard = ({newsItem, showTitle, cardClassName, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
-    return <AdaCard {...props} data-testid={"news-pod"} card={{
+    return <AdaCard {...props} data-testid={"news-pod"} className="px-3 my-3" card={{
         title: showTitle && title || "",
         image: {
             src: (image?.src && apiHelper.determineImageUrl(image.src)) || "/assets/cs/decor/news-placeholder.png",

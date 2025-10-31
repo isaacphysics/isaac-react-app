@@ -37,10 +37,10 @@ export const AdminStats = () => {
     });
 
     return <Container id="admin-stats-page">
-        <TitleAndBreadcrumb 
-            currentPageTitle={`${SITE_TITLE_SHORT} statistics`} 
-            breadcrumbTitleOverride="Admin statistics" 
-            icon={{type: "hex", icon: "icon-progress"}} 
+        <TitleAndBreadcrumb
+            currentPageTitle={`${SITE_TITLE_SHORT} statistics`}
+            breadcrumbTitleOverride="Admin statistics"
+            icon={{type: "hex", icon: "icon-progress"}}
         />
         <ShowLoading
             until={maybeAdminStatsWithTotals}
@@ -59,7 +59,7 @@ export const AdminStats = () => {
                                         <li>Last 2 years:&nbsp;
                                             <strong>{(adminStatsWithTotals.activeUsersOverPrevious.twoYears.TOTAL || 0).toLocaleString()}</strong>
                                         </li>
-                                        <li>Total accounts: <strong>{(adminStatsWithTotals.userGenders.TOTAL || 0).toLocaleString()}</strong></li>
+                                        <li>Total (excl. archived): <strong>{(adminStatsWithTotals.userGenders.TOTAL || 0).toLocaleString()}</strong></li>
                                         <li className="mt-3">
                                             <strong>Gender</strong>
                                             <ul className="list-unstyled">

@@ -18,7 +18,10 @@ import {
     mockRubrics,
     mockAttempts,
     mockPreviews,
-    mockConceptsResults
+    mockConceptsResults,
+    mockProgress,
+    mockLLMMarkedRegressionTestQuestion,
+    mockLLMMarkedValidationResponse
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -83,14 +86,14 @@ export const handlers = [
         const quizId = params.quizId as string;
         if (quizId in mockRubrics) {
             return HttpResponse.json(mockRubrics[quizId], { status: 200 });
-        } 
+        }
         return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.get(API_PATH + "/quiz/:quizId/preview", ({ params }) => {
         const quizId = params.quizId as string;
         if (quizId in mockPreviews) {
             return HttpResponse.json(mockPreviews[quizId], { status: 200 });
-        } 
+        }
         return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.post(API_PATH + "/quiz/attempt/:quizId/log", () => {
@@ -100,19 +103,28 @@ export const handlers = [
         const quizId = params.quizId as string;
         if (quizId in mockAttempts) {
             return HttpResponse.json(mockAttempts[quizId], { status: 200 });
-        } 
+        }
         return HttpResponse.json(errorResponses.testUnavailable404,  { status: 404 });
     }),
     http.get(API_PATH + "/assignments/assign/:assignmentId", ({params}) => {
         const {assignmentId: _assignmentId} = params;
         const assignmentId = parseInt(_assignmentId as string);
-        // FIXME augment the returned assignment like in the API
         const assignments = mockSetAssignments.filter(a => a.id === assignmentId);
         if (assignments.length === 1) {
             return HttpResponse.json(assignments[0]);
         }
         // FIXME this is probably the wrong format for errors
         return HttpResponse.json({error: `Assignment with id ${_assignmentId} not found.`}, {
+            status: 404,
+        });
+    }),
+    http.get(API_PATH + "/assignments/assign/:assignmentId/progress", ({params}) => {
+        const {assignmentId: _assignmentId} = params;
+        const assignmentId = parseInt(_assignmentId as string);
+        if (assignmentId in mockProgress) {
+            return HttpResponse.json(mockProgress[assignmentId as keyof typeof mockProgress]);
+        }
+        return HttpResponse.json({error: `Assignment progress for assignment ${_assignmentId} not found.`}, {
             status: 404,
         });
     }),
@@ -194,7 +206,22 @@ export const handlers = [
     http.get(API_PATH + "/pages/questions/_regression_test_", () => {
         return HttpResponse.json(mockRegressionTestQuestions, {
             status: 200,
-        });   
+        });
+    }),
+    http.get(API_PATH + "/pages/questions/_llm_marked_regression_test_", () => {
+        return HttpResponse.json(mockLLMMarkedRegressionTestQuestion, {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/questions/isaacLLMFreeTextQuestion/can_attempt", () => {
+        return HttpResponse.json({"remainingAttempts": 30}, { 
+            status: 200, 
+        });
+    }),
+    http.post(API_PATH + "/questions/_regression_test_llm_/answer", () => {
+        return HttpResponse.json(mockLLMMarkedValidationResponse, { 
+            status: 200, 
+        });
     }),
     http.get(API_PATH + "/pages/questions/", () => {
         return HttpResponse.json(mockQuestionFinderResults, {

@@ -143,6 +143,7 @@ export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacLLMFreeTextQuestionDTO extends QuestionDTO {
+    maxMarks?: number;
 }
 
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
@@ -369,9 +370,6 @@ export interface InlineRegionValidationResponseDTO extends QuestionValidationRes
 }
 
 export interface LLMFreeTextQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
-    markCalculationInstructions?: string;
-    additionalMarkingInstructions?: string;
-    maxMarks?: number;
     marksAwarded?: number;
     markBreakdown?: LLMFreeTextMarkSchemeEntryDTO[];
 }

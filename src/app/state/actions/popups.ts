@@ -4,7 +4,7 @@ import {Action, ActiveModal, Toast} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE, trackEvent} from "../../services";
 
 // Toasts
-const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
+export const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.TOASTS_REMOVE, toastId});
 };
 

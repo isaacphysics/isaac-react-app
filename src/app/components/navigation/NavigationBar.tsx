@@ -83,8 +83,8 @@ export function MenuBadge({count, message, ...rest}: {count: number, message: st
 }
 
 export function getActiveWorkCount(assignments?: AssignmentDTO[], quizAssignments?: QuizAssignmentDTO[]) {
-    const assignmentsCount = assignments 
-        ? filterAssignmentsByStatus(assignments).inProgressRecent.length 
+    const assignmentsCount = assignments
+        ? filterAssignmentsByStatus(assignments).inProgress.length
         : 0;
     const quizzesCount = quizAssignments && isFound(quizAssignments)
         ? partitionCompleteAndIncompleteQuizzes(quizAssignments)[1].filter(q => !isOverdue(q)).length
@@ -102,6 +102,6 @@ export function useAssignmentsCount() {
 
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, queryOptions);
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery(queryArg, queryOptions);
-    
+
     return getActiveWorkCount(assignments, quizAssignments);
 }

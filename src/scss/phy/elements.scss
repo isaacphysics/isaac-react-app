@@ -5,7 +5,7 @@
     border: none;
     position: relative;
     vertical-align: middle;
-    margin-left: 0.5rem;
+    margin-left: 0.35rem;
     @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
     transform: rotate3d(1, 0, 0, 0deg);
     transition: transform 0.21s ease-in-out;
@@ -16,7 +16,7 @@
   }
 }
 
-.accordion .accordion-button::after {
+.isaac-accordion .accordion-button::after {
   @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
 }
 
@@ -88,4 +88,12 @@ details.teacher-notes {
   ul {
     list-style-image: unset;
   }
+}
+
+.pill-tag-outline {
+  @include pill-tag($color-neutral-600, white, $color-neutral-900);
+}
+
+.warning-tag {
+  @include pill-tag($color-misc-orange-600, $color-misc-orange-50, $color-misc-orange-500);
 }

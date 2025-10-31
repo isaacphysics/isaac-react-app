@@ -1,6 +1,6 @@
 import React from "react";
 import queryString from "query-string";
-import {selectors, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery} from "../state";
+import {selectors, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery, useGetTopicQuery} from "../state";
 import {
     determineCurrentCreationContext,
     determineGameboardHistory,
@@ -47,7 +47,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
     const {data: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
-    const currentTopic = useAppSelector(selectors.topic.currentTopic) ?? undefined;
+    const {data: currentTopic} = useGetTopicQuery(topic || skipToken);
 
     const user = useAppSelector(selectors.user.orNull);
     const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;

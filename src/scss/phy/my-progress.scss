@@ -1,7 +1,8 @@
 @import "../common/my-progress";
 
 .progress-gauge {
-  font-family: $secondary-font-semi-bold;
+  font-family: $secondary-font;
+  font-weight: 600;
   height: 140px;
   width: 140px;
   :is(b) {

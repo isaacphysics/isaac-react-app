@@ -5,12 +5,16 @@ import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Badge, Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
-import { below, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
+import { below, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
 import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetGroupsQuery, useLazyGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
-import { getAssigneesByBoard, SetAssignmentsModal } from "../../pages/SetAssignments";
+import { getAssigneesByBoard } from "../../pages/SetAssignments";
+import { SetAssignmentsModal } from "../modals/SetAssignmentsModal";
+import { ExternalLink } from "../ExternalLink";
+import { QuestionPropertyTags } from "../ContentPropertyTags";
+import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -170,8 +174,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isDisabled = state && [AbstractListViewItemState.COMING_SOON, AbstractListViewItemState.DISABLED].includes(state);
     
     fullWidth = fullWidth || below["sm"](deviceSize) || (isItem && !(typedProps.status || typedProps.audienceViews));
-    const cardBody =
-    <div className="w-100 d-flex flex-row">
+    const cardBody = <div className="w-100 d-flex flex-row">
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
             <div className="position-relative">
                 {icon && (
@@ -186,28 +189,23 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
             </div>
             <div className="align-content-center text-overflow-ellipsis pe-2">
-                <div className="d-flex text-wrap">
+                <div className="d-flex text-wrap mt-n1">
                     {url && !isDisabled
-                        ? <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
-                            <Markup encoding="latex">{title}</Markup>
-                        </Link>
+                        ? (url.startsWith("http")
+                            ? <ExternalLink href={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                                <Markup encoding="latex">{title}</Markup>
+                            </ExternalLink>
+                            : <Link to={url} className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
+                                <Markup encoding="latex">{title}</Markup>
+                            </Link>
+                        )
                         : <span className={classNames("alvi-title", {"question-link-title": isPhy || !isQuiz})}>
                             <Markup encoding="latex">{title}</Markup>
                         </span>
                     }
                     {isItem && <>
                         {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
-                        {isPhy && <div className="d-flex flex-column justify-self-end">
-                            {typedProps.supersededBy && <a 
-                                className="superseded-tag mx-1 ms-sm-3 align-self-end" 
-                                href={`/questions/${typedProps.supersededBy}`}
-                                onClick={(e) => e.stopPropagation()}
-                                target="_blank"
-                            >SUPERSEDED</a>}
-                            {tags?.includes("nofilter") && isStaff(user) && <span
-                                className="superseded-tag mx-1 ms-sm-3 align-self-end" 
-                            >NO-FILTER</span>}
-                        </div>}
+                        {isPhy && <QuestionPropertyTags className="ms-2 justify-self-end" supersededBy={typedProps.supersededBy} tags={tags} />}
                     </>}
                 </div>
                 {subtitle && <div className="small text-muted text-wrap">
@@ -218,6 +216,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 </span>}
                 {isItem && fullWidth && typedProps.audienceViews && <div className="d-flex mt-1"> 
                     <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
+                </div>}
+                {tags?.includes("llm_question_page") && <div className="mt-2">
+                    <LLMFreeTextQuestionIndicator small />
                 </div>}
                 {isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
                     <StatusDisplay status={typedProps.status} showText className="py-1" />

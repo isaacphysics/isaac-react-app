@@ -3,7 +3,7 @@ import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Dropdown, Dro
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
-import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PATHS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, Subject, above, below, isFullyDefinedContext, isSingleStageContext, isTutor, isTutorOrAbove, isValidStageSubjectPair, useDeviceSize } from "../../../services";
+import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PATHS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, Subject, above, below, ifKeyIsEnter, isFullyDefinedContext, isSingleStageContext, isTutor, isTutorOrAbove, isValidStageSubjectPair, useDeviceSize } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
@@ -87,7 +87,7 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
         <DropdownToggle nav className={classNames("p-2 pb-4", toggleClassName)} tabIndex={isOpen ? -1 : 0}>
             {title}
         </DropdownToggle>
-        <DropdownMenu onMouseDown={(e) => e.stopPropagation()} onMouseUp={() => toggle()}>
+        <DropdownMenu onMouseDown={(e) => e.stopPropagation()} onMouseUp={() => toggle()} onKeyDown={ifKeyIsEnter(() => toggle())}>
             {/* don't fire the onMouseDown event in the parent Dropdown (needed for mobile press check) if we click on the body (i.e. a link). */}
             {children}
         </DropdownMenu>
@@ -186,7 +186,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                 let sharedTheme = undefined;
                 let quickSwitcher: {subject: Subject, stage: LearningStage} | undefined = undefined;
 
-                if (category.subcategories.every((sub, _j, arr) => sub.subject === arr[0].subject)) {
+                if (category.subcategories.every((sub, _j, arr) => sub.subject === arr[0].subject) && category.subcategories.length > 1) {
                     sharedTheme = category.subcategories[0].subject;
                 }
 
@@ -373,7 +373,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
         [...`${user.givenName[0]}${user.familyName[0]}`.toUpperCase()].filter(c => c.match(/[\p{L}]/u)) : undefined;
 
     const title = <div className="d-flex align-items-center">
-        <div className="d-flex flex-column justify-content-center align-items-center me-2">
+        <div className="d-flex flex-column justify-content-center align-items-center me-2" aria-hidden="true">
             {userInitials?.length
                 ? <>
                     <i className="icon-initials"/>

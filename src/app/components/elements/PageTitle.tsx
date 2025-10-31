@@ -1,5 +1,5 @@
 import React, {ReactElement, useEffect, useRef} from "react";
-import {Button, UncontrolledTooltip} from "reactstrap";
+import {UncontrolledTooltip} from "reactstrap";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     filterAudienceViewsByProperties,
@@ -14,13 +14,10 @@ import {
 } from "../../services";
 import {
     AppState,
-    closeActiveModal,
     mainContentIdSlice,
-    openActiveModal,
     useAppDispatch,
     useAppSelector
 } from "../../state";
-import {PageFragment} from "./PageFragment";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
@@ -37,30 +34,18 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const filteredViews = filterAudienceViewsByProperties(viewsToUse, AUDIENCE_DISPLAY_FIELDS);
     const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
 
-    return siteSpecific(
-        <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
-            {filteredViews.map((view, i) => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classNames("d-flex d-sm-block", {"ms-sm-2": i > 0})}>
-                {view.stage && view.stage !== STAGE.ALL && <div className={classNames("text-center align-self-center", {"fw-regular": isAda})}>
-                    {stageLabelMap[view.stage]}
+    return <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
+        {/* Show all stage/difficulty combinations for Phy, but just the first difficulty for Ada */}
+        {siteSpecific(filteredViews, [{difficulty: difficulties[0], stage: undefined}]).map((view, i) => {
+            return <div key={`${view.difficulty} ${view.stage}`} className={classNames("d-flex d-sm-block", {"ms-sm-2": i > 0})}>
+                <div className={classNames("text-center align-self-center", {"fw-regular": isAda})}>
+                    {siteSpecific(view.stage && stageLabelMap[view.stage], view.difficulty && simpleDifficultyLabelMap[view.difficulty])}
+                </div>
+                {view.difficulty && <div className="ms-2 ms-sm-0 text-center">
+                    <DifficultyIcons difficulty={view.difficulty}/>
                 </div>}
-                {view.difficulty && <div className={"ms-2 ms-sm-0 text-center"}>
-                    <DifficultyIcons difficulty={view.difficulty} />
-                </div>}
-            </div>)}
-        </div>,
-        <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
-            <div key={`${difficulties[0]}`} className="d-flex d-sm-block">
-                {difficulties.length > 0 && <>
-                    <div className={classNames("text-center align-self-center", {"fw-regular": isAda})}>
-                        {simpleDifficultyLabelMap[difficulties[0]]}
-                    </div>
-                    <div className={"ms-2 ms-sm-0 text-center"}>
-                        <DifficultyIcons difficulty={difficulties[0]} />
-                    </div>
-                </>}
-            </div>
-        </div>
-    );
+            </div>})}
+    </div>;
 }
 
 interface IconPlaceholderProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -97,20 +82,16 @@ export interface PageTitleProps {
 }
 export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, help, className, audienceViews, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
-    const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {
         if (preview) return; // Don't set the main content ID if we're in preview mode
-        dispatch(mainContentIdSlice.actions.set("main-heading"));
+        dispatch(mainContentIdSlice.actions.set({id: "main-heading", priority: 1}));
     }, []);
+
     useEffect(() => {
         if (preview) return; // Don't set the document title if we're in preview mode
         document.title = currentPageTitle + " — " + SITE_TITLE;
-        const element = headerRef.current;
-        if (element && (window as any).followedAtLeastOneSoftLink && !openModal) {
-            element.focus();
-        }
     }, [currentPageTitle, preview]);
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-2 mb-0": isPhy}, className)}>

@@ -39,9 +39,7 @@ const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): Li
     icon: {type: "hex", icon: "icon-question-deck"},
     subject: context.subject,
     linkTags: [{tag: "View topic question decks", url: extendUrl(context, 'question_decks')}],
-    state: (context.stage.includes("gcse") && context.subject === "maths") || context.stage.includes("university")
-        ? AbstractListViewItemState.COMING_SOON
-        : undefined,
+    state: context.stage.includes("university") ? AbstractListViewItemState.COMING_SOON : undefined,
 });
 
 // TODO: replace the link tags with links to lessons by *field* (see designs)
@@ -50,8 +48,8 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
     subtitle: "Revise with our summary videos, topic tests and question decks.",
     icon: {type: "hex", icon: "icon-revision"},
     subject: context.subject,
-    linkTags: [{tag: "List of revision areas", url: extendUrl(context, 'revision')}],
-    state: AbstractListViewItemState.COMING_SOON,
+    linkTags: [{tag: "List of revision areas", url: `/pages/revision_${context.stage[0].replace("_", "")}_${context.subject}`}],
+    state: (context.subject.includes("physics") && ["gcse", "a_level"].includes(context.stage[0])) ? undefined : AbstractListViewItemState.COMING_SOON,
 });
 
 const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({

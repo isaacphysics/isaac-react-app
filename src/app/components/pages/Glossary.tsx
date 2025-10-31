@@ -405,7 +405,7 @@ export const Glossary = () => {
                             {(isAda || isDefined(filterSubject)) && searchText !== "" &&  <p>We could not find glossary terms to match your search criteria.</p>}
                         </div>
                     </Row>}
-                    {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className={classNames("p-2 pb-4", {"list-results-container border-radius-2 mb-4": isPhy})}>
+                    {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className={classNames("p-4", {"pt-0": isAda, "pe-2 pt-md-2 mb-4 border-radius-2 list-results-container": isPhy})}>
                         <div className="no-print">
                             <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
                             <div ref={stickyAlphabetListContainer} id="stickyalphabetlist" className="alphabetlist pb-4">
@@ -424,7 +424,7 @@ export const Glossary = () => {
                             <Col>
                                 {terms.map(term => <IsaacGlossaryTerm
                                     key={term.id}
-                                    ref={(el: HTMLElement) => {
+                                    ref={(el: HTMLParagraphElement) => {
                                         glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
                                     }}
                                     doc={term}

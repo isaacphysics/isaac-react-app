@@ -30,8 +30,8 @@ export const RegistrationSuccess = () => {
                 <Row className="justify-content-center">
                     <Col>
                         {siteSpecific(
-                            <img className="img-fluid mx-auto mt-3 mb-4" src="/assets/common/icons/tick.svg" alt="" id="registration-complete-tick" />,
-                            <img className="img-fluid mx-auto my-7" src="/assets/cs/decor/verify_done.svg" alt="" />
+                            <img className="img-fluid mx-auto mt-3 mb-4" src="/assets/common/icons/check.svg" alt="" id="registration-complete-tick" />,
+                            <img className="img-fluid mx-auto my-7 w-md-50" src="/assets/cs/decor/verify_done.png" alt="" />
                         )}
                     </Col>
                 </Row>

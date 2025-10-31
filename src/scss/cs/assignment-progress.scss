@@ -6,6 +6,20 @@
   text-decoration: none !important;
 }
 
+.progress-table {
+  tbody {
+    background-color: white;
+  }
+
+  thead, tfoot {
+    background-color: $cs-cultured;
+  }
+
+  tbody tr:not(:last-child) {
+    border-bottom: 1px solid $cs-cultured;
+  }
+}
+
 .progress-questions {
   font-size: 1.1rem;
 }
@@ -36,4 +50,12 @@
   min-width: 25px;
   text-align: center;
   border-radius: 8px;
+}
+
+.progress-table {
+  @include respond-above(sm) {
+    tbody td, tbody th {
+      min-width: 77px; // fits 10 questions on screen at once
+    }
+  }
 }

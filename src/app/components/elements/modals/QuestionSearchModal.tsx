@@ -33,7 +33,7 @@ import {
     TAG_LEVEL,
     below,
     useDeviceSize,
-    EXAM_BOARD
+    EXAM_BOARD, QUESTIONS_PER_GAMEBOARD
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -169,9 +169,9 @@ export const QuestionSearchModal = (
         );
     }, [questions, user, searchTopics, isBookSearch, questionsSort, creationContext]);
 
-    const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center">
+    const addSelectionsRow = <div className="d-sm-flex flex-xl-column align-items-center mt-2">
         <div className="flex-grow-1 mb-1">
-            <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
+            <strong className={classNames({"text-danger": selectedQuestions.size > QUESTIONS_PER_GAMEBOARD})}>
                 {`${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`}
             </strong>
         </div>
@@ -205,21 +205,26 @@ export const QuestionSearchModal = (
         <Col className="col-12 col-xl-3 mt-4">
             <Row>
                 <Col className={isPhy && !isBookSearch ? "col-12 col-lg-6 col-xl-12" : ""}>
-                    {isAda && <CollapsibleList title={<span className="ms-n3">Topic</span>} expanded={listState.topics.state} className="mb-3"
-                        toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}>
+                    {isAda && <CollapsibleList 
+                        title={<span className="ms-n3">Topic</span>} 
+                        expanded={listState.topics.state} 
+                        className="mb-3"
+                        toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
+                    >
                         {groupBaseTagOptions.map((tag, index) => (
-                            <li key={index} style={{listStyle: "none"}}>
-                                <CollapsibleList title={tag.label} asSubList
-                                    expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
-                                    toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}>
-                                    {tag.options.map((topic, index) => (
-                                        <li className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} style={{listStyle: "none"}} key={index}>
-                                            <StyledCheckbox color="primary" checked={searchTopics.includes(topic.value)}
-                                                onChange={() => setSearchTopics(s => s.includes(topic.value) ? s.filter(v => v !== topic.value) : [...s, topic.value])}
-                                                label={<span>{topic.label}</span>} className="ps-3"/>
-                                        </li>))}
-                                </CollapsibleList>
-                            </li>))}
+                            <CollapsibleList title={tag.label} asSubList
+                                expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
+                                toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
+                                key={index} tag={"li"}
+                            >
+                                {tag.options.map((topic, index) => (
+                                    <li className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} style={{listStyle: "none"}} key={index}>
+                                        <StyledCheckbox color="primary" checked={searchTopics.includes(topic.value)}
+                                            onChange={() => setSearchTopics(s => s.includes(topic.value) ? s.filter(v => v !== topic.value) : [...s, topic.value])}
+                                            label={<span>{topic.label}</span>} className="ps-3"/>
+                                    </li>))}
+                            </CollapsibleList>
+                        ))}
                     </CollapsibleList>}
                     {isPhy && <div className="mb-2">
                         <Label htmlFor="question-search-book">Book</Label>
@@ -245,14 +250,14 @@ export const QuestionSearchModal = (
                             inputId: "question-search-topic", tier: 0, index: TAG_LEVEL.subject,
                             choices: topicChoices, selections: topicSelections, setSelections: setTopicSelections}}/>
                     </div>}
-                    <div className={`mb-2 ${isBookSearch ? "d-none" : ""}`}>
+                    <div className={classNames("mb-2", {"d-none": isBookSearch})}>
                         <Label htmlFor="question-search-difficulty">Difficulty</Label>
                         <StyledSelect
                             inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
                             options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                         />
                         {isAda && <>
-                            <Label htmlFor="question-search-exam-board">Exam Board</Label>
+                            <Label className="mt-2" htmlFor="question-search-exam-board">Exam Board</Label>
                             <StyledSelect
                                 inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
                                 value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
@@ -262,7 +267,7 @@ export const QuestionSearchModal = (
                         </>}
                     </div>
                     <Label htmlFor="question-search-title">Search</Label>
-                    <Input id="question-search-title" className="mb-2"
+                    <Input id="question-search-title" className="mb-3"
                         type="text"
                         placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -307,7 +312,7 @@ export const QuestionSearchModal = (
                         <tbody>
                             {isSearching ? <tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr> : sortedQuestions?.map(question =>
                                 <GameboardBuilderRow
-                                    key={`question-search-modal-row-${question.id}`} 
+                                    key={`question-search-modal-row-${question.id}`}
                                     question={question}
                                     currentQuestions={modalQuestions}
                                     undoStack={undoStack}

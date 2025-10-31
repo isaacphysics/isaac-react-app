@@ -20,7 +20,7 @@ const FooterButton = ({link, label}: {link: string, label: string}) => <Col clas
     <Button className="flex-fill d-flex text-nowrap align-items-center justify-content-center mb-3" color="secondary" tag={Link} to={link}>
         {label}
     </Button>
-</Col>; 
+</Col>;
 
 const QuizFooter = ({quizId, user}: {quizId: string, user: RegisteredUserDTO}) =>
     <QuizSidebarLayout>
@@ -30,7 +30,7 @@ const QuizFooter = ({quizId, user}: {quizId: string, user: RegisteredUserDTO}) =
             <FooterButton link={`/test/attempt/${quizId}`} label="Take Test" />
         </Row>
     </QuizSidebarLayout>;
-    
+
 export const QuizView = ({user}: {user: RegisteredUserDTO}) => {
     const {quizId} = useParams<{quizId: string}>();
     const quizRubricQuery = useGetQuizRubricQuery(quizId);

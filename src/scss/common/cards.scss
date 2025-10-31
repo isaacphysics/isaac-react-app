@@ -10,16 +10,6 @@
   @include respond-above(sm) {
     box-shadow: 0 2px 30px 0 $shadow-08;
   }
-  .news-card-image {
-    @include aspect-ratio(4, 3);
-    width: 100%;
-    object-fit: cover;
-  }
-  // Nomensa's image offset code, if we decide to use
-  //.news-card-image {
-  //  //margin-left: -1.45rem;
-  //  //width: calc(100% - 0.5rem) !important;
-  //}
   .event-card-image img {
     display: block;
     height: 180px;
@@ -28,7 +18,8 @@
   }
 
   .card-title {
-    font-family: $secondary-font-semi-bold;
+    font-family: $secondary-font;
+    font-weight: 600;
     font-size: 1.25rem;
   }
 
@@ -154,7 +145,7 @@
 .action-card {
   height: 100%;
   h2 {
-    font-family: $secondary-font-medium;
+    font-family: $secondary-font;
     font-size: 1.625rem;
   }
   p:first-of-type > span {
@@ -167,47 +158,13 @@
   }
 
   .btn {
-    font-family: $secondary-font-bold;
+    font-family: $secondary-font;
+    font-weight: bold;
     text-decoration: none;
     &:hover {
       text-decoration: underline;
     }
   }
-}
-.carousel {
-  .news-card {
-    max-width: 308px;
-    @include respond-above(sm) {
-      margin: 0.75rem;
-    }
-    &:first-of-type {
-      margin-left: 1.75rem;
-    }
-    &:last-of-type {
-      margin-right: 1.75rem;
-    }
-
-    a img {
-      @include aspect-ratio(5, 3);
-      object-fit: cover;
-    }
-  }
-  .news-card-text p {
-    max-height: 182px;
-    overflow: hidden;
-    // truncates longer news text with ... at the end. if not supported (IE + Opera Mini at time of writing), overflow still hidden.
-    display: -webkit-box;
-    -webkit-line-clamp: 7;
-    -webkit-box-orient: vertical;
-  }
-}
-.news-card + a,
-.events-carousel + a {
-  display: block;
-  font-family: $primary-font;
-  font-size: 1.125rem;
-  font-weight: bold;
-  padding: 0;
 }
 
 .card-deck + .card-deck {
@@ -216,10 +173,6 @@
 
 .card-deck {
   @extend .card-group;
-
-  .news-card {
-    flex: unset !important;
-  }
 
   // de-couple the border
   @include media-breakpoint-up(sm){
