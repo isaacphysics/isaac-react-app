@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AssignmentProgressDTO, GameboardItem, CompletionState } from "../../../IsaacApiTypes";
 import { EnhancedAssignmentWithProgress, AssignmentProgressPageSettingsContext, AuthorisedAssignmentProgress } from "../../../IsaacAppTypes";
 import { getAssignmentProgressCSVDownloadLink, isAda, isAuthorisedFullAccess, isPhy, PATHS, siteSpecific } from "../../services";
-import { ICON, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
+import { ICON, markResultsToPartResults, passMark, ResultsTable, ResultsTablePartBreakdown } from "../elements/quiz/QuizProgressCommon";
 import { Badge, Button, Card, CardBody } from "reactstrap";
 import { formatDate } from "../elements/DateString";
 import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
@@ -45,6 +45,15 @@ export const AssignmentProgressSettings = () => {
             <StyledToggle trueLabel="Correct" falseLabel="Attempted"
                 checked={assignmentProgressContext?.attemptedOrCorrect === "CORRECT"}
                 onChange={(e) => assignmentProgressContext?.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")}
+            />
+        </div>}
+
+        {isPhy && <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
+            <span>Marks display mode</span>
+            <Spacer />
+            <StyledToggle falseLabel="Parts" trueLabel="Marks"
+                checked={assignmentProgressContext?.displayIndividualMarks}
+                onChange={(e) => assignmentProgressContext?.setDisplayIndividualMarks?.(e.currentTarget.checked)}
             />
         </div>}
     </div>;
@@ -102,8 +111,8 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
             return "revoked";
         }
 
-        const correctParts = studentProgress.correctQuestionPartsCount;
-        const incorrectParts = studentProgress.incorrectQuestionPartsCount;
+        const correctParts = studentProgress.correctQuestionMarksCount;
+        const incorrectParts = studentProgress.incorrectQuestionMarksCount;
         const status = null;
 
         return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, status, correctParts, incorrectParts, totalParts);
@@ -114,12 +123,11 @@ const GroupAssignmentTab = ({assignment, progress}: GroupAssignmentTabProps) => 
             return "revoked";
         }
 
-
         const question = questions[index];
 
         const totalParts = question.questionPartsTotal;
-        const correctParts = (studentProgress.correctPartResults || [])[index];
-        const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
+        const correctParts = markResultsToPartResults(studentProgress.correctMarkResults, studentProgress.markTotals)[index];
+        const incorrectParts = markResultsToPartResults(studentProgress.incorrectMarkResults, studentProgress.markTotals)[index];
         const status = (studentProgress.questionResults || [])[index];
 
         return markClassesInternal(assignmentProgressContext?.attemptedOrCorrect ?? "CORRECT", studentProgress, status, correctParts, incorrectParts, totalParts);
@@ -333,27 +341,29 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
         const initialState = {
             ...p,
             correctQuestionPagesCount: 0,
-            correctQuestionPartsCount: 0,
-            incorrectQuestionPartsCount: 0,
+            correctQuestionMarksCount: 0,
+            incorrectQuestionMarksCount: 0,
             notAttemptedPartResults: []
         };
 
         const ret = (p.questionResults || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
             const correctQuestionsCount  = [CompletionState.ALL_CORRECT].includes(results) ? oldP.correctQuestionPagesCount + 1 : oldP.correctQuestionPagesCount;
-            const questions = assignment.gameboard.contents;
+            const correctMarkTotal = (p.correctMarkResults || [])[i].reduce((a, b) => a + b, 0);
+            const incorrectMarkTotal = (p.incorrectMarkResults || [])[i].reduce((a, b) => a + b, 0);
+            const markTotal = (p.markTotals || [])[i].reduce((a, b) => a + b, 0);
             return {
                 ...oldP,
                 correctQuestionPagesCount: correctQuestionsCount,
-                correctQuestionPartsCount: oldP.correctQuestionPartsCount + (p.correctPartResults || [])[i],
-                incorrectQuestionPartsCount: oldP.incorrectQuestionPartsCount + (p.incorrectPartResults || [])[i],
+                correctQuestionMarksCount: oldP.correctQuestionMarksCount + correctMarkTotal,
+                incorrectQuestionMarksCount: oldP.incorrectQuestionMarksCount + incorrectMarkTotal,
                 notAttemptedPartResults: [
                     ...oldP.notAttemptedPartResults,
-                    (questions[i].questionPartsTotal - (p.correctPartResults || [])[i] - (p.incorrectPartResults || [])[i])
+                    (markTotal - correctMarkTotal - incorrectMarkTotal)
                 ]
             };
         }, initialState);
         return [ret, questions.length === ret.correctQuestionPagesCount];
-    }), [assignment.gameboard.contents, assignment.progress, questions.length]);
+    }), [assignment.progress, questions.length]);
 
     const progress = progressData.map(pd => pd[0]);
 

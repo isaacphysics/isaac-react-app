@@ -335,7 +335,7 @@ export interface ActiveModalWithoutState {
     bodyContainerClassName?: string;
 }
 
-export type ProgressSortOrder = number | "name" | "totalPartPercentage" | "totalAttemptedPartPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
+export type ProgressSortOrder = number | "name" | "totalMarkPercentage" | "totalAttemptedMarkPercentage" | "totalQuestionPercentage" | "totalAttemptedQuestionPercentage";
 
 export enum QuizzesBoardOrder {
     "title" = "title",
@@ -435,6 +435,8 @@ export interface AssignmentProgressPageSettings {
     setFormatAsPercentage: (formatAsPercentage: boolean) => void;
     attemptedOrCorrect: "ATTEMPTED" | "CORRECT";
     setAttemptedOrCorrect: (attemptedOrCorrect: "ATTEMPTED" | "CORRECT") => void;
+    displayIndividualMarks: boolean;
+    setDisplayIndividualMarks: (displayIndividualMarks: boolean) => void;
     assignmentOrder: AssignmentOrderSpec;
     setAssignmentOrder: (assignmentOrder: AssignmentOrderSpec) => void;
     groupSortOrder: GroupSortOrder;
@@ -494,14 +496,14 @@ export const AssignmentScheduleContext = React.createContext<{
     collapsed: boolean;
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
-        }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+}>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 export const ContentSidebarContext = React.createContext<{ toggle: () => void; close: () => void; } | undefined>(undefined);
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
     completed?: boolean;
     correctQuestionPagesCount: number;
-    correctQuestionPartsCount: number;
-    incorrectQuestionPartsCount: number;
+    correctQuestionMarksCount: number;
+    incorrectQuestionMarksCount: number;
     notAttemptedPartResults: number[];
 }
 
@@ -738,6 +740,8 @@ export interface PageSettings {
     assignmentOrder?: AssignmentOrderSpec;
     attemptedOrCorrect?: "ATTEMPTED" | "CORRECT";
     setAttemptedOrCorrect?: (newValue: "ATTEMPTED" | "CORRECT") => void;
+    displayIndividualMarks: boolean;
+    setDisplayIndividualMarks: (displayIndividualMarks: boolean) => void;
 }
 
 export interface GameboardBuilderQuestions {
