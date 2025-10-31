@@ -177,14 +177,7 @@ describe('updateTopicChoices', () => {
 
 const choice = (tagId: TAG_ID) => ({label: tags.getById(tagId).title, value: tagId}); 
 const makeChoiceTree = (key: string) => (...choices: TAG_ID[]): ChoiceTree => ({[key]: choices.map(choice)});
-
-const subject = makeChoiceTree("subject");
-
-const physics = makeChoiceTree("physics");
-const thermal = makeChoiceTree("thermal");
-const fields = makeChoiceTree("fields");
-const mechanics = makeChoiceTree("mechanics");
-
-const maths = makeChoiceTree("maths");
-const calculus = makeChoiceTree("calculus");
+const [subject, physics, thermal, fields, mechanics, maths, calculus] = [
+    "subject", "physics", "thermal", "fields", "mechanics", "maths", "calculus"
+].map(makeChoiceTree);
 
