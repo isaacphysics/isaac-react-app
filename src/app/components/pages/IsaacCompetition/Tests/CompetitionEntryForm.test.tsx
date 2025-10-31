@@ -231,6 +231,7 @@ describe("CompetitionEntryForm", () => {
     });
 
     it("should show member selection error when more than 4 students selected", async () => {
+      const user = userEvent.setup();
       const groupsWithManyMembers = [
         {
           id: 1,
@@ -244,9 +245,53 @@ describe("CompetitionEntryForm", () => {
           ],
         },
       ];
-      setupTest(undefined, groupsWithManyMembers);
+      setupTest({ schoolId: 123 }, groupsWithManyMembers);
 
-      expect(true).toBe(true);
+      // Select the group first
+      const groupSelect = screen.getByText("Choose from the groups you've created or create one first");
+      await user.click(groupSelect);
+
+      // Wait for the dropdown option to appear (use findByText instead of getByText)
+      const largeGroupOption = await screen.findByText("Large Group");
+      await user.click(largeGroupOption);
+
+      // Wait for the member select to be available
+      await waitFor(() => {
+        expect(screen.getByText("Choose students from your selected group")).toBeInTheDocument();
+      });
+
+      // Find the select input using its inputId
+      const getSelectInput = () => document.querySelector("#group-members-select") as HTMLElement;
+
+      // Select first 4 students (should work fine)
+      await user.click(getSelectInput());
+      const student1Option = await screen.findByText("Student 1");
+      await user.click(student1Option);
+
+      await user.click(getSelectInput());
+      const student2Option = await screen.findByText("Student 2");
+      await user.click(student2Option);
+
+      await user.click(getSelectInput());
+      const student3Option = await screen.findByText("Student 3");
+      await user.click(student3Option);
+
+      await user.click(getSelectInput());
+      const student4Option = await screen.findByText("Student 4");
+      await user.click(student4Option);
+
+      expect(screen.queryByText(/Limit of 4 students reached/)).not.toBeInTheDocument();
+
+      await user.click(getSelectInput());
+      const student5Option = await screen.findByText("Student 5");
+      await user.click(student5Option);
+
+      await waitFor(() => {
+        const errorTooltip = screen.getByText(
+          /Limit of 4 students reached. To select a new student, remove one first./,
+        );
+        expect(errorTooltip).toBeInTheDocument();
+      });
     });
   });
 

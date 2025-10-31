@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Row, Col, Container, FormGroup, Label, Input, Alert } from "reactstrap";
+import { Form, Row, Col, Container, FormGroup, Label, Input } from "reactstrap";
 import { isaacApi, useAppSelector } from "../../../../state";
 import { selectors } from "../../../../state/selectors";
 import { SchoolInput } from "../../../elements/inputs/SchoolInput";
@@ -71,17 +71,17 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
     const selectedValues = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
 
     if (selectedValues.length > 4) {
-      setMemberSelectionError("You can only select up to 4 students");
-
-      setTimeout(() => {
-        setMemberSelectionError("");
-      }, 3000);
+      setMemberSelectionError("Limit of 4 students reached. To select a new student, remove one first.");
 
       return;
     }
 
     setMemberSelectionError("");
     setSelectedMembers(selectedValues);
+
+    setTimeout(() => {
+      setMemberSelectionError("");
+    }, 10000);
   };
 
   const isSchoolValid = isSchoolValidForCompetition();
@@ -205,7 +205,7 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                       <div className="entry-form-validation-tooltip">
                         <div className="tooltip-content">
                           <div className="tooltip-arrow"></div>
-                          <div className="tooltip-icon">!</div>
+                          <img src="/assets/warning_icon.svg" alt="invalid school error" />
                           <div className="tooltip-text">
                             Please <a href="/account">update</a> your account details to specify your school or college.
                             Only teachers and students from state-funded schools in England are eligible to participate.
@@ -300,7 +300,7 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                   <div className="entry-form-validation-tooltip">
                     <div className="tooltip-content">
                       <div className="tooltip-arrow"></div>
-                      <div className="tooltip-icon">!</div>
+                      <img src="/assets/warning_icon.svg" alt="no groups found error" />
                       <div className="tooltip-text" style={{ color: "#000" }}>
                         You have not created any groups. Please{" "}
                         <a href="/groups" style={{ color: "#1D70B8", textDecoration: "underline" }}>
@@ -328,9 +328,17 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                       message="Choose 1-4 students from the selected group who worked on the submitted project."
                     />
                     {memberSelectionError && (
-                      <Alert color="danger" className="mb-2" style={{ zIndex: 9999, position: "relative" }}>
-                        {memberSelectionError}
-                      </Alert>
+                      <div
+                        className="entry-form-validation-tooltip entry-form-validation-tooltip-centered mt-2"
+                        style={{ alignItems: "center" }}
+                      >
+                        <div className="tooltip-content">
+                          <img src="/assets/warning_icon.svg" alt="member selection error" />
+                          <div className="tooltip-text" style={{ color: "#000" }}>
+                            Limit of 4 students reached. To select a new student, remove one first.
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </Label>
                   <Select
@@ -389,7 +397,7 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                     <div className="entry-form-validation-tooltip" style={{ marginTop: "12px" }}>
                       <div className="tooltip-content">
                         <div className="tooltip-arrow"></div>
-                        <div className="tooltip-icon">!</div>
+                        <img src="/assets/warning_icon.svg" alt="no members found error" />
                         <div className="tooltip-text" style={{ color: "#000" }}>
                           No students found in the selected group. To add students go to the{" "}
                           <a href="/groups" style={{ color: "#1D70B8", textDecoration: "underline" }}>

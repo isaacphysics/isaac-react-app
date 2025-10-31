@@ -244,6 +244,10 @@
       align-items: flex-start;
       gap: 8px;
     }
+
+    &-centered .tooltip-content {
+      align-items: center;
+    }
     
     .tooltip-arrow {
       position: absolute;
@@ -268,23 +272,9 @@
       }
     }
     
-    .tooltip-icon {
-      flex-shrink: 0;
-      width: 16px;
-      height: 16px;
-      background-color: #ff6b35;
-      color: white;
-      border-radius: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
-      margin-top: 1px;
-    }
-    
     .tooltip-text {
       flex: 1;
+      font-family: "roboto", Roboto, sans-serif;
       color: #dc3545;
       font-size: 14px;
       line-height: 1.4;
