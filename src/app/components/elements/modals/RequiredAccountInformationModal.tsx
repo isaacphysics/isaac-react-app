@@ -8,7 +8,7 @@ import {
     useAppSelector
 } from "../../../state";
 import React, {useEffect, useState} from "react";
-import {ActiveModalWithoutState, BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
+import {ActiveModalProps, BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
     isDefined,
@@ -147,7 +147,7 @@ const RequiredAccountInfoBody = () => {
     </Form>;
 };
 
-export const requiredAccountInformationModal: ActiveModalWithoutState = {
+export const requiredAccountInformationModal: ActiveModalProps = {
     title: "Required account information",
     body: <RequiredAccountInfoBody />,
     size: "lg"

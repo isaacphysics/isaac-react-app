@@ -10,6 +10,7 @@ import { StudentDashboard } from "../../elements/StudentDashboard";
 import { ListViewCardProps, ListViewCards } from "../../elements/list-groups/ListView";
 import { Spacer } from "../../elements/Spacer";
 import { TeacherDashboard } from "../../elements/TeacherDashboard";
+import { scheduleTeacherOnboardingModalForNextOverviewVisit, useTeacherOnboardingModal } from "../../elements/modals/AdaTeacherOnboardingModal";
 
 interface HomepageHeroCardProps extends CardProps {
     title?: string;
@@ -130,6 +131,9 @@ const AdaSubjectCard: ListViewCardProps = {
 const cards = [...subjectCategories.map((sc) => getListViewSubjectCard(sc)), AdaSubjectCard];
 
 export const HomepagePhy = () => {
+
+    scheduleTeacherOnboardingModalForNextOverviewVisit();
+    useTeacherOnboardingModal();  
 
     useEffect( () => {document.title = SITE_TITLE;}, []);
 

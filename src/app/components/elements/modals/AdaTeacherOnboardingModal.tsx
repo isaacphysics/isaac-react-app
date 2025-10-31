@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { Button } from "reactstrap";
 import { closeActiveModal, openActiveModal, useAppDispatch } from "../../../state";
 import { KEY, persistence } from "../../../services";
-import { activeModalWithPagination, type PaginationState } from "./ActiveModalWithPagination";
+import { ActiveModalProps } from "../../../../IsaacAppTypes";
+import { MODAL_TYPES } from "./ActiveModals";
 
 const pages = [
     {
@@ -29,7 +30,7 @@ const pages = [
 
 const Page = ({ page }: { page: typeof pages[number]}) => {
     return <div role="region" aria-label="Teacher onboarding modal page" key={page.title} className="text-center mx-2">
-        <img src={`/assets/cs/decor/${page.image}`} alt='' aria-hidden className="pb-3 modal-page-hero-image"/>
+        <img src={`/assets/cs/decor/${page.image}`} height="217px" alt='' aria-hidden className="pb-3 modal-page-hero-image"/>
         <div className="d-flex flex-column align-items-center justify-content-center modal-page-text">
             <h4>{page.title}</h4>
             <p className="mb-0">{page.message}</p>
@@ -37,31 +38,20 @@ const Page = ({ page }: { page: typeof pages[number]}) => {
     </div>;
 };
 
-const buttons = ({ pageIndex, setPage, close}: PaginationState) => {
-    const isLastPage = pageIndex == pages.length;
-    const nextPage = () => setPage(pageIndex + 1);
-    return [
-        <Button key={0} block color="solid" onClick={isLastPage ? close : nextPage} aria-label="Go to next page on modal">
-            {isLastPage ? "Go to My Ada" : "Next"}
-        </Button>
-    ];
+export const adaTeacherOnboardingModal: ActiveModalProps = {
+    title: "Teacher Onboarding modal",
+    body: pages.map((page, idx) => <Page key={idx} page={page}/>),
+    buttons: <Button color="solid" onClick={close}>Go to My Ada</Button>,
+    onInitialise: () => {
+        setTimeout(unscheduleTeacherOnboardingModal, 300);
+    }
 };
-
-export const adaTeacherOnboardingModal = activeModalWithPagination({ 
-    title: 'Teacher Onboarding modal',
-    useInit: () => useEffect(() => {
-        const unschedule = setTimeout(unscheduleTeacherOnboardingModal, 300);
-        return () => clearTimeout(unschedule);
-    }, []),
-    pages: pages.map((page, idx) => <Page key={idx} page={page}/>),
-    buttons
-});
 
 export const useTeacherOnboardingModal = () => {
     const dispatch = useAppDispatch();
     useEffect(() => {
         if (shouldModalShow()) {
-            dispatch(openActiveModal(adaTeacherOnboardingModal));
+            dispatch(openActiveModal(MODAL_TYPES.adaTeacherOnboardingModal));
             return () => {
                 dispatch(closeActiveModal());
             };

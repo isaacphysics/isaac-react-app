@@ -100,7 +100,7 @@ describe('Overview page', () => {
                 it('leaves the flag when the modal is closed too quickly', async() => {
                     await renderOverviewPage();
                     await userEvent.click(modal.closeButton);
-                    expect(modal.element).toBeNull();
+                    await waitFor(() => expect(modal.element).toBeNull());
                     expect(persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT)).toBe("true");
                 });
             });

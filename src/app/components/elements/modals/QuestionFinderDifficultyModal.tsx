@@ -2,7 +2,7 @@ import React from "react";
 import { Col } from "reactstrap";
 import { siteSpecific } from "../../../services";
 import { closeActiveModal, store } from "../../../state";
-import { ActiveModal } from "../../../../IsaacAppTypes";
+import { ActiveModalProps } from "../../../../IsaacAppTypes";
 
 const QuestionFinderDifficultyModal = () => {
     return <Col>
@@ -39,7 +39,7 @@ const QuestionFinderDifficultyModal = () => {
     </Col>;
 };
 
-export const questionFinderDifficultyModal = () : ActiveModal => {
+export const questionFinderDifficultyModal = () : ActiveModalProps => {
     return {
         closeAction: () => store.dispatch(closeActiveModal()),
         title: siteSpecific("Difficulty Levels", "What do the difficulty levels mean?"),

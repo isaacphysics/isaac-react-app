@@ -33,7 +33,7 @@ import {
 } from "../../../services";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {GameboardDTO, UserGroupDTO} from "../../../../IsaacApiTypes";
-import {BoardAssignee, ActiveModal} from "../../../../IsaacAppTypes";
+import {BoardAssignee, ActiveModalProps} from "../../../../IsaacAppTypes";
 import {StyledSelect} from "../../elements/inputs/StyledSelect";
 import classNames from "classnames";
 
@@ -257,7 +257,7 @@ const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
     </div>;
 };
 
-export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModal => {
+export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModalProps => {
     const {board, toggle} = props;
 
     return {

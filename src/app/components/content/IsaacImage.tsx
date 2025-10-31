@@ -4,7 +4,7 @@ import {apiHelper} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {Markup} from "../elements/markup";
 import { closeActiveModal, openActiveModal, useAppDispatch } from '../../state';
-import { ActiveModal } from '../../../IsaacAppTypes';
+import { ActiveModalProps } from '../../../IsaacAppTypes';
 
 interface FigureModalProps {
     path?: string;
@@ -13,7 +13,7 @@ interface FigureModalProps {
     toggle: () => void;
 }
 
-export const FigureModal = ({path, altText, caption, toggle}: FigureModalProps) : ActiveModal => {
+export const FigureModal = ({path, altText, caption, toggle}: FigureModalProps) : ActiveModalProps => {
     return {
         closeAction: toggle,
         size: "xxl",

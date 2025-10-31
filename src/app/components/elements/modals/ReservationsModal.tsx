@@ -26,7 +26,7 @@ import {
     UncontrolledButtonDropdown
 } from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {ActiveModal, AppGroup, AugmentedEvent} from "../../../../IsaacAppTypes";
+import {ActiveModalProps, AppGroup, AugmentedEvent} from "../../../../IsaacAppTypes";
 import {RegisteredUserDTO, UserSummaryWithGroupMembershipDTO} from "../../../../IsaacApiTypes";
 import {bookingStatusMap, isDefined, isLoggedIn, schoolNameWithPostcode} from "../../../services";
 import _orderBy from "lodash/orderBy";
@@ -417,7 +417,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
     </>;
 };
 
-export const reservationsModal = ({event}: {event: AugmentedEvent}): ActiveModal => {
+export const reservationsModal = ({event}: {event: AugmentedEvent}): ActiveModalProps => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
         size: 'xl',

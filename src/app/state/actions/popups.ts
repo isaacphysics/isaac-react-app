@@ -1,7 +1,8 @@
 import {getRTKQueryErrorMessage, AppDispatch} from "../index";
 import {Dispatch} from "react";
-import {Action, ActiveModalWithoutState, ActiveModalWithState, Toast} from "../../../IsaacAppTypes";
+import {Action, ActiveModalProps, Toast} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE, trackEvent} from "../../services";
+import { MODAL_TYPES } from "../../components/elements/modals/ActiveModals";
 
 // Toasts
 export const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -61,8 +62,6 @@ export function showRTKQueryErrorToastIfNeeded(error: string, response: any, mes
 }
 
 // Modals
-export const openActiveModal = <T> (
-    activeModal: ActiveModalWithoutState | ActiveModalWithState<T>
-) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
+export const openActiveModal = (activeModal: ActiveModalProps | keyof typeof MODAL_TYPES) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
 
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});

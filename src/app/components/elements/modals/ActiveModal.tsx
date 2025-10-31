@@ -1,22 +1,25 @@
-import React, {ReactNode, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import * as AppTypes from "../../../../IsaacAppTypes";
 import {closeActiveModal, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import classNames from "classnames";
 import {isAda, siteSpecific} from "../../../services";
-import {Modal, ModalHeader, ModalFooter, ModalBody, CloseButton} from "reactstrap";
+import {Modal, ModalHeader, ModalFooter, ModalBody, CloseButton, Button} from "reactstrap";
 
-interface ActiveModalProps <T> {
-    activeModal?: AppTypes.ActiveModalWithState<T> | AppTypes.ActiveModalWithoutState | null;
+interface ActiveModalProps {
+    activeModal?: AppTypes.ActiveModalProps | null;
 }
 
-export const ActiveModal = <T,>({activeModal}: ActiveModalProps<T>) => {
+export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement<typeof Modal> => {
     const dispatch = useAppDispatch();
     const subject = useAppSelector(selectors.pageContext.subject);
-    const state = isActiveModalWithState(activeModal) && activeModal.useInit ? activeModal.useInit() : null;
+    const [page, setPage] = useState(0);
+    const totalPages = activeModal && Symbol.iterator in Object(activeModal.body) ? Array.from(activeModal.body as Iterable<React.ReactNode>).length : 1;
 
-    const display = (prop: ((state: T) => ReactNode) | ReactNode): ReactNode => {
-        return typeof prop === "function" ? prop(state!) : prop;
-    };
+    const pageIndicator = totalPages > 1 && <div role="region" aria-label={`Modal page indicator (page ${page + 1} of ${totalPages})`} className="w-100 text-center mb-3 mt-n3 fs-2">
+        {Array.from({length: totalPages}, (_, idx) => (
+            <span key={idx} className={classNames({"text-body-tertiary": page !== idx})} aria-hidden>⋅</span>
+        ))}
+    </div>;
     
     const toggle = () => {
         dispatch(closeActiveModal());
@@ -31,14 +34,13 @@ export const ActiveModal = <T,>({activeModal}: ActiveModalProps<T>) => {
 
     return <Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={activeModal?.size ?? "lg"} centered={activeModal?.centered} data-bs-theme={subject ?? "neutral"}>
         {activeModal && <React.Fragment>
-            {activeModal.header ?
-                display(activeModal.header)
-                :
-                (activeModal.title || activeModal.closeAction) &&
-                    <ModalHeader
+            <div className="d-flex gap-2">
+                {activeModal.header 
+                    ? activeModal.header
+                    : (activeModal.title || activeModal.closeAction) && <ModalHeader
                         data-testid={"modal-header"}
                         tag={siteSpecific(undefined, "h3")}
-                        className={classNames({
+                        className={classNames("w-100", {
                             "d-flex justify-content-between": activeModal.closeAction,
                             "h-title": !!activeModal.title && isAda,
                             "position-absolute": !activeModal.title,
@@ -58,23 +60,26 @@ export const ActiveModal = <T,>({activeModal}: ActiveModalProps<T>) => {
                     >
                         {activeModal.title}
                     </ModalHeader>
-            }
+                }
+            </div>
 
             <ModalBody className={classNames(activeModal.bodyContainerClassName, {"mx-4": ["lg", "xl", undefined].includes(activeModal.size), "pt-0": !activeModal.title})}>
-                {display(activeModal.body)}
+                {totalPages > 1
+                    ? <>{Array.from(activeModal.body as Iterable<React.ReactNode>)[page]}</>
+                    : typeof activeModal.body === "function" ? <activeModal.body /> : activeModal.body
+                }
             </ModalBody>
 
             {activeModal.buttons &&
-                <ModalFooter className="mb-2 mx-2">
-                    {display(activeModal.buttons)}
+                <ModalFooter className="mb-2 mx-2 justify-content-center">
+                    {page < totalPages - 1
+                        ? <Button color="primary" onClick={() => setPage(p => p + 1)}>Next</Button>
+                        : activeModal.buttons
+                    }
                 </ModalFooter>
             }
+
+            {pageIndicator}
         </React.Fragment>}
     </Modal>;
-};
-
-const isActiveModalWithState = <T,>(
-    activeModal: AppTypes.ActiveModalWithState<T> | AppTypes.ActiveModalWithoutState | null | undefined
-): activeModal is AppTypes.ActiveModalWithState<T> => {
-    return activeModal !== null && activeModal !== undefined && 'useInit' in activeModal;
 };

@@ -1,4 +1,4 @@
-import {Action, ActiveModal, Toast} from "../../../IsaacAppTypes";
+import {Action, ActiveModalProps, Toast} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
 
 export type ToastsState = Toast[] | null;
@@ -18,7 +18,7 @@ export const toasts = (toasts: ToastsState = null, action: Action) => {
     }
 };
 
-export type ActiveModalsState = ActiveModal[] | null;
+export type ActiveModalsState = ActiveModalProps[] | null;
 export const activeModals = (activeModals: ActiveModalsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.ACTIVE_MODAL_OPEN:
