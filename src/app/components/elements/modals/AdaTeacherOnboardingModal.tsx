@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Button } from "reactstrap";
 import { closeActiveModal, openActiveModal, useAppDispatch } from "../../../state";
 import { KEY, persistence } from "../../../services";
-import { ActiveModalWithPagination, PaginationState } from "./ActiveModalWithPagination";
+import { ActiveModalProps } from "../../../../IsaacAppTypes";
 
 const pages = [
     {
@@ -37,33 +37,29 @@ const Page = ({ page }: { page: typeof pages[number]}) => {
     </div>;
 };
 
-const buttons = ({ pageIndex, setPage, close}: PaginationState) => {
-    const isLastPage = pageIndex == pages.length;
-    const nextPage = () => setPage(pageIndex + 1);
-    return [
-        <Button key={0} block color="solid" onClick={isLastPage ? close : nextPage} aria-label="Go to next page on modal">
-            {isLastPage ? "Go to My Ada" : "Next"}
-        </Button>
-    ];
-};
-
-export const AdaTeacherOnboardingModal = () => {
-    useEffect(() => {
-        const unschedule = setTimeout(unscheduleTeacherOnboardingModal, 300);
-        return () => clearTimeout(unschedule);
-    }, []);
+export const adaTeacherOnboardingModal: ActiveModalProps = {
+    // useEffect(() => {
+    //     const unschedule = setTimeout(unscheduleTeacherOnboardingModal, 300);
+    //     return () => clearTimeout(unschedule);
+    // }, []);
   
-    return <ActiveModalWithPagination
-        title="Teacher Onboarding modal"
-        pages={pages.map((page, idx) => <Page key={idx} page={page}/>)}
-        buttons={buttons} />;
+    // return <ActiveModalWithPagination
+    //     title="Teacher Onboarding modal"
+    //     pages={pages.map((page, idx) => <Page key={idx} page={page}/>)}
+    //     buttons={buttons} />;
+    title: "Teacher Onboarding modal",
+    body: pages.map((page, idx) => <Page key={idx} page={page}/>),
+    buttons: <Button color="solid" onClick={close}>Go to My Ada</Button>,
+    onInitialise: () => {
+        setTimeout(unscheduleTeacherOnboardingModal, 300);
+    }
 };
 
 export const useTeacherOnboardingModal = () => {
     const dispatch = useAppDispatch();
     useEffect(() => {
         if (shouldModalShow()) {
-            dispatch(openActiveModal('adaTeacherOnboardingModal'));
+            dispatch(openActiveModal(adaTeacherOnboardingModal));
             return () => {
                 dispatch(closeActiveModal());
             };
