@@ -15,18 +15,9 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
     const [page, setPage] = useState(0);
     const totalPages = activeModal && Symbol.iterator in Object(activeModal.body) ? Array.from(activeModal.body as Iterable<React.ReactNode>).length : 1;
 
-    // const header = <div className="d-flex justify-content-between px-4 pt-3 pb-2 border-bottom">
-    //     <strong role="region" aria-label="Modal page indicator" className="text-theme">{pageIndex} of {pages.length}</strong>
-    //     <button aria-label="Close modal" className="icon icon-close" onClick={close} />
-    // </div>;
-
-    // const body = <>
-    //     {pages.map((page, idx) => <div key={idx} style={pageIndex === (idx + 1) ? {} : {display: "none"}}>{ page }</div>)}
-    // </>;
-
-    const pageIndicator = totalPages > 1 && <div role="region" aria-label="Modal page indicator" className="w-100 text-center my-3">
-        {Array(totalPages).map((_, idx) => (
-            <span key={idx} className={classNames({"text-muted": page !== idx})}>⋅</span>
+    const pageIndicator = totalPages > 1 && <div role="region" aria-label={`Modal page indicator (page ${page + 1} of ${totalPages})`} className="w-100 text-center mb-3 mt-n3 fs-2">
+        {Array.from({length: totalPages}, (_, idx) => (
+            <span key={idx} className={classNames({"text-body-tertiary": page !== idx})} aria-hidden>⋅</span>
         ))}
     </div>;
     
