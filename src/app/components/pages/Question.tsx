@@ -31,7 +31,7 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
-import { GameboardQuestionSidebar, MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { GameboardContentSidebar, MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
@@ -86,8 +86,10 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                     />
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                     <SidebarLayout>
-                        {isDefined(gameboardId) ? <GameboardQuestionSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} currentQuestionId={questionId}/>
-                            : <QuestionSidebar relatedContent={doc.relatedContent} />}
+                        {isDefined(gameboardId) 
+                            ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentContentId={questionId}/>
+                            : <QuestionSidebar relatedContent={doc.relatedContent} />
+                        }
                         <MainContent>
                             {!preview && <CanonicalHrefElement />}
 

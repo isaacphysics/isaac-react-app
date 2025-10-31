@@ -21,6 +21,7 @@ import {
     filterAudienceViewsByProperties,
     generateQuestionTitle,
     isAda,
+    isAppLink,
     isDefined,
     isFound,
     isNotPartiallyLoggedIn,
@@ -128,9 +129,12 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     </ListGroupItem>;
 };
 
-export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
+export const Wildcard = ({gameboard, wildcard}: {gameboard: GameboardDTO, wildcard: IsaacWildcard}) => {
+    if (!wildcard.url) return null;
+    const link = isAppLink(wildcard.url) ? `${wildcard.url}?board=${gameboard.id}` : wildcard.url;
+
     return <ListGroupItem key={wildcard.id} className={"content-summary-link text-info bg-wildcard p-3"}>
-        <a href={wildcard.url} className="align-items-center">
+        <a href={link} className="align-items-center">
             <i className="icon icon-concept me-3" />
             <div className={"flex-grow-1"}>
                 <span className="link-title question-link-title me-2">{wildcard.title}</span>
@@ -145,7 +149,7 @@ export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
 export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => {
     return <ListGroup className="link-list list-group-links list-gameboard">
         {gameboard?.wildCard && showWildcard(gameboard) &&
-            <Wildcard wildcard={gameboard.wildCard} />
+            <Wildcard gameboard={gameboard} wildcard={gameboard.wildCard} />
         }
         {gameboard?.contents && gameboard.contents.map(q =>
             <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />

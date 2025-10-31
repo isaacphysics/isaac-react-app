@@ -2,24 +2,23 @@ import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
 import {SeguePageDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
-import {above, isAda, isPhy, useDeviceSize, useUrlHashValue} from "../../services";
+import {isAda, useUrlHashValue} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {EditContentButton} from "../elements/EditContentButton";
-import {ShareLink} from "../elements/ShareLink";
-import {PrintButton} from "../elements/PrintButton";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
+import queryString from "query-string";
 import { useUntilFound } from "./Glossary";
-import { MainContent, SidebarLayout, GenericPageSidebar, PolicyPageSidebar, ContentControlledSidebar, GenericSidebarWithRelatedContent } from "../elements/layout/SidebarLayout";
-import { TeacherNotes } from "../elements/TeacherNotes";
+import { MainContent, SidebarLayout, GenericPageSidebar, PolicyPageSidebar, ContentControlledSidebar, GenericSidebarWithRelatedContent, GameboardContentSidebar } from "../elements/layout/SidebarLayout";
 import { useGetGenericPageQuery } from "../../state/slices/api/genericApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
+import { useGetGameboardByIdQuery } from "../../state";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -50,7 +49,9 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
 
     const hash = useUntilFound(pageQuery.currentData, useUrlHashValue());
 
-    const deviceSize = useDeviceSize();
+    const query = queryString.parse(location.search);
+    const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
+    const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
 
     useEffect(() => {
         if (hash) {
@@ -73,9 +74,11 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 ? <ContentControlledSidebar sidebar={doc.sidebar} />
                 : React.cloneElement(PHY_SIDEBAR.has(pageId) 
                     ? PHY_SIDEBAR.get(pageId)!() 
-                    : doc.relatedContent
-                        ? <GenericSidebarWithRelatedContent relatedContent={doc.relatedContent} />
-                        : <GenericPageSidebar/>,
+                    : gameboard?.id && gameboard.wildCard?.url === window.location.pathname 
+                        ? <GameboardContentSidebar id={gameboard.id} title={gameboard.title || ""} questions={gameboard.contents || []} wildCard={gameboard.wildCard} currentContentId={pageId}/>
+                        : doc.relatedContent
+                            ? <GenericSidebarWithRelatedContent relatedContent={doc.relatedContent} />
+                            : <GenericPageSidebar/>,
                 );
 
             return <Container data-bs-theme={doc.subjectId}>
