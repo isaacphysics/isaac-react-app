@@ -1,4 +1,4 @@
-import {isDefined} from "./";
+import {decorate, isDefined} from "./";
 import { Action } from "history";
 
 const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: string, reducedMotion: boolean): boolean => {
@@ -28,18 +28,27 @@ export const scrollTopOnPageLoad = (reducedMotion: boolean) => (previousPathname
         }
         
         (window as any).followedAtLeastOneSoftLink = true;
-        try {
-            window.scrollTo({top: 0, left: 0, behavior: reducedMotion ? "instant" : "auto"});
-        } catch {
-            // Some older browsers, notably Safari, don't support the new spec used above!
-            window.scrollTo(0, 0);
-        }
+
+        safeScrollTo({top: 0, left: 0, behavior: reducedMotion ? "instant" : "auto"});
     }
 };
 
 export function scrollVerticallyIntoView(element: Element, offset = 0): void {
     const yPosition = element.getBoundingClientRect().top + window.scrollY + offset;
     if (isDefined(yPosition)) {
-        window.scrollTo(0, yPosition);
+        safeScrollTo(0, yPosition);
     }
 }
+
+// this function exists to wrap window.scrollTo in both a timeout and a try/catch to fix various browser issues.
+// timeout: https://stackoverflow.com/questions/24616322/mobile-safari-why-is-window-scrollto0-0-not-scrolling-to-0-0
+// try-catch: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollTo compatibility table for Safari options.behaviour
+const safeScrollTo = decorate(window.scrollTo, original => {
+    setTimeout(() => {
+        try {
+            original();
+        } catch {
+            window.scrollTo(0, 0);
+        }
+    }, 10);
+});
