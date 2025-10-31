@@ -68,7 +68,7 @@ export enum Filter {
 
     // Maths -> Statistics topics
     DataAnalysis = "Data Analysis",
-    Probablity = `Probabi${softHyphen}lity`,
+    Probability = `Probabi${softHyphen}lity`,
     RandomVariables = "Random Variables",
     HypothesisTests = `Hypo${softHyphen}thesis Tests`
 }

@@ -384,7 +384,7 @@ describe("QuestionFinder", () => {
                     const geometryTopics = [F.Shapes, F.Trigonometry, F.Vectors, F.Planes, F.Coordinates];
                     const functionTopics = [F.GeneralFunctions, F.GraphSketching];
                     const calculusTopics = [F.Differentiation, F.Integration, F.DifferentialEquations];
-                    const statisticsTopics = [F.DataAnalysis, F.Probablity, F.RandomVariables, F.HypothesisTests];
+                    const statisticsTopics = [F.DataAnalysis, F.Probability, F.RandomVariables, F.HypothesisTests];
                     const mechanicsTopics = [
                         F.Statics, F.Kinematics, F.Dynamics, F.CircularMotion, F.Oscillations, F.Materials
                     ];
@@ -406,7 +406,7 @@ describe("QuestionFinder", () => {
                     const algebraTopics = [F.Manipulation, F.Quadratics, F.SimultaneousEquations, F.Series];
                     const geometryTopics = [F.Shapes, F.Trigonometry, F.Vectors, F.Coordinates];
                     const functionTopics = [F.GeneralFunctions, F.GraphSketching];
-                    const statisticsTopics = [F.DataAnalysis, F.Probablity];
+                    const statisticsTopics = [F.DataAnalysis, F.Probability];
                     expect(queryFilters()).toEqual([
                         F.Number, ...numberTopics, F.Algebra, ...algebraTopics, F.Geometry, ...geometryTopics,
                         F.Functions, ...functionTopics, F.Statistics, ...statisticsTopics

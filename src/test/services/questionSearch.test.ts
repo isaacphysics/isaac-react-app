@@ -175,14 +175,16 @@ describe('updateTopicChoices', () => {
     });
 });
 
-const subject = (...choices: TAG_ID[]): ChoiceTree => ({ subject: choices.map(choice) });
-
-const physics = (...choices: TAG_ID[]): ChoiceTree => ({ physics: choices.map(choice) });
-const thermal = (...choices: TAG_ID[]): ChoiceTree => ({ thermal: choices.map(choice) });
-const fields = (...choices: TAG_ID[]): ChoiceTree => ({ fields: choices.map(choice) });
-const mechanics = (...choices: TAG_ID[]): ChoiceTree => ({ mechanics: choices.map(choice) });
-
-const maths = (...choices: TAG_ID[]): ChoiceTree => ({ maths: choices.map(choice) });
-const calculus = (...choices: TAG_ID[]): ChoiceTree => ({ calculus: choices.map(choice) });
-
 const choice = (tagId: TAG_ID) => ({label: tags.getById(tagId).title, value: tagId}); 
+const makeChoiceTree = (key: string) => (...choices: TAG_ID[]): ChoiceTree => ({[key]: choices.map(choice)});
+
+const subject = makeChoiceTree("subject");
+
+const physics = makeChoiceTree("physics");
+const thermal = makeChoiceTree("thermal");
+const fields = makeChoiceTree("fields");
+const mechanics = makeChoiceTree("mechanics");
+
+const maths = makeChoiceTree("maths");
+const calculus = makeChoiceTree("calculus");
+
