@@ -9,6 +9,11 @@
     min-height: 100%;
     border-radius: 24px 0 0 24px;
     border: none;
+
+    nav & {
+      min-width: 3rem;
+      max-width: unset;
+    }
   }
   button {
     padding-left: 15px;
