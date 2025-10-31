@@ -3,6 +3,7 @@ import { Button } from "reactstrap";
 import { closeActiveModal, openActiveModal, useAppDispatch } from "../../../state";
 import { KEY, persistence } from "../../../services";
 import { ActiveModalProps } from "../../../../IsaacAppTypes";
+import { MODAL_TYPES } from "./ActiveModals";
 
 const pages = [
     {
@@ -50,7 +51,7 @@ export const useTeacherOnboardingModal = () => {
     const dispatch = useAppDispatch();
     useEffect(() => {
         if (shouldModalShow()) {
-            dispatch(openActiveModal(adaTeacherOnboardingModal));
+            dispatch(openActiveModal(MODAL_TYPES.adaTeacherOnboardingModal));
             return () => {
                 dispatch(closeActiveModal());
             };
