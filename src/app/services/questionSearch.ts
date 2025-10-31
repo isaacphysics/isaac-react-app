@@ -4,7 +4,7 @@ import { isPhy } from "./siteConstants";
 import { ChoiceTree } from "../components/elements/panels/QuestionFinderFilterPanel";
 import { itemiseTag } from "./filter";
 import { tags } from "./tags";
-import { STAGE, SUBJECT_SPECIFIC_CHILDREN_MAP, SUBJECTS, TAG_ID, TAG_LEVEL } from "./constants";
+import { getContextSpecificTags, STAGE_SPECIFIC_EXCLUSIONS_MAP, SUBJECT_SPECIFIC_CHILDREN_MAP, TAG_ID, TAG_LEVEL } from "./constants";
 import { PageContextState } from "../../IsaacAppTypes";
 import { mapObject } from "./miscUtils";
 
@@ -98,11 +98,14 @@ export const updateTopicChoices = (
             }
         }
     }
-    if (choices.length > 1 && pageContext?.subject && pageContext.stage?.length === 1) {
-        SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext.stage[0]]?.forEach(tag => 
-            pageContext.subject ? choices[1][pageContext?.subject]?.push(itemiseTag(tags.getById(tag))) : null
-        );
+
+    if (choices.length > 1 && pageContext?.subject) {
+        const contextSpecificTags = getContextSpecificTags(SUBJECT_SPECIFIC_CHILDREN_MAP, pageContext)
+            .map(t => tags.getById(t))    
+            .map(itemiseTag);
+        choices[1][pageContext.subject]?.push(...contextSpecificTags);
     }
+
     return allowedTags ? filterChoices(choices, allowedTags) : choices;
 };
 
@@ -113,11 +116,7 @@ const filterChoices = (choices: ChoiceTree[], allowedTags: TAG_ID[]): ChoiceTree
         )
     );
 
-export const getAllowedTags = (pageContext?: PageContextState): TAG_ID[] | undefined => {
-    if (pageContext?.subject === SUBJECTS.MATHS && pageContext.stage?.[0] === STAGE.GCSE) {
-        const gcseExclusions = [TAG_ID.complexNumbers, TAG_ID.matrices, TAG_ID.planes, TAG_ID.calculus,
-            TAG_ID.randomVariables, TAG_ID.hypothesisTests];
-        return tags.allTagIds.filter(tagId => !gcseExclusions.includes(tagId));
-    }
-    return undefined;
+export const getAllowedTags = (pageContext?: PageContextState): TAG_ID[] => {
+    const exclusions = getContextSpecificTags(STAGE_SPECIFIC_EXCLUSIONS_MAP, pageContext);
+    return tags.allTagIds.filter(tagId => !exclusions.includes(tagId));
 };
