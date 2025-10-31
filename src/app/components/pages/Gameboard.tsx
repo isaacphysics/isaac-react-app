@@ -131,7 +131,6 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
 
 export const Wildcard = ({gameboard, wildcard}: {gameboard: GameboardDTO, wildcard: IsaacWildcard}) => {
     if (!wildcard.url) return null;
-    console.log(wildcard.url);
     const link = isAppLink(wildcard.url) ? `${wildcard.url}?board=${gameboard.id}` : wildcard.url;
 
     return <ListGroupItem key={wildcard.id} className={"content-summary-link text-info bg-wildcard p-3"}>
