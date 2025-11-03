@@ -39,13 +39,11 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
 
     const icon: TitleIconProps = isPhy
         ? {type: "hex", icon: "icon-question", size: "lg"}
-        : item.state === CompletionState.IN_PROGRESS
-            ? {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "In progress question icon"}
+        : item.state === CompletionState.IN_PROGRESS || item.state === CompletionState.ALL_INCORRECT
+            ? {type: "img", icon: iconPath("status-incorrect"), width: "24px", height: "24px", alt: "In progress question icon"}
             : item.state === CompletionState.ALL_CORRECT
                 ? {type: "img", icon: iconPath("status-correct"), width: "24px", height: "24px", alt: "Complete question icon"}
-                : item.state === CompletionState.ALL_INCORRECT
-                    ? {type: "img", icon: iconPath("status-incorrect"), width: "24px", height: "24px", alt: "Incorrect question icon"}
-                    : {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "Not attempted question icon", label: "Question"};
+                : {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "Not attempted question icon", label: "Question"};
 
     return <AbstractListViewItem
         {...rest}
