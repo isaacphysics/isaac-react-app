@@ -39,11 +39,13 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
 
     const icon: TitleIconProps = isPhy
         ? {type: "hex", icon: "icon-question", size: "lg"}
-        : item.state === CompletionState.IN_PROGRESS || item.state === CompletionState.ALL_INCORRECT
-            ? {type: "img", icon: iconPath("status-incorrect"), width: "24px", height: "24px", alt: "In progress question icon"}
+        : item.state === CompletionState.IN_PROGRESS 
+            ? {type: "img", icon: iconPath("status-in-progress"), width: "24px", height: "24px", alt: "In progress question icon", label: "Question"}
             : item.state === CompletionState.ALL_CORRECT
-                ? {type: "img", icon: iconPath("status-correct"), width: "24px", height: "24px", alt: "Complete question icon"}
-                : {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "Not attempted question icon", label: "Question"};
+                ? {type: "img", icon: iconPath("status-correct"), width: "24px", height: "24px", alt: "Complete question icon", label: "Question"}
+                : item.state === CompletionState.ALL_INCORRECT
+                    ? {type: "img", icon: iconPath("status-incorrect"), width: "24px", height: "24px", alt: "Incorrect question icon", label: "Question"}
+                    : {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "Not attempted question icon", label: "Question"};
 
     return <AbstractListViewItem
         {...rest}
@@ -92,7 +94,7 @@ interface TopicListViewItemProps extends Extract<AbstractListViewItemProps, {alv
 export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
-    const breadcrumb = rest.hasCaret ? tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title) : undefined;
+    const breadcrumb = rest.hasCaret ? tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).filter(c => c.contentType === "isaacQuestionPage").map(tag => tag.title) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id}`;
     const icon: TitleIconProps = {type: "img", icon: iconPath("topic"), width: "24px", height: "24px", alt: "Topic summary page icon", label: "Topic"};
 
