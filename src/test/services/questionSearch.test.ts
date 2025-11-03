@@ -12,58 +12,36 @@ describe('updateTopicChoices', () => {
 
         it('returns just the subjects when no selections were made', () => {
             const choices = updateTopicChoices([{}, {}, {}], pageContext); 
-            expect(choices).toEqual([subject(TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology)]);
+            expect(choices).toEqual([subject(all.subjects)]);
         });
 
         it('shows the fields when subject is selected', () => {
-            const choices = updateTopicChoices([subject(TAG_ID.physics), {}, {}], pageContext); 
-            expect(choices).toEqual([
-                subject(TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology),
-                physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                    TAG_ID.thermal)
-            ]);
+            const choices = updateTopicChoices([subject([TAG_ID.physics]), {}, {}], pageContext); 
+            expect(choices).toEqual([subject(all.subjects), physics(all.fields.physics)]);
         });
 
         it('shows the topics when field is selected', () => {
-            const choices = updateTopicChoices([subject(TAG_ID.physics), physics(TAG_ID.thermal), {}], pageContext); 
-            expect(choices).toEqual([
-                subject(TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology),
-                physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                    TAG_ID.thermal),
-                thermal(TAG_ID.heatCapacity, TAG_ID.gases, TAG_ID.thermalRadiation)
-            ]);
+            const choices = updateTopicChoices([subject([TAG_ID.physics]), physics([TAG_ID.thermal]), {}], pageContext); 
+            expect(choices).toEqual([subject(all.subjects), physics(all.fields.physics), thermal(all.topics.thermal)]);
         });
 
         it('does not modify selections when topics are selected', () => {
             const choices = updateTopicChoices(
-                [subject(TAG_ID.physics), physics(TAG_ID.thermal), thermal(TAG_ID.heatCapacity)], pageContext
+                [subject([TAG_ID.physics]), physics([TAG_ID.thermal]), thermal([TAG_ID.heatCapacity])], pageContext
             ); 
-            expect(choices).toEqual([
-                subject(TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology),
-                physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                    TAG_ID.thermal),
-                thermal(TAG_ID.heatCapacity, TAG_ID.gases, TAG_ID.thermalRadiation)
-            ]);
+            expect(choices).toEqual([subject(all.subjects), physics(all.fields.physics), thermal(all.topics.thermal)]);
         });
 
         it('handles multiple topic, field selections', () => {
             const choices = updateTopicChoices([
-                subject(TAG_ID.physics, TAG_ID.maths),
-                {...physics(TAG_ID.thermal), ...maths(TAG_ID.calculus)},
-                {...thermal(TAG_ID.heatCapacity), ...calculus(TAG_ID.differentiation)}
+                subject([TAG_ID.physics, TAG_ID.maths]),
+                {...physics([TAG_ID.thermal]), ...maths([TAG_ID.calculus])},
+                {...thermal([TAG_ID.heatCapacity]), ...calculus([TAG_ID.differentiation])}
             ], pageContext);
             expect(choices).toEqual([
-                subject(TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology),
-                {
-                    ...physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles,
-                        TAG_ID.fields, TAG_ID.thermal),
-                    ...maths(TAG_ID.number, TAG_ID.algebra, TAG_ID.geometry, TAG_ID.functions, TAG_ID.calculus,
-                        TAG_ID.statistics)
-                },
-                {
-                    ...thermal(TAG_ID.heatCapacity, TAG_ID.gases, TAG_ID.thermalRadiation),
-                    ...calculus(TAG_ID.differentiation, TAG_ID.integration, TAG_ID.differentialEq)
-                }
+                subject(all.subjects),
+                { ...physics(all.fields.physics), ...maths(all.fields.maths) },
+                { ...thermal(all.topics.thermal), ...calculus(all.topics.calculus) }
             ]);
         });
     });
@@ -75,50 +53,37 @@ describe('updateTopicChoices', () => {
         const pageContext: PageContextState = {subject: TAG_ID.physics, stage: [STAGE.GCSE]};
         
         it('returns just the fields when no selections are made', () => {
-            const choices = updateTopicChoices([subject(TAG_ID.physics), physics()], pageContext);
-            expect(choices).toEqual([
-                subject(TAG_ID.physics),
-                physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                    TAG_ID.thermal),
-                {}
-            ]);
+            const choices = updateTopicChoices([subject([TAG_ID.physics]), physics([])], pageContext);
+            expect(choices).toEqual([subject([TAG_ID.physics]), physics(all.fields.physics), {}]);
         });
 
         it('shows the topics when field is selected', () => {
-            const choices = updateTopicChoices([subject(TAG_ID.physics), physics(TAG_ID.thermal)], pageContext);
+            const choices = updateTopicChoices([subject([TAG_ID.physics]), physics([TAG_ID.thermal])], pageContext);
             expect(choices).toEqual([
-                subject(TAG_ID.physics),
-                physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                    TAG_ID.thermal),
-                thermal(TAG_ID.heatCapacity, TAG_ID.gases, TAG_ID.thermalRadiation)
-            ]);
+                subject([TAG_ID.physics]),
+                physics(all.fields.physics),
+                thermal(all.topics.thermal)]);
         });
 
         it('does not modify selections when topics are selected', () => {
             const choices = updateTopicChoices([
-                subject(TAG_ID.physics), physics(TAG_ID.thermal), thermal(TAG_ID.heatCapacity)
+                subject([TAG_ID.physics]), physics([TAG_ID.thermal]), thermal([TAG_ID.heatCapacity])
             ], pageContext);
             expect(choices).toEqual([
-                subject(TAG_ID.physics),
-                physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                    TAG_ID.thermal),
-                thermal(TAG_ID.heatCapacity, TAG_ID.gases, TAG_ID.thermalRadiation)
-            ]);
+                subject([TAG_ID.physics]),
+                physics(all.fields.physics),
+                thermal(all.topics.thermal)]);
         });
 
         it('handles multiple topic, field selections', () => {
             const choices = updateTopicChoices([
-                subject(TAG_ID.physics), physics(TAG_ID.fields, TAG_ID.thermal), thermal(TAG_ID.heatCapacity)
+                subject([TAG_ID.physics]), physics([TAG_ID.fields, TAG_ID.thermal]), thermal([TAG_ID.heatCapacity])
             ], pageContext);
 
             expect(choices).toEqual([
-                subject(TAG_ID.physics),
-                physics(TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields,
-                    TAG_ID.thermal),
-                {
-                    ...fields(TAG_ID.gravitational, TAG_ID.electric, TAG_ID.magnetic, TAG_ID.combined),
-                    ...thermal(TAG_ID.heatCapacity, TAG_ID.gases, TAG_ID.thermalRadiation)
-                }
+                subject([TAG_ID.physics]),
+                physics(all.fields.physics),
+                { ...fields(all.topics.fields), ...thermal(all.topics.thermal) }
             ]);
         });
 
@@ -126,23 +91,21 @@ describe('updateTopicChoices', () => {
             const pageContext: PageContextState = {subject: TAG_ID.maths, stage: [STAGE.A_LEVEL]};
 
             it('also shows the mechanics field, which is normally shown on physics', () => {
-                const choices = updateTopicChoices([subject(TAG_ID.maths), maths()], pageContext);
+                const choices = updateTopicChoices([subject([TAG_ID.maths]), maths([])], pageContext);
                 expect(choices).toEqual([
-                    subject(TAG_ID.maths),
-                    maths(TAG_ID.number, TAG_ID.algebra, TAG_ID.geometry, TAG_ID.functions, TAG_ID.calculus,
-                        TAG_ID.statistics, TAG_ID.mechanics),
-                    {}
-                ]);
+                    subject([TAG_ID.maths]),
+                    maths([...all.fields.maths, TAG_ID.mechanics]),
+                    {}]);
             });
 
             it('shows mechanics topics when mechanics field is selected', () => {
-                const choices = updateTopicChoices([subject(TAG_ID.maths), maths(TAG_ID.mechanics), mechanics()], pageContext);
+                const choices = updateTopicChoices(
+                    [subject([TAG_ID.maths]), maths([TAG_ID.mechanics]), mechanics([])], pageContext
+                );
                 expect(choices).toEqual([
-                    subject(TAG_ID.maths),
-                    maths(TAG_ID.number, TAG_ID.algebra, TAG_ID.geometry, TAG_ID.functions, TAG_ID.calculus,
-                        TAG_ID.statistics, TAG_ID.mechanics),
-                    mechanics(TAG_ID.statics, TAG_ID.kinematics, TAG_ID.dynamics, TAG_ID.circularMotion,
-                        TAG_ID.oscillations, TAG_ID.materials)
+                    subject([TAG_ID.maths]),
+                    maths([...all.fields.maths, TAG_ID.mechanics]),
+                    mechanics(all.topics.mechanics)
                 ]);
             });
         });
@@ -154,30 +117,53 @@ describe('updateTopicChoices', () => {
         it('filters the subjects', () => {
             const allowedTags = [TAG_ID.physics, TAG_ID.chemistry, TAG_ID.bonding];
             const choices = updateTopicChoices([{}, {}, {}], pageContext, allowedTags); 
-            expect(choices).toEqual([subject(TAG_ID.physics, TAG_ID.chemistry)]);
+            expect(choices).toEqual([subject([TAG_ID.physics, TAG_ID.chemistry])]);
         });
 
         it('filters the fields', () => {
             const allowedTags = [TAG_ID.physics, TAG_ID.chemistry, TAG_ID.thermal];
-            const choices = updateTopicChoices([subject(TAG_ID.physics), {}, {}], pageContext, allowedTags); 
-            expect(choices).toEqual([subject(TAG_ID.physics, TAG_ID.chemistry), physics(TAG_ID.thermal)]);
+            const choices = updateTopicChoices([subject([TAG_ID.physics]), {}, {}], pageContext, allowedTags); 
+            expect(choices).toEqual([subject([TAG_ID.physics, TAG_ID.chemistry]), physics([TAG_ID.thermal])]);
         });
 
         it('filters the topics', () => {
             const allowedTags = [TAG_ID.physics, TAG_ID.chemistry, TAG_ID.thermal, TAG_ID.thermalRadiation];
             const choices = updateTopicChoices([
-                subject(TAG_ID.physics), physics(TAG_ID.thermal), {}
+                subject([TAG_ID.physics]), physics([TAG_ID.thermal]), {}
             ], pageContext, allowedTags); 
             expect(choices).toEqual([
-                subject(TAG_ID.physics, TAG_ID.chemistry), physics(TAG_ID.thermal), thermal(TAG_ID.thermalRadiation)
+                subject([TAG_ID.physics, TAG_ID.chemistry]),
+                physics([TAG_ID.thermal]),
+                thermal([TAG_ID.thermalRadiation])
             ]);
         });
     });
 });
 
 const choice = (tagId: TAG_ID) => ({label: tags.getById(tagId).title, value: tagId}); 
-const makeChoiceTree = (key: string) => (...choices: TAG_ID[]): ChoiceTree => ({[key]: choices.map(choice)});
-const [subject, physics, thermal, fields, mechanics, maths, calculus] = [
-    "subject", "physics", "thermal", "fields", "mechanics", "maths", "calculus"
-].map(makeChoiceTree);
 
+const makeChoiceTree = (key: string) => (choices: TAG_ID[]): ChoiceTree => ({ [key]: choices.map(choice) });
+const [subject, physics, thermal, fields, mechanics, maths, calculus] = ([
+    "subject", "physics", "thermal", "fields", "mechanics", "maths", "calculus"
+] as const).map(makeChoiceTree);
+
+const all = {
+    subjects: [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology],
+    fields: {
+        physics: [
+            TAG_ID.skills, TAG_ID.mechanics, TAG_ID.electricity, TAG_ID.wavesParticles, TAG_ID.fields, TAG_ID.thermal
+        ],
+        maths:  [
+            TAG_ID.number, TAG_ID.algebra, TAG_ID.geometry, TAG_ID.functions, TAG_ID.calculus, TAG_ID.statistics
+        ]
+    },
+    topics: {
+        thermal: [TAG_ID.heatCapacity, TAG_ID.gases, TAG_ID.thermalRadiation],
+        calculus: [TAG_ID.differentiation, TAG_ID.integration, TAG_ID.differentialEq],
+        fields: [TAG_ID.gravitational, TAG_ID.electric, TAG_ID.magnetic, TAG_ID.combined],
+        mechanics: [
+            TAG_ID.statics, TAG_ID.kinematics, TAG_ID.dynamics, TAG_ID.circularMotion, TAG_ID.oscillations,
+            TAG_ID.materials
+        ]
+    }
+};
