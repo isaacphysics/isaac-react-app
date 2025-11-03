@@ -105,3 +105,30 @@ export const determineNextTopicContentLink = (
     }
   }
 };
+
+export const determinePreviousTopicContentLink = (
+  currentTopic: CurrentTopicState | undefined,
+  contentId: string,
+  userContext: UseUserContextReturnType,
+  user: Immutable<PotentialUser> | null,
+) => {
+  if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
+    if (isValidIdForTopic(contentId, currentTopic)) {
+      const [relatedConcepts, relatedQuestions] = filterAndSeparateRelatedContent(
+        currentTopic.relatedContent,
+        userContext,
+        user,
+      );
+      const orderedRelatedContent = relatedConcepts.concat(relatedQuestions);
+      const relatedContentIds = orderedRelatedContent.map((content) => content.id);
+      const previousIndex = relatedContentIds.indexOf(contentId) - 1;
+      if (previousIndex >= 0) {
+        const previousContent = orderedRelatedContent[previousIndex];
+        return {
+          title: previousContent.title as string,
+          to: `/${documentTypePathPrefix[previousContent.type as DOCUMENT_TYPE]}/${previousContent.id}`,
+        };
+      }
+    }
+  }
+};

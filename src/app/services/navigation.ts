@@ -5,6 +5,7 @@ import {
   determineGameboardHistory,
   determineNextGameboardItem,
   determineNextTopicContentLink,
+  determinePreviousTopicContentLink,
   determinePreviousGameboardItem,
   determineTopicHistory,
   makeAttemptAtTopicHistory,
@@ -81,6 +82,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
       breadcrumbHistory: topicHistory,
       backToCollection: topicHistory.slice(-1)[0],
       nextItem: determineNextTopicContentLink(currentTopic, currentDocId, userContext, user),
+      previousItem: determinePreviousTopicContentLink(currentTopic, currentDocId, userContext, user),
       search,
       currentGameboard,
     };
