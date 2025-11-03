@@ -13,6 +13,7 @@
     border-color: $cs-list-outline-gray;
     border-left: 0;
     border-right: 0;
+    padding: 0;
   }
   .list-caret {
     position: relative;
@@ -28,10 +29,10 @@
       border-width: 0;
     }
 
-    a {
+    > div {
       font-size: 1.25rem;
 
-      > span:first-of-type {
+      .question-progress-icon {
         display: inline-block;
         border-right: 1px solid $gray-107;
         margin-right: 1rem;

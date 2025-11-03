@@ -2,7 +2,7 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, PATHS, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -34,7 +34,7 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
 
     return <AbstractListViewItem
         {...rest}
-        icon={{type: "hex", icon: "icon-question", size: "lg"}}
+        icon={siteSpecific({type: "hex", icon: "icon-question", size: "lg"}, {type: "img", icon: "/assets/cs/icons/status-not-started.svg", width: "24px", height: "24px"})}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
         tags={item.tags}

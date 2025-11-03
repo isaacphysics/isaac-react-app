@@ -5,7 +5,7 @@ import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Badge, Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
-import { below, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
+import { below, isAda, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
@@ -176,9 +176,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     fullWidth = fullWidth || below["sm"](deviceSize) || (isItem && !(typedProps.status || typedProps.audienceViews));
     const cardBody = <div className="w-100 d-flex flex-row">
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
-            <div className="position-relative">
+            <div className={classNames("position-relative", {"question-progress-icon": isAda})}>
                 {icon && (
-                    icon.type === "img" ? <img src={icon.icon} alt="" width={icon.width} height={icon.height} className={classNames(icon.className, "me-3")} /> 
+                    icon.type === "img" ? <img src={icon.icon} alt="" width={icon.width} height={icon.height} className={classNames(icon.className, {"me-3": isPhy})} /> 
                         : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size} className={icon.className} />
                             : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}} /> 
                                 : undefined
