@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Button } from "reactstrap";
-import { closeActiveModal, openActiveModal, useAppDispatch } from "../../../state";
+import { closeActiveModal, openActiveModal, store, useAppDispatch } from "../../../state";
 import { KEY, persistence } from "../../../services";
 import { ActiveModalProps } from "../../../../IsaacAppTypes";
 import { MODAL_TYPES } from "./ActiveModals";
@@ -41,7 +41,7 @@ const Page = ({ page }: { page: typeof pages[number]}) => {
 export const adaTeacherOnboardingModal: ActiveModalProps = {
     title: "Teacher Onboarding modal",
     body: pages.map((page, idx) => <Page key={idx} page={page}/>),
-    buttons: <Button color="solid" onClick={close}>Go to My Ada</Button>,
+    buttons: <Button color="solid" onClick={() => store.dispatch(closeActiveModal())}>Go to My Ada</Button>,
     onInitialise: () => {
         setTimeout(unscheduleTeacherOnboardingModal, 300);
     }
