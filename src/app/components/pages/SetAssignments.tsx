@@ -91,7 +91,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
 
     const filteredBoards = useMemo(() => {
         return boards?.boards
-            .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+            .filter(board => (matchesAllWordsInAnyOrder(board.title, boardTitleFilter) || board.id === boardTitleFilter))
             .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
             .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())));
     }, [boards, boardTitleFilter, boardCreator, boardSubject, user]);
@@ -368,7 +368,7 @@ export const SetAssignments = () => {
     };
 
     const filteredBoards = useMemo(() =>
-        boards?.boards.filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+        boards?.boards.filter(board => (matchesAllWordsInAnyOrder(board.title, boardTitleFilter) || board.id === boardTitleFilter))
             .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
             .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))),
     [boards, user, boardTitleFilter, boardCreator, boardSubject]);

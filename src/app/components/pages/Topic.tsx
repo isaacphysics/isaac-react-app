@@ -1,6 +1,6 @@
 import React from "react";
 import {Link, withRouter} from "react-router-dom";
-import {selectors, useAppSelector} from "../../state";
+import {selectors, useAppSelector, useGetTopicWithStateUpdateQuery} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {
@@ -18,12 +18,11 @@ import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import { IntendedAudienceWarningBanner } from "../navigation/IntendedAudienceWarningBanner";
-import {useGetTopicQuery} from "../../state";
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
     const user = useAppSelector(selectors.user.orNull);
     
-    const { data: topicPage } = useGetTopicQuery(topicName);
+    const { data: topicPage } = useGetTopicWithStateUpdateQuery(topicName);
 
     const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage ?? null);
 

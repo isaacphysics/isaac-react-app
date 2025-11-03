@@ -13,6 +13,15 @@ export const topicsApi = isaacApi.injectEndpoints({
             }),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Unable to load topic",
+            })
+        }),
+
+        getTopicWithStateUpdate: build.query<IsaacTopicSummaryPageDTO, TAG_ID | string | null>({
+            query: (id) => ({
+                url: `/pages/topics/${id}`
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Unable to load topic",
                 onQueryStart: (_args, {dispatch}) => {
                     dispatch(docSlice.actions.resetPage());
                     dispatch(topicSlice.actions.clearCurrentTopic());
@@ -27,5 +36,6 @@ export const topicsApi = isaacApi.injectEndpoints({
 });
 
 export const {
-    useGetTopicQuery
+    useGetTopicQuery,
+    useGetTopicWithStateUpdateQuery
 } = topicsApi;
