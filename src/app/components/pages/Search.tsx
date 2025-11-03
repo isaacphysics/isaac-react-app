@@ -34,7 +34,6 @@ import classNames from "classnames";
 import {SearchPageSearch} from "../elements/SearchInputs";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { ListView } from "../elements/list-groups/ListView";
-import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 
 interface Item<T> {
     value: T;
@@ -151,13 +150,8 @@ export const Search = withRouter((props: RouteComponentProps) => {
                 </CardHeader>
                 {urlQuery != "" && <CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
                     <ShowLoading until={shortcutAndFilteredSearchResults}>
-                        {gotResults ?
-                            isPhy ? 
-                                <ListView type="item" items={shortcutAndFilteredSearchResults}/> :
-                                <LinkToContentSummaryList 
-                                    items={shortcutAndFilteredSearchResults} showBreadcrumb={true}
-                                    contentTypeVisibility={ContentTypeVisibility.SHOWN}   
-                                />
+                        {gotResults
+                            ? <ListView type="item" items={shortcutAndFilteredSearchResults} hasCaret={isAda}/>
                             : <em>No results found</em>}
                     </ShowLoading>
                 </CardBody>}

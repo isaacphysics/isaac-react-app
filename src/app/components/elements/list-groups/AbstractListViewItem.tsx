@@ -161,9 +161,10 @@ export type AbstractListViewItemProps = {
     url?: string;
     state?: AbstractListViewItemState;
     className?: string;
+    hasCaret?: boolean;
 } & ALVIType & ALVILayout;
 
-export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, fullWidth, url, state, className, ...typedProps}: AbstractListViewItemProps) => { 
+export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, fullWidth, url, state, className, hasCaret, ...typedProps}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
 
@@ -177,12 +178,13 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const cardBody = <div className="w-100 d-flex flex-row">
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
             <div className={classNames("position-relative", {"question-progress-icon": isAda})}>
-                {icon && (
-                    icon.type === "img" ? <img src={icon.icon} alt={icon.alt} width={icon.width} height={icon.height} className={classNames(icon.className, {"me-3": isPhy})} /> 
+                {icon && <div className="inner-progress-icon">
+                    {icon.type === "img" ? <img src={icon.icon} alt={icon.alt ?? ""} width={icon.width} height={icon.height} className={classNames(icon.className, {"me-3": isPhy})} /> 
                         : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size} className={icon.className} />
                             : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}} /> 
-                                : undefined
-                )}
+                                : undefined}
+                    {hasCaret && icon.label && <div className="icon-title mt-1">{icon.label}</div>}
+                </div>}
                 {isPhy && isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
                     <StatusDisplay status={typedProps.status} showText={false} />
                 </div>}
@@ -248,6 +250,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 </Col>}
             </>
         }
+        {hasCaret && <div className="list-caret align-content-center" aria-hidden="true">
+            <i className="icon icon-chevron-right" aria-hidden="true"/>
+        </div>}
     </div>;
 
     return <ListGroupItem

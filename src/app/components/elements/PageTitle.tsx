@@ -68,6 +68,7 @@ export interface TitleIconProps extends PhyHexIconProps {
     height?: string;
     width?: string;
     alt?: string;
+    label?: string;
 }
 
 export interface PageTitleProps {
@@ -98,7 +99,7 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-2 mb-0": isPhy}, className)}>
         <div className="d-flex w-100" data-testid={"main-heading"}>
             {isPhy && icon && (
-                icon.type === "img" ? <img src={icon.icon} alt="" height={icon.height} width={icon.width} className="me-3"/> 
+                icon.type === "img" ? <img src={icon.icon} alt={icon.alt ?? ""} height={icon.height} width={icon.width} className="me-3"/> 
                     : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/> 
                         : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/>
                             : undefined

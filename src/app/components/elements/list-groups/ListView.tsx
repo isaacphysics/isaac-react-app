@@ -41,7 +41,7 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
                 ? {type: "img", icon: "/assets/cs/icons/status-correct.svg", width: "24px", height: "24px", alt: "Complete question icon"}
                 : item.state === CompletionState.ALL_INCORRECT
                     ? {type: "img", icon: "/assets/cs/icons/status-incorrect.svg", width: "24px", height: "24px", alt: "Incorrect question icon"}
-                    : {type: "img", icon: "/assets/cs/icons/status-not-started.svg", width: "24px", height: "24px", alt: "Not attempted question icon"}
+                    : {type: "img", icon: "/assets/cs/icons/status-not-started.svg", width: "24px", height: "24px", alt: "Not attempted question icon", label: "Question"}
     );
 
     return <AbstractListViewItem
@@ -298,6 +298,7 @@ type ListViewItemProps =
 type ListViewProps<T, G extends "item" | "gameboard" | "quiz"> = {
     className?: string;
     fullWidth?: boolean;
+    hasCaret?: boolean;
 } & (
     {
         items: Required<T> extends Required<Extract<ListViewItemProps, {alviType: G}>['item']> ? T[] : never;

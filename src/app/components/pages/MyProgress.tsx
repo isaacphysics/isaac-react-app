@@ -30,7 +30,6 @@ import { Tabs } from "../elements/Tabs";
 import { FlushableRef, QuestionProgressCharts } from "../elements/views/QuestionProgressCharts";
 import { ActivityGraph } from "../elements/views/ActivityGraph";
 import { ProgressBar } from "../elements/views/ProgressBar";
-import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { ListView } from '../elements/list-groups/ListView';
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
