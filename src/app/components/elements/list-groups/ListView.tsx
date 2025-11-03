@@ -340,7 +340,7 @@ export const ListView = <T extends {type?: string}, G extends "item" | "gameboar
         return null;
     };
 
-    return <ListGroup className={`link-list list-group-links ${className}`}>
+    return <ListGroup className={classNames("link-list list-group-links", className)}>
         {(() => {
             switch (type) {
                 case "item":

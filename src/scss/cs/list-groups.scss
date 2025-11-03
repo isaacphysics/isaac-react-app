@@ -4,6 +4,10 @@
   border: 0;
   border-radius: 0;
 
+  &.bordered {
+    border: 1px solid $cs-list-outline-gray;
+  }
+
   .list-caret {
     position: relative;
     text-align: center;

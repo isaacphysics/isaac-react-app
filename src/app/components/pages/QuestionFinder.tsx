@@ -47,7 +47,6 @@ import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../ele
 import {TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ListView } from "../elements/list-groups/ListView";
-import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { processTagHierarchy, pruneTreeNode } from "../../services/questionHierarchy";
