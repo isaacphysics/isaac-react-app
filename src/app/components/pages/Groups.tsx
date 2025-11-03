@@ -522,7 +522,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                 <StyledTabPicker
                                     id={g.groupName} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}
                                     onInputChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)} data-testid={"select-group"}
-                                    suffix={showArchived ? {icon: "icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(g);}, info: "Delete group"} : undefined}
+                                    suffix={showArchived ? {icon: "icon icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(g);}, info: "Delete group"} : undefined}
                                 />
                             </li>
                             : <div key={g.id} className="group-item p-md-2" data-testid={"group-item"}>
