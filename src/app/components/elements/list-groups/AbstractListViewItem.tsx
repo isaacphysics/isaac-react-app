@@ -188,7 +188,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 </div>}
                 {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
             </div>
-            <div className={siteSpecific("align-content-center text-overflow-ellipsis pe-2", "py-3")}>
+            <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2", "py-3"))}>
                 <div className="d-flex text-wrap mt-n1">
                     {url && !isDisabled
                         ? (url.startsWith("http")
@@ -217,7 +217,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 {isItem && fullWidth && typedProps.audienceViews && <div className="d-flex mt-1"> 
                     <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
                 </div>}
-                {tags?.includes("llm_question_page") && <div className="mt-2">
+                {tags?.includes("llm_question_page") && <div className={classNames("mt-1", {"mt-2": isPhy || !fullWidth})}>
                     <LLMFreeTextQuestionIndicator small />
                 </div>}
                 {isPhy && isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
@@ -238,7 +238,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             <>
                 {isPhy && isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
                 {isItem && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": typedProps.audienceViews.length > 0})}>
-                    <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "pe-3")}/> 
+                    <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
                 </div>}
                 {isGameboard && isTeacherOrAbove(user) && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                     <GameboardAssign board={typedProps.board} />
