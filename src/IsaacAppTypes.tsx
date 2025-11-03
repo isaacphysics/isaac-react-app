@@ -11,12 +11,13 @@ import {
     GameboardDTO,
     GameboardItem,
     ItemDTO,
-    QuestionDTO, QuestionValidationResponseDTO,
+    QuestionDTO,
+    QuestionValidationResponseDTO,
     QuizAttemptDTO,
     QuizFeedbackMode,
     ResultsWrapper,
     TestCaseDTO,
-    UserContext,
+    UserContext
 } from "./IsaacApiTypes";
 import {
     ACTION_TYPE,
@@ -34,7 +35,7 @@ import {
     TAG_LEVEL
 } from "./app/services";
 import {Immutable} from "immer";
-import { UniqueIdentifier } from "@dnd-kit/core";
+import {UniqueIdentifier} from "@dnd-kit/core";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -44,9 +45,6 @@ export type Action =
     | {type: ACTION_TYPE.CURRENT_USER_REQUEST}
     | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: Immutable<LoggedInUser>}
     | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
@@ -459,7 +457,7 @@ export const ClozeDropRegionContext = React.createContext<{
     shouldGetFocus: (id: string) => boolean,
     nonSelectedItems: Immutable<ClozeItemDTO>[]
     allItems: Immutable<ClozeItemDTO>[]
-        } | undefined>(undefined);
+} | undefined>(undefined);
 
 export const InlineContext = React.createContext<{
     docId?: string,
@@ -494,7 +492,7 @@ export const AssignmentScheduleContext = React.createContext<{
     collapsed: boolean;
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
-        }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+}>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 export const ContentSidebarContext = React.createContext<{ toggle: () => void; close: () => void; } | undefined>(undefined);
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {

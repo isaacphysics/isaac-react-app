@@ -8,15 +8,14 @@ import {
     AppDispatch,
     AppState,
     closeActiveModal,
-    errorSlice,
-    ErrorState,
     getChosenUserAuthSettings,
+    getRTKQueryErrorMessage,
     openActiveModal,
     resetPassword,
     showErrorToast,
-    updateCurrentUser,
     useAdminGetUserQuery,
-    useAppDispatch
+    useAppDispatch,
+    useUpdateCurrentMutation
 } from "../../state";
 import {
     AccessibilitySettings,
@@ -61,7 +60,8 @@ import {UserContent} from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {MainContent, MyAccountSidebar, SidebarLayout} from '../elements/layout/SidebarLayout';
 import {Loading} from '../handlers/IsaacSpinner';
-import { UserAccessibilitySettings } from '../elements/panels/UserAccessibilitySettings';
+import {UserAccessibilitySettings} from '../elements/panels/UserAccessibilitySettings';
+import {showEmailChangeModal} from "../elements/modals/EmailChangeModal";
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
@@ -72,7 +72,6 @@ const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
     const searchParams = queryString.parse(search);
     return {
-        error: state?.error ?? null,
         userAuthSettings: state?.userAuthSettings ?? null,
         userPreferences: state?.userPreferences ?? null,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -90,7 +89,6 @@ const dispatchToProps = {
 
 interface AccountPageProps {
     user: PotentialUser;
-    error: ErrorState;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     getChosenUserAuthSettings: (userid: number) => void;
     userPreferences: UserPreferencesDTO | null;
@@ -141,8 +139,10 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
     }));
 };
 
-const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthSettings, userPreferences, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
+const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings, userPreferences, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
     const dispatch = useAppDispatch();
+
+    const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
 
     const {data: adminUserToEdit} = useAdminGetUserQuery(userOfInterest ? Number(userOfInterest) : skipToken);
     // Memoising this derived field is necessary so that it can be used as a dependency to a useEffect later.
@@ -279,7 +279,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     }, [userToUpdate, user]);
 
     // Form's submission method
-    function updateAccount(event: React.FormEvent<HTMLFormElement>) {
+    async function updateAccount(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setAttemptedAccountUpdate(true);
         setSaving(true);
@@ -301,15 +301,24 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
             (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
             (!userToUpdate.password || isNewPasswordValid))
         {
-            dispatch(errorSlice.actions.clearError());
-            dispatch(updateCurrentUser(
-                userToUpdate,
-                editingOtherUser ? {} : newPreferences,
-                contextsChanged ? userContextsToUpdate : undefined,
-                currentPassword,
-                user,
-                true
-            )).then(() => setSaving(false)).catch(() => setSaving(false));
+
+            if (!editingOtherUser && user.loggedIn && user.email !== userToUpdate.email) {
+                const confirmed = await showEmailChangeModal(dispatch);
+                if (!confirmed) {
+                    setSaving(false);
+                    return;
+                }
+            }
+
+            await updateCurrentUser({
+                currentUser: user,
+                updatedUser: userToUpdate,
+                userPreferences: editingOtherUser ? {} : newPreferences,
+                registeredUserContexts: contextsChanged ? userContextsToUpdate : undefined,
+                passwordCurrent: currentPassword,
+                redirect: true
+            });
+
             return;
         } else if (activeTab !== ACCOUNT_TAB.account) {
             dispatch(showErrorToast("Account update failed", "Please make sure that all required fields in the \"Profile\" tab have been filled in."));
@@ -354,10 +363,10 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                 )}
                             </Nav>}
                             <Form id="my-account" name="my-account" onSubmit={updateAccount}>
-                                {error?.type == "generalError" &&
+                                {updateCurrentUserError &&
                                         <ExigentAlert color="warning">
                                             <p className="alert-heading fw-bold">Unable to update your account</p>
-                                            <p>{error.generalError}</p>
+                                            <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
                                         </ExigentAlert>
                                 }
                                 <TabContent activeTab={activeTab}>
