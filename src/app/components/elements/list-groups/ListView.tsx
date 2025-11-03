@@ -33,16 +33,15 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "");
 
-    const icon: TitleIconProps = siteSpecific(
-        {type: "hex", icon: "icon-question", size: "lg"}, 
-        item.state === CompletionState.IN_PROGRESS
+    const icon: TitleIconProps = isPhy
+        ? {type: "hex", icon: "icon-question", size: "lg"}
+        : item.state === CompletionState.IN_PROGRESS
             ? {type: "img", icon: "/assets/cs/icons/status-not-started.svg", width: "24px", height: "24px", alt: "In progress question icon"}
             : item.state === CompletionState.ALL_CORRECT
                 ? {type: "img", icon: "/assets/cs/icons/status-correct.svg", width: "24px", height: "24px", alt: "Complete question icon"}
                 : item.state === CompletionState.ALL_INCORRECT
                     ? {type: "img", icon: "/assets/cs/icons/status-incorrect.svg", width: "24px", height: "24px", alt: "Incorrect question icon"}
-                    : {type: "img", icon: "/assets/cs/icons/status-not-started.svg", width: "24px", height: "24px", alt: "Not attempted question icon", label: "Question"}
-    );
+                    : {type: "img", icon: "/assets/cs/icons/status-not-started.svg", width: "24px", height: "24px", alt: "Not attempted question icon", label: "Question"};
 
     return <AbstractListViewItem
         {...rest}
@@ -68,11 +67,35 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
 
+    const icon: TitleIconProps = isPhy
+        ? {type: "hex", icon: "icon-concept", size: "lg"}
+        : {type: "img", icon: "/assets/cs/icons/concept.svg", width: "24px", height: "24px", alt: "Concept page icon", label: "Concept"};
+
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-concept", size: "lg"}}
+        icon={icon}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
         subtitle={item.summary ?? item.subtitle}
+        url={url}
+        {...rest}
+    />;
+};
+
+interface TopicListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
+    item: ContentSummaryDTO;
+}
+
+export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
+    const pageSubject = useAppSelector(selectors.pageContext.subject);
+    const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id}`;
+    const icon: TitleIconProps = {type: "img", icon: "/assets/cs/icons/topic.svg", width: "24px", height: "24px", alt: "Topic summary page icon", label: "Topic"};
+
+    return <AbstractListViewItem
+        icon={icon}
+        title={item.title ?? ""}
+        subject={itemSubject !== "neutral" ? itemSubject : undefined}
+        subtitle={item.subtitle}
         url={url}
         {...rest}
     />;
@@ -193,8 +216,12 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
 
+    const icon: TitleIconProps = isPhy
+        ? {type: "hex", icon: "icon-info", size: "lg"}
+        : {type: "img", icon: "/assets/cs/icons/info-filled.svg", width: "24px", height: "24px", alt: "Generic page icon", label: "Info"};
+
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-info", size: "lg"}}
+        icon={icon}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.summary ?? item.subtitle}  // summary more useful than subtitle, if present.
@@ -356,6 +383,8 @@ export const ListView = <T extends {type?: string}, G extends "item" | "gameboar
                                 return <QuestionListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             case (DOCUMENT_TYPE.CONCEPT):
                                 return <ConceptListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                            case (DOCUMENT_TYPE.TOPIC_SUMMARY):
+                                return <TopicListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             case (DOCUMENT_TYPE.EVENT):
                                 return <EventListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             case DOCUMENT_TYPE.BOOK_INDEX_PAGE:
