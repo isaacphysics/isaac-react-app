@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Form, Row, Col, Container, FormGroup, Label, Input } from "reactstrap";
 import { isaacApi, useAppSelector } from "../../../../state";
 import { selectors } from "../../../../state/selectors";
@@ -26,6 +26,7 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
   const targetUser = useAppSelector(selectors.user.orNull);
   const reserveUsersOnCompetition = useReserveUsersOnCompetition();
   const [memberSelectionError, setMemberSelectionError] = useState<string>("");
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [userToUpdate, setUserToUpdate] = useState(targetUser ? { ...targetUser, password: null } : { password: null });
 
   const handleUserUpdate = (user: any) => {
@@ -67,14 +68,28 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
     setSelectedMembers([]);
   }, [selectedGroupId]);
 
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleMemberSelection = (selectedOptions: any) => {
     const selectedValues = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
 
     if (selectedValues.length > 4) {
       setMemberSelectionError("Limit of 4 students reached. To select a new student, remove one first.");
 
-      setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         setMemberSelectionError("");
+        timeoutRef.current = null;
       }, 10000);
 
       return;
