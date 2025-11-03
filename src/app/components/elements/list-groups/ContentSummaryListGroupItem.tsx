@@ -7,7 +7,6 @@ import {
     documentTypePathPrefix,
     filterAudienceViewsByProperties,
     generateQuestionTitle,
-    isAda,
     isIntendedAudience,
     SEARCH_RESULT_TYPE,
     TAG_ID,
@@ -59,7 +58,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
         titleClasses += itemSubject.id;
     }
     const hierarchyTags = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[])
-        .filter((_t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
+        .filter((_t, i) => i !== 0); // CS always has Computer Science at the top level
 
     let questionIconLabel, questionIcon;
     switch(item.state) {
@@ -90,16 +89,12 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
         case (SEARCH_RESULT_TYPE.SHORTCUT):
             linkDestination = item.url;
             icon = <img src={"/assets/cs/icons/concept.svg"} alt="Shortcut icon"/>;
-            if (isAda) {
-                typeLabel = "Shortcut";
-            }
+            typeLabel = "Shortcut";
             break;
         case (DOCUMENT_TYPE.QUESTION):
         case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
             title = generateQuestionTitle(item);
-            if (isAda) {
-                typeLabel = "Question";
-            }
+            typeLabel = "Question";
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = questionIcon;
             audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
@@ -108,9 +103,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
             icon = <img src={"/assets/cs/icons/concept.svg"} alt="Concept page icon"/>;
-            if (isAda) {
-                typeLabel = "Concept";
-            }
+            typeLabel = "Concept";
             break;
         case (DOCUMENT_TYPE.EVENT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
@@ -125,9 +118,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
         case (DOCUMENT_TYPE.GENERIC):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
             icon = <img src={"/assets/cs/icons/info-filled.svg"} alt="Generic page icon"/>;
-            if (isAda) {
-                typeLabel = "Info";
-            }
+            typeLabel = "Info";
             break;
         default:
             // Do not render this item if there is no matching DOCUMENT_TYPE
@@ -136,8 +127,8 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
     }
 
     return <ListGroupItem className={classNames(itemClasses)} data-bs-theme={itemSubject?.id} key={linkDestination}>
-        <Link className={classNames({"position-relative justify-content-center": isAda})} to={{pathname: linkDestination, search: search, hash: hash}}>
-            {contentTypeVisibility !== ContentTypeVisibility.FULLY_HIDDEN && <span className={classNames({"question-progress-icon": isAda})}>
+        <Link className={"position-relative justify-content-center"} to={{pathname: linkDestination, search: search, hash: hash}}>
+            {contentTypeVisibility !== ContentTypeVisibility.FULLY_HIDDEN && <span className="question-progress-icon">
                 <div className={"inner-progress-icon"}>
                     {icon}
                     {contentTypeVisibility !== ContentTypeVisibility.ICON_ONLY && <>
@@ -146,10 +137,10 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                     </>}
                 </div>
             </span>}
-            <div className={classNames("flex-fill", {"py-3 pe-3 align-content-center": isAda, "d-flex": isAda && !stack})}>
+            <div className={classNames("flex-fill py-3 pe-3 align-content-center", {"d-flex": !stack})}>
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
-                        <Markup encoding={"latex"} className={classNames( "link-title question-link-title")}>
+                        <Markup encoding={"latex"} className="link-title question-link-title">
                             {title ?? ""}
                         </Markup>
                         <QuestionPropertyTags className="ms-2" supersededBy={item.supersededBy} tags={item.tags} />
@@ -169,7 +160,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                     {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={stack}/>}
                 </div>
             </div>
-            {isAda && !noCaret && <div className="list-caret align-content-center" aria-hidden="true">
+            {!noCaret && <div className="list-caret align-content-center" aria-hidden="true">
                 <i className="icon icon-chevron-right" aria-hidden="true"/>
             </div>}
         </Link>
