@@ -90,20 +90,23 @@ const cleanItem = function (item: Immutable<CoordinateItemDTO>) {
 
 const CoordinateInput = (props: CoordinateInputProps) => {
     const {value, placeholderValues, useBrackets, separator, suffixes, numberOfDimensions, onChange, readonly, remove} = props;
-    return <span className="coordinate-input">{useBrackets ? "(" : ""}{[...Array(numberOfDimensions)].map((_, i) =>
-        <span key={i}>
-            <Input
-                type="text"
-                className="force-print"
-                placeholder={placeholderValues[i] ?? ""}
-                value={coordItemToValue(value, i)}
-                onChange={event => onChange(updateCoordItem(value, event.target.value, i, numberOfDimensions))}
-                readOnly={readonly}
-            />
-            {suffixes && suffixes[i] && <Markup encoding="latex">{suffixes[i]}</Markup>}
-            {(i < numberOfDimensions - 1) && <Markup encoding="latex" className="coordinate-input-separator">{separator}</Markup>}
-        </span>)}{useBrackets ? ")" : ""}
-    {remove && <Button className="ms-3" size="sm" onClick={remove}>Delete</Button>}
+    return <span className="coordinate-input">
+        {useBrackets ? "(" : ""}
+        {[...Array(numberOfDimensions)].map((_, i) =>
+            <span key={i}>
+                <Input
+                    type="text"
+                    className="force-print"
+                    placeholder={placeholderValues[i] ?? ""}
+                    value={coordItemToValue(value, i)}
+                    onChange={event => onChange(updateCoordItem(value, event.target.value, i, numberOfDimensions))}
+                    readOnly={readonly}
+                />
+                {suffixes && suffixes[i] && <Markup encoding="latex">{suffixes[i]}</Markup>}
+                {(i < numberOfDimensions - 1) && <Markup encoding="latex" className="coordinate-input-separator">{separator}</Markup>}
+            </span>)}
+        {useBrackets ? ")" : ""}
+        {remove && <Button className="ms-3" size="sm" onClick={remove}>Delete</Button>}
     </span>;
 };
 
@@ -185,8 +188,9 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                 />
         }
         <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => answer.coordinates ?? []) ?? []} validator={coordinateInputValidator}/>
-        {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" 
-            onClick={() => updateItem(currentAttempt?.items?.length ?? 1, getEmptyCoordItem())}><Markup encoding="latex">{buttonText}</Markup></Button>}
+        {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={() => updateItem(currentAttempt?.items?.length ?? 1, getEmptyCoordItem())}>
+            <Markup encoding="latex">{buttonText}</Markup>
+        </Button>}
     </div>;
 };
 export default IsaacCoordinateQuestion;
