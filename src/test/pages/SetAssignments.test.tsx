@@ -441,7 +441,7 @@ describe("SetAssignments", () => {
             });
 
             // close modal, make sure the gameboard number of groups assigned is unchanged
-            const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
+            const closeButtons = within(modal).getAllByRole("button", {name: "Close modal"});
             await userEvent.click(closeButtons[0]);
             await waitFor(() => {
                 expect(modal).not.toBeInTheDocument();
