@@ -5,11 +5,12 @@ import { determineAudienceViews } from "../../../services/userViewingContext";
 import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, isPhy, PATHS, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
-import { ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
+import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
 import { selectors, showQuizSettingModal, useAppDispatch, useAppSelector } from "../../../state";
 import { UnionToIntersection } from "@reduxjs/toolkit/dist/tsHelpers";
 import classNames from "classnames";
+import { TitleIconProps } from "../PageTitle";
 
 type ListViewCardItemProps = Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}>;
 
@@ -31,10 +32,18 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "");
+    
+    const adaIcon: TitleIconProps = item.state === CompletionState.IN_PROGRESS
+        ? {type: "img", icon: "/assets/cs/icons/status-not-started.svg", width: "24px", height: "24px", alt: "In progress question icon"}
+        : item.state === CompletionState.ALL_CORRECT
+            ? {type: "img", icon: "/assets/cs/icons/status-correct.svg", width: "24px", height: "24px", alt: "Complete question icon"}
+            : item.state === CompletionState.ALL_INCORRECT
+                ? {type: "img", icon: "/assets/cs/icons/status-incorrect.svg", width: "24px", height: "24px", alt: "Incorrect question icon"}
+                : {type: "img", icon: "/assets/cs/icons/status-not-started.svg", width: "24px", height: "24px", alt: "Not attempted question icon"};
 
     return <AbstractListViewItem
         {...rest}
-        icon={siteSpecific({type: "hex", icon: "icon-question", size: "lg"}, {type: "img", icon: "/assets/cs/icons/status-not-started.svg", width: "24px", height: "24px"})}
+        icon={siteSpecific({type: "hex", icon: "icon-question", size: "lg"}, adaIcon)}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
         tags={item.tags}

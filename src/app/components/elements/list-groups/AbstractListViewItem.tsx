@@ -178,12 +178,12 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
             <div className={classNames("position-relative", {"question-progress-icon": isAda})}>
                 {icon && (
-                    icon.type === "img" ? <img src={icon.icon} alt="" width={icon.width} height={icon.height} className={classNames(icon.className, {"me-3": isPhy})} /> 
+                    icon.type === "img" ? <img src={icon.icon} alt={icon.alt} width={icon.width} height={icon.height} className={classNames(icon.className, {"me-3": isPhy})} /> 
                         : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size} className={icon.className} />
                             : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}} /> 
                                 : undefined
                 )}
-                {isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
+                {isPhy && isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
                     <StatusDisplay status={typedProps.status} showText={false} />
                 </div>}
                 {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
@@ -220,7 +220,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 {tags?.includes("llm_question_page") && <div className="mt-2">
                     <LLMFreeTextQuestionIndicator small />
                 </div>}
-                {isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
+                {isPhy && isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
                     <StatusDisplay status={typedProps.status} showText className="py-1" />
                 }
                 {isGameboard && fullWidth && isTeacherOrAbove(user) && <div className="d-flex pt-3">
@@ -236,9 +236,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
         </Col>
         {!fullWidth &&
             <>
-                {isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
+                {isPhy && isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
                 {isItem && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": typedProps.audienceViews.length > 0})}>
-                    <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className="w-100"/> 
+                    <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "pe-3")}/> 
                 </div>}
                 {isGameboard && isTeacherOrAbove(user) && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                     <GameboardAssign board={typedProps.board} />

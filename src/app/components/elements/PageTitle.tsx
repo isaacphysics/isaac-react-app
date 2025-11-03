@@ -67,6 +67,7 @@ export interface TitleIconProps extends PhyHexIconProps {
     type: "img" | "hex" | "placeholder";
     height?: string;
     width?: string;
+    alt?: string;
 }
 
 export interface PageTitleProps {
