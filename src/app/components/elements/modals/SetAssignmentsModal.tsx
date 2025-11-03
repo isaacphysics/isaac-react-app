@@ -265,6 +265,6 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
         size: "md",
         title: `Assign "${board?.title}"`,
         body: <SetAssignmentsModalContent {...props} />,
-        buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]
+        buttons: [<Button key={0} aria-label="Close modal" color="keyline" className="w-100" onClick={toggle}>Close</Button>]
     };
 };
