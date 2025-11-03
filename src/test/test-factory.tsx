@@ -7,7 +7,8 @@ import {
 } from "../IsaacApiTypes";
 import {UserPreferencesDTO} from "../IsaacAppTypes";
 
-export type ErrorType = 'mustBeLoggedIn401' | 'testUnavailable404';
+export type ErrorType = 'mustBeLoggedIn401' | 'testUnavailable404' |
+    'csrfError401' | 'accountNotLinked403' | 'deniedAccess401';
 export const errorResponses: Record<ErrorType, object> = {
     mustBeLoggedIn401: {
         responseCode: 401,
@@ -20,6 +21,24 @@ export const errorResponses: Record<ErrorType, object> = {
         responseCodeType: "Not found",
         errorMessage: "This test has become unavailable.",
         bypassGenericSiteErrorPage: false
+    },
+    csrfError401: {
+        responseCode: 401,
+        responseCodeType: "Unauthorized",
+        errorMessage: "CSRF check failed",
+        bypassGenericSiteErrorPage: false
+    },
+    accountNotLinked403: {
+        responseCode: 403,
+        responseCodeType: "Forbidden",
+        errorMessage: "You do not use Microsoft to log in. You may have registered using a different provider, or your email address and password.",
+        bypassGenericSiteErrorPage: false
+    },
+    deniedAccess401: {
+        responseCode: 401,
+        responseCodeType: "Unauthorized",
+        errorMessage: "User denied access to our app",
+        bypassGenericSiteErrorPage: false,
     }
 };
 

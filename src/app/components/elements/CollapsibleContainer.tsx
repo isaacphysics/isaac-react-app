@@ -1,28 +1,64 @@
 import classNames from "classnames";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { CollapsibleContext } from "./CollapsibleList";
 
 export interface CollapsibleContainerProps extends React.HTMLAttributes<HTMLDivElement> {
     expanded: boolean;
 }
 
 export const CollapsibleContainer = (props: CollapsibleContainerProps) => {
-    const {expanded, ...rest} = props;
-    const [expandedHeight, setExpandedHeight] = useState(0);
+    const {expanded, children, ...rest} = props;
+    const [expandedContainerHeight, setExpandedContainerHeight] = useState(0);
+
+    const parentCollapsible = React.useContext(CollapsibleContext);
 
     const divRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
+    
+    // see CollapsibleList for explanation of this logic; this version is simplified as there is no header to account for
+    const recalculateHeight = useCallback(() => {
+        let containerHeight : number | undefined = 0;
 
-    useLayoutEffect(() => {
         if (expanded) {
-            setExpandedHeight(divRef?.current ? [...divRef.current.children].map(c => 
-                c.getAttribute("data-targetheight") ? parseInt(c.getAttribute("data-targetheight") as string) : c.clientHeight
-            ).reduce((a, b) => a + b, 0) : 0);
+            containerHeight = divRef?.current 
+                ? [...divRef.current.children].map(c => c.getAttribute("data-targetheight")
+                    ? parseInt(c.getAttribute("data-targetheight") as string) 
+                    : c.clientHeight
+                ).reduce((a, b) => a + b, 0)
+                : undefined;
+            
+            if (containerHeight !== 0) {
+                setExpandedContainerHeight(containerHeight ?? 0);
+            }
         }
-    }, [expanded, props.children]);
+        
+        if (divRef.current) {
+            divRef.current.setAttribute(
+                "data-targetheight",
+                (containerHeight ?? 0).toString()
+            );
+        }
+
+        if (parentCollapsible?.expanded) {
+            parentCollapsible?.recalculateHeight();
+        }
+    }, [expanded, parentCollapsible]);
+
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver(() => recalculateHeight());
+        resizeObserver.observe(contentRef.current as Element);
+        return () => resizeObserver.disconnect();
+    }, [recalculateHeight]);
 
     return <div {...rest} 
         className={classNames("collapsible-body", rest.className)} 
-        style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0, ...rest.style}}
-        data-targetheight={expandedHeight}
-        ref={divRef} 
-    />;
+        style={{height: expanded ? expandedContainerHeight : 0, maxHeight: expanded ? expandedContainerHeight : 0, ...rest.style}}
+        ref={divRef}
+    >
+        <CollapsibleContext.Provider value={{expanded, recalculateHeight}}>
+            <div ref={contentRef}>
+                {children}
+            </div>
+        </CollapsibleContext.Provider>
+    </div>;
 };

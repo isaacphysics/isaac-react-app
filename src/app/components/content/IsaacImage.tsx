@@ -32,7 +32,7 @@ interface IsaacImageProps {
 }
 
 const IsaacImageCaption = ({doc}: {doc: ImageDTO}) => {
-    return React.isValidElement(doc.children) || React.isValidElement(doc.attribution) && <figcaption className="text-center figure-caption">
+    return (!!doc.children?.length || !!doc.attribution || !!doc.value) && <figcaption className="text-center figure-caption">
         <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
             {doc.children}
         </IsaacContentValueOrChildren>
@@ -51,7 +51,7 @@ export const IsaacImage = ({doc}: IsaacImageProps) => {
     return <div className="figure-panel">
         <figure>
             <div className="text-center position-relative">
-                <button className="figure-fullscreen" onClick={() => {
+                <button className="figure-fullscreen" aria-label="Expand image" onClick={() => {
                     dispatch(openActiveModal(FigureModal({
                         path, 
                         altText: doc.altText, 

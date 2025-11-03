@@ -23,6 +23,7 @@
     --buttons-dark-text: #{$color-neutral-white};
     --buttons-focus-ring: #{map.get($subject-colors, 300)};
     --buttons-keyline-border: #{map.get($subject-colors, 500)};
+    --buttons-keyline-disabled-border: #{map.get($subject-colors, 300)};
     --buttons-keyline-white-border: #{map.get($subject-colors, 400)};
     --buttons-keyline-white-hover: #{map.get($subject-colors, 900)};
     --buttons-keyline-white-text: #{$color-neutral-white};
@@ -89,10 +90,10 @@
 :root {
   --buttons-prefix-button-neutral-focus-ring: #{$color-neutral-200};
   --forms-input-background: #{$color-neutral-white};
-  --forms-colour-input-border: #{var(--color-neutral-300)};
+  --forms-colour-input-border: #{$color-neutral-300};
   --forms-colour-input-border-active: #{$color-neutral-900};
-  --forms-colour-input-border-error: #{var(--color-misc-red)};
-  --forms-colour-input-placeholder: #{var(--primary-color-label)};
+  --forms-colour-input-border-error: #{$color-misc-red};
+  --forms-colour-input-placeholder: var(--primary-color-label);
   --forms-colour-input-text: #{$color-neutral-900};
 
   --border-light: #F5F4F0;

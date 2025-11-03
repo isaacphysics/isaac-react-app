@@ -1,15 +1,17 @@
-import React, { ChangeEvent, Dispatch, RefObject, SetStateAction, useEffect, useMemo, useState } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, Stage } from "../../../../IsaacApiTypes";
+import { AssignmentDTO, CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
     ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
     stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS, getSearchPlaceholder,
     sortByStringValue,
     SUBJECT_SPECIFIC_CHILDREN_MAP,
-    LEARNING_STAGE} from "../../../services";
+    LEARNING_STAGE,
+    ASSIGNMENT_STATE_MAP,
+    isAppLink} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -36,6 +38,8 @@ import { History } from "history";
 import { calculateSidebarLink, containsActiveTab, isSidebarGroup } from "../../../services/sidebar";
 import { SidebarButton } from "../SidebarButton";
 import { GlossarySearch } from "../../pages/Glossary";
+import { IsaacProgrammeDTO } from "../cards/ProgrammeCard";
+import { ExternalLink } from "../ExternalLink";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -48,10 +52,10 @@ export const MainContent = (props: ColProps) => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(mainContentIdSlice.actions.set("page-content"));
+        dispatch(mainContentIdSlice.actions.set({id: "page-content", priority: 2}));
     }, [dispatch]);
 
-    return siteSpecific(<Col id="page-content" xs={12} lg={8} xl={9} {...rest} className={classNames(className, "order-0 order-lg-1")} />, props.children);
+    return siteSpecific(<Col id="page-content" xs={12} lg={8} xl={9} {...rest} tabIndex={-1} className={classNames(className, "order-0 order-lg-1")} />, props.children);
 };
 
 interface QuestionLinkProps {
@@ -250,23 +254,51 @@ export const GenericSidebarWithRelatedContent = (props: RelatedContentSidebarPro
     return <RelatedContentSidebar {...props} pageType="page" />;
 };
 
-interface GameboardQuestionSidebarProps extends SidebarProps {
+interface GameboardContentSidebarProps extends SidebarProps {
     id: string;
     title: string;
     questions: GameboardItem[];
-    currentQuestionId: string;
+    wildCard?: IsaacWildcard;
+    currentContentId?: string;
 }
 
-export const GameboardQuestionSidebar = (props: GameboardQuestionSidebarProps) => {
+export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => {
     // For questions in the context of a gameboard
-    const {id, title, questions, currentQuestionId} = props;
+    const {id, title, questions, wildCard, currentContentId} = props;
+
+    const wildCardContents = useMemo(() => {
+        if (!wildCard?.url) return null;
+
+        const isExternal = !isAppLink(wildCard.url);
+        const externalUrl = isExternal && wildCard.url?.replace(/^https?:\/\//, '').split('/')[0];
+
+        return <>
+            <i className="icon icon-concept-thick ms-2"/>
+            <div className="d-flex flex-column w-100 overflow-hidden">
+                <span className="hover-underline link-title"><Markup encoding="latex">{wildCard?.title}</Markup></span>
+                <span className="text-muted small text-overflow-ellipsis">
+                    {isExternal
+                        ? <>External link (<em>{externalUrl}</em>)</>
+                        : wildCard.description ?? wildCard.subtitle
+                    }
+                </span>
+            </div>
+        </>;
+    }, [wildCard]);
+
     return <NavigationSidebar>
         <div className="section-divider"/>
         <Link to={`${PATHS.GAMEBOARD}#${id}`} style={{textDecoration: "none"}}>
             <h5 className="mb-3">Question deck: {title}</h5>
         </Link>
         <ul>
-            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={classNames("board-sidebar-question", {"selected-question": q.id === currentQuestionId})}/></li>)}
+            {wildCard && wildCard.url && <li className={classNames("board-sidebar-content", {"selected-content": wildCard.url === window.location.pathname})}>
+                {isAppLink(wildCard.url)
+                    ? <Link className="py-2" to={`${wildCard.url}?board=${id}`}>{wildCardContents}</Link>
+                    : <ExternalLink className="py-2" href={wildCard.url}>{wildCardContents}</ExternalLink>
+                }
+            </li>}
+            {questions?.map(q => <li key={q.id}><QuestionLink question={q} gameboardId={id} className={classNames("board-sidebar-content", {"selected-content": q.id === currentContentId})}/></li>)}
         </ul>
         <div className="section-divider"/>
         <CompletionKey/>
@@ -294,7 +326,7 @@ export const GameboardSidebar = (props: GameboardSidebarProps) => {
         const topics = (tags.getTopicTags(gameboardTags).length > 0
             ? tags.getTopicTags(gameboardTags)
             : tags.getFieldTags(gameboardTags)
-        ).map(tag => tag.title).sort();
+        ).map(tag => tag.alias ?? tag.title).sort();
 
         return <>
             <div className="mb-2">
@@ -804,6 +836,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
         <ShowLoadingQuery query={assignmentQuery} defaultErrorTitle="" thenRender={(assignments: AssignmentDTO[]) => {
             const myAssignments = filterAssignmentsByStatus(assignments);
             const assignmentCountByStatus = myAssignments && Object.fromEntries(Object.entries(myAssignments).map(([key, value]) => [key, value.length]));
+            const totalAssignmentCount = Object.values(assignmentCountByStatus).reduce((a, b) => a + b, 0);
             return <>
                 <div className="section-divider"/>
                 <search data-testid="my-assignments-sidebar">
@@ -822,10 +855,10 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                     <div className="section-divider"/>
                     <h5 className="mb-4">Filter by status</h5>
                     <ul>
-                        <li><AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/></li>
+                        <li><AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={totalAssignmentCount}/></li>
                         <div className="section-divider-small"/>
                         {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <li key={state}>
-                            <AssignmentStatusCheckbox status={state} count={assignmentCountByStatus?.[state]} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
+                            <AssignmentStatusCheckbox status={state} count={assignmentCountByStatus[ASSIGNMENT_STATE_MAP[state]]} statusFilter={statusFilter} setStatusFilter={setStatusFilter}/>
                         </li>)}
                     </ul>
                     <h5 className="mt-4 mb-3">Filter by group</h5>
@@ -853,10 +886,11 @@ interface MyGameboardsSidebarProps extends ContentSidebarProps {
     setBoardCreatorFilter: React.Dispatch<React.SetStateAction<BoardCreators>>;
     boardCompletionFilter: BoardCompletions;
     setBoardCompletionFilter: React.Dispatch<React.SetStateAction<BoardCompletions>>;
+    forceAllBoards?: boolean;
 }
 
 export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
-    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, boardCreatorFilter, setBoardCreatorFilter, boardCompletionFilter, setBoardCompletionFilter, ...rest } = props;
+    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, boardCreatorFilter, setBoardCreatorFilter, boardCompletionFilter, setBoardCompletionFilter, forceAllBoards, ...rest } = props;
 
     const deviceSize = useDeviceSize();
 
@@ -888,7 +922,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
                 </Input>
                 {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
                 <div className="select-pretext me-2">Limit:</div>
-                <Input className="w-auto" type="select" aria-label="Set display limit" data-testid="limit-select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                <Input disabled={forceAllBoards} className="w-auto" type="select" aria-label="Set display limit" data-testid="limit-select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </div>
@@ -997,7 +1031,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
     const subjects = tagsService.getSubjectTags(tags as TAG_ID[]);
     const topics = tagsService.getTopicTags(tags as TAG_ID[]);
     const fields = tagsService.getFieldTags(tags as TAG_ID[]);
-    const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A"}];
+    const topicsAndFields = (topics.length + fields.length) > 0 ? [...topics, ...fields] : [{id: 'na', title: "N/A", alias: undefined}];
 
     const progressIcon = (section: number) => {
         return sectionStates[section] === SectionProgress.COMPLETED ? "icon icon-raw icon-correct"
@@ -1024,7 +1058,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
             </div>
             <div className="mb-2">
                 Topic{topicsAndFields?.length > 1 && "s"}:
-                <ul className="d-inline ms-1">{topicsAndFields.map(e => <li className="d-inline" key={e.id}><Pill title={e.title} theme="neutral"/></li>)}</ul>
+                <ul className="d-inline ms-1">{topicsAndFields.map(e => <li className="d-inline" key={e.id}><Pill title={e.alias ?? e.title} theme="neutral"/></li>)}</ul>
             </div>
 
             {hasSections && <>
@@ -1105,17 +1139,15 @@ interface GroupsSidebarProps extends ContentSidebarProps {
     setSelectedGroupId: React.Dispatch<React.SetStateAction<number | undefined>>;
     showArchived: boolean;
     setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
-    groupNameInputRef: RefObject<HTMLInputElement>;
-    createNewGroup: (newGroupName: string) => Promise<boolean>;
 }
 
 export const GroupsSidebar = (props: GroupsSidebarProps) => {
-    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, ...rest } = props;
+    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, createNewGroup, ...rest } = props;
     return <ContentSidebar buttonTitle="Select or create a group" {...rest}>
         <div className="section-divider"/>
-        <h5>Select a group</h5>
+        <h5>Select or create a group</h5>
         <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
-            setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true} sidebarStyle={true}/>
+            setShowArchived={setShowArchived} showCreateGroup={true} sidebarStyle={true}/>
     </ContentSidebar>;
 };
 
@@ -1657,6 +1689,36 @@ export const AnvilAppsListingSidebar = (props: ContentSidebarProps) => {
                     onClick={() => history.push(`/${context?.subject}/${stage}/tools`)}
                 />
             </li>)}
+        </ul>
+    </ContentSidebar>;
+};
+
+interface ProgrammesSidebarProps extends ContentSidebarProps {
+    programmes?: IsaacProgrammeDTO[];
+}
+
+export const ProgrammesSidebar = ({programmes, ...rest}: ProgrammesSidebarProps) => {
+    const history = useHistory();
+
+    return <ContentSidebar buttonTitle="Explore programmes" {...rest}>
+        <div className="section-divider"/>
+        <h5>Our programmes</h5>
+        <ul>
+            <li>
+                {programmes?.map((programme) =>
+                    <StyledTabPicker
+                        key={programme.id}
+                        checkboxTitle={programme.title}
+                        checked={false}
+                        onClick={() => {
+                            if (programme.id) {
+                                history.replace({pathname: history.location.pathname, hash: `${programme.id.slice(programme.id.indexOf("_") + 1)}`});
+                                document.getElementById(programme.id.slice(programme.id.indexOf("_") + 1))?.scrollIntoView({behavior: "smooth"});
+                            }
+                        }}
+                    />
+                )}
+            </li>
         </ul>
     </ContentSidebar>;
 };

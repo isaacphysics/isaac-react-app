@@ -307,7 +307,7 @@ export const updateCurrentUser = (
             if (isFirstLogin) {
                 persistence.session.remove(KEY.FIRST_LOGIN);
                 if (redirect) {
-                    continueToAfterAuthPath({loggedIn: true, ...currentUser});
+                    continueToAfterAuthPath({loggedIn: true, ...currentUser.data});
                 }
             } else if (!editingOtherUser) {
                 dispatch(showToast({
@@ -449,28 +449,6 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
     }
 };
 
-export const verifyPasswordReset = (token: string | null) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST});
-        await api.users.verifyPasswordReset(token);
-        dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS});
-    } catch(e: any) {
-        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const handlePasswordReset = (params: {token: string; password: string}) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
-        await api.users.handlePasswordReset(params);
-        dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
-        history.push('/login');
-        dispatch(showToast({color: "success", title: "Password reset successful", body: "Please log in with your new password.", timeout: 5000}) as any);
-    } catch(e: any) {
-        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
 export const handleProviderLoginRedirect = (provider: AuthenticationProvider, isSignup: boolean = false) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT, provider});
     try {
@@ -512,10 +490,20 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
         history.push(nextPage || defaultNextPage);
     } catch (error: any) {
-        trackEvent("sign_in_failure", { props: { provider: provider.toLowerCase(), ...fetchErrorFromParameters(parameters) }});
-        history.push("/auth_error", { errorMessage: extractMessage(error) });
+        const providerErrors = fetchErrorFromParameters(parameters);
+        trackEvent("sign_in_failure", { props: {
+            provider: provider.toLowerCase(),
+            providerError: providerErrors.error || 'unknown',
+            providerErrorDescription: providerErrors.errorDescription || 'unknown',
+            providerParseError: providerErrors.parseError || 'unknown',
+            isaacError: error?.response?.data?.responseCode || error?.code || 'unknown',
+            isaacErrorDescription: error?.response?.data?.errorMessage || error?.message || 'unknown'
+        }});
+        history.push("/auth_error", { errorMessage: extractMessage(error), provider, providerErrors });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
-        dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
+        if (!extractMessage(error).startsWith("You do not use") && !providerErrors.errorDescription?.startsWith("AADSTS65004")) {
+            dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
+        }
     }
 };
 
@@ -627,7 +615,7 @@ export function setCurrentAttempt<T extends ChoiceDTO>(questionId: string, attem
 
 let questionSearchCounter = 0;
 
-export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: Dispatch<Action>) => {
+export const searchQuestions = (query: QuestionSearchQuery, searchId?: string) => async (dispatch: Dispatch<Action>) => {
     const searchCount = ++questionSearchCounter;
     dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
     try {
@@ -635,7 +623,7 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
         // Because some searches might take longer to return that others, check this is the most recent search still.
         // Otherwise, we just discard the data.
         if (searchCount === questionSearchCounter) {
-            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: questionsResponse.data});
+            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: questionsResponse.data, searchId});
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});

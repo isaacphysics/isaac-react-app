@@ -1,24 +1,6 @@
 @use "sass:math";
 @import "../common/cards";
 
-// number of news cards per line for each breakpoint
-$news-cards-per-line: (
-        xs: 2,
-        lg: 3,
-        xl: 4
-);
-
-@each $name, $breakpoint in $grid-breakpoints {
-  @if (map-has-key($news-cards-per-line, $name)) {
-    @include media-breakpoint-up($name) {
-      .card-deck .news-card {
-        flex: 0 0 calc(#{math.percentage(math.div(1, map-get($news-cards-per-line, $name)))} - #{$grid-gutter-width});
-        width: 100%;
-      }
-    }
-  }
-}
-
 // number of cards per line for each breakpoint
 $cards-per-line: (
         xs: 1,
@@ -137,14 +119,13 @@ a.icon-card, a.cs-card {
   }
 }
 
-.cs-card, .icon-card, .prompt-banner {
+.cs-card, .icon-card, .prompt-banner, .text-block {
   .card-footer {
     .btn-link::after {
       content: "";
       display: inline-flex;
-      @include svg-color(url('/assets/common/icons/chevron-right.svg'), $dark-pink-300, 12px, 12px);
+      @include svg-color(url('/assets/common/icons/chevron-right.svg'), $dark-pink-300, 12px, 12px, cover);
       margin-left: 10px;
-      mask-size: cover;
     }
   }
 
@@ -159,7 +140,7 @@ a.icon-card, a.cs-card {
   }
 }
 
-.cs-card-plain, .news-card {
+.cs-card-plain {
   position: relative;
   border-radius: 15px;
   display: inline-block;
@@ -174,37 +155,13 @@ a.icon-card, a.cs-card {
     background-repeat: no-repeat;
   }
 
-  &.backslash-1 {
-    &::before {
-      height: 56px;
-      width: 28px;
-      background-image: url(/assets/cs/decor/backslash-outline-1.svg);
-    }
-  }
-
-  &.backslash-2 {
-    &::before {
-      height: 56px;
-      width: 46px;
-      background-image: url(/assets/cs/decor/backslash-outline-2.svg);
-    }
-  }
-
-  &.backslash-3 {
-    &::before {
-      height: 56px;
-      width: 64px;
-      background-image: url(/assets/cs/decor/backslash-outline-3.svg);
-    }
-  }
-
   .card-img, .card-img-top {
     width: 100%;
     border-radius: 15px 15px 0 0;
   }
 }
 
-.cs-card-plain, .news-card, .board-card {
+.cs-card-plain, .board-card {
   // This is to make sure that the "footers" of multiple cards line up nicely
   &::after {
     @extend .mb-7;
@@ -224,7 +181,7 @@ a.icon-card, a.cs-card {
   }
 }
 
-.cs-card, .cs-card-plain, .icon-card, .news-card, .board-card, .prompt-banner {
+.cs-card, .cs-card-plain, .icon-card, .board-card, .prompt-banner {
   .card-footer {
     background-color: transparent !important;
   }

@@ -38,13 +38,16 @@ export const GameboardCard = (props: GameboardCardProps) => {
             return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
         }
         return a;
-    }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
+    }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.alias ?? tag.title).sort();
 
     const boardSubjects = determineGameboardSubjects(gameboard);
 
     const isSetAssignments = isDefined(setAssignmentsDetails);
 
-    const boardLink = gameboard && `${PATHS.GAMEBOARD}#${gameboard.id}`;
+    const boardLink = gameboard && (isSetAssignments 
+        ? `/assignment/${gameboard.id}`
+        : `${PATHS.GAMEBOARD}#${gameboard.id}`
+    );
 
     const card = <div className="px-3 py-2 flex-grow-1">
         <Row data-testid="my-assignment">

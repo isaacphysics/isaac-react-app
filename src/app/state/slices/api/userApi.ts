@@ -49,10 +49,38 @@ export const userApi = isaacApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 successTitle: "Account upgraded",
                 successMessage: "You have upgraded to a teacher account!",
-                errorTitle: "Failed to upgrade account"
+                errorTitle: "Failed to upgrade account",
+            }),
+        }),
+
+        verifyPasswordReset: build.query<void, string | null>({
+            query: (token) => ({
+                url: `/users/resetpassword/${token}`,
+                method: "GET"
             })
-        })
+        }),
+
+        handlePasswordReset: build.mutation<void, { token: string; password: string }>({
+            query: (params) => ({
+                url: `/users/resetpassword/${params.token}`,
+                method: "POST",
+                body: {password: params.password}
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                successTitle: "Password reset successful",
+                successMessage: "Your password has been updated successfully.",
+                errorTitle: "Failed to reset password"
+            })
+        }),
+
     })
 });
 
-export const {useSetupAccountMFAMutation, useDisableAccountMFAMutation, useNewMFASecretMutation, useUpgradeToTeacherAccountMutation} = userApi;
+export const {
+    useSetupAccountMFAMutation,
+    useDisableAccountMFAMutation,
+    useNewMFASecretMutation,
+    useUpgradeToTeacherAccountMutation,
+    useVerifyPasswordResetQuery,
+    useHandlePasswordResetMutation
+} = userApi;

@@ -1,0 +1,73 @@
+
+
+@property --num {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+
+.animated-counter {
+  --num: var(--limit);
+  animation: calc(var(--time, 5) * 1s) cubic-bezier(0, 1, 0.32, 1) counter;
+  counter-reset: num var(--num);
+  font-family: monospace;
+  &::after {
+    content: counter(num);
+  }
+}
+
+#stats-subjects-background {
+  background: url('/assets/phy/decor/science-bg.png') no-repeat center center;
+  background-size: cover;
+  height: 200px;
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 95%);
+}
+
+#concept-column li {
+  height: 100%;
+}
+
+section#homepage-images {
+  > .content-chunk {
+    margin: 0 10vw;
+  }
+
+  img {
+    max-height: 70vh;
+  }
+}
+
+.stats-hex-container {
+  width: 150px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    position: relative;
+    z-index: 1;
+  }
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    mask: url('/assets/phy/icons/redesign/hexagon.svg') no-repeat center center;
+    mask-size: contain;
+    background-color: $color-brand-400;
+  }
+}
+
+@keyframes counter {
+  from {
+    --num: 0;
+  }
+  to {
+    --num: var(--limit);
+  }
+}
+
+

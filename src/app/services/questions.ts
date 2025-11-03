@@ -67,18 +67,6 @@ export function isQuestion(doc: ContentDTO) {
     return doc.type ? doc.type in QUESTION_TYPES : false;
 }
 
-export const HUMAN_QUESTION_TAGS = new Map([
-    ["phys_book_step_up", "Step Up to GCSE Physics"],
-    ["phys_book_gcse", "Mastering Essential GCSE Physics"],
-    ["physics_skills_14", "Mastering Essential Pre-University Physics (2nd Edition)"],
-    ["physics_skills_19", "Mastering Essential Pre-University Physics (3rd Edition)"],
-    ["physics_linking_concepts", "Linking Concepts in Pre-University Physics"],
-    ["maths_book_gcse", "Using Essential GCSE Mathematics"],
-    ["maths_book", "Pre-University Mathematics for Sciences (1st edition)"],
-    ["maths_book_2e", "Pre-University Mathematics for Sciences (2nd edition)"],
-    ["chemistry_16", "Mastering Essential Pre-University Physical Chemistry"]
-]);
-
 export function selectQuestionPart(questions?: AppQuestionDTO[], questionPartId?: string) {
     return questions?.filter(question => question.id == questionPartId)[0];
 }
@@ -146,9 +134,9 @@ const pseudoToSymbolDict: {[key: string]: string[]} = {
     '_brackets_round': ['()'],
     '_brackets_square': ['[]'],
     '_dot': ['.'],
-    // Adding a pseudosymbol to an empty list in the content editor causes the list to start with a comma 
+    // Adding a pseudosymbol to an empty list in the content editor causes the list to start with a comma
     // and so this empty string is used to avoid adding it to the list of available symbols
-    '': [] 
+    '': []
 };
 
 export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[]) => {
@@ -201,7 +189,7 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
                 redirectOnSuccess: false
             }));
         }
-        
+
         return attempt;
     }
     return Promise.resolve();

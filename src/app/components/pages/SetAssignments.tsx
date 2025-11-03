@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {
     Alert,
     Button,
@@ -15,7 +15,6 @@ import {
 } from "reactstrap";
 import {Link, useLocation} from "react-router-dom";
 import {
-    assignGameboard,
     closeActiveModal,
     openActiveModal,
     openIsaacBooksModal,
@@ -28,10 +27,7 @@ import {
     useUnassignGameboardMutation
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import range from "lodash/range";
-import sortBy from "lodash/sortBy";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
     above,
     BOARD_ORDER_NAMES,
@@ -46,25 +42,15 @@ import {
     isAda,
     isDefined,
     isPhy,
-    isEventLeaderOrStaff,
-    Item,
-    itemise,
     matchesAllWordsInAnyOrder,
-    nthHourOf,
     PATHS,
-    selectOnChange,
     siteSpecific,
     useDeviceSize,
     useGameboards,
-    TODAY,
-    UTC_MIDNIGHT_IN_SIX_DAYS
 } from "../../services";
-import {Loading} from "../handlers/IsaacSpinner";
-import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
-import {BoardAssignee, AssignmentBoardOrder, Boards, ActiveModal} from "../../../IsaacAppTypes";
+import {AssignmentDTO, GameboardDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {BoardAssignee, AssignmentBoardOrder, Boards} from "../../../IsaacAppTypes";
 import {BoardCard} from "../elements/cards/BoardCard";
-import {StyledSelect} from "../elements/inputs/StyledSelect";
-import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import {SortItemHeader} from "../elements/SortableItemHeader";
 import {MainContent, SetAssignmentsSidebar, SidebarLayout} from "../elements/layout/SidebarLayout";
@@ -72,195 +58,9 @@ import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
 import { PageMetadata } from "../elements/PageMetadata";
-
-interface AssignGroupProps {
-    groups: UserGroupDTO[];
-    board: GameboardDTO | undefined;
-    closeModal: () => void;
-}
-
-const AssignGroup = ({groups, board, closeModal}: AssignGroupProps) => {
-    const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
-    const [dueDate, setDueDate] = useState<Date | undefined>(UTC_MIDNIGHT_IN_SIX_DAYS);
-    const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
-    const [assignmentNotes, setAssignmentNotes] = useState<string>();
-    const user = useAppSelector(selectors.user.loggedInOrNull);
-    const dispatch = useAppDispatch();
-
-    if (!board) return <Loading/>;
-
-    function assign() {
-        dispatch(assignGameboard({
-            boardId: board?.id as string,
-            groups: selectedGroups,
-            dueDate,
-            scheduledStartDate,
-            notes: assignmentNotes,
-            userId: user?.id
-        })).then(success => {
-            if (success) {
-                setSelectedGroups([]);
-                setDueDate(UTC_MIDNIGHT_IN_SIX_DAYS);
-                setScheduledStartDate(undefined);
-                setAssignmentNotes('');
-                closeModal();
-            }
-        });
-    }
-
-    const yearRange = range(currentYear, currentYear + 5);
-    const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) : false) || TODAY().valueOf() > dueDate.valueOf());
-    const startDateInvalid = scheduledStartDate ? TODAY().valueOf() > scheduledStartDate.valueOf() : false;
-
-    function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
-        const utcDate = e.target.valueAsDate;
-        if (utcDate) {
-            const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
-            // Sets the scheduled date to 7AM in the timezone of the browser.
-            setScheduledStartDate(scheduledDate);
-        } else {
-            setScheduledStartDate(null as unknown as Date);
-            {/* DANGER here with force-casting Date|null to Date */
-            }
-        }
-    }
-
-    return <Container fluid className="py-2">
-        <Label data-testid="modal-groups-selector" className="w-100 pb-2">Group(s):
-            <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
-                value={selectedGroups}
-                closeMenuOnSelect={false}
-                onChange={selectOnChange(setSelectedGroups, false)}
-                options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
-            />
-        </Label>
-        <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
-            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..."
-                yearRange={yearRange}
-                onChange={setScheduledStartDateAtSevenAM}/>
-            {startDateInvalid && <small className={"pt-2 text-danger"}>Start date must be in the future.</small>}
-        </Label>
-        <Label className="w-100 pb-2">Due date reminder
-            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)}/> {/* DANGER here with force-casting Date|null to Date */}
-            {!dueDate &&
-                <small className={"pt-2 text-danger"}>Since {siteSpecific("Jan", "January")} 2025, due dates are
-                    required for assignments.</small>}
-            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the
-                future.</small>}
-        </Label>
-        {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
-            <Input type="textarea"
-                spellCheck={true}
-                rows={3}
-                value={assignmentNotes}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
-            />
-            <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
-            {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
-                <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
-            }
-        </Label>}
-        <Button
-            className="mt-2 mb-2"
-            block color={siteSpecific("keyline", "solid")}
-            onClick={assign}
-            role={"button"}
-            disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !dueDate || dueDateInvalid || startDateInvalid}
-        >Assign to group{selectedGroups.length > 1 ? "s" : ""}</Button>
-    </Container>;
-};
-
-type SetAssignmentsModalProps = {
-    board: GameboardDTO | undefined;
-    assignees: BoardAssignee[];
-    groups: UserGroupDTO[];
-    toggle: () => void;
-    unassignBoard: (props: { boardId: string, groupId: number }) => void;
-};
-
-export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModal => {
-    const {board, assignees, toggle, unassignBoard} = props;
-
-    const hasStarted = (a: { startDate?: Date | number }) => !a.startDate || (Date.now() > a.startDate.valueOf());
-
-    const startedAssignees = assignees.filter(hasStarted);
-    const scheduledAssignees = assignees.filter(a => !hasStarted(a));
-
-    function confirmUnassignBoard(groupId: number, groupName?: string) {
-        if (board?.id && confirm(`Are you sure you want to unassign this ${siteSpecific("question deck", "quiz")} from ${groupName ? `group ${groupName}` : "this group"}?`)) {
-            unassignBoard({boardId: board?.id, groupId});
-        }
-    }
-
-    const description = "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. " +
-        "Assignments are due by the end of the day indicated.";
-
-    return {
-        closeAction: toggle,
-        size: "md",
-        title: board?.title,
-        body: <>
-            <p className="px-1">{description}</p>
-            <hr className="text-center"/>
-            <AssignGroup closeModal={toggle} {...props} />
-            <hr className="text-center"/>
-            <div className="py-2 border-bottom d-flex flex-column" data-testid="currently-assigned-to">
-                <span>{siteSpecific("Question deck", "Quiz")} currently assigned to:</span>
-                {startedAssignees.length > 0
-                    ? <ul className="p-2 mb-3">{startedAssignees.map(assignee =>
-                        <li data-testid={"current-assignment"} key={assignee.groupId}
-                            className="my-1 px-1 d-flex justify-content-between"
-                        >
-                            <span className="flex-grow-1">{assignee.groupName}</span>
-                            <button 
-                                className="close bg-transparent invert-underline" aria-label="Unassign group" 
-                                onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}
-                            >
-                                Unassign
-                            </button>
-                        </li>
-                    )}</ul>
-                    : <p className="px-2">No groups.</p>}
-            </div>
-            <div className="py-2 d-flex flex-column">
-                <span className={classNames("mb-2", siteSpecific("d-flex align-items-center", ""))}>
-                    Pending {siteSpecific("assignments", "quiz assignments")}:
-                    <i className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help mx-1")}
-                        id={`pending-assignments-help-${board?.id}`}/>
-                </span>
-                <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
-                    These {siteSpecific("assignments", "quizzes")} are scheduled to begin at a future date. On the
-                    morning of the scheduled date, students
-                    will be able to see the {siteSpecific("assignment", "quiz")}, and will receive a notification email.
-                </UncontrolledTooltip>
-                {scheduledAssignees.length > 0
-                    ? <ul className="p-2 mb-3">{scheduledAssignees.map(assignee =>
-                        <li data-testid={"pending-assignment"} key={assignee.groupId}
-                            className="my-1 px-1 d-flex justify-content-between"
-                        >
-                            <span className="flex-grow-1">{assignee.groupName}</span>
-                            {assignee.startDate && <>
-                                <span id={`start-date-${assignee.groupId}`}
-                                    className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
-                                        ? new Date(assignee.startDate)
-                                        : assignee.startDate).toDateString()}
-                                </span>
-                            </>}
-                            <button 
-                                className="close bg-transparent" aria-label="Unassign group"
-                                onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}
-                            >
-                                ×
-                            </button>
-                        </li>
-                    )}</ul>
-                    : <p className="px-2">No groups.</p>}
-            </div>
-        </>,
-        buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]
-    };
-};
+import { SetAssignmentsModal } from "../elements/modals/SetAssignmentsModal";
+import { PageFragment } from "../elements/PageFragment";
+import { useHistoryState } from "../../state/actions/history";
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -291,7 +91,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
 
     const filteredBoards = useMemo(() => {
         return boards?.boards
-            .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+            .filter(board => (matchesAllWordsInAnyOrder(board.title, boardTitleFilter) || board.id === boardTitleFilter))
             .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
             .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())));
     }, [boards, boardTitleFilter, boardCreator, boardSubject, user]);
@@ -301,7 +101,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
             setOrder={setBoardOrder} alignment="start">
-            Board name
+            Deck name
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
             <div className="d-flex align-items-center">
@@ -323,35 +123,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
 
     return <Card className="mt-2 mb-7">
         <CardBody id="boards-table">
-            <Row>
-                <Col lg={4}>
-                    <Label className="w-100">
-                        Filter boards <Input type="text"
-                            onChange={(e) => setBoardTitleFilter(e.target.value)}
-                            placeholder="Filter boards by name"/>
-                    </Label>
-                </Col>
-                <Col sm={6} lg={2}>
-                    <Label className="w-100">
-                        Subject <Input type="select" value={boardSubject}
-                            onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
-                            {Object.values(BoardSubjects).map(subject => <option key={subject}
-                                value={subject}>{subject}</option>)}
-                        </Input>
-                    </Label>
-                </Col>
-                <Col lg={2}>
-                    <Label className="w-100">
-                        Creator <Input type="select" value={boardCreator}
-                            onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                            {Object.values(BoardCreators).map(creator => <option key={creator}
-                                value={creator}>{creator}</option>)}
-                        </Input>
-                    </Label>
-                </Col>
-            </Row>
-
-            <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false} className="mt-3">
+            <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
                 <Table className="mb-0">
                     <thead>
                         {tableHeader}
@@ -514,8 +286,8 @@ export const SetAssignments = () => {
     const {data: assignmentsSetByMe} = useGetMySetAssignmentsQuery(undefined);
     const groupsByGameboard = useMemo(() => getAssigneesByBoard(assignmentsSetByMe), [assignmentsSetByMe]);
 
-    const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
-    const [boardSubject, setBoardSubject] = useState<BoardSubjects>(BoardSubjects.all);
+    const [boardCreator, setBoardCreator] = useHistoryState<BoardCreators>("boardCreator", BoardCreators.all);
+    const [boardSubject, setBoardSubject] = useHistoryState<BoardSubjects>("boardSubject", BoardSubjects.all);
 
     const deviceSize = useDeviceSize();
     const {
@@ -595,10 +367,10 @@ export const SetAssignments = () => {
         groupsByGameboard, openAssignModal
     };
 
-    const filteredBoards = useMemo(() => 
-        boards?.boards.filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+    const filteredBoards = useMemo(() =>
+        boards?.boards.filter(board => (matchesAllWordsInAnyOrder(board.title, boardTitleFilter) || board.id === boardTitleFilter))
             .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))), 
+            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))),
     [boards, user, boardTitleFilter, boardCreator, boardSubject]);
 
     return <Container>
@@ -688,7 +460,7 @@ export const SetAssignments = () => {
                         <Row>
                             {boardView === BoardViews.card && <Col sm={6} lg={3}>
                                 <Label className="w-100">
-                                Display in <Input type="select" value={boardView} onChange={switchView}>
+                                    Display in <Input type="select" value={boardView} onChange={switchView}>
                                         {Object.values(BoardViews).map(view => <option key={view}
                                             value={view}>{view}</option>)}
                                     </Input>
@@ -697,7 +469,7 @@ export const SetAssignments = () => {
                             {boardView === BoardViews.card && <>
                                 <Col xs={6} lg={{size: 2, offset: 3}}>
                                     <Label className="w-100">
-                                    Show <Input disabled={forceAllBoards} type="select" value={boardLimit}
+                                        Show <Input disabled={forceAllBoards} type="select" value={boardLimit}
                                             onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                             {Object.values(BoardLimit).map(limit => <option key={limit}
                                                 value={limit}>{limit}</option>)}
@@ -706,7 +478,7 @@ export const SetAssignments = () => {
                                 </Col>
                                 <Col xs={6} lg={4}>
                                     <Label className="w-100">
-                                    Sort by <Input type="select" value={boardOrder}
+                                        Sort by <Input type="select" value={boardOrder}
                                             onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
                                             {Object.values(AssignmentBoardOrder).map(order => <option key={order}
                                                 value={order}>{BOARD_ORDER_NAMES[order]}</option>)}

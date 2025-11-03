@@ -102,29 +102,33 @@ const CoordinateInput = (props: CoordinateInputProps) => {
     </span>;
 };
 
-const DEFAULT_COORDINATE_ITEM = {type: "coordinateItem", coordinates: []};
-
 const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacCoordinateQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<CoordinateChoiceDTO>(questionId);
 
+    const numberOfDimensions = doc.numberOfDimensions ?? 2;
+
+    const getEmptyCoordItem = useCallback((): CoordinateItemDTO => {
+        return {type: "coordinateItem", coordinates: Array<string>(numberOfDimensions).fill("")};
+    }, [numberOfDimensions]);
+
     useEffect(() => {
         if (!isDefined(currentAttempt)) {
-            dispatchSetCurrentAttempt({type: "coordinateChoice", items: [{...DEFAULT_COORDINATE_ITEM}]});
+            dispatchSetCurrentAttempt({type: "coordinateChoice", items: [getEmptyCoordItem()]});
         }
-    }, [dispatchSetCurrentAttempt, currentAttempt]);
+    }, [dispatchSetCurrentAttempt, currentAttempt, getEmptyCoordItem]);
 
     const updateItem = useCallback((index: number, value: Immutable<CoordinateItemDTO>) => {
-        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : {...DEFAULT_COORDINATE_ITEM});
+        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : getEmptyCoordItem());
         items[index] = cleanItem(value);
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
-    }, [currentAttempt, dispatchSetCurrentAttempt]);
+    }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem]);
 
     const removeItem = useCallback((index: number) => {
-        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : {...DEFAULT_COORDINATE_ITEM});
+        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : getEmptyCoordItem());
         items.splice(index, 1);
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
-    }, [currentAttempt, dispatchSetCurrentAttempt]);
+    }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem]);
 
     return <div className="coordinate-question">
         <div className="question-content">
@@ -137,8 +141,8 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                 <CoordinateInput
                     key={index}
                     placeholderValues={doc.placeholderValues ?? []}
-                    numberOfDimensions={doc.numberOfDimensions ?? 1}
-                    value={currentAttempt?.items?.[index] ?? {...DEFAULT_COORDINATE_ITEM}}
+                    numberOfDimensions={numberOfDimensions}
+                    value={currentAttempt?.items?.[index] ?? getEmptyCoordItem()}
                     readonly={readonly}
                     onChange={value => updateItem(index, value)}
                 />
@@ -148,7 +152,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                         <CoordinateInput
                             key={index}
                             placeholderValues={doc.placeholderValues ?? []}
-                            numberOfDimensions={doc.numberOfDimensions ?? 1}
+                            numberOfDimensions={numberOfDimensions}
                             value={item}
                             readonly={readonly}
                             onChange={value => updateItem(index, value)}
@@ -159,14 +163,14 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                 : <CoordinateInput
                     key={0}
                     placeholderValues={doc.placeholderValues ?? []}
-                    numberOfDimensions={doc.numberOfDimensions ?? 1}
-                    value={{...DEFAULT_COORDINATE_ITEM}}
+                    numberOfDimensions={numberOfDimensions}
+                    value={getEmptyCoordItem()}
                     readonly={readonly}
                     onChange={value => updateItem(0, value)}
                 />
         }
         <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => answer.coordinates ?? []) ?? []} validator={coordinateInputValidator}/>
-        {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={() => updateItem(currentAttempt?.items?.length ?? 1, {...DEFAULT_COORDINATE_ITEM})}>Add coordinate</Button>}
+        {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={() => updateItem(currentAttempt?.items?.length ?? 1, getEmptyCoordItem())}>Add coordinate</Button>}
     </div>;
 };
 export default IsaacCoordinateQuestion;

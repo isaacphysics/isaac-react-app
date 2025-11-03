@@ -140,12 +140,20 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-event {
+  @include svg-icon('/assets/common/icons/event.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 .icon-event-upcoming {
   @include svg-icon('/assets/common/icons/event-upcoming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-event-complete {
   @include svg-icon('/assets/common/icons/event-complete.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-location {
+  @include svg-icon('/assets/common/icons/location.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-task-complete {
@@ -158,6 +166,34 @@ img[aria-disabled="true"] {
 
 .icon-fullscreen {
   @include svg-icon('/assets/common/icons/fullscreen.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-undo {
+  @include svg-icon('/assets/common/icons/undo.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-redo {
+  @include svg-icon('/assets/common/icons/redo.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-access-visual {
+  @include svg-icon('/assets/common/icons/access-visual.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-access-motor {
+  @include svg-icon('/assets/common/icons/access-motor.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-done, .icon-tick {
+  @include svg-icon('/assets/common/icons/tick.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-close, .icon-cross {
+  @include svg-icon('/assets/common/icons/cross.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-ai {
+  @include svg-icon('/assets/common/icons/ai.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 // Icon sizing

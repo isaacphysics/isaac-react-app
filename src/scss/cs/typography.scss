@@ -55,16 +55,19 @@ $code_font_scale_ratio: 1.16;
 
 .fw-bold {
   // FIXME this is nasty (using semi-bold for bold) but some of the shared SCSS uses fw-bold
-  font-family: $secondary-font-semi-bold, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+  font-family: $secondary-font, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+  font-weight: 600 !important;
   @extend .fw-normal;
 }
 
 .fw-semi-bold {
-  font-family: $secondary-font-semi-bold, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+  font-family: $secondary-font, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+  font-weight: 600 !important;
 }
 
 .fst-italic {
-  font-family: $secondary-font-italic, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+  font-family: $secondary-font, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+  font-style: italic !important;
 }
 
 h1 {
@@ -94,6 +97,7 @@ body {
 strong, b {
   @extend .fw-semi-bold;
 }
+
 i, em {
   @extend .fst-italic;
 }

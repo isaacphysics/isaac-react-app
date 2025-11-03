@@ -31,7 +31,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
         )
     };
 
-    return <FormGroup className={classNames("form-group overflow-auto", {"pt-4": isPhy})}>
+    return <FormGroup className={classNames("form-group", {"pt-4": isPhy})}>
         {isPhy && submissionAttempted !== undefined ? <> {/* submissionAttempted should always exist on phy, just here for typing */}
             <Table className="mb-0">
                 <thead>
@@ -50,8 +50,8 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}assignments`} stateObject={emailPreferences}
-                                propertyName="ASSIGNMENTS" setStateFunction={setEmailPreferences}
-                                submissionAttempted={submissionAttempted}
+                                propertyName="ASSIGNMENTS" accessibleName="assignments"
+                                setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                             />
                         </td>
                     </tr>
@@ -63,8 +63,8 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}news`} stateObject={emailPreferences}
-                                propertyName="NEWS_AND_UPDATES" setStateFunction={setEmailPreferences}
-                                submissionAttempted={submissionAttempted}
+                                propertyName="NEWS_AND_UPDATES" accessibleName="news and updates"
+                                setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                             />
                         </td>
                     </tr>
@@ -76,8 +76,8 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}events`} stateObject={emailPreferences}
-                                propertyName="EVENTS" setStateFunction={setEmailPreferences}
-                                submissionAttempted={submissionAttempted}
+                                propertyName="EVENTS" accessibleName="events"
+                                setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                             />
                         </td>
                     </tr>}
@@ -98,7 +98,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         ...emailPreferences,
                         NEWS_AND_UPDATES: e.target.checked
                     })}
-                    label={<span><b>News</b></span>}
+                    label={<span><b>Tips and updates</b></span>}
                 />
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.news}</span>
             </WithLinkableSetting>

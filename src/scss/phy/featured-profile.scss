@@ -6,7 +6,7 @@
 
 // Detecting a div with any number of featured-profile children
 div:has(> .featured-profile) {
-  @extend .flex-row;
+  flex-direction: row !important;
   @extend .card-deck;
   @extend .row-cols-1;
   @extend .row-cols-sm-2;
@@ -19,7 +19,7 @@ div:has(> .featured-profile) {
 
 // Detecting a div with exactly two featured-profile children (co-founders)
 div:has(> .featured-profile:first-child:nth-last-child(2)) {
-  @extend .flex-row;
+  flex-direction: row !important;
   @extend .row-cols-1;
   @extend .row-cols-sm-2;
 

@@ -43,7 +43,7 @@ import {
     Item,
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
-    logEvent,
+    logEvent, QUESTIONS_PER_GAMEBOARD,
     selectOnChange,
     siteSpecific,
     STAGE,
@@ -61,6 +61,7 @@ import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import { PageMetadata } from '../elements/PageMetadata';
+import {IconButton} from "../elements/AffixButton";
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
@@ -223,7 +224,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const titleIsValid = gameboardTitle != "";
     const tooFewQuestions = selectedQuestions.size == 0;
-    const tooManyQuestions = selectedQuestions.size > 10;
+    const tooManyQuestions = selectedQuestions.size > QUESTIONS_PER_GAMEBOARD;
     const questionSetIsValid = !tooFewQuestions && !tooManyQuestions;
     const allInputIsValid = isValidGameboardId(gameboardURL) && titleIsValid && questionSetIsValid;
 
@@ -292,6 +293,32 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         selectedQuestionsStack: redoSelectedQuestionsStack,
         setSelectedQuestionsStack: setRedoSelectedQuestionsStack
     });
+    const canUndo = !!undoStack.length;
+    const canRedo = !!redoStack.length;
+
+    const undoButtonProps = {
+        color: "keyline",
+        "aria-label": "Undo last action",
+        title: "Undo last action",
+        onClick: () => {
+            const newQuestion = undoStack.pop();
+            redoStack.push(currentQuestions);
+            currentQuestions.setQuestionOrder(newQuestion.questionOrder);
+            currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
+        }
+    };
+
+    const redoButtonProps = {
+        color: "keyline",
+        "aria-label": "Redo last action",
+        title: "Redo last action",
+        onClick: () => {
+            const newQuestion = redoStack.pop();
+            undoStack.push(currentQuestions);
+            currentQuestions.setQuestionOrder(newQuestion.questionOrder);
+            currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
+        }
+    };
 
     return <Container id="gameboard-builder">
         <div ref={sentinel}/>
@@ -379,11 +406,27 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             </Input>
                         </Col>
                     </Row>}
-                    <span className={classNames("fw-bold form-required")}>Questions</span>
-                    <p className="d-block input-description mb-2">
-                        You can add up to 10 questions.
-                    </p>
-                    <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "mt-4 responsive vertical-scroll-shadow")}>
+
+                    <div className={"d-flex flex-row justify-content-between align-items-center"}>
+                        <div>
+                            <span className={classNames("fw-bold form-required")}>Questions</span>
+                            <p className={classNames("d-none d-sm-block input-description mb-2")}>
+                                You can add up to {QUESTIONS_PER_GAMEBOARD} questions.
+                            </p>
+                        </div>
+                        <div className={"d-flex flex-row gap-2"}>
+                            {siteSpecific(
+                                <IconButton icon="icon-undo" className="icon-button-sm" {...undoButtonProps} disabled={!canUndo}/>,
+                                <Button className={"undo-icon btn-action outline"} {...undoButtonProps} disabled={!canUndo} />
+                            )}
+                            {siteSpecific(
+                                <IconButton icon="icon-redo" className="icon-button-sm" {...redoButtonProps} disabled={!canRedo}/>,
+                                <Button className={"redo-icon btn-action outline"} {...redoButtonProps} disabled={!canRedo} />
+                            )}
+                        </div>
+                    </div>
+
+                    <div className={classNames({"is-invalid": submissionAttempted && !questionSetIsValid}, "mt-2 responsive vertical-scroll-shadow")}>
                         <DragDropContext onDragEnd={reorder}>
                             <Droppable droppableId="droppable">
                                 {(providedDrop) => {
@@ -440,86 +483,51 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         </DragDropContext>
                     </div>
                     <div className={"invalid-feedback"}>
-                        {`${tooManyQuestions ? "Only 10 questions can be added, please remove some." : "Please add some questions."}`}
+                        {`${tooManyQuestions ? `Only ${QUESTIONS_PER_GAMEBOARD} questions can be added, please remove some.` : "Please add some questions."}`}
                     </div>
-                    <Row className="justify-content-center mt-4">
-                        <Col className="col-auto col-md-2 order-1 d-flex justify-content-center">
-                            {undoStack.length > 0 && <Button
-                                className={classNames("my-2", {"btn-sm": isAda})}
-                                color="keyline"
-                                onClick={() => {
-                                    const newQuestion = undoStack.pop();
-                                    redoStack.push(currentQuestions);
-                                    currentQuestions.setQuestionOrder(newQuestion.questionOrder);
-                                    currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
-                                }}
-                            >
-                                Undo
-                            </Button>}
-                        </Col>
-                        <Col className="col-auto col-md-2 order-2 order-md-4 d-flex justify-content-center">
-                            {redoStack.length > 0 && <Button
-                                className={classNames("my-2", {"btn-sm": isAda})}
-                                color="keyline"
-                                onClick={() => {
-                                    const newQuestion = redoStack.pop();
-                                    undoStack.push(currentQuestions);
-                                    currentQuestions.setQuestionOrder(newQuestion.questionOrder);
-                                    currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
-                                }}
-                            >
-                                Redo
-                            </Button>}
-                        </Col>
-                        <div className="w-100 d-md-none"></div>
-                        {/* Main two centre buttons: */}
-                        <Col
-                            className="col-12 col-md-4 order-3 order-md-2 d-flex justify-content-center justify-content-md-end pb-2 pb-md-0">
-                            <ShowLoading
-                                placeholder={<div className="text-center"><IsaacSpinner/></div>}
-                                until={!baseGameboardId || baseGameboard}
-                            >
-                                <Button
-                                    className={classNames("d-flex align-items-center", {"plus-button": isAda})}
-                                    color="keyline"
-                                    onClick={() => {
-                                        logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                        dispatch(openActiveModal({
-                                            closeAction: () => {
-                                                dispatch(closeActiveModal());
-                                            },
-                                            closeLabelOverride: "Cancel",
-                                            size: "xl",
-                                            title: "Search questions",
-                                            body: <QuestionSearchModal
-                                                currentQuestions={currentQuestions}
-                                                undoStack={undoStack}
-                                                redoStack={redoStack}
-                                                eventLog={eventLog}
-                                            />
-                                        }));
-                                    }}
-                                >
-                                    Add questions
-                                    {siteSpecific(<img src={"/assets/phy/icons/redesign/plus.svg"} height={"12px"}
-                                        className={"ms-2"} alt=""/>,
-                                    <img className={"plus-icon"}
-                                        src={"/assets/cs/icons/add-circle-outline-pink.svg"} alt=""/>)}
-                                </Button>
-                            </ShowLoading>
-                        </Col>
-                        <Col
-                            className="col-12 col-md-4 order-4 order-md-3 d-flex justify-content-center justify-content-md-start">
+                    <div className="d-flex flex-column flex-md-row justify-content-end gap-2 mt-3">
+                        <ShowLoading
+                            placeholder={<div className="text-center"><IsaacSpinner/></div>}
+                            until={!baseGameboardId || baseGameboard}
+                        >
                             <Button
-                                id="gameboard-save-button" color="secondary"
-                                aria-describedby="gameboard-help"
-                                type={"submit"}
+                                className={classNames("w-100 w-md-auto d-flex align-items-center justify-content-center", {"plus-button": isAda})}
+                                color="keyline"
+                                onClick={() => {
+                                    logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
+                                    dispatch(openActiveModal({
+                                        closeAction: () => {
+                                            dispatch(closeActiveModal());
+                                        },
+                                        closeLabelOverride: "Cancel",
+                                        size: "xl",
+                                        title: "Search questions",
+                                        body: <QuestionSearchModal
+                                            currentQuestions={currentQuestions}
+                                            undoStack={undoStack}
+                                            redoStack={redoStack}
+                                            eventLog={eventLog}
+                                        />
+                                    }));
+                                }}
                             >
-                                {isWaitingForCreateGameboard ?
-                                    <Spinner size={"md"}/> : siteSpecific("Save question deck", "Save quiz")}
+                                    Add questions
+                                {siteSpecific(<img src={"/assets/phy/icons/redesign/plus.svg"} height={"12px"}
+                                    className={"ms-2"} alt=""/>,
+                                <img className={"plus-icon"}
+                                    src={"/assets/cs/icons/add-circle-outline-pink.svg"} alt=""/>)}
                             </Button>
-                        </Col>
-                    </Row>
+                        </ShowLoading>
+                        <Button
+                            className={"w-100 w-md-auto"}
+                            id="gameboard-save-button" color="secondary"
+                            aria-describedby="gameboard-help"
+                            type={"submit"}
+                        >
+                            {isWaitingForCreateGameboard ?
+                                <Spinner size={"md"}/> : siteSpecific("Save question deck", "Save quiz")}
+                        </Button>
+                    </div>
                 </Form>
             </CardBody>
         </Card>

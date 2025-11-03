@@ -6,7 +6,6 @@ import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} f
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
 import {Concepts} from "../../pages/Concepts";
-import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
 import {QuizDoAssignment} from "../../pages/quizzes/QuizDoAssignment";
 import {QuizAttemptFeedback} from "../../pages/quizzes/QuizAttemptFeedback";
@@ -45,7 +44,8 @@ import {BooksOverview} from "../../pages/BooksOverview";
 import {RevisionPage} from "../../pages/RevisionDetailPage";
 import {AnvilAppsListing} from "../../pages/AnvilAppsListing";
 import {AdaCSOverviewPage} from "../../pages/AdaCSOverviewPage";
-import {PhysicsSkills14} from "../../pages/books_old/physics_skills_14";
+import { IsaacStats } from "../../pages/IsaacBirthdayStats";
+import { Programmes } from "../../pages/Programmes";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -65,7 +65,6 @@ const subjectStagePairPages : Record<string, React.ComponentType<RouteComponentP
 
 // TODO: remove these (and related imports) when we have replaced old book index pages with API-based ones
 const old_books : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
-    "/books/physics_skills_14": PhysicsSkills14,
     "/books/pre_uni_maths": PreUniMaths,
     "/books/solve_physics_problems": SolvingPhysProblems,
     "/books/phys_book_yr9": PhysBookYrNine,
@@ -86,7 +85,6 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/register/success" ifUser={isLoggedIn} component={RegistrationSuccess} />,
 
     // Assignments
-    <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
     <TrackedRoute key={key++} exact path="/assignment_schedule" ifUser={isTutorOrAbove} component={AssignmentSchedule} />, // Currently in beta, not yet advertised or listed on navigation menus
 
     // Teacher test pages
@@ -130,6 +128,7 @@ export const RoutesPhy = [
         <TrackedRoute key={key++} exact path={path} component={component} />,
         <TrackedRoute key={key++} exact path={`${path}/:pageId`} component={component} />,
     ]).flat()),
+    <Redirect key={key++} exact from="/books/physics_skills_14" to="/books/physics_skills_19" />,
 
     // Books (new)
     <TrackedRoute key={key++} exact path={"/books/:bookId"} component={Book} />,
@@ -183,7 +182,9 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/tutor_features" component={TutorFeatures}/>,
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
     <TrackedRoute key={key++} exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>,
+    <TrackedRoute key={key++} exact path="/programmes" component={Programmes} />,
     <TrackedRoute key={key++} exact path="/news" component={News} />,
+    <TrackedRoute key={key++} exact path="/isaac_11" component={IsaacStats} />,
 
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,
@@ -195,8 +196,8 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/board/:id" to={`${PATHS.GAMEBOARD}#:id`} />,
     <Redirect key={key++} exact from="/gameboards" to={{pathname: PATHS.GAMEBOARD, hash: window.location.hash}} />,
     <Redirect key={key++} exact from="/gcsebook" to="/books/phys_book_gcse" />,
-    <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_14" />,
-    <Redirect key={key++} exact from="/book" to="/books/physics_skills_14" />,
+    <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_19" />,
+    <Redirect key={key++} exact from="/book" to="/books/physics_skills_19" />,
     <Redirect key={key++} exact from="/qmp" to="/books/quantum_mechanics_primer" />,
     <Redirect key={key++} exact from="/solve_physics_problems" to="/books/solve_physics_problems" />,
     <Redirect key={key++} exact from="/answers" to="/support/student/questions#answers" />,
@@ -207,6 +208,11 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/11_14" to="/" />,
     <Redirect key={key++} exact from="/gcse" to="/" />,
     <Redirect key={key++} exact from="/alevel" to="/" />,
+    <Redirect key={key++} exact from="/s/:shortCode" to="/pages/problem_solving_qs" />,
+    <Redirect key={key++} exact from="/pages/boards_by_topic_bio" to="/biology/a_level/question_decks" />,
+    <Redirect key={key++} exact from="/pages/boards_by_topic_chem" to="/chemistry/a_level/question_decks" />,
+    <Redirect key={key++} exact from="/pages/maths_practice" to="/maths/a_level/question_decks" />,
+    <Redirect key={key++} exact from="/pages/pre_made_gameboards" to="/physics/a_level/question_decks" />,
 
     // Isaac Chemistry redirect
     // TODO: if chemistry is a separate site ever, should move to Chemistry routes.

@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
-import {
-    useGetContentVersionQuery, useGetSegueVersionQuery, useUpdateContentVersionMutation,
-} from "../../state";
+import {useGetContentVersionQuery, useGetSegueVersionQuery, useUpdateContentVersionMutation,} from "../../state";
 import {Link} from "react-router-dom";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {
@@ -19,7 +17,19 @@ import {AnonymisationCheckboxes} from "../elements/AnonymisationCheckboxes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {MisuseStats} from "../elements/MisuseStats";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import { Container, Card, CardTitle, ListGroup, ListGroupItem, CardBody, Form, InputGroup, Input, Button, Alert } from 'reactstrap';
+import {
+    Alert,
+    Button,
+    Card,
+    CardBody,
+    CardTitle,
+    Container,
+    Form,
+    Input,
+    InputGroup,
+    ListGroup,
+    ListGroupItem
+} from 'reactstrap';
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const {data: segueVersion} = useGetSegueVersionQuery();
@@ -45,8 +55,8 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     };
 
     return <Container id="admin-page">
-        <TitleAndBreadcrumb 
-            currentPageTitle={`${SITE_TITLE_SHORT} administration`} breadcrumbTitleOverride="Admin tools" 
+        <TitleAndBreadcrumb
+            currentPageTitle={`${SITE_TITLE_SHORT} administration`} breadcrumbTitleOverride="Admin tools"
             icon={{"type": "hex", "icon": "icon-account"}}
         />
 

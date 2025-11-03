@@ -3,6 +3,7 @@
 .has-tip {
   cursor: help;
 }
+
 .icon-help {
   display: inline-block;
   cursor: help;
@@ -75,14 +76,8 @@
   width: 1.25rem;
   height: 1.25rem;
   background: url(/assets/cs/icons/person.svg) no-repeat;
-  margin-bottom: -4px;
+  background-size: contain;
   margin-right: 10px;
-}
-.icon-ai {
-  display: inline-block;
-  background: url('/assets/cs/icons/ai.svg') no-repeat;
-  width: 24px;
-  height: 24px;
 }
 .icon-lock {
   display: inline-block;
@@ -133,9 +128,8 @@
   @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-:is(a, span) > i.icon:only-child {
-  // centers the icon in the default line height of 1.5rem
-  margin-top: 0.25rem;
+.icon-tick {
+  @include svg-icon('/assets/cs/icons/feedback-sent-tick.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 i.icon.icon-color-black {

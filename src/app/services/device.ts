@@ -14,6 +14,7 @@ export const isTouchDevice = () => {
 export const isNotTouchDevice = () => !isTouchDevice();
 
 export enum DeviceSize {
+    XXXL = "3xl",
     XXL = "xxl",
     XL = "xl",
     LG = "lg",
@@ -27,12 +28,13 @@ export enum DeviceOrientation {
     LANDSCAPE = "landscape",
 }
 
-const descDeviceSizes = [DeviceSize.XXL, DeviceSize.XL, DeviceSize.LG, DeviceSize.MD, DeviceSize.SM, DeviceSize.XS];
+const descDeviceSizes = [DeviceSize.XXXL, DeviceSize.XXL, DeviceSize.XL, DeviceSize.LG, DeviceSize.MD, DeviceSize.SM, DeviceSize.XS];
 
 export const useDeviceSize = () => {
     const getSize = (): DeviceSize => {
         const width = window.innerWidth;
-        if (width >= 1400) return DeviceSize.XXL;
+        if (width >= 1800) return DeviceSize.XXXL;
+        else if (width >= 1400) return DeviceSize.XXL;
         else if (width >= 1200) return DeviceSize.XL;
         else if (width >= 992) return DeviceSize.LG;
         else if (width >= 768) return DeviceSize.MD;
@@ -54,7 +56,8 @@ export const useDeviceSize = () => {
 export const useDeviceHeight = () => {
     const getHeight = (): DeviceSize => {
         const height = window.innerHeight;
-        if (height >= 1400) return DeviceSize.XXL;
+        if (height >= 1800) return DeviceSize.XXXL;
+        else if (height >= 1400) return DeviceSize.XXL;
         else if (height >= 1200) return DeviceSize.XL;
         else if (height >= 992) return DeviceSize.LG;
         else if (height >= 768) return DeviceSize.MD;

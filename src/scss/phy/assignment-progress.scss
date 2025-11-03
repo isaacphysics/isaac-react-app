@@ -23,10 +23,12 @@ $table-selected-border: 2px solid rgb(75, 157, 252);
     border-left: $table-selected-border;
     border-right: $table-selected-border;
     background: $table-selected-background;
+    background-clip: padding-box;
   }
 
   .progress-table-question-link {
     // this relies on elements in the table never having relative positioning!
+    // TODO: since the header is now sticky, this interferes with this :/
     position: absolute;
     width: 100%;
     left: 0;
@@ -36,9 +38,33 @@ $table-selected-border: 2px solid rgb(75, 157, 252);
     font-weight: bold;
   }
 
+  background-color: $gray-103;
+  // :is(thead, tfoot) tr :is(td, th) {
+  // }
+
+  tbody tr:nth-of-type(even) {
+    background: $gray-103;
+    th {
+      background: $gray-103;
+    }
+  }
+
+  tbody tr:nth-of-type(odd) {
+    background: white;
+    th {
+      background: white;
+    }
+  }
+
+  thead th, tfoot th, tfoot td {
+    // this be enabled for all sticky elements.
+    background: $gray-103;
+  }
+
   &:has(.selected) {
-    thead tr:nth-of-type(2) {
+    thead tr:nth-of-type(2) th {
       background: $table-selected-background;
+      background-clip: padding-box;
     }
     
     thead tr:first-of-type th:not(.selected) {

@@ -1,6 +1,6 @@
 import {
     CONTEXT_SOURCE,
-    determineUserContext,
+    calculateNewUserContext,
     EXAM_BOARD,
     GameboardAndPathInfo,
     getFilteredStageOptions,
@@ -19,7 +19,7 @@ describe("User context derivation", () => {
             const registered: UserContext[] = [{examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE}];
 
             // Act
-            const result = determineUserContext(transient, registered, undefined, undefined);
+            const result = calculateNewUserContext(transient, registered, undefined, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.GCSE]);
@@ -32,7 +32,7 @@ describe("User context derivation", () => {
     if (isPhy){
         it("uses correct defaults on Isaac", () => {
             // Act
-            const result = determineUserContext({}, undefined, undefined, undefined);
+            const result = calculateNewUserContext({}, undefined, undefined, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.ALL]);
@@ -47,7 +47,7 @@ describe("User context derivation", () => {
     } else {
         it("uses correct defaults on Ada", () => {
             // Act
-            const result = determineUserContext({}, undefined, undefined, undefined);
+            const result = calculateNewUserContext({}, undefined, undefined, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.ALL]);
@@ -66,7 +66,7 @@ describe("User context derivation", () => {
             const registered: UserContext[] = [{stage: STAGE.A_LEVEL}];
 
             // Act
-            const result = determineUserContext({}, registered, undefined, undefined);
+            const result = calculateNewUserContext({}, registered, undefined, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.A_LEVEL]);
@@ -81,7 +81,7 @@ describe("User context derivation", () => {
             const registered: UserContext[] = [{examBoard: EXAM_BOARD.CIE, stage: STAGE.A_LEVEL}];
 
             // Act
-            const result = determineUserContext({}, registered, undefined, undefined);
+            const result = calculateNewUserContext({}, registered, undefined, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.A_LEVEL]);
@@ -99,7 +99,7 @@ describe("User context derivation", () => {
             const transient: TransientUserContextState = {stage: STAGE.GCSE};
 
             // Act
-            const result = determineUserContext(transient, registered, undefined, undefined);
+            const result = calculateNewUserContext(transient, registered, undefined, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.GCSE]);
@@ -117,7 +117,7 @@ describe("User context derivation", () => {
             const transient: TransientUserContextState = {examBoard: EXAM_BOARD.AQA, stage: STAGE.GCSE};
 
             // Act
-            const result = determineUserContext(transient, registered, undefined, undefined);
+            const result = calculateNewUserContext(transient, registered, undefined, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.GCSE]);
@@ -157,7 +157,7 @@ describe("User context derivation", () => {
             };
 
             // Act
-            const result = determineUserContext(transient, registered, gameboardInfo, undefined);
+            const result = calculateNewUserContext(transient, registered, gameboardInfo, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.FURTHER_A]);
@@ -193,7 +193,7 @@ describe("User context derivation", () => {
             };
 
             // Act
-            const result = determineUserContext(transient, registered, gameboardInfo, undefined);
+            const result = calculateNewUserContext(transient, registered, gameboardInfo, undefined);
 
             // Assert
             expect(result.contexts.map(c => c.stage)).toEqual([STAGE.SCOTLAND_HIGHER]);

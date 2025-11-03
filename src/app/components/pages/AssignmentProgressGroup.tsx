@@ -29,6 +29,7 @@ import {StyledDropdown} from '../elements/inputs/DropdownInput';
 import {Loading} from '../handlers/IsaacSpinner';
 import {skipToken} from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
+import { useHistoryState } from '../../state/actions/history';
 
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const dispatch = useAppDispatch();
@@ -44,17 +45,24 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
         ? getQuizAssignmentCSVDownloadLink(assignment.id as number)
         : getAssignmentProgressCSVDownloadLink(assignment.id as number);
 
+    const isScheduled = assignment.scheduledStartDate && new Date(assignment.scheduledStartDate) > new Date();
+
     return <Link to={quiz ? `/test/assignment/${assignment.id}/feedback` : `${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} className="w-100 d-block no-underline mt-2">
         <div className="d-flex align-items-center assignment-progress-group w-100 p-3">
             <div className="d-flex flex-column">
-                <span className="d-flex">
+                <span className="d-inline-flex flex-wrap">
                     <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? "Unknown quiz"}</b>
-                    <a className="external-link" href={quiz ? assignment.quizSummary?.url : `/question_decks#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
+                    {isScheduled && <em className="mx-1">(scheduled)</em>}
+                    <a className="new-tab-link" href={quiz ? assignment.quizSummary?.url : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`} target="_blank" onClick={(e) => e.stopPropagation()}>
                         <i className="icon icon-new-tab" />
                     </a>
                 </span>
-                <div className="d-flex">
-                    {assignment.dueDate && <Badge className="d-flex align-items-center me-2 text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
+                <div className="d-flex flex-column flex-sm-row align-items-start gap-2 me-2">
+                    {isScheduled && <Badge className="d-flex align-items-center text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
+                        <i className="icon icon-event-upcoming me-2" color="primary"/>
+                        {`Starts: ${formatDate(assignment.scheduledStartDate)}`}
+                    </Badge>}
+                    {assignment.dueDate && <Badge className="d-flex align-items-center text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                         <i className="icon icon-event-upcoming me-2" color="primary"/>
                         {`Due: ${formatDate(assignment.dueDate)}`}
                     </Badge>}
@@ -66,11 +74,11 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
                 </div>
             </div>
             <Spacer/>
-            <strong className="align-content-center">
+            {!isScheduled && <strong className="align-content-center mw-max-content">
                 <a href={csvDownloadLink} className="assignment-csv-download-link" target="_blank" rel="noopener" onClick={(e) => openAssignmentDownloadLink(e)}>
                     Download CSV
                 </a>
-            </strong>
+            </strong>}
             <i className="icon icon-chevron-right ms-3" color="tertiary"/>
         </div>
     </Link>;
@@ -86,11 +94,13 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
     const dispatch = useAppDispatch();
 
     const [searchText, setSearchText] = useState("");
-    const [activeTab, setActiveTab] = useState<"assignments" | "tests">("assignments");
+    const [activeTab, setActiveTab] = useHistoryState<"assignments" | "tests">("markbookTab", "assignments");
 
     const deviceSize = useDeviceSize();
 
     const assignmentLikeListing = activeTab === "assignments" ? groupBoardAssignments : groupQuizAssignments;
+
+    const filteredAssignments = assignmentLikeListing?.filter(al => (isQuiz(al) ? al.quizSummary?.title : al.gameboard?.title)?.toLowerCase().includes(searchText.toLowerCase()));
 
     return <Container className="mb-5">
         <TitleAndBreadcrumb
@@ -110,7 +120,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                 Back to assignment progress
             </Link>}
             {isDefined(group?.id) && <>
-                {above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
+                {isPhy && above[siteSpecific("sm", "lg")](deviceSize) && <Spacer/>}
                 <Button className="d-flex align-items-center" color="solid" onClick={() => dispatch(openActiveModal(downloadLinkModal(getGroupAssignmentProgressCSVDownloadLink(group.id as number))))}>
                     Download assignments CSV
                     <i className="icon icon-download ms-2" color="white"/>
@@ -144,20 +154,9 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         <Card>
             <CardBody>
                 <Row className="mb-3">
-                    <Col xs={12} lg={8}>
+                    <Col xs={12}>
                         <h3>Assignments and tests</h3>
                         <span>View this group&apos;s progress on assignment and tests.</span>
-                    </Col>
-                    <Col xs={12} sm={6} lg={4} className="d-flex flex-column">
-                        <Label className="m-0 fw-bold mt-2 mt-lg-0">Sort by:</Label>
-                        <StyledDropdown
-                            value={Object.values(AssignmentOrder).findIndex(item => item.type === assignmentOrder.type && item.order === assignmentOrder.order)}
-                            onChange={(e) => setAssignmentOrder(Object.values(AssignmentOrder)[parseInt(e.target.value)])}
-                        >
-                            {Object.values(AssignmentOrder).map((item, index) =>
-                                <option key={item.type + item.order} value={index}>{item.type} ({item.order === SortOrder.ASC ? "ascending" : "descending"})</option>
-                            )}
-                        </StyledDropdown>
                     </Col>
                     <Col xs={12} sm={6} lg={4}>
                         <Label className="m-0 fw-bold mt-2 mt-lg-3">Search:</Label>
@@ -165,6 +164,18 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                             onChange={(e) => setSearchText(e.target.value)}
                             placeholder={`Search for ${activeTab === "assignments" ? "assignments" : "tests"}...`}
                         />
+                    </Col>
+                    <Col xs={12} sm={6} lg={{size: 4, offset: 4}} className="d-flex flex-column">
+                        <Label for="sort-by-dropdown" className="m-0 fw-bold mt-2 mt-lg-3">Sort by:</Label>
+                        <StyledDropdown
+                            value={Object.values(AssignmentOrder).findIndex(item => item.type === assignmentOrder.type && item.order === assignmentOrder.order)}
+                            onChange={(e) => setAssignmentOrder(Object.values(AssignmentOrder)[parseInt(e.target.value)])}
+                            id="sort-by-dropdown"
+                        >
+                            {Object.values(AssignmentOrder).map((item, index) =>
+                                <option key={item.type + item.order} value={index}>{item.type} ({item.order === SortOrder.ASC ? "ascending" : "descending"})</option>
+                            )}
+                        </StyledDropdown>
                     </Col>
                 </Row>
 
@@ -181,9 +192,11 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                     {isFetching
                         ? <Loading/>
                         : assignmentLikeListing?.length
-                            ? assignmentLikeListing
-                                .filter(al => (isQuiz(al) ? al.quizSummary?.title : al.gameboard?.title)?.toLowerCase().includes(searchText.toLowerCase()))
-                                .map(assignment => <AssignmentLikeLink key={assignment.id} assignment={assignment} />)
+                            ? filteredAssignments?.length
+                                ? filteredAssignments.map(assignment => <AssignmentLikeLink key={assignment.id} assignment={assignment} />)
+                                : <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
+                                    <span>No {activeTab === "assignments" ? "assignments" : "tests"} match your search.</span>
+                                </div>
                             : <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
                                 <span>You haven&apos;t {activeTab === "assignments" ? "set any assignments" : "assigned any tests"} yet.</span>
                                 <strong><Link to={activeTab === "assignments" ? PATHS.SET_ASSIGNMENTS : "/set_tests"} className={classNames("btn btn-link", {"fw-bold": isPhy})}>

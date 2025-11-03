@@ -5,7 +5,7 @@ import { determineAudienceViews } from "../../../services/userViewingContext";
 import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
-import { ContentSummaryDTO, GameboardDTO, QuizSummaryDTO } from "../../../../IsaacApiTypes";
+import { ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
 import { selectors, showQuizSettingModal, useAppDispatch, useAppSelector } from "../../../state";
 import { UnionToIntersection } from "@reduxjs/toolkit/dist/tsHelpers";
@@ -198,20 +198,22 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
 
 interface ShortcutListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
     item: ShortcutResponse;
+    linkedBoardId?: string;
 }
 
-export const ShortcutListViewItem = ({item, ...rest}: ShortcutListViewItemProps) => {
+export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutListViewItemProps) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `${item.url}${item.hash ? `#${item.hash}` : ""}`;
+    const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
     const icon = (url.includes("concepts/") || !item.className?.includes("wildcard-list-view")) ? "icon-concept" : "icon-wildcard";
+    const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
 
     return <AbstractListViewItem
         icon={{type: "hex", icon: icon, size: "lg"}}
         title={item.title ?? ""}
         subject={itemSubject}
-        subtitle={item.subtitle}
+        subtitle={subtitle}
         tags={item.tags}
         supersededBy={item.supersededBy}
         breadcrumb={breadcrumb}

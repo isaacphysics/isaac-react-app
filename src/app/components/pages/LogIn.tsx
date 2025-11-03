@@ -32,6 +32,7 @@ import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {extractErrorMessage} from '../../services/errors';
 import { StyledCheckbox } from '../elements/inputs/StyledCheckbox';
 import { MicrosoftSignInButton } from '../elements/MicrosoftSignInButton';
+import { Link } from 'react-router-dom';
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -95,6 +96,8 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
                 }
                 invalid={isNaN(Number(mfaVerificationCode))}
                 required
+                // eslint-disable-next-line jsx-a11y/no-autofocus
+                autoFocus
             />
             <FormFeedback id="verification-code-validation-message">
                 {isNaN(Number(mfaVerificationCode)) && "Please enter a valid verification code"}
@@ -145,6 +148,11 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
             </strong>}
         </p>;
 };
+
+export const SsoHelpLink = () => 
+    <Link className="justify-content-end d-flex" to="/pages/single_sign_on" target='_blank'>
+        Learn more about Single Sign-On
+    </Link>;
 
 interface EmailPasswordInputsProps {
     setEmail: (email: string) => void;
@@ -302,6 +310,11 @@ export const LogIn = () => {
                                     {isPhy && <Row className="mb-2 justify-content-center">
                                         <Col sm={9}>
                                             <MicrosoftSignInButton/>
+                                        </Col>
+                                    </Row>}
+                                    {isPhy && <Row className="mb-2">
+                                        <Col>
+                                            <SsoHelpLink />
                                         </Col>
                                     </Row>}
                                 </React.Fragment>

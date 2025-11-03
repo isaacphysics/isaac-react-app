@@ -5,6 +5,7 @@ import {FormGroup, Input} from "reactstrap";
 import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
 import {useCurrentQuestionAttempt} from "../../services";
 import {useCanAttemptQuestionTypeQuery} from "../../state";
+import { LLMFreeTextQuestionRemainingAttemptsView } from "../elements/LLMFreeTextQuestionRemainingAttemptsView";
 
 interface Limit {
     exceeded: boolean;
@@ -78,10 +79,12 @@ const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
 
     return (
         <div className="freetext-question">
+            <LLMFreeTextQuestionRemainingAttemptsView canAttemptQuestionType={canAttemptQuestionType} />
             <div className="question-content">
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
+                {doc.maxMarks && <p><strong>{`[${doc.maxMarks} mark${doc.maxMarks > 1 ? "s" : ""}]`}</strong></p>}
             </div>
             <FormGroup className="mb-4">
                 <Input type="textarea"

@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "master", "redesign-2024" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master", "redesign-2024" ]
+    branches: [ "main" ]
 
 jobs:
   build-and-test:
@@ -26,6 +26,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
     - run: yarn --frozen-lockfile
+    - name: Run ESLint
+      run: yarn run lint:ci
     - run: yarn run build-ada
     - run: yarn run test-phy --silent
     - run: yarn run test-ada --silent --coverage

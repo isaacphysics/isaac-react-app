@@ -6,6 +6,7 @@ import {
     BookInfo,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
+    getAllowedTags,
     getFilteredExamBoardOptions,
     getHumanContext,
     getQuestionPlaceholder,
@@ -35,7 +36,7 @@ import {
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {RouteComponentProps, useHistory, withRouter} from "react-router";
+import {useHistory, withRouter} from "react-router";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -68,6 +69,14 @@ export interface QuestionStatus {
     allAttempted: boolean; // Phy only
     complete: boolean;
 }
+
+export const statusLabelMap: {[key: string]: string} = {
+    "notAttempted": siteSpecific("Not started", "Not attempted"),
+    "tryAgain": siteSpecific("In progress", "Try again"),
+    "allIncorrect": "All incorrect",
+    "allAttempted": "All attempted",
+    "complete": siteSpecific("Fully correct", "Completed"),
+};
 
 function questionStatusToURIComponent(statuses: QuestionStatus): string {
     return Object.entries(statuses)
@@ -131,13 +140,13 @@ export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: Filte
             {t.label}
             <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label="Close"/>
         </div>)}
-        {filterTags.length > 0 && <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
+        {filterTags.length > 0 && <button className="text-black py-0 mt-1 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
             Clear all filters
         </button>}
     </div>;
 };
 
-export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
+export const QuestionFinder = withRouter(() => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
@@ -195,7 +204,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
     const choices = useMemo(() => {
-        return updateTopicChoices(selections, pageContext);
+        return updateTopicChoices(selections, pageContext, getAllowedTags(pageContext));
     }, [selections, pageContext]);
 
     const isEmptySearch = (query: string, topics: string[], books: string[], stages: string[], difficulties: string[], examBoards: string[], selections: ChoiceTree[]) => {
@@ -219,11 +228,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             excludeBooks,
             searchStatuses: questionStatuses,
             startIndex, randomSeed
-        }) => {
+        }): void => {
             if (isEmptySearch(searchString, topics, book, stages, difficulties, examBoards, hierarchySelections)) {
                 setIsCurrentSearchEmpty(true);
-                dispatch(clearQuestionSearch);
-                return;
+                return void dispatch(clearQuestionSearch);
             }
 
             const choiceTreeLeaves = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
@@ -242,7 +250,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
             setIsCurrentSearchEmpty(false);
 
-            dispatch(searchQuestions({
+            void dispatch(searchQuestions({
                 querySource: "questionFinder",
                 searchString: searchString || undefined,
                 tags: choiceTreeLeaves.join(",") || undefined,
@@ -446,7 +454,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const filterTags = useMemo(() => [
         searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
         searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
-        statusList.map(s => {return {value: s, label: s.replace("notAttempted", "Not started").replace("complete", "Fully correct").replace("tryAgain", "In progress")};}),
+        statusList.map(s => {return {value: s, label: statusLabelMap[s]};}),
         excludeBooks ? [{value: "excludeBooks", label: "Exclude skills books questions"}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
         selectionList,
     ].flat(), [searchDifficulties, searchStages, statusList, excludeBooks, booksList, selectionList]);
@@ -492,7 +500,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     </p>
                                 </div>
                                 : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
-                                Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
+                                    Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
                         </div>,
                         <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
                     )}

@@ -9,6 +9,7 @@ import {
     isAda,
     isDobOldEnoughForSite,
     isPhy,
+    isTeacherOrAbove,
     KEY,
     persistence,
     SITE_TITLE,
@@ -17,7 +18,6 @@ import {
     validateCountryCode,
     validateEmail,
     validateName,
-    validatePassword,
     validateUserSchool
 } from "../../services";
 import {errorSlice, registerNewUser, selectors, useAppDispatch, useAppSelector} from "../../state";
@@ -37,6 +37,7 @@ import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
 import {DobInput} from "../elements/inputs/DobInput";
 import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
 import { SignupTab } from "../elements/panels/SignupTab";
+import { scheduleTeacherOnboardingModalForNextOverviewVisit } from "../elements/modals/AdaTeacherOnboardingModal";
 
 interface RegistrationSetDetailsProps {
     role: UserRole
@@ -60,14 +61,12 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         })
     );
 
-    const [confirmedPassword, setConfirmedPassword] = useState("");
+    const [passwordValid, setPasswordValid] = useState(false);
     const [tosAccepted, setTosAccepted] = useState(false);
 
     const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
     const givenNameIsValid = validateName(registrationUser.givenName);
     const familyNameIsValid = validateName(registrationUser.familyName);
-    const passwordIsValid = validatePassword(registrationUser.password || "");
-    const passwordsMatch = (!isPhy || confirmedPassword === registrationUser.password);
     const schoolIsValid = validateUserSchool(registrationUser);
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
     const dobValidOrUnset = !isPhy || !registrationUser.dateOfBirth || isDobOldEnoughForSite(registrationUser.dateOfBirth);
@@ -78,10 +77,14 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
-        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid &&
+        if (familyNameIsValid && givenNameIsValid && passwordValid && emailIsValid &&
             (!isAda || countryCodeIsValid) && (!isPhy || dobValidOrUnset) &&
             ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
+            
+            if (isAda && isTeacherOrAbove({ role })) {
+                scheduleTeacherOnboardingModalForNextOverviewVisit();
+            }
 
             // stop the Required account information modal appearing before the signup flow has completed
             persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
@@ -157,11 +160,9 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 />
                                 <SetPasswordInput
                                     className="my-4"
-                                    userToUpdate={registrationUser}
-                                    setUserToUpdate={setRegistrationUser}
-                                    passwordValid={passwordIsValid}
-                                    passwordsMatch={passwordsMatch}
-                                    setConfirmedPassword={setConfirmedPassword}
+                                    password={registrationUser.password}
+                                    onChange={(password) => setRegistrationUser(Object.assign({}, registrationUser, {password: password}))}
+                                    onValidityChange={setPasswordValid}
                                     submissionAttempted={attemptedSignUp}
                                     required={true}
                                 />

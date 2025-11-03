@@ -5,7 +5,8 @@ import {
     selectors,
     setAssignBoardPath,
     useAppDispatch,
-    useAppSelector, useGetGameboardByIdQuery,
+    useAppSelector,
+    useGetGameboardByIdQuery,
     useGetMyAssignmentsQuery
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
@@ -20,11 +21,13 @@ import {
     filterAudienceViewsByProperties,
     generateQuestionTitle,
     isAda,
+    isAppLink,
     isDefined,
     isFound,
     isNotPartiallyLoggedIn,
     isPhy,
-    isTutorOrAbove, PATHS,
+    isTutorOrAbove,
+    PATHS,
     SEARCH_RESULT_TYPE,
     showWildcard,
     siteSpecific,
@@ -39,14 +42,14 @@ import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import { GameboardSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { PageMetadata } from "../elements/PageMetadata";
-import { ListView } from "../elements/list-groups/ListView";
+import {GameboardSidebar, MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
+import {PageMetadata} from "../elements/PageMetadata";
+import {ListView} from "../elements/list-groups/ListView";
 
 export const getProgressIcon = (state?: CompletionState) => {
     const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
     let backgroundColor = "white";
-    let icon = siteSpecific("icon icon-raw icon-not-started", "/assets/cs/icons/question-not-started.svg");
+    let icon = siteSpecific("icon icon-raw icon-not-started", "/assets/cs/icons/status-not-started.svg");
     let message = siteSpecific("", "Not started");
     switch (state) {
         case CompletionState.ALL_CORRECT:
@@ -54,26 +57,26 @@ export const getProgressIcon = (state?: CompletionState) => {
                 backgroundColor = "correct";
             }
             message = "Correct";
-            icon = siteSpecific("icon icon-raw icon-correct", "/assets/cs/icons/question-correct.svg");
+            icon = siteSpecific("icon icon-raw icon-correct", "/assets/cs/icons/status-correct.svg");
             break;
         case CompletionState.ALL_INCORRECT:
             if (isAda) {
                 backgroundColor = "incorrect";
                 message = "Incorrect";
-                icon = siteSpecific("icon icon-raw icon-incorrect", "/assets/cs/icons/question-incorrect.svg");
+                icon = "/assets/cs/icons/status-incorrect.svg";
                 break;
             }
             // fallthrough if isPhy
         case CompletionState.ALL_ATTEMPTED:
             if (isPhy) {
                 message = "All attempted (some errors)";
-                icon = siteSpecific("icon icon-raw icon-attempted", "/assets/cs/icons/question-attempted.svg");
+                icon = "icon icon-raw icon-attempted";
                 break;
             }
             // fallthrough if isAda
         case CompletionState.IN_PROGRESS:
             message = "In progress";
-            icon = siteSpecific("icon icon-raw icon-in-progress", "/assets/cs/icons/question-in-progress.svg");
+            icon = siteSpecific("icon icon-raw icon-in-progress", "/assets/cs/icons/status-in-progress.svg");
             break;
     }
     return {itemClasses: classNames(itemClasses, `bg-${backgroundColor}`), icon, message};
@@ -126,9 +129,12 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     </ListGroupItem>;
 };
 
-export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
+export const Wildcard = ({gameboard, wildcard}: {gameboard: GameboardDTO, wildcard: IsaacWildcard}) => {
+    if (!wildcard.url) return null;
+    const link = isAppLink(wildcard.url) ? `${wildcard.url}?board=${gameboard.id}` : wildcard.url;
+
     return <ListGroupItem key={wildcard.id} className={"content-summary-link text-info bg-wildcard p-3"}>
-        <a href={wildcard.url} className="align-items-center">
+        <a href={link} className="align-items-center">
             <i className="icon icon-concept me-3" />
             <div className={"flex-grow-1"}>
                 <span className="link-title question-link-title me-2">{wildcard.title}</span>
@@ -143,7 +149,7 @@ export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
 export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => {
     return <ListGroup className="link-list list-group-links list-gameboard">
         {gameboard?.wildCard && showWildcard(gameboard) &&
-            <Wildcard wildcard={gameboard.wildCard} />
+            <Wildcard gameboard={gameboard} wildcard={gameboard.wildCard} />
         }
         {gameboard?.contents && gameboard.contents.map(q =>
             <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
@@ -180,9 +186,9 @@ export const Gameboard = withRouter(({ location }) => {
     }, [dispatch, gameboard]);
 
     const notFoundComponent = <>
-        <TitleAndBreadcrumb 
-            breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")} 
-            currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`} 
+        <TitleAndBreadcrumb
+            breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")}
+            currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`}
             icon={{type: "hex", icon: "icon-error"}}
         />
         <h3 className="my-4">
@@ -200,7 +206,7 @@ export const Gameboard = withRouter(({ location }) => {
                 ifNotFound={notFoundComponent}
                 thenRender={(gameboard) => {
                     return <>
-                        <TitleAndBreadcrumb 
+                        <TitleAndBreadcrumb
                             currentPageTitle={siteSpecific("Question deck", gameboard && gameboard.title || "Filter Generated Quiz")} icon={{type: "hex", icon: "icon-question-deck"}}
                             intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: "Assignments", to: "/assignments"}] : []}
                         />
@@ -208,9 +214,9 @@ export const Gameboard = withRouter(({ location }) => {
                             <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />
                             <MainContent>
                                 <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
-                                {isPhy 
+                                {isPhy
                                     ? <ListView type="item" items={displayQuestions} linkedBoardId={gameboardId} className="mt-3"/>
-                                    : <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-7" /> 
+                                    : <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-7" />
                                 }
                                 {user && isTutorOrAbove(user)
                                     ? <Row>

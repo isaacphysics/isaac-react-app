@@ -25,7 +25,7 @@ import classNames from "classnames";
 import { CheckboxWrapper, StyledCheckbox } from "../inputs/StyledCheckbox";
 import { DifficultyIcons } from "../svg/DifficultyIcons";
 import { GroupBase } from "react-select";
-import { HierarchyFilterTreeList } from "../svg/HierarchyFilter";
+import { HierarchyFilterTreeContents } from "../svg/HierarchyFilter";
 import { openActiveModal, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
@@ -154,266 +154,259 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         </CardHeader>
         <CardBody className={classNames("p-0 m-0", {"d-none": isAda && below["md"](deviceSize) && !filtersVisible})}>
             <ul>
-                {(isAda || pageStageToSearchStage(pageContext?.stage).length !== 1) && <li>
-                    <CollapsibleList
-                        title={listTitles.stage} expanded={listState.stage.state}
-                        toggle={() => listStateDispatch({type: "toggle", id: "stage", focus: below["md"](deviceSize)})}
-                        numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.length}
-                    >
-                        {getFilteredStageOptions().filter(stage => pageStageToSearchStage(pageContext?.stage).includes(stage.value) || !pageContext?.stage?.length).map((stage, index) => (
-                            <li key={index}>
-                                <CheckboxWrapper active={searchStages.includes(stage.value)}>
-                                    <StyledCheckbox
-                                        color="primary"
-                                        checked={searchStages.includes(stage.value)}
-                                        onChange={() => setSearchStages(s => s.includes(stage.value) ? s.filter(v => v !== stage.value) : [...s, stage.value])}
-                                        label={<span>{stage.label}</span>}
-                                    />
-                                </CheckboxWrapper>
-                            </li>
-                        ))}
-                    </CollapsibleList>
-                </li>}
+                {(isAda || pageStageToSearchStage(pageContext?.stage).length !== 1) && <CollapsibleList
+                    title={listTitles.stage} expanded={listState.stage.state}
+                    toggle={() => listStateDispatch({type: "toggle", id: "stage", focus: below["md"](deviceSize)})}
+                    numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.length}
+                    tag={"li"}
+                >
+                    {getFilteredStageOptions().filter(stage => pageStageToSearchStage(pageContext?.stage).includes(stage.value) || !pageContext?.stage?.length).map((stage, index) => (
+                        <li key={index}>
+                            <CheckboxWrapper active={searchStages.includes(stage.value)}>
+                                <StyledCheckbox
+                                    color="primary"
+                                    checked={searchStages.includes(stage.value)}
+                                    onChange={() => setSearchStages(s => s.includes(stage.value) ? s.filter(v => v !== stage.value) : [...s, stage.value])}
+                                    label={<span>{stage.label}</span>}
+                                />
+                            </CheckboxWrapper>
+                        </li>
+                    ))}
+                </CollapsibleList>}
 
-                {isAda && <li>
-                    <CollapsibleList
-                        title={listTitles.examBoard} expanded={listState.examBoard.state}
-                        toggle={() => listStateDispatch({type: "toggle", id: "examBoard", focus: below["md"](deviceSize)})}
-                        numberSelected={searchExamBoards.length}
-                    >
-                        {getFilteredExamBoardOptions({byStages: searchStages}).map((board, index) => (
-                            <li key={index}>
-                                <CheckboxWrapper active={searchExamBoards.includes(board.value)}>
-                                    <StyledCheckbox
-                                        color="primary"
-                                        checked={searchExamBoards.includes(board.value)}
-                                        onChange={() => setSearchExamBoards(s => s.includes(board.value) ? s.filter(v => v !== board.value) : [...s, board.value])}
-                                        label={<span>{board.label}</span>}
-                                    />
-                                </CheckboxWrapper>
-                            </li>
-                        ))}
-                    </CollapsibleList>
-                </li>}
+                {isAda && <CollapsibleList
+                    title={listTitles.examBoard} expanded={listState.examBoard.state}
+                    toggle={() => listStateDispatch({type: "toggle", id: "examBoard", focus: below["md"](deviceSize)})}
+                    numberSelected={searchExamBoards.length}
+                    tag={"li"}
+                >
+                    {getFilteredExamBoardOptions({byStages: searchStages}).map((board, index) => (
+                        <li key={index}>
+                            <CheckboxWrapper active={searchExamBoards.includes(board.value)}>
+                                <StyledCheckbox
+                                    color="primary"
+                                    checked={searchExamBoards.includes(board.value)}
+                                    onChange={() => setSearchExamBoards(s => s.includes(board.value) ? s.filter(v => v !== board.value) : [...s, board.value])}
+                                    label={<span>{board.label}</span>}
+                                />
+                            </CheckboxWrapper>
+                        </li>
+                    ))}
+                </CollapsibleList>}
 
-                <li>
-                    <CollapsibleList
-                        title={listTitles.topics} expanded={listState.topics.state} hasUlTag={isPhy}
-                        toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
-                        numberSelected={siteSpecific(getChoiceTreeLeaves(selections).filter(l => l.value !== pageContext?.subject).length, searchTopics.length)}
-                    >
-                        {siteSpecific(
-                            <HierarchyFilterTreeList root {...{
-                                tier: pageContext?.subject ? 1 : 0,
-                                index: pageContext?.subject as TAG_ID ?? TAG_LEVEL.subject,
-                                choices, selections, setSelections,
-                                questionFinderFilter: true
-                            }}/>,
-                            <>{groupBaseTagOptions.map((tag, index) => (
-                                <li key={index}>
-                                    <CollapsibleList
-                                        title={tag.label} asSubList
-                                        expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
-                                        toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
-                                    >
-                                        {tag.options.map((topic, index) => (
-                                            <li className={classNames("ps-3", {"bg-white": isAda})} key={index}>
-                                                <StyledCheckbox
-                                                    color="primary"
-                                                    checked={searchTopics.includes(topic.value)}
-                                                    onChange={() => setSearchTopics(
-                                                        s => s.includes(topic.value)
-                                                            ? s.filter(v => v !== topic.value)
-                                                            : [...s, topic.value]
-                                                    )}
-                                                    label={<span>{topic.label}</span>}
-                                                    className="ps-3"
-                                                />
-                                            </li>
-                                        ))}
-                                    </CollapsibleList>
-                                </li>
-                            ))}</>
-                        )}
-                    </CollapsibleList>
-                </li>
-
-                <li>
-                    <CollapsibleList
-                        title={listTitles.difficulty} expanded={listState.difficulty.state}
-                        toggle={() => listStateDispatch({type: "toggle", id: "difficulty", focus: below["md"](deviceSize)})}
-                        numberSelected={searchDifficulties.length}
-                    >
-                        <button
-                            className={classNames("p-0 h-min-content btn-link d-flex ps-3 py-2", {"bg-white": isAda, "bg-transparent": isPhy})}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                dispatch(openActiveModal(questionFinderDifficultyModal()));
-                            }}>
-                            <b className="small text-start">{siteSpecific("Learn more about difficulty levels", "What do the difficulty levels mean?")}</b>
-                        </button>
-                        {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
-                            <li key={index}>
-                                <CheckboxWrapper active={searchDifficulties.includes(difficulty.value)}>
-                                    <StyledCheckbox
-                                        color="primary"
-                                        checked={searchDifficulties.includes(difficulty.value)}
-                                        onChange={() => setSearchDifficulties(
-                                            s => s.includes(difficulty.value)
-                                                ? s.filter(v => v !== difficulty.value)
-                                                : [...s, difficulty.value]
-                                        )}
-                                        label={<div className="d-flex align-items-center">
-                                            <span className="me-2">{difficulty.label}</span>
-                                            <DifficultyIcons difficulty={difficulty.value} blank className={classNames({"mt-n2": isAda, "mt-2": isPhy})}/>
-                                        </div>}
-                                    />
-                                </CheckboxWrapper>
-                            </li>
-                        ))}
-                    </CollapsibleList>
-                </li>
-
-                {isPhy && bookOptions.length > 0 && <li>
-                    <CollapsibleList
-                        title={listTitles.books} expanded={listState.books.state}
-                        toggle={() => listStateDispatch({type: "toggle", id: "books", focus: below["md"](deviceSize)})}
-                        numberSelected={excludeBooks ? 1 : searchBooks.length}
-                    >
-                        <>
-                            <li>
-                                <CheckboxWrapper active={excludeBooks}>
-                                    <StyledCheckbox
-                                        color="primary"
-                                        checked={excludeBooks}
-                                        onChange={() => setExcludeBooks(p => !p)}
-                                        label={<span className="me-2">Exclude skills book questions</span>}
-                                    />
-                                </CheckboxWrapper>
-                            </li>
-                            <div className="section-divider ms-3 my-2"/>
-                            {bookOptions.map((book, index) => (
-                                <li key={index}>
-                                    <CheckboxWrapper active={searchBooks.includes(book.tag) && !excludeBooks}>
+                <CollapsibleList
+                    title={listTitles.topics} expanded={listState.topics.state}
+                    toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
+                    numberSelected={siteSpecific(getChoiceTreeLeaves(selections).filter(l => l.value !== pageContext?.subject).length, searchTopics.length)}
+                    tag={"li"}
+                >
+                    {siteSpecific(
+                        <HierarchyFilterTreeContents root {...{
+                            tier: pageContext?.subject ? 1 : 0,
+                            index: pageContext?.subject as TAG_ID ?? TAG_LEVEL.subject,
+                            choices, selections, setSelections,
+                            questionFinderFilter: true
+                        }}/>,
+                        <>{groupBaseTagOptions.map((tag, index) => (
+                            <CollapsibleList
+                                title={tag.label} asSubList
+                                expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
+                                toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
+                                tag={"li"} key={index}
+                            >
+                                {tag.options.map((topic, index) => (
+                                    <li className={classNames("ps-3", {"bg-white": isAda})} key={index}>
                                         <StyledCheckbox
                                             color="primary"
-                                            checked={searchBooks.includes(book.tag) && !excludeBooks}
-                                            onChange={() => {
-                                                if (excludeBooks) {
-                                                    setExcludeBooks(false);
-                                                    setSearchBooks([book.tag]);
-                                                } else {
-                                                    setSearchBooks(
-                                                        s => s.includes(book.tag)
-                                                            ? s.filter(v => v !== book.tag)
-                                                            : [...s, book.tag]
-                                                    );
-                                                }
-                                            }}
-                                            label={<span className="me-2">{book.shortTitle ?? book.title}</span>}
+                                            checked={searchTopics.includes(topic.value)}
+                                            onChange={() => setSearchTopics(
+                                                s => s.includes(topic.value)
+                                                    ? s.filter(v => v !== topic.value)
+                                                    : [...s, topic.value]
+                                            )}
+                                            label={<span>{topic.label}</span>}
+                                            className="ps-3"
                                         />
-                                    </CheckboxWrapper>
-                                </li>
-                            ))}
-                        </>
-                    </CollapsibleList>
-                </li>}
+                                    </li>
+                                ))}
+                            </CollapsibleList>
+                        ))}</>
+                    )}
+                </CollapsibleList>
 
-                <li>
-                    <CollapsibleList
-                        title={listTitles.questionStatus} expanded={listState.questionStatus.state}
-                        toggle={() => listStateDispatch({type: "toggle", id: "questionStatus", focus: below["md"](deviceSize)})}
-                        numberSelected={Object.values(searchStatuses).reduce((acc, item) => acc + item, 0)}
-                    >
-                        <li>
-                            <CheckboxWrapper active={searchStatuses.notAttempted}>
+                <CollapsibleList
+                    title={listTitles.difficulty} expanded={listState.difficulty.state}
+                    toggle={() => listStateDispatch({type: "toggle", id: "difficulty", focus: below["md"](deviceSize)})}
+                    numberSelected={searchDifficulties.length}
+                    tag={"li"}
+                >
+                    <button
+                        className={classNames("p-0 h-min-content btn-link d-flex ps-3 py-2", {"bg-white": isAda, "bg-transparent": isPhy})}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            dispatch(openActiveModal(questionFinderDifficultyModal()));
+                        }}>
+                        <b className="small text-start">{siteSpecific("Learn more about difficulty levels", "What do the difficulty levels mean?")}</b>
+                    </button>
+                    {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
+                        <li key={index}>
+                            <CheckboxWrapper active={searchDifficulties.includes(difficulty.value)}>
                                 <StyledCheckbox
                                     color="primary"
-                                    checked={searchStatuses.notAttempted}
-                                    onChange={() => setSearchStatuses(s => {return {...s, notAttempted: !s.notAttempted};})}
-                                    label={siteSpecific(
-                                        <div className="d-flex">
+                                    checked={searchDifficulties.includes(difficulty.value)}
+                                    onChange={() => setSearchDifficulties(
+                                        s => s.includes(difficulty.value)
+                                            ? s.filter(v => v !== difficulty.value)
+                                            : [...s, difficulty.value]
+                                    )}
+                                    label={<div className="d-flex align-items-center">
+                                        <span className="me-2">{difficulty.label}</span>
+                                        <DifficultyIcons difficulty={difficulty.value} blank className={classNames({"mt-n2": isAda, "mt-2": isPhy})}/>
+                                    </div>}
+                                />
+                            </CheckboxWrapper>
+                        </li>
+                    ))}
+                </CollapsibleList>
+
+                {isPhy && bookOptions.length > 0 && <CollapsibleList
+                    title={listTitles.books} expanded={listState.books.state}
+                    toggle={() => listStateDispatch({type: "toggle", id: "books", focus: below["md"](deviceSize)})}
+                    numberSelected={excludeBooks ? 1 : searchBooks.length}
+                    tag={"li"}
+                >
+                    <>
+                        <li className="pb-2">
+                            <CheckboxWrapper active={excludeBooks}>
+                                <StyledCheckbox
+                                    color="primary"
+                                    checked={excludeBooks}
+                                    onChange={() => setExcludeBooks(p => !p)}
+                                    label={<span className="me-2">Exclude skills book questions</span>}
+                                />
+                            </CheckboxWrapper>
+                        </li>
+                        <div className="section-divider ms-3 my-0 pb-2"/> {/* this cannot use margin as spacing as it is inside a collapsible region, which cannot count child margin towards the total height */}
+                        {bookOptions.map((book, index) => (
+                            <li key={index}>
+                                <CheckboxWrapper active={searchBooks.includes(book.tag) && !excludeBooks}>
+                                    <StyledCheckbox
+                                        color="primary"
+                                        checked={searchBooks.includes(book.tag) && !excludeBooks}
+                                        onChange={() => {
+                                            if (excludeBooks) {
+                                                setExcludeBooks(false);
+                                                setSearchBooks([book.tag]);
+                                            } else {
+                                                setSearchBooks(
+                                                    s => s.includes(book.tag)
+                                                        ? s.filter(v => v !== book.tag)
+                                                        : [...s, book.tag]
+                                                );
+                                            }
+                                        }}
+                                        label={<span className="me-2">{book.shortTitle ?? book.title}</span>}
+                                    />
+                                </CheckboxWrapper>
+                            </li>
+                        ))}
+                    </>
+                </CollapsibleList>}
+
+                <CollapsibleList
+                    title={listTitles.questionStatus} expanded={listState.questionStatus.state}
+                    toggle={() => listStateDispatch({type: "toggle", id: "questionStatus", focus: below["md"](deviceSize)})}
+                    numberSelected={Object.values(searchStatuses).reduce((acc, item) => acc + item, 0)}
+                    tag={"li"}
+                >
+                    <li>
+                        <CheckboxWrapper active={searchStatuses.notAttempted}>
+                            <StyledCheckbox
+                                color="primary"
+                                checked={searchStatuses.notAttempted}
+                                onChange={() => setSearchStatuses(s => {return {...s, notAttempted: !s.notAttempted};})}
+                                label={siteSpecific(
+                                    <div className="d-flex">
                                         Not started
-                                            <img className="ps-2" src={`/assets/phy/icons/redesign/status-not-started.svg`} alt="Not started"/>
-                                        </div>,
-                                        <div>
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-not-started.svg`} alt="Not started"/>
+                                    </div>,
+                                    <div>
                                         Not attempted
-                                            <img className="ps-2 icon-status" src="/assets/common/icons/not-started.svg" alt="Not attempted" />
-                                        </div>
-                                    )}
-                                />
-                            </CheckboxWrapper>
-                        </li>
-                        <li>
-                            <CheckboxWrapper active={searchStatuses.complete}>
-                                <StyledCheckbox
-                                    color="primary"
-                                    checked={searchStatuses.complete}
-                                    onChange={() => setSearchStatuses(s => {return {...s, complete: !s.complete};})}
-                                    label={siteSpecific(
-                                        <div className="d-flex">
-                                            Fully correct
-                                            <img className="ps-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt="Fully correct"/> 
-                                        </div>,
-                                        <div>
-                                            Completed
-                                            <img className="ps-2 icon-status" src="/assets/common/icons/completed.svg" alt="Completed" />
-                                        </div>
-                                    )}
-                                />
-                            </CheckboxWrapper>
-                        </li>
-                        {isAda && <li>
-                            <CheckboxWrapper active={searchStatuses.allIncorrect}>
-                                <StyledCheckbox
-                                    color="primary"
-                                    checked={searchStatuses.allIncorrect}
-                                    onChange={() => setSearchStatuses(s => {return {...s, allIncorrect: !s.allIncorrect};})}
-                                    label={
-                                        <div className="d-flex">
-                                            All incorrect
-                                            <img className="ps-2 icon-status" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt="All incorrect"/> 
-                                        </div>
-                                    }
-                                />
-                            </CheckboxWrapper>
-                        </li>}
-                        {isPhy && <li>
-                            <CheckboxWrapper active={searchStatuses.allAttempted}>
-                                <StyledCheckbox
-                                    color="primary"
-                                    checked={searchStatuses.allAttempted}
-                                    onChange={() => setSearchStatuses(s => {return {...s, allAttempted: !s.allAttempted};})}
-                                    label={
-                                        <div className="d-flex">
-                                            All attempted
-                                            <img className="ps-2" src={`/assets/phy/icons/redesign/status-attempted.svg`} alt="All attempted"/> 
-                                        </div>
-                                    }
-                                />
-                            </CheckboxWrapper>
-                        </li>}
-                        <li>
-                            <CheckboxWrapper active={searchStatuses.tryAgain}>
-                                <StyledCheckbox
-                                    color="primary"
-                                    checked={searchStatuses.tryAgain}
-                                    onChange={() => setSearchStatuses(s => {return {...s, tryAgain: !s.tryAgain};})}
-                                    label={siteSpecific(
-                                        <div className="d-flex">
-                                            In progress
-                                            <img className="ps-2" src={`/assets/phy/icons/redesign/status-in-progress.svg`} alt="In Progress"/> 
-                                        </div>,
-                                        <div>
-                                            Try again
-                                            <img className="ps-2 icon-status" src="/assets/common/icons/incorrect.svg" alt="Try again" />
-                                        </div>
-                                    )}
-                                />
-                            </CheckboxWrapper>
-                        </li>
-                    </CollapsibleList>
-                </li>
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-not-started.svg" alt="Not attempted" />
+                                    </div>
+                                )}
+                            />
+                        </CheckboxWrapper>
+                    </li>
+                    <li>
+                        <CheckboxWrapper active={searchStatuses.complete}>
+                            <StyledCheckbox
+                                color="primary"
+                                checked={searchStatuses.complete}
+                                onChange={() => setSearchStatuses(s => {return {...s, complete: !s.complete};})}
+                                label={siteSpecific(
+                                    <div className="d-flex">
+                                        Fully correct
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt="Fully correct"/> 
+                                    </div>,
+                                    <div>
+                                        Completed
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-correct.svg" alt="Completed" />
+                                    </div>
+                                )}
+                            />
+                        </CheckboxWrapper>
+                    </li>
+                    {isAda && <li>
+                        <CheckboxWrapper active={searchStatuses.allIncorrect}>
+                            <StyledCheckbox
+                                color="primary"
+                                checked={searchStatuses.allIncorrect}
+                                onChange={() => setSearchStatuses(s => {return {...s, allIncorrect: !s.allIncorrect};})}
+                                label={
+                                    <div className="d-flex">
+                                        All incorrect
+                                        <img className="ps-2 icon-status" src={`/assets/phy/icons/redesign/status-incorrect.svg`} alt="All incorrect"/> 
+                                    </div>
+                                }
+                            />
+                        </CheckboxWrapper>
+                    </li>}
+                    {isPhy && <li>
+                        <CheckboxWrapper active={searchStatuses.allAttempted}>
+                            <StyledCheckbox
+                                color="primary"
+                                checked={searchStatuses.allAttempted}
+                                onChange={() => setSearchStatuses(s => {return {...s, allAttempted: !s.allAttempted};})}
+                                label={
+                                    <div className="d-flex">
+                                        All attempted
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-attempted.svg`} alt="All attempted"/> 
+                                    </div>
+                                }
+                            />
+                        </CheckboxWrapper>
+                    </li>}
+                    <li>
+                        <CheckboxWrapper active={searchStatuses.tryAgain}>
+                            <StyledCheckbox
+                                color="primary"
+                                checked={searchStatuses.tryAgain}
+                                onChange={() => setSearchStatuses(s => {return {...s, tryAgain: !s.tryAgain};})}
+                                label={siteSpecific(
+                                    <div className="d-flex">
+                                        In progress
+                                        <img className="ps-2" src={`/assets/phy/icons/redesign/status-in-progress.svg`} alt="In Progress"/> 
+                                    </div>,
+                                    <div>
+                                        Try again
+                                        <img className="ps-2 icon-status" src="/assets/cs/icons/status-in-progress.svg" alt="Try again" />
+                                    </div>
+                                )}
+                            />
+                        </CheckboxWrapper>
+                    </li>
+                </CollapsibleList>
             </ul>
             {/* TODO: implement once necessary tags are available
             <div className="pb-2">

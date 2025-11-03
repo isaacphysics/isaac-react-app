@@ -1,8 +1,9 @@
 import React, {Ref} from 'react';
-import {Col, Row} from "reactstrap";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {formatGlossaryTermId} from "../pages/Glossary";
+import { Col, Row } from 'reactstrap';
+import { DeviceSize, useDeviceSize } from '../../services';
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
@@ -10,23 +11,24 @@ interface IsaacGlossaryTermProps {
     linkToGlossary?: boolean;
 }
 
-const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossaryTermProps, ref: Ref<any>) => {
-    const termContents = <>
-        <Col md={3} className="glossary_term_name">
-            <p ref={ref}>
-                {linkToGlossary && <a href={`#${(doc.id && formatGlossaryTermId(doc.id)) ?? ""}`}>
-                    <strong>{doc.value}</strong>
-                </a>}
-                {!linkToGlossary && <strong>{doc.value}</strong>}
+const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossaryTermProps, ref: Ref<HTMLParagraphElement>) => {
+    const deviceSize = useDeviceSize();
+    return <Row className={"d-inline-flex d-md-flex"} key={doc.id}>
+        <Col md={(inPortal && deviceSize === DeviceSize.XXL) ? 2 : 3} className={"glossary-term-name"}>
+            <p ref={ref} className={inPortal ? "mb-0 mb-md-3" : "fw-bold"}>
+                {linkToGlossary ? 
+                    <a href={`#${(doc.id && formatGlossaryTermId(doc.id)) ?? ""}`}>
+                        {doc.value}
+                    </a> : 
+                    doc.value
+                }
                 <span className="only-print">: </span>
             </p>
         </Col>
-        <Col md={7}>
+        <Col md={inPortal ? (deviceSize === DeviceSize.XXL) ? 10 : 9 : 7} className={"glossary-term-definition"}>
             {doc.explanation && <IsaacContent doc={doc.explanation} />}
         </Col>
-    </>;
-
-    return (inPortal === true) ? termContents : <Row className="glossary_term" key={doc.id}>{termContents}</Row>;
+    </Row>;
 };
 
 export const IsaacGlossaryTerm = React.forwardRef(IsaacGlossaryTermComponent);

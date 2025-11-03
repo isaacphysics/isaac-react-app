@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import {Button, Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {SITE_TITLE, trackEvent} from "../../services";
-import {useSessionExpired} from "../../services/useSessionExpired";
+import {useSessionExpired} from "../../services";
 
 export const SessionCookieExpired = () => {
 

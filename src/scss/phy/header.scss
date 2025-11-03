@@ -122,12 +122,17 @@ header {
           border-color: var(--nav-primary);
           width: calc(100% - 1rem);
         }
+
+        .badge {
+          margin-top: 2px;
+        }
       }
 
       > a {
         font-size: 15px;
-        font-family: $secondary-font-medium;
+        font-family: $secondary-font;
         color: $color-neutral-900;
+        font-weight: 500;
       }
 
       &:not(.hoverable) {

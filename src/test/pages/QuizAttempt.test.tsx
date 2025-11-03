@@ -71,8 +71,8 @@ describe("QuizAttempt", () => {
     });
 
     describe('for unregistered users', () => {
-        const anonymousAttemptsMissingQuiz = () => renderQuizAttempt({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'}); 
-        
+        const anonymousAttemptsMissingQuiz = () => renderQuizAttempt({ role: 'ANONYMOUS', quizId: 'some_non_existent_test'});
+
         it('redirects to log in', async () => {
             await anonymousAttemptsMissingQuiz();
             await expectUrl('/login');
@@ -89,7 +89,7 @@ describe("QuizAttempt", () => {
                 () => expectAdaBreadCrumbs([{href: '/', text: "Home"}, {href: "/tests", text: "My tests"}, "Test"])
             )();
         });
-        
+
         it('shows error', async () => {
             await studentAttemptsMissingQuiz();
             expectH1('Test');
@@ -105,7 +105,7 @@ describe("QuizAttempt", () => {
         });
 
         describe('sidebar on redesigned Physics site', sideBarTestCases(studentAttemptsQuiz));
-        
+
         it('sidebar toggle is called "Sections"', async () => {
             await studentAttemptsQuiz();
             await expectSidebarToggle("Sections");

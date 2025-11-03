@@ -10,8 +10,8 @@ if [ "$2" == "live" ]; then
 fi
 
 # Need at least four args and the first argument to be the site:
-if [ $# -lt 4 ] || ! { [ $1 = "ada" ] || [ $1 = "phy" ]; } || ! { [ $2 = "dev" ] || [ $2 = "staging" ] || [ $2 = "test" ]; } ; then
-  echo "Usage: compose [ada|phy] [staging|dev|test] [APP_VERSION] [DOCKER_ARGS]..."
+if [ $# -lt 4 ] || ! { [ $1 = "ada" ] || [ $1 = "sci" ]; } || ! { [ $2 = "dev" ] || [ $2 = "staging" ] || [ $2 = "test" ]; } ; then
+  echo "Usage: compose [ada|sci] [staging|dev|test] [APP_VERSION] [DOCKER_ARGS]..."
   exit 1
 fi
 
@@ -19,26 +19,33 @@ DOCKER_REPO=ghcr.io/isaacphysics
 
 # Extract args:
 SITE=$1
+SUBJECT=$1
 ENV=$2
 APP_VERSION=$3
-# We're done with the first three args. The remainder will be passed to docker-compose:
+
+# Whilst things are shared, some "sci" things are named "phy":
+if [ "$SITE" == "sci" ]; then
+  SUBJECT="phy"
+fi
+
+# We're done with the first three args. The remainder will be passed to docker compose:
 shift 3
 
 
 # Use the app image to find the correct API version to use:
 if [ $1 = "create" ] || [ $1 = "pull" ] || [ $1 = "push" ] || [ $1 = "run" ] || [ $1 = "start" ] || [ $1 = "up" ]; then
   # This will cause new containers or should update containers, so pull newer images if possible:
-  docker pull $DOCKER_REPO/isaac-$SITE-app:$APP_VERSION
-  API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' $DOCKER_REPO/isaac-$SITE-app:$APP_VERSION)
+  docker pull $DOCKER_REPO/isaac-$SUBJECT-app:$APP_VERSION
+  API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' $DOCKER_REPO/isaac-$SUBJECT-app:$APP_VERSION)
   docker pull $DOCKER_REPO/isaac-api:$API_VERSION
 
 elif [ $1 = "down" ] || [ $1 = "stop" ] || [ $1 = "restart" ] || [ $1 = "exec" ] || [ $1 = "config" ] || [ $1 = "logs" ] || [ $1 = "kill" ] || [ $1 = "ps" ]; then
   # This affects existing containers, so don't pull newer images:
-  API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' $DOCKER_REPO/isaac-$SITE-app:$APP_VERSION)
+  API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' $SITE-app-$ENV-$APP_VERSION)
 
 else
-  # This might not be a docker-compose operation. If it is, it could be added above to the correct branch.
-  echo "Error: Unsupported docker-compose operation '$1'!"
+  # This might not be a docker compose operation. If it is, it could be added above to the correct branch.
+  echo "Error: Unsupported docker compose operation '$1'!"
   exit 1
 fi
 
@@ -51,21 +58,20 @@ fi
 API_NAME=$SITE-api-$ENV-$API_VERSION
 APP_NAME=$SITE-app-$ENV-$APP_VERSION
 PG_CONTAINER_NAME=$SITE-pg-$ENV
-ES_CONTAINER_NAME=$SITE-elasticsearch-live
+ES_CONTAINER_NAME=$SUBJECT-elasticsearch-live
 
 # The content repo is named differently for both sites in a non-standard way:
-if [ "$SITE" == "ada" ]; then
+if [ "$SUBJECT" == "ada" ]; then
   CONTENT_REPO="ada-content"
-elif [ "$SITE" == "phy" ]; then
+elif [ "$SUBJECT" == "phy" ]; then
   CONTENT_REPO="rutherford-content"
 fi
 
-docker-compose -p dc-${APP_NAME//./-} -f - $@ << EOF
-version: '2'
+docker compose -p dc-${APP_NAME//./-} -f - $@ << EOF
 services:
   $APP_NAME:
     container_name: $APP_NAME
-    image: $DOCKER_REPO/isaac-$SITE-app:$APP_VERSION
+    image: $DOCKER_REPO/isaac-$SUBJECT-app:$APP_VERSION
     restart: "no"
     networks:
       default:
@@ -101,7 +107,8 @@ services:
   $PG_CONTAINER_NAME:
     container_name: $PG_CONTAINER_NAME
     restart: "no"
-    image: postgres:13
+    image: postgres:16
+    shm_size: 128M
     environment:
       POSTGRES_USER: rutherford
       POSTGRES_PASSWORD: rutherf0rd
@@ -114,10 +121,11 @@ services:
       - /local/data/test-$SITE-db-schema.sql:/docker-entrypoint-initdb.d/99-test-db-schema.sql:ro
 networks:
   default:
-    external:
-      name: isaac
+    name: isaac
+    external: true
 volumes:
   $PG_CONTAINER_NAME:
+    name: $PG_CONTAINER_NAME
     external: true
 EOF
 

@@ -18,7 +18,7 @@
 
 .hierarchy-tags {
   font-size: 0.8125rem;
-  color: $color-neutral-500;
+  color: $color-neutral-600;
   min-width: max-content;
 }
 
@@ -42,6 +42,7 @@
   .table.table-bordered {
     thead {
       @include table-sticky();
+      background: $gray-103;
     }
     tr {
       &.disabled {
@@ -61,12 +62,12 @@ button.btn.delete-button {
   }
 }
 
-.board-sidebar-question {
-  &.selected-question {
+.board-sidebar-content {
+  &.selected-content {
     background-color: $color-neutral-100;
     border-left: solid 3px var(--subject-color-500);
   }
-  &:not(.selected-question) {
+  &:not(.selected-content) {
     border-left: solid 3px transparent;
   }
 }

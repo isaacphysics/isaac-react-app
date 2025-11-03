@@ -2,7 +2,7 @@ import {AbstractBaseTagService, subject, TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag} from "../../IsaacAppTypes";
 import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 
-const softHyphen = "\u00AD";
+export const softHyphen = "\u00AD";
 
 export class PhysicsTagService extends AbstractBaseTagService {
     private static readonly tagHierarchy = [TAG_LEVEL.subject, TAG_LEVEL.field, TAG_LEVEL.topic];
@@ -61,27 +61,27 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Thermal
         {id: TAG_ID.heatCapacity, title: "Heat", parent: TAG_ID.thermal},
         {id: TAG_ID.gases, title: "Gases", parent: TAG_ID.thermal},
-        {id: TAG_ID.thermalRadiation, title: "Radiation", parent: TAG_ID.thermal},
+        {id: TAG_ID.thermalRadiation, title: "Radiation", parent: TAG_ID.thermal, alias: "Thermal Radiation"},
         // Waves Particles
         {id: TAG_ID.optics, title: "Optics", parent: TAG_ID.wavesParticles},
         {id: TAG_ID.waveMotion, title: "Wave Motion", parent: TAG_ID.wavesParticles},
         {id: TAG_ID.superposition, title: `Super${softHyphen}position`, parent: TAG_ID.wavesParticles},
         {id: TAG_ID.quantum, title: "Quantum", parent: TAG_ID.wavesParticles},
-        {id: TAG_ID.nuclear, title: "Nuclear", parent: TAG_ID.wavesParticles},
+        {id: TAG_ID.nuclear, title: "Nuclear", parent: TAG_ID.wavesParticles, alias: "Nuclear Particles"},
         {id: TAG_ID.fundamental, title: `Funda${softHyphen}mental Particles`, parent: TAG_ID.wavesParticles},
         // Skills
         {id: TAG_ID.sigFigs, title: "Significant Figures", parent: TAG_ID.skills},
         {id: TAG_ID.units, title: "Units", parent: TAG_ID.skills},
         {id: TAG_ID.prefixes, title: "Prefixes", parent: TAG_ID.skills},
         {id: TAG_ID.relationships, title: `Relation${softHyphen}ships`, parent: TAG_ID.skills},
-        {id: TAG_ID.graphs, title: "Graphs", parent: TAG_ID.skills},
+        {id: TAG_ID.graphs, title: "Graphs", parent: TAG_ID.skills, alias: "Graph Skills"},
         {id: TAG_ID.uncertainties, title: `Un${softHyphen}certainties`, parent: TAG_ID.skills},
         // Electricity
         {id: TAG_ID.chargeCurrent, title: "Charge & Current", parent: TAG_ID.electricity},
         {id: TAG_ID.resistors, title: "Resistors", parent: TAG_ID.electricity},
         {id: TAG_ID.internalResistance, title: `Internal Resis${softHyphen}tance`, parent: TAG_ID.electricity},
-        {id: TAG_ID.power, title: "Power", parent: TAG_ID.electricity},
-        {id: TAG_ID.components, title: `Comp${softHyphen}onents`, parent: TAG_ID.electricity},
+        {id: TAG_ID.power, title: "Power", parent: TAG_ID.electricity, alias: "Electrical Power"},
+        {id: TAG_ID.components, title: `Comp${softHyphen}onents`, parent: TAG_ID.electricity, alias: "Circuit Components"},
         {id: TAG_ID.capacitors, title: "Capacitors", parent: TAG_ID.electricity},
 
         // --- Maths Topics ---
@@ -92,16 +92,16 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.factors, title: "Factors & Powers", parent: TAG_ID.number},
         {id: TAG_ID.complexNumbers, title: "Complex Numbers", parent: TAG_ID.number},
         // Algebra
-        {id: TAG_ID.manipulation, title: `Manip${softHyphen}ulation`, parent: TAG_ID.algebra},
+        {id: TAG_ID.manipulation, title: `Manip${softHyphen}ulation`, parent: TAG_ID.algebra, alias: "Algebraic Manipulation"},
         {id: TAG_ID.quadratics, title: `Quadra${softHyphen}tics`, parent: TAG_ID.algebra},
         {id: TAG_ID.simultaneous, title: `Simul${softHyphen}taneous Equations`, parent: TAG_ID.algebra},
         {id: TAG_ID.series, title: "Series", parent: TAG_ID.algebra},
         {id: TAG_ID.matrices, title: "Matrices", parent: TAG_ID.algebra},
         // Geometry
-        {id: TAG_ID.shapes, title: "Shapes", parent: TAG_ID.geometry},
+        {id: TAG_ID.shapes, title: "Shapes", parent: TAG_ID.geometry, alias: "Geometric Shapes"},
         {id: TAG_ID.trigonometry, title: `Trigon${softHyphen}ometry`, parent: TAG_ID.geometry},
         {id: TAG_ID.vectors, title: "Vectors", parent: TAG_ID.geometry},
-        {id: TAG_ID.planes, title: "Planes", parent: TAG_ID.geometry},
+        {id: TAG_ID.planes, title: "Planes", parent: TAG_ID.geometry, alias: "Geometric Planes"},
         {id: TAG_ID.coordinates, title: "Coordinates", parent: TAG_ID.geometry},
         // Functions
         {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},
@@ -125,9 +125,9 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.transitionMetals, title: `Transition Metals`, parent: TAG_ID.inorganic},
         // Physical
         {id: TAG_ID.kinetics, title: "Kinetics", parent: TAG_ID.physical},
-        {id: TAG_ID.energetics, title: `Energe${softHyphen}tics`, parent: TAG_ID.physical},
+        {id: TAG_ID.energetics, title: `Energe${softHyphen}tics`, parent: TAG_ID.physical, alias: "Chemical Energetics"},
         {id: TAG_ID.entropy, title: "Entropy", parent: TAG_ID.physical},
-        {id: TAG_ID.equilibrium, title: `Equili${softHyphen}brium`, parent: TAG_ID.physical},
+        {id: TAG_ID.equilibrium, title: `Equili${softHyphen}brium`, parent: TAG_ID.physical, alias: "Chemical Equilibrium"},
         {id: TAG_ID.acidsAndBases, title: "Acids & Bases", parent: TAG_ID.physical},
         {id: TAG_ID.electrochemistry, title: `Electro${softHyphen}chemistry`, parent: TAG_ID.physical},
         // Analytical
@@ -144,7 +144,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Organic
         {id: TAG_ID.functionalGroups, title: "Functional Groups", parent: TAG_ID.organic},
         {id: TAG_ID.isomerism, title: "Isomerism", parent: TAG_ID.organic},
-        {id: TAG_ID.organicReactions, title: "Reactions", parent: TAG_ID.organic},
+        {id: TAG_ID.organicReactions, title: "Reactions", parent: TAG_ID.organic, alias: "Organic Reactions"},
         {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic},
         {id: TAG_ID.aromaticReactions, title: "Reactions (aromatics)", parent: TAG_ID.organic},
         {id: TAG_ID.polymers, title: "Polymers", parent: TAG_ID.organic},
@@ -172,7 +172,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.inheritance, title: "Inheritance", parent: TAG_ID.genetics},
         {id: TAG_ID.biotechnology, title: `Bio${softHyphen}technology`, parent: TAG_ID.genetics},
         // Physiology
-        {id: TAG_ID.plants, title: "Plants", parent: TAG_ID.physiology},
+        {id: TAG_ID.plants, title: "Plants", parent: TAG_ID.physiology, alias: "Plant Physiology"},
         {id: TAG_ID.breathingAndCirculation, title: "Breathing & Circulation", parent: TAG_ID.physiology},
         {id: TAG_ID.hormones, title: "Hormones", parent: TAG_ID.physiology},
         {id: TAG_ID.digestionAndExcretion, title: "Digestion & Excretion", parent: TAG_ID.physiology},
@@ -185,7 +185,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.biodiversity, title: "Biodiversity", parent: TAG_ID.ecology},
         // Evolution
         {id: TAG_ID.variation, title: "Variation", parent: TAG_ID.evolution},
-        {id: TAG_ID.theory, title: "Theory", parent: TAG_ID.evolution},
+        {id: TAG_ID.theory, title: "Theory", parent: TAG_ID.evolution, alias: "Evolutionary Theory"},
         {id: TAG_ID.phylogenetics, title: `Phylo${softHyphen}genetics`, parent: TAG_ID.evolution},
         // Biology Maths Skills
         {id: TAG_ID.bioStatisticalTests, title: "Statistical Tests", parent: TAG_ID.bioMathsSkills}

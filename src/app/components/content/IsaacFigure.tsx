@@ -64,7 +64,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                 return <figure>
                     <div className="w-100 d-flex justify-content-center" ref={clozeDropRootElement}>
                         <div className="position-relative w-max-content">
-                            <button className="figure-fullscreen" onClick={() => {
+                            <button className="figure-fullscreen" aria-label="Expand figure" onClick={() => {
                                 dispatch(openActiveModal(FigureModal({
                                     path, 
                                     altText: doc.altText,
