@@ -48,7 +48,7 @@ const isDropZone = (item: {id: UniqueIdentifier} | null) => item?.id === CLOZE_I
 
 const augmentInlineItemWithUniqueReplacementID = (idv: Immutable<ReplaceableItem> | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}|${uuid_v4()}`}) : undefined;
 const augmentNonSelectedItemWithReplacementID = (item: Immutable<ReplaceableItem>) => ({...item, replacementId: item.id});
-const augmentInlineItemWithDropZoneId = (idv: Immutable<ReplaceableItem> | undefined, dropZoneId: string) => isDefined(idv) ? ({...idv, dropZoneId}) : undefined;
+const augmentInlineItemWithDropZoneId = (idv: Immutable<ReplaceableItem> | undefined, dropZoneId: string) => isDefined(idv) ? ({...idv, type: "dndItem", dropZoneId}) : undefined;
 const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (Immutable<ReplaceableItem> | undefined)[]}) => (i: Immutable<ReplaceableItem> | undefined) => i ? !currentAttempt.items?.map(si => si?.id).includes(i.id) : false;
 
 const replaceNullItems = (items: readonly Immutable<ItemDTO>[] | undefined) => items?.map(i => i.id === NULL_CLOZE_ITEM_ID ? undefined : i);
