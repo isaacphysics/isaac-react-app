@@ -198,13 +198,14 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
 
 interface ShortcutListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
     item: ShortcutResponse;
+    linkedBoardId?: string;
 }
 
-export const ShortcutListViewItem = ({item, ...rest}: ShortcutListViewItemProps) => {
+export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutListViewItemProps) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
-    const url = `${item.url}${item.hash ? `#${item.hash}` : ""}`;
+    const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
     const icon = (url.includes("concepts/") || !item.className?.includes("wildcard-list-view")) ? "icon-concept" : "icon-wildcard";
     const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
 
