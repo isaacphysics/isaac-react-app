@@ -31,7 +31,7 @@ interface QuestionListViewItemProps extends Extract<AbstractListViewItemProps, {
 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const { item, linkedBoardId, ...rest } = props;
-    const breadcrumb = (isPhy || props.hasCaret) ? tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title) : undefined;
+    const breadcrumb = (isPhy || props.hasCaret) ? tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title) : undefined;
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
@@ -67,7 +67,7 @@ interface ConceptListViewItemProps extends Extract<AbstractListViewItemProps, {a
 export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
-    const breadcrumb = rest.hasCaret ? tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title) : undefined;
+    const breadcrumb = rest.hasCaret ? tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
 
     const icon: TitleIconProps = isPhy
@@ -92,7 +92,7 @@ interface TopicListViewItemProps extends Extract<AbstractListViewItemProps, {alv
 export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
-    const breadcrumb = rest.hasCaret ? tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title) : undefined;
+    const breadcrumb = rest.hasCaret ? tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id}`;
     const icon: TitleIconProps = {type: "img", icon: iconPath("topic"), width: "24px", height: "24px", alt: "Topic summary page icon", label: "Topic"};
 
