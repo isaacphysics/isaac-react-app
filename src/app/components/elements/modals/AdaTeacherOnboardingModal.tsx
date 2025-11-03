@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { Button } from "reactstrap";
 import { closeActiveModal, openActiveModal, store, useAppDispatch } from "../../../state";
-import { KEY, persistence } from "../../../services";
+import { KEY, MODAL_TYPES, persistence } from "../../../services";
 import { ActiveModalProps } from "../../../../IsaacAppTypes";
-import { MODAL_TYPES } from "./ActiveModals";
 
 const pages = [
     {
@@ -49,9 +48,10 @@ export const adaTeacherOnboardingModal: ActiveModalProps = {
 
 export const useTeacherOnboardingModal = () => {
     const dispatch = useAppDispatch();
+    console.log("useTeacherOnboardingModal called", shouldModalShow());
     useEffect(() => {
         if (shouldModalShow()) {
-            dispatch(openActiveModal(MODAL_TYPES.adaTeacherOnboardingModal));
+            dispatch(openActiveModal(MODAL_TYPES.TEACHER_ONBOARDING));
             return () => {
                 dispatch(closeActiveModal());
             };

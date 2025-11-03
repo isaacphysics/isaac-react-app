@@ -3,13 +3,10 @@ import { AppState, useAppSelector } from "../../../state";
 import { ActiveModal } from "./ActiveModal";
 import { adaTeacherOnboardingModal } from "./AdaTeacherOnboardingModal";
 import { ActiveModalProps } from "../../../../IsaacAppTypes";
-
-export const MODAL_TYPES = {
-    adaTeacherOnboardingModal: 'adaTeacherOnboardingModal',
-} as const;
+import { MODAL_TYPES } from "../../../services";
 
 const MODAL_REGISTRY: Record<typeof MODAL_TYPES[keyof typeof MODAL_TYPES], ActiveModalProps> = {
-    'adaTeacherOnboardingModal': adaTeacherOnboardingModal,
+    'TEACHER_ONBOARDING': adaTeacherOnboardingModal,
 };
 
 export const ActiveModals = () => {

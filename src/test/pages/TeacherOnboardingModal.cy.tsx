@@ -1,16 +1,23 @@
-import { scheduleTeacherOnboardingModalForNextOverviewVisit } from "../../app/components/elements/modals/AdaTeacherOnboardingModal";
+import { ActiveModals } from "../../app/components/elements/modals/ActiveModals";
 import { Overview } from "../../app/components/pages/Overview";
-import { isAda } from "../../app/services";
+import { isAda, KEY, persistence } from "../../app/services";
 import React from "react";
 
-it('Teacher Onboarding Modal should have no visual regressions', () => {
-    if (isAda) {
-        // Arrange
-        scheduleTeacherOnboardingModalForNextOverviewVisit();
-        cy.mountWithStoreAndRouter(<Overview />, ["/dashboard"]);
-        cy.get('[data-testid="active-modal"]').should('be.visible');
-        
-        // Assert
-        cy.matchImage();
-    }
+describe('Overview Page Visual Regression Tests', () => {    
+    it('Teacher Onboarding Modal should have no visual regressions', () => {
+        if (isAda) {
+            // Arrange
+            cy.stub(persistence, 'load').withArgs(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT).returns("true");
+
+            // Act
+            cy.mountWithStoreAndRouter(<>
+                <ActiveModals/>
+                <Overview />
+            </>, ["/dashboard"]);
+            cy.get('[data-testid="active-modal"]').should('be.visible');
+            
+            // Assert
+            cy.matchImage();
+        }
+    });
 });

@@ -1,8 +1,7 @@
 import {getRTKQueryErrorMessage, AppDispatch} from "../index";
 import {Dispatch} from "react";
 import {Action, ActiveModalProps, Toast} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE, trackEvent} from "../../services";
-import { MODAL_TYPES } from "../../components/elements/modals/ActiveModals";
+import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE, MODAL_TYPES, trackEvent} from "../../services";
 
 // Toasts
 export const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {

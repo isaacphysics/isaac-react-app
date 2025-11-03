@@ -1287,6 +1287,11 @@ export const EMAIL_PREFERENCE_DEFAULTS: UserEmailPreferences = siteSpecific(
     }
 );
 
+// this must exist outside of ActiveModals to avoid circular dependencies
+export const MODAL_TYPES = {
+    TEACHER_ONBOARDING: 'TEACHER_ONBOARDING',
+} as const;
+
 export const CODE_EDITOR_IFRAME_HEIGHT_SMALL = 278;
 export const CODE_EDITOR_IFRAME_HEIGHT_LARGE = 354;
 export const CODE_EDITOR_RUN_BUTTON_SPACING = 96;
