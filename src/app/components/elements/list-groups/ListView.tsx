@@ -12,6 +12,10 @@ import { UnionToIntersection } from "@reduxjs/toolkit/dist/tsHelpers";
 import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
 
+function iconPath(iconName: string): string {
+    return `/assets/cs/icons/${iconName}.svg`;
+} 
+
 type ListViewCardItemProps = Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}>;
 
 export const ListViewCardItem = (props: ListViewCardItemProps) => {
@@ -36,12 +40,12 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const icon: TitleIconProps = isPhy
         ? {type: "hex", icon: "icon-question", size: "lg"}
         : item.state === CompletionState.IN_PROGRESS
-            ? {type: "img", icon: "/assets/cs/icons/status-not-started.svg", width: "24px", height: "24px", alt: "In progress question icon"}
+            ? {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "In progress question icon"}
             : item.state === CompletionState.ALL_CORRECT
-                ? {type: "img", icon: "/assets/cs/icons/status-correct.svg", width: "24px", height: "24px", alt: "Complete question icon"}
+                ? {type: "img", icon: iconPath("status-correct"), width: "24px", height: "24px", alt: "Complete question icon"}
                 : item.state === CompletionState.ALL_INCORRECT
-                    ? {type: "img", icon: "/assets/cs/icons/status-incorrect.svg", width: "24px", height: "24px", alt: "Incorrect question icon"}
-                    : {type: "img", icon: "/assets/cs/icons/status-not-started.svg", width: "24px", height: "24px", alt: "Not attempted question icon", label: "Question"};
+                    ? {type: "img", icon: iconPath("status-incorrect"), width: "24px", height: "24px", alt: "Incorrect question icon"}
+                    : {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "Not attempted question icon", label: "Question"};
 
     return <AbstractListViewItem
         {...rest}
@@ -69,7 +73,7 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
 
     const icon: TitleIconProps = isPhy
         ? {type: "hex", icon: "icon-concept", size: "lg"}
-        : {type: "img", icon: "/assets/cs/icons/concept.svg", width: "24px", height: "24px", alt: "Concept page icon", label: "Concept"};
+        : {type: "img", icon: iconPath("concept"), width: "24px", height: "24px", alt: "Concept page icon", label: "Concept"};
 
     return <AbstractListViewItem
         icon={icon}
@@ -89,7 +93,7 @@ export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id}`;
-    const icon: TitleIconProps = {type: "img", icon: "/assets/cs/icons/topic.svg", width: "24px", height: "24px", alt: "Topic summary page icon", label: "Topic"};
+    const icon: TitleIconProps = {type: "img", icon: iconPath("topic"), width: "24px", height: "24px", alt: "Topic summary page icon", label: "Topic"};
 
     return <AbstractListViewItem
         icon={icon}
@@ -218,7 +222,7 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
 
     const icon: TitleIconProps = isPhy
         ? {type: "hex", icon: "icon-info", size: "lg"}
-        : {type: "img", icon: "/assets/cs/icons/info-filled.svg", width: "24px", height: "24px", alt: "Generic page icon", label: "Info"};
+        : {type: "img", icon: iconPath("info-filled"), width: "24px", height: "24px", alt: "Generic page icon", label: "Info"};
 
     return <AbstractListViewItem
         icon={icon}
