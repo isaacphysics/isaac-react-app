@@ -6,6 +6,7 @@ import {
     BookInfo,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
+    getAllowedTags,
     getFilteredExamBoardOptions,
     getHumanContext,
     getQuestionPlaceholder,
@@ -35,7 +36,7 @@ import {
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {RouteComponentProps, useHistory, withRouter} from "react-router";
+import {useHistory, withRouter} from "react-router";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -145,7 +146,7 @@ export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: Filte
     </div>;
 };
 
-export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
+export const QuestionFinder = withRouter(() => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
@@ -203,7 +204,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
     const choices = useMemo(() => {
-        return updateTopicChoices(selections, pageContext);
+        return updateTopicChoices(selections, pageContext, getAllowedTags(pageContext));
     }, [selections, pageContext]);
 
     const isEmptySearch = (query: string, topics: string[], books: string[], stages: string[], difficulties: string[], examBoards: string[], selections: ChoiceTree[]) => {
@@ -227,11 +228,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             excludeBooks,
             searchStatuses: questionStatuses,
             startIndex, randomSeed
-        }) => {
+        }): void => {
             if (isEmptySearch(searchString, topics, book, stages, difficulties, examBoards, hierarchySelections)) {
                 setIsCurrentSearchEmpty(true);
-                dispatch(clearQuestionSearch);
-                return;
+                return void dispatch(clearQuestionSearch);
             }
 
             const choiceTreeLeaves = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
@@ -250,7 +250,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
             setIsCurrentSearchEmpty(false);
 
-            dispatch(searchQuestions({
+            void dispatch(searchQuestions({
                 querySource: "questionFinder",
                 searchString: searchString || undefined,
                 tags: choiceTreeLeaves.join(",") || undefined,
@@ -500,7 +500,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     </p>
                                 </div>
                                 : <>Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.
-                                Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
+                                    Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.</>}
                         </div>,
                         <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
                     )}

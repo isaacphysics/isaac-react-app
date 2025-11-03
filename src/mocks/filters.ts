@@ -1,24 +1,76 @@
 import { screen } from "@testing-library/react";
 import zipWith from "lodash/zipWith";
 import flatten from "lodash/flatten";
-import { isPhy } from "../app/services";
+import { isPhy, softHyphen } from "../app/services";
 import { clickOn } from "../test/testUtils";
 
 export enum Filter {
+    // stages
     All = 'All',
     GCSE = 'GCSE',
+    
+    //subjects
     Physics = "Physics",
-    Skills = "Skills",
-    Mechanics = "Mechanics",
-    SigFigs = "Significant Figures",
     Maths = "Maths",
-    Number = "Number",
-    Arithmetic = "Arithmetic",
-    Geometry = "Geometry",
-    Shapes = "Shapes",
+    
+    // Physics fields
+    Mechanics = "Mechanics",
+    Skills = "Skills",
+
+    // Physics -> Mechanics topics
     Statics = "Statics",
+    Kinematics = `Kine${softHyphen}matics`,
+    Dynamics = "Dynamics",
+    CircularMotion = "Circular Motion",
+    Oscillations = `Oscil${softHyphen}lations`,
+    Materials = "Materials",
+
+    // Physics -> Skills topics
+    SigFigs = "Significant Figures",
     Units = "Units",
-    Kinematics = "Kinematics"
+
+    // Maths fields
+    Number = "Number",
+    Algebra = "Algebra",
+    Geometry = "Geometry",
+    Functions = "Functions",
+    Calculus = "Calculus",
+    Statistics = "Statistics",
+
+    // Maths -> Number topics
+    Arithmetic = "Arithmetic",
+    RationalNumbers = "Rational Numbers",
+    FactorsPowers = "Factors & Powers",
+    ComplexNumbers = "Complex Numbers",
+
+    // Maths -> Algebra topics
+    Manipulation = `Manip${softHyphen}ulation`,
+    Quadratics = `Quadra${softHyphen}tics`,
+    SimultaneousEquations = `Simul${softHyphen}taneous Equations`,
+    Series = "Series",
+    Matrices = "Matrices",
+    
+    // Maths -> Geometry topics
+    Shapes = "Shapes",
+    Trigonometry = `Trigon${softHyphen}ometry`,
+    Vectors = "Vectors",
+    Planes = "Planes",
+    Coordinates = "Coordinates",
+
+    // Maths -> Functions topics
+    GeneralFunctions = "General Functions",
+    GraphSketching = "Graph Sketching",
+
+    // Maths -> Calculus topics
+    Differentiation = `Differen${softHyphen}tiation`,
+    Integration = `Inte${softHyphen}gration`,
+    DifferentialEquations = `Differ${softHyphen}ential Equations`,
+
+    // Maths -> Statistics topics
+    DataAnalysis = "Data Analysis",
+    Probability = `Probabi${softHyphen}lity`,
+    RandomVariables = "Random Variables",
+    HypothesisTests = `Hypo${softHyphen}thesis Tests`
 }
 
 export const toggleFilter = async (filter: Filter | Filter[]): Promise<void> => {
@@ -74,6 +126,9 @@ export const expectPartialCheckBox = toExpectation((filter: Filter, state: Parti
     const element = findFilter(filter);
     if (state === PartialCheckboxState.Hidden) {
         return expect(element).not.toBeInTheDocument();
+    }
+    if (!element) {
+        throw new Error(`Could not find filter with label ${filter}`);
     }
     return expect(element).toHaveClass(state);
 });

@@ -2,7 +2,7 @@
 import {Remarkable} from "remarkable";
 // @ts-ignore
 import {linkify} from "remarkable/linkify";
-import {BooleanNotation, NOT_FOUND_TYPE, UserEmailPreferences} from "../../IsaacAppTypes";
+import {BooleanNotation, NOT_FOUND_TYPE, PageContextState, UserEmailPreferences} from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
     BookingStatus,
@@ -944,11 +944,30 @@ export enum TAG_LEVEL {
     topic = "topic",
 }
 
+type ContextSpecificTags = Record<SUBJECTS, Partial<Record<LearningStage, TAG_ID[]>>>;
+
 // A mapping used to define tags which should be treated as children of a subject, but only in that subject-specific context
-export const SUBJECT_SPECIFIC_CHILDREN_MAP: Record<SUBJECTS, Partial<Record<LearningStage, TAG_ID[]>>> = {
+export const SUBJECT_SPECIFIC_CHILDREN_MAP: ContextSpecificTags = {
     [SUBJECTS.MATHS]: {[LEARNING_STAGE.A_LEVEL]: [TAG_ID.mechanics]},
     [SUBJECTS.PHYSICS]: {}, [SUBJECTS.CHEMISTRY]: {}, [SUBJECTS.BIOLOGY]: {}, [SUBJECTS.CS]: {}
 };
+
+// A mapping used to define tags which should be excluded from the subject in a specific context
+export const STAGE_SPECIFIC_EXCLUSIONS_MAP: ContextSpecificTags = {
+    [SUBJECTS.MATHS]: {
+        [LEARNING_STAGE.GCSE]: [TAG_ID.complexNumbers, TAG_ID.matrices, TAG_ID.planes, TAG_ID.calculus,
+            TAG_ID.randomVariables, TAG_ID.hypothesisTests]
+    },
+    [SUBJECTS.PHYSICS]: {}, [SUBJECTS.CHEMISTRY]: {}, [SUBJECTS.BIOLOGY]: {}, [SUBJECTS.CS]: {}
+};
+
+export const getContextSpecificTags = (map: ContextSpecificTags, pageContext: PageContextState): TAG_ID[] => {
+    if (!pageContext?.subject || pageContext.stage?.length !== 1) {
+        return [];
+    }
+    return map[pageContext.subject][pageContext.stage[0]] || [];
+};
+
 
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
