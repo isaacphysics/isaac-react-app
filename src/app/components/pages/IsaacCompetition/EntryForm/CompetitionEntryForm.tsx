@@ -73,15 +73,15 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
     if (selectedValues.length > 4) {
       setMemberSelectionError("Limit of 4 students reached. To select a new student, remove one first.");
 
+      setTimeout(() => {
+        setMemberSelectionError("");
+      }, 10000);
+
       return;
     }
 
     setMemberSelectionError("");
     setSelectedMembers(selectedValues);
-
-    setTimeout(() => {
-      setMemberSelectionError("");
-    }, 10000);
   };
 
   const isSchoolValid = isSchoolValidForCompetition();
