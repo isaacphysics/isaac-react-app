@@ -3,18 +3,7 @@
 .list-group-links {
   border: 0;
   border-radius: 0;
-  .list-group-item {
-    .link-title {
-      @extend .font-size-1-25;
-    }
-    .question-link-title {
-      @extend .fw-semi-bold;
-    }
-    border-color: $cs-list-outline-gray;
-    border-left: 0;
-    border-right: 0;
-    padding: 0;
-  }
+
   .list-caret {
     position: relative;
     text-align: center;
@@ -23,10 +12,30 @@
     border-left: 1px solid $cs-list-outline-gray;
   }
 
-  li {
+  li.list-group-item {
+    border-color: $cs-list-outline-gray;
+    border-left: 0;
+    border-right: 0;
     border-bottom: 1px solid $gray-107;
+    padding: 0;
     &:last-of-type {
       border-width: 0;
+    }
+
+    .question-link-title {
+      @extend .fw-semi-bold;
+    }
+
+    .alvi-title {
+      @extend .font-size-1-25;
+
+      &:is(a)::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        cursor: pointer;
+      }
     }
 
     > div {
