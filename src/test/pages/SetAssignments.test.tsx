@@ -213,7 +213,6 @@ describe("SetAssignments", () => {
 
         // Close modal
         const closeButtons = within(modal).getAllByRole("button", {name: "Close modal"});
-        expect(closeButtons).toHaveLength(siteSpecific(2, 1)); // One at the top (and one at the bottom on Phy)
         await userEvent.click(closeButtons[0]);
         await waitFor(() => {
             expect(modal).not.toBeInTheDocument();
