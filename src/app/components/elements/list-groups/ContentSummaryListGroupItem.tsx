@@ -9,10 +9,7 @@ import {
     generateQuestionTitle,
     isAda,
     isIntendedAudience,
-    isPhy,
-    notRelevantMessage,
     SEARCH_RESULT_TYPE,
-    siteSpecific,
     TAG_ID,
     TAG_LEVEL,
     tags,
@@ -20,14 +17,13 @@ import {
     useUserViewingContext
 } from "../../../services";
 import {Link} from "react-router-dom";
-import React, {useRef} from "react";
+import React from "react";
 import {selectors, useAppSelector} from "../../../state";
-import {v4 as uuid_v4} from "uuid";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 import {ShortcutResponse} from "../../../../IsaacAppTypes";
 import {Markup} from "../markup";
 import classNames from "classnames";
-import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
+import {ListGroup, ListGroupItem} from "reactstrap";
 import { CSSModule } from "reactstrap/types/lib/utils";
 import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 import { QuestionPropertyTags } from "../ContentPropertyTags";
@@ -46,7 +42,6 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
     contentTypeVisibility?: ContentTypeVisibility;
     ignoreIntendedAudience?: boolean;
 }) => {
-    const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
     const isContentsIntendedAudience = ignoreIntendedAudience || isIntendedAudience(item.audience, userContext, user);
@@ -94,7 +89,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
     switch (item.type) {
         case (SEARCH_RESULT_TYPE.SHORTCUT):
             linkDestination = item.url;
-            icon = <img src={siteSpecific("/assets/phy/icons/concept.svg", "/assets/cs/icons/concept.svg")} alt="Shortcut icon"/>;
+            icon = <img src={"/assets/cs/icons/concept.svg"} alt="Shortcut icon"/>;
             if (isAda) {
                 typeLabel = "Shortcut";
             }
@@ -102,9 +97,6 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
         case (DOCUMENT_TYPE.QUESTION):
         case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
             title = generateQuestionTitle(item);
-            if (isPhy) {
-                itemClasses += item.state === CompletionState.ALL_CORRECT ? "bg-success" : "text-info";
-            }
             if (isAda) {
                 typeLabel = "Question";
             }
@@ -115,24 +107,24 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
-            icon = <img src={siteSpecific("/assets/phy/icons/concept.svg", "/assets/cs/icons/concept.svg")} alt="Concept page icon"/>;
+            icon = <img src={"/assets/cs/icons/concept.svg"} alt="Concept page icon"/>;
             if (isAda) {
                 typeLabel = "Concept";
             }
             break;
         case (DOCUMENT_TYPE.EVENT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
-            icon = <img src={siteSpecific("/assets/common/icons/event-md.svg", "/assets/cs/icons/event.svg")} alt="Event page icon"/>;
+            icon = <img src={"/assets/cs/icons/event.svg"} alt="Event page icon"/>;
             typeLabel = "Event";
             break;
         case (DOCUMENT_TYPE.TOPIC_SUMMARY):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
-            icon = <img src={siteSpecific("/assets/common/icons/work-md.svg", "/assets/cs/icons/topic.svg")} alt="Topic summary page icon"/>;
+            icon = <img src={"/assets/cs/icons/topic.svg"} alt="Topic summary page icon"/>;
             typeLabel = "Topic";
             break;
         case (DOCUMENT_TYPE.GENERIC):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
-            icon = <img src={siteSpecific("/assets/common/icons/info-md.svg", "/assets/cs/icons/info-filled.svg")} alt="Generic page icon"/>;
+            icon = <img src={"/assets/cs/icons/info-filled.svg"} alt="Generic page icon"/>;
             if (isAda) {
                 typeLabel = "Info";
             }
@@ -143,34 +135,25 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
             return null;
     }
 
-    return <ListGroupItem className={classNames(itemClasses, {"p-3 d-md-flex flex-column justify-content-center content-summary-item": isPhy})} data-bs-theme={itemSubject?.id} key={linkDestination}>
+    return <ListGroupItem className={classNames(itemClasses)} data-bs-theme={itemSubject?.id} key={linkDestination}>
         <Link className={classNames({"position-relative justify-content-center": isAda})} to={{pathname: linkDestination, search: search, hash: hash}}>
-            {contentTypeVisibility !== ContentTypeVisibility.FULLY_HIDDEN && <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
-                {siteSpecific(
-                    icon,
-                    <div className={"inner-progress-icon"}>
-                        {icon}
-                        {contentTypeVisibility !== ContentTypeVisibility.ICON_ONLY && <>
-                            <br/>
-                            <span className={"icon-title"}>{typeLabel}</span>
-                        </>}
-                    </div>
-                )}
+            {contentTypeVisibility !== ContentTypeVisibility.FULLY_HIDDEN && <span className={classNames({"question-progress-icon": isAda})}>
+                <div className={"inner-progress-icon"}>
+                    {icon}
+                    {contentTypeVisibility !== ContentTypeVisibility.ICON_ONLY && <>
+                        <br/>
+                        <span className={"icon-title"}>{typeLabel}</span>
+                    </>}
+                </div>
             </span>}
-            <div className={classNames("flex-fill", {"py-3 pe-3 align-content-center": isAda, "d-flex": isAda && !stack, "d-md-flex": isPhy})}>
+            <div className={classNames("flex-fill", {"py-3 pe-3 align-content-center": isAda, "d-flex": isAda && !stack})}>
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
-                        <Markup encoding={"latex"} className={classNames( "link-title question-link-title", {"text-theme": isPhy})}>
+                        <Markup encoding={"latex"} className={classNames( "link-title question-link-title")}>
                             {title ?? ""}
                         </Markup>
-                        {isPhy && typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ms-2 mb-1"}>
-                            ({typeLabel})
-                        </span>}
                         <QuestionPropertyTags className="ms-2" supersededBy={item.supersededBy} tags={item.tags} />
                     </div>
-                    {(isPhy && item.summary) && <div className="small text-muted d-none d-sm-block">
-                        {item.summary}
-                    </div>}
                     {(!item.summary || deviceSize === "xs") && item.subtitle && <div className="small text-muted d-block">
                         {item.subtitle}
                     </div>}
@@ -182,12 +165,6 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                     </div>}
                 </div>
 
-                {isPhy && !isContentsIntendedAudience && <div className="ms-auto me-3 d-flex align-items-center">
-                    <i id={`audience-help-${componentId}`} className="icon icon-info icon-color-grey" />
-                    <UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
-                        {`This content has ${notRelevantMessage(userContext)}.`}
-                    </UncontrolledTooltip>
-                </div>}
                 <div>
                     {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={stack}/>}
                 </div>
