@@ -98,8 +98,7 @@ const passwordResetInformation = function(member: AppGroupMembership, passwordRe
     return message;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const confirmDeleteGroup = (dispatch: AppDispatch, deleteGroup: any, user: RegisteredUserDTO, groupToDelete: AppGroup) => {
+const confirmDeleteGroup = (dispatch: AppDispatch, deleteGroup: ReturnType<typeof useDeleteGroupMutation>, user: RegisteredUserDTO, groupToDelete: AppGroup) => {
     if (user.id === groupToDelete.ownerId) {
         if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nThis action cannot be undone!")) {
             deleteGroup(groupToDelete.id as number);
