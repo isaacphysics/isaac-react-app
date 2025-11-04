@@ -136,7 +136,8 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 />
                 {(selectedGroups.length === 0 
                     ? <FormFeedback>You must select a group</FormFeedback> 
-                    : <FormFeedback>You cannot reassign a test to this group(s) until the due date has passed.</FormFeedback>
+                    : <FormFeedback>{siteSpecific("You cannot reassign a test to this group(s) until the due date has passed.", 
+                        "This test has already been assigned to this group.")}</FormFeedback>
                 )}
             </Label>
         </FormGroup>

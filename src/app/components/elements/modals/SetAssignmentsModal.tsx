@@ -123,10 +123,11 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
                 </div>
                 {(selectedGroups.length === 0 
                     ? <FormFeedback>Please select a group</FormFeedback> 
-                    : <FormFeedback> {selectedGroups.length === 1 ? 
-                        `You cannot reassign a ${siteSpecific("question deck", "quiz")} to this group until the due date has passed.` 
-                        : `You cannot reassign a ${siteSpecific("question deck", "quiz")} to the following groups until the due date has passed: 
-                            ${selectedGroups.filter(g => currentAssignees.some(a => a.groupId === g.value)).map(g => g.label).join(", ")}` }
+                    : <FormFeedback>
+                        {`${siteSpecific(
+                            `You cannot reassign a question deck to ${selectedGroups.length === 1 ? "this group" : "the following groups"} until the due date has passed:`,
+                            `This quiz has already been assigned to ${selectedGroups.length === 1 ? "this group" : "the following groups"}:`)}
+                        ${selectedGroups.filter(g => currentAssignees.some(a => a.groupId === g.value)).map(g => g.label).join(", ")}`}
                     </FormFeedback>
                 )}
             </Label>

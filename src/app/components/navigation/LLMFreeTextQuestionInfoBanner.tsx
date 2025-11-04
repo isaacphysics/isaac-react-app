@@ -3,10 +3,10 @@ import React from "react";
 import {Button, Col, Row} from "reactstrap";
 import {ACCOUNT_TAB, isAda, isLoggedIn, KEY, persistence, useNavigation, useUserConsent} from "../../services";
 import {Link, useLocation} from "react-router-dom";
-import {selectors, useAppSelector, useUpdateCurrentMutation} from "../../state";
+import {PotentialUser} from "../../../IsaacAppTypes";
 import {ContentBaseDTO} from "../../../IsaacApiTypes";
 import {useLinkableSetting} from "../../services/linkableSetting";
-import {PotentialUser} from "../../../IsaacAppTypes";
+import {selectors, useAppSelector, useUpdateCurrentMutation} from "../../state";
 
 const locationOfFAQEntry = "/support/student/general#llm_questions";
 
