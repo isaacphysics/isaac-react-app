@@ -219,7 +219,6 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
         }
     }
 
-    const displayQuestions: ContentSummaryDTO[] = gameboardToPreview?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
     const boardStagesAndDifficulties = determineGameboardStagesAndDifficulties(gameboardToPreview);
 
     return <Card className={"my-1"}>
@@ -276,20 +275,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                             </Table>
                         </Col>}
                     </Row>
-                    {gameboardToPreview?.contents && gameboardToPreview.contents.length > 0 && <Card className="mt-1">
-                        <CardHeader className="text-end">
-                            <Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>
-                                {showGameboardPreview ? "Hide " : "Show "}{siteSpecific("question deck", "quiz")} preview
-                            </Button>
-                        </CardHeader>
-                        {showGameboardPreview && gameboardToPreview && <ListView type="item" items={displayQuestions} linkedBoardId={gameboardToPreview.id} hasCaret={isAda}/>}
-                        {showGameboardPreview && 
-                            <CardFooter className={"text-end"}>
-                                <Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>
-                                    Hide {siteSpecific("question deck", "quiz")} preview
-                                </Button>
-                            </CardFooter>}
-                    </Card>}
+                    {gameboardToPreview && <GameboardPreviewCard showGameboardPreview={showGameboardPreview} toggleGameboardPreview={() => setShowGameboardPreview(p => !p)} gameboardToPreview={gameboardToPreview} />}
                 </div>}
             </>}
         </CardBody>
@@ -392,6 +378,26 @@ const MonthAssignmentList = ({year, month, datesAndAssignments}: {year: number, 
     </>;
 };
 
+const GameboardPreviewCard = ({showGameboardPreview, toggleGameboardPreview, gameboardToPreview}: {showGameboardPreview: boolean, toggleGameboardPreview: () => void, gameboardToPreview: GameboardDTO}) => {
+    const displayQuestions: ContentSummaryDTO[] = gameboardToPreview?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
+
+    return <Card className="my-1">
+        <CardHeader className="text-end">
+            <Button color={"link"} onClick={toggleGameboardPreview}>
+                {showGameboardPreview ? "Hide " : "Show "}{siteSpecific("question deck", "quiz")} preview
+            </Button>
+        </CardHeader>
+        {showGameboardPreview && <>
+            <ListView type="item" items={displayQuestions} linkedBoardId={gameboardToPreview.id} hasCaret={isAda}/>
+            <CardFooter className="text-end">
+                <Button color={"link"} onClick={toggleGameboardPreview}>
+                    Hide {siteSpecific("question deck", "quiz")} preview
+                </Button>
+            </CardFooter>
+        </>}
+    </Card>;
+};
+
 interface AssignmentModalProps {
     user: RegisteredUserDTO;
     showSetAssignmentUI: boolean;
@@ -404,10 +410,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
     const [dueDate, setDueDate] = useState<Date>();
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
-
     const [showGameboardPreview, setShowGameboardPreview] = useState<boolean>(false);
-    const toggleGameboardPreview = () => setShowGameboardPreview(o => !o);
-
     const [selectedGameboard, setSelectedGameboard] = useState<Item<string>[]>();
 
     const {boardsById, groups, gameboards, boardIdsByGroupId} = useContext(AssignmentScheduleContext);
@@ -480,8 +483,6 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
         }
     }
     
-    const displayQuestions: ContentSummaryDTO[] = gameboardToPreview?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
-    
     return <>
         <h3>
             Set new assignment{assignmentToCopy ? " (from existing)" : ""}
@@ -503,15 +504,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             {alreadyAssignedGroupNames && alreadyAssignedGroupNames.length > 0 && <Alert color={"warning"} className={"my-1"}>
                 This {siteSpecific("question deck", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
             </Alert>}
-            {gameboardToPreview?.contents && <Card className={"my-1"} >
-                <CardHeader className={"text-end"}>
-                    <Button color={"link"} onClick={toggleGameboardPreview}>
-                        {showGameboardPreview ? "Hide " : "Show "}{siteSpecific("question deck", "quiz")} preview
-                    </Button>
-                </CardHeader>
-                {showGameboardPreview && gameboardToPreview && <ListView type="item" items={displayQuestions} linkedBoardId={gameboardToPreview.id} hasCaret={isAda}/>}
-                {showGameboardPreview && <CardFooter className={"text-end"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide {siteSpecific("question deck", "quiz")} preview</Button></CardFooter>}
-            </Card>}
+            {gameboardToPreview && <GameboardPreviewCard showGameboardPreview={showGameboardPreview} toggleGameboardPreview={() => setShowGameboardPreview(p => !p)} gameboardToPreview={gameboardToPreview} />} 
         </Label>
         <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
