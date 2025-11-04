@@ -207,7 +207,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     }
                     {isItem && <>
                         {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
-                        {isPhy && <QuestionPropertyTags className="ms-2 justify-self-end" supersededBy={typedProps.supersededBy} tags={tags} />}
+                        <QuestionPropertyTags className="ms-2 justify-self-end" supersededBy={typedProps.supersededBy} tags={tags} />
                     </>}
                 </div>
                 {subtitle && <div className="small text-muted text-wrap">

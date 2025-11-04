@@ -116,8 +116,7 @@ const GameboardBuilderRow = (
                             </button>
                             <Spacer />
                         </div>
-                        {isPhy && <QuestionPropertyTags className="my-1" supersededBy={question.supersededBy} tags={question.tags} />}
-
+                        <QuestionPropertyTags className="my-1" supersededBy={question.supersededBy} tags={question.tags} />
                         {question.subtitle && <>
                             <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
                         </>}
