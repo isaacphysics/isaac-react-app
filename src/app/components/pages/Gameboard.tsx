@@ -157,14 +157,6 @@ export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => 
     </ListGroup>;
 };
 
-export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => (
-    <Row className={className}>
-        <div className={isAda ? "col col-lg-10 offset-lg-1" : ""}>
-            <GameboardViewerInner gameboard={gameboard}/>
-        </div>
-    </Row>
-);
-
 export const Gameboard = withRouter(({ location }) => {
     const dispatch = useAppDispatch();
     const gameboardId = location.hash ? location.hash.slice(1) : null;

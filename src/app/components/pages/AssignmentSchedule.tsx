@@ -9,7 +9,7 @@ import {
     useLazyGetGameboardByIdQuery,
     useUnassignGameboardMutation
 } from "../../state";
-import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
+import {AssignmentDTO, ContentSummaryDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import groupBy from "lodash/groupBy";
 import mapValues from "lodash/mapValues";
 import range from "lodash/range";
@@ -34,6 +34,7 @@ import {
 import {
     above,
     BoardLimit,
+    convertGameboardItemToContentSummary,
     determineGameboardStagesAndDifficulties,
     determineGameboardSubjects,
     difficultyShortLabelMap,
@@ -66,11 +67,11 @@ import {
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import classNames from "classnames";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
-import {GameboardViewerInner} from "./Gameboard";
 import {Link, useLocation} from "react-router-dom";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {formatDate} from "../elements/DateString";
+import { ListView } from "../elements/list-groups/ListView";
 
 interface HeaderProps {
     assignmentsSetByMe?: AssignmentDTO[];
@@ -218,8 +219,8 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
         }
     }
 
+    const displayQuestions: ContentSummaryDTO[] = gameboardToPreview?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
     const boardStagesAndDifficulties = determineGameboardStagesAndDifficulties(gameboardToPreview);
-
 
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
@@ -275,10 +276,19 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                             </Table>
                         </Col>}
                     </Row>
-                    {gameboardToPreview?.contents && gameboardToPreview.contents.length > 0 && <Card className={"mt-1"}>
-                        <CardHeader className={"text-end"}><Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("question deck", "quiz")} preview</Button></CardHeader>
-                        {showGameboardPreview && gameboardToPreview && <GameboardViewerInner gameboard={gameboardToPreview}/>}
-                        {showGameboardPreview && <CardFooter className={"text-end"}><Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>Hide {siteSpecific("question deck", "quiz")} preview</Button></CardFooter>}
+                    {gameboardToPreview?.contents && gameboardToPreview.contents.length > 0 && <Card className="mt-1">
+                        <CardHeader className="text-end">
+                            <Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>
+                                {showGameboardPreview ? "Hide " : "Show "}{siteSpecific("question deck", "quiz")} preview
+                            </Button>
+                        </CardHeader>
+                        {showGameboardPreview && gameboardToPreview && <ListView type="item" items={displayQuestions} linkedBoardId={gameboardToPreview.id} hasCaret={isAda}/>}
+                        {showGameboardPreview && 
+                            <CardFooter className={"text-end"}>
+                                <Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>
+                                    Hide {siteSpecific("question deck", "quiz")} preview
+                                </Button>
+                            </CardFooter>}
                     </Card>}
                 </div>}
             </>}
@@ -469,7 +479,9 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             }
         }
     }
-
+    
+    const displayQuestions: ContentSummaryDTO[] = gameboardToPreview?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
+    
     return <>
         <h3>
             Set new assignment{assignmentToCopy ? " (from existing)" : ""}
@@ -492,8 +504,12 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
                 This {siteSpecific("question deck", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
             </Alert>}
             {gameboardToPreview?.contents && <Card className={"my-1"} >
-                <CardHeader className={"text-end"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("question deck", "quiz")} preview</Button></CardHeader>
-                {showGameboardPreview && gameboardToPreview && <GameboardViewerInner gameboard={gameboardToPreview}/>}
+                <CardHeader className={"text-end"}>
+                    <Button color={"link"} onClick={toggleGameboardPreview}>
+                        {showGameboardPreview ? "Hide " : "Show "}{siteSpecific("question deck", "quiz")} preview
+                    </Button>
+                </CardHeader>
+                {showGameboardPreview && gameboardToPreview && <ListView type="item" items={displayQuestions} linkedBoardId={gameboardToPreview.id} hasCaret={isAda}/>}
                 {showGameboardPreview && <CardFooter className={"text-end"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide {siteSpecific("question deck", "quiz")} preview</Button></CardFooter>}
             </Card>}
         </Label>
