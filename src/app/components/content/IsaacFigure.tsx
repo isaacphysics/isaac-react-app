@@ -2,11 +2,12 @@ import React, { useContext, useRef, useState } from 'react';
 import {FigureDTO} from "../../../IsaacApiTypes";
 import {apiHelper} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {DragAndDropRegionContext, FigureNumberingContext} from "../../../IsaacAppTypes";
+import {DragAndDropRegionContext, FigureNumberingContext, InlineContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import InlineDropRegion from '../elements/markup/portals/InlineDropZones';
 import { closeActiveModal, openActiveModal, useAppDispatch } from '../../state';
 import { FigureModal } from './IsaacImage';
+import InlineEntryZoneBase from '../elements/markup/portals/InlineEntryZone';
 
 interface IsaacFigureProps {
     doc: FigureDTO;
@@ -43,6 +44,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
 
     // TODO: if the image fails to load, you can't answer the question
     const dropRegionContext = useContext(DragAndDropRegionContext);
+    const inlineRegionContext = useContext(InlineContext);
     const clozeDropRootElement = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
     const [imageScaleFactor, setImageScaleFactor] = useState({x: 1, y: 1});
@@ -74,23 +76,35 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                             }}>
                                 <i className="icon icon-fullscreen icon-md" />
                             </button>
-                            {doc.dropZones && dropRegionContext && path && doc.dropZones.map((dropZone, i) => {
+                            {doc.dropZones && (dropRegionContext || inlineRegionContext) && path && doc.dropZones.map((dropZone, i) => {
                                 const zoneId = dropZone.id;
-                                const dropZoneElement = document.getElementById(`figure-drop-target-${zoneId}`);
+                                const parentId = dropRegionContext ? `figure-drop-target-${zoneId}` : `inline-question-${zoneId}`;
+                                const parentElement = document.getElementById(parentId);
+
                                 return <div 
-                                    className="position-absolute" id={`figure-drop-target-${zoneId}`} key={i}
+                                    className="position-absolute" id={parentId} key={i}
                                     style={{
-                                        left: `calc(${dropZone.left}% - (${dropZoneElement?.clientWidth}px * ${(dropZone.left)/100})`,
-                                        top: `calc(${dropZone.top}% - (${dropZoneElement?.clientHeight}px * ${(dropZone.top)/100})`
+                                        left: `calc(${dropZone.left}% - (${parentElement?.clientWidth}px * ${(dropZone.left)/100})`,
+                                        top: `calc(${dropZone.top}% - (${parentElement?.clientHeight}px * ${(dropZone.top)/100})`
                                     }}
                                 >
-                                    <InlineDropRegion 
-                                        divId={`figure-drop-target-${zoneId}`}
-                                        zoneId={zoneId}
-                                        emptyWidth={dropZone.minWidth.endsWith("px") ? parseInt(dropZone.minWidth.replace("px", "")) * imageScaleFactor.x : undefined}
-                                        emptyHeight={dropZone.minHeight.endsWith("px") ? parseInt(dropZone.minHeight.replace("px", "")) * imageScaleFactor.y : undefined}
-                                        rootElement={clozeDropRootElement.current || undefined}
-                                    />
+                                    {dropRegionContext
+                                        ? <InlineDropRegion 
+                                            divId={parentId}
+                                            zoneId={zoneId}
+                                            emptyWidth={dropZone.minWidth.endsWith("px") ? parseInt(dropZone.minWidth.replace("px", "")) * imageScaleFactor.x : undefined}
+                                            emptyHeight={dropZone.minHeight.endsWith("px") ? parseInt(dropZone.minHeight.replace("px", "")) * imageScaleFactor.y : undefined}
+                                            rootElement={clozeDropRootElement.current || undefined}
+                                        />
+                                        : inlineRegionContext && <InlineEntryZoneBase
+                                            inlineSpanId={parentId}
+                                            className="figure-inline-region"
+                                            widthPx={dropZone.minWidth.endsWith("px") ? parseInt(dropZone.minWidth.replace("px", "")) * imageScaleFactor.x : undefined}
+                                            heightPx={dropZone.minHeight.endsWith("px") ? parseInt(dropZone.minHeight.replace("px", "")) * imageScaleFactor.y : undefined}
+                                            root={clozeDropRootElement.current || document.body}
+                                        />
+                                    }
+
                                 </div>; 
                             })}
 
