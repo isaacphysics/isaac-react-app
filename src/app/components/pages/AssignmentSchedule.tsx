@@ -381,7 +381,7 @@ const MonthAssignmentList = ({year, month, datesAndAssignments}: {year: number, 
 const GameboardPreviewCard = ({showGameboardPreview, toggleGameboardPreview, gameboardToPreview}: {showGameboardPreview: boolean, toggleGameboardPreview: () => void, gameboardToPreview: GameboardDTO}) => {
     const displayQuestions: ContentSummaryDTO[] = gameboardToPreview?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
 
-    return <Card className="my-1">
+    return displayQuestions.length > 0 && <Card className="my-1">
         <CardHeader className="text-end">
             <Button color={"link"} onClick={toggleGameboardPreview}>
                 {showGameboardPreview ? "Hide " : "Show "}{siteSpecific("question deck", "quiz")} preview
