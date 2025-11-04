@@ -14,7 +14,11 @@ import { TitleIconProps } from "../PageTitle";
 
 function iconPath(iconName: string): string {
     return `/assets/cs/icons/${iconName}.svg`;
-} 
+}
+
+function getBreadcrumb(tagIds: TAG_ID[] = []): string[] {
+    return tags.getByIdsAsHierarchy(tagIds).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title);
+}
 
 type ListViewCardItemProps = Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}>;
 
@@ -31,7 +35,7 @@ interface QuestionListViewItemProps extends Extract<AbstractListViewItemProps, {
 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const { item, linkedBoardId, ...rest } = props;
-    const breadcrumb = (isPhy || props.hasCaret) ? tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title) : undefined;
+    const breadcrumb = (isPhy || props.hasCaret) ? getBreadcrumb(props.tags as TAG_ID[]) : undefined;
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
@@ -69,7 +73,7 @@ interface ConceptListViewItemProps extends Extract<AbstractListViewItemProps, {a
 export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
-    const breadcrumb = rest.hasCaret ? tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title) : undefined;
+    const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
 
     const icon: TitleIconProps = isPhy
@@ -94,7 +98,7 @@ interface TopicListViewItemProps extends Extract<AbstractListViewItemProps, {alv
 export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
-    const breadcrumb = rest.hasCaret ? tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).filter(c => c.contentType === "isaacQuestionPage").map(tag => tag.title) : undefined;
+    const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id}`;
     const icon: TitleIconProps = {type: "img", icon: iconPath("topic"), width: "24px", height: "24px", alt: "Topic summary page icon", label: "Topic"};
 
@@ -195,7 +199,7 @@ interface QuickQuizListViewItemProps extends Extract<AbstractListViewItemProps, 
 }
 
 export const QuickQuizListViewItem = ({item, ...rest}: QuickQuizListViewItemProps) => {
-    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[])
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
@@ -219,7 +223,7 @@ interface GenericListViewItemProps extends Extract<AbstractListViewItemProps, {a
 }
 
 export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) => {
-    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[])
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
@@ -249,7 +253,7 @@ interface ShortcutListViewItemProps extends Extract<AbstractListViewItemProps, {
 }
 
 export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutListViewItemProps) => {
-    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[])
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
