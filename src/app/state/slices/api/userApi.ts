@@ -6,7 +6,7 @@ import {PotentialUser, UserPreferencesDTO, ValidationUser} from "../../../../Isa
 import {showToast} from "../../actions/popups";
 import {history, isFirstLoginInPersistence, isTeacherOrAbove, KEY, persistence, siteSpecific} from "../../../services";
 import {questionsApi} from "./questionsApi";
-import {continueToAfterAuthPath} from "../../actions";
+import {continueToAfterAuthPath, requestCurrentUser} from "../../actions";
 
 export const userApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -101,10 +101,12 @@ export const userApi = isaacApi.injectEndpoints({
                         registeredUserContexts: newUserContexts
                     }
                 }),
-                async onQueryStarted( args , {queryFulfilled} ) {
+                async onQueryStarted( args , {queryFulfilled, dispatch} ) {
                     try {
                         const { newUser } = args;
+
                         await queryFulfilled;
+                        await dispatch(requestCurrentUser());
 
                         if (isTeacherOrAbove(newUser)) {
                             // Redirect to email verification page
@@ -150,6 +152,7 @@ export const userApi = isaacApi.injectEndpoints({
                     try {
 
                         await queryFulfilled;
+                        await dispatch(requestCurrentUser());
 
                         if (!editingOtherUser) {
                             // Invalidate tagged caches that are dependent on the current user's settings
