@@ -2,7 +2,7 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, isAda, isPhy, PATHS, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, isAda, isPhy, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -35,7 +35,7 @@ interface QuestionListViewItemProps extends Extract<AbstractListViewItemProps, {
 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const { item, linkedBoardId, ...rest } = props;
-    const breadcrumb = (isPhy || props.hasCaret) ? getBreadcrumb(props.tags as TAG_ID[]) : undefined;
+    const breadcrumb = (isPhy || props.hasCaret) ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
@@ -44,12 +44,12 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const icon: TitleIconProps = isPhy
         ? {type: "hex", icon: "icon-question", size: "lg"}
         : item.state === CompletionState.IN_PROGRESS 
-            ? {type: "img", icon: iconPath("status-in-progress"), width: "24px", height: "24px", alt: "In progress question icon", label: "Question"}
+            ? {type: "img", icon: iconPath("status-in-progress"), width: "24px", height: "24px", alt: "In progress question icon", label: "In progress"}
             : item.state === CompletionState.ALL_CORRECT
-                ? {type: "img", icon: iconPath("status-correct"), width: "24px", height: "24px", alt: "Complete question icon", label: "Question"}
+                ? {type: "img", icon: iconPath("status-correct"), width: "24px", height: "24px", alt: "Complete question icon", label: "Correct"}
                 : item.state === CompletionState.ALL_INCORRECT
-                    ? {type: "img", icon: iconPath("status-incorrect"), width: "24px", height: "24px", alt: "Incorrect question icon", label: "Question"}
-                    : {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "Not attempted question icon", label: "Question"};
+                    ? {type: "img", icon: iconPath("status-incorrect"), width: "24px", height: "24px", alt: "Incorrect question icon", label: "Incorrect"}
+                    : {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "Not attempted question icon", label: linkedBoardId ? "Not started" : "Question"};
 
     return <AbstractListViewItem
         {...rest}
