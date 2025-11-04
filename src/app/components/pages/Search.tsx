@@ -15,7 +15,6 @@ import {
     DOCUMENT_TYPE,
     documentDescription,
     isAda,
-    isPhy,
     parseLocationSearch,
     pushSearchToHistory,
     SEARCH_RESULT_TYPE,

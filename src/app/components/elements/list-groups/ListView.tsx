@@ -199,7 +199,7 @@ interface QuickQuizListViewItemProps extends Extract<AbstractListViewItemProps, 
 }
 
 export const QuickQuizListViewItem = ({item, ...rest}: QuickQuizListViewItemProps) => {
-    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[])
+    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
@@ -223,7 +223,7 @@ interface GenericListViewItemProps extends Extract<AbstractListViewItemProps, {a
 }
 
 export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) => {
-    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[])
+    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
@@ -253,7 +253,7 @@ interface ShortcutListViewItemProps extends Extract<AbstractListViewItemProps, {
 }
 
 export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutListViewItemProps) => {
-    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[])
+    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
