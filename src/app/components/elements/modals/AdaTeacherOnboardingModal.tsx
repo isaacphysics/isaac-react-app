@@ -41,8 +41,9 @@ export const adaTeacherOnboardingModal: ActiveModalProps = {
     title: "Teacher Onboarding modal",
     body: pages.map((page, idx) => <Page key={idx} page={page}/>),
     buttons: <Button color="solid" onClick={() => store.dispatch(closeActiveModal())}>Go to My Ada</Button>,
-    onInitialise: () => {
-        setTimeout(unscheduleTeacherOnboardingModal, 300);
+    closeAction: () => {
+        unscheduleTeacherOnboardingModal();
+        store.dispatch(closeActiveModal());
     }
 };
 
