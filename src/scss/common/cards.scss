@@ -198,3 +198,12 @@
       flex-direction: column;
   }
 }
+
+.card {
+  .card-header {
+    &:has(+ .d-none), &:only-child {
+      border-radius: inherit;
+      border-bottom: none;
+    }
+  }
+}
