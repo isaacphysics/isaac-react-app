@@ -17,7 +17,7 @@ describe('Overview Page Visual Regression Tests', () => {
             cy.get('[data-testid="active-modal"]').should('be.visible');
             
             // Assert
-            cy.matchImage();
+            cy.get('[data-testid="active-modal"]').matchImage();
         }
     });
 });
