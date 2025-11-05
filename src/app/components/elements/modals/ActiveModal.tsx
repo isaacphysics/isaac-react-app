@@ -13,6 +13,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
     const dispatch = useAppDispatch();
     const subject = useAppSelector(selectors.pageContext.subject);
     const [page, setPage] = useState(0);
+    const [isPageTransitioning, setIsPageTransitioning] = useState(false);
     const totalPages = activeModal && Symbol.iterator in Object(activeModal.body) ? Array.from(activeModal.body as Iterable<React.ReactNode>).length : 1;
     
     const toggle = useCallback(() => {
@@ -28,6 +29,13 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
 
     useEffect(() => {
         activeModal?.onInitialise?.();
+    }, [activeModal]);
+
+    const getPage = useCallback((pageIndex: number) => {
+        if (activeModal && Symbol.iterator in Object(activeModal.body)) {
+            return <React.Fragment key={pageIndex}>{Array.from(activeModal.body as Iterable<React.ReactNode>)[pageIndex]}</React.Fragment>;
+        }
+        return null;
     }, [activeModal]);
 
     return <Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={activeModal?.size ?? "lg"} centered={activeModal?.centered} data-bs-theme={subject ?? "neutral"}>
@@ -60,7 +68,10 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
 
             <ModalBody className={classNames(activeModal.bodyContainerClassName, {"mx-4": ["lg", "xl", undefined].includes(activeModal.size), "pt-0": !activeModal.title})}>
                 {totalPages > 1
-                    ? <>{Array.from(activeModal.body as Iterable<React.ReactNode>)[page]}</>
+                    ? <div className="ptn-container">
+                        <div className={classNames({"ptn-move-left": isPageTransitioning})}>{getPage(isPageTransitioning ? page - 1 : page)}</div>
+                        {isPageTransitioning && <div className="ptn-move-left">{getPage(page)}</div>}
+                    </div>
                     : typeof activeModal.body === "function" ? <activeModal.body /> : activeModal.body
                 }
             </ModalBody>
@@ -68,7 +79,17 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
             {activeModal.buttons &&
                 <ModalFooter data-testid="active-modal-footer" className="mb-2 mx-2 justify-content-center">
                     {page < totalPages - 1
-                        ? <Button color="primary" onClick={() => setPage(p => p + 1)} aria-label="Go to next page on modal">Next</Button>
+                        ? <Button 
+                            color="primary" 
+                            onClick={() => {
+                                setPage(p => p + 1);
+                                setIsPageTransitioning(true);
+                                setTimeout(() => setIsPageTransitioning(false), 500); // slightly higher than CSS animation as React/CSS timers are not perfectly aligned; entirely safe to be too long here
+                            }} 
+                            aria-label="Go to next page on modal"
+                        >
+                            Next
+                        </Button>
                         : activeModal.buttons
                     }
                 </ModalFooter>

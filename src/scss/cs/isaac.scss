@@ -365,6 +365,7 @@ $warning-border-subtle: #fffeee;
 // Utility
 @import "../common/mixins";
 @import "../common/_utils";
+@import "../common/transitions";
 
 // Theming
 @import "accessibility";
