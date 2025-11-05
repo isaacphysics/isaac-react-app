@@ -1,24 +1,9 @@
 import axios, {AxiosPromise} from "axios";
-import {
-    API_PATH,
-    IMAGE_PATH,
-    securePadCredentials,
-    TAG_ID
-} from "./";
+import {API_PATH, IMAGE_PATH, securePadCredentials, TAG_ID} from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {
-    AuthenticationProvider,
-    TestCaseDTO,
-    UserContext
-} from "../../IsaacApiTypes";
+import {AuthenticationProvider, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
-import {
-    Choice,
-    CredentialsAuthDTO,
-    QuestionSearchQuery,
-    UserPreferencesDTO,
-    ValidationUser
-} from "../../IsaacAppTypes";
+import {Choice, CredentialsAuthDTO, QuestionSearchQuery} from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state";
 import {Immutable} from "immer";
 
@@ -72,11 +57,6 @@ export const api = {
         },
         passwordReset: (params: {email: string}) => {
             return endpoint.post(`/users/resetpassword`, params);
-        },
-        updateCurrent: (registeredUser: Immutable<ValidationUser>, userPreferences: UserPreferencesDTO, passwordCurrent: string | null, registeredUserContexts?: UserContext[])
-        :  AxiosPromise<Immutable<ApiTypes.RegisteredUserDTO>> =>
-        {
-            return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent, registeredUserContexts});
         },
         passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);
