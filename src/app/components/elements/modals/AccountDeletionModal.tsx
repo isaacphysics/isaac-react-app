@@ -9,11 +9,11 @@ export const ConfirmAccountDeletionRequestModal = (confirmAccountDeletionRequest
         title: siteSpecific("Delete Account", "Delete account"),
         body: <PageFragment fragmentId="account_deletion_email_confirmation_notice" />,
         buttons: [
+            <Button key={1} block color="keyline" onClick={() => {store.dispatch(closeActiveModal());}}>
+                Cancel
+            </Button>,
             <Button key={0} block color="solid" onClick={() => {confirmAccountDeletionRequest();}}>
                 Confirm via email
-            </Button>,
-            <Button key={1} block color="tertiary" onClick={() => {store.dispatch(closeActiveModal());}}>
-                Cancel
             </Button>,
         ]
     };

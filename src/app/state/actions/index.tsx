@@ -262,13 +262,14 @@ export const updateCurrentUser = (
                 <div className="w-100">
                     <Button
                         className={"float-start mb-4"}
-                        color={siteSpecific("tertiary", "keyline")}
+                        color="keyline"
                         onClick={() => { cancelSettingsUpdate(); dispatch(closeActiveModal() as any); }}
                     >
                         Cancel
                     </Button>
                     <Button
                         className={"float-end mb-4"}
+                        color="solid"
                         onClick={() => { continueSettingsUpdate(); dispatch(closeActiveModal() as any); }}
                     >
                         OK

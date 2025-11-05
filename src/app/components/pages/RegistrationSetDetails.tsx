@@ -209,16 +209,16 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                         label={<span className={classNames({"form-required": isPhy})}>I accept the <a href="/terms" target="_blank">terms of use</a>.</span>}
                                     />
                                     <FormFeedback className="mt-0">
-                                    You must accept the terms to continue.
+                                        You must accept the terms to continue.
                                     </FormFeedback>
                                 </FormGroup>
                                 {isAda && <hr className="text-center"/>}
                                 <Row className="justify-content-end">
                                     <Col className="d-flex justify-content-end" xs={12} sm={siteSpecific(3,4)} lg={6}>
-                                        <Button className="mt-2 w-100" color={siteSpecific("solid", "keyline")} onClick={goBack}>Back</Button>
+                                        <Button className="mt-2 w-100" color="keyline" onClick={goBack}>Back</Button>
                                     </Col>
                                     <Col xs={12} sm={siteSpecific(4,5)} lg={6}>
-                                        <Button type="submit" value="Continue" className="mt-2 w-100">Continue</Button>
+                                        <Button type="submit" value="Continue" className="mt-2 w-100" color="solid">Continue</Button>
                                     </Col>
                                 </Row>
                             </Form>}
