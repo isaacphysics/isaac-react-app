@@ -312,6 +312,99 @@ describe("CompetitionEntryForm", () => {
     });
   });
 
+  describe("Project link URL validation", () => {
+    it("should show custom error message when URL is invalid", async () => {
+      const user = userEvent.setup();
+      setupTest();
+
+      const projectLinkInput = screen.getByPlaceholderText(
+        /Add a link to a project saved in the cloud/,
+      ) as HTMLInputElement;
+
+      await waitFor(() => {
+        expect(document.getElementById("projectLink")).toBeInTheDocument();
+      });
+
+      await user.type(projectLinkInput, "isaaccomputerscience.org");
+
+      const isValid = projectLinkInput.checkValidity();
+      expect(isValid).toBe(false);
+
+      const invalidEvent = new Event("invalid", { bubbles: true, cancelable: true });
+      projectLinkInput.dispatchEvent(invalidEvent);
+
+      expect(projectLinkInput.validationMessage).toBe("Please enter a full URL, including http:// or https://");
+      expect(projectLinkInput.validity.valid).toBe(false);
+    });
+
+    it("should accept valid URL with http:// protocol", async () => {
+      const user = userEvent.setup();
+      setupTest();
+
+      const projectLinkInput = screen.getByPlaceholderText(
+        /Add a link to a project saved in the cloud/,
+      ) as HTMLInputElement;
+
+      await waitFor(() => {
+        expect(document.getElementById("projectLink")).toBeInTheDocument();
+      });
+
+      await user.type(projectLinkInput, "http://isaaccomputerscience.org");
+
+      expect(projectLinkInput.validity.valid).toBe(true);
+      expect(projectLinkInput.validationMessage).toBe("");
+    });
+
+    it("should accept valid URL with https:// protocol", async () => {
+      const user = userEvent.setup();
+      setupTest();
+
+      const projectLinkInput = screen.getByPlaceholderText(
+        /Add a link to a project saved in the cloud/,
+      ) as HTMLInputElement;
+
+      await waitFor(() => {
+        expect(document.getElementById("projectLink")).toBeInTheDocument();
+      });
+
+      await user.type(projectLinkInput, "https://isaaccomputerscience.org");
+
+      expect(projectLinkInput.validity.valid).toBe(true);
+      expect(projectLinkInput.validationMessage).toBe("");
+    });
+
+    it("should clear validation error when user fixes the URL", async () => {
+      const user = userEvent.setup();
+      setupTest();
+
+      const projectLinkInput = screen.getByPlaceholderText(
+        /Add a link to a project saved in the cloud/,
+      ) as HTMLInputElement;
+
+      await waitFor(() => {
+        expect(document.getElementById("projectLink")).toBeInTheDocument();
+      });
+
+      await user.type(projectLinkInput, "isaaccomputerscience.org");
+
+      projectLinkInput.checkValidity();
+      const invalidEvent = new Event("invalid", { bubbles: true, cancelable: true });
+      projectLinkInput.dispatchEvent(invalidEvent);
+
+      expect(projectLinkInput.validity.valid).toBe(false);
+      expect(projectLinkInput.validationMessage).toBe("Please enter a full URL, including http:// or https://");
+
+      await user.clear(projectLinkInput);
+      await user.type(projectLinkInput, "https://isaaccomputerscience.org");
+
+      const inputEvent = new Event("input", { bubbles: true });
+      projectLinkInput.dispatchEvent(inputEvent);
+
+      expect(projectLinkInput.validity.valid).toBe(true);
+      expect(projectLinkInput.validationMessage).toBe("");
+    });
+  });
+
   describe("Submit button state management", () => {
     it("should enable submit button when all fields are valid", async () => {
       const user = userEvent.setup();
@@ -323,16 +416,14 @@ describe("CompetitionEntryForm", () => {
         },
       ];
 
-      // Create a valid user without the default "N/A" - this is crucial
       const validUser = {
         ...mockUser,
         schoolId: 123,
-        schoolOther: undefined, // Remove the default "N/A"
+        schoolOther: undefined,
       };
 
       setupTest(validUser, groupsWithMembers);
 
-      // Fill in project details
       await user.type(screen.getByPlaceholderText("E.g., SmartLab"), "My Project");
       await user.type(screen.getByPlaceholderText(/Add a link to a project saved in the cloud/), "https://example.com");
 

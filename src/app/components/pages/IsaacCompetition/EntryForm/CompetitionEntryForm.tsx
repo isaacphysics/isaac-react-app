@@ -76,6 +76,27 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
     };
   }, []);
 
+  useEffect(() => {
+    const input = document.getElementById("projectLink") as HTMLInputElement;
+    if (!input) return;
+
+    const handleInvalid = () => {
+      input.setCustomValidity("Please enter a full URL, including http:// or https://");
+    };
+
+    const handleInput = () => {
+      input.setCustomValidity("");
+    };
+
+    input.addEventListener("invalid", handleInvalid);
+    input.addEventListener("input", handleInput);
+
+    return () => {
+      input.removeEventListener("invalid", handleInvalid);
+      input.removeEventListener("input", handleInput);
+    };
+  }, []);
+
   const handleMemberSelection = (selectedOptions: any) => {
     const selectedValues = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
 
