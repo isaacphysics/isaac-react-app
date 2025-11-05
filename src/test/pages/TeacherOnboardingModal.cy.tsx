@@ -15,6 +15,10 @@ describe('Overview Page Visual Regression Tests', () => {
                 <Overview />
             </>, ["/dashboard"]);
             cy.get('[data-testid="active-modal"]').should('be.visible');
+
+            // make screen large enough that modal does not need to scroll
+            // https://github.com/cypress-io/cypress/issues/19438#issuecomment-1508248270
+            cy.viewport(1280, 720); 
             
             // Assert
             cy.get('[data-testid="active-modal"]').matchImage();
