@@ -25,8 +25,8 @@ import {
 } from "reactstrap";
 import {Link, withRouter} from "react-router-dom";
 import {
+    AppDispatch,
     AppState,
-    mutationSucceeded,
     resetMemberPassword,
     showAdditionalManagerSelfRemovalModal,
     showCreateGroupModal,
@@ -96,6 +96,19 @@ const passwordResetInformation = function(member: AppGroupMembership, passwordRe
         message = 'Password reset request cannot be sent because this user\'s account email address is either invalid or not accepting email.';
     }
     return message;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const confirmDeleteGroup = (dispatch: AppDispatch, deleteGroup: any, user: RegisteredUserDTO, groupToDelete: AppGroup) => {
+    if (user.id === groupToDelete.ownerId) {
+        if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nThis action cannot be undone!")) {
+            deleteGroup(groupToDelete.id as number);
+        }
+    } else {
+        if (confirm("You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '" + groupToDelete.groupName + "'?")) {
+            dispatch(showAdditionalManagerSelfRemovalModal({group: groupToDelete, user}));
+        }
+    }
 };
 
 interface MemberInfoProps {
@@ -268,6 +281,8 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     const isGroupNameInvalid = isDefined(newGroupName) && isDefined(existingGroupWithConflictingName);
     const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName) && (isDefined(group) ? newGroupName !== group.groupName : true);
 
+    const [deleteGroup] = useDeleteGroupMutation();
+
     return <Card className={classNames({"mb-4": isPhy})} {...rest}>
         <CardBody>
             <h4 className={"mb-2"}>
@@ -400,13 +415,17 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                 {canArchive && <>
                     {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                     <div>
-                        <Button className={classNames("w-100 w-md-auto", {"mt-n3 mb-2": isPhy})} color={siteSpecific("solid", "keyline")} 
+                        <Button className={classNames("w-100 w-md-auto", {"mt-n3 mb-2": isPhy})} color="keyline"
                             onClick={async () => {
                                 if (group.archived) toggleArchived();
                                 else await dispatch(showGroupArchiveModal({group, toggleArchived}));
                             }}>
                             {`${group.archived ? "Unarchive" : "Archive"} group`}
                         </Button>
+                        {group.archived && <Button className={classNames("w-100 w-md-auto ms-2", {"mt-n3 mb-2": isPhy})} color="solid"
+                            onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, group);}}>
+                            {"Delete group"}
+                        </Button>}
                     </div>
                 </>}
             </div>
@@ -464,21 +483,6 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
     }, [groups, sortOrder]);
 
     const [deleteGroup] = useDeleteGroupMutation();
-    const confirmDeleteGroup = (groupToDelete: AppGroup) => {
-        if (user.id === groupToDelete.ownerId) {
-            if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nThis action cannot be undone!")) {
-                deleteGroup(groupToDelete.id as number).then(result => {
-                    if (mutationSucceeded(result)) {
-                        setSelectedGroupId(undefined);
-                    }
-                });
-            }
-        } else {
-            if (confirm("You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '" + groupToDelete.groupName + "'?")) {
-                dispatch(showAdditionalManagerSelfRemovalModal({group: groupToDelete, user}));
-            }
-        }
-    };
 
     return <Card className="group-selector">
         <CardBody>
@@ -522,7 +526,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                 <StyledTabPicker
                                     id={g.groupName} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}
                                     onInputChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)} data-testid={"select-group"}
-                                    suffix={showArchived ? {icon: "icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(g);}, info: "Delete group"} : undefined}
+                                    suffix={showArchived ? {icon: "icon icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}, info: "Delete group"} : undefined}
                                 />
                             </li>
                             : <div key={g.id} className="group-item p-md-2" data-testid={"group-item"}>
@@ -531,7 +535,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                         {g.groupName}
                                     </Button>
                                     {showArchived &&
-                                        <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
+                                        <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}}
                                             aria-label="Delete group" className={classNames("ms-1", siteSpecific("icon-close", "bin-icon"))} title={"Delete group"}/>
                                     }
                                 </div>
