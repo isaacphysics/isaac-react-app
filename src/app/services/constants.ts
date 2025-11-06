@@ -519,6 +519,14 @@ export const QUESTION_PART_STATUS_TO_ICON: {[key in QuestionPartState]: string} 
     "NOT_ATTEMPTED": "icon-not-started"
 };
 
+export const HUMAN_STATUS: {[key in CompletionState]: string} = {
+    [CompletionState.ALL_CORRECT]: siteSpecific("All correct", "Correct"),
+    [CompletionState.ALL_ATTEMPTED]: siteSpecific("All attempted", "Attempted"),
+    [CompletionState.ALL_INCORRECT]: siteSpecific("All incorrect", "Incorrect"),
+    [CompletionState.IN_PROGRESS]: "In progress",
+    [CompletionState.NOT_ATTEMPTED]: siteSpecific("Not started", "Not attempted"),
+};
+
 type BookTag = "phys_book_step_into" | "phys_book_step_up" | "phys_book_gcse" | "physics_skills_14" | "physics_skills_19" | "solving_physics_problems" | "physics_linking_concepts" | "qmp" | "maths_book_gcse" | "maths_book_2e" | "maths_book" | "chemistry_16";
 export enum BookHiddenState {
     BOOKS_LISTING_ONLY = "books_listing_only",

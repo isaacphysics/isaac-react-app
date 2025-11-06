@@ -2,7 +2,7 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, isAda, isPhy, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -41,17 +41,13 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "");
-
+    const state = item.state ?? CompletionState.NOT_ATTEMPTED;
     const icon: TitleIconProps = isPhy
         ? {type: "icon", icon: "icon-question", size: "lg"}
-        : item.state === CompletionState.IN_PROGRESS 
-            ? {type: "img", icon: iconPath("status-in-progress"), width: "24px", height: "24px", alt: "In progress question icon", label: "In progress"}
-            : item.state === CompletionState.ALL_CORRECT
-                ? {type: "img", icon: iconPath("status-correct"), width: "24px", height: "24px", alt: "Complete question icon", label: "Correct"}
-                : item.state === CompletionState.ALL_INCORRECT
-                    ? {type: "img", icon: iconPath("status-incorrect"), width: "24px", height: "24px", alt: "Incorrect question icon", label: "Incorrect"}
-                    : {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "Not attempted question icon", label: linkedBoardId ? "Not started" : "Question"};
-    if (props.hideIconLabel) icon.label = undefined;
+        : {type: "icon", icon: QUESTION_STATUS_TO_ICON[state], size: "md"};
+
+    if (isAda) icon.alt = classNames(HUMAN_STATUS[state], "question icon");
+    if (isAda && !props.hideIconLabel) icon.label = linkedBoardId ? HUMAN_STATUS[state] : "Question";
 
     return <AbstractListViewItem
         {...rest}
