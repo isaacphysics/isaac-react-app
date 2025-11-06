@@ -11,7 +11,8 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
     SUBJECT_SPECIFIC_CHILDREN_MAP,
     LEARNING_STAGE,
     ASSIGNMENT_STATE_MAP,
-    isAppLink} from "../../../services";
+    isAppLink,
+    QUESTION_STATUS_TO_ICON} from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -67,14 +68,7 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
     const subject = useAppSelector(selectors.pageContext.subject);
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
     const link = isDefined(gameboardId) ? `/questions/${question.id}?board=${gameboardId}` : `/questions/${question.id}`;
-
-    const progressIcon = question.state && (question.state === CompletionState.ALL_CORRECT
-        ? "icon icon-raw icon-correct"
-        : [CompletionState.ALL_INCORRECT, CompletionState.ALL_ATTEMPTED].includes(question.state)
-            ? "icon icon-raw icon-attempted"
-            : question.state === CompletionState.IN_PROGRESS
-                ? "icon icon-raw icon-in-progress"
-                : "icon icon-raw icon-not-started");
+    const progressIcon = classNames("icon icon-raw", QUESTION_STATUS_TO_ICON[question.state ?? CompletionState.NOT_ATTEMPTED]);
 
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
         <Link to={link} className="py-2">
