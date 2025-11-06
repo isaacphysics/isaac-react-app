@@ -125,7 +125,7 @@ const modal = {
         return within(screen.getByTestId('active-modal-footer')).getAllByRole('button');
     },
     get body() {
-        return screen.getByRole('region', { name: 'Teacher onboarding modal page'});
+        return screen.getByTestId('modal-page');
     },
     get pages() {
         return screen.getByTestId('modal-page-indicator');
