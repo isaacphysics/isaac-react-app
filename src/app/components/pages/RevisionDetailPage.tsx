@@ -23,7 +23,7 @@ export const RevisionPage = ({match: {params: {pageId}}}: RevisionProps) => {
         <TitleAndBreadcrumb 
             currentPageTitle="Revision"
             icon={{
-                type: "hex", 
+                type: "icon", 
                 icon: "icon-revision"
             }}
         />

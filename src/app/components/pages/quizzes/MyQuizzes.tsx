@@ -455,7 +455,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     }</span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My tests" icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="My tests" icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
         <SidebarLayout>
             <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter}
                 setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}

@@ -386,7 +386,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </div>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
         <SidebarLayout>
             {activeTab === MANAGE_QUIZ_TAB.set
                 ? <SetQuizzesSidebar titleFilter={titleFilter} setTitleFilter={setTitleFilter} hideButton />
