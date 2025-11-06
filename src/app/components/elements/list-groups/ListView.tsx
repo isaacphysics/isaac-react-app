@@ -30,6 +30,7 @@ export const ListViewCardItem = (props: ListViewCardItemProps) => {
 
 interface QuestionListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
     item: ContentSummaryDTO;
+    hideIconLabel?: boolean;
     linkedBoardId?: string;
 }
 
@@ -50,6 +51,7 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
                 : item.state === CompletionState.ALL_INCORRECT
                     ? {type: "img", icon: iconPath("status-incorrect"), width: "24px", height: "24px", alt: "Incorrect question icon", label: "Incorrect"}
                     : {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "Not attempted question icon", label: linkedBoardId ? "Not started" : "Question"};
+    if (props.hideIconLabel) icon.label = undefined;
 
     return <AbstractListViewItem
         {...rest}

@@ -5,7 +5,7 @@ import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Badge, Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
-import { below, isAda, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
+import { above, below, isAda, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
@@ -183,7 +183,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size} className={icon.className} />
                             : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}} /> 
                                 : undefined}
-                    {hasCaret && icon.label && <div className="icon-title mt-1">{icon.label}</div>}
+                    {icon.label && above['sm'](deviceSize) && <div className="icon-title mt-1">{icon.label}</div>}
                 </div>}
                 {isPhy && isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
                     <StatusDisplay status={typedProps.status} showText={false} />
