@@ -12,10 +12,6 @@ import { UnionToIntersection } from "@reduxjs/toolkit/dist/tsHelpers";
 import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
 
-function iconPath(iconName: string): string {
-    return `/assets/cs/icons/${iconName}.svg`;
-}
-
 function getBreadcrumb(tagIds: TAG_ID[] = []): string[] {
     return tags.getByIdsAsHierarchy(tagIds).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title);
 }
