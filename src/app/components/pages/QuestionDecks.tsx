@@ -32,7 +32,7 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
         <TitleAndBreadcrumb
             currentPageTitle="Question decks by topic"
             icon={pageContext?.subject ? {
-                type: "icon",
+                type: "hex",
                 subject: pageContext.subject,
                 icon: "icon-finder"
             } : undefined}

@@ -12,10 +12,10 @@ import classNames from "classnames";
 import { Markup } from "../markup";
 
 export const ICON = {
-    correct: <i className={classNames("icon-md", siteSpecific("icon-correct", "icon-correctness-correct"))}/>,
-    incorrect: <i className={classNames("icon-md", siteSpecific("icon-incorrect", "icon-correctness-incorrect"))}/>,
-    notAttempted: <i className={classNames("icon-md", siteSpecific("icon-not-attempted", "icon-correctness-not-attempted"))}/>,
-    partial: <i className={classNames("icon-md", siteSpecific("icon-in-progress", "icon-correctness-partial"))}/>,
+    correct: <i className="icon-md icon-correct"/>,
+    incorrect: <i className="icon-md icon-incorrect"/>,
+    notAttempted: <i className="icon-md icon-not-attempted"/>,
+    partial: <i className={classNames("icon-md", siteSpecific("icon-in-progress", "icon-partial"))}/>,
 };
 
 export const passMark = 0.75;

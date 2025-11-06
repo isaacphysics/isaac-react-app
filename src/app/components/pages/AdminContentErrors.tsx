@@ -85,7 +85,7 @@ export const AdminContentErrors = () => {
             <Col>
                 <TitleAndBreadcrumb
                     currentPageTitle="Content errors"
-                    icon={{type: "icon", icon: "icon-tests"}}
+                    icon={{type: "hex", icon: "icon-tests"}}
                 />
             </Col>
         </Row>

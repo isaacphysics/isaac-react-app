@@ -259,7 +259,7 @@ const QuizTitle = ({attempt, view, page, pageLink, pageHelp, preview, studentUse
     const crumbs = getCrumbs(preview, !!view, user);
     if (page === null || page === undefined) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
-            intermediateCrumbs={crumbs} icon={{type: "icon", icon: "icon-tests"}}
+            intermediateCrumbs={crumbs} icon={{"type": "hex", "icon": "icon-tests"}}
         />;
     } else {
         const sections = attempt.quiz?.children;
@@ -267,7 +267,7 @@ const QuizTitle = ({attempt, view, page, pageLink, pageHelp, preview, studentUse
         const sectionTitle = section?.title ?? "Section " + page;
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
             intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink()}]}
-            icon={{type: "icon", icon: "icon-tests"}}
+            icon={{"type": "hex", "icon": "icon-tests"}}
         />;
     }
 };

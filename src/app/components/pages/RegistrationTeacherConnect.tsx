@@ -60,7 +60,7 @@ export const RegistrationTeacherConnect = () => {
 
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
         <Card className={"my-7"}>
             <CardBody>
                 <Form onSubmit={submit}>

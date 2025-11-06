@@ -116,7 +116,7 @@ export const Events = withRouter(({location}: RouteComponentProps) => {
             <TitleAndBreadcrumb
                 currentPageTitle={"Events"}
                 help={pageHelp}
-                icon={{type: "icon", icon: "icon-events"}}
+                icon={{type: "hex", icon: "icon-events"}}
             />
             <SidebarLayout>
                 <EventsSidebar/>

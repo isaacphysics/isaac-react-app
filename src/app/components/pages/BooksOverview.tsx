@@ -26,7 +26,7 @@ export const BooksOverview = () => {
     return <Container>
         <TitleAndBreadcrumb 
             currentPageTitle="Our books"
-            icon={{type: "icon", icon: "icon-book"}}
+            icon={{type: "hex", icon: "icon-book"}}
         />
         <SidebarLayout>
             <BooksOverviewSidebar hideButton />

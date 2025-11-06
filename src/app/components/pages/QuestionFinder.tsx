@@ -465,7 +465,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             currentPageTitle={siteSpecific("Question finder", "Questions")} 
             help={pageHelp}
             intermediateCrumbs={crumb ? [crumb] : []}
-            icon={{type: "icon", icon: "icon-finder"}}
+            icon={{type: "hex", icon: "icon-finder"}}
         />
 
         <SidebarLayout>

@@ -143,7 +143,7 @@ export const FreeTextBuilder = () => {
     const atLeastOneQuestionChoiceAndTestCase = atLeastOne(cleanQuestionChoices.length) && atLeastOne(cleanTestCases.length);
 
     return <Container>
-        <TitleAndBreadcrumb className="mb-4" currentPageTitle="Free-text question builder" icon={{type: "icon", icon: "icon-concept"}} />
+        <TitleAndBreadcrumb className="mb-4" currentPageTitle="Free-text question builder" icon={{type: "hex", icon: "icon-concept"}} />
         <Form onSubmit={(event: React.FormEvent) => {
             if (event) {event.preventDefault();}
             if (atLeastOneQuestionChoiceAndTestCase) {
