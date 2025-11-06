@@ -49,7 +49,6 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
                         className={classNames("w-100", {
                             "d-flex justify-content-between": activeModal.closeAction,
                             "h-title": !!activeModal.title && isAda,
-                            "position-absolute": !activeModal.title,
                         })}
                         style={activeModal.title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
                         close={
@@ -77,10 +76,11 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
             </ModalBody>
 
             {activeModal.buttons &&
-                <ModalFooter data-testid="active-modal-footer" className="mb-2 mx-2 justify-content-center">
+                <ModalFooter data-testid="active-modal-footer" className="mb-2 mx-2 justify-content-center gap-3">
                     {page < totalPages - 1
                         ? <Button 
                             color="primary" 
+                            block
                             onClick={() => {
                                 setPage(p => p + 1);
                                 setIsPageTransitioning(true);

@@ -28,17 +28,16 @@ const pages = [
 ] as const;
 
 const Page = ({ page }: { page: typeof pages[number]}) => {
-    return <div role="region" aria-label="Teacher onboarding modal page" key={page.title} className="text-center mx-2">
-        <img src={`/assets/cs/decor/${page.image}`} height="217px" alt='' aria-hidden className="pb-3 modal-page-hero-image"/>
+    return <div key={page.title} className="text-center mx-2">
+        <img src={`/assets/cs/decor/${page.image}`} height="217px" alt='' aria-hidden className="my-3 modal-page-hero-image"/>
         <div className="d-flex flex-column align-items-center justify-content-center modal-page-text">
-            <h4>{page.title}</h4>
+            <h3 className="mb-3">{page.title}</h3>
             <p className="mb-0">{page.message}</p>
         </div>
     </div>;
 };
 
 export const adaTeacherOnboardingModal: ActiveModalProps = {
-    title: "Teacher Onboarding modal",
     body: pages.map((page, idx) => <Page key={idx} page={page}/>),
     buttons: <Button color="solid" onClick={() => store.dispatch(closeActiveModal())}>Go to My Ada</Button>,
     closeAction: () => {
@@ -49,7 +48,6 @@ export const adaTeacherOnboardingModal: ActiveModalProps = {
 
 export const useTeacherOnboardingModal = () => {
     const dispatch = useAppDispatch();
-    console.log("useTeacherOnboardingModal called", shouldModalShow());
     useEffect(() => {
         if (shouldModalShow()) {
             dispatch(openActiveModal(MODAL_TYPES.TEACHER_ONBOARDING));
