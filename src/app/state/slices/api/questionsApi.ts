@@ -1,13 +1,57 @@
-import { IsaacQuestionPageDTO } from "../../../../IsaacApiTypes";
-import { CanAttemptQuestionTypeDTO } from "../../../../IsaacAppTypes";
-import { tags } from "../../../services";
+import { ContentSummaryDTO, IsaacQuestionPageDTO } from "../../../../IsaacApiTypes";
+import { CanAttemptQuestionTypeDTO, QuestionSearchQuery } from "../../../../IsaacAppTypes";
+import { SEARCH_RESULTS_PER_PAGE, tags } from "../../../services";
 import { docSlice } from "../doc";
 import { isaacApi } from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
 
+interface QuestionSearchResponseType {
+    results: ContentSummaryDTO[];
+    totalResults: number;
+    nextSearchOffset?: number;
+    moreResultsAvailable?: boolean; // frontend only; calculated in transformResponse
+}
 
 export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttemptQuestionType"]}).injectEndpoints({
     endpoints: (build) => ({
+        searchQuestions: build.query<QuestionSearchResponseType, QuestionSearchQuery>({
+            query: (query: QuestionSearchQuery) => ({
+                url: `/pages/questions`,
+                params: {
+                    ...query,
+                    limit: query.limit ? query.limit + 1 : SEARCH_RESULTS_PER_PAGE + 1 // fetch one extra to check if more results are available
+                }
+            }),
+            serializeQueryArgs: (args) => {
+                const { queryArgs, ...rest } = args;
+                const { startIndex: _startIndex, ...otherParams } = queryArgs;
+                // So that different queries with different pagination params still share the same cache
+                return {
+                    ...rest,
+                    queryArgs: otherParams
+                };
+            },
+            transformResponse: (response: QuestionSearchResponseType, _, arg) => {
+                return {
+                    ...response,
+                    // remove the extra result used to check for more results, so that we return the correct amount
+                    moreResultsAvailable: response.results.length > (arg.limit ?? SEARCH_RESULTS_PER_PAGE),
+                    results: response.results.slice(0, (arg.limit ?? SEARCH_RESULTS_PER_PAGE))
+                };
+            },
+            merge: (currentCache, newItems) => {
+                currentCache.results.push(...newItems.results);
+                currentCache.totalResults = newItems.totalResults;
+                currentCache.nextSearchOffset = newItems.nextSearchOffset;
+            },
+            forceRefetch({ currentArg, previousArg }) {
+                return currentArg !== previousArg;
+            },
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Unable to search for questions",
+            }),
+        }),
+
         getQuestion: build.query<IsaacQuestionPageDTO, string>({
             query: (id) => ({
                 url: `/pages/questions/${id}`
@@ -33,6 +77,8 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
 });
 
 export const {
+    useSearchQuestionsQuery,
+    useLazySearchQuestionsQuery,
     useGetQuestionQuery,
     useCanAttemptQuestionTypeQuery,
 } = questionsApi;

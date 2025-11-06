@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {AppState, clearQuestionSearch, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
+import {AppState, clearQuestionSearch, useAppDispatch, useAppSelector, useSearchQuestionsQuery} from "../../state";
 import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
@@ -34,10 +34,9 @@ import {
     useQueryParams,
     useUrlPageTheme,
 } from "../../services";
-import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
+import {Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useHistory, withRouter} from "react-router";
-import {ShowLoading} from "../handlers/ShowLoading";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
@@ -57,6 +56,9 @@ import { Link } from "react-router-dom";
 import { updateTopicChoices } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
 import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
+import { QuestionSearchQuery } from "../../../IsaacAppTypes";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;
@@ -146,6 +148,13 @@ export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: Filte
     </div>;
 };
 
+const loadingPlaceholder = <ResultsListContainer>
+    <div className="w-100 text-center pb-2">
+        <h2 aria-hidden="true" className="pt-7">Searching...</h2>
+        <IsaacSpinner />
+    </div>
+</ResultsListContainer>;
+
 export const QuestionFinder = withRouter(() => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
@@ -201,8 +210,6 @@ export const QuestionFinder = withRouter(() => {
         }
     }, [pageContext]);
 
-    const [disableLoadMore, setDisableLoadMore] = useState(false);
-
     const choices = useMemo(() => {
         return updateTopicChoices(selections, pageContext, getAllowedTags(pageContext));
     }, [selections, pageContext]);
@@ -214,7 +221,8 @@ export const QuestionFinder = withRouter(() => {
     // this should only update when a new search is triggered, not (necessarily) when the filters change
     const [isCurrentSearchEmpty, setIsCurrentSearchEmpty] = useState(isEmptySearch(searchQuery, searchTopics, searchBooks, searchStages, searchDifficulties, searchExamBoards, selections));
 
-    const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
+    const [searchParams, setSearchParams] = useState<QuestionSearchQuery | undefined>(undefined);
+    const searchQuestionsQuery = useSearchQuestionsQuery(searchParams ?? skipToken);
 
     const debouncedSearch = useMemo(() =>
         debounce(({
@@ -250,7 +258,7 @@ export const QuestionFinder = withRouter(() => {
 
             setIsCurrentSearchEmpty(false);
 
-            void dispatch(searchQuestions({
+            setSearchParams({
                 querySource: "questionFinder",
                 searchString: searchString || undefined,
                 tags: choiceTreeLeaves.join(",") || undefined,
@@ -265,9 +273,9 @@ export const QuestionFinder = withRouter(() => {
                 statuses: questionStatusToURIComponent(questionStatuses),
                 fasttrack: false,
                 startIndex,
-                limit: SEARCH_RESULTS_PER_PAGE + 1, // request one more than we need to know if there are more results
+                limit: SEARCH_RESULTS_PER_PAGE,
                 randomSeed
-            }));
+            });
         }, 250),
     [dispatch, pageContext]);
 
@@ -276,8 +284,6 @@ export const QuestionFinder = withRouter(() => {
 
     const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
-        setDisableLoadMore(false);
-        setDisplayQuestions(undefined);
 
         const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
         debouncedSearch({
@@ -340,31 +346,9 @@ export const QuestionFinder = withRouter(() => {
         }
     }, [searchStages]);
 
-    const questionList = useMemo(() => {
-        if (questions) {
-            if (questions.length < SEARCH_RESULTS_PER_PAGE + 1) {
-                setDisableLoadMore(true);
-            } else {
-                setDisableLoadMore(false);
-            }
-
-            return questions.slice(0, SEARCH_RESULTS_PER_PAGE);
-        }
-    }, [questions]);
-
-    const [displayQuestions, setDisplayQuestions] = useState<ContentSummaryDTO[] | undefined>([]);
     const [pageCount, setPageCount] = useState(1);
 
     const [validFiltersSelected, setValidFiltersSelected] = useState(false);
-
-    useEffect(() => {
-        if (displayQuestions && nextSearchOffset && pageCount > 1) {
-            setDisplayQuestions(dqs => [...dqs ?? [], ...questionList ?? []]);
-        } else {
-            setDisplayQuestions(questionList);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [questionList]);
 
     useEffect(function onFiltersChanged() {
         setSearchDisabled(false);
@@ -423,11 +407,6 @@ export const QuestionFinder = withRouter(() => {
         "Find physics, maths, chemistry and biology questions by topic and difficulty.",
         "Search for the perfect computer science questions to study. For revision. For homework. For the classroom."
     );
-
-    const loadingPlaceholder = <div className="w-100 text-center pb-2">
-        <h2 aria-hidden="true" className="pt-7">Searching...</h2>
-        <IsaacSpinner />
-    </div>;
 
     function removeFilterTag(filter: string) {
         if (searchStages.includes(filter as STAGE)) {
@@ -551,78 +530,86 @@ export const QuestionFinder = withRouter(() => {
                         }} />
                     </Col>}
                     <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
-                        <ResultsListContainer>
-                            <ResultsListHeader className="d-flex">
-                                <div className="flex-grow-1" data-testid="question-finder-results-header">
-                                    {displayQuestions && displayQuestions.length > 0
-                                        ? <>Showing <b>{displayQuestions.length}</b></>
-                                        : isPhy && isCurrentSearchEmpty
-                                            ? <>Select {filteringByStatus ? "more" : "some"} filters to start searching</>
-                                            : <>No results</>
+                        <ShowLoadingQuery 
+                            query={searchQuestionsQuery} 
+                            placeholder={loadingPlaceholder}
+                            defaultErrorTitle="Error loading questions"
+                            maintainOnRefetch={pageCount > 1}
+                            thenRender={({ results: questions, totalResults: totalQuestions, nextSearchOffset, moreResultsAvailable }, isStale) => {
+                                return <>
+                                    <ResultsListContainer>
+                                        <ResultsListHeader className="d-flex">
+                                            <div className="flex-grow-1" data-testid="question-finder-results-header">
+                                                <>{questions && questions.length > 0
+                                                    ? <>
+                                                        Showing <b>{questions.length}</b>
+                                                        {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
+                                                        .
+                                                    </>
+                                                    : isPhy && isCurrentSearchEmpty
+                                                        ? <>Select {filteringByStatus ? "more" : "some"} filters to start searching.</>
+                                                        : <>No results.</>
+                                                }</>
+                                            </div>
+                                            <button className={siteSpecific(
+                                                "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end ms-3 text-nowrap",
+                                                "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
+                                            } onClick={() => setRandomSeed(nextSeed())}
+                                            >
+                                                <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
+                                                {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
+                                            </button>
+                                        </ResultsListHeader>
+                                        <CardBody className={classNames({"border-0": isPhy, "p-0": questions.length, "m-0": isAda && questions.length})}>
+                                            <>{questions.length
+                                                ? isPhy
+                                                    ? <ListView type="item" items={questions} />
+                                                    : <LinkToContentSummaryList
+                                                        items={questions} className="m-0"
+                                                        contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
+                                                        ignoreIntendedAudience noCaret
+                                                    />
+                                                : isAda && <>{
+                                                    isCurrentSearchEmpty
+                                                        ? <span>Please select and apply filters.</span>
+                                                        : filteringByStatus 
+                                                            ? <span>Could not load any results matching the requested filters.</span>
+                                                            : <span>No results match the requested filters.</span>
+                                                }</>
+                                            }</>
+                                        </CardBody>
+                                    </ResultsListContainer>
+                                    {(questions?.length ?? 0) > 0 &&
+                                        <Row className="pt-3">
+                                            <Col className="d-flex justify-content-center mb-3">
+                                                <Button
+                                                    onClick={() => {
+                                                        debouncedSearch({
+                                                            searchQuery,
+                                                            searchTopics,
+                                                            searchExamBoards,
+                                                            searchBooks,
+                                                            searchStages,
+                                                            searchDifficulties,
+                                                            selections,
+                                                            excludeBooks,
+                                                            searchStatuses,
+                                                            startIndex: nextSearchOffset ? nextSearchOffset - 1 : 0,
+                                                            randomSeed
+                                                        });
+                                                        setPageCount(c => c + 1);
+                                                    }}
+                                                    disabled={!moreResultsAvailable || isStale}
+                                                    outline={isAda}
+                                                >
+                                                    Load more
+                                                </Button>
+                                            </Col>
+                                        </Row>
                                     }
-                                    {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
-                                    .
-                                </div>
-                                <button className={siteSpecific(
-                                    "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end ms-3 text-nowrap",
-                                    "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
-                                } onClick={() => setRandomSeed(nextSeed())}
-                                >
-                                    <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
-                                    {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
-                                </button>
-                            </ResultsListHeader>
-                            <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
-                                <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
-                                    {displayQuestions?.length
-                                        ? isPhy
-                                            ? <ListView type="item" items={displayQuestions} />
-                                            : <LinkToContentSummaryList
-                                                items={displayQuestions} className="m-0"
-                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                                ignoreIntendedAudience noCaret
-                                            />
-                                        : isAda && <>{
-                                            isCurrentSearchEmpty
-                                                ? <span>Please select and apply filters.</span>
-                                                : filteringByStatus 
-                                                    ? <span>Could not load any results matching the requested filters.</span>
-                                                    : <span>No results match the requested filters.</span>
-                                        }</>
-                                    }
-                                </ShowLoading>
-                            </CardBody>
-                        </ResultsListContainer>
-                        {(displayQuestions?.length ?? 0) > 0 &&
-                            <Row className="pt-3">
-                                <Col className="d-flex justify-content-center mb-3">
-                                    <Button
-                                        onClick={() => {
-                                            debouncedSearch({
-                                                searchQuery,
-                                                searchTopics,
-                                                searchExamBoards,
-                                                searchBooks,
-                                                searchStages,
-                                                searchDifficulties,
-                                                selections,
-                                                excludeBooks,
-                                                searchStatuses,
-                                                startIndex: nextSearchOffset
-                                                    ? nextSearchOffset - 1
-                                                    : 0,
-                                                randomSeed
-                                            });
-                                            setPageCount(c => c + 1);
-                                            setDisableLoadMore(true);
-                                        }}
-                                        disabled={disableLoadMore}
-                                        outline={isAda}
-                                    >
-                                        Load more
-                                    </Button>
-                                </Col>
-                            </Row>}
+                                </>;
+                            }}
+                        />
                     </Col>
                 </Row>
             </MainContent>
