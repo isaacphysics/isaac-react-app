@@ -41,7 +41,7 @@ import { StyledSelect } from "../../elements/inputs/StyledSelect";
 import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 import { FilterCount } from "../../elements/svg/FilterCount";
 import { MainContent, MyQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
-import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
+import { HexIcon } from "../../elements/svg/HexIcon";
 import { CardGrid } from "../../elements/CardGrid";
 import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 import { PageMetadata } from "../../elements/PageMetadata";
@@ -121,7 +121,7 @@ const PhyQuizItem = ({quiz}: QuizAssignmentProps) => {
                     <Col className="d-flex flex-column align-items-start col-sm-8">
                         <div className="d-flex align-items-center">
                             <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
-                                <PhyHexIcon icon="icon-tests" subject={subject as Subject} className="assignment-hex ps-3"/>
+                                <HexIcon icon="icon-tests" subject={subject as Subject} className="assignment-hex ps-3"/>
                             </div>
                             <div className="d-flex flex-column flex-grow-1">
                                 <h4>{quiz.title || quiz.id}</h4>
