@@ -33,7 +33,7 @@ import {
 } from "../../../services";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {GameboardDTO, UserGroupDTO} from "../../../../IsaacApiTypes";
-import {BoardAssignee, ActiveModal} from "../../../../IsaacAppTypes";
+import {BoardAssignee, ActiveModalProps} from "../../../../IsaacAppTypes";
 import {StyledSelect} from "../../elements/inputs/StyledSelect";
 import classNames from "classnames";
 
@@ -258,7 +258,7 @@ const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
     </div>;
 };
 
-export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModal => {
+export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModalProps => {
     const {board, toggle} = props;
 
     return {
@@ -266,6 +266,6 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
         size: "md",
         title: `Assign "${board?.title}"`,
         body: <SetAssignmentsModalContent {...props} />,
-        buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]
+        buttons: [<Button key={0} aria-label="Close modal" color="keyline" className="w-100" onClick={toggle}>Close</Button>]
     };
 };
