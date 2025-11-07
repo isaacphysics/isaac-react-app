@@ -558,8 +558,8 @@ export const QuestionFinder = withRouter(() => {
                                                 {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
                                             </button>
                                         </ResultsListHeader>
-                                        <CardBody className={classNames({"border-0": isPhy, "p-0": questions.length, "m-0": isAda && questions.length})}>
-                                            <>{questions.length
+                                        <CardBody className={classNames({"border-0": isPhy, "p-0": questions?.length, "m-0": isAda && questions?.length})}>
+                                            <>{questions?.length
                                                 ? isPhy
                                                     ? <ListView type="item" items={questions} />
                                                     : <LinkToContentSummaryList

@@ -306,6 +306,7 @@ export const QuestionSearchModal = (
                             placeholder={<tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr>}
                             defaultErrorTitle="Failed to load questions."
                             thenRender={({results: questions}) => {
+                                if (!questions) return <></>;
                                 const sortedQuestions = sortAndFilterBySearch(questions);
                                 return sortedQuestions?.map(question =>
                                     <GameboardBuilderRow

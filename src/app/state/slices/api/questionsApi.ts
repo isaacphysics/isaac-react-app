@@ -1,13 +1,13 @@
 import { ContentSummaryDTO, IsaacQuestionPageDTO } from "../../../../IsaacApiTypes";
 import { CanAttemptQuestionTypeDTO, QuestionSearchQuery } from "../../../../IsaacAppTypes";
-import { SEARCH_RESULTS_PER_PAGE, tags } from "../../../services";
+import { isDefined, SEARCH_RESULTS_PER_PAGE, tags } from "../../../services";
 import { docSlice } from "../doc";
 import { isaacApi } from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
 
 interface QuestionSearchResponseType {
-    results: ContentSummaryDTO[];
-    totalResults: number;
+    results?: ContentSummaryDTO[];
+    totalResults?: number;
     nextSearchOffset?: number;
     moreResultsAvailable?: boolean; // frontend only; calculated in transformResponse
 }
@@ -35,12 +35,16 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
                 return {
                     ...response,
                     // remove the extra result used to check for more results, so that we return the correct amount
-                    moreResultsAvailable: response.results.length > (arg.limit ?? SEARCH_RESULTS_PER_PAGE),
-                    results: response.results.slice(0, (arg.limit ?? SEARCH_RESULTS_PER_PAGE))
+                    moreResultsAvailable: isDefined(response.results) ? response.results.length > (arg.limit ?? SEARCH_RESULTS_PER_PAGE) : undefined,
+                    results: response.results?.slice(0, (arg.limit ?? SEARCH_RESULTS_PER_PAGE))
                 };
             },
             merge: (currentCache, newItems) => {
-                currentCache.results.push(...newItems.results);
+                if (currentCache.results) {
+                    currentCache.results.push(...(newItems.results ?? []));
+                } else {
+                    currentCache.results = newItems.results;
+                }
                 currentCache.totalResults = newItems.totalResults;
                 currentCache.nextSearchOffset = newItems.nextSearchOffset;
             },
