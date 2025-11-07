@@ -14,7 +14,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
     const subject = useAppSelector(selectors.pageContext.subject);
     const [page, setPage] = useState(0);
     const [isPageTransitioning, setIsPageTransitioning] = useState(false);
-    const totalPages = activeModal && Symbol.iterator in Object(activeModal.body) ? Array.from(activeModal.body as Iterable<React.ReactNode>).length : 1;
+    const totalPages = activeModal && Symbol.iterator in Object(activeModal.body) && typeof activeModal.body !== "string" ? Array.from(activeModal.body as Iterable<React.ReactNode>).length : 1;
     
     const toggle = useCallback(() => {
         dispatch(closeActiveModal());
