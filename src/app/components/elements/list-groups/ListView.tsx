@@ -80,7 +80,7 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
 
     const icon: TitleIconProps = isPhy
         ? {type: "hex", icon: "icon-concept", size: "lg"}
-        : {type: "img", icon: iconPath("concept"), width: "24px", height: "24px", alt: "Concept page icon", label: "Concept"};
+        : {type: "img", icon: iconPath("concept"), width: "32px", height: "32px", alt: "Concept page icon", label: "Concept"};
 
     return <AbstractListViewItem
         icon={icon}
@@ -102,7 +102,7 @@ export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id}`;
-    const icon: TitleIconProps = {type: "img", icon: iconPath("topic"), width: "24px", height: "24px", alt: "Topic summary page icon", label: "Topic"};
+    const icon: TitleIconProps = {type: "img", icon: iconPath("topic"), width: "32px", height: "32px", alt: "Topic summary page icon", label: "Topic"};
 
     return <AbstractListViewItem
         icon={icon}
@@ -232,7 +232,7 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
 
     const icon: TitleIconProps = isPhy
         ? {type: "hex", icon: "icon-info", size: "lg"}
-        : {type: "img", icon: iconPath("info-filled"), width: "24px", height: "24px", alt: "Generic page icon", label: "Info"};
+        : {type: "img", icon: iconPath("info-filled"), width: "32px", height: "32px", alt: "Generic page icon", label: "Info"};
 
     return <AbstractListViewItem
         icon={icon}
