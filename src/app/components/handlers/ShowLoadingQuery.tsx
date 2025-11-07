@@ -84,7 +84,11 @@ export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, i
     }
 
     const isStale = (isLoading || isFetching) && isFound<T>(data);
-    const showPlaceholder = (isUninitialized || isLoading || isFetching) && (!maintainOnRefetch || !isDefined(data));
+    const showPlaceholder = (isLoading || isFetching) && (!maintainOnRefetch || !isDefined(data));
+
+    if (isUninitialized) {
+        return null;
+    }
 
     if (showPlaceholder) {
         return placeholder ? <>{placeholder}</> : <LoadingPlaceholder />;
