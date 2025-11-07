@@ -4469,7 +4469,7 @@ export const mockLLMMarkedValidationResponse = {
     },
     "correct": true,
     "dateAttempted": 1760018609128,
-    "marksAwarded": 1,
+    "marks": 1,
     "markBreakdown": [
         {
             "jsonField": "unreceivedMark0",
