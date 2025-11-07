@@ -132,7 +132,7 @@ export const QuestionSearchModal = (
             });
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
-        }, 250),
+        }, 250, { leading: true }),
     [eventLog]);
 
     const sortableTableHeaderUpdateState = (sortState: Record<string, SortOrder>, setSortState: React.Dispatch<React.SetStateAction<Record<string, SortOrder>>>, key: string) => (order: SortOrder) => {

@@ -274,7 +274,7 @@ export const QuestionFinder = withRouter(() => {
                 limit: SEARCH_RESULTS_PER_PAGE,
                 randomSeed
             });
-        }, 250),
+        }, 250, { leading: true }),
     [pageContext]);
 
 

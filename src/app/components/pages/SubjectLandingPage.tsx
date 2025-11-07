@@ -57,7 +57,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
             limit: 1,
             randomSeed
         });
-    }), [context, randomSeed]);
+    }, 250, { leading: true }), [context, randomSeed]);
 
     useEffect(() => {
         searchDebounce();
