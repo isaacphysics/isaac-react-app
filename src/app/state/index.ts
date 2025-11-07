@@ -23,7 +23,6 @@ export * from "./reducers/quizState";
 export * from "./reducers/questionState";
 export * from "./reducers/notifiersState";
 export * from "./reducers/groupsState";
-export * from "./reducers/gameboardsState";
 export * from "./reducers/progressState";
 export * from "./reducers/adminState";
 

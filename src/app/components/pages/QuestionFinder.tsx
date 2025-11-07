@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {AppState, clearQuestionSearch, useAppDispatch, useAppSelector, useSearchQuestionsQuery} from "../../state";
+import {AppState, useAppDispatch, useAppSelector, useSearchQuestionsQuery} from "../../state";
 import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
@@ -239,7 +239,6 @@ export const QuestionFinder = withRouter(() => {
         }): void => {
             if (isEmptySearch(searchString, topics, book, stages, difficulties, examBoards, hierarchySelections)) {
                 setIsCurrentSearchEmpty(true);
-                return void dispatch(clearQuestionSearch);
             }
 
             const choiceTreeLeaves = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
