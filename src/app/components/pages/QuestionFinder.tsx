@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {AppState, useAppDispatch, useAppSelector, useSearchQuestionsQuery} from "../../state";
+import {AppState, useAppSelector, useSearchQuestionsQuery} from "../../state";
 import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
@@ -156,7 +156,6 @@ const loadingPlaceholder = <ResultsListContainer>
 </ResultsListContainer>;
 
 export const QuestionFinder = withRouter(() => {
-    const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
@@ -276,7 +275,7 @@ export const QuestionFinder = withRouter(() => {
                 randomSeed
             });
         }, 250),
-    [dispatch, pageContext]);
+    [pageContext]);
 
 
     const filteringByStatus = Object.values(searchStatuses).some(v => v) && !Object.values(searchStatuses).every(v => v);

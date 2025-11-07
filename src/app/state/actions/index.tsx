@@ -19,7 +19,6 @@ import {
     CredentialsAuthDTO,
     FreeTextRule,
     InlineContext,
-    QuestionSearchQuery,
     UserSnapshot,
     ValidatedChoice,
 } from "../../../IsaacAppTypes";
