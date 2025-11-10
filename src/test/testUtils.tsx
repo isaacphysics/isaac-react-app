@@ -172,6 +172,7 @@ export const enterInput = async (placeholder: string, input: string) => {
 
 export const waitForLoaded = () => waitFor(() => {
     expect(screen.queryAllByText("Loading...")).toHaveLength(0);
+    expect(screen.queryAllByText("Searching...")).toHaveLength(0);
 });
 
 export const expectUrl = (text: string) => waitFor(() => {
