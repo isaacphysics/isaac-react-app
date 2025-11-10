@@ -6,6 +6,7 @@ import { siteSpecific } from "../../../services";
 
 export const ConfirmAccountDeletionRequestModal = (confirmAccountDeletionRequest: () => void) => {
     return {
+        closeAction: () => {store.dispatch(closeActiveModal());},
         title: siteSpecific("Delete Account", "Delete account"),
         body: <PageFragment fragmentId="account_deletion_email_confirmation_notice" />,
         buttons: [
