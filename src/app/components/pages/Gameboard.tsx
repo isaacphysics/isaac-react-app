@@ -57,7 +57,7 @@ export const Gameboard = withRouter(({ location }) => {
         <TitleAndBreadcrumb
             breadcrumbTitleOverride={siteSpecific("Question deck", "Quiz")}
             currentPageTitle={`${siteSpecific("Question deck", "Quiz")} not found`}
-            icon={{type: "icon", icon: "icon-error"}}
+            icon={{type: "hex", icon: "icon-error"}}
         />
         <h3 className="my-4">
             <small>
@@ -75,7 +75,7 @@ export const Gameboard = withRouter(({ location }) => {
                 thenRender={(gameboard) => {
                     return <>
                         <TitleAndBreadcrumb
-                            currentPageTitle={siteSpecific("Question deck", gameboard && gameboard.title || "Filter Generated Quiz")} icon={{type: "icon", icon: "icon-question-deck"}}
+                            currentPageTitle={siteSpecific("Question deck", gameboard && gameboard.title || "Filter Generated Quiz")} icon={{type: "hex", icon: "icon-question-deck"}}
                             intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: "Assignments", to: "/assignments"}] : []}
                         />
                         <SidebarLayout>

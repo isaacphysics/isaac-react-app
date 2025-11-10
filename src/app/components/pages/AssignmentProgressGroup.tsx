@@ -106,7 +106,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         <TitleAndBreadcrumb
             currentPageTitle={group?.groupName ?? "Group progress"}
             intermediateCrumbs={[{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}]}
-            icon={{type: "icon", icon: "icon-group"}}
+            icon={{type: "hex", icon: "icon-group"}}
         />
 
         {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-flex align-items-center mb-2 mt-4 d-md-none")}>

@@ -6,14 +6,12 @@ import {BooleanNotation, NOT_FOUND_TYPE, UserEmailPreferences} from "../../Isaac
 import {
     AuthenticationProvider,
     BookingStatus,
-    CompletionState,
     ContentDTO,
     Difficulty,
     ExamBoard,
     IsaacFastTrackQuestionPageDTO,
     IsaacQuestionPageDTO,
     ItemDTO,
-    QuestionPartState,
     Stage,
     UserRole
 } from "../../IsaacApiTypes";
@@ -503,29 +501,6 @@ export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) 
     acc[stage.valueOf() as LEARNING_STAGE] = Object.keys(PHY_NAV_SUBJECTS).filter(subject => (PHY_NAV_SUBJECTS[subject as keyof typeof PHY_NAV_SUBJECTS] as readonly LEARNING_STAGE[]).includes(stage as LEARNING_STAGE)) as Exclude<SUBJECTS, SUBJECTS.CS>[];
     return acc;
 }, {} as {[stage in LEARNING_STAGE]: Exclude<SUBJECTS, SUBJECTS.CS>[]});
-
-export const QUESTION_STATUS_TO_ICON: {[key in CompletionState]: string} = {
-    [CompletionState.ALL_CORRECT]: "icon-correct",
-    [CompletionState.ALL_ATTEMPTED]: siteSpecific("icon-attempted", "icon-in-progress"),
-    [CompletionState.ALL_INCORRECT]: siteSpecific("icon-attempted", "icon-incorrect"),
-    [CompletionState.IN_PROGRESS]: "icon-in-progress",
-    [CompletionState.NOT_ATTEMPTED]: "icon-not-started"
-};
-
-export const QUESTION_PART_STATUS_TO_ICON: {[key in QuestionPartState]: string} = {
-    // Note: These are currently unused for Ada
-    "CORRECT": "icon-correct",
-    "INCORRECT": "icon-incorrect",
-    "NOT_ATTEMPTED": "icon-not-started"
-};
-
-export const HUMAN_STATUS: {[key in CompletionState]: string} = {
-    [CompletionState.ALL_CORRECT]: siteSpecific("All correct", "Correct"),
-    [CompletionState.ALL_ATTEMPTED]: siteSpecific("All attempted", "Attempted"),
-    [CompletionState.ALL_INCORRECT]: siteSpecific("All incorrect", "Incorrect"),
-    [CompletionState.IN_PROGRESS]: "In progress",
-    [CompletionState.NOT_ATTEMPTED]: siteSpecific("Not started", "Not attempted"),
-};
 
 type BookTag = "phys_book_step_into" | "phys_book_step_up" | "phys_book_gcse" | "physics_skills_14" | "physics_skills_19" | "solving_physics_problems" | "physics_linking_concepts" | "qmp" | "maths_book_gcse" | "maths_book_2e" | "maths_book" | "chemistry_16";
 export enum BookHiddenState {

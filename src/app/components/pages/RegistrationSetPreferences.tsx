@@ -76,7 +76,7 @@ export const RegistrationSetPreferences = () => {
     const canSavePreferences = !isPhy || allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Customise your account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={`Customise your account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
         <SidebarLayout>
             <SignupSidebar activeTab={3}/>
             <MainContent>

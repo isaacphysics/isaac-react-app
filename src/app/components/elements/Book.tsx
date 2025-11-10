@@ -46,7 +46,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
     return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
         <TitleAndBreadcrumb
             currentPageTitle={pageId === undefined ? "Book" : book?.title ?? "Book"}
-            icon={{type: "icon", icon: "icon-book"}}
+            icon={{type: "hex", icon: "icon-book"}}
             intermediateCrumbs={pageId !== undefined && book?.title ? [BOOKS_CRUMB, {title: book.title, to: `/books/${bookId}`}] : [BOOKS_CRUMB]}
         />
         <SidebarLayout>

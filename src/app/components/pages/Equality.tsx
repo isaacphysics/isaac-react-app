@@ -247,7 +247,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
         <Container>
             <Row>
                 <Col>
-                    <TitleAndBreadcrumb currentPageTitle="Equation editor demo page" icon={{type: "icon", icon: "icon-concept"}} />
+                    <TitleAndBreadcrumb currentPageTitle="Equation editor demo page" icon={{type: "hex", icon: "icon-concept"}} />
                 </Col>
             </Row>
             <Row>

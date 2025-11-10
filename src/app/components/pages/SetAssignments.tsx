@@ -375,7 +375,7 @@ export const SetAssignments = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
-            icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}
+            icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
         />
         <SidebarLayout>
             <SetAssignmentsSidebar
