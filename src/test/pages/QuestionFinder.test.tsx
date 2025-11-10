@@ -357,7 +357,6 @@ describe("QuestionFinder", () => {
                 });
 
                 await waitFor(async () => {
-                    const x = resultsResponseWithMultipleStages;
                     const found = (await findQuestions()).map(getQuestionText);
                     expect(found.length).toEqual(30);
                 });

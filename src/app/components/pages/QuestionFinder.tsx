@@ -208,9 +208,6 @@ export const QuestionFinder = withRouter(() => {
         return [query, topics, books, stages, difficulties, examBoards].every(v => v.length === 0) && selections.every(v => Object.keys(v).length === 0);
     };
 
-    // this should only update when a new search is triggered, not (necessarily) when the filters change
-    const [isCurrentSearchEmpty, setIsCurrentSearchEmpty] = useState(isEmptySearch(searchQuery, searchTopics, searchBooks, searchStages, searchDifficulties, searchExamBoards, selections));
-
     const [searchParams, setSearchParams] = useState<QuestionSearchQuery | undefined>(undefined);
     const searchQuestionsQuery = useSearchQuestionsQuery(searchParams ?? skipToken);
 
