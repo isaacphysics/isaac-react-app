@@ -17,3 +17,5 @@ export const isAfterCompetitionOpenDateAndBeforeCompetitionEndDate = (currentDat
 
 export const isAfterCompetitionEndDateAndBeforeEntriesClosedBannerEndDate = (currentDate: Date) =>
   currentDate > COMPETITION_END_DATE && currentDate <= ENTRIES_CLOSED_BANNER_END_DATE;
+
+export const liveQandASessionDate = new Date("2025-11-15");

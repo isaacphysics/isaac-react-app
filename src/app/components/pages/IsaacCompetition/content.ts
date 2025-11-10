@@ -1,3 +1,5 @@
+import { liveQandASessionDate } from "./dateUtils";
+const isBeforeQandALiveSession = liveQandASessionDate > new Date();
 export default {
   section1: {
     header: {
@@ -22,11 +24,13 @@ export default {
       steps: [
         "1. Students ask their teacher to get involved and log in or create an account",
         {
-          text: "2. Join our ",
-          link1: {
-            text: "live Q&A session",
-            href: "https://isaaccomputerscience.org/events/20251113_national_competition_q_and_a",
-          },
+          ...(isBeforeQandALiveSession ? { text: "2. Join our " } : { text: "2. Watch the Q&A session recording" }),
+          ...(isBeforeQandALiveSession && {
+            link1: {
+              text: "live Q&A session",
+              href: "https://isaaccomputerscience.org/events/20251113_national_competition_q_and_a",
+            },
+          }),
           text2: " and boost skills with ",
           link2: { text: "Boosters", href: "https://isaaccomputerscience.org/events" },
           text3: " and ",
@@ -51,6 +55,12 @@ export default {
         "Showcase your talent: stand out on future university or job applications and earn the title of an IoE innovator",
       ],
     },
+    qanda: {
+      title: "Q&A - Everything you need to know",
+      description: "Learn about the competition essentials to get started",
+      videoUrl: "t0ojrm0fMoE",
+    },
+
     eligibility: {
       title: "Who can join?",
       description:

@@ -7,6 +7,7 @@ interface InformationCardProps {
   content: (string | any)[];
   isList?: boolean;
   className?: string;
+  videoUrl?: string;
   onFaqClick?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
@@ -16,6 +17,7 @@ const InformationCard = ({
   content,
   isList = false,
   className = "",
+  videoUrl,
   onFaqClick,
 }: InformationCardProps) => {
   const renderStepWithLinks = (step: any, index: number) => (
@@ -56,6 +58,19 @@ const InformationCard = ({
 
   return (
     <Card className={`h-100 ${className} competition-information-no-border`}>
+      {videoUrl && (
+        <div className="" style={{ position: "relative", paddingBottom: "56.25%" }}>
+          <iframe
+            title={`${title} video`}
+            src={`https://www.youtube-nocookie.com/embed/${videoUrl}?enablejsapi=1&rel=0&fs=1&modestbranding=1`}
+            id="ytplayer"
+            width="100%"
+            height="100%"
+            style={{ position: "absolute", border: "none" }}
+            allowFullScreen
+          />
+        </div>
+      )}
       <CardTitle tag="h3" className="competition-information-title pt-4 px-4">
         {title}
       </CardTitle>
