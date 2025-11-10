@@ -5,34 +5,29 @@ import shuffle from "lodash/shuffle";
 import times from "lodash/times";
 import flatten from "lodash/flatten";
 import { buildFunctionHandler } from "../../mocks/handlers";
-import { isPhy, siteSpecific } from "../../app/services";
+import { isPhy, SEARCH_RESULTS_PER_PAGE, siteSpecific } from "../../app/services";
 import userEvent from "@testing-library/user-event";
 import { PageContextState } from "../../IsaacAppTypes";
 import { expectPhyBreadCrumbs } from "../helpers/quiz";
-import { IsaacQuestionPageDTO } from "../../IsaacApiTypes";
+import { ContentSummaryDTO } from "../../IsaacApiTypes";
 import { toggleFilter, PartialCheckboxState, Filter as F, expectPartialCheckBox } from "../../mocks/filters";
+import { QuestionSearchResponseType } from "../../app/state";
 
-type QuestionFinderResultsResponse = {
-    results: IsaacQuestionPageDTO[];
-    nextSearchOffset: number;
-    totalResults: number;
+const buildMockQuestions = (n: number, questions: QuestionSearchResponseType): ContentSummaryDTO[] => {
+    return Array(n).fill(null).map((_, i) => ({ ...questions.results?.[i % questions.results.length], id: `q${i}`, title: `Question ${i}: ${questions.results?.[i % questions.results.length].title}` }));
 };
 
-const buildMockQuestions = (n: number, questions: QuestionFinderResultsResponse): IsaacQuestionPageDTO[] => {
-    return Array(n).fill(null).map((_, i) => ({ ...questions.results[i % questions.results.length], id: `q${i}`, title: `Question ${i}: ${questions.results[i % questions.results.length].title}` }));
-};
-
-const buildMockQuestionFinderResults = <T extends IsaacQuestionPageDTO[]>(questions: T, start: number): QuestionFinderResultsResponse => ({
-    results: questions.slice(start, start + 31),
-    nextSearchOffset: start + 31,
-    totalResults: questions.length
+const buildMockQuestionFinderResults = <T extends ContentSummaryDTO[]>(questions: T, start: number): QuestionSearchResponseType => ({
+    results: questions.slice(start, start + SEARCH_RESULTS_PER_PAGE + 1),
+    nextSearchOffset: start + SEARCH_RESULTS_PER_PAGE + 1,
+    totalResults: questions.length,
 });
 
 describe("QuestionFinder", () => {
-    const questions = buildMockQuestions(40, mockQuestionFinderResults as QuestionFinderResultsResponse);
+    const questions = buildMockQuestions(40, mockQuestionFinderResults as QuestionSearchResponseType);
     const resultsResponse = buildMockQuestionFinderResults(questions, 0);
 
-    const questionsWithMultipleStages = buildMockQuestions(40, mockQuestionFinderResultsWithMultipleStages as QuestionFinderResultsResponse);
+    const questionsWithMultipleStages = buildMockQuestions(40, mockQuestionFinderResultsWithMultipleStages as QuestionSearchResponseType);
     const resultsResponseWithMultipleStages = buildMockQuestionFinderResults(questionsWithMultipleStages, 0);
 
     const renderQuestionFinderPage = async ({response, queryParams, context} : RenderParameters) => {
@@ -361,6 +356,12 @@ describe("QuestionFinder", () => {
                     context: { subject: "physics", stage: ["a_level"] },
                 });
 
+                await waitFor(async () => {
+                    const x = resultsResponseWithMultipleStages;
+                    const found = (await findQuestions()).map(getQuestionText);
+                    expect(found.length).toEqual(30);
+                });
+
                 await clickOn("Load more");
 
                 await waitFor(() => expect(getQuestionsWithMultipleStages).toHaveBeenLastCalledWith(expect.objectContaining({
@@ -423,7 +424,7 @@ type RenderParameters = {
         stages: string | null;
         randomSeed: string | null;
         startIndex: string | null;
-    }) => QuestionFinderResultsResponse;
+    }) => QuestionSearchResponseType;
     queryParams?: SearchString;
     context?: NonNullable<PageContextState>;
 };
@@ -432,7 +433,7 @@ const findQuestions = () => screen.findByTestId("question-finder-results").then(
 
 const getQuestionText = (q: HTMLElement) => q.querySelector(isPhy ? '.question-link-title > span' : 'span.question-link-title')?.textContent;
 
-const expectQuestions = (expectedQuestions: IsaacQuestionPageDTO[]) => waitFor(async () => {
+const expectQuestions = (expectedQuestions: ContentSummaryDTO[]) => waitFor(async () => {
     const found = await findQuestions();
     expect(found.length).toEqual(expectedQuestions.length);
     expect(found.map(getQuestionText)).toEqual(expectedQuestions.map(q => q.title));

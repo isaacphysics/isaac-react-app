@@ -5,7 +5,7 @@ import { docSlice } from "../doc";
 import { isaacApi } from "./baseApi";
 import { onQueryLifecycleEvents } from "./utils";
 
-interface QuestionSearchResponseType {
+export interface QuestionSearchResponseType {
     results?: ContentSummaryDTO[];
     totalResults?: number;
     nextSearchOffset?: number;

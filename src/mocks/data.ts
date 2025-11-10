@@ -4529,7 +4529,7 @@ export const mockQuestionFinderResults = {
             "title": "A Bungee Jumper",
             "subtitle": "Step into Physics: Force and Motion Practice 9",
             "type": "isaacQuestionPage",
-            "level": 0,
+            "level": "0",
             "tags": [
                 "physics",
                 "problem_solving",
