@@ -12,10 +12,6 @@ import { UnionToIntersection } from "@reduxjs/toolkit/dist/tsHelpers";
 import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
 
-function iconPath(name: string): string {
-    return `/assets/${siteSpecific("phy", "cs")}/icons/${name}.svg`;
-}
-
 function getBreadcrumb(tagIds: TAG_ID[] = []): string[] {
     return tags.getByIdsAsHierarchy(tagIds).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title);
 }
@@ -45,8 +41,11 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
 
     const icon: TitleIconProps = isPhy
         ? {type: "icon", icon: "icon-question", size: "lg"}
-        : {type: "icon", icon: QUESTION_STATUS_TO_ICON[state], size: "md", alt: classNames(HUMAN_STATUS[state], "question icon"), label: linkedBoardId ? HUMAN_STATUS[state] : "Question"};
-    if (hideIconLabel) icon.label = undefined;
+        : {type: "icon", icon: QUESTION_STATUS_TO_ICON[state], size: "lg", alt: classNames(HUMAN_STATUS[state], "question icon"), label: linkedBoardId ? HUMAN_STATUS[state] : "Question"};
+    if (isAda && hideIconLabel) {
+        icon.label = undefined;
+        icon.size = "md";
+    }
 
     return <AbstractListViewItem
         {...rest}
@@ -72,7 +71,7 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
-    const icon: TitleIconProps = {type: "icon", icon: "icon-concept icon-search-md", size: siteSpecific("lg", "md")};
+    const icon: TitleIconProps = {type: "icon", icon: "icon-concept icon-search-md", size: "lg"};
     
     if (isAda) {
         icon.label = "Concept";
@@ -99,7 +98,7 @@ export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
-    const icon: TitleIconProps = {type: "icon", icon: "icon-topic", size: "md", alt: "Topic summary page icon", label: "Topic"};
+    const icon: TitleIconProps = {type: "icon", icon: "icon-topic", size: "lg", alt: "Topic summary page icon", label: "Topic"};
 
     return <AbstractListViewItem
         icon={icon}
@@ -226,10 +225,12 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
+    const icon: TitleIconProps = {type: "icon", icon: "icon-info", size: "lg"};
 
-    const icon: TitleIconProps = isPhy
-        ? {type: "icon", icon: "icon-info", size: "lg"}
-        : {type: "img", icon: iconPath("info-filled"), width: "32px", height: "32px", alt: "Generic page icon", label: "Info"};
+    if (isAda) {
+        icon.label = "Info";
+        icon.alt = "Generic page icon";
+    }
 
     return <AbstractListViewItem
         icon={icon}
