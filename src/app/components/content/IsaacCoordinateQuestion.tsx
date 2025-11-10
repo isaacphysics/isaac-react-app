@@ -121,12 +121,6 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
         return {type: "coordinateItem", coordinates: Array<string>(numberOfDimensions).fill("")};
     }, [numberOfDimensions]);
 
-    useEffect(() => {
-        if (!isDefined(currentAttempt)) {
-            dispatchSetCurrentAttempt({type: "coordinateChoice", items: [getEmptyCoordItem()]});
-        }
-    }, [dispatchSetCurrentAttempt, currentAttempt, getEmptyCoordItem]);
-
     const updateItem = useCallback((index: number, value: Immutable<CoordinateItemDTO>) => {
         const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : getEmptyCoordItem());
         items[index] = cleanItem(value);
