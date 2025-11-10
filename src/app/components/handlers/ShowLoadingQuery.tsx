@@ -52,6 +52,7 @@ export const discardResults = (): true => true;
 
 interface ShowLoadingQueryBaseProps<T> {
     placeholder?: JSX.Element | JSX.Element[];
+    uninitializedPlaceholder?: JSX.Element | JSX.Element[];
     query: ShowLoadingQueryInfo<T>;
     ifNotFound?: JSX.Element | JSX.Element[];
     maintainOnRefetch?: boolean;
@@ -76,7 +77,7 @@ type ShowLoadingQueryProps<T> = ShowLoadingQueryErrorProps<T> & ({
 //  - `placeholder` (React element to show while loading)
 //  - `maintainOnRefetch` (boolean indicating whether to keep showing the current data while refetching. use second parameter of `thenRender` to modify render tree accordingly)
 //  - `query` (the object returned by a RTKQ useQuery hook)
-export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, ifError, ifNotFound, defaultErrorTitle, maintainOnRefetch}: ShowLoadingQueryProps<T>) {
+export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, uninitializedPlaceholder, ifError, ifNotFound, defaultErrorTitle, maintainOnRefetch}: ShowLoadingQueryProps<T>) {
     const {data, isLoading, isFetching, isUninitialized, isError, error} = query;
     const renderError = () => ifError ? <>{ifError(error)}</> : <DefaultQueryError error={error} title={defaultErrorTitle}/>;
     if (isError && error) {
@@ -87,7 +88,7 @@ export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, i
     const showPlaceholder = (isLoading || isFetching) && (!maintainOnRefetch || !isDefined(data));
 
     if (isUninitialized) {
-        return null;
+        return uninitializedPlaceholder ? <>{uninitializedPlaceholder}</> : null;
     }
 
     if (showPlaceholder) {
