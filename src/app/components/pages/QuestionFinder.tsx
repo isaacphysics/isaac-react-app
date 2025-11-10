@@ -160,10 +160,16 @@ export const QuestionFinder = withRouter(() => {
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
     const pageContext = useUrlPageTheme();
-    const [selections, setSelections] = useState<ChoiceTree[]>([]); // we can't populate this until we have the page context
+    const [selections, setSelections] = useState<ChoiceTree[]>(processTagHierarchy(
+        tags,
+        pageContext.subject ? [pageContext.subject] : arrayFromPossibleCsv(params.subjects),
+        arrayFromPossibleCsv(params.fields),
+        arrayFromPossibleCsv(params.topics),
+        pageContext
+    ));
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the page context
+    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the user
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
@@ -194,21 +200,6 @@ export const QuestionFinder = withRouter(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- we don't want this to re-run on params change.
     }, [user, pageContext]);
 
-    useEffect(() => {
-        if (pageContext) {
-            // on subject-QFs, the url path (i.e. pageContext.subject) is the first tier of the hierarchy.
-            setSelections(
-                processTagHierarchy(
-                    tags,
-                    pageContext.subject ? [pageContext.subject] : arrayFromPossibleCsv(params.subjects),
-                    arrayFromPossibleCsv(params.fields),
-                    arrayFromPossibleCsv(params.topics),
-                    pageContext
-                )
-            );
-        }
-    }, [pageContext]);
-
     const choices = useMemo(() => {
         return updateTopicChoices(selections, pageContext, getAllowedTags(pageContext));
     }, [selections, pageContext]);
@@ -237,7 +228,8 @@ export const QuestionFinder = withRouter(() => {
             startIndex, randomSeed
         }): void => {
             if (isEmptySearch(searchString, topics, book, stages, difficulties, examBoards, hierarchySelections)) {
-                setIsCurrentSearchEmpty(true);
+                setSearchParams(undefined);
+                return;
             }
 
             const choiceTreeLeaves = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
@@ -253,8 +245,6 @@ export const QuestionFinder = withRouter(() => {
                     }
                 });
             }
-
-            setIsCurrentSearchEmpty(false);
 
             setSearchParams({
                 querySource: "questionFinder",
@@ -532,22 +522,30 @@ export const QuestionFinder = withRouter(() => {
                             query={searchQuestionsQuery} 
                             placeholder={loadingPlaceholder}
                             defaultErrorTitle="Error loading questions"
+                            uninitializedPlaceholder={
+                                <ResultsListContainer>
+                                    <ResultsListHeader className="d-flex">
+                                        {siteSpecific(
+                                            <>Select {filteringByStatus ? "more" : "some"} filters to start searching.</>,
+                                            <span>Please select and apply filters.</span>
+                                        )}
+                                    </ResultsListHeader>
+                                </ResultsListContainer>
+                            }
                             maintainOnRefetch={pageCount > 1}
                             thenRender={({ results: questions, totalResults: totalQuestions, nextSearchOffset, moreResultsAvailable }, isStale) => {
                                 return <>
                                     <ResultsListContainer>
                                         <ResultsListHeader className="d-flex">
                                             <div className="flex-grow-1" data-testid="question-finder-results-header">
-                                                <>{questions && questions.length > 0
+                                                {questions && questions.length > 0 
                                                     ? <>
                                                         Showing <b>{questions.length}</b>
                                                         {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> of <b>{totalQuestions}</b></>}
                                                         .
                                                     </>
-                                                    : isPhy && isCurrentSearchEmpty
-                                                        ? <>Select {filteringByStatus ? "more" : "some"} filters to start searching.</>
-                                                        : <>No results.</>
-                                                }</>
+                                                    : isPhy && <>No results.</>
+                                                }
                                             </div>
                                             <button className={siteSpecific(
                                                 "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end ms-3 text-nowrap",
@@ -559,22 +557,19 @@ export const QuestionFinder = withRouter(() => {
                                             </button>
                                         </ResultsListHeader>
                                         <CardBody className={classNames({"border-0": isPhy, "p-0": questions?.length, "m-0": isAda && questions?.length})}>
-                                            <>{questions?.length
-                                                ? isPhy
-                                                    ? <ListView type="item" items={questions} />
-                                                    : <LinkToContentSummaryList
+                                            {questions?.length
+                                                ? siteSpecific(
+                                                    <ListView type="item" items={questions} />,
+                                                    <LinkToContentSummaryList
                                                         items={questions} className="m-0"
                                                         contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
                                                         ignoreIntendedAudience noCaret
                                                     />
-                                                : isAda && <>{
-                                                    isCurrentSearchEmpty
-                                                        ? <span>Please select and apply filters.</span>
-                                                        : filteringByStatus 
-                                                            ? <span>Could not load any results matching the requested filters.</span>
-                                                            : <span>No results match the requested filters.</span>
-                                                }</>
-                                            }</>
+                                                )
+                                                : isAda && filteringByStatus 
+                                                    ? <span>Could not load any results matching the requested filters.</span>
+                                                    : <span>No results match the requested filters.</span>
+                                            }
                                         </CardBody>
                                     </ResultsListContainer>
                                     {(questions?.length ?? 0) > 0 &&

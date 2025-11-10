@@ -181,13 +181,13 @@ function isValidIsaacStage(stage?: string): stage is LearningStage {
     return typeof stage === "string" && LearningStages.includes(stage as LearningStage);
 }
 
-function determinePageContextFromUrl(url: string): PageContextState {
+function determinePageContextFromUrl(url: string): NonNullable<PageContextState> {
     const [subject, stage] = url.split("/").filter(Boolean);
 
     return {
         subject: isValidIsaacSubject(subject) ? subject : undefined,
         stage: isValidIsaacStage(stage) ? [stage] : [],
-    } as PageContextState;
+    } as NonNullable<PageContextState>;
 }
 
 /**
@@ -196,12 +196,12 @@ function determinePageContextFromUrl(url: string): PageContextState {
  * If you want to get the current page context from redux rather than the URL, use `useAppSelector(selectors.pageContext.context)` instead.
  * @returns The current page context.
  */
-export function useUrlPageTheme(): PageContextState {
+export function useUrlPageTheme(): NonNullable<PageContextState> {
     const location = useLocation();
     const dispatch = useAppDispatch();
 
     // urlPageTheme mirrors the redux state, but without delay; this is never stale, but redux might be for a couple of renders
-    const [urlPageTheme, setUrlPageTheme] = useState<PageContextState | undefined>(undefined);
+    const [urlPageTheme, setUrlPageTheme] = useState<NonNullable<PageContextState>>(determinePageContextFromUrl(location.pathname));
 
     useEffect(() => {
         const urlContext = determinePageContextFromUrl(location.pathname);
@@ -213,7 +213,7 @@ export function useUrlPageTheme(): PageContextState {
         }));
 
         return () => {
-            setUrlPageTheme(undefined);
+            setUrlPageTheme({stage: undefined, subject: undefined});
             dispatch(pageContextSlice.actions.updatePageContext({
                 subject: undefined,
                 stage: undefined,
