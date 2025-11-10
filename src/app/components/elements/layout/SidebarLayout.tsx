@@ -1078,7 +1078,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
                 <div className="section-divider"/>
 
                 <div className="d-flex flex-column sidebar-key">
-                Key
+                    Key
                     <ul>
                         <KeyItem icon="not-started" text="Section not started"/>
                         <KeyItem icon="in-progress" text="Section in progress"/>

@@ -155,7 +155,7 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
 };
 
 export const clickOn = async (text: string | RegExp, container?: Promise<HTMLElement>) => {
-    const [target] = await (container ? within(await container).findAllByText(text).then(e => e) : screen.findAllByText(text));
+    const target = await (container ? within(await container).findByText(text).then(e => e) : screen.findByText(text));
     if (target.hasAttribute('disabled')) {
         throw new Error(`Can't click on disabled button ${target.textContent}`);
     }
@@ -253,7 +253,8 @@ export const expectLinkWithEnabledBackwardsNavigation = async (text: string | un
     if (text === undefined) {
         throw new Error("Target text is undefined");
     }
-    await clickOn(text);
+    const container = isPhy ? screen.findByRole("link", { name: text}) : undefined;
+    await clickOn(text, container);
     await expectUrl(targetHref);
     goBack();
     await expectUrl(originalHref);
