@@ -19,14 +19,21 @@ import {
 } from "../../../services";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {SchoolInput} from "../inputs/SchoolInput";
-import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
+import {BooleanNotation, DisplaySettings, PotentialUser, ValidationUser} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
+import {
+    closeActiveModal,
+    getRTKQueryErrorMessage,
+    logAction,
+    selectors,
+    useUpdateCurrentMutation
+} from "../../../state";
 import {Immutable} from "immer";
-import { CountryInput } from "../inputs/CountryInput";
-import { UserContext } from "../../../../IsaacApiTypes";
-import { RevisionModeInput } from "../panels/UserBetaFeatures";
+import {CountryInput} from "../inputs/CountryInput";
+import {UserContext} from "../../../../IsaacApiTypes";
+import {RevisionModeInput} from "../panels/UserBetaFeatures";
 import classNames from "classnames";
+import {ExigentAlert} from "../ExigentAlert";
 
 const adaModalText = (isTeacher: boolean) => {
     return {
@@ -56,7 +63,7 @@ const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode,
 
 const UserContextReconfirmationModalBody = () => {
     const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
+    const user: Immutable<PotentialUser> | null = useSelector(selectors.user.orNull);
     const userPreferences = useSelector(selectors.user.preferences);
     const deviceSize = useDeviceSize();
 
@@ -66,6 +73,8 @@ const UserContextReconfirmationModalBody = () => {
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
     const [userContexts, setUserContexts] = useState<UserContext[]>([{stage: STAGE.ALL, examBoard: EXAM_BOARD.ALL}]);
+
+    const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
 
     useEffect(() => {
         // on first load `user` is undefined and so userToUpdate is incomplete, so wait for the `user` selector to return a value then update
@@ -109,7 +118,7 @@ const UserContextReconfirmationModalBody = () => {
     ), [user]);
 
     // Form submission
-    const formSubmission = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+    const formSubmission = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSubmissionAttempted(true);
         if (user && isLoggedIn(user) && allFieldsAreValid) {
@@ -117,12 +126,34 @@ const UserContextReconfirmationModalBody = () => {
                 BOOLEAN_NOTATION: booleanNotation,
                 DISPLAY_SETTING: displaySettings
             };
-            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false));
-            dispatch(closeActiveModal());
+            await updateCurrentUser({
+                currentUser: user,
+                updatedUser: userToUpdate,
+                userPreferences: userPreferencesToUpdate,
+                registeredUserContexts: userContexts,
+                passwordCurrent: null,
+                redirect: false
+            }).unwrap()
+                // If successful, close the modal.
+                .then(() => {dispatch(closeActiveModal());})
+                // Otherwise do nothing, as the component will re-render with the relevant error anyway.
+                .catch(() => {});
         }
-    }, [dispatch, setSubmissionAttempted, userToUpdate, allFieldsAreValid, userContexts, booleanNotation, displaySettings, user]);
+    }, [dispatch, updateCurrentUser, setSubmissionAttempted, userToUpdate, allFieldsAreValid, userContexts, booleanNotation, displaySettings, user]);
 
     return <Form onSubmit={formSubmission} className={"mb-2"}>
+        {submissionAttempted && !allFieldsAreValid &&
+            <ExigentAlert color="warning">
+                <p className="alert-heading fw-bold">Unable to update your account</p>
+                <p>Please fill in all required fields.</p>
+            </ExigentAlert>
+        }
+        {updateCurrentUserError &&
+            <ExigentAlert color="warning">
+                <p className="alert-heading fw-bold">Unable to update your account</p>
+                <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>
+            </ExigentAlert>
+        }
         <p>{modalText.intro}</p>
         <p>{modalText.connections}</p>
         {isPhy && <div className="text-end text-muted required-before">

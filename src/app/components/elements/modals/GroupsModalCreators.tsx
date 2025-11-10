@@ -29,7 +29,7 @@ import {
 import {Row, Col, Form, Input, Table, Alert, Label, FormFeedback, FormGroup, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
-import {ActiveModal, AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
+import {ActiveModalProps, AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {Loading} from "../../handlers/IsaacSpinner";
 import classNames from "classnames";
@@ -427,7 +427,7 @@ const GroupCreateModal = ({user}: GroupCreateModalProps) => {
     </>;
 };
 
-export const groupCreateModal = (user: RegisteredUserDTO): ActiveModal => ({
+export const groupCreateModal = (user: RegisteredUserDTO): ActiveModalProps => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: "Create a group",
     body: <GroupCreateModal user={user}/>,
@@ -455,7 +455,7 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
     </div>;
 };
 
-export const groupArchiveModal = (group: AppGroup, toggleArchived: () => void): ActiveModal => ({
+export const groupArchiveModal = (group: AppGroup, toggleArchived: () => void): ActiveModalProps => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: "Archive group",
     body: <GroupArchiveModal group={group} toggleArchived={toggleArchived} />,

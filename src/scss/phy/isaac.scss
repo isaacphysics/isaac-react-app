@@ -373,6 +373,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 // Utility
 @import "../common/mixins";
 @import "../common/_utils";
+@import "../common/transitions";
 
 // theming
 @import "color-theme";

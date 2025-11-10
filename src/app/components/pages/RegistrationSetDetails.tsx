@@ -20,7 +20,7 @@ import {
     validateName,
     validateUserSchool
 } from "../../services";
-import {errorSlice, registerNewUser, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {getRTKQueryErrorMessage, selectors, useAppSelector, useCreateNewMutation} from "../../state";
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../IsaacAppTypes";
 import {SchoolInput} from "../elements/inputs/SchoolInput";
@@ -30,21 +30,19 @@ import {UserRole} from "../../../IsaacApiTypes";
 import {FamilyNameInput, GivenNameInput} from "../elements/inputs/NameInput";
 import {EmailInput} from "../elements/inputs/EmailInput";
 import {GenderInput} from "../elements/inputs/GenderInput";
-import {extractErrorMessage} from "../../services/errors";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import classNames from "classnames";
 import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
 import {DobInput} from "../elements/inputs/DobInput";
-import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
-import { SignupTab } from "../elements/panels/SignupTab";
-import { scheduleTeacherOnboardingModalForNextOverviewVisit } from "../elements/modals/AdaTeacherOnboardingModal";
+import {MainContent, SidebarLayout, SignupSidebar} from "../elements/layout/SidebarLayout";
+import {SignupTab} from "../elements/panels/SignupTab";
+import {scheduleTeacherOnboardingModalForNextOverviewVisit} from "../elements/modals/AdaTeacherOnboardingModal";
 
 interface RegistrationSetDetailsProps {
     role: UserRole
 }
 
 export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
-    const dispatch = useAppDispatch();
 
     // todo: before, this was probably used to keep the details from the initial login screen (if any). Possibly still useful for SSO. Remove?
     const user = useAppSelector(selectors.user.orNull);
@@ -61,6 +59,8 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         })
     );
 
+    const [createNewUser, {error: createNewUserError}] = useCreateNewMutation();
+
     const [passwordValid, setPasswordValid] = useState(false);
     const [tosAccepted, setTosAccepted] = useState(false);
 
@@ -70,10 +70,8 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     const schoolIsValid = validateUserSchool(registrationUser);
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
     const dobValidOrUnset = !isPhy || !registrationUser.dateOfBirth || isDobOldEnoughForSite(registrationUser.dateOfBirth);
-    const error = useAppSelector((state) => state?.error);
-    const errorMessage = extractErrorMessage(error);
 
-    const register = (event: React.FormEvent<HTMLFormElement>) => {
+    const register = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
@@ -91,8 +89,14 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
 
             setAttemptedSignUp(true);
             Object.assign(registrationUser, {loggedIn: false});
-            dispatch(errorSlice.actions.clearError());
-            dispatch(registerNewUser(registrationUser, {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS}, undefined, null));
+
+            await createNewUser({
+                newUser: registrationUser,
+                newUserPreferences: {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
+                newUserContexts: undefined,
+                passwordCurrent: null
+            });
+
             trackEvent("registration", {
                 props:
                         {
@@ -123,10 +127,10 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             <MainContent>
                 <Card className="my-7">
                     <CardBody>
-                        {errorMessage &&
-                            <ExigentAlert color={"warning"}>
+                        {createNewUserError &&
+                            <ExigentAlert color="warning">
                                 <p className="alert-heading fw-bold">Unable to create your account</p>
-                                <p>{errorMessage}</p>
+                                <p>{getRTKQueryErrorMessage(createNewUserError).message}</p>
                             </ExigentAlert>
                         }
                         <SignupTab
