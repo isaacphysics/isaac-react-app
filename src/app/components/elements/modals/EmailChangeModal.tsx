@@ -1,6 +1,5 @@
 import {AppDispatch, closeActiveModal, openActiveModal} from "../../../state";
 import {Button} from "reactstrap";
-import {siteSpecific} from "../../../services";
 import React from "react";
 
 type EmailChangeModalProps = {
