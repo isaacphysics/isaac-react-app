@@ -98,10 +98,15 @@
   width: 24px;
   height: 24px;
   background: url(/assets/cs/icons/feedback-sent-tick.svg) no-repeat;
-  margin-bottom: -7px;  
+  margin-bottom: -7px; 
 }
 .icon-status {
   width: 30px;
+}
+
+.icon-search-md {
+  --icon-size: 32px;
+  --mask-size: 100% 100%;
 }
 
 // This class is used in a number of non-icon-related places on both sites

@@ -325,7 +325,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     }, [activeTab]);
 
     return <Container id="account-page" className="mb-7">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-account"}} className="mb-3"/>
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-account"}} className="mb-3"/>
         {isAda && <h3 className="d-md-none text-center text-muted m-3">
             <small>
                 {`Update your Ada Computer Science account, or `}

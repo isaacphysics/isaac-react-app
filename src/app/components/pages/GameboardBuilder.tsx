@@ -322,7 +322,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="gameboard-builder">
         <div ref={sentinel}/>
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question deck", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question deck", "Quiz")} builder`} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
         <PageMetadata helpModalId="help_modal_gameboard_builder" />
         <Card className="p-3 mt-4 mb-7">
             <CardBody>

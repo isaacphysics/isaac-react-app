@@ -24,7 +24,7 @@ import classNames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
 import { Difficulty } from "../../../IsaacApiTypes";
-import { PhyHexIcon, PhyHexIconProps } from "./svg/PhyHexIcon";
+import { HexIcon, HexIconProps } from "./svg/HexIcon";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserViewingContext();
@@ -63,8 +63,8 @@ export const placeholderIcon = (props: IconPlaceholderProps): TitleIconProps => 
     };
 };
 
-export interface TitleIconProps extends PhyHexIconProps {
-    type: "img" | "hex" | "placeholder";
+export interface TitleIconProps extends HexIconProps {
+    type: "img" | "icon" | "placeholder";
     height?: string;
     width?: string;
     alt?: string;
@@ -100,7 +100,7 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
         <div className="d-flex w-100" data-testid={"main-heading"}>
             {isPhy && icon && (
                 icon.type === "img" ? <img src={icon.icon} alt={icon.alt ?? ""} height={icon.height} width={icon.width} className="me-3"/> 
-                    : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/> 
+                    : icon.type === "icon" ? <HexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/> 
                         : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/>
                             : undefined
             )}

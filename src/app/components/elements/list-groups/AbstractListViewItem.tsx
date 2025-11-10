@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { Badge, Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
 import { above, below, isAda, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
-import { PhyHexIcon } from "../svg/PhyHexIcon";
+import { HexIcon } from "../svg/HexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
 import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetGroupsQuery, useLazyGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
@@ -180,7 +180,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             <div className={classNames("position-relative", {"question-progress-icon": isAda})}>
                 {icon && <div className="inner-progress-icon">
                     {icon.type === "img" ? <img src={icon.icon} alt={icon.alt ?? ""} width={icon.width} height={icon.height} className={classNames(icon.className, {"me-3": isPhy})} /> 
-                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size} className={icon.className} />
+                        : icon.type === "icon" ? <HexIcon icon={icon.icon} subject={icon.subject} size={icon.size} className={icon.className} />
                             : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}} /> 
                                 : undefined}
                     {icon.label && above['sm'](deviceSize) && <div className="icon-title mt-1">{icon.label}</div>}
