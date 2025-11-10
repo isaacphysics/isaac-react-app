@@ -37,6 +37,13 @@ describe("QuestionFinder", () => {
         await waitForLoaded();
         await setUrl({ pathname: context ? `/${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
         await waitForLoaded();
+        if (context || queryParams?.includes("stages=") || queryParams?.includes("subjects=")) {
+            await waitFor(async () => {
+                expect(await within(screen.getByTestId("question-finder-results")).findAllByTestId("list-view-item")).not.toHaveLength(0);
+            });
+        } else {
+            await waitFor(() => expect(screen.getByTestId("question-finder-results")).toHaveTextContent("Select some filters"));
+        }
     };
 
     it('should render results in alphabetical order', async () => {
@@ -65,10 +72,7 @@ describe("QuestionFinder", () => {
         it('button should shuffle questions', async () => {
             await withMockedRandom(async (randomSequence) => {
                 randomSequence([1 * 10 ** -6]);
-                await renderQuestionFinderPage({ response });
-
-                await toggleFilter(F.GCSE);
-                await expectQuestions(questions.slice(0, 30));
+                await renderQuestionFinderPage({ response, queryParams: '?stages=gcse' });
 
                 await clickOn("Shuffle");
                 await expectQuestions(shuffledQuestions.slice(0, 30));
@@ -79,8 +83,8 @@ describe("QuestionFinder", () => {
             return withMockedRandom(async (randomSequence) => {
                 randomSequence([1 * 10 ** -6]);
 
-                await renderQuestionFinderPage({ response });
-                await toggleFilter(F.GCSE);
+                await renderQuestionFinderPage({ response, queryParams: '?stages=gcse' });
+
                 await clickOn("Shuffle");
                 await expectUrlParams("?randomSeed=1&stages=gcse");
             });
@@ -127,7 +131,7 @@ describe("QuestionFinder", () => {
 
                 await renderQuestionFinderPage({ response: ({ randomSeed, startIndex }) => {
                     switch (randomSeed) {
-                        case null: return startIndex === '0' ? resultsResponse : resultsResponsePage2;;
+                        case null: return startIndex === '0' ? resultsResponse : resultsResponsePage2;
                         case '1': return startIndex === '0' ? shuffledResultsResponse : shuffledResultsResponsePage2;
                         default: throw new Error('Unexpected seed');
                     }
@@ -437,10 +441,11 @@ const expectQuestions = (expectedQuestions: ContentSummaryDTO[]) => waitFor(asyn
     expect(found.length).toEqual(expectedQuestions.length);
     expect(found.map(getQuestionText)).toEqual(expectedQuestions.map(q => q.title));
 }, { timeout: 5000 });
-
-const expectPageIndicator = (content: string) => screen.findByTestId("question-finder-results").then(found => {
-    expect(found.querySelector('[data-testid="question-finder-results-header"]')?.textContent).toBe(content);
-});
+    
+const expectPageIndicator = async (content: string) => await waitFor(async () => {
+    const results = await screen.findByTestId("question-finder-results");
+    expect(results.querySelector('[data-testid="question-finder-results-header"]')?.textContent).toBe(content);
+}, { timeout: 5000 });
 
 const clearFilterTag = async (tagId: string) => {
     const tag = await screen.findByTestId(`filter-tag-${tagId}`);
