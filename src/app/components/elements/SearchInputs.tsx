@@ -31,7 +31,8 @@ function withSearch(Component: React.FC<SearchInputProps>) {
         }, [onSearch]);
 
         return <Form 
-            className={classNames(className, {"form-inline" : inline})} 
+            className={classNames(className, {"form-inline" : inline})}
+            data-testid="search-form"
             onSubmit={(e) => {
                 e.preventDefault();
                 doSearch(searchText);
