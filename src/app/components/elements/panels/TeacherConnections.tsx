@@ -83,14 +83,14 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
                     <Spacer />
                 </> :
                 <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
-                    {isAda && <span className="icon-group-white" />}
+                    {isAda && <span className="icon-group-white mx-2" />}
                     {title}
                 </h4>
             }</>
             :
             <>
                 <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
-                    {isAda && <span className="icon-group-white" />}
+                    {isAda && <span className="icon-group-white mx-2" />}
                     {title}
                 </h4>
                 <Spacer />

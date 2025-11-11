@@ -5,7 +5,7 @@ import React from "react";
 
 export interface PromptBannerContentProps {
     title: string;
-    icon: {src: string, altText?: string, className?: string};
+    icon: string;
     bodyText?: string;
     color?: string;
     buttons?: {
@@ -40,7 +40,7 @@ export const PromptBanner = ({card, ...props}: PromptBannerProps) => {
         <Card className={classNames("icon-card prompt-banner", `bg-${color ?? "cyan-100"}`, card.className)}>
             <div className={"d-flex flex-column h-100 icon-card-main-content"}>
                 <CardTitle className={classNames("px-4 mt-4 d-flex flex-column flex-md-row align-items-start gap-2")}>
-                    <img src={icon.src} alt={icon.altText ?? ""} className={icon.className ?? ""}/>
+                    <i className={classNames(icon, "mt-1")}/>
                     <h3 className="my-0">{title}</h3>
                 </CardTitle>
                 

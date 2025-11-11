@@ -380,11 +380,11 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
                     Due: {formatDate(assignment.dueDate)}
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className="icon icon-group icon-md me-2" color="secondary"/>
+                    <i className="icon icon-group icon-md me-2" color={siteSpecific("secondary", "white")}/>
                     {numStudentsAttemptedAll} of {progress.length} attempted all questions
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className="icon icon-task-complete icon-md me-2" color="secondary"/>
+                    <i className="icon icon-task-complete icon-md me-2" color={siteSpecific("secondary", "white")}/>
                     {numStudentsCompletedAll} of {progress.length} got full marks
                 </div>
             </CardBody>

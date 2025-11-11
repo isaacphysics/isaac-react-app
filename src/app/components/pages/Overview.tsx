@@ -25,7 +25,7 @@ export const Overview = () => {
                 <ColumnSlice className={"row-cols-lg-4 row-cols-md-2"}>
                     <IconCard className={"without-margin"} card={{
                         title: "Student groups",
-                        icon: {src: "/assets/cs/icons/group-cyan.svg"},
+                        icon: "icon-group-cyan",
                         bodyText: "Organise your students into groups so you can set appropriate work.",
                         clickUrl: "/groups",
                         buttonText: "Manage groups",

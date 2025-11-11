@@ -422,7 +422,7 @@ export const SetAssignments = () => {
                         <PromptBanner
                             card={{
                                 title: "You need a student group before you can assign a quiz to students.",
-                                icon: {src: "/assets/cs/icons/group.svg"},
+                                icon: "icon-group",
                                 bodyText: "",
                                 color: "yellow",
                                 buttons: {

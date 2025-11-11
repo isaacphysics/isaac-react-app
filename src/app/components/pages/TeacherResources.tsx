@@ -87,7 +87,7 @@ export const TeacherResources = () => {
                     }}/>
                     <IconCard card={{
                         title: "Create student groups",
-                        icon: {src: "/assets/cs/icons/group-cyan.svg"},
+                        icon: "icon-group-cyan",
                         bodyText: "Organise your students into groups and set work appropriate for each group.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/groups" : undefined,
                         buttonText: "Create a group",
