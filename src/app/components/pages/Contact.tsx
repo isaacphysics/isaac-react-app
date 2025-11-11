@@ -28,6 +28,9 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
   let presetMessage = "";
   let presetPlaceholder = "";
   let presetUrl = "";
+  const presetFirstName = "";
+  const presetLastName = "";
+  const presetEmail = "";
 
   const setTeacherRequestPresets = (user: Immutable<LoggedInUser>) => {
     presetSubject = "Teacher Account Request";
@@ -68,7 +71,11 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
   } else if (urlQuery?.preset == "contentProblem") {
     setContentProblemPresets();
   }
+
   return [
+    (urlQuery.firstName as string) || presetFirstName,
+    (urlQuery.lastName as string) || presetLastName,
+    (urlQuery.email as string) || presetEmail,
     (urlQuery.subject as string) || presetSubject,
     (urlQuery.message as string) || presetMessage,
     (urlQuery.placeholder as string) || presetPlaceholder,
@@ -80,10 +87,11 @@ export const Contact = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectors.user.orNull);
   const error = useAppSelector((state: AppState) => state?.error ?? null);
-  const [presetSubject, presetMessage, presetPlaceholder, presetUrl] = determineUrlQueryPresets(user);
-  const [firstName, setFirstName] = useState((user?.loggedIn && user.givenName) || "");
-  const [lastName, setLastName] = useState((user?.loggedIn && user.familyName) || "");
-  const [email, setEmail] = useState((user?.loggedIn && user.email) || "");
+  const [presetFirstName, presetLastName, presetEmail, presetSubject, presetMessage, presetPlaceholder, presetUrl] =
+    determineUrlQueryPresets(user);
+  const [firstName, setFirstName] = useState((user?.loggedIn && user.givenName) || presetFirstName || "");
+  const [lastName, setLastName] = useState((user?.loggedIn && user.familyName) || presetLastName || "");
+  const [email, setEmail] = useState((user?.loggedIn && user.email) || presetEmail || "");
   const [subject, setSubject] = useState(presetSubject);
   const [message, setMessage] = useState(presetMessage);
   const [messageSendAttempt, setMessageSendAttempt] = useState(false);
@@ -96,10 +104,10 @@ export const Contact = () => {
   }, [presetSubject, presetMessage]);
 
   useEffect(() => {
-    setFirstName((user?.loggedIn && user.givenName) || "");
-    setLastName((user?.loggedIn && user.familyName) || "");
-    setEmail((user?.loggedIn && user.email) || "");
-  }, [user]);
+    setFirstName((user?.loggedIn && user.givenName) || presetFirstName || "");
+    setLastName((user?.loggedIn && user.familyName) || presetLastName || "");
+    setEmail((user?.loggedIn && user.email) || presetEmail || "");
+  }, [user, presetFirstName, presetLastName, presetEmail]);
 
   const successRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
@@ -187,7 +195,7 @@ export const Contact = () => {
                             id="first-name-input"
                             type="text"
                             name="first-name"
-                            defaultValue={user?.loggedIn ? user.givenName : ""}
+                            defaultValue={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
                             required
                           />
@@ -202,7 +210,7 @@ export const Contact = () => {
                             id="last-name-input"
                             type="text"
                             name="last-name"
-                            defaultValue={user?.loggedIn ? user.familyName : ""}
+                            defaultValue={lastName}
                             onChange={(e) => setLastName(e.target.value)}
                             required
                           />
@@ -220,7 +228,7 @@ export const Contact = () => {
                             id="email-input"
                             type="email"
                             name="email"
-                            defaultValue={user?.loggedIn ? user.email : ""}
+                            defaultValue={email}
                             onChange={(e) => setEmail(e.target.value)}
                             aria-describedby="emailValidationMessage"
                             required
