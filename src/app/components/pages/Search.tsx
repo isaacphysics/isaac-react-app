@@ -79,6 +79,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const [filtersState, setFiltersState] = useState<Item<SearchableDocumentType>[]>(initialFilters.map(itemise));
     const [queryState, setQueryState] = useState(urlQuery);
 
+    // searchQuery is really just {queryState, filtersState}, but updating it triggers a request; we wish to debounce this, so the state is kept separate
     const [searchQuery, setSearchQuery] = useState<{query: string; types: string} | typeof skipToken>(skipToken);
     const searchResult = useSearchRequestQuery(searchQuery);
 
