@@ -111,7 +111,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                 <CardHeader className="search-header p-3">
                     <Col xs={12}>
                         <h3 className="me-2">
-                            Search Results {urlQuery != "" && isDefined(searchResult?.data?.results) ? <Badge color="primary">{searchResult?.data?.results.length}</Badge> : null}
+                            Search Results {urlQuery != "" && isDefined(searchResult?.currentData?.results) ? <Badge color="primary">{searchResult?.currentData?.results.length}</Badge> : null}
                         </h3>
                     </Col>
                     <Col className="d-flex justify-content-end flex-grow-1">
