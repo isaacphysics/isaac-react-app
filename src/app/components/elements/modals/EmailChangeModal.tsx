@@ -1,6 +1,5 @@
 import {AppDispatch, closeActiveModal, openActiveModal} from "../../../state";
 import {Button} from "reactstrap";
-import {siteSpecific} from "../../../services";
 import React from "react";
 
 type EmailChangeModalProps = {
@@ -38,13 +37,14 @@ export const EmailChangeModal = (props: EmailChangeModalProps) => {
         <div className="w-100">
             <Button
                 className={"float-start mb-4"}
-                color={siteSpecific("tertiary", "keyline")}
+                color={"keyline"}
                 onClick={cancel}
             >
                 Cancel
             </Button>
             <Button
                 className={"float-end mb-4"}
+                color={"solid"}
                 onClick={proceed}
             >
                 OK

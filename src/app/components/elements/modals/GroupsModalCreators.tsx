@@ -54,14 +54,14 @@ export const additionalManagerSelfRemovalModal = (group: AppGroup, user: Registe
     buttons: [
         <Row key={0}>
             <Col>
-                <Button block color={siteSpecific("solid", "keyline")} onClick={() => {
+                <Button block color="keyline" onClick={() => {
                     store.dispatch(closeActiveModal());
                 }}>
                     Cancel
                 </Button>
             </Col>
             <Col>
-                <Button block color={siteSpecific("keyline", "solid")} onClick={() => {
+                <Button block color="solid" onClick={() => {
                     if (group.id && user.id) {
                         store.dispatch(groupsApi.endpoints.deleteGroupManager.initiate({groupId: group.id, managerUserId: user.id}));
                     }
@@ -442,10 +442,10 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
         <p>Are you sure you want to archive &quot;{group.groupName}&quot;? You will no longer be able to set assignments or tests to this group, and the group will not be visible {siteSpecific(<>on the <strong>Assignment progress</strong> or <strong>Assignment schedule</strong> pages.</>, <>in the Markbook.</>)}</p>
         <p>A group can be unarchived at any time by navigating to the group in the &quot;Archived&quot; section of this page and clicking &quot;Unarchive group&quot;.</p>
         <div className="text-end">
-            <Button color="secondary" className="me-2" onClick={() => dispatch(closeActiveModal())}>
+            <Button color="keyline" className="me-2" onClick={() => dispatch(closeActiveModal())}>
                 Cancel
             </Button>
-            <Button color={siteSpecific("danger", "keyline")} onClick={() => {
+            <Button color="solid" onClick={() => {
                 toggleArchived();
                 dispatch(closeActiveModal());
             }}>
