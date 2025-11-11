@@ -31,15 +31,20 @@
   margin-bottom: -6px;
 }
 
-.icon-person-active {
-  @include svg-icon-raw('/assets/cs/icons/person-pink.svg', 1.25rem, 1.25rem);
+.icon-group-table-person {
+  @include svg-icon-raw('/assets/cs/icons/person.svg', 1.25rem, 1.25rem);
+  margin-right: 10px;
+}
+
+.icon-person-white {
+  @include svg-color(url('/assets/cs/icons/person.svg'), $white, 1.25rem, 1.25rem);
   margin-bottom: -4px;
   margin-left: 10px;
   margin-right: 10px;
 }
 
-.icon-person-white {
-  @include svg-icon-raw('/assets/cs/icons/person-white.svg', 1.25rem, 1.25rem);
+.icon-person-active {
+  @include svg-color(url('/assets/cs/icons/person.svg'), $dark-pink-300, 1.25rem, 1.25rem);
   margin-bottom: -4px;
   margin-left: 10px;
   margin-right: 10px;
@@ -58,10 +63,6 @@
   margin-right: 10px;
 }
 
-.icon-group-table-person {
-  @include svg-icon-raw('/assets/cs/icons/person.svg', 1.25rem, 1.25rem, contain);
-  margin-right: 10px;
-}
 
 .icon-lock {
   @include svg-icon-raw('/assets/cs/icons/lock.svg', 30px, 30px);
