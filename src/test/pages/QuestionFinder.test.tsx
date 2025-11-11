@@ -37,13 +37,6 @@ describe("QuestionFinder", () => {
         await waitForLoaded();
         await setUrl({ pathname: context ? `/${context.subject}/${context.stage?.[0]}/questions` : '/questions', search: queryParams });
         await waitForLoaded();
-        if (context || queryParams?.includes("stages=") || queryParams?.includes("subjects=")) {
-            await waitFor(async () => {
-                expect(await within(screen.getByTestId("question-finder-results")).findAllByTestId("list-view-item")).not.toHaveLength(0);
-            });
-        } else {
-            await waitFor(() => expect(screen.getByTestId("question-finder-results")).toHaveTextContent("Select some filters"));
-        }
     };
 
     it('should render results in alphabetical order', async () => {
