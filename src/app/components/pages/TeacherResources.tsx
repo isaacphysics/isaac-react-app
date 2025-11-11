@@ -79,7 +79,7 @@ export const TeacherResources = () => {
                 <ColumnSlice>
                     <IconCard card={{
                         title: "See content specific to you",
-                        icon: "icon-tune",
+                        icon: "icon icon-tune icon-md icon-color-cyan",
                         bodyText: "Set your location, level, and exam board, and we'll show you the content most relevant to you.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/account" : undefined,
                         buttonText: "Set your preferences",
@@ -87,7 +87,7 @@ export const TeacherResources = () => {
                     }}/>
                     <IconCard card={{
                         title: "Create student groups",
-                        icon: "icon-group-cyan",
+                        icon: "icon icon-group-cyan icon-md icon-color-cyan",
                         bodyText: "Organise your students into groups and set work appropriate for each group.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/groups" : undefined,
                         buttonText: "Create a group",
@@ -95,7 +95,7 @@ export const TeacherResources = () => {
                     }}/>
                     <IconCard card={{
                         title: "Set assignments",
-                        icon: "icon-file",
+                        icon: "icon icon-file icon-md icon-color-cyan",
                         bodyText: "Create self-marking assignments for your students. There are over 1000 questions for you to choose from.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/quizzes/set" : undefined,
                         buttonText: "Set an assignment",
@@ -103,7 +103,7 @@ export const TeacherResources = () => {
                     }}/>
                     <IconCard card={{
                         title: "Review your markbook",
-                        icon: "icon-search-cyan",
+                        icon: "icon icon-search-cyan icon-md icon-color-cyan",
                         bodyText: "Track student progress with a personal markbook to help pinpoint areas to work on.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/my_markbook" : undefined,
                         buttonText: "View markbook",

@@ -202,13 +202,18 @@ img[aria-disabled="true"] {
   --mask-size: 100%;
 }
 
+.icon-sm {
+  --icon-size: 20px;
+  --mask-size: 100%;
+}
+
 .icon-md {
   --icon-size: 24px;
   --mask-size: 100%;
 }
 
 .icon-lg {
-  --icon-size: 60px;
+  --icon-size: 60px; // 32px for cs
   --mask-size: initial;
 }
 
