@@ -31,7 +31,6 @@ import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledDropdown } from "../inputs/DropdownInput";
 import { CollapsibleList } from "../CollapsibleList";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
-import { getProgressIcon } from "../../pages/Gameboard";
 import { tags as tagsService } from "../../../services";
 import { Markup } from "../markup";
 import { History } from "history";
@@ -69,11 +68,18 @@ const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkP
     const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
     const link = isDefined(gameboardId) ? `/questions/${question.id}?board=${gameboardId}` : `/questions/${question.id}`;
 
+    const progressIcon = question.state && (question.state === CompletionState.ALL_CORRECT
+        ? "icon icon-raw icon-correct"
+        : [CompletionState.ALL_INCORRECT, CompletionState.ALL_ATTEMPTED].includes(question.state)
+            ? "icon icon-raw icon-attempted"
+            : question.state === CompletionState.IN_PROGRESS
+                ? "icon icon-raw icon-in-progress"
+                : "icon icon-raw icon-not-started");
+
     return <li key={question.id} {...rest} data-bs-theme={getThemeFromContextAndTags(subject, question.tags ?? [])}>
         <Link to={link} className="py-2">
             {(isDefined(gameboardId) || question.state !== CompletionState.NOT_ATTEMPTED) 
-                ? <i className={classNames(getProgressIcon(question.state).icon, {"ms-2": isDefined(gameboardId)})} style={{minWidth: "16px"}}/> 
-
+                ? <i className={classNames(progressIcon, {"ms-2": isDefined(gameboardId)})} style={{minWidth: "16px"}}/> 
                 : <i className="icon icon-question-thick"/>
             }
             <div className="d-flex flex-column w-100">

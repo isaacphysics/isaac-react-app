@@ -48,7 +48,6 @@ import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../ele
 import {TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ListView } from "../elements/list-groups/ListView";
-import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
 import { processTagHierarchy, pruneTreeNode } from "../../services/questionHierarchy";
@@ -575,20 +574,12 @@ export const QuestionFinder = withRouter(() => {
                             <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                                     {displayQuestions?.length
-                                        ? isPhy
-                                            ? <ListView type="item" items={displayQuestions} />
-                                            : <LinkToContentSummaryList
-                                                items={displayQuestions} className="m-0"
-                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                                ignoreIntendedAudience noCaret
-                                            />
-                                        : isAda && <>{
-                                            isCurrentSearchEmpty
-                                                ? <span>Please select and apply filters.</span>
-                                                : filteringByStatus 
-                                                    ? <span>Could not load any results matching the requested filters.</span>
-                                                    : <span>No results match the requested filters.</span>
-                                        }</>
+                                        ? <ListView type="item" items={displayQuestions} hideIconLabel />
+                                        : isAda && isCurrentSearchEmpty
+                                            ? <span>Please select and apply filters.</span>
+                                            : filteringByStatus 
+                                                ? <span>Could not load any results matching the requested filters.</span>
+                                                : <span>No results match the requested filters.</span>
                                     }
                                 </ShowLoading>
                             </CardBody>
