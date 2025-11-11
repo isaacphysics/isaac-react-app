@@ -79,7 +79,7 @@ export const TeacherResources = () => {
                 <ColumnSlice>
                     <IconCard card={{
                         title: "See content specific to you",
-                        icon: {src: "/assets/cs/icons/tune-cyan.svg"},
+                        icon: "icon-tune",
                         bodyText: "Set your location, level, and exam board, and we'll show you the content most relevant to you.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/account" : undefined,
                         buttonText: "Set your preferences",
@@ -103,7 +103,7 @@ export const TeacherResources = () => {
                     }}/>
                     <IconCard card={{
                         title: "Review your markbook",
-                        icon: {src: "/assets/cs/icons/search-cyan.svg"},
+                        icon: "icon-search-cyan",
                         bodyText: "Track student progress with a personal markbook to help pinpoint areas to work on.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/my_markbook" : undefined,
                         buttonText: "View markbook",

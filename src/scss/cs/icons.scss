@@ -58,6 +58,18 @@
   @include svg-color(url('/assets/cs/icons/person_check.svg'), $cyan-100, 25px, 25px, 100%);
 }
 
+.icon-search {
+  @include svg-color(url('/assets/cs/icons/search.svg'), $cs-jet, 25px, 25px, 100%);
+}
+
+.icon-search-cyan {
+  @include svg-color(url('/assets/cs/icons/search.svg'), $cyan-100, 25px, 25px, 100%);
+}
+
+.icon-search-white {
+  @include svg-color(url('/assets/cs/icons/search.svg'), $white, 25px, 25px, 100%);
+}
+
 .icon-group {
   @include svg-icon-raw('/assets/cs/icons/group.svg', 1.5rem, 1.25rem);
 }
@@ -90,8 +102,24 @@
    @include svg-color(url('/assets/cs/icons/settings.svg'), $cyan-100, 25px, 25px, 100%);
 }
 
+.icon-tune {
+  @include svg-color(url('/assets/cs/icons/tune.svg'), $cyan-100, 25px, 25px, 100%);
+}
+
+.icon-location-on {
+  @include svg-color(url('/assets/cs/icons/location-on.svg'), $cyan-100, 25px, 25px, 100%);
+}
+
+.icon-globe {
+  @include svg-color(url('/assets/cs/icons/globe.svg'), $cyan-100, 25px, 25px, 100%);
+}
+
 .icon-lightbulb-cyan {
   @include svg-color(url('/assets/cs/icons/lightbulb-empty.svg'), $cyan-100, 25px, 25px, 100%);
+}
+
+.icon-event {
+  @include svg-icon('/assets/cs/icons/event.svg', 25px, 25px, 100%);
 }
 
 .icon-lock {
