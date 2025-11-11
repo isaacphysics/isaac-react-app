@@ -7,7 +7,6 @@ import {getFilteredStageOptions, isPhy, isRelevantToPageContext, matchesAllWords
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import { ListView } from "../elements/list-groups/ListView";
-import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
 import { getHumanContext, isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
 import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
@@ -180,12 +179,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                                     </ResultsListHeader>}
 
                                     {shortcutAndFilteredSearchResults.length
-                                        ? isPhy
-                                            ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
-                                            : <LinkToContentSummaryList 
-                                                items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
-                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                            />
+                                        ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
                                         : <em>No results found</em>
                                     }
                                 </>;

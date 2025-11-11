@@ -427,7 +427,7 @@ type RenderParameters = {
 
 const findQuestions = () => screen.findByTestId("question-finder-results").then(e => within(e).findAllByRole('listitem'));
 
-const getQuestionText = (q: HTMLElement) => q.querySelector(isPhy ? '.question-link-title > span' : 'span.question-link-title')?.textContent;
+const getQuestionText = (q: HTMLElement) => q.querySelector('.question-link-title > span')?.textContent;
 
 const expectQuestions = (expectedQuestions: ContentSummaryDTO[]) => waitFor(async () => {
     const found = await findQuestions();

@@ -290,7 +290,7 @@
   color: $cs-jet;
 }
 
-a:not(.btn):not(.nav-link) {
+a:not(.btn):not(.nav-link):not(.question-link-title) {
   // FIXME this breaks tables with links
   &:not(.link-light):not(.footer-link):not(.a-link):not(.breadcrumb-link) {
     color: $cs-jet;

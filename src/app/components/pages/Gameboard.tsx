@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
 import {
-    AppState,
     logAction,
     selectors,
     setAssignBoardPath,
@@ -10,18 +9,12 @@ import {
     useGetMyAssignmentsQuery
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
-import {Button, Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap";
-import {CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
+import {Button, Col, Container, Row} from "reactstrap";
+import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    AUDIENCE_DISPLAY_FIELDS,
-    below,
     convertGameboardItemToContentSummary,
-    determineAudienceViews,
-    filterAudienceViewsByProperties,
-    generateQuestionTitle,
     isAda,
-    isAppLink,
     isDefined,
     isFound,
     isNotPartiallyLoggedIn,
@@ -31,139 +24,14 @@ import {
     SEARCH_RESULT_TYPE,
     showWildcard,
     siteSpecific,
-    TAG_ID,
-    tags,
-    useDeviceSize,
-    useUserViewingContext
 } from "../../services";
 import {Redirect} from "react-router";
-import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySummaryIcons";
-import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {GameboardSidebar, MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {PageMetadata} from "../elements/PageMetadata";
 import {ListView} from "../elements/list-groups/ListView";
-
-export const getProgressIcon = (state?: CompletionState) => {
-    const itemClasses = classNames("content-summary-link text-info", {"p-3": isPhy, "p-0": isAda});
-    let backgroundColor = "white";
-    let icon = siteSpecific("icon icon-raw icon-not-started", "/assets/cs/icons/status-not-started.svg");
-    let message = siteSpecific("", "Not started");
-    switch (state) {
-        case CompletionState.ALL_CORRECT:
-            if (isPhy) {
-                backgroundColor = "correct";
-            }
-            message = "Correct";
-            icon = siteSpecific("icon icon-raw icon-correct", "/assets/cs/icons/status-correct.svg");
-            break;
-        case CompletionState.ALL_INCORRECT:
-            if (isAda) {
-                backgroundColor = "incorrect";
-                message = "Incorrect";
-                icon = "/assets/cs/icons/status-incorrect.svg";
-                break;
-            }
-            // fallthrough if isPhy
-        case CompletionState.ALL_ATTEMPTED:
-            if (isPhy) {
-                message = "All attempted (some errors)";
-                icon = "icon icon-raw icon-attempted";
-                break;
-            }
-            // fallthrough if isAda
-        case CompletionState.IN_PROGRESS:
-            message = "In progress";
-            icon = siteSpecific("icon icon-raw icon-in-progress", "/assets/cs/icons/status-in-progress.svg");
-            break;
-    }
-    return {itemClasses: classNames(itemClasses, `bg-${backgroundColor}`), icon, message};
-};
-
-const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
-    const {itemClasses, icon, message} = getProgressIcon(question.state);
-
-    const questionTags = tags.getByIdsAsHierarchy((question.tags || []) as TAG_ID[])
-        .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
-
-    const questionViewingContexts = filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS);
-    const userViewingContext = useUserViewingContext();
-    const deviceSize = useDeviceSize();
-    const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
-    const uniqueStage = questionViewingContexts.find(context => userViewingContext.contexts.map(c => c.stage).includes(context.stage));
-    return <ListGroupItem key={question.id} className={itemClasses}>
-        <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "justify-content-center": isAda})}>
-            <span className={"question-progress-icon"}>
-                {siteSpecific(
-                    <div className={`${icon} me-3`}/>,
-                    <div className={"inner-progress-icon"}>
-                        <img src={icon} alt="" /><br/>
-                        <span className={"icon-title d-none d-sm-block"}>{message}</span>
-                    </div>
-                )}
-            </span>
-            <div className={classNames({"d-flex py-3 pe-3 flex-column flex-md-row flex-fill": isAda, "d-flex flex-column flex-sm-row align-items-sm-center w-100": isPhy})}>
-                <div>
-                    <Markup encoding={"latex"} className={classNames( "link-title question-link-title", {"text-theme me-2": isPhy})}>
-                        {generateQuestionTitle(question)}
-                    </Markup>
-                    {isPhy && question.subtitle && <div className="small text-muted d-none d-sm-block">
-                        {question.subtitle}
-                    </div>}
-                    {questionTags && <div className={classNames("hierarchy-tags", {"mt-2": isAda})}>
-                        {questionTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
-                    </div>}
-                </div>
-                {question.audience && <span className="ms-sm-auto w-max-content">
-                    <StageAndDifficultySummaryIcons stack={isAda && below['sm'](deviceSize)} audienceViews={
-                        isPhy && !isTutorOrAbove(currentUser) && uniqueStage ? [uniqueStage] : questionViewingContexts
-                    } />
-                </span>}
-            </div>
-            {isAda && <div className="list-caret align-content-center" aria-hidden="true">
-                <i className="icon icon-chevron-right" aria-hidden="true"/>
-            </div>}
-        </Link>
-    </ListGroupItem>;
-};
-
-export const Wildcard = ({gameboard, wildcard}: {gameboard: GameboardDTO, wildcard: IsaacWildcard}) => {
-    if (!wildcard.url) return null;
-    const link = isAppLink(wildcard.url) ? `${wildcard.url}?board=${gameboard.id}` : wildcard.url;
-
-    return <ListGroupItem key={wildcard.id} className={"content-summary-link text-info bg-wildcard p-3"}>
-        <a href={link} className="align-items-center">
-            <i className="icon icon-concept me-3" />
-            <div className={"flex-grow-1"}>
-                <span className="link-title question-link-title me-2">{wildcard.title}</span>
-                {wildcard.description && <div className="hierarchy-tags">
-                    <span className="hierarchy-tag">{wildcard.description}</span>
-                </div>}
-            </div>
-        </a>
-    </ListGroupItem>;
-};
-
-export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => {
-    return <ListGroup className="link-list list-group-links list-gameboard">
-        {gameboard?.wildCard && showWildcard(gameboard) &&
-            <Wildcard gameboard={gameboard} wildcard={gameboard.wildCard} />
-        }
-        {gameboard?.contents && gameboard.contents.map(q =>
-            <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
-        )}
-    </ListGroup>;
-};
-
-export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => (
-    <Row className={className}>
-        <div className={isAda ? "col col-lg-10 offset-lg-1" : ""}>
-            <GameboardViewerInner gameboard={gameboard}/>
-        </div>
-    </Row>
-);
 
 export const Gameboard = withRouter(({ location }) => {
     const dispatch = useAppDispatch();
@@ -214,10 +82,8 @@ export const Gameboard = withRouter(({ location }) => {
                             <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />
                             <MainContent>
                                 <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
-                                {isPhy
-                                    ? <ListView type="item" items={displayQuestions} linkedBoardId={gameboardId} className="mt-3"/>
-                                    : <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-7" />
-                                }
+                                <ListView type="item" items={displayQuestions} linkedBoardId={gameboardId} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
+                                {/*  <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-7" /> */}
                                 {user && isTutorOrAbove(user)
                                     ? <Row>
                                         <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">

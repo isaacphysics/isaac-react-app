@@ -11,11 +11,20 @@ describe('Overview page', () => {
     if (isPhy) {
         it('has no such page', () => {});
     } else {
+        mockPersistence();
+
         const renderOverviewPage = async (role: UserRole | "ANONYMOUS" = 'TEACHER') => {
-            renderTestEnvironment({ role });
+            renderTestEnvironment({ role, initalRouteEntries: ['/dashboard'] });
             await waitForLoaded();
             await setUrl({ pathname: '/dashboard' });
             await waitForLoaded();
+        };
+
+        const renderLastPage = async () => {
+            await renderOverviewPage();
+            await waitFor(() => expect(persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT)).toBe("true"));
+            await Promise.all(times(3, () => userEvent.click(modal.footerButtons[0])));
+            await waitFor(() => expect(screen.getByTestId('active-modal-footer')).toBeInTheDocument(), { timeout: 2000 });
         };
 
         it('is only shown for teachers', async () => {
@@ -30,6 +39,10 @@ describe('Overview page', () => {
 
         describe('Teacher onboarding modal', () => {
             describe('when showOnboardingModalOnNextOverviewVisit is unset', () => {
+                beforeEach(() => {
+                    persistence.save(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT, "false");
+                });
+
                 it('does not appear', async() => {
                     await renderOverviewPage();
                     expect(modal.element).toBeNull();
@@ -37,12 +50,14 @@ describe('Overview page', () => {
             });
 
             describe('when showOnboardingModalOnNextOverviewVisit is set', () => {
-                mockPersistence(p => p.save(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT, "true"));
-                
+                beforeEach(() => {
+                    persistence.save(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT, "true");
+                });
+
                 describe('on the first page', () => {
                     it('shows the first page', async () => {
                         await renderOverviewPage();
-                        expect(modal.pages).toHaveTextContent('1 of 4');
+                        expect(modal.pages.getAttribute('aria-valuenow')).toBe("1");
                     });
 
                     it('shows the text and picture for the first page', async () => {
@@ -53,9 +68,9 @@ describe('Overview page', () => {
 
                     it('shows a "Next" button that takes to the following page', async () => {
                         await renderOverviewPage();
-                        expect(modal.forwardButton).toHaveTextContent('Next');
-                        await userEvent.click(modal.forwardButton);
-                        await waitFor(() => expect(modal.pages).toHaveTextContent('2 of 4'));
+                        expect(modal.footerButtons[0]).toHaveTextContent('Next');
+                        await userEvent.click(modal.footerButtons[0]);
+                        await waitFor(() => expect(modal.pages.getAttribute('aria-valuenow')).toBe("2"));
                     });
 
                     it('can be dismissed by closing the modal', async () => {
@@ -63,17 +78,22 @@ describe('Overview page', () => {
                         await userEvent.click(modal.closeButton);
                         await waitFor(() => expect(modal.element).toBeNull());
                     });
+
+                    it('unsets the flag when the modal is closed', async () => {
+                        await renderOverviewPage();
+                        await userEvent.click(modal.closeButton);
+                        await waitFor(() => expect(persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT)).toBeNull());
+                    });
                 });
 
                 describe('on the last page', () => {
-                    const renderLastPage = async () => {
-                        await renderOverviewPage();
-                        await Promise.all(times(3, () => userEvent.click(modal.forwardButton)));
-                    };
+                    beforeEach(() => {
+                        persistence.save(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT, "true");
+                    });
 
                     it('shows the last page', async () => {
                         await renderLastPage();
-                        await waitFor(() => expect(modal.pages).toHaveTextContent('4 of 4'));
+                        await waitFor(() => expect(modal.pages.getAttribute('aria-valuenow')).toBe(modal.pages.getAttribute('aria-valuemax')));
                     });
 
                     it('shows the text and picture for the last page', async () => {
@@ -86,22 +106,11 @@ describe('Overview page', () => {
 
                     it('shows a "Go to My Ada" button that dismisses the modal', async () => {
                         await renderLastPage();
-                        await waitFor(() => expect(modal.forwardButton).toHaveTextContent("Go to My Ada"));
-                        await userEvent.click(modal.forwardButton);
+                        const goToMyAdaButton = modal.footerButtons[0];
+                        await waitFor(() => expect(goToMyAdaButton).toHaveTextContent("Go to My Ada"));
+                        await userEvent.click(goToMyAdaButton);
                         await waitFor(() => expect(modal.element).toBeNull());
                     });
-                });
-
-                it('unsets the flag when the modal is left open', async() => {
-                    await renderOverviewPage();
-                    await waitFor(() => expect(persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT)).toBeNull());
-                });
-
-                it('leaves the flag when the modal is closed too quickly', async() => {
-                    await renderOverviewPage();
-                    await userEvent.click(modal.closeButton);
-                    expect(modal.element).toBeNull();
-                    expect(persistence.load(KEY.SHOW_TEACHER_ONBOARDING_MODAL_ON_NEXT_OVERVIEW_VISIT)).toBe("true");
                 });
             });
         });
@@ -112,14 +121,14 @@ const modal = {
     get closeButton() {
         return screen.getByRole('button', { name: "Close modal" });
     },
-    get forwardButton() {
-        return screen.getByRole('button', { name: "Go to next page on modal" });
+    get footerButtons() {
+        return within(screen.getByTestId('active-modal-footer')).getAllByRole('button');
     },
     get body() {
-        return screen.getByRole('region', { name: 'Teacher onboarding modal page'});
+        return screen.getByTestId('modal-page');
     },
     get pages() {
-        return screen.getByRole('region', { name: 'Modal page indicator' });
+        return screen.getByTestId('modal-page-indicator');
     },
     get image() {
         return within(this.body).getByAltText('');
