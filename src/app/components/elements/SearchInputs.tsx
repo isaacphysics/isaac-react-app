@@ -1,8 +1,7 @@
-import React, {ChangeEvent, FormEvent, useMemo, useRef, useState} from "react";
+import React, {ChangeEvent, useMemo, useRef, useState} from "react";
 import {Button, Form, Input, InputGroup, InputProps, Label} from "reactstrap";
-import {ifKeyIsEnter, pushSearchToHistory, SEARCH_CHAR_LENGTH_LIMIT, siteSpecific} from "../../services";
+import {ifKeyIsEnter, SEARCH_CHAR_LENGTH_LIMIT, siteSpecific} from "../../services";
 import classNames from "classnames";
-import { useHistory } from "react-router";
 import { debounce } from "lodash";
 
 interface SearchInputProps {

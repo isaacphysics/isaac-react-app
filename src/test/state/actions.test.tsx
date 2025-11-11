@@ -4,7 +4,6 @@ import configureMockStore from 'redux-mock-store';
 import thunk from "redux-thunk";
 import {
     fetchErrorFromParameters,
-    fetchSearch,
     middleware,
     registerQuestions,
     requestCurrentUser,
@@ -15,7 +14,6 @@ import {
     errorResponses,
     questionDTOs,
     registeredUserDTOs,
-    searchResultsList,
     userAuthenticationSettings,
     userPreferencesSettings
 } from "../test-factory";
@@ -137,38 +135,6 @@ describe("registerQuestion action", () => {
         const actualActions = store.getActions();
         const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
         expect(actualIsaacActions).toEqual(expectedActions);
-    });
-});
-
-describe("fetchSearch action", () => {
-    afterEach(() => {
-        axiosMock.reset();
-    });
-
-    it("dispatches SEARCH_RESPONSE_SUCCESS after a successful request", async () => {
-        axiosMock.onGet(`/search`, {params: {types: "bar", query: "foo"}}).replyOnce(200, searchResultsList);
-        const store = mockStore();
-        await store.dispatch(fetchSearch("foo", "bar") as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.SEARCH_REQUEST, query: "foo", types: "bar"},
-            {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResultsList}
-        ];
-        const actualActions = store.getActions();
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions).toEqual(expectedActions);
-        expect(axiosMock.history.get.length).toBe(1);
-    });
-
-    it("doesn't call the API if the query is blank", async () => {
-        const store = mockStore();
-        await store.dispatch(fetchSearch("", "types") as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.SEARCH_REQUEST, query: "", types: "types"}
-        ];
-        const actualActions = store.getActions();
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions).toEqual(expectedActions);
-        expect(axiosMock.history.get.length).toBe(0);
     });
 });
 
