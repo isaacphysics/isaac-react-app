@@ -5,9 +5,6 @@
     }
   },
   "src/IsaacAppTypes.tsx": {
-    "@stylistic/indent": {
-      "count": 2
-    },
     "@typescript-eslint/no-explicit-any": {
       "count": 8
     }
@@ -246,9 +243,6 @@
     }
   },
   "src/app/components/elements/SearchInputs.tsx": {
-    "jsx-a11y/alt-text": {
-      "count": 1
-    },
     "react-hooks/exhaustive-deps": {
       "count": 1
     }
@@ -369,11 +363,6 @@
       "count": 3
     }
   },
-  "src/app/components/elements/list-groups/AbstractListViewItem.tsx": {
-    "@stylistic/indent": {
-      "count": 62
-    }
-  },
   "src/app/components/elements/markup/index.tsx": {
     "no-case-declarations": {
       "count": 1
@@ -463,9 +452,6 @@
     }
   },
   "src/app/components/elements/modals/RequiredAccountInformationModal.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
     "react-hooks/exhaustive-deps": {
       "count": 1
     }
@@ -536,11 +522,6 @@
     },
     "react-hooks/exhaustive-deps": {
       "count": 1
-    }
-  },
-  "src/app/components/elements/panels/QuestionFinderFilterPanel.tsx": {
-    "@stylistic/indent": {
-      "count": 2
     }
   },
   "src/app/components/elements/panels/TeacherConnections.tsx": {
@@ -700,11 +681,6 @@
       "count": 3
     }
   },
-  "src/app/components/navigation/LLMFreeTextQuestionInfoBanner.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/app/components/navigation/ResearchNotificationBanner.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
@@ -784,9 +760,6 @@
     }
   },
   "src/app/components/pages/Concept.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    },
     "react-hooks/exhaustive-deps": {
       "count": 1
     }
@@ -867,11 +840,6 @@
     },
     "react-hooks/exhaustive-deps": {
       "count": 4
-    }
-  },
-  "src/app/components/pages/Generic.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 7
     }
   },
   "src/app/components/pages/Glossary.tsx": {
@@ -955,15 +923,6 @@
     }
   },
   "src/app/components/pages/QuestionFinder.tsx": {
-    "@stylistic/indent": {
-      "count": 1
-    },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    },
     "react-hooks/exhaustive-deps": {
       "count": 2
     }
@@ -987,20 +946,9 @@
       "count": 1
     }
   },
-  "src/app/components/pages/RegistrationSetDetails.tsx": {
-    "@stylistic/indent": {
-      "count": 1
-    },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/app/components/pages/RegistrationSetPreferences.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
     "@typescript-eslint/no-unused-vars": {
-      "count": 4
+      "count": 1
     }
   },
   "src/app/components/pages/RegistrationTeacherConnect.tsx": {
@@ -1259,10 +1207,7 @@
   },
   "src/app/state/actions/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 42
-    },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
+      "count": 31
     },
     "@typescript-eslint/no-unused-vars": {
       "count": 6

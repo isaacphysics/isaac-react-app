@@ -33,7 +33,7 @@ import {
 } from "../../../services";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {GameboardDTO, UserGroupDTO} from "../../../../IsaacApiTypes";
-import {BoardAssignee, ActiveModal} from "../../../../IsaacAppTypes";
+import {BoardAssignee, ActiveModalProps} from "../../../../IsaacAppTypes";
 import {StyledSelect} from "../../elements/inputs/StyledSelect";
 import classNames from "classnames";
 
@@ -123,10 +123,11 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
                 </div>
                 {(selectedGroups.length === 0 
                     ? <FormFeedback>Please select a group</FormFeedback> 
-                    : <FormFeedback> {selectedGroups.length === 1 ? 
-                        `You cannot reassign a ${siteSpecific("question deck", "quiz")} to this group until the due date has passed.` 
-                        : `You cannot reassign a ${siteSpecific("question deck", "quiz")} to the following groups until the due date has passed: 
-                            ${selectedGroups.filter(g => currentAssignees.some(a => a.groupId === g.value)).map(g => g.label).join(", ")}` }
+                    : <FormFeedback>
+                        {`${siteSpecific(
+                            `You cannot reassign a question deck to ${selectedGroups.length === 1 ? "this group" : "the following groups"} until the due date has passed:`,
+                            `This quiz has already been assigned to ${selectedGroups.length === 1 ? "this group" : "the following groups"}:`)}
+                        ${selectedGroups.filter(g => currentAssignees.some(a => a.groupId === g.value)).map(g => g.label).join(", ")}`}
                     </FormFeedback>
                 )}
             </Label>
@@ -257,7 +258,7 @@ const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
     </div>;
 };
 
-export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModal => {
+export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModalProps => {
     const {board, toggle} = props;
 
     return {
@@ -265,6 +266,6 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
         size: "md",
         title: `Assign "${board?.title}"`,
         body: <SetAssignmentsModalContent {...props} />,
-        buttons: [<Button key={0} color="keyline" className="w-100" onClick={toggle}>Close</Button>]
+        buttons: [<Button key={0} aria-label="Close modal" color="keyline" className="w-100" onClick={toggle}>Close</Button>]
     };
 };

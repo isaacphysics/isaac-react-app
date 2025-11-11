@@ -241,6 +241,10 @@ export interface IsaacCoordinateQuestionDTO extends QuestionDTO {
     numberOfCoordinates?: number;
     numberOfDimensions?: number;
     placeholderValues?:  string[];
+    useBrackets?: boolean;
+    separator?: string;
+    suffixes?: string[];
+    buttonText?: string;
 }
 
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {

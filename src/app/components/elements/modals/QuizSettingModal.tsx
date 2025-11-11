@@ -136,7 +136,8 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 />
                 {(selectedGroups.length === 0 
                     ? <FormFeedback>You must select a group</FormFeedback> 
-                    : <FormFeedback>You cannot reassign a test to this group(s) until the due date has passed.</FormFeedback>
+                    : <FormFeedback>{siteSpecific("You cannot reassign a test to this group(s) until the due date has passed.", 
+                        "This test has already been assigned to this group.")}</FormFeedback>
                 )}
             </Label>
         </FormGroup>
@@ -208,7 +209,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         <div className="d-flex justify-content-between gap-4 mb-4 w-100">
             <Button
                 className={"float-start w-100 w-sm-auto"}
-                color="tertiary"
+                color="keyline"
                 disabled={isAssigning}
                 onClick={() => dispatch(closeActiveModal())}
             >
@@ -216,6 +217,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
             </Button>
             <Button
                 className={"float-end w-100 w-sm-auto"}
+                color="solid"
                 disabled={isAssigning}
             >
                 {isAssigning ? <IsaacSpinner size={"sm"} /> : "Set test"}

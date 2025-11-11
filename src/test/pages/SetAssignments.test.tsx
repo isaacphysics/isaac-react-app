@@ -212,8 +212,7 @@ describe("SetAssignments", () => {
         });
 
         // Close modal
-        const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
-        expect(closeButtons).toHaveLength(siteSpecific(2, 1)); // One at the top (and one at the bottom on Phy)
+        const closeButtons = within(modal).getAllByRole("button", {name: "Close modal"});
         await userEvent.click(closeButtons[0]);
         await waitFor(() => {
             expect(modal).not.toBeInTheDocument();
@@ -441,7 +440,7 @@ describe("SetAssignments", () => {
             });
 
             // close modal, make sure the gameboard number of groups assigned is unchanged
-            const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
+            const closeButtons = within(modal).getAllByRole("button", {name: "Close modal"});
             await userEvent.click(closeButtons[0]);
             await waitFor(() => {
                 expect(modal).not.toBeInTheDocument();

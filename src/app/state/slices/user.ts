@@ -16,7 +16,6 @@ export const userSlice = createSlice({
         const loggedInMatcher = (action: any): action is {type: string, user: RegisteredUserDTO} => [
             ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS,
             ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS,
-            ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS,
         ].includes(action.type);
 
         const loggedOutMatcher = (action: any): action is {type: string} => [

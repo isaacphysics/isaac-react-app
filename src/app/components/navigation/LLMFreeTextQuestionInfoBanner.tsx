@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Button, Col, Row } from "reactstrap";
-import { ACCOUNT_TAB, isAda, isLoggedIn, KEY, persistence, useNavigation, useUserConsent } from "../../services";
-import { Link, useLocation } from "react-router-dom";
-import { selectors, updateCurrentUser, useAppDispatch, useAppSelector } from "../../state";
-import { PotentialUser } from "../../../IsaacAppTypes";
-import { ContentBaseDTO } from "../../../IsaacApiTypes";
-import { useLinkableSetting } from "../../services/linkableSetting";
+import {Button, Col, Row} from "reactstrap";
+import {ACCOUNT_TAB, isAda, isLoggedIn, KEY, persistence, useNavigation, useUserConsent} from "../../services";
+import {Link, useLocation} from "react-router-dom";
+import {PotentialUser} from "../../../IsaacAppTypes";
+import {ContentBaseDTO} from "../../../IsaacApiTypes";
+import {useLinkableSetting} from "../../services/linkableSetting";
+import {selectors, useAppSelector, useUpdateCurrentMutation} from "../../state";
 
 const locationOfFAQEntry = "/support/student/general#llm_questions";
 
@@ -52,12 +52,20 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
 }
 
 function OpenAIConsentCopy({doc}: InfoBannerProps) {
-    const dispatch = useAppDispatch();
     const navigation = useNavigation(doc);
     const user = useAppSelector(selectors.user.orNull);
 
-    function provideConsent() {
-        dispatch(updateCurrentUser({...user, password: null}, {CONSENT: {OPENAI: true}}, undefined, null, user as PotentialUser, false));
+    const [updateCurrentUser] = useUpdateCurrentMutation();
+
+    async function provideConsent() {
+        await updateCurrentUser({
+            currentUser: user as PotentialUser,
+            updatedUser: {...user, password: null},
+            userPreferences: {CONSENT: {OPENAI: true}},
+            registeredUserContexts: undefined,
+            passwordCurrent: null,
+            redirect: false
+        });
     }
 
     return <>

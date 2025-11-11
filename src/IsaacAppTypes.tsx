@@ -11,12 +11,13 @@ import {
     GameboardDTO,
     GameboardItem,
     ItemDTO,
-    QuestionDTO, QuestionValidationResponseDTO,
+    QuestionDTO,
+    QuestionValidationResponseDTO,
     QuizAttemptDTO,
     QuizFeedbackMode,
     ResultsWrapper,
     TestCaseDTO,
-    UserContext,
+    UserContext
 } from "./IsaacApiTypes";
 import {
     ACTION_TYPE,
@@ -34,7 +35,7 @@ import {
     TAG_LEVEL
 } from "./app/services";
 import {Immutable} from "immer";
-import { UniqueIdentifier } from "@dnd-kit/core";
+import {UniqueIdentifier} from "@dnd-kit/core";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -44,9 +45,6 @@ export type Action =
     | {type: ACTION_TYPE.CURRENT_USER_REQUEST}
     | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: Immutable<LoggedInUser>}
     | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
@@ -151,7 +149,7 @@ export type Action =
     | {type: ACTION_TYPE.TOASTS_HIDE; toastId: string}
     | {type: ACTION_TYPE.TOASTS_REMOVE; toastId: string}
 
-    | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModal}
+    | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModalProps}
     | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
 
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST; member: AppGroupMembership}
@@ -315,23 +313,16 @@ export interface Toast {
     showing?: boolean;
 }
 
-export type ActiveModal = ActiveModalWithoutState | ActiveModalWithState<never>
-
-export interface ActiveModalWithState<T> extends Omit<ActiveModalWithoutState, 'header' | 'body' | 'buttons'> {
-    header?: ReactNode | ((state: T) => ReactNode) 
-    body: ReactNode | ((state: T) => ReactNode);
-    buttons?: ReactNode[] | ((state: T) => ReactNode[]);
-    useInit: () => T;
-}
-export interface ActiveModalWithoutState {
+export interface ActiveModalProps {
     centered?: boolean;
+    onInitialise?: () => void;
     closeAction?: () => void;
     closeLabelOverride?: string;
     size?: "sm" | "md" | "lg" | "xl" | "xxl";
     title?: string;
     header?: ReactNode;
-    body: ReactNode | (() => ReactNode);
-    buttons?: ReactNode[];
+    body: ReactNode | (() => ReactNode); // multiple nodes for body indicates pagination. function type only legacy
+    buttons?: ReactNode;
     bodyContainerClassName?: string;
 }
 
@@ -459,7 +450,7 @@ export const ClozeDropRegionContext = React.createContext<{
     shouldGetFocus: (id: string) => boolean,
     nonSelectedItems: Immutable<ClozeItemDTO>[]
     allItems: Immutable<ClozeItemDTO>[]
-        } | undefined>(undefined);
+} | undefined>(undefined);
 
 export const InlineContext = React.createContext<{
     docId?: string,
@@ -494,7 +485,7 @@ export const AssignmentScheduleContext = React.createContext<{
     collapsed: boolean;
     setCollapsed: (b: boolean) => void;
     viewBy: "startDate" | "dueDate";
-        }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
+}>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 export const ContentSidebarContext = React.createContext<{ toggle: () => void; close: () => void; } | undefined>(undefined);
 
 export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {

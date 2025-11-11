@@ -29,7 +29,7 @@ import {
 import {Row, Col, Form, Input, Table, Alert, Label, FormFeedback, FormGroup, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
-import {ActiveModal, AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
+import {ActiveModalProps, AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {Loading} from "../../handlers/IsaacSpinner";
 import classNames from "classnames";
@@ -54,14 +54,14 @@ export const additionalManagerSelfRemovalModal = (group: AppGroup, user: Registe
     buttons: [
         <Row key={0}>
             <Col>
-                <Button block color={siteSpecific("solid", "keyline")} onClick={() => {
+                <Button block color="keyline" onClick={() => {
                     store.dispatch(closeActiveModal());
                 }}>
                     Cancel
                 </Button>
             </Col>
             <Col>
-                <Button block color={siteSpecific("keyline", "solid")} onClick={() => {
+                <Button block color="solid" onClick={() => {
                     if (group.id && user.id) {
                         store.dispatch(groupsApi.endpoints.deleteGroupManager.initiate({groupId: group.id, managerUserId: user.id}));
                     }
@@ -427,7 +427,7 @@ const GroupCreateModal = ({user}: GroupCreateModalProps) => {
     </>;
 };
 
-export const groupCreateModal = (user: RegisteredUserDTO): ActiveModal => ({
+export const groupCreateModal = (user: RegisteredUserDTO): ActiveModalProps => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: "Create a group",
     body: <GroupCreateModal user={user}/>,
@@ -442,10 +442,10 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
         <p>Are you sure you want to archive &quot;{group.groupName}&quot;? You will no longer be able to set assignments or tests to this group, and the group will not be visible {siteSpecific(<>on the <strong>Assignment progress</strong> or <strong>Assignment schedule</strong> pages.</>, <>in the Markbook.</>)}</p>
         <p>A group can be unarchived at any time by navigating to the group in the &quot;Archived&quot; section of this page and clicking &quot;Unarchive group&quot;.</p>
         <div className="text-end">
-            <Button color="secondary" className="me-2" onClick={() => dispatch(closeActiveModal())}>
+            <Button color="keyline" className="me-2" onClick={() => dispatch(closeActiveModal())}>
                 Cancel
             </Button>
-            <Button color={siteSpecific("danger", "keyline")} onClick={() => {
+            <Button color="solid" onClick={() => {
                 toggleArchived();
                 dispatch(closeActiveModal());
             }}>
@@ -455,7 +455,7 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
     </div>;
 };
 
-export const groupArchiveModal = (group: AppGroup, toggleArchived: () => void): ActiveModal => ({
+export const groupArchiveModal = (group: AppGroup, toggleArchived: () => void): ActiveModalProps => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: "Archive group",
     body: <GroupArchiveModal group={group} toggleArchived={toggleArchived} />,
