@@ -95,7 +95,7 @@ export const TeacherResources = () => {
                     }}/>
                     <IconCard card={{
                         title: "Set assignments",
-                        icon: {src: "/assets/cs/icons/file-cyan.svg"},
+                        icon: "icon-file",
                         bodyText: "Create self-marking assignments for your students. There are over 1000 questions for you to choose from.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/quizzes/set" : undefined,
                         buttonText: "Set an assignment",

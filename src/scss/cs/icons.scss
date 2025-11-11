@@ -21,6 +21,10 @@
   margin-right: 10px;
 }
 
+.icon-help-cyan {
+  @include svg-color(url('/assets/cs/icons/help.svg'), $cyan-100, 25px, 25px, 100%);
+}
+
 .icon-help-q {
   @include svg-icon-raw('/assets/cs/icons/help.svg', 1.5rem, 1.5rem);
   margin-right: 10px;
@@ -50,6 +54,10 @@
   margin-right: 10px;
 }
 
+.icon-person-check {
+  @include svg-color(url('/assets/cs/icons/person_check.svg'), $cyan-100, 25px, 25px, 100%);
+}
+
 .icon-group {
   @include svg-icon-raw('/assets/cs/icons/group.svg', 1.5rem, 1.25rem);
 }
@@ -59,11 +67,27 @@
 }
 
 .icon-group-cyan {
-  @include svg-color(url('/assets/cs/icons/group.svg'), $cyan-100, 1.5rem, 1.25rem);
+  @include svg-color(url('/assets/cs/icons/group.svg'), $cyan-100, 25px, 25px, 100%);
 }
 
 .icon-mail {
-  @include svg-icon-raw('/assets/cs/icons/mail.svg', 25px, 25px);
+  @include svg-color(url('/assets/cs/icons/mail.svg'), $cyan-100, 25px, 25px, 100%);
+}
+
+.icon-file {
+  @include svg-color(url('/assets/cs/icons/file.svg'), $cyan-100, 25px, 25px, 100%);
+}
+
+.icon-school {
+  @include svg-color(url('/assets/cs/icons/school.svg'), $cyan-100, 25px, 25px, 100%);
+}
+
+.icon-done-all {
+  @include svg-color(url('/assets/cs/icons/done_all.svg'), $cyan-100, 25px, 25px, 100%);
+}
+
+.icon-settings {
+   @include svg-color(url('/assets/cs/icons/settings.svg'), $cyan-100, 25px, 25px, 100%);
 }
 
 .icon-lightbulb-cyan {

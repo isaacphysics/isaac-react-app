@@ -1,3 +1,40 @@
-<svg width="34" height="35" viewBox="0 0 34 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M17.0013 30.25L7.08463 24.8667V16.3667L1.41797 13.25L17.0013 4.75L32.5846 13.25V24.5833H29.7513V14.8083L26.918 16.3667V24.8667L17.0013 30.25ZM17.0013 18.4917L26.7055 13.25L17.0013 8.00833L7.29713 13.25L17.0013 18.4917ZM17.0013 27.0271L24.0846 23.2021V17.8542L17.0013 21.75L9.91797 17.8542V23.2021L17.0013 27.0271Z" fill="#00A8A6"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="school.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="23.257143"
+     inkscape:cx="17.005528"
+     inkscape:cy="14.060197"
+     inkscape:window-width="1920"
+     inkscape:window-height="1010"
+     inkscape:window-x="1529"
+     inkscape:window-y="-6"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     d="M 12.000012,21.624965 4.3636364,17.481943 V 10.940288 L 0,8.5416551 12.000012,2 24,8.5416551 V 17.263836 H 21.818205 V 9.7409328 L 19.63641,10.940288 v 6.541655 z m 0,-9.049264 7.472762,-4.0340459 -7.472762,-4.0340232 -7.472739,4.0340232 z m 0,6.568899 5.454526,-2.943744 V 12.085077 L 12.000012,15.08331 6.5454624,12.085077 v 4.115779 z"
+     fill="#00a8a6"
+     id="path1"
+     style="stroke-width:0.76983" />
 </svg>
