@@ -1,8 +1,7 @@
-import React, {ChangeEvent, useMemo, useRef, useState} from "react";
+import React, {ChangeEvent, useCallback, useRef, useState} from "react";
 import {Button, Form, Input, InputGroup, InputProps, Label} from "reactstrap";
 import {ifKeyIsEnter, SEARCH_CHAR_LENGTH_LIMIT, siteSpecific} from "../../services";
 import classNames from "classnames";
-import { debounce } from "lodash";
 
 interface SearchInputProps {
     setSearchText: (s: string) => void;
@@ -23,14 +22,12 @@ function withSearch(Component: React.FC<SearchInputProps>) {
         const [searchText, setSearchText] = useState(initialValue ?? "");
         const searchInputRef = useRef<HTMLInputElement>(null);
 
-        const doSearch = useMemo(() => {
-            return debounce((text: string) => {
-                if (text === "") {
-                    if (searchInputRef.current) searchInputRef.current.focus();
-                } else {
-                    onSearch?.(text);
-                }
-            }, 500, { leading: true, trailing: true });
+        const doSearch = useCallback((text: string) => {
+            if (text === "") {
+                if (searchInputRef.current) searchInputRef.current.focus();
+            } else {
+                onSearch?.(text);
+            }
         }, [onSearch]);
 
         return <Form 

@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {selectors, useAppSelector} from "../../state";
+import {selectors, useAppSelector, useSearchRequestQuery} from "../../state";
 import {
     Card,
     CardBody,
@@ -34,9 +34,8 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentSummaryDTO } from "../../../IsaacApiTypes";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
-import { useSearchRequestQuery } from "../../state/slices/api/searchApi";
 import { History } from "history";
-import { throttle } from "lodash";
+import { debounce } from "lodash";
 import { skipToken } from "@reduxjs/toolkit/query";
 
 interface Item<T> {
@@ -80,13 +79,15 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const [filtersState, setFiltersState] = useState<Item<SearchableDocumentType>[]>(initialFilters.map(itemise));
     const [queryState, setQueryState] = useState(urlQuery);
 
-    const searchResult = useSearchRequestQuery(queryState ? {query: queryState, types: filtersState.map(deitemise).join(",")} : skipToken);
+    const [searchQuery, setSearchQuery] = useState<{query: string; types: string} | typeof skipToken>(skipToken);
+    const searchResult = useSearchRequestQuery(searchQuery);
 
-    // Trigger update to search url on query or filter change
+    // Trigger update to query on state change
     const onUpdate = useMemo(() => {
-        return throttle((query: Nullable<string>, filters: Item<SearchableDocumentType>[]) => {
+        return debounce((query: Nullable<string>, filters: Item<SearchableDocumentType>[]) => {
+            setSearchQuery(query ? {query, types: filters.map(deitemise).join(",")} : skipToken);
             updateSearchUrl(history, query, filters);
-        }, 500);
+        }, 500, {leading: true, trailing: true});
     }, [history]);
 
     useEffect(() => {
