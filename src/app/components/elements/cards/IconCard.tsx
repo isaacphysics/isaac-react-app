@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export interface IconCardContentProps {
     title: string;
-    icon: {src: string, altText?: string, className?: string};
+    icon: string;
     bodyText?: string;
     tag?: string;
     clickUrl?: string;
@@ -25,7 +25,7 @@ export const IconCard = ({card, children, ...props}: IconCardProps) => {
     const {title, icon, bodyText, tag, clickUrl, onButtonClick, buttonText, disabled, buttonStyle} = card;
     return <Container {...props} className={classNames("icon-card-container px-3 my-3", props?.className ?? "")}>
         <Card className={classNames("icon-card border-0", card.className)} tag={buttonStyle === "card" ? Link : Card} to={clickUrl}>
-            <img src={icon.src} alt={icon.altText ?? ""} className={icon.className ?? ""}/>
+            <i className={icon}/>
             {tag && <div className="icon-card-tag">
                 <span><b>{tag}</b></span>
             </div>}
