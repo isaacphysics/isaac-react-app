@@ -46,8 +46,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps): React.ReactElement
                     : (activeModal.title || activeModal.closeAction) && <ModalHeader
                         data-testid={"modal-header"}
                         tag={siteSpecific(undefined, "h3")}
-                        className={classNames("w-100", {
-                            "d-flex justify-content-between": activeModal.closeAction,
+                        className={classNames("w-100 d-flex justify-content-between", {
                             "h-title": !!activeModal.title && isAda,
                         })}
                         style={activeModal.title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
