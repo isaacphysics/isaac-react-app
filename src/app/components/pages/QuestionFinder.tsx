@@ -373,6 +373,7 @@ export const QuestionFinder = withRouter(() => {
 
     const debouncedSearchHandler = useMemo(() =>
         debounce((searchTerm: string) => {
+            setRandomSeed(undefined);
             setSearchQuery(searchTerm);
         }, 500),
     [setSearchQuery]);
@@ -472,10 +473,7 @@ export const QuestionFinder = withRouter(() => {
                         <SearchInputWithIcon
                             defaultValue={searchQuery}
                             placeholder={siteSpecific(`e.g. ${getQuestionPlaceholder(pageContext)}`, "e.g. Creating an AST")}
-                            onChange={(e) => {
-                                debouncedSearchHandler(e.target.value);
-                                setRandomSeed(undefined); // This random seed reset is for Ada only! This is managed in the filtersChanged useEffect for Phy
-                            }}
+                            onChange={(e) => debouncedSearchHandler(e.target.value)}
                             onSearch={searchAndUpdateURL}
                         />
                     </Col>
