@@ -4932,6 +4932,14 @@ export const mockConceptPage =
                                 "stage": [
                                     "a_level"
                                 ]
+                            },
+                            {
+                                "examBoard": [
+                                    "ada"
+                                ],
+                                "stage": [
+                                    "advanced"
+                                ]
                             }
                         ]
                     }
