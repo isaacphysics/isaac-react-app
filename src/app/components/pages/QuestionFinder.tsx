@@ -18,6 +18,7 @@ import {
     isPhy,
     Item,
     itemiseTag,
+    LEARNING_STAGE_TO_STAGES,
     LearningStage,
     ListParams,
     nextSeed,
@@ -27,6 +28,7 @@ import {
     STAGE,
     STAGE_NULL_OPTIONS,
     stageLabelMap,
+    STAGES_PHY,
     SUBJECT_SPECIFIC_CHILDREN_MAP,
     TAG_ID,
     tags,
@@ -120,13 +122,7 @@ function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionS
 
 export function pageStageToSearchStage(stage?: LearningStage[]): STAGE[] {
     if (!stage || stage.length === 0) return [];
-    switch (stage[0]) {
-        case "11_14": return [STAGE.YEAR_7_AND_8, STAGE.YEAR_9];
-        case "gcse": return [STAGE.GCSE];
-        case "a_level": return [STAGE.A_LEVEL, STAGE.FURTHER_A];
-        case "university": return [STAGE.UNIVERSITY];
-        default: return [];
-    }
+    return LEARNING_STAGE_TO_STAGES[stage[0]].filter((STAGES_PHY as readonly STAGE[]).includes);
 }
 
 interface FilterSummaryProps {
