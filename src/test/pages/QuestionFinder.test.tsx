@@ -360,10 +360,13 @@ describe("QuestionFinder", () => {
 
                 await clickOn("Load more");
 
-                await waitFor(() => expect(getQuestionsWithMultipleStages).toHaveBeenLastCalledWith(expect.objectContaining({
-                    tags: "physics",
-                    stages: "a_level,further_a",
-                })));
+                await waitFor(() => {
+                    expect(getQuestionsWithMultipleStages).toHaveBeenCalledTimes(2);
+                    return expect(getQuestionsWithMultipleStages).toHaveBeenLastCalledWith(expect.objectContaining({
+                        tags: "physics",
+                        stages: "a_level,further_a",
+                    }));
+                });
             });
 
             describe('fields and topics', () => {
