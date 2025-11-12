@@ -350,7 +350,7 @@ export const QuestionFinder = withRouter(() => {
             searchAndUpdateURL();
         }
 
-    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses, searchQuery]);
+    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
 
     const clearFilters = useCallback(() => {
         setSearchDifficulties([]);
