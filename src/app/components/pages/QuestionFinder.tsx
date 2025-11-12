@@ -122,7 +122,7 @@ function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionS
 
 export function pageStageToSearchStage(stage?: LearningStage[]): STAGE[] {
     if (!stage || stage.length === 0) return [];
-    return LEARNING_STAGE_TO_STAGES[stage[0]].filter((STAGES_PHY as readonly STAGE[]).includes);
+    return LEARNING_STAGE_TO_STAGES[stage[0]].filter(s => (STAGES_PHY as readonly STAGE[]).includes(s));
 }
 
 interface FilterSummaryProps {
@@ -256,7 +256,7 @@ export const QuestionFinder = withRouter(() => {
                 limit: SEARCH_RESULTS_PER_PAGE,
                 randomSeed
             });
-        }, 0, { leading: true }),
+        }, 250, { leading: true }),
     [pageContext]);
 
 
