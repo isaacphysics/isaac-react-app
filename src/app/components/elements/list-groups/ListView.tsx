@@ -2,7 +2,7 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -41,7 +41,7 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
 
     const icon: TitleIconProps = isPhy
         ? {type: "icon", icon: "icon-question", size: "lg"}
-        : {type: "icon", icon: QUESTION_STATUS_TO_ICON[state], size: "lg", alt: classNames(HUMAN_STATUS[state], "question icon"), label: linkedBoardId ? HUMAN_STATUS[state] : "Question"};
+        : {type: "icon", icon: QUESTION_STATUS_TO_ICON[state], size: "lg", alt: classNames(HUMAN_STATUS[state], "question icon"), label: linkedBoardId ? HUMAN_STATUS[state] : "Question", color: "tertiary"};
     if (isAda && hideIconLabel) {
         icon.label = undefined;
         icon.size = "md";
@@ -76,6 +76,7 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
     if (isAda) {
         icon.label = "Concept";
         icon.alt = "Concept page icon";
+        icon.color = "tertiary";
     }
 
     return <AbstractListViewItem
@@ -98,7 +99,7 @@ export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
-    const icon: TitleIconProps = {type: "icon", icon: "icon-topic", size: "lg", alt: "Topic summary page icon", label: "Topic"};
+    const icon: TitleIconProps = {type: "icon", icon: "icon-topic", size: "lg", alt: "Topic summary page icon", label: "Topic", color: "tertiary"};
 
     return <AbstractListViewItem
         icon={icon}
@@ -225,11 +226,12 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
-    const icon: TitleIconProps = {type: "icon", icon: "icon-info", size: "lg"};
+    const icon: TitleIconProps = {type: "icon", icon: "icon-info", size: "lg", color: "secondary"};
 
     if (isAda) {
         icon.label = "Info";
         icon.alt = "Generic page icon";
+        icon.color = "tertiary";
     }
 
     return <AbstractListViewItem

@@ -8,15 +8,12 @@ import {
     simpleDifficultyLabelMap,
     SITE_TITLE,
     siteSpecific,
-    STAGE,
     stageLabelMap,
     useUserViewingContext
 } from "../../services";
 import {
-    AppState,
     mainContentIdSlice,
     useAppDispatch,
-    useAppSelector
 } from "../../state";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
@@ -24,7 +21,7 @@ import classNames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
 import { Difficulty } from "../../../IsaacApiTypes";
-import { HexIcon, HexIconProps } from "./svg/HexIcon";
+import { HexIcon, IconProps } from "./svg/HexIcon";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserViewingContext();
@@ -63,7 +60,7 @@ export const placeholderIcon = (props: IconPlaceholderProps): TitleIconProps => 
     };
 };
 
-export interface TitleIconProps extends HexIconProps {
+export interface TitleIconProps extends IconProps {
     type: "img" | "icon" | "placeholder";
     height?: string;
     width?: string;
