@@ -345,7 +345,7 @@ describe("QuestionFinder", () => {
                 })));
             });
 
-            it.skip('"Load more" only fetches questions for the context', async () => {
+            it('"Load more" only fetches questions for the context', async () => {
                 const getQuestionsWithMultipleStages = jest.fn(() => resultsResponseWithMultipleStages);
 
                 await renderQuestionFinderPage({
@@ -362,7 +362,7 @@ describe("QuestionFinder", () => {
 
                 await waitFor(() => {
                     expect(getQuestionsWithMultipleStages).toHaveBeenCalledTimes(2);
-                    return expect(getQuestionsWithMultipleStages).toHaveBeenLastCalledWith(expect.objectContaining({
+                    expect(getQuestionsWithMultipleStages).toHaveBeenLastCalledWith(expect.objectContaining({
                         tags: "physics",
                         stages: "a_level,further_a",
                     }));
