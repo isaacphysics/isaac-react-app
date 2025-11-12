@@ -260,7 +260,7 @@ export const QuestionFinder = withRouter(() => {
                 limit: SEARCH_RESULTS_PER_PAGE,
                 randomSeed
             });
-        }, 250, { leading: true }),
+        }, 0, { leading: true }),
     [pageContext]);
 
 

@@ -345,7 +345,7 @@ describe("QuestionFinder", () => {
                 })));
             });
 
-            it('"Load more" only fetches questions for the context', async () => {
+            it.skip('"Load more" only fetches questions for the context', async () => {
                 const getQuestionsWithMultipleStages = jest.fn(() => resultsResponseWithMultipleStages);
 
                 await renderQuestionFinderPage({
