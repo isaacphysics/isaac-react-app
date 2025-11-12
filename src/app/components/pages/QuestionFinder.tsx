@@ -164,7 +164,7 @@ export const QuestionFinder = withRouter(() => {
     ));
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(pageContext.stage ? pageStageToSearchStage(pageContext.stage) : arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the user
+    const [searchStages, setSearchStages] = useState<STAGE[]>(pageContext.stage?.length ? pageStageToSearchStage(pageContext.stage) : arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the user
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
@@ -539,10 +539,13 @@ export const QuestionFinder = withRouter(() => {
                                                     : isPhy && <>No results.</>
                                                 }
                                             </div>
-                                            <button className={siteSpecific(
-                                                "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end ms-3 text-nowrap",
-                                                "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
-                                            } onClick={() => setRandomSeed(nextSeed())}
+                                            <button 
+                                                className={siteSpecific(
+                                                    "btn btn-link mt-0 invert-underline d-flex align-items-center gap-2 float-end ms-3 text-nowrap",
+                                                    "text-black pe-lg-0 py-0 p-0 me-lg-0 bg-opacity-10 btn-link bg-white float-end")
+                                                } 
+                                                onClick={() => setRandomSeed(nextSeed())}
+                                                disabled={questions?.length === 0}
                                             >
                                                 <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
                                                 {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
@@ -551,9 +554,10 @@ export const QuestionFinder = withRouter(() => {
                                         <CardBody className={classNames({"border-0": isPhy, "p-0": questions?.length, "m-0": isAda && questions?.length})}>
                                             {questions?.length
                                                 ? <ListView type="item" items={questions} hideIconLabel/>
-                                                : isAda && filteringByStatus 
+                                                : isAda && (filteringByStatus 
                                                     ? <span>Could not load any results matching the requested filters.</span>
                                                     : <span>No results match the requested filters.</span>
+                                                )
                                             }
                                         </CardBody>
                                     </ResultsListContainer>

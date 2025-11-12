@@ -190,6 +190,10 @@ function determinePageContextFromUrl(url: string): NonNullable<PageContextState>
     } as NonNullable<PageContextState>;
 }
 
+function isDistinctUrlContext(urlContext: PageContextState, reduxContext: PageContextState): boolean {
+    return urlContext?.subject !== reduxContext?.subject || urlContext?.stage?.join(",") !== reduxContext?.stage?.join(",");
+}
+
 /**
  * A hook for updating the page context based on the URL. Only use on pages where the URL is the source of truth for the page context.
  * (i.e. subject-specific pages, like question finders, concept pages, etc.)
@@ -205,7 +209,9 @@ export function useUrlPageTheme(): NonNullable<PageContextState> {
 
     useEffect(() => {
         const urlContext = determinePageContextFromUrl(location.pathname);
-        setUrlPageTheme(urlContext);
+        // only update local state if an actual value has changed, not just because this is a different object
+        setUrlPageTheme(pt => isDistinctUrlContext(urlContext, pt) ? urlContext : pt);
+
         dispatch(pageContextSlice.actions.updatePageContext({
             subject: urlContext?.subject, 
             stage: urlContext?.stage,
