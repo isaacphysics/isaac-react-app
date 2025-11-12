@@ -4929,16 +4929,11 @@ export const mockConceptPage =
                         "id": "_mock_accordion_",
                         "audience": [
                             {
-                                "stage": [
-                                    "a_level"
-                                ]
-                            },
-                            {
                                 "examBoard": [
-                                    "ada"
+                                    "aqa"
                                 ],
                                 "stage": [
-                                    "advanced"
+                                    "a_level"
                                 ]
                             }
                         ]
