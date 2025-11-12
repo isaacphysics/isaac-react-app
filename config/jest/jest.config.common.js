@@ -24,7 +24,6 @@ module.exports = {
     "transform": {
         "^.+\\.css$": "<rootDir>config/jest/cssTransform.js",
         "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>config/jest/fileTransform.js",
-        '^.+\\.[jt]sx?$': "<rootDir>config/jest/tsTransform.js",
         "^.+\\.[jt]sx?$": ["ts-jest", {
             tsconfig: "<rootDir>/tsconfig.json",
         }],
