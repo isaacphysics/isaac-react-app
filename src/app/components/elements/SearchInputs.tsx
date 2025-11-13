@@ -114,7 +114,7 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
                 value={searchText} onChange={setSearchTextAsValue}
             />
             <button className="d-flex align-items-center justify-content-center">
-                <i className="icon icon-search"/>
+                <i className="icon icon-search icon-color-jet"/>
             </button>
         </InputGroup>
     </>;

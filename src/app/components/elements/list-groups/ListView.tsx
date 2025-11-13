@@ -70,7 +70,7 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
-    const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-concept icon-search-md", size: "lg"}};
+    const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-concept", size: "lg"}};
     
     if (isAda) {
         icon.label = "Concept";

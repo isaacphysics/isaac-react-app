@@ -2,10 +2,11 @@ import {Button, Card, CardBody, CardFooter, CardTitle, Container, ContainerProps
 import classNames from "classnames";
 import {Link} from "react-router-dom";
 import React from "react";
+import { IconProps } from "../svg/HexIcon";
 
 export interface PromptBannerContentProps {
     title: string;
-    icon: string;
+    icon: IconProps | string;
     bodyText?: string;
     color?: string;
     buttons?: {
@@ -36,11 +37,13 @@ export interface PromptBannerProps extends ContainerProps {
 
 export const PromptBanner = ({card, ...props}: PromptBannerProps) => {
     const {title, icon, bodyText, color, buttons} = card;
+    const {name, altText, size, color: iconColor} = typeof icon === "string" ? {name: icon} : icon;
+
     return <Container {...props} className={classNames( "icon-card-container px-3 my-3", props?.className ?? "")}>
         <Card className={classNames("icon-card prompt-banner", `bg-${color ?? "cyan-100"}`, card.className)}>
             <div className={"d-flex flex-column h-100 icon-card-main-content"}>
                 <CardTitle className={classNames("px-4 mt-4 d-flex flex-column flex-md-row align-items-start gap-2")}>
-                    <i className={classNames(icon, "mt-1")}/>
+                    <i className={classNames(`icon icon-${size ?? "md"}`, name)} color={iconColor} aria-label={altText}/>
                     <h3 className="my-0">{title}</h3>
                 </CardTitle>
                 

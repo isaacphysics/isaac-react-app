@@ -7,7 +7,7 @@ import { IconProps } from "../svg/HexIcon";
 
 export interface IconCardContentProps {
     title: string;
-    icon: IconProps;
+    icon: IconProps | string;
     bodyText?: string;
     tag?: string;
     clickUrl?: string;
@@ -24,9 +24,11 @@ export interface IconCardProps extends ContainerProps {
 
 export const IconCard = ({card, children, ...props}: IconCardProps) => {
     const {title, icon, bodyText, tag, clickUrl, onButtonClick, buttonText, disabled, buttonStyle} = card;
+    const {name, altText, size, color} = typeof icon === "string" ? {name: icon} : icon;
+
     return <Container {...props} className={classNames("icon-card-container px-3 my-3", props?.className ?? "")}>
         <Card className={classNames("icon-card border-0", card.className)} tag={buttonStyle === "card" ? Link : Card} to={clickUrl}>
-            <i className={classNames(`icon icon-${icon.size ?? "xl"}`, icon.name)} color={icon.color} aria-label={icon.altText}/>
+            <i className={classNames(`icon icon-${size ?? "md"}`, name)} color={color} aria-label={altText}/>
             {tag && <div className="icon-card-tag">
                 <span><b>{tag}</b></span>
             </div>}

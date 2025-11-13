@@ -63,7 +63,7 @@ div.header-progress {
       width: 1.25em;
       height: 1.25em;
       vertical-align: middle;
-      background-image: url('/assets/cs/icons/search-white.svg'); // TODO: Fix
+      background: white url(/assets/cs/icons/search.svg) no-repeat center;
     }
   }
 }
