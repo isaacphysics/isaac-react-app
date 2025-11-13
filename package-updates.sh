@@ -1,5 +1,10 @@
 #! /bin/bash
 
+# This script checks for dependency version mismatches between package.json and yarn.lock.
+# package.json is only intended to specify a minimal version requirement, and so is often not the actual version
+# used, particularly after running e.g. yarn upgrade-interactive. Where we can update package.json to match the
+# installed version in yarn.lock, we should do so for clarity.
+
 json=$(< package.json)
 deps=$(echo $json | jq -r '.dependencies * .devDependencies | to_entries[] | "\(.key)@\(.value)"')
 
