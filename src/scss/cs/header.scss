@@ -59,11 +59,8 @@ div.header-progress {
       border: none !important;
     }
     .search-toggler-icon {
-      display: inline-block;
-      width: 1.25em;
-      height: 1.25em;
+      @include svg-color(url('/assets/cs/icons/search.svg'), $white, 1.25rem, 1.25rem);
       vertical-align: middle;
-      background: white url(/assets/cs/icons/search.svg) no-repeat center;
     }
   }
 }

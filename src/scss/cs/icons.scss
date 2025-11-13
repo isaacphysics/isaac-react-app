@@ -14,13 +14,6 @@
   cursor: help;
 }
 
-.icon-info {
-  @include svg-icon-raw('/assets/common/icons/info.svg', 1.25rem, 1.25rem);
-  margin-bottom: -4px;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
 .icon-help-q {
   @include svg-icon-raw('/assets/cs/icons/help.svg', 1.5rem, 1.5rem);
   margin-right: 10px;
@@ -70,7 +63,7 @@
 }
 
 .icon-help {
-  @include svg-color(url('/assets/cs/icons/help.svg'), $cyan-100, var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  @include svg-icon('/assets/cs/icons/help.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-person-check {
@@ -129,8 +122,12 @@
   @include svg-icon('/assets/cs/icons/lightbulb.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-info {
+.icon-info-filled {
   @include svg-icon('/assets/cs/icons/info-filled.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
+.icon-info {
+  @include svg-icon('/assets/cs/icons/info-empty.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-topic {

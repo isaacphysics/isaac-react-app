@@ -189,7 +189,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         </>}
         rightColumn={<>
             <h3>
-                <span className={classNames({"h4": isPhy})}>Teacher connection code<i id="teacher-connections-title" className={siteSpecific("ms-2 icon icon-info icon-color-grey", "icon-help")} /></span>
+                <span className={classNames({"h4": isPhy})}>Teacher connection code<i id="teacher-connections-title" className={classNames("ms-2 icon icon-info", siteSpecific("icon-color-grey", "icon-color-black icon-sm"))} /></span>
                 <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your {SITE_TITLE_SHORT} assignment progress.
                 </UncontrolledTooltip>
@@ -257,7 +257,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
                 <h3>
-                    <span className={classNames({"h4": isPhy})}>Your student connections<i id="student-connections-title" className={siteSpecific("ms-2 icon icon-info icon-color-grey", "icon-help")} /></span>
+                    <span className={classNames({"h4": isPhy})}>Your student connections<i id="student-connections-title" className={classNames("ms-2 icon icon-info", siteSpecific("icon-color-grey", "icon-color-black icon-sm"))} /></span>
                     <UncontrolledTooltip placement="bottom" target="student-connections-title">
                         These are the students who have shared their {SITE_TITLE_SHORT} data with you.
                         These students are also able to view your name and email address on their Teacher connections page.
@@ -319,7 +319,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             <h3>
                 <span className={classNames({"h4": isPhy})}>
                     Your group memberships
-                    <i id="group-memberships-title" className={siteSpecific("ms-2 icon icon-info icon-color-grey", "icon-help")} />
+                    <i id="group-memberships-title" className={classNames("ms-2 icon icon-info", siteSpecific("icon-color-grey", "icon-color-black icon-sm"))} />
                 </span>
                 <UncontrolledTooltip placement="bottom" target="group-memberships-title">
                     These are the groups you are currently a member of.
@@ -375,7 +375,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                         Leave
                                                     </Button>
                                                     {isPhy && <>
-                                                        <i id={`leave-group-action-${membership.group.id}`} className={siteSpecific("ms-2 icon icon-info icon-color-grey", "icon-help membership-status-help-button")} />
+                                                        <i id={`leave-group-action-${membership.group.id}`} className={classNames("ms-2 icon icon-info", siteSpecific("icon-color-grey", "icon-color-black icon-sm membership-status-help-button"))} />
                                                         <UncontrolledTooltip placement="bottom" target={`leave-group-action-${membership.group.id}`}
                                                             modifiers={[preventOverflow]}
                                                         >
@@ -391,7 +391,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                         Rejoin
                                                     </Button>
                                                     {isPhy && <>
-                                                        <i id={`rejoin-group-action-${membership.group.id}`} className={siteSpecific("ms-2 icon icon-info icon-color-grey", "icon-help membership-status-help-button")} />
+                                                        <i id={`rejoin-group-action-${membership.group.id}`} className={classNames("ms-2 icon icon-info", siteSpecific("icon-color-grey", "icon-color-black icon-sm membership-status-help-button"))} />
                                                         <UncontrolledTooltip placement="bottom" target={`rejoin-group-action-${membership.group.id}`}
                                                             modifiers={[preventOverflow]}
                                                         >
