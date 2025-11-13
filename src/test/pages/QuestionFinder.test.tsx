@@ -24,10 +24,10 @@ const buildMockQuestionFinderResults = <T extends ContentSummaryDTO[]>(questions
 });
 
 describe("QuestionFinder", () => {
-    const questions = buildMockQuestions(40, mockQuestionFinderResults as QuestionSearchResponseType);
+    const questions = buildMockQuestions(40, mockQuestionFinderResults);
     const resultsResponse = buildMockQuestionFinderResults(questions, 0);
 
-    const questionsWithMultipleStages = buildMockQuestions(40, mockQuestionFinderResultsWithMultipleStages as QuestionSearchResponseType);
+    const questionsWithMultipleStages = buildMockQuestions(40, mockQuestionFinderResultsWithMultipleStages);
     const resultsResponseWithMultipleStages = buildMockQuestionFinderResults(questionsWithMultipleStages, 0);
 
     const renderQuestionFinderPage = async ({response, queryParams, context} : RenderParameters) => {
