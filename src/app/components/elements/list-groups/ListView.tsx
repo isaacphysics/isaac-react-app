@@ -101,7 +101,7 @@ export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
-    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id}`;
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
     const icon: TitleIconProps = {type: "img", icon: iconPath("topic"), width: "32px", height: "32px", alt: "Topic summary page icon", label: "Topic"};
 
     return <AbstractListViewItem
