@@ -66,16 +66,17 @@ export default {
       description:
         "Groups of up to 4 students are able to join in! We will also accept individual entries with teacher support.",
       requirements:
-        "Eligible participants must be in Year 9, 10, or 11 during the 2025/2026 academic year and attend a state-funded school; private, independent, and home-educated students are not eligible.",
+        "Eligible participants must be in Year 9, 10, or 11 during the 2025/2026 academic year and attend a state-funded school in England; private, independent, and home-educated students are not eligible.",
     },
     prizes: {
       title: "🏆 The prizes",
       description: "As well as the glory of being a IOE innovator, we also have prizes available, which may include:",
       prizeList: [
-        "Trophies for the winning team and the individual winner",
-        "£50 Amazon gift vouchers",
-        "Industry tour hosted by a partner organisation",
-        "Isaac Computer Science and partner merchandise",
+        "Trophies for the winners",
+        "£50 Amazon gift vouchers for the winners",
+        "SOLIDWORKS CAD software licences for all finalists",
+        "An exclusive industry tour hosted by a partner organisation for the winners",
+        "Isaac Computer Science and partner merchandise for all finalists",
       ],
     },
     timeline: {
@@ -147,7 +148,7 @@ export default {
           "<strong>Overview of the project:</strong> Explain the global problem your IoE device addresses. Give a short summary of your project and its purpose.",
           "<strong>Impact:</strong> Describe how your IoE device could improve lives globally. Include any benefits for people, communities, or the environment.",
           "<strong>Device description:</strong> Show the design or prototype of your device – it doesn’t have to be perfect or finished! Explain its features, functions, and how it works.",
-          "Teamwork or individual approach: <ul><li><strong>If its a group project:</strong> Explain how you worked together, your collaboration skills, and methods used.</li><li><strong>If its an individual project:</strong> Describe your approach, how you solved problems, and how you managed the project yourself.</li></ul>",
+          "Teamwork or individual approach: <ul><li><strong>If it's a group project:</strong> Explain how you worked together, your collaboration skills, and methods used.</li><li><strong>If it's an individual project:</strong> Describe your approach, how you solved problems, and how you managed the project yourself.</li></ul>",
           "<strong>Creativity and engagement:</strong> Use visuals, demonstrations, or examples to make your video interesting and easy to follow. Creative formats are welcome! But make sure your explanation is clear for someone who has never seen your project before.",
         ],
         "Remember, the Internet of Everything (IoE) device focuses not just on things, but also on people, processes, and data. This captures the IoE difference from Internet of Things (IoT). IoT is mostly “things”; IoE is about integrating people, processes, and data with connected devices.",
@@ -206,7 +207,7 @@ export default {
           "Teachers are responsible for submitting the work of students on their behalf.",
           "Make sure that your account details are accurate in the <strong>‘Your account information’ section</strong> of the entry form. If necessary, you can update your information in your <a href = 'https://isaaccomputerscience.org/account'>account settings</a>.",
           "In the <strong>'Project title’ field,</strong> enter the title of the project your students worked on. Each title must be unique.",
-          "In the <strong>‘Project link’ field,</strong> provide a link to the cloud storage where a video and any supporting materials are saved. Ensure the link is accessible to the Organiser by setting the correct permissions (e.g., open to anyone with the link).",
+          "In the <strong>‘Project link’ field,</strong> provide a link to the cloud storage where a video and any supporting materials are saved. Make sure the link is accessible to the Organiser by setting it to 'Anyone with the link can view'. If that's not possible, grant access to <a href='mailto:contact@isaaccomputerscience.org'>contact@isaaccomputerscience.org</a>.",
           "In the <strong>‘Select your student group’ field,</strong> choose from the groups you've created or create one first. If no groups are available, go to Teachers > <a href = 'https://isaaccomputerscience.org/groups'>Manage groups</a> to create one and invite students to join.",
           "In the <strong>‘Select student(s)’</strong> field, choose 1-4 students from your selected student group who worked on the submitted project. If no students are found in the selected group, make sure students join the group first. Go to the <a href = 'https://isaaccomputerscience.org/groups'>Manage groups</a> page and invite them using a URL or authentication code.",
         ],

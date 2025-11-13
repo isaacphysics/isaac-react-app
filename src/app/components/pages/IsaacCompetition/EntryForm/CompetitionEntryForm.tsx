@@ -278,7 +278,7 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                   value={projectLink}
                   onChange={(e) => setProjectLink(e.target.value)}
                   placeholder="Add a link to a project saved in the cloud (e.g., Google Drive, Dropbox)"
-                  tooltipMessage="Upload your project to cloud storage (e.g., Google Drive, OneDrive, Dropbox) and paste the share link here. The link must be set to 'Anyone with the link can view'."
+                  tooltipMessage="Upload your project to cloud storage (e.g., Google Drive, OneDrive, Dropbox) and paste the share link here. Set the link so that 'Anyone with the link can view'. If that's not possible, grant access to contact@isaaccomputerscience.org."
                 />
               </Col>
             </Row>
