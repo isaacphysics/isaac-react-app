@@ -258,6 +258,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     return <ListGroupItem
         className={classNames("content-summary-item", {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT}, className, state)} 
         data-bs-theme={subject && !isDisabled ? subject : "neutral"}
+        data-testid={"list-view-item"}
     >
         {cardBody}
     </ListGroupItem>;
