@@ -203,8 +203,8 @@ export const QuestionFinder = withRouter(() => {
         return [query, topics, books, stages, difficulties, examBoards].every(v => v.length === 0) && selections.every(v => Object.keys(v).length === 0);
     };
 
-    const [searchParams, setSearchParams] = useState<QuestionSearchQuery | undefined>(undefined);
-    const searchQuestionsQuery = useSearchQuestionsQuery(searchParams ?? skipToken);
+    const [searchParams, setSearchParams] = useState<QuestionSearchQuery | typeof skipToken>(skipToken);
+    const searchQuestionsQuery = useSearchQuestionsQuery(searchParams);
 
     const debouncedSearch = useMemo(() =>
         debounce(({
@@ -220,7 +220,7 @@ export const QuestionFinder = withRouter(() => {
             startIndex, randomSeed
         }): void => {
             if (isEmptySearch(searchString, topics, book, stages, difficulties, examBoards, hierarchySelections)) {
-                setSearchParams(undefined);
+                setSearchParams(skipToken);
                 return;
             }
 
