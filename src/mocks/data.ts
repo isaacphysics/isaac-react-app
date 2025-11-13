@@ -4929,6 +4929,9 @@ export const mockConceptPage =
                         "id": "_mock_accordion_",
                         "audience": [
                             {
+                                "examBoard": [
+                                    "aqa"
+                                ],
                                 "stage": [
                                     "a_level"
                                 ]
