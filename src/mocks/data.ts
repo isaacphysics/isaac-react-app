@@ -4483,7 +4483,7 @@ export const mockLLMMarkedValidationResponse = {
     ]
 };
 
-export const mockQuestionFinderResults: QuestionSearchResponseType = {
+export const mockQuestionFinderResults = {
     "results": [
         {
             "id": "itsp24_weight_class_q6",
@@ -4688,9 +4688,9 @@ export const mockQuestionFinderResults: QuestionSearchResponseType = {
     ],
     "nextSearchOffset": 5,
     "totalResults": 5
-};
+} satisfies QuestionSearchResponseType;
 
-export const mockQuestionFinderResultsWithMultipleStages: QuestionSearchResponseType = {
+export const mockQuestionFinderResultsWithMultipleStages = {
     "results": [
         {
             "id": "phys_linking_22_q5",
@@ -4869,7 +4869,7 @@ export const mockQuestionFinderResultsWithMultipleStages: QuestionSearchResponse
     ],
     "nextSearchOffset": 6,
     "totalResults": 6
-};
+} satisfies QuestionSearchResponseType;
 
 export const mockConceptsResults = {
     results: [{
