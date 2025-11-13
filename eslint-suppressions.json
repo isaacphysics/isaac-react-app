@@ -350,9 +350,6 @@
     }
   },
   "src/app/components/elements/layout/SidebarLayout.tsx": {
-    "@stylistic/indent": {
-      "count": 1
-    },
     "@typescript-eslint/no-explicit-any": {
       "count": 4
     },
@@ -728,7 +725,7 @@
       "count": 4
     },
     "@typescript-eslint/no-unused-vars": {
-      "count": 3
+      "count": 2
     },
     "jsx-a11y/anchor-is-valid": {
       "count": 1
@@ -921,7 +918,7 @@
   },
   "src/app/components/pages/QuestionFinder.tsx": {
     "react-hooks/exhaustive-deps": {
-      "count": 2
+      "count": 1
     }
   },
   "src/app/components/pages/QuickQuizzes.tsx": {
@@ -1237,11 +1234,6 @@
   },
   "src/app/state/reducers/quizState.ts": {
     "no-case-declarations": {
-      "count": 1
-    }
-  },
-  "src/app/state/slices/api/baseApi.ts": {
-    "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
   },
