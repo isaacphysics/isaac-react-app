@@ -25,7 +25,7 @@ export const Overview = () => {
                 <ColumnSlice className={"row-cols-lg-4 row-cols-md-2"}>
                     <IconCard className={"without-margin"} card={{
                         title: "Student groups",
-                        icon: "icon icon-group-cyan icon-md icon-color-cyan",
+                        icon: {name: "icon-group-cyan", size: "md", color: "tertiary"},
                         bodyText: "Organise your students into groups so you can set appropriate work.",
                         clickUrl: "/groups",
                         buttonText: "Manage groups",
@@ -33,7 +33,7 @@ export const Overview = () => {
                     }}/>
                     <IconCard className={"without-margin"} card={{
                         title: "Quizzes",
-                        icon: "icon icon-file icon-md icon-color-cyan",
+                        icon: {name: "icon icon-file icon-md icon-color-cyan"},
                         bodyText: "Create self-marking quizzes and assign them to your students.",
                         clickUrl: "/quizzes/set",
                         buttonText: "Assign a quiz",
@@ -41,7 +41,7 @@ export const Overview = () => {
                     }}/>
                     <IconCard className={"without-margin"} card={{
                         title: "Tests",
-                        icon: "icon icon-school icon-md icon-color-cyan",
+                        icon: {name: "icon icon-school icon-md icon-color-cyan"},
                         bodyText: "Set a test curated by the Ada Computer Science team.",
                         clickUrl: "/set_tests/",
                         buttonText: "Set a test",
@@ -49,7 +49,7 @@ export const Overview = () => {
                     }}/>
                     <IconCard className={"without-margin"} card={{
                         title: "Review your markbook",
-                        icon: "icon icon-done-all icon-md icon-color-cyan",
+                        icon: {name: "icon icon-done-all icon-md icon-color-cyan"},
                         bodyText: "Track student progress and pinpoint areas to work on.",
                         clickUrl: "/my_markbook",
                         buttonText: "View markbook",
@@ -57,7 +57,7 @@ export const Overview = () => {
                     }}/>
                     <IconCard className={"without-margin"} card={{
                         title: "Assigned to me",
-                        icon: "icon icon-person-check icon-md  icon-color-cyan",
+                        icon: {name: "icon icon-person-check icon-md  icon-color-cyan"},
                         bodyText: "If you join a group for your development, this is where you’ll find quizzes assigned to you.",
                         clickUrl: "/assignments",
                         buttonText: "Work for you",
@@ -65,7 +65,7 @@ export const Overview = () => {
                     }}/>
                     <IconCard className={"without-margin"} card={{
                         title: "Account",
-                        icon: "icon icon-settings icon-md icon-color-cyan",
+                        icon: {name: "icon icon-settings icon-md icon-color-cyan"},
                         bodyText: "Manage all aspects of your account, from content settings to notification preferences.",
                         clickUrl: "/account",
                         buttonText: "Account settings",
@@ -73,7 +73,7 @@ export const Overview = () => {
                     }}/>
                     <IconCard className={"without-margin"} card={{
                         title: "Need help?",
-                        icon: "icon icon-help-cyan icon-md icon-color-cyan",
+                        icon: {name: "icon icon-help-cyan icon-md icon-color-cyan"},
                         bodyText: "Our teacher support page has useful information for common questions and issues.",
                         clickUrl: "/support/teacher/general",
                         buttonText: "Teacher support",

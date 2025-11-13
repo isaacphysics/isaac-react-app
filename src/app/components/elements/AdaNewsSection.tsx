@@ -30,7 +30,7 @@ export const AdaNewsSection = ({isHomepage}: {isHomepage?: boolean}) => {
                 <IconCard
                     card={{
                         title: "Stay updated",
-                        icon: "icon-mail",
+                        icon: {name: "icon-mail"},
                         bodyText: "Get fresh teaching ideas, student study tips, and development news about our tools and resources delivered straight to your inbox.",
                         clickUrl: "/account#notifications",
                         buttonText: "Get tips and updates",

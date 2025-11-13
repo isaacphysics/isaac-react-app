@@ -79,7 +79,7 @@ export const TeacherResources = () => {
                 <ColumnSlice>
                     <IconCard card={{
                         title: "See content specific to you",
-                        icon: "icon icon-tune icon-md icon-color-cyan",
+                        icon: {name: "icon icon-tune icon-md icon-color-cyan"},
                         bodyText: "Set your location, level, and exam board, and we'll show you the content most relevant to you.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/account" : undefined,
                         buttonText: "Set your preferences",
@@ -87,7 +87,7 @@ export const TeacherResources = () => {
                     }}/>
                     <IconCard card={{
                         title: "Create student groups",
-                        icon: "icon icon-group-cyan icon-md icon-color-cyan",
+                        icon: {name: "icon icon-group-cyan icon-md icon-color-cyan"},
                         bodyText: "Organise your students into groups and set work appropriate for each group.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/groups" : undefined,
                         buttonText: "Create a group",
@@ -95,7 +95,7 @@ export const TeacherResources = () => {
                     }}/>
                     <IconCard card={{
                         title: "Set assignments",
-                        icon: "icon icon-file icon-md icon-color-cyan",
+                        icon: {name: "icon icon-file icon-md icon-color-cyan"},
                         bodyText: "Create self-marking assignments for your students. There are over 1000 questions for you to choose from.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/quizzes/set" : undefined,
                         buttonText: "Set an assignment",
@@ -103,7 +103,7 @@ export const TeacherResources = () => {
                     }}/>
                     <IconCard card={{
                         title: "Review your markbook",
-                        icon: "icon icon-search-cyan icon-md icon-color-cyan",
+                        icon: {name: "icon icon-search-cyan icon-md icon-color-cyan"},
                         bodyText: "Track student progress with a personal markbook to help pinpoint areas to work on.",
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/my_markbook" : undefined,
                         buttonText: "View markbook",
@@ -159,7 +159,7 @@ export const TeacherResources = () => {
                     </TextBlock>
                     {featuredStudentChallengePod ? <IconCard card={{
                         title: featuredStudentChallengePod.title ?? "",
-                        icon: "icon icon-lightbulb-empty icon-md icon-color-cyan",
+                        icon: {name: "icon icon-lightbulb-empty icon-md icon-color-cyan"},
                         bodyText: featuredStudentChallengePod.value ?? "",
                         tag: featuredStudentChallengePod.subtitle ?? "",
                         clickUrl: featuredStudentChallengePod.url ?? "",
@@ -167,7 +167,7 @@ export const TeacherResources = () => {
                         buttonStyle: "link",
                     }}/> : <IconCard card={{
                         title: "There are no active challenges at the moment.",
-                        icon: "icon icon-lightbulb-empty icon-md icon-color-cyan",
+                        icon: {name: "icon icon-lightbulb-empty icon-md icon-color-cyan"},
                         bodyText: "Check back soon!",
                     }}/>}
                 </ColumnSlice>

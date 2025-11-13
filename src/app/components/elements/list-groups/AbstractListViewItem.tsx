@@ -180,7 +180,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
             <div className={classNames("position-relative", {"question-progress-icon": isAda})}>
                 {icon && <div className="inner-progress-icon">
                     {icon.type === "img" ? <img src={icon.icon} alt={icon.alt ?? ""} width={icon.width} height={icon.height} className={classNames(icon.className, {"me-3": isPhy})} /> 
-                        : icon.type === "icon" ? <HexIcon icon={icon.icon} subject={icon.subject} size={icon.size} className={icon.className} altText={icon.altText} color={icon.color}/>
+                        : icon.type === "icon" ? <HexIcon icon={icon.icon} subject={icon.subject} className={icon.className}/>
                             : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}} /> 
                                 : undefined}
                     {icon.label && above['sm'](deviceSize) && <div className="icon-title mt-1">{icon.label}</div>}

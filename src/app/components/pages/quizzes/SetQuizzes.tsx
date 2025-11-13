@@ -167,7 +167,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                 <>
                     <Row className="w-100 ms-0 d-flex flex-row">
                         <Col className="d-flex align-items-center col-7 col-sm-8 col-md-6">
-                            <HexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="d-none d-sm-block assignment-hex"/>
+                            <HexIcon icon={{name: "icon-tests", size: "lg"}} subject={subject as Subject} className="d-none d-sm-block assignment-hex"/>
 
                             <span className="manage-quiz-title me-3">{quizTitle}</span>
                         </Col>

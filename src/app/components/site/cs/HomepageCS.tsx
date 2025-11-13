@@ -143,7 +143,7 @@ export const HomepageCS = () => {
                     <ColumnSlice breakpoint="md">
                         <IconCard card={{
                             title: "In the UK",
-                            icon: "icon icon-location-on icon-md icon-color-cyan",
+                            icon: {name: "icon icon-location-on icon-md icon-color-cyan"},
                             clickUrl: "/exam_specifications",
                             buttonText: "See more",
                             buttonStyle: "link",
@@ -157,7 +157,7 @@ export const HomepageCS = () => {
                         </IconCard>
                         <IconCard card={{
                             title: "Teaching outside the UK",
-                            icon: "icon icon-globe icon-md icon-color-cyan",
+                            icon: {name: "icon icon-globe icon-md icon-color-cyan"},
                             clickUrl: "/exam_specifications_ada",
                             buttonText: "See more",
                             buttonStyle: "link",
