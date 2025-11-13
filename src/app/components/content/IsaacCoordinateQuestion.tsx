@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from "react";
+import React, {useCallback} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {CoordinateChoiceDTO, CoordinateItemDTO, IsaacCoordinateQuestionDTO} from "../../../IsaacApiTypes";
 import {Button, Input} from "reactstrap";
@@ -120,12 +120,6 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
     const getEmptyCoordItem = useCallback((): CoordinateItemDTO => {
         return {type: "coordinateItem", coordinates: Array<string>(numberOfDimensions).fill("")};
     }, [numberOfDimensions]);
-
-    useEffect(() => {
-        if (!isDefined(currentAttempt)) {
-            dispatchSetCurrentAttempt({type: "coordinateChoice", items: [getEmptyCoordItem()]});
-        }
-    }, [dispatchSetCurrentAttempt, currentAttempt, getEmptyCoordItem]);
 
     const updateItem = useCallback((index: number, value: Immutable<CoordinateItemDTO>) => {
         const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : getEmptyCoordItem());

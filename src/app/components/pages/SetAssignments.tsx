@@ -298,8 +298,8 @@ export const SetAssignments = () => {
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(isAda && above["lg"](deviceSize) ? BoardViews.table : BoardViews.card, BoardLimit.six);
 
-    const isGroupsEmptyState = !(groups && groups.length > 0);
-    const isBoardsEmptyState = !(boards && boards.boards?.length > 0);
+    const isGroupsEmptyState = groups && groups.length === 0;
+    const isBoardsEmptyState = boards && boards.boards?.length === 0;
     const switchView = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setBoardView(e.target.value as BoardViews);
     }, [setBoardView]);
@@ -438,9 +438,9 @@ export const SetAssignments = () => {
                     <h3>Your quizzes</h3>
                     <div
                         className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
-                        {!(boards && boards.totalResults === 0) &&
+                        {boards && boards.totalResults > 0 &&
                             <div>
-                                <p className={"d-none d-lg-block my-auto"}>{`You have ${boards?.boards.length} created quiz${boards && boards.boards?.length > 1 ? "zes" : ""}.`}</p>
+                                <p className={"d-none d-lg-block my-auto"}>{`You have ${boards.boards.length} created quiz${boards.boards.length > 1 ? "zes" : ""}.`}</p>
                             </div>
                         }
                         <div className={"w-100 w-lg-auto"}>
