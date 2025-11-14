@@ -29,6 +29,7 @@ interface ShowLoadingQueryInfo<T> {
     data?: T | NOT_FOUND_TYPE;
     isLoading: boolean;
     isFetching: boolean;
+    isUninitialized: boolean;
     isError: boolean;
     error?: FetchBaseQueryError | SerializedError;
 }
@@ -38,6 +39,7 @@ export function combineQueries<T, R, S>(firstQuery: ShowLoadingQueryInfo<T>, sec
         data: isFound<T>(firstQuery.data) && isFound<R>(secondQuery.data) ? combineResult(firstQuery.data, secondQuery.data) : undefined,
         isLoading: firstQuery.isLoading || secondQuery.isLoading,
         isFetching: firstQuery.isFetching || secondQuery.isFetching,
+        isUninitialized: firstQuery.isUninitialized || secondQuery.isUninitialized,
         isError: firstQuery.isError || secondQuery.isError,
         error: firstQuery.error ?? secondQuery.error,
     };
@@ -50,6 +52,7 @@ export const discardResults = (): true => true;
 
 interface ShowLoadingQueryBaseProps<T> {
     placeholder?: JSX.Element | JSX.Element[];
+    uninitializedPlaceholder?: JSX.Element | JSX.Element[];
     query: ShowLoadingQueryInfo<T>;
     ifNotFound?: JSX.Element | JSX.Element[];
     maintainOnRefetch?: boolean;
@@ -74,8 +77,8 @@ type ShowLoadingQueryProps<T> = ShowLoadingQueryErrorProps<T> & ({
 //  - `placeholder` (React element to show while loading)
 //  - `maintainOnRefetch` (boolean indicating whether to keep showing the current data while refetching. use second parameter of `thenRender` to modify render tree accordingly)
 //  - `query` (the object returned by a RTKQ useQuery hook)
-export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, ifError, ifNotFound, defaultErrorTitle, maintainOnRefetch}: ShowLoadingQueryProps<T>) {
-    const {data, isLoading, isFetching, isError, error} = query;
+export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, uninitializedPlaceholder, ifError, ifNotFound, defaultErrorTitle, maintainOnRefetch}: ShowLoadingQueryProps<T>) {
+    const {data, isLoading, isFetching, isUninitialized, isError, error} = query;
     const renderError = () => ifError ? <>{ifError(error)}</> : <DefaultQueryError error={error} title={defaultErrorTitle}/>;
     if (isError && error) {
         return "status" in error && typeof error.status === "number" && [NOT_FOUND, NO_CONTENT].includes(error.status) && ifNotFound ? <>{ifNotFound}</> : renderError();
@@ -83,6 +86,10 @@ export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, i
 
     const isStale = (isLoading || isFetching) && isFound<T>(data);
     const showPlaceholder = (isLoading || isFetching) && (!maintainOnRefetch || !isDefined(data));
+
+    if (isUninitialized) {
+        return uninitializedPlaceholder ? <>{uninitializedPlaceholder}</> : null;
+    }
 
     if (showPlaceholder) {
         return placeholder ? <>{placeholder}</> : <LoadingPlaceholder />;

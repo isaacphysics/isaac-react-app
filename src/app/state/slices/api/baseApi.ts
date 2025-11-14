@@ -10,7 +10,7 @@ const isaacApi = createApi({
     reducerPath: "isaacApi",
     baseQuery: isaacBaseQuery,
     keepUnusedDataFor: 0,
-    endpoints: (build) => ({
+    endpoints: () => ({
         // Endpoints are injected in other files, e.g. contentApi.ts
     })
 });

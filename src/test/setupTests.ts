@@ -1,9 +1,12 @@
+// scrollManager access this as it's interpreted, so the mocking 
+// needs to happen before it's imported
+global.window.scrollTo = jest.fn();
+
 import 'core-js';
 import '@testing-library/jest-dom';
 import {server} from "../mocks/server";
 import "./matchers";
 
-global.window.scrollTo = jest.fn();
 global.window.alert = jest.fn();
 global.window.confirm = jest.fn(() => true);
 global.confirm = jest.fn(() => true);

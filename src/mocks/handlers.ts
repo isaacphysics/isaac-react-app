@@ -223,7 +223,7 @@ export const handlers = [
             status: 200, 
         });
     }),
-    http.get(API_PATH + "/pages/questions/", () => {
+    http.get(API_PATH + "/pages/questions", () => {
         return HttpResponse.json(mockQuestionFinderResults, {
             status: 200,
         });
