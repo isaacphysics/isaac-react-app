@@ -6,7 +6,8 @@ import { buildMockQuestionFinderResults, buildMockQuestions } from "../../../../
 import { buildFunctionHandler } from "../../../../mocks/handlers";
 import { mockQuestionFinderResults } from "../../../../mocks/data";
 import { useState } from "react";
-import { SEARCH_RESULTS_PER_PAGE } from "../../../../app/services";
+import { API_PATH, SEARCH_RESULTS_PER_PAGE } from "../../../../app/services";
+import { http, HttpResponse } from "msw";
 
 describe('questions API', () => {
     it('calls the /pages/questions endpoint', async () => {
@@ -52,7 +53,7 @@ describe('questions API', () => {
         expect(response().data?.moreResultsAvailable).toBe(true);
     });
 
-    describe('when paging through results', () => {
+    describe('paging', () => {
         it('appends the new page to the existing one', async () => {
             const { questions, response, setQuery } = await renderQuestionsQueryHook(
                 createSearchQuery({ startIndex: 0, limit: 10 }),
@@ -63,10 +64,33 @@ describe('questions API', () => {
             expect(response().data?.moreResultsAvailable).toBe(true);
 
             await setQuery(createSearchQuery({ startIndex: 10, limit: 10  }));
-            await waitFor(() => expect(response().isFetching).toBe(false));
 
             expect(response().data?.results?.length).toEqual(20);
             expect(response().data?.moreResultsAvailable).toBe(false);
+        });
+
+        it('starts a new page when a filter parameter changes', async () => {
+            const { questions, response, setQuery } = await renderQuestionsQueryHook(
+                createSearchQuery({ searchString: "horse", startIndex: 0, limit: 10 }),
+                { totalQuestions: 20 }
+            );
+            
+            expect(response().data?.results).toEqual(questions.slice(0, 10));
+            expect(response().data?.moreResultsAvailable).toBe(true);
+
+            await setQuery(createSearchQuery({ searchString: "vs", startIndex: 0, limit: 10  }));
+
+            expect(response().data?.results?.length).toEqual(10);
+            expect(response().data?.moreResultsAvailable).toBe(true);
+        });
+    });
+
+    describe('when there was an error', () => {
+        it('indicates this in the response', async () => {
+            const result = await renderQuestionsQueryHookFailure();
+            expect(result.current.isError).toBe(true);
+            expect(result.current.error).toHaveProperty('status', 'FETCH_ERROR');
+            expect(result.current.data).toBe(undefined);
         });
     });
 });
@@ -86,16 +110,25 @@ const renderQuestionsQueryHook = async (initialQuery: QuestionSearchQuery, { tot
     const { result } = renderTestHook(useTest, { extraEndpoints: [
         buildFunctionHandler('/pages/questions', ['startIndex', 'limit', 'searchString'], handler)
     ]});
+    
     await waitFor(() => expect(result.current.response.isFetching).toBe(false));
-    return { 
-        handler, questions,
-        response() {
-            return result.current.response;
-        },
-        async setQuery(q: QuestionSearchQuery) {
-            await act(async() => result.current.setQuery(q));
-        }
-    };            
+    
+    const response = () => result.current.response;
+    const setQuery = async (q: QuestionSearchQuery) => {
+        await act(async() => result.current.setQuery(q));
+        await waitFor(() => expect(response().isFetching).toBe(false));
+    };
+    return { handler, questions, response, setQuery };            
+};
+
+const renderQuestionsQueryHookFailure = async () => {
+    const useTest = () => useSearchQuestionsQuery(createSearchQuery());
+    const handler = http.get(API_PATH + "/pages/questions", () => HttpResponse.error());
+            
+    const { result } = renderTestHook(useTest, { extraEndpoints: [handler]});
+    await waitFor(() => expect(result.current.isFetching).toBe(false));
+    
+    return result;
 };
 
 const createSearchQuery = ({limit, searchString, startIndex = 0} : { limit?: number, searchString?: string, startIndex?: number } = { }): QuestionSearchQuery => {
