@@ -5,23 +5,15 @@ import shuffle from "lodash/shuffle";
 import times from "lodash/times";
 import flatten from "lodash/flatten";
 import { buildFunctionHandler } from "../../mocks/handlers";
-import { isPhy, SEARCH_RESULTS_PER_PAGE, siteSpecific } from "../../app/services";
+import { isPhy, siteSpecific } from "../../app/services";
 import userEvent from "@testing-library/user-event";
 import { PageContextState } from "../../IsaacAppTypes";
 import { expectPhyBreadCrumbs } from "../helpers/quiz";
 import { ContentSummaryDTO } from "../../IsaacApiTypes";
 import { toggleFilter, PartialCheckboxState, Filter as F, expectPartialCheckBox } from "../../mocks/filters";
 import { QuestionSearchResponseType } from "../../app/state";
+import { buildMockQuestionFinderResults, buildMockQuestions } from "../../mocks/utils";
 
-const buildMockQuestions = (n: number, questions: QuestionSearchResponseType): ContentSummaryDTO[] => {
-    return Array(n).fill(null).map((_, i) => ({ ...questions.results?.[i % questions.results.length], id: `q${i}`, title: `Question ${i}: ${questions.results?.[i % questions.results.length].title}` }));
-};
-
-const buildMockQuestionFinderResults = <T extends ContentSummaryDTO[]>(questions: T, start: number): QuestionSearchResponseType => ({
-    results: questions.slice(start, start + SEARCH_RESULTS_PER_PAGE + 1),
-    nextSearchOffset: start + SEARCH_RESULTS_PER_PAGE + 1,
-    totalResults: questions.length,
-});
 
 describe("QuestionFinder", () => {
     const questions = buildMockQuestions(40, mockQuestionFinderResults);

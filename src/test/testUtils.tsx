@@ -10,7 +10,7 @@ import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
 import {MemoryRouter} from "react-router";
-import {fireEvent, screen, waitFor, within, act} from "@testing-library/react";
+import {fireEvent, screen, waitFor, within, act, renderHook, RenderHookResult} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
@@ -49,10 +49,7 @@ interface RenderTestEnvironmentOptions {
 export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
     history.replace({ pathname: '/', search: '' });
-    store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
-    store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
-    store.dispatch(isaacApi.util.resetApiState());
-    store.getState().toasts?.forEach(toast => toast.id && store.dispatch(removeToast(toast.id)));
+    resetStore();
     server.resetHandlers();
     if (role || modifyUser) {
         server.use(
@@ -97,6 +94,28 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
             }
         </div>
     </Provider>);
+};
+
+export const renderTestHook = <Result, Props>(
+    render: (initialProps: Props) => Result,
+    { extraEndpoints }: { extraEndpoints?: HttpHandler[] } = {}
+): RenderHookResult<Result, Props> => {
+    resetStore();
+    server.resetHandlers();
+    if (extraEndpoints) {
+        server.use(...extraEndpoints);
+    }
+    
+    return renderHook(render, {
+        wrapper: ({children}) => <Provider store={store}>{children}</Provider>
+    });
+};
+
+export const resetStore = () => {
+    store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
+    store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
+    store.dispatch(isaacApi.util.resetApiState());
+    store.getState().toasts?.forEach(toast => toast.id && store.dispatch(removeToast(toast.id)));
 };
 
 // Clicks on the given navigation menu entry, allowing navigation around the app as a user would

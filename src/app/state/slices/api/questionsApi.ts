@@ -47,6 +47,7 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
                 }
                 currentCache.totalResults = newItems.totalResults;
                 currentCache.nextSearchOffset = newItems.nextSearchOffset;
+                currentCache.moreResultsAvailable = newItems.moreResultsAvailable;
             },
             forceRefetch({ currentArg, previousArg }) {
                 return currentArg !== previousArg;
