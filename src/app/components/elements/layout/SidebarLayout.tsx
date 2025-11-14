@@ -41,12 +41,12 @@ import { IsaacProgrammeDTO } from "../cards/ProgrammeCard";
 import { ExternalLink } from "../ExternalLink";
 
 interface SidebarLayoutProps extends RowProps {
-    site: boolean;
+    site?: boolean;
 }
 
 export const SidebarLayout = (props: SidebarLayoutProps) => {
-    const { className, site, ...rest } = props;
-    return site 
+    const { className, site=true, ...rest } = props;
+    return site
         ? <SidebarContext.Provider value={{sidebarPresent: true}}>
             <Row {...rest} className={classNames("sidebar-layout", className, {"g-0": isAda})}/>
         </SidebarContext.Provider>
