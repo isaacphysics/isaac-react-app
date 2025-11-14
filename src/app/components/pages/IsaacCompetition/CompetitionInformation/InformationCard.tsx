@@ -66,7 +66,7 @@ const InformationCard = ({
             id="ytplayer"
             width="100%"
             height="100%"
-            style={{ position: "absolute", border: "none" }}
+            style={{ position: "absolute", border: "none", borderRadius: "4px" }}
             allowFullScreen
           />
         </div>
