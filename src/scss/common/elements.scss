@@ -387,9 +387,14 @@ iframe.email-html {
   }
 }
 
-.tab-picker {
+@mixin tab-picker($indicator-position: left) {
   cursor: pointer;
-  border-left: solid 2px transparent;
+
+  @if $indicator-position == left {
+    border-left: solid 2px transparent;
+  } @else if $indicator-position == right {
+    border-right: solid 2px transparent;
+  }
 
   .badge.rounded-pill {
     background-color: white;
@@ -402,7 +407,11 @@ iframe.email-html {
   transition: background-position 0.3s ease-in-out;
   
   &:has(> input:checked) {
-    border-left: solid 2px var(--tab-active);
+    @if $indicator-position == left {
+      border-left: solid 2px var(--tab-active);
+    } @else if $indicator-position == right {
+      border-right: solid 2px var(--tab-active);
+    }
     background-position: 0% 0%;
     
     .badge.rounded-pill {
@@ -412,7 +421,11 @@ iframe.email-html {
   }
 
   &:hover:not(:has(> input:checked, > input:disabled)) {
-    border-left: solid 2px var(--tab-hover);
+    @if $indicator-position == left {
+      border-left: solid 2px var(--tab-hover);
+    } @else if $indicator-position == right {
+      border-right: solid 2px var(--tab-hover);
+    }
   }
 
   &:has(> input:disabled) {
@@ -434,7 +447,11 @@ iframe.email-html {
 
   @supports not selector(:has(a, b)) {
     &.checked {
-      border-left: solid 2px var(--tab-active);
+      @if $indicator-position == left {
+        border-left: solid 2px var(--tab-active);
+      } @else if $indicator-position == right {
+        border-right: solid 2px var(--tab-active);
+      }
       background-position: 0% 0%;
       
       .badge.rounded-pill {
@@ -443,6 +460,14 @@ iframe.email-html {
       }
     }
   }
+}
+
+.tab-picker-left {
+  @include tab-picker(left);
+}
+
+.tab-picker-right {
+  @include tab-picker(right);
 }
 
 .inline-tabs {

@@ -1,7 +1,7 @@
 import React from "react";
 import { ReactNode } from "react";
 import { Label, Input } from "reactstrap";
-import { isDefined } from "../../../services";
+import { isDefined, siteSpecific } from "../../../services";
 import { Spacer } from "../Spacer";
 import classNames from "classnames";
 
@@ -21,6 +21,7 @@ interface StyledTabPickerProps extends React.HTMLAttributes<HTMLLabelElement> {
     onInputChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
     checkboxTitle: ReactNode;
     count?: number;
+    indicatorPosition?: "left" | "right";
     suffix?: {
         icon: string;
         action?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -36,9 +37,9 @@ interface StyledTabPickerProps extends React.HTMLAttributes<HTMLLabelElement> {
  * @returns {JSX.Element}
  */
 export const StyledTabPicker = (props: StyledTabPickerProps): JSX.Element => {
-    const { checked, disabled, onInputChange, checkboxTitle, count, suffix, ...rest } = props;
+    const { checked, disabled, onInputChange, checkboxTitle, count, suffix, indicatorPosition = siteSpecific("left", "right"), ...rest } = props;
     const id = checkboxTitle?.toString().replace(" ", "-");
-    return <Label {...rest} id={props.id ?? id} tabIndex={-1} className={classNames("d-flex align-items-center tab-picker py-2 my-1 w-100", rest.className, {"checked": checked})}>
+    return <Label {...rest} id={props.id ?? id} tabIndex={-1} className={classNames("d-flex align-items-center py-2 my-1 w-100", rest.className, indicatorPosition === 'left' ? "tab-picker-left" : "tab-picker-right", {"checked": checked})}>
         <Input type="checkbox" checked={checked ?? false} onChange={onInputChange} readOnly={onInputChange === undefined} disabled={disabled} aria-labelledby={props.id ?? id} />
         <span className="ms-3">{checkboxTitle}</span>
         {isDefined(count) && <span className="badge rounded-pill ms-2">{count}</span>}
