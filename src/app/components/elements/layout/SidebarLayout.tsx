@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from "react";
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
@@ -15,7 +15,7 @@ import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector, useGetQuizAssignmentsAssignedToMeQuery } from "../../../state";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag, ContentSidebarContext } from "../../../../IsaacAppTypes";
+import { AppGroup, AssignmentBoardOrder, PageContextState, MyAssignmentsOrder, Tag, ContentSidebarContext, SidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
 import { AssignmentState } from "../../pages/MyAssignments";
@@ -40,21 +40,32 @@ import { GlossarySearch } from "../../pages/Glossary";
 import { IsaacProgrammeDTO } from "../cards/ProgrammeCard";
 import { ExternalLink } from "../ExternalLink";
 
-export const SidebarLayout = (props: RowProps) => {
-    const { className, ...rest } = props;
-    return siteSpecific(<Row {...rest} className={classNames("sidebar-layout", className)}/>, props.children);
+interface SidebarLayoutProps extends RowProps {
+    site: boolean;
+}
+
+export const SidebarLayout = (props: SidebarLayoutProps) => {
+    const { className, site, ...rest } = props;
+    return site 
+        ? <SidebarContext.Provider value={{sidebarPresent: true}}>
+            <Row {...rest} className={classNames("sidebar-layout", className, {"g-0": isAda})}/>
+        </SidebarContext.Provider>
+        : props.children;
 };
 
 export const MainContent = (props: ColProps) => {
     const { className, ...rest } = props;
 
     const dispatch = useAppDispatch();
+    const sidebarContext = useContext(SidebarContext);
 
     useEffect(() => {
         dispatch(mainContentIdSlice.actions.set({id: "page-content", priority: 2}));
     }, [dispatch]);
 
-    return siteSpecific(<Col id="page-content" xs={12} lg={8} xl={9} {...rest} tabIndex={-1} className={classNames(className, "order-0 order-lg-1")} />, props.children);
+    if (!sidebarContext?.sidebarPresent) return rest.children;
+
+    return <Col id="page-content" {...rest} tabIndex={-1} className={classNames(className, "flex-grow-1 order-0 order-lg-1")} />;
 };
 
 interface QuestionLinkProps {
@@ -102,24 +113,26 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Cont
     </li>;
 };
 
-type SidebarProps = ColProps
+export type SidebarProps = ColProps
 
-const NavigationSidebar = (props: SidebarProps) => {
+export const NavigationSidebar = (props: SidebarProps) => {
     // A navigation sidebar is used for external links that are supplementary to the main content (e.g. related content);
     // the content in such a sidebar will collapse underneath the main content on smaller screens
-    if (isAda) return <></>;
+    
+    const sidebarContext = useContext(SidebarContext);
+    if (!sidebarContext?.sidebarPresent) return <></>; 
 
     const { className, ...rest } = props;
     return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", className)} />;
 };
 
-interface ContentSidebarProps extends SidebarProps {
+export interface ContentSidebarProps extends SidebarProps {
     buttonTitle?: string;
     hideButton?: boolean; // if true, the sidebar will not be collapsible on small screens
     optionBar?: React.JSX.Element;
 }
 
-const ContentSidebar = (props: ContentSidebarProps) => {
+export const ContentSidebar = (props: ContentSidebarProps) => {
     // A content sidebar is used to interact with the main content, e.g. filters or search boxes, or for in-page nav (e.g. lessons and revision);
     // the content in such a sidebar will collapse into a button accessible from above the main content on smaller screens
     const deviceSize = useDeviceSize();
@@ -130,11 +143,13 @@ const ContentSidebar = (props: ContentSidebarProps) => {
 
     const pageTheme = useAppSelector(selectors.pageContext.subject);
 
-    if (isAda) return <></>;
+    const sidebarContext = useContext(SidebarContext);
+    if (!sidebarContext?.sidebarPresent) return <></>; 
 
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
-    return <>
-        {above['lg'](deviceSize)
+    return siteSpecific(
+        // Sci
+        above['lg'](deviceSize)
             ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
             : <>
                 {optionBar && <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
@@ -159,9 +174,11 @@ const ContentSidebar = (props: ContentSidebarProps) => {
                         </ContentSidebarContext.Provider>
                     </OffcanvasBody>
                 </Offcanvas>
-            </>
-        }
-    </>;
+            </>,
+        
+        // Ada
+        <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print order-0", className)} />
+    );
 };
 
 const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
