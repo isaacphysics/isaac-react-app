@@ -8,7 +8,6 @@ import {
     getGroupAssignmentProgressCSVDownloadLink,
     getGroupQuizProgressCSVDownloadLink,
     getQuizAssignmentCSVDownloadLink,
-    isAda,
     isDefined,
     isPhy,
     isQuiz,
