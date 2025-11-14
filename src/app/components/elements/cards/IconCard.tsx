@@ -28,7 +28,7 @@ export const IconCard = ({card, children, ...props}: IconCardProps) => {
 
     return <Container {...props} className={classNames("icon-card-container px-3 my-3", props?.className ?? "")}>
         <Card className={classNames("icon-card border-0", card.className)} tag={buttonStyle === "card" ? Link : Card} to={clickUrl}>
-            <i className={classNames(`icon icon-${size ?? "md"}`, {"icon-raw": raw}, name)} color={color} aria-label={altText}/>
+            <i className={classNames(`icon icon-${size ?? "md"}`, {"icon-raw": raw}, name)} color={color ?? "tertiary"} aria-label={altText}/>
             {tag && <div className="icon-card-tag">
                 <span><b>{tag}</b></span>
             </div>}
