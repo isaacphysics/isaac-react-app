@@ -226,7 +226,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                 return <React.Fragment key={teacherAuthorisation.id}>
                                     <li style={style} className="py-2">
                                         <div className="d-inline-flex connections-fixed-length-container">
-                                            {isAda && <span className="icon-person-active" />}
+                                            {isAda && <span className="icon-person-active mx-2"/>}
                                             <span id={`teacher-authorisation-${teacherAuthorisation.id}`} className="connections-fixed-length-text">
                                                 {extractTeacherName(teacherAuthorisation)}
                                             </span>
@@ -281,7 +281,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                     }
                                     return <li key={student.id} style={style} className="py-2">
                                         <div className="d-inline-flex connections-fixed-length-container">
-                                            {isAda && <span className="icon-person-active" />}
+                                            {isAda && <span className="icon-person-active mx-2"/>}
                                             <span id={`student-authorisation-${student.id}`} className="connections-fixed-length-text">
                                                 {student.givenName} {student.familyName}
                                             </span>

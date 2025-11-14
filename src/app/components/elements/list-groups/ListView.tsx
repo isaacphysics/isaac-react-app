@@ -43,7 +43,7 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const icon: TitleIconProps = { type: "icon", label: hideIconLabel ? undefined : linkedBoardId ? HUMAN_STATUS[state] : "Question",
         icon: isPhy
             ? {name: "icon-question", size: "lg"}
-            : {name: QUESTION_STATUS_TO_ICON[state], size: hideIconLabel ? "md" : "lg", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary"}
+            : {name: QUESTION_STATUS_TO_ICON[state], size: hideIconLabel ? "md" : "lg", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary", raw: true}
     };
 
     return <AbstractListViewItem

@@ -60,6 +60,7 @@ div.header-progress {
     }
     .search-toggler-icon {
       @include svg-color(url('/assets/cs/icons/search.svg'), $white, 1.25rem, 1.25rem);
+      display: inline-block;
       vertical-align: middle;
     }
   }

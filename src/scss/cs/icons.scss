@@ -1,5 +1,6 @@
 @import "../common/icons";
 
+// icon-lg is 60px on Sci, but we want a smaller size for CS to fit its ALVI size constraints
 .icon-lg {
   --icon-size: 32px;
   --mask-size: 100%;
@@ -14,8 +15,12 @@
   cursor: help;
 }
 
+.icon-status {
+  width: 30px;
+}
+
 .icon-help-q {
-  @include svg-icon-raw('/assets/cs/icons/help.svg', 1.5rem, 1.5rem);
+  @include svg-icon-raw('/assets/cs/icons/help.svg', 20px, 20px, 100%);
   margin-right: 10px;
 }
 
@@ -25,27 +30,12 @@
 }
 
 .icon-group-table-person {
-  @include svg-icon-raw('/assets/cs/icons/person.svg', 1.25rem, 1.25rem);
-  margin-right: 10px;
-}
-
-.icon-person-white {
-  @include svg-color(url('/assets/cs/icons/person.svg'), $white, 1.25rem, 1.25rem);
-  margin-bottom: -4px;
-  margin-left: 10px;
+  @include svg-icon('/assets/cs/icons/person.svg', 1.25rem, 1.25rem);
   margin-right: 10px;
 }
 
 .icon-person-active {
   @include svg-color(url('/assets/cs/icons/person.svg'), $dark-pink-300, 1.25rem, 1.25rem);
-  margin-bottom: -4px;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.icon-lock {
-  @include svg-icon-raw('/assets/cs/icons/lock.svg', 30px, 30px);
-  margin-bottom: -4px;
 }
 
 .icon-feedback-tick {
@@ -58,8 +48,8 @@
   margin-bottom: -7px; 
 }
 
-.icon-status {
-  width: 30px;
+.icon-lock {
+  @include svg-icon('/assets/cs/icons/lock.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-help {
@@ -110,10 +100,11 @@
   @include svg-icon('/assets/cs/icons/globe.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-lightbulb-empty {
-  @include svg-icon('/assets/cs/icons/lightbulb-empty.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+.icon-tick {
+  @include svg-icon('/assets/cs/icons/feedback-sent-tick.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+// AbstractListViewItem icons
 .icon-event {
   @include svg-icon('/assets/cs/icons/event.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
@@ -121,19 +112,22 @@
 .icon-concept {
   @include svg-icon('/assets/cs/icons/lightbulb.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
-
-.icon-info-filled {
-  @include svg-icon('/assets/cs/icons/info-filled.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+.icon-lightbulb-empty {
+  @include svg-icon('/assets/cs/icons/lightbulb-empty.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-info {
   @include svg-icon('/assets/cs/icons/info-empty.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+.icon-info-filled {
+  @include svg-icon('/assets/cs/icons/info-filled.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-topic {
   @include svg-icon('/assets/cs/icons/topic.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+// Correctness status icons (for markbook)
 .icon-correctness-correct {
   @include svg-icon-raw('/assets/common/icons/correctness-correct.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
@@ -150,26 +144,24 @@
   @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+// Status icons (for questions)
 .icon-correct {
-  @include svg-icon('/assets/cs/icons/status-correct.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  @include svg-icon-raw('/assets/cs/icons/status-correct.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-incorrect {
-  @include svg-icon('/assets/cs/icons/status-incorrect.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  @include svg-icon-raw('/assets/cs/icons/status-incorrect.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-in-progress {
-  @include svg-icon('/assets/cs/icons/status-in-progress.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  @include svg-icon-raw('/assets/cs/icons/status-in-progress.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 .icon-not-started {
-  @include svg-icon('/assets/cs/icons/status-not-started.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+  @include svg-icon-raw('/assets/cs/icons/status-not-started.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-tick {
-  @include svg-icon('/assets/cs/icons/feedback-sent-tick.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
+// Icon color overrides
 i.icon.icon-color-black {
   @include icon-color-override($cs-jet);
 }
