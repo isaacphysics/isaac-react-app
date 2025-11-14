@@ -1,4 +1,4 @@
-import { ContentSummaryDTO, IsaacQuestionPageDTO } from "../../../../IsaacApiTypes";
+import { ContentSummaryDTO, IsaacQuestionPageDTO, SearchResultsWrapper } from "../../../../IsaacApiTypes";
 import { CanAttemptQuestionTypeDTO, QuestionSearchQuery } from "../../../../IsaacAppTypes";
 import { isDefined, SEARCH_RESULTS_PER_PAGE, tags } from "../../../services";
 import { docSlice } from "../doc";
@@ -15,11 +15,11 @@ export interface QuestionSearchResponseType {
 export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttemptQuestionType"]}).injectEndpoints({
     endpoints: (build) => ({
         searchQuestions: build.query<QuestionSearchResponseType, QuestionSearchQuery>({
-            query: (query: QuestionSearchQuery) => ({
+            query: args => ({
                 url: `/pages/questions`,
                 params: {
-                    ...query,
-                    limit: query.limit ? query.limit + 1 : SEARCH_RESULTS_PER_PAGE + 1 // fetch one extra to check if more results are available
+                    ...args,
+                    limit: args.limit ? args.limit + 1 : SEARCH_RESULTS_PER_PAGE + 1 // fetch one extra to check if more results are available
                 }
             }),
             serializeQueryArgs: (args) => {
@@ -31,12 +31,12 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
                     queryArgs: otherParams
                 };
             },
-            transformResponse: (response: QuestionSearchResponseType, _, arg) => {
+            transformResponse: (response: SearchResultsWrapper<ContentSummaryDTO>, _, args) => {
                 return {
                     ...response,
                     // remove the extra result used to check for more results, so that we return the correct amount
-                    moreResultsAvailable: isDefined(response.results) ? response.results.length > (arg.limit ?? SEARCH_RESULTS_PER_PAGE) : undefined,
-                    results: response.results?.slice(0, (arg.limit ?? SEARCH_RESULTS_PER_PAGE))
+                    moreResultsAvailable: isDefined(response.results) ? response.results.length > (args.limit ?? SEARCH_RESULTS_PER_PAGE) : undefined,
+                    results: response.results?.slice(0, (args.limit ?? SEARCH_RESULTS_PER_PAGE))
                 };
             },
             merge: (currentCache, newItems) => {
