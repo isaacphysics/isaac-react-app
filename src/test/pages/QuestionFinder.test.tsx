@@ -45,6 +45,14 @@ describe("QuestionFinder", () => {
         await expectQuestions(questions.slice(0, 30));
     });
 
+    it('should disable the shuffle button when there are no results', async () => {
+        await renderQuestionFinderPage({
+            response: () => buildMockQuestionFinderResults([], 0),
+            queryParams: '?stages=gcse'
+        });
+        expect(shuffleButton()).toBeDisabled();
+    });
+
     describe('Question shuffling', () => {
         const shuffledQuestions = shuffle(questions);
         const shuffledResultsResponse = buildMockQuestionFinderResults(shuffledQuestions, 0);
@@ -67,7 +75,7 @@ describe("QuestionFinder", () => {
                 randomSequence([1 * 10 ** -6]);
                 await renderQuestionFinderPage({ response, queryParams: '?stages=gcse' });
 
-                await clickOn("Shuffle");
+                await clickOn(shuffleButton());
                 await expectQuestions(shuffledQuestions.slice(0, 30));
             });
         });
@@ -78,7 +86,7 @@ describe("QuestionFinder", () => {
 
                 await renderQuestionFinderPage({ response, queryParams: '?stages=gcse' });
 
-                await clickOn("Shuffle");
+                await clickOn(shuffleButton());
                 await expectUrlParams("?randomSeed=1&stages=gcse");
             });
         });
@@ -133,7 +141,7 @@ describe("QuestionFinder", () => {
                 await expectQuestions(questions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
 
-                await clickOn("Shuffle");
+                await clickOn(shuffleButton());
                 await expectQuestions(shuffledQuestions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
 
@@ -460,3 +468,5 @@ const queryFilters = () => {
 const isInput = (element: HTMLElement): element is HTMLInputElement => {
     return element.tagName.toLowerCase() === 'input';
 };
+
+const shuffleButton = () => screen.getByRole('button', { name: "Shuffle questions" });

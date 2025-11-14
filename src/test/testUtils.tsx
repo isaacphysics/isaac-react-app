@@ -154,12 +154,22 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     await userEvent.click(tabLink);
 };
 
-export const clickOn = async (text: string | RegExp, container?: Promise<HTMLElement>) => {
-    const target = await (container ? within(await container).findByText(text).then(e => e) : screen.findByText(text));
+export const clickOn = async (e: string | RegExp | HTMLElement, container?: Promise<HTMLElement>) => {
+    const target = await identify(e, container);
     if (target.hasAttribute('disabled')) {
         throw new Error(`Can't click on disabled button ${target.textContent}`);
     }
     await userEvent.click(target);
+};
+
+const identify = async (e: string | RegExp | HTMLElement, container?: Promise<HTMLElement>): Promise<HTMLElement> => {
+    if (e instanceof HTMLElement) {
+        return e;
+    } else if (container) {
+        return within(await container).getByText(e);
+    } else {
+        return screen.getByText(e);
+    }
 };
 
 export const enterInput = async (placeholder: string, input: string) => {
