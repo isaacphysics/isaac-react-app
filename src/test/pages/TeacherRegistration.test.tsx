@@ -13,7 +13,7 @@ import userEvent from "@testing-library/user-event";
 import { TeacherRegistration } from "../../app/components/pages/TeacherRegistration";
 import * as actions from "../../app/state/actions";
 import { rest } from "msw";
-import { API_PATH } from "../../app/services";
+import { API_PATH, PASSWORD_REQUIREMENTS } from "../../app/services";
 import { registrationMockUser, registrationUserData } from "../../mocks/data";
 
 const registerUserSpy = jest.spyOn(actions, "registerUser");
@@ -124,7 +124,7 @@ describe("Teacher Registration", () => {
     await fillFormCorrectly(false, "teacher");
     const formFields = getFormFields();
     const { password, confirmPassword, stage, noSchool, email } = formFields;
-    const pwErrorMessage = screen.getByText(/Passwords must be at least 12 characters/i);
+    const pwErrorMessage = screen.getByText(PASSWORD_REQUIREMENTS);
     expect(pwErrorMessage).toBeVisible();
     // update PW to meet requirements but not match the confirmation, and observe error changes
     await fillTextField(confirmPassword(), registrationUserData.password);
