@@ -11,7 +11,7 @@ export const ServerError = () => {
 
     return <Container>
         <div>
-            <TitleAndBreadcrumb currentPageTitle="Error" icon={{type: "hex", icon: "icon-error"}} />
+            <TitleAndBreadcrumb currentPageTitle="Error" icon={{type: "icon", icon: "icon-error"}} />
 
             <h3 className="my-4"><small>{`We're sorry, but an error has occurred on the ${SITE_TITLE_SHORT} server!`}</small></h3>
 

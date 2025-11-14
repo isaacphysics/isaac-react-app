@@ -77,7 +77,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                         collectionType={navigation.collectionType}
                         subTitle={siteSpecific(undefined, doc.subtitle as string)}
                         preview={preview}
-                        icon={{type: "hex", subject: doc.subjectId as Subject, icon: "icon-concept"}}
+                        icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-concept"}}
                     />
                     {!preview && <>
                         <MetaDescription description={doc.summary} />

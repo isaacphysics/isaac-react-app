@@ -322,7 +322,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="gameboard-builder">
         <div ref={sentinel}/>
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question deck", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question deck", "Quiz")} builder`} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
         <PageMetadata helpModalId="help_modal_gameboard_builder" />
         <Card className="p-3 mt-4 mb-7">
             <CardBody>
@@ -515,7 +515,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 {siteSpecific(<img src={"/assets/phy/icons/redesign/plus.svg"} height={"12px"}
                                     className={"ms-2"} alt=""/>,
                                 <img className={"plus-icon"}
-                                    src={"/assets/cs/icons/add-circle-outline-pink.svg"} alt=""/>)}
+                                    src={"/assets/cs/icons/add-circle.svg"} alt=""/>)}
                             </Button>
                         </ShowLoading>
                         <Button

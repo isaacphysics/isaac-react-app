@@ -66,11 +66,9 @@ $cards-per-line: (
     box-shadow: none;
   }
 
-  > img {
-    width: 25px;
-    height: 25px;
-    margin-top: 2rem;
-    margin-left: 1.5rem;
+  > img, > i {
+    margin-top: 35px;
+    margin-left: 25px;
   }
 
   .icon-card-tag {

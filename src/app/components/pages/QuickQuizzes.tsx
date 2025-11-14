@@ -15,7 +15,7 @@ export const QuickQuizzes = withRouter((props: RouteComponentProps) => {
             currentPageTitle="Quick quizzes"
             intermediateCrumbs={crumb ? [crumb] : undefined}
             icon={pageContext?.subject ? {
-                type: "hex", 
+                type: "icon", 
                 subject: pageContext.subject,
                 icon: "icon-finder"
             } : undefined}

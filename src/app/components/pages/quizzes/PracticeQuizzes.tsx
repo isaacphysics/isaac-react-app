@@ -91,7 +91,7 @@ const PracticeQuizzesComponent = () => {
     return <Container { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb
             currentPageTitle={"Practice tests"}
-            icon={{"type": "hex", "icon": "icon-tests"}}
+            icon={{"type": "icon", "icon": "icon-tests"}}
             intermediateCrumbs={crumb ? [crumb] : []}
         />
         <SidebarLayout>

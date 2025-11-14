@@ -151,7 +151,7 @@
         background-color: $cs-white !important;
       }
       background-color: $cs-white !important;
-      background-image: url("/assets/cs/icons/share-pink.svg");
+      background-image: url("/assets/cs/icons/share.svg");
     }
     position: relative;
     z-index: 2;
@@ -187,7 +187,7 @@
   &.outline {
     @include ada-icon-button-base(48px, 48px, true);
   }
-  background-image: url("/assets/cs/icons/undo-pink.svg");
+  background-image: url("/assets/cs/icons/undo.svg");
   
   &:disabled, &.disabled {
     filter: grayscale(100%);
@@ -201,7 +201,7 @@
   &.outline {
     @include ada-icon-button-base(48px, 48px, true);
   }
-  background-image: url("/assets/cs/icons/redo-pink.svg");
+  background-image: url("/assets/cs/icons/redo.svg");
   
   &:disabled, &.disabled {
     filter: grayscale(100%);

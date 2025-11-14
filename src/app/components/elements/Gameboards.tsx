@@ -60,7 +60,7 @@ const CSTable = (props: GameboardsTableProps) => {
             {siteSpecific("Question deck name", "Quiz name")}
         </SortItemHeader>
         <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}>
-            Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
+            Stages and Difficulties <span id={`difficulties-help`} className="icon icon-info icon-color-black icon-sm mb-n1" />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
                 Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}

@@ -50,7 +50,7 @@ const ContentEmails = (props: ContentEmailsProps) => {
     const [sendProvidedEmailWithUserIds] = useSendProvidedEmailWithUserIdsMutation();
 
     return <Container id="admin-emails-page">
-        <TitleAndBreadcrumb currentPageTitle="Content email sending" icon={{type: "hex", icon: "icon-mail"}} />
+        <TitleAndBreadcrumb currentPageTitle="Content email sending" icon={{type: "icon", icon: "icon-mail"}} />
 
         <Card className="p-3 my-3">
             <CardTitle tag="h2">User selection</CardTitle>
