@@ -343,7 +343,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
         </h3>}
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
-                <SidebarLayout>
+                <SidebarLayout site={isPhy}>
                     <MyAccountSidebar editingOtherUser={editingOtherUser} activeTab={activeTab} setActiveTab={setActiveTab}/>
                     <MainContent className="w-lg-50">
                         <div className={classNames({"card": isAda})}>

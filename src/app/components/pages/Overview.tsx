@@ -8,12 +8,12 @@ import { GetStartedWithAda } from "../elements/panels/GetStartedWithAda";
 import { AdaNewsSection } from "../elements/AdaNewsSection";
 import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
-import { isPhy } from "../../services";
+import { isAda } from "../../services";
 
 export const Overview = () => {
     useTeacherOnboardingModal();    
 
-    return <SidebarLayout site={isPhy} id={"overview"}>
+    return <SidebarLayout site={isAda} id={"overview"}>
         <MyAdaSidebar />
         <MainContent>
             <section id="get-started">

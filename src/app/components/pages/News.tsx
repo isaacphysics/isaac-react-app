@@ -5,7 +5,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {NEWS_PODS_PER_PAGE, siteSpecific} from "../../services";
+import {isPhy, NEWS_PODS_PER_PAGE, siteSpecific} from "../../services";
 import { IsaacPodDTO } from "../../../IsaacApiTypes";
 import { GenericPageSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 
@@ -34,7 +34,7 @@ export const News = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("News", "Tips, tools & support")} icon={{type: "hex", icon: "icon-news"}} />
         <MetaDescription description={metaDescription} />
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <GenericPageSidebar/>
             <MainContent>
                 {allNews.length === 0 ? 

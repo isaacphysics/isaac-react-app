@@ -49,7 +49,7 @@ export const RegistrationAgeCheck = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}} />
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <SignupSidebar activeTab={1}/>
             <MainContent>
                 <Card className="my-7">

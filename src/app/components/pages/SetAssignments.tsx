@@ -377,7 +377,7 @@ export const SetAssignments = () => {
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
             icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
         />
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <SetAssignmentsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
                 displayLimit={boardLimit} setDisplayLimit={setBoardLimit}

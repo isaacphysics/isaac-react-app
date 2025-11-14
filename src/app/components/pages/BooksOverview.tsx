@@ -3,7 +3,7 @@ import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { PageFragment } from "../elements/PageFragment";
 import { BooksOverviewSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { BookHiddenState, BookInfo, ISAAC_BOOKS } from "../../services";
+import { BookHiddenState, BookInfo, ISAAC_BOOKS, isPhy } from "../../services";
 import { Link } from "react-router-dom";
 import { PageMetadata } from "../elements/PageMetadata";
 
@@ -28,7 +28,7 @@ export const BooksOverview = () => {
             currentPageTitle="Our books"
             icon={{type: "hex", icon: "icon-book"}}
         />
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <BooksOverviewSidebar hideButton />
             <MainContent>
                 <PageMetadata title={"Isaac books: in print and online"} showSidebarButton sidebarButtonText="View all books"/>

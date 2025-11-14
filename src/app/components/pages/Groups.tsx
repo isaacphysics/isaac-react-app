@@ -599,7 +599,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
     const GroupsPhy = <Container>
         <TitleAndBreadcrumb currentPageTitle="Manage groups" icon={{type: "hex", icon: "icon-group"}}/>
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
-            <SidebarLayout>
+            <SidebarLayout site={isPhy}>
                 <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
                     showArchived={showArchived} setShowArchived={setShowArchived}
                     hideButton
