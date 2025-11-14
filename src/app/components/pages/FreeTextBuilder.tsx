@@ -7,6 +7,7 @@ import {Tabs} from "../elements/Tabs";
 import {atLeastOne, siteSpecific} from "../../services";
 import {IsaacContent} from "../content/IsaacContent";
 import { Container, Form, Card, CardBody, Table, Label, Input, UncontrolledTooltip, Row, Col, Button } from "reactstrap";
+import classNames from "classnames";
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
@@ -168,7 +169,7 @@ export const FreeTextBuilder = () => {
                                                         className="w-100" type="text" value={choice.value}
                                                         onChange={e => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, value: e.target.value} : c))}
                                                     />
-                                                    <i id={`choice-help-${choice.choiceNumber}`} className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help me-2")} />
+                                                    <i id={`choice-help-${choice.choiceNumber}`} className={classNames("ms-2 icon icon-info", siteSpecific("icon-color-grey", "icon-color-black icon-sm"))} />
                                                 </div>
                                             </Label>
                                             <UncontrolledTooltip target={`choice-help-${choice.choiceNumber}`} placement="bottom" innerClassName="">

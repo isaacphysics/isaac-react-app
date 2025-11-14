@@ -73,7 +73,7 @@ export const Overview = () => {
                     }}/>
                     <IconCard className={"without-margin"} card={{
                         title: "Need help?",
-                        icon: {name: "icon-help-cyan", color: "secondary"},
+                        icon: {name: "icon-help", color: "secondary"},
                         bodyText: "Our teacher support page has useful information for common questions and issues.",
                         clickUrl: "/support/teacher/general",
                         buttonText: "Teacher support",

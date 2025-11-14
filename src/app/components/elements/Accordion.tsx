@@ -205,7 +205,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     {isPhy && <i className={classNames("icon icon-chevron-right icon-dropdown-90 icon-color-black mx-2", {"active": isOpen})}/>}
                 </div>
                 {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
-                    <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
+                    <span id={`disabled-tooltip-${componentId}`} className={classNames("ms-2 icon icon-info", siteSpecific("icon-color-grey", "icon-color-black icon-sm"))} />
                     <UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
                         modifiers={[preventOverflow]}>
                         {disabled}

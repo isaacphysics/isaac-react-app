@@ -515,7 +515,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 {siteSpecific(<img src={"/assets/phy/icons/redesign/plus.svg"} height={"12px"}
                                     className={"ms-2"} alt=""/>,
                                 <img className={"plus-icon"}
-                                    src={"/assets/cs/icons/add-circle-outline-pink.svg"} alt=""/>)}
+                                    src={"/assets/cs/icons/add-circle.svg"} alt=""/>)}
                             </Button>
                         </ShowLoading>
                         <Button

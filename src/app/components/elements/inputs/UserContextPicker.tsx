@@ -146,7 +146,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     }
 
                     <div className="mt-2 ms-1">
-                        <i id={`viewing-context-explanation`} className={siteSpecific("icon icon-info icon-color-grey mx-1", "icon-help mx-1")}/>
+                        <i id={`viewing-context-explanation`} className={classNames("mx-2 icon icon-info", siteSpecific("icon-color-grey", "icon-color-black icon-sm mb-n1"))} />
                         <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
                             You are seeing {stagesString(currentStages)}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
                             &nbsp;content.&nbsp;
