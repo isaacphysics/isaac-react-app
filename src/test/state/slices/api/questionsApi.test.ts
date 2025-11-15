@@ -1,6 +1,6 @@
 import { QuestionSearchQuery } from "../../../../IsaacAppTypes";
 import { renderTestHook } from "../../../testUtils";
-import { useSearchQuestionsQuery } from "../../../../app/state";
+import { useAppSelector, useSearchQuestionsQuery } from "../../../../app/state";
 import { act, waitFor } from "@testing-library/react";
 import { buildMockQuestionFinderResults, buildMockQuestions } from "../../../../mocks/utils";
 import { buildFunctionHandler } from "../../../../mocks/handlers";
@@ -65,7 +65,7 @@ describe('questions API', () => {
 
             await setQuery(createSearchQuery({ startIndex: 10, limit: 10  }));
 
-            expect(response().data?.results?.length).toEqual(20);
+            expect(response().data?.results).toEqual(questions);
             expect(response().data?.moreResultsAvailable).toBe(false);
         });
 
@@ -80,26 +80,34 @@ describe('questions API', () => {
 
             await setQuery(createSearchQuery({ searchString: "vs", startIndex: 0, limit: 10  }));
 
-            expect(response().data?.results?.length).toEqual(10);
+            expect(response().data?.results).toEqual(questions.slice(0, 10));
             expect(response().data?.moreResultsAvailable).toBe(true);
         });
     });
 
     describe('when there was an error', () => {
         it('indicates this in the response', async () => {
-            const result = await renderQuestionsQueryHookFailure();
-            expect(result.current.isError).toBe(true);
-            expect(result.current.error).toHaveProperty('status', 'FETCH_ERROR');
-            expect(result.current.data).toBe(undefined);
+            const { result } = await renderQuestionsQueryHookFailure();
+            expect(result.current.result.isError).toBe(true);
+            expect(result.current.result.error).toHaveProperty('status', 401);
+            expect(result.current.result.data).toBe(undefined);
+        });
+
+        it('shows a toast notification that mentions this endpoint', async () => {
+            const { result } = await renderQuestionsQueryHookFailure();
+            expect(result.current.toasts).toHaveLength(1);
+            expect(result.current.toasts).toHaveProperty('[0].title', 'Unable to search for questions');
         });
     });
 });
 
-
-const renderQuestionsQueryHook = async (initialQuery: QuestionSearchQuery, { totalQuestions } = { totalQuestions: 10}) => {
+const renderQuestionsQueryHook = async (
+    initialQuery: QuestionSearchQuery,
+    { totalQuestions } = { totalQuestions: 10}
+) => {
     const questions = buildMockQuestions(totalQuestions, mockQuestionFinderResults);
     const useTest = () => {
-        const [query, setQuery] = useState<QuestionSearchQuery>(createSearchQuery(initialQuery));
+        const [query, setQuery] = useState(createSearchQuery(initialQuery));
         const response = useSearchQuestionsQuery(query);
         return { response, setQuery } as const;
     };
@@ -114,24 +122,33 @@ const renderQuestionsQueryHook = async (initialQuery: QuestionSearchQuery, { tot
     await waitFor(() => expect(result.current.response.isFetching).toBe(false));
     
     const response = () => result.current.response;
-    const setQuery = async (q: QuestionSearchQuery) => {
-        await act(async() => result.current.setQuery(q));
+    const setQuery = async (query: QuestionSearchQuery) => {
+        await act(async() => result.current.setQuery(query));
         await waitFor(() => expect(response().isFetching).toBe(false));
     };
     return { handler, questions, response, setQuery };            
 };
 
 const renderQuestionsQueryHookFailure = async () => {
-    const useTest = () => useSearchQuestionsQuery(createSearchQuery());
-    const handler = http.get(API_PATH + "/pages/questions", () => HttpResponse.error());
+    const useTest = () => {
+        const toasts = useAppSelector(state => state?.toasts || []);
+        const result = useSearchQuestionsQuery(createSearchQuery());
+        return { toasts, result };
+    };
+    const handler = http.get(
+        API_PATH + "/pages/questions",
+        () => HttpResponse.json({ error: 'Not Authorized' }, { status: 401 })
+    );
             
     const { result } = renderTestHook(useTest, { extraEndpoints: [handler]});
-    await waitFor(() => expect(result.current.isFetching).toBe(false));
+    await waitFor(() => expect(result.current.result.isFetching).toBe(false));
     
-    return result;
+    return { result };
 };
 
-const createSearchQuery = ({limit, searchString, startIndex = 0} : { limit?: number, searchString?: string, startIndex?: number } = { }): QuestionSearchQuery => {
+const createSearchQuery = (
+    {limit, searchString, startIndex = 0} : { limit?: number, searchString?: string, startIndex?: number } = { }
+): QuestionSearchQuery => {
     return {
         querySource: "questionFinder",
         startIndex, limit, searchString      
