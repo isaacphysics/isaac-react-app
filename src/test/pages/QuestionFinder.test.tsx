@@ -9,9 +9,8 @@ import { isPhy, siteSpecific } from "../../app/services";
 import userEvent from "@testing-library/user-event";
 import { PageContextState } from "../../IsaacAppTypes";
 import { expectPhyBreadCrumbs } from "../helpers/quiz";
-import { ContentSummaryDTO } from "../../IsaacApiTypes";
+import { ContentSummaryDTO, SearchResultsWrapper } from "../../IsaacApiTypes";
 import { toggleFilter, PartialCheckboxState, Filter as F, expectPartialCheckBox } from "../../mocks/filters";
-import { QuestionSearchResponseType } from "../../app/state";
 import { buildMockQuestionFinderResults, buildMockQuestions } from "../../mocks/utils";
 
 
@@ -423,7 +422,7 @@ type RenderParameters = {
         stages: string | null;
         randomSeed: string | null;
         startIndex: string | null;
-    }) => QuestionSearchResponseType;
+    }) => SearchResultsWrapper<ContentSummaryDTO>;
     queryParams?: SearchString;
     context?: NonNullable<PageContextState>;
 };

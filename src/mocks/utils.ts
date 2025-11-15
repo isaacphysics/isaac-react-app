@@ -1,6 +1,5 @@
 import { persistence, SEARCH_RESULTS_PER_PAGE } from "../app/services";
-import { QuestionSearchResponseType } from "../app/state";
-import { ContentSummaryDTO } from "../IsaacApiTypes";
+import { ContentSummaryDTO, SearchResultsWrapper } from "../IsaacApiTypes";
 
 // this makes sure `elem` implements an interface without widening its type
 export const recordOf = <T extends string | number | symbol, U>() => <V extends U>(elem: Record<T, V>) => elem;
@@ -25,11 +24,11 @@ export const mockPersistence = () => {
     });
 }; 
 
-export const buildMockQuestions = (n: number, questions: QuestionSearchResponseType): ContentSummaryDTO[] => {
+export const buildMockQuestions = (n: number, questions: SearchResultsWrapper<ContentSummaryDTO>): ContentSummaryDTO[] => {
     return Array(n).fill(null).map((_, i) => ({ ...questions.results?.[i % questions.results.length], id: `q${i}`, title: `Question ${i}: ${questions.results?.[i % questions.results.length].title}` }));
 };
 
-export const buildMockQuestionFinderResults = <T extends ContentSummaryDTO[]>(questions: T, start: number, limit = SEARCH_RESULTS_PER_PAGE): QuestionSearchResponseType => ({
+export const buildMockQuestionFinderResults = <T extends ContentSummaryDTO[]>(questions: T, start: number, limit = SEARCH_RESULTS_PER_PAGE): SearchResultsWrapper<ContentSummaryDTO> => ({
     results: questions.slice(start, start + limit + 1),
     nextSearchOffset: start + limit + 1,
     totalResults: questions.length,

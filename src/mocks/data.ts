@@ -4,18 +4,19 @@ import {DAYS_AGO, SOME_FIXED_FUTURE_DATE, SOME_FIXED_PAST_DATE} from "../test/da
 import {
     BookingStatus,
     CompletionState,
+    ContentSummaryDTO,
     DetailedQuizSummaryDTO,
     EmailVerificationStatus,
     EventStatus,
     IsaacQuizDTO,
     QuizAttemptDTO,
+    SearchResultsWrapper,
     USER_ROLES,
     UserRole,
     UserSummaryWithGroupMembershipDTO
 } from "../IsaacApiTypes";
 import {School} from "../IsaacAppTypes";
 import {recordOf} from "./utils";
-import { QuestionSearchResponseType } from "../app/state";
 
 export const mockUser = {
     givenName: "Test",
@@ -4688,7 +4689,7 @@ export const mockQuestionFinderResults = {
     ],
     "nextSearchOffset": 5,
     "totalResults": 5
-} satisfies QuestionSearchResponseType;
+} satisfies SearchResultsWrapper<ContentSummaryDTO>;
 
 export const mockQuestionFinderResultsWithMultipleStages = {
     "results": [
@@ -4869,7 +4870,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
     ],
     "nextSearchOffset": 6,
     "totalResults": 6
-} satisfies QuestionSearchResponseType;
+} satisfies SearchResultsWrapper<ContentSummaryDTO>;
 
 export const mockConceptsResults = {
     results: [{
