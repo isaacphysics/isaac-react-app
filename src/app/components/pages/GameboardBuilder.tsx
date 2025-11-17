@@ -61,7 +61,7 @@ import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import { PageMetadata } from '../elements/PageMetadata';
-import {IconButton} from "../elements/AffixButton";
+import {AffixButton, IconButton} from "../elements/AffixButton";
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
@@ -484,31 +484,25 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             placeholder={<div className="text-center"><IsaacSpinner/></div>}
                             until={!baseGameboardId || baseGameboard}
                         >
-                            <Button
-                                className={classNames("w-100 w-md-auto d-flex align-items-center justify-content-center", {"plus-button": isAda})}
-                                color="keyline"
-                                onClick={() => {
-                                    logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                    dispatch(openActiveModal({
-                                        closeAction: () => {
-                                            dispatch(closeActiveModal());
-                                        },
-                                        closeLabelOverride: "Cancel",
-                                        size: "xl",
-                                        title: "Search questions",
-                                        body: <QuestionSearchModal
-                                            currentQuestions={currentQuestions}
-                                            undoStack={undoStack}
-                                            redoStack={redoStack}
-                                            eventLog={eventLog}
-                                        />
-                                    }));
-                                }}
-                            >
+                            <AffixButton color="keyline" affix={{affix: classNames(siteSpecific("icon-plus icon-color-black-hoverable", "icon-add-circle"), "ms-2"), position: "suffix", type: "icon"}} onClick={() => {
+                                logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
+                                dispatch(openActiveModal({
+                                    closeAction: () => {
+                                        dispatch(closeActiveModal());
+                                    },
+                                    closeLabelOverride: "Cancel",
+                                    size: "xl",
+                                    title: "Search questions",
+                                    body: <QuestionSearchModal
+                                        currentQuestions={currentQuestions}
+                                        undoStack={undoStack}
+                                        redoStack={redoStack}
+                                        eventLog={eventLog}
+                                    />
+                                }));
+                            }}>
                                 Add questions
-                                {siteSpecific(<img src={"/assets/phy/icons/redesign/plus.svg"} height={"12px"} className={"ms-2"} alt=""/>,
-                                    <i className="icon icon-add-circle icon-sm ms-2"/>)}
-                            </Button>
+                            </AffixButton>
                         </ShowLoading>
                         <Button
                             className={"w-100 w-md-auto"}

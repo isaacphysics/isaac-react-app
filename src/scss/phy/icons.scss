@@ -131,6 +131,10 @@
   margin-bottom: -5px;
 }
 
+.icon-plus {
+  @include svg-icon('/assets/phy/icons/redesign/plus.svg', 12px, 12px, 100%);
+}
+
 
 .icon-question {
   @include svg-icon-layered(
