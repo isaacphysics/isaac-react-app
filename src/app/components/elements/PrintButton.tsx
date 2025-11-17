@@ -42,46 +42,29 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                     ><span className="visually-hidden">Print{" "}</span>Without hints</Button>
                 </div>
             </div>}
-            {siteSpecific(
-                <IconButton
-                    icon="icon-print"
-                    className="w-max-content h-max-content"
-                    affixClassName="icon-color-black-hoverable"
-                    aria-label="Print page" 
-                    title="Print page"
-                    color="tint"
-                    data-bs-theme="neutral"
-                    onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
-                />,
-                <button
-                    className="print-icon btn-action not-mobile"
-                    onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
-                    aria-label="Print page"
-                />
-            )}
-        </div>
-        :
-        siteSpecific(
             <IconButton
                 icon="icon-print"
-                className="w-max-content h-max-content"
-                affixClassName="icon-color-black-hoverable"
-                aria-label="Print page" 
-                title="Print page"
-                color="tint"
-                data-bs-theme="neutral"
-                onClick={() => {
-                    dispatch(printingSettingsSlice.actions.enableHints(false));
-                    setTimeout(window.print, 100);
-                }}
-            />,
-            <button
-                className="print-icon btn-action not-mobile"
-                onClick={() => {
-                    dispatch(printingSettingsSlice.actions.enableHints(false));
-                    setTimeout(window.print, 100);
-                }}
+                className={classNames("w-max-content h-max-content action-button", {"not-mobile": isAda})}
+                affixClassName={siteSpecific("icon-color-black-hoverable", "icon-color-white icon-sm")}
                 aria-label="Print page"
+                title="Print page"
+                color={siteSpecific("tint", "primary")}
+                data-bs-theme="neutral"
+                onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
             />
-        );
+        </div>
+        :
+        <IconButton
+            icon="icon-print"
+            className={classNames("w-max-content h-max-content action-button", {"not-mobile": isAda})}
+            affixClassName={siteSpecific("icon-color-black-hoverable", "icon-color-white icon-sm")}
+            aria-label="Print page"
+            title="Print page"
+            color={siteSpecific("tint", "primary")}
+            data-bs-theme="neutral"
+            onClick={() => {
+                dispatch(printingSettingsSlice.actions.enableHints(false)); 
+                setTimeout(window.print, 100);
+            }}
+        />;
 };
