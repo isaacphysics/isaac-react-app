@@ -73,8 +73,8 @@ export const QuestionSearchModal = (
     const deviceSize = useDeviceSize();
     const sublistDelimiter = " >>> ";
 
-    const [searchParams, setSearchParams] = useState<QuestionSearchQuery | undefined>(undefined);
-    const searchQuestionsQuery = useSearchQuestionsQuery(searchParams ?? skipToken);
+    const [searchParams, setSearchParams] = useState<QuestionSearchQuery | typeof skipToken>(skipToken);
+    const searchQuestionsQuery = useSearchQuestionsQuery(searchParams);
 
     const [topicSelections, setTopicSelections] = useState<ChoiceTree[]>([]);
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
@@ -114,7 +114,7 @@ export const QuestionSearchModal = (
             const isBookSearch = book.length > 0; // Tasty.
             if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for
-                return;
+                return setSearchParams(skipToken);
             }
 
             const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(",");
