@@ -68,6 +68,7 @@ import { MainContent, GroupsSidebar, SidebarLayout } from "../elements/layout/Si
 import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
 import { PageMetadata } from "../elements/PageMetadata";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -620,45 +621,42 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
         </ShowLoadingQuery>
     </Container>;
 
-    const GroupsAda = <SidebarLayout site={isAda}>
-        <MyAdaSidebar />
-        <MainContent>
-            <Container>
-                <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />
-                <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
-                    {!isEmptyState ?
-                        <>
-                            <p className={"mw-75"}>You can add other teachers to help you manage a group. You cannot directly add students, but you can invite them to join.</p>
-                            <Row className="mb-7">
-                                <Col lg={4}>
-                                    <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                                        showArchived={showArchived} setShowArchived={setShowArchived} showCreateGroup={true} />
-                                </Col>
+    const GroupsAda = <PageContainer
+        pageTitle={<TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />}
+        sidebar={<MyAdaSidebar />}
+    >
+        <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
+            {!isEmptyState ?
+                <>
+                    <p className={"mw-75"}>You can add other teachers to help you manage a group. You cannot directly add students, but you can invite them to join.</p>
+                    <Row className="mb-7">
+                        <Col lg={4}>
+                            <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
+                                showArchived={showArchived} setShowArchived={setShowArchived} showCreateGroup={true} />
+                        </Col>
 
-                                <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
-                                    {
-                                        selectedGroup &&
-                                            <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} />
-                                    }
-                                </Col>
-                            </Row>
-                        </>
-                        :
-                        <div className={"mb-7"}>
-                            <p className={"mw-50"}>
-                                Organise your students into groups and set work appropriate for each group.
-                                <br />
-                                You need a student group before you can assign quizzes and tests in {SITE_TITLE_SHORT}.
-                            </p>
-                            <Button onClick={() => void dispatch(showCreateGroupModal({user}))}>
-                                Create a group
-                            </Button>
-                        </div>
-                    }
-                </ShowLoadingQuery>
-            </Container>
-        </MainContent>
-    </SidebarLayout>;
+                        <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
+                            {
+                                selectedGroup &&
+                                    <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} />
+                            }
+                        </Col>
+                    </Row>
+                </>
+                :
+                <div className={"mb-7"}>
+                    <p className={"mw-50"}>
+                        Organise your students into groups and set work appropriate for each group.
+                        <br />
+                        You need a student group before you can assign quizzes and tests in {SITE_TITLE_SHORT}.
+                    </p>
+                    <Button onClick={() => void dispatch(showCreateGroupModal({user}))}>
+                        Create a group
+                    </Button>
+                </div>
+            }
+        </ShowLoadingQuery>
+    </PageContainer>;
 
     return siteSpecific(GroupsPhy, GroupsAda);
 };

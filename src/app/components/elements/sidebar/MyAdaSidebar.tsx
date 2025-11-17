@@ -34,12 +34,12 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
     markbook: {
         title: "Markbook",
         url: "/my_markbook",
-        icon: "icon-done_all",
+        icon: "icon-done-all",
     },
     assignedToMe: {
         title: "Assigned to me",
         url: "/todo",
-        icon: "icon-person-tick",
+        icon: "icon-person-check",
     },
     account: {
         title: "Account",
@@ -55,8 +55,9 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
             <StyledTabPicker
                 key={key}
                 id={tab.title.replace(" ", "-").toLowerCase()}
-                checkboxTitle={<div>
-                    <i className={classNames("icon", tab.icon)} aria-hidden="true" /> {tab.title}
+                checkboxTitle={<div className="d-flex align-items-center gap-2">
+                    <i className={classNames("icon icon-md", tab.icon)} aria-hidden="true" />
+                    <strong>{tab.title}</strong>
                 </div>}
                 checked={history.location.pathname === tab.url}
                 onClick={() => history.push(tab.url)}
