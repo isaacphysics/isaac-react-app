@@ -64,9 +64,8 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
             </a>
         </div>}
         <IconButton
-            icon="icon-share"
+            icon={{name: "icon-share icon-color-black-hoverable", size: "sm", color: "white"}}
             className={classNames(innerClassName, "w-max-content h-max-content action-button", {"icon-button-sm": size == "sm"})}
-            affixClassName={classNames(siteSpecific("icon-color-black-hoverable", "icon-sm"), {"icon-color-white": !outline && isAda})}
             aria-label="Share page"
             title="Share page"
             color="tint"

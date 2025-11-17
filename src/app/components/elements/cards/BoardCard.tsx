@@ -234,7 +234,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </div>
                 </td>}
                 {isAda && <td className={"align-middle text-center"}>
-                    <IconButton icon="icon-bin" color="keyline" className="action-button" affixClassName="icon-sm" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
+                    <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
                 </td>}
             </> 
                 : 
@@ -263,7 +263,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             <ShareLink linkUrl={boardLink} gameboardId={board.id} innerClassName="btn-keyline" outline clickAwayClose />
                         </div>
                     </td>}
-                    <IconButton icon="icon-bin" color="keyline" className="action-button" affixClassName="icon-sm" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
+                    <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
                 </>}
         </tr>)
         :
@@ -334,7 +334,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </Row>
                     <CardFooter className={"text-end p-3 mt-3"}>
                         <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
-                        <IconButton icon="icon-bin" color="keyline" className="action-button" affixClassName="icon-sm" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
+                        <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={toggleAssignModal}>
                             Assign{hasAssignedGroups && " / Unassign"}
                         </Button>}

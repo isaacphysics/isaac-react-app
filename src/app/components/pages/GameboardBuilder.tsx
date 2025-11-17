@@ -305,8 +305,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             redoStack.push(currentQuestions);
             currentQuestions.setQuestionOrder(newQuestion.questionOrder);
             currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
-        },
-        affixClassName: classNames({"icon-color-primary": isAda})
+        }
     };
 
     const redoButtonProps = {
@@ -318,8 +317,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             undoStack.push(currentQuestions);
             currentQuestions.setQuestionOrder(newQuestion.questionOrder);
             currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
-        },
-        affixClassName: classNames({"icon-color-primary": isAda})
+        }
     };
 
     return <Container id="gameboard-builder">

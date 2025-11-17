@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {printingSettingsSlice, useAppDispatch} from "../../state";
 import {Button} from "reactstrap";
 import { IconButton } from "./AffixButton";
-import { isAda, siteSpecific } from "../../services";
+import { isAda, isPhy, siteSpecific } from "../../services";
 import classNames from "classnames";
 
 interface PrintProps {
@@ -43,9 +43,8 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                 </div>
             </div>}
             <IconButton
-                icon="icon-print"
+                icon={{name: "icon-print icon-color-black-hoverable", size: "sm", color: "white"}}
                 className={classNames("w-max-content h-max-content action-button", {"not-mobile": isAda})}
-                affixClassName={siteSpecific("icon-color-black-hoverable", "icon-color-white icon-sm")}
                 aria-label="Print page"
                 title="Print page"
                 color={siteSpecific("tint", "primary")}
@@ -55,9 +54,8 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
         </div>
         :
         <IconButton
-            icon="icon-print"
+            icon={{name: "icon-print icon-color-black-hoverable", size: "sm", color: "white"}}
             className={classNames("w-max-content h-max-content action-button", {"not-mobile": isAda})}
-            affixClassName={siteSpecific("icon-color-black-hoverable", "icon-color-white icon-sm")}
             aria-label="Print page"
             title="Print page"
             color={siteSpecific("tint", "primary")}
