@@ -95,6 +95,10 @@ export const Search = withRouter((props: RouteComponentProps) => {
         onUpdate(queryState, filtersState);
     }, [queryState, filtersState, onUpdate]);
 
+    useEffect(function triggerSearchOnUrlChange() {
+        setQueryState(urlQuery);
+    }, [urlQuery]);
+
     // Process results and add shortcut responses
 
     const shortcutAndFilterResults = (results?: ContentSummaryDTO[]) => {

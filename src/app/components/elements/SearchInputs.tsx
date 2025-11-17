@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useRef, useState} from "react";
+import React, {ChangeEvent, useCallback, useEffect, useRef, useState} from "react";
 import {Button, Form, Input, InputGroup, InputProps, Label} from "reactstrap";
 import {ifKeyIsEnter, SEARCH_CHAR_LENGTH_LIMIT, siteSpecific} from "../../services";
 import classNames from "classnames";
@@ -29,6 +29,13 @@ function withSearch(Component: React.FC<SearchInputProps>) {
                 onSearch?.(text);
             }
         }, [onSearch]);
+
+        useEffect(() => {
+            // If the initial value changes, update the search text - allows the search input to reflect URL changes
+            if (initialValue !== undefined) {
+                setSearchText(initialValue);
+            }
+        }, [initialValue]);
 
         return <Form 
             className={classNames(className, {"form-inline" : inline})}
