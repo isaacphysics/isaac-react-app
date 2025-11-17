@@ -387,13 +387,13 @@ iframe.email-html {
   }
 }
 
-@mixin tab-picker($indicator-position: left) {
+@mixin tab-picker($indicator-position: left, $indicator-thickness: 2px) {
   cursor: pointer;
 
   @if $indicator-position == left {
-    border-left: solid 2px transparent;
+    border-left: solid $indicator-thickness transparent;
   } @else if $indicator-position == right {
-    border-right: solid 2px transparent;
+    border-right: solid $indicator-thickness transparent;
   }
 
   .badge.rounded-pill {
@@ -404,13 +404,14 @@ iframe.email-html {
   background-size: 205% 100%;
   background-image: linear-gradient(90deg, var(--subject-color-100) 50%, transparent 50%);
   background-position: 100% 0%;
+  background-origin: border-box;
   transition: background-position 0.3s ease-in-out;
   
   &:has(> input:checked) {
     @if $indicator-position == left {
-      border-left: solid 2px var(--tab-active);
+      border-left: solid $indicator-thickness var(--tab-active);
     } @else if $indicator-position == right {
-      border-right: solid 2px var(--tab-active);
+      border-right: solid $indicator-thickness var(--tab-active);
     }
     background-position: 0% 0%;
     
@@ -422,9 +423,9 @@ iframe.email-html {
 
   &:hover:not(:has(> input:checked, > input:disabled)) {
     @if $indicator-position == left {
-      border-left: solid 2px var(--tab-hover);
+      border-left: solid $indicator-thickness var(--tab-hover);
     } @else if $indicator-position == right {
-      border-right: solid 2px var(--tab-hover);
+      border-right: solid $indicator-thickness var(--tab-hover);
     }
   }
 
@@ -448,9 +449,9 @@ iframe.email-html {
   @supports not selector(:has(a, b)) {
     &.checked {
       @if $indicator-position == left {
-        border-left: solid 2px var(--tab-active);
+        border-left: solid $indicator-thickness var(--tab-active);
       } @else if $indicator-position == right {
-        border-right: solid 2px var(--tab-active);
+        border-right: solid $indicator-thickness var(--tab-active);
       }
       background-position: 0% 0%;
       
@@ -462,12 +463,12 @@ iframe.email-html {
   }
 }
 
-.tab-picker-left {
-  @include tab-picker(left);
+.tab-picker-sci {
+  @include tab-picker(left, 2px);
 }
 
-.tab-picker-right {
-  @include tab-picker(right);
+.tab-picker-ada {
+  @include tab-picker(right, 5px);
 }
 
 .inline-tabs {
