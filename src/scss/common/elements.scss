@@ -407,7 +407,8 @@ iframe.email-html {
   background-origin: border-box;
   transition: background-position 0.3s ease-in-out;
   
-  &:has(> input:checked) {
+  &:has(> input:checked), // checkbox/radio inputs
+  &:is(a.checked) { // links
     @if $indicator-position == left {
       border-left: solid $indicator-thickness var(--tab-active);
     } @else if $indicator-position == right {
@@ -421,7 +422,8 @@ iframe.email-html {
     }
   }
 
-  &:hover:not(:has(> input:checked, > input:disabled)) {
+  &:not(:is(a)):hover:not(:has(> input:checked, > input:disabled)), 
+  &:is(a):not(.checked):hover {
     @if $indicator-position == left {
       border-left: solid $indicator-thickness var(--tab-hover);
     } @else if $indicator-position == right {
@@ -429,7 +431,8 @@ iframe.email-html {
     }
   }
 
-  &:has(> input:disabled) {
+  &:has(> input:disabled),
+  &:is(a.disabled) {
     color: var(--sidebar-tab-disabled);
     cursor: not-allowed;
   }
@@ -469,6 +472,7 @@ iframe.email-html {
 
 .tab-picker-ada {
   @include tab-picker(right, 5px);
+  height: 56px;
 }
 
 .inline-tabs {

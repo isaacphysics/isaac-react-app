@@ -54,13 +54,15 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
         {Object.entries(MyAdaTabs).map(([key, tab]) => (
             <StyledTabPicker
                 key={key}
-                id={tab.title.replace(" ", "-").toLowerCase()}
+                id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
                 checkboxTitle={<div className="d-flex align-items-center gap-2">
                     <i className={classNames("icon icon-md", tab.icon)} aria-hidden="true" />
-                    <strong>{tab.title}</strong>
+                    <b>{tab.title}</b>
                 </div>}
                 checked={history.location.pathname === tab.url}
-                onClick={() => history.push(tab.url)}
+                className="nav-link"
+                type="link"
+                to={tab.url}
             />
         ))}
     </ContentSidebar>;
