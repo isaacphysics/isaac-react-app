@@ -3,11 +3,14 @@ import { ContentSidebar, ContentSidebarProps } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import classNames from "classnames";
 import { useHistory } from "react-router";
+import { selectors, useAppSelector } from "../../../state";
+import { isStudent, isTeacherOrAbove } from "../../../services";
 
 interface MyAdaTab {
     title: string;
     url: string;
     icon: string;
+    user: "STUDENT" | "TEACHER" | "ALL"; // Which user roles can see this tab – n.b. teacher means teacherOrAbove
 }
 
 const MyAdaTabs: Record<string, MyAdaTab> = {
@@ -15,36 +18,64 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
         title: "Overview",
         url: "/dashboard",
         icon: "icon-home",
+        user: "TEACHER"
     },
     groups: {
         title: "Groups",
         url: "/groups",
         icon: "icon-group",
+        user: "TEACHER"
     },
-    quizzes: {
+    setQuizzes: {
         title: "Quizzes",
         url: "/quizzes/set",
         icon: "icon-file",
+        user: "TEACHER"
     },
-    tests: {
+    setTests: {
         title: "Tests",
         url: "/set_tests",
         icon: "icon-school",
+        user: "TEACHER"
     },
     markbook: {
         title: "Markbook",
         url: "/my_markbook",
         icon: "icon-done-all",
+        user: "TEACHER"
     },
     assignedToMe: {
+        // exists under My Assignments for students
         title: "Assigned to me",
         url: "/assignments",
         icon: "icon-person-check",
+        user: "TEACHER"
     },
+
+    myAssignments: {
+        title: "My Assignments",
+        url: "/assignments",
+        icon: "icon-person-check",
+        user: "STUDENT"
+    },
+    myTests: {
+        title: "My Tests",
+        url: "/tests",
+        icon: "icon-school",
+        user: "STUDENT"
+    },
+    progress: {
+        title: "My Progress",
+        url: "/progress",
+        icon: "icon-done-all",
+        user: "STUDENT"
+    },
+
     account: {
         title: "Account",
         url: "/account",
         icon: "icon-cog",
+        user: "ALL"
     }
 };
 
@@ -68,26 +99,34 @@ const AdaSidebarCollapser = ({collapsed, setCollapsed, ...rest}: AdaSidebarColla
 
 export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const history = useHistory();
+    const user = useAppSelector(selectors.user.loggedInOrNull);
     const [collapsed, setCollapsed] = useState(false);
 
     return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": collapsed})}>
 
         <AdaSidebarCollapser collapsed={collapsed} setCollapsed={setCollapsed} />
 
-        {Object.entries(MyAdaTabs).map(([key, tab]) => {
-            const isActive = history.location.pathname === tab.url;
-            return <StyledTabPicker
-                key={key}
-                id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
-                checkboxTitle={<div className="d-flex align-items-center gap-2">
-                    <i className={classNames("icon icon-md", tab.icon, {"icon-color-black": isActive && collapsed})} aria-hidden="true" />
-                    <b>{tab.title}</b>
-                </div>}
-                checked={isActive}
-                className="nav-link my-ada-tab"
-                type="link"
-                to={tab.url}
-            />;
-        })}
+        {Object.entries(MyAdaTabs)
+            .filter(([_, tab]) => {
+                if (tab.user === "TEACHER") return isTeacherOrAbove(user);
+                if (tab.user === "STUDENT") return isStudent(user);
+                if (tab.user === "ALL") return true;
+                return false;
+            }).map(([key, tab]) => {
+                const isActive = history.location.pathname === tab.url;
+                return <StyledTabPicker
+                    key={key}
+                    id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
+                    checkboxTitle={<div className="d-flex align-items-center gap-2">
+                        <i className={classNames("icon icon-md", tab.icon, {"icon-color-black": isActive && collapsed})} aria-hidden="true" />
+                        <b>{tab.title}</b>
+                    </div>}
+                    checked={isActive}
+                    className="nav-link my-ada-tab"
+                    type="link"
+                    to={tab.url}
+                />;
+            })
+        }
     </ContentSidebar>;
 };
