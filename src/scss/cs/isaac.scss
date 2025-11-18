@@ -289,13 +289,15 @@ $theme-colour-overrides: (
 );
 $theme-colors: map-merge($theme-colors, $theme-colour-overrides);
 
+$sidebar-width: 220px;
+
 $grid-breakpoints: (
   xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  nav: 1256px,
+  sm: calc(576px + $sidebar-width),
+  md: calc(768px + $sidebar-width),
+  lg: calc(992px + $sidebar-width),
+  xl: calc(1200px + $sidebar-width),
+  nav: calc(1256px + $sidebar-width),
   // xxl: 1400px // we don't need xxl
 );
 
