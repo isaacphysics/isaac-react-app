@@ -38,5 +38,5 @@ img.full-background-img {
 }
 
 .tab-picker {
-  @include tab-picker(right, 5px);
+  @include tab-picker(right, 5px, $cs-list-outline-gray);
 }

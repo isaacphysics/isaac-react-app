@@ -387,7 +387,7 @@ iframe.email-html {
   }
 }
 
-@mixin tab-picker($indicator-position: left, $indicator-thickness: 2px) {
+@mixin tab-picker($indicator-position: left, $indicator-thickness: 2px, $active-color: var(--subject-color-100)) {
   cursor: pointer;
 
   @if $indicator-position == left {
@@ -402,7 +402,7 @@ iframe.email-html {
   }
 
   background-size: 205% 100%;
-  background-image: linear-gradient(90deg, var(--subject-color-100) 50%, transparent 50%);
+  background-image: linear-gradient(90deg, $active-color 50%, transparent 50%);
   background-position: 100% 0%;
   background-origin: border-box;
   transition: background-position 0.3s ease-in-out;

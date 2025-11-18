@@ -99,5 +99,5 @@ details.teacher-notes {
 }
 
 .tab-picker {
-  @include tab-picker(left, 2px);
+  @include tab-picker(left, 2px, var(--subject-color-100));
 }
