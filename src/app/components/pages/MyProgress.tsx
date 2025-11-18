@@ -31,6 +31,8 @@ import { FlushableRef, QuestionProgressCharts } from "../elements/views/Question
 import { ActivityGraph } from "../elements/views/ActivityGraph";
 import { ProgressBar } from "../elements/views/ProgressBar";
 import { ListView } from '../elements/list-groups/ListView';
+import { PageContainer } from '../elements/layout/PageContainer';
+import { MyAdaSidebar } from '../elements/sidebar/MyAdaSidebar';
 
 const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAAC_BOOKS_BY_TAG]?: number}, questionTypeStatsList: string[]} = siteSpecific(
     // Physics
@@ -101,8 +103,12 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
-    return <Container id="my-progress" className="mb-7">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-progress"}} disallowLaTeX />
+    return <PageContainer id="my-progress"
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-progress"}} disallowLaTeX />
+        }
+        sidebar={siteSpecific(null, <MyAdaSidebar />)}
+    >
         <Card className="mt-4">
             <CardBody>
                 <div>
@@ -196,6 +202,6 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                 </div>
             </CardBody>
         </Card>
-    </Container>;
+    </PageContainer>;
 });
 export default MyProgress;
