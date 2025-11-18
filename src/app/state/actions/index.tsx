@@ -559,20 +559,6 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
     }
 };
 
-// Search
-export const fetchSearch = (query: string, types: string | undefined) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query, types});
-    try {
-        if (query === "") {
-            return;
-        }
-        const searchResponse = await api.search.get(query, types);
-        dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Search failed", e));
-    }
-};
-
 // Admin
 
 export const resetMemberPassword = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {

@@ -138,9 +138,6 @@ export type Action =
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string | undefined}
-    | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
-
     | {type: ACTION_TYPE.TOASTS_SHOW; toast: Toast}
     | {type: ACTION_TYPE.TOASTS_HIDE; toastId: string}
     | {type: ACTION_TYPE.TOASTS_REMOVE; toastId: string}

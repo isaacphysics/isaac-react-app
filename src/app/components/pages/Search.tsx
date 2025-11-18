@@ -1,6 +1,6 @@
-import React, {FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {AppState, fetchSearch, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {selectors, useAppSelector, useSearchRequestQuery} from "../../state";
 import {
     Card,
     CardBody,
@@ -10,11 +10,11 @@ import {
     Form,
     Container,
 } from "reactstrap";
-import {ShowLoading} from "../handlers/ShowLoading";
 import {
     DOCUMENT_TYPE,
     documentDescription,
     isAda,
+    isDefined,
     parseLocationSearch,
     pushSearchToHistory,
     SEARCH_RESULT_TYPE,
@@ -28,11 +28,15 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
-import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {SearchPageSearch} from "../elements/SearchInputs";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { ListView } from "../elements/list-groups/ListView";
+import { ContentSummaryDTO } from "../../../IsaacApiTypes";
+import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { History } from "history";
+import { debounce } from "lodash";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface Item<T> {
     value: T;
@@ -57,70 +61,61 @@ const selectStyle: StylesConfig<Item<SearchableDocumentType>, true, GroupBase<It
     menuPortal: base => ({ ...base, zIndex: 19 })
 };
 
+function updateSearchUrl(history: History<unknown>, queryState: Nullable<string>, filtersState: Item<SearchableDocumentType>[]) {
+    pushSearchToHistory(history, queryState || "", filtersState.map(deitemise));
+}
+
 // Interacting with the page's filters change the query parameters.
 // Whenever the query parameters change we send a search request to the API.
 export const Search = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
-    const dispatch = useAppDispatch();
-    const searchResults = useAppSelector((state: AppState) => state?.search?.searchResults || null);
     const user = useAppSelector(selectors.user.orNull);
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
-    const [queryState, setQueryState] = useState(urlQuery);
-
+    
     let initialFilters = urlFilters;
     if (isAda && urlFilters.length === 0) {
         initialFilters = [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC] as SearchableDocumentType[];
     }
     const [filtersState, setFiltersState] = useState<Item<SearchableDocumentType>[]>(initialFilters.map(itemise));
+    const [queryState, setQueryState] = useState(urlQuery);
 
-    useEffect(function triggerSearchAndUpdateLocalStateOnUrlChange() {
-        dispatch(fetchSearch(urlQuery ?? "", initialFilters.length ? initialFilters.join(",") : undefined));
+    // searchQuery is really just {queryState, filtersState}, but updating it triggers a request; we wish to debounce this, so the state is kept separate
+    const [searchQuery, setSearchQuery] = useState<{query: string; types: string} | typeof skipToken>(skipToken);
+    const searchResult = useSearchRequestQuery(searchQuery);
+
+    // Trigger update to query on state change
+    const onUpdate = useMemo(() => {
+        return debounce((query: Nullable<string>, filters: Item<SearchableDocumentType>[]) => {
+            setSearchQuery(query ? {query, types: filters.map(deitemise).join(",")} : skipToken);
+            updateSearchUrl(history, query, filters);
+        }, 500, {leading: true, trailing: true});
+    }, [history]);
+
+    useEffect(() => {
+        onUpdate(queryState, filtersState);
+    }, [queryState, filtersState, onUpdate]);
+
+    useEffect(function triggerSearchOnUrlChange() {
         setQueryState(urlQuery);
-        setFiltersState(initialFilters.map(itemise));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, location.search]);
-
-    function updateSearchUrl(e?: FormEvent<HTMLFormElement>) {
-        if (e) {e.preventDefault();}
-        pushSearchToHistory(history, queryState || "", filtersState.map(deitemise));
-    }
-
-    // Trigger update to search url on query or filter change
-    const timer: MutableRefObject<number | undefined> = useRef();
-    useEffect(() => {
-        if (queryState !== urlQuery) {
-            timer.current = window.setTimeout(() => {updateSearchUrl();}, 800);
-            return () => {clearTimeout(timer.current);};
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [queryState]);
-
-    useEffect(() => {
-        const filtersStateMatchesQueryParamFilters =
-            filtersState.length === initialFilters.length &&
-            filtersState.map(deitemise).every(f => initialFilters.includes(f));
-        if (!filtersStateMatchesQueryParamFilters) {
-            updateSearchUrl();
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filtersState]);
+    }, [urlQuery]);
 
     // Process results and add shortcut responses
-    const filteredSearchResults = searchResults?.results && searchResults.results
-        .filter(result => searchResultIsPublic(result, user));
-    const shortcutResponses = (queryState ? shortcuts(queryState) : []) as ShortcutResponse[];
-    const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
-    const gotResults = shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0;
+
+    const shortcutAndFilterResults = (results?: ContentSummaryDTO[]) => {
+        const filteredSearchResults = results && results.filter(result => searchResultIsPublic(result, user));
+        const shortcutResponses = (queryState ? shortcuts(queryState) : []) as ShortcutResponse[];
+        return (shortcutResponses || []).concat(filteredSearchResults || []);
+    };
 
     return (
         <Container id="search-page">
             <TitleAndBreadcrumb currentPageTitle="Search" icon={{type: "hex", icon: "icon-finder"}} />
-            <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={urlQuery ?? ""} />
+            <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={urlQuery ?? ""} onSearch={setQueryState} />
             <Card className="my-4">
                 <CardHeader className="search-header p-3">
                     <Col xs={12}>
                         <h3 className="me-2">
-                            Search Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
+                            Search Results {urlQuery != "" && isDefined(searchResult?.currentData?.results) ? <Badge color="primary">{searchResult?.currentData?.results.length}</Badge> : null}
                         </h3>
                     </Col>
                     <Col className="d-flex justify-content-end flex-grow-1">
@@ -147,12 +142,17 @@ export const Search = withRouter((props: RouteComponentProps) => {
                         </Form>
                     </Col>
                 </CardHeader>
-                {urlQuery != "" && <CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
-                    <ShowLoading until={shortcutAndFilteredSearchResults}>
-                        {gotResults
-                            ? <ListView type="item" items={shortcutAndFilteredSearchResults} hasCaret={isAda}/>
-                            : <em>No results found</em>}
-                    </ShowLoading>
+                {urlQuery !== "" && <CardBody>
+                    <ShowLoadingQuery
+                        query={searchResult}
+                        defaultErrorTitle="Failed to search. Please try again later."
+                        thenRender={({ results }) => {
+                            const shortcutAndFilteredSearchResults = shortcutAndFilterResults(results);
+                            return shortcutAndFilteredSearchResults.length > 0
+                                ? <ListView type="item" items={shortcutAndFilteredSearchResults} hasCaret={isAda}/>
+                                : <em>No results found</em>;
+                        }}
+                    />
                 </CardBody>}
             </Card>
         </Container>

@@ -20,7 +20,6 @@ import {
     testQuestions,
     quizAttempt,
     groupMemberships,
-    search,
     isaacApi,
     gameboardsSlice,
     adminUserSearchSlice,
@@ -81,9 +80,6 @@ export const rootReducer = combineReducers({
 
     // Gameboards
     boards: gameboardsSlice.reducer,
-    
-    // Search
-    search,
 
     // Quizzes
     quizAttempt,
