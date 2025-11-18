@@ -546,7 +546,7 @@ export const QuestionFinder = withRouter(() => {
                                                 disabled={questions?.length === 0}
                                             >
                                                 <span>Shuffle <span className="d-none d-sm-inline">questions</span></span>
-                                                {isPhy && <i className="icon icon-refresh icon-color-black"></i>}
+                                                {isPhy && <i className={classNames("icon icon-refresh", questions?.length === 0 ? "icon-color-grey" : "icon-color-black")}></i>}
                                             </button>
                                         </ResultsListHeader>
                                         <CardBody className={classNames({"border-0": isPhy, "p-0": questions?.length, "m-0": isAda && questions?.length})}>
