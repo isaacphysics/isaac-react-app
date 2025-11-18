@@ -97,3 +97,7 @@ details.teacher-notes {
 .warning-tag {
   @include pill-tag($color-misc-orange-600, $color-misc-orange-50, $color-misc-orange-500);
 }
+
+.tab-picker {
+  @include tab-picker(left, 2px);
+}

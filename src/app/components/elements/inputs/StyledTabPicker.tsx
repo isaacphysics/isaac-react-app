@@ -62,7 +62,7 @@ export const StyledTabPicker = (props: StyledTabPickerProps): JSX.Element => {
     const type = props.type ?? "checkbox";
 
     if (type === "link") {
-        return <Link {...rest} id={props.id ?? id} className={classNames("d-flex align-items-center py-2 my-1 w-100", rest.className, siteSpecific("tab-picker-sci", "tab-picker-ada"), {"checked": checked})}
+        return <Link {...rest} id={props.id ?? id} className={classNames("d-flex align-items-center py-2 my-1 w-100 tab-picker", rest.className, {"checked": checked})}
             to={rest.to as string}
         >
             <PickerContents checkboxTitle={checkboxTitle} count={count} suffix={suffix} disabled={disabled} />

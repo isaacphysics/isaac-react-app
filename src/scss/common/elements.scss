@@ -466,14 +466,6 @@ iframe.email-html {
   }
 }
 
-.tab-picker-sci {
-  @include tab-picker(left, 2px);
-}
-
-.tab-picker-ada {
-  @include tab-picker(right, 5px);
-}
-
 .my-ada-tab {
   height: 56px;
 }
