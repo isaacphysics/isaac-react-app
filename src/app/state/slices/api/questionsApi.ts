@@ -15,11 +15,11 @@ export interface QuestionSearchResponseType {
 export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttemptQuestionType"]}).injectEndpoints({
     endpoints: (build) => ({
         searchQuestions: build.query<QuestionSearchResponseType, QuestionSearchQuery>({
-            query: args => ({
+            query: (search) => ({
                 url: `/pages/questions`,
                 params: {
-                    ...args,
-                    limit: (args.limit ?? SEARCH_RESULTS_PER_PAGE) + 1 // fetch one extra to check if more results are available
+                    ...search,
+                    limit: (search.limit ?? SEARCH_RESULTS_PER_PAGE) + 1 // fetch one extra to check if more results are available
                 }
             }),
             serializeQueryArgs: (args) => {
