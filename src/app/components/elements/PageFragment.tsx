@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { IsaacContent } from "../content/IsaacContent";
 import { WithFigureNumbering } from "./WithFigureNumbering";
@@ -11,6 +11,15 @@ interface PageFragmentComponentProps {
 }
 export const PageFragment = ({ fragmentId, ifNotFound }: PageFragmentComponentProps) => {
   const { data: fragment, error } = isaacApi.endpoints.getPageFragment.useQuery(fragmentId);
+
+  useEffect(() => {
+    if (fragment) {
+      const el = document.getElementById(fragmentId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, [fragmentId, fragment]);
 
   const defaultNotFoundComponent = (
     <div>

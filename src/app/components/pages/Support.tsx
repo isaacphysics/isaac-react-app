@@ -79,7 +79,16 @@ export const SupportPageComponent = ({
   }
 
   function activeTabChanged(tabIndex: number) {
-    history.push(supportPath(type, categoryNames[tabIndex - 1]));
+    const newCategory = categoryNames[tabIndex - 1];
+    history.push(supportPath(type, newCategory));
+
+    // Scroll into view after tab change
+    setTimeout(() => {
+      const el = document.getElementById(`support_${type}_${newCategory}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 200);
   }
 
   function tabTitleClass(tabName: string, tabIndex: number) {
@@ -111,8 +120,13 @@ export const SupportPageComponent = ({
           >
             {fromPairs(
               Object.values(section.categories).map((category) => {
-                // eslint-disable-next-line react/jsx-key
-                return [category.title, <PageFragment fragmentId={`support_${type}_${category.category}`} />];
+                const fragmentId = `support_${type}_${category.category}`;
+                return [
+                  category.title,
+                  <div key={fragmentId} id={fragmentId}>
+                    <PageFragment fragmentId={fragmentId} />
+                  </div>,
+                ];
               }),
             )}
           </Tabs>
