@@ -19,7 +19,7 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
                 url: `/pages/questions`,
                 params: {
                     ...args,
-                    limit: limit(args) + 1 // fetch one extra to check if more results are available
+                    limit: (args.limit ?? SEARCH_RESULTS_PER_PAGE) + 1 // fetch one extra to check if more results are available
                 }
             }),
             serializeQueryArgs: (args) => {
@@ -35,8 +35,8 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
                 return {
                     ...response,
                     // remove the extra result used to check for more results, so that we return the correct amount
-                    moreResultsAvailable: isDefined(response.results) ? response.results.length > limit(args) : undefined,
-                    results: response.results?.slice(0, limit(args))
+                    moreResultsAvailable: isDefined(response.results) ? response.results.length > (args.limit ?? SEARCH_RESULTS_PER_PAGE) : undefined,
+                    results: response.results?.slice(0, args.limit ?? SEARCH_RESULTS_PER_PAGE)
                 };
             },
             merge: (currentCache, newItems) => {
@@ -87,5 +87,3 @@ export const {
     useGetQuestionQuery,
     useCanAttemptQuestionTypeQuery,
 } = questionsApi;
-
-const limit = (args: QuestionSearchQuery) => args.limit ?? SEARCH_RESULTS_PER_PAGE;
