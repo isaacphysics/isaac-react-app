@@ -28,7 +28,7 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
     },
     tests: {
         title: "Tests",
-        url: "/set_tests/",
+        url: "/set_tests",
         icon: "icon-school",
     },
     markbook: {
@@ -38,7 +38,7 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
     },
     assignedToMe: {
         title: "Assigned to me",
-        url: "/todo",
+        url: "/assignments",
         icon: "icon-person-check",
     },
     account: {

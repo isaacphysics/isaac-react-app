@@ -32,7 +32,7 @@ import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
 import {PageFragment} from "../../elements/PageFragment";
 import { SortItemHeader } from "../../elements/SortableItemHeader";
-import { Card, CardBody, Button, Table, Container, Alert, Row, Col, Label, Input } from "reactstrap";
+import { Card, CardBody, Button, Table, Alert, Row, Col, Label, Input } from "reactstrap";
 import orderBy from "lodash/orderBy";
 import classNames from "classnames";
 import StyledToggle from "../../elements/inputs/StyledToggle";
@@ -40,11 +40,13 @@ import { TrLink } from "../../elements/tables/TableLinks";
 import { StyledSelect } from "../../elements/inputs/StyledSelect";
 import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 import { FilterCount } from "../../elements/svg/FilterCount";
-import { MainContent, MyQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
+import { MyQuizzesSidebar } from "../../elements/layout/SidebarLayout";
 import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
 import { CardGrid } from "../../elements/CardGrid";
 import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 import { PageMetadata } from "../../elements/PageMetadata";
+import { PageContainer } from "../../elements/layout/PageContainer";
+import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
 
 export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -454,57 +456,59 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         : "No practice tests match your filters."
     }</span>;
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My tests" icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
-        <SidebarLayout site={isPhy}>
+    return <PageContainer
+        pageTitle={
+            <TitleAndBreadcrumb currentPageTitle="My tests" icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
+        }
+        sidebar={siteSpecific(
             <MyQuizzesSidebar setQuizTitleFilter={setQuizTitleFilter} setQuizCreatorFilter={setQuizCreatorFilter} quizStatusFilter={quizStatusFilter}
                 setQuizStatusFilter={setQuizStatusFilter} activeTab={tabOverride ?? 1} displayMode={displayMode} setDisplayMode={setDisplayMode}
                 hideButton
-            />
-            <MainContent>
-                <PageMetadata noTitle showSidebarButton>
-                    <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_tests_teacher" : "help_toptext_tests_student"} ifNotFound={<div className={"mt-7"}/>} />
-                </PageMetadata>
-                <Tabs style="tabs" className="mb-7 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
-                    history.replace({...history.location, hash: tabAnchors[index - 1]});
-                    setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
-                }}>
-                    {{
-                        ["Assigned tests"]:
-                            <ShowLoading
-                                until={quizAssignments}
-                                ifNotFound={<Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>}
-                            >
-                                <div className="d-flex flex-column">
-                                    {tabTopContent}
-                                    {displayMode === "table" ? <Card>
-                                        <AssignedQuizTable
-                                            quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                                            emptyMessage={emptyAssignedMessage}
-                                        />
-                                    </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} emptyMessage={emptyAssignedMessage}/>}
-                                </div>
-                            </ShowLoading>,
-                        ["My practice tests"]:
-                            <ShowLoading
-                                until={freeAttempts}
-                                ifNotFound={<Alert color="warning">Your practice test attempts failed to load, please try refreshing the page.</Alert>}
-                            >
-                                <div className="d-flex flex-column">
-                                    {tabTopContent}
-                                    {displayMode === "table" ? <Card>
-                                        <PracticeQuizTable
-                                            quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                                            emptyMessage={emptyPracticeMessage}
-                                        />
-                                    </Card> : <QuizGrid quizzes={sortedPracticeQuizzes} emptyMessage={emptyPracticeMessage}/>}
-                                </div>
-                            </ShowLoading>,
-                    }}
-                </Tabs>
-            </MainContent>
-        </SidebarLayout>
-    </Container>;
+            />,
+            <MyAdaSidebar />
+        )}
+    >
+        <PageMetadata noTitle showSidebarButton>
+            <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_tests_teacher" : "help_toptext_tests_student"} ifNotFound={<div className={"mt-7"}/>} />
+        </PageMetadata>
+        <Tabs style="tabs" className="mb-7 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
+            history.replace({...history.location, hash: tabAnchors[index - 1]});
+            setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
+        }}>
+            {{
+                ["Assigned tests"]:
+                    <ShowLoading
+                        until={quizAssignments}
+                        ifNotFound={<Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>}
+                    >
+                        <div className="d-flex flex-column">
+                            {tabTopContent}
+                            {displayMode === "table" ? <Card>
+                                <AssignedQuizTable
+                                    quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                    emptyMessage={emptyAssignedMessage}
+                                />
+                            </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} emptyMessage={emptyAssignedMessage}/>}
+                        </div>
+                    </ShowLoading>,
+                ["My practice tests"]:
+                    <ShowLoading
+                        until={freeAttempts}
+                        ifNotFound={<Alert color="warning">Your practice test attempts failed to load, please try refreshing the page.</Alert>}
+                    >
+                        <div className="d-flex flex-column">
+                            {tabTopContent}
+                            {displayMode === "table" ? <Card>
+                                <PracticeQuizTable
+                                    quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                    emptyMessage={emptyPracticeMessage}
+                                />
+                            </Card> : <QuizGrid quizzes={sortedPracticeQuizzes} emptyMessage={emptyPracticeMessage}/>}
+                        </div>
+                    </ShowLoading>,
+            }}
+        </Tabs>
+    </PageContainer>;
 };
 
 export const MyQuizzes = withRouter(MyQuizzesPageComponent);
