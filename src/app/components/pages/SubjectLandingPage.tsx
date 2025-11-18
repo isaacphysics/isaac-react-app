@@ -29,10 +29,13 @@ const loadingPlaceholder = <ul className="w-100 list-group ">
 const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
     const [randomSeed, setRandomSeed] = useState(nextSeed);
 
-    const handleGetDifferentQuestion = () => setRandomSeed(nextSeed);
+    const handleGetDifferentQuestion = () => {
+        setSearchParams(skipToken);
+        setRandomSeed(nextSeed);
+    };
 
-    const [searchParams, setSearchParams] = useState<QuestionSearchQuery | undefined>(undefined);
-    const searchQuestionsQuery = useSearchQuestionsQuery(searchParams ?? skipToken);
+    const [searchParams, setSearchParams] = useState<QuestionSearchQuery | typeof skipToken>(skipToken);
+    const searchQuestionsQuery = useSearchQuestionsQuery(searchParams);
 
     const searchDebounce = useMemo(() => debounce(() => {
         if (!isFullyDefinedContext(context)) {
