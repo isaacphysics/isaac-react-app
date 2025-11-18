@@ -90,7 +90,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                     } as ContentSummaryDTO]}/>
                     : <ul className="w-100 list-group ">
                         <li className="w-100 d-flex justify-content-center align-items-center content-summary-item list-group-item p-0">
-                            <IsaacSpinner size="sm" />
+                            <span>No questions found.</span>
                         </li>
                     </ul>;
             }}
