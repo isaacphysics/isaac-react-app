@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ContentSidebar, ContentSidebarProps } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import classNames from "classnames";
@@ -48,22 +48,46 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
     }
 };
 
+interface AdaSidebarCollapserProps extends React.HTMLAttributes<HTMLButtonElement> {
+    collapsed: boolean;
+    setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const AdaSidebarCollapser = ({collapsed, setCollapsed, ...rest}: AdaSidebarCollapserProps) => {
+    return <button
+        {...rest}
+        type="button"
+        className={classNames("bg-transparent w-100 d-flex justify-content-center align-items-center px-3 my-ada-tab", rest.className)}
+        onClick={() => setCollapsed(c => !c)}
+    >
+        <b className="flex-grow-1 text-start">My Ada</b>
+        <i className={classNames("icon icon-md icon-md", collapsed ? "icon-chevron-right" : "icon-chevron-left")} aria-hidden="true" />
+    </button>;
+};
+
+
 export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const history = useHistory();
-    return <ContentSidebar {...props}>
-        {Object.entries(MyAdaTabs).map(([key, tab]) => (
-            <StyledTabPicker
+    const [collapsed, setCollapsed] = useState(false);
+
+    return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": collapsed})}>
+
+        <AdaSidebarCollapser collapsed={collapsed} setCollapsed={setCollapsed} />
+
+        {Object.entries(MyAdaTabs).map(([key, tab]) => {
+            const isActive = history.location.pathname === tab.url;
+            return <StyledTabPicker
                 key={key}
                 id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
                 checkboxTitle={<div className="d-flex align-items-center gap-2">
-                    <i className={classNames("icon icon-md", tab.icon)} aria-hidden="true" />
+                    <i className={classNames("icon icon-md", tab.icon, {"icon-color-black": isActive && collapsed})} aria-hidden="true" />
                     <b>{tab.title}</b>
                 </div>}
-                checked={history.location.pathname === tab.url}
-                className="nav-link"
+                checked={isActive}
+                className="nav-link my-ada-tab"
                 type="link"
                 to={tab.url}
-            />
-        ))}
+            />;
+        })}
     </ContentSidebar>;
 };

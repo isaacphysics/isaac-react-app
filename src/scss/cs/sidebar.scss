@@ -1,6 +1,22 @@
 .sidebar {
-    width: 220px;
-    max-width: 220px;
     background-color: $cs-white;
     border-right: 1px solid $cs-silver;
+
+    &:not(.collapsed) {
+        width: 220px;
+        max-width: 220px;
+    }
+
+    &.collapsed {
+        width: 60px;
+        max-width: 60px;
+
+        b {
+            display: none;
+        }
+    }
+
+    button i {
+        --mask-size: 60%;
+    }
 }
