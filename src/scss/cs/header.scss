@@ -23,11 +23,16 @@ div.header-progress {
       border: none !important;
     }
     .navbar-toggler-icon {
-      background-image: url('/assets/cs/icons/hamburger.svg');
+      display: inline-block;
+      background-image: none;
+      @include svg-color(url('/assets/cs/icons/hamburger.svg'), $white, 24px, 24px, 100%);
     }
     &.open {
       .navbar-toggler-icon {
-        background-image: url('/assets/cs/icons/close.svg');
+        display: inline-block;
+        background-image: none;
+        @include svg-color(url('/assets/cs/icons/close.svg'), $white, 18px, 18px, 100%);
+        margin-left: 6px; // So the close and hamburger icons have the same offset
       }
     }
   }

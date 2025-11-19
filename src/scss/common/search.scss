@@ -56,16 +56,6 @@ nav.search {
       right: 90px;
       top: 19px;
     }
-
-    .navbar-toggler-icon {
-      background-image: url('/assets/common/icons/search-icon.svg');
-    }
-
-    &.open {
-      .navbar-toggler-icon {
-        background-image: url('/assets/common/icons/cross.svg');
-      }
-    }
   }
 
   .search--main-group {
