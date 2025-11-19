@@ -538,7 +538,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                     {showArchived && (isPhy ?
                                         <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}}
                                             aria-label="Delete group" className="ms-1 icon-close" title={"Delete group"}/> :
-                                        <IconButton icon={{name: "icon-bin", color: "white"}} className="action-button" affixClassName="icon-sm" aria-label="Delete quiz" title="Delete quiz" onClick={() => confirmDeleteGroup(dispatch, deleteGroup, user, g)}/>)
+                                        <IconButton icon={{name: "icon-bin", color: "white"}} className="action-button" affixClassName="icon-sm" aria-label="Delete group" title="Delete group" onClick={() => confirmDeleteGroup(dispatch, deleteGroup, user, g)}/>)
                                     }
                                 </div>
                                 {isAda && selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
