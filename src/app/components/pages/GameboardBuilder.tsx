@@ -61,7 +61,7 @@ import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import { PageMetadata } from '../elements/PageMetadata';
-import {AffixButton, IconButton} from "../elements/AffixButton";
+import {IconButton} from "../elements/AffixButton";
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 

@@ -24,7 +24,6 @@ import { Spacer } from "./Spacer";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
 import { StyledCheckbox } from "./inputs/StyledCheckbox";
 import { Markup } from "./markup";
-import { Button } from "reactstrap";
 import { QuestionPropertyTags } from "./ContentPropertyTags";
 import { IconButton } from "./AffixButton";
 
