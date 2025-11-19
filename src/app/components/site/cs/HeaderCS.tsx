@@ -19,6 +19,7 @@ import {
 } from "../../navigation/NavigationBar";
 import classNames from "classnames";
 import {AdaHeaderSearch} from "../../elements/SearchInputs";
+import { useHistory } from "react-router";
 
 export const HeaderCS = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -28,6 +29,8 @@ export const HeaderCS = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+    const history = useHistory();
 
     const closeWholeNavbar = () => {
         setIsOpen(false);
@@ -49,7 +52,9 @@ export const HeaderCS = () => {
 
             <MenuOpenContext.Provider value={{menuOpen: isOpen, setMenuOpen: setIsOpen}}>
                 <Collapse className={"search-collapse p-3 p-nav-0 me-nav-2 border-nav-0"} isOpen={isSearchOpen} navbar>
-                    <AdaHeaderSearch className={"ms-nav-2 d-nav-inline-block d-block"} onSearch={closeWholeNavbar} />
+                    <AdaHeaderSearch className={"ms-nav-2 d-nav-inline-block d-block"} onSearch={(s) => {
+                        history.push(`/search?query=${encodeURIComponent(s)}`);
+                        closeWholeNavbar();
                 </Collapse>
                 <Collapse isOpen={isOpen} navbar>
                     <Nav navbar className={"w-100"}>
