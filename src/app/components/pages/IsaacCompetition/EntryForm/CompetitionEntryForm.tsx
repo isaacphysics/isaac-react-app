@@ -465,10 +465,10 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                 </Label>
               </Col>
             </Row>
-            <Row className="entry-form-button-label justify-content-center mb-5 pt-3">
+            <Row className="justify-content-center mb-5 pt-3">
               <div className="col-md-6">
                 <Input
-                  className="btn btn-block btn-secondary border-0 form-control"
+                  className="btn btn-block btn-secondary border-0 form-control entry-form-button"
                   type="submit"
                   disabled={isSubmitDisabled}
                   value="Submit competition entry"

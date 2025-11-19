@@ -202,21 +202,27 @@
   }
 
   &-button {
-    background-color: #ff4aa0 !important;
+    background-color:  #FF248C !important;
     color: #212529 !important;
     border: none !important;
     width: auto;
     height: 48px;
     font-size: 18px;
     font-family: "dm-sans-light", DMSans-Light, sans-serif;
+    opacity: 1 !important;
+    position: relative;
+    isolation: isolate;
+    transform: translateY(0);
 
     @media (min-width: 1024px) {
       min-width: 500px;
     }
-  }
-
-  &-button-label {
-    padding-top: 34px;
+    
+    &:disabled {
+      opacity: 1 !important;
+      background-color: #FF89C1 !important;
+      color: #495057 !important;
+    }
   }
 
   &-button:focus {
