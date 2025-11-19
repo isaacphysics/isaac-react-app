@@ -505,7 +505,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     }));
                                 }}
                             >
-                                Add questions <i className={classNames("icon ms-2", siteSpecific("icon-plus icon-color-black-hoverable", "icon-add-circle"))}/>
+                                Add questions <i className={classNames("icon ms-2", siteSpecific("icon-plus icon-color-black-hoverable", "icon-sm icon-add-circle"))}/>
                             </Button>
                         </ShowLoading>
                         <Button
