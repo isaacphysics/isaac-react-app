@@ -66,11 +66,9 @@ $cards-per-line: (
     box-shadow: none;
   }
 
-  > img {
-    width: 25px;
-    height: 25px;
-    margin-top: 2rem;
-    margin-left: 1.5rem;
+  > img, > i {
+    margin-top: 35px;
+    margin-left: 25px;
   }
 
   .icon-card-tag {
@@ -132,10 +130,8 @@ a.icon-card, a.cs-card {
   .external-link::after {
     content: "";
     display: inline-block;
-    width: 30px;
-    height: 30px;
-    margin: -1px -4px 0 4px;
-    background: url(/assets/cs/icons/external-link.svg) no-repeat center center;
+    @include svg-color(url('/assets/cs/icons/external-link.svg'), $white, 18px, 18px, cover);
+    margin: -3px -4px 0 12px;
     vertical-align: middle;
   }
 }

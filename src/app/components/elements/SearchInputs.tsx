@@ -120,8 +120,8 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
                 id="header-search" {...inputProps}
                 value={searchText} onChange={setSearchTextAsValue}
             />
-            <button>
-                <img src={"/assets/cs/icons/search-jet.svg"} alt={"search icon"}/>
+            <button className="d-flex align-items-center justify-content-center">
+                <i className="icon icon-search icon-color-jet"/>
             </button>
         </InputGroup>
     </>;

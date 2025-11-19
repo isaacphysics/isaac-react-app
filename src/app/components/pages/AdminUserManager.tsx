@@ -151,7 +151,7 @@ export const AdminUserManager = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager" icon={{type: "icon", icon: "icon-account"}}/>
 
         {/* Search */}
         <Card className="mt-7">

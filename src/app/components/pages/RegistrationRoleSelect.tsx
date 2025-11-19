@@ -17,7 +17,7 @@ export const RegistrationRoleSelect = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         <Card className="my-7">
             <CardBody>
                 <h2>Are you a student or a teacher?</h2>
