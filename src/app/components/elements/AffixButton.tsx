@@ -20,7 +20,7 @@ const renderAffix = (affix: AffixProps, className?: string) => {
         return <span className={classNames(className)}>{affix.affix as ReactNode}</span>;
     } else if (affix.type === "icon") {
         const {name, altText, size, color, raw} = typeof affix.affix === "string" ? {name: affix.affix} : affix.affix as IconProps;
-        return <i className={classNames(className, "icon", size ? `icon-${size ?? "sm"}` : "", {"icon-raw": raw}, name)} color={color} aria-label={altText}/>;
+        return <i className={classNames(className, "icon", size ? `icon-${size}` : "", {"icon-raw": raw}, name)} color={color} aria-label={altText}/>;
     } else {
         return <img src={affix.affix as string} className={classNames(className)} alt=""/>;
     }

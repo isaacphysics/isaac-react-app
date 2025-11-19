@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {printingSettingsSlice, useAppDispatch} from "../../state";
 import {Button} from "reactstrap";
 import { IconButton } from "./AffixButton";
-import { isAda, isPhy, siteSpecific } from "../../services";
+import { isAda, siteSpecific } from "../../services";
 import classNames from "classnames";
 
 interface PrintProps {

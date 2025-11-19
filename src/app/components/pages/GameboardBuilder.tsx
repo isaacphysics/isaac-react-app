@@ -484,25 +484,29 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             placeholder={<div className="text-center"><IsaacSpinner/></div>}
                             until={!baseGameboardId || baseGameboard}
                         >
-                            <AffixButton color="keyline" affix={{affix: classNames(siteSpecific("icon-plus icon-color-black-hoverable", "icon-add-circle"), "ms-2"), position: "suffix", type: "icon"}} onClick={() => {
-                                logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                dispatch(openActiveModal({
-                                    closeAction: () => {
-                                        dispatch(closeActiveModal());
-                                    },
-                                    closeLabelOverride: "Cancel",
-                                    size: "xl",
-                                    title: "Search questions",
-                                    body: <QuestionSearchModal
-                                        currentQuestions={currentQuestions}
-                                        undoStack={undoStack}
-                                        redoStack={redoStack}
-                                        eventLog={eventLog}
-                                    />
-                                }));
-                            }}>
-                                Add questions
-                            </AffixButton>
+                            <Button
+                                className={classNames("w-100 w-md-auto d-flex align-items-center justify-content-center", {"plus-button": isAda})}
+                                color="keyline"
+                                onClick={() => {
+                                    logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
+                                    dispatch(openActiveModal({
+                                        closeAction: () => {
+                                            dispatch(closeActiveModal());
+                                        },
+                                        closeLabelOverride: "Cancel",
+                                        size: "xl",
+                                        title: "Search questions",
+                                        body: <QuestionSearchModal
+                                            currentQuestions={currentQuestions}
+                                            undoStack={undoStack}
+                                            redoStack={redoStack}
+                                            eventLog={eventLog}
+                                        />
+                                    }));
+                                }}
+                            >
+                                Add questions <i className={classNames("icon ms-2", siteSpecific("icon-plus icon-color-black-hoverable", "icon-add-circle"))}/>
+                            </Button>
                         </ShowLoading>
                         <Button
                             className={"w-100 w-md-auto"}

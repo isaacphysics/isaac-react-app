@@ -16,7 +16,7 @@ export const HelpButton = ({modalId} : {modalId: string}) => {
     }
 
     return <IconButton
-        icon={{name: "icon-info icon-color-black-hoverable", size: "sm", color: "white"}}
+        icon={{name: "icon-info icon-color-black-hoverable", color: "white"}}
         className="w-max-content h-max-content"
         aria-label="Open help video" 
         title="Open help video"

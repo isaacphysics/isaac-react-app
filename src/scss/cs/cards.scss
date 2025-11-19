@@ -130,10 +130,8 @@ a.icon-card, a.cs-card {
   .external-link::after {
     content: "";
     display: inline-block;
-    width: 30px;
-    height: 30px;
-    margin: -1px -4px 0 4px;
-    background: url(/assets/cs/icons/external-link.svg) no-repeat center center;
+    @include svg-color(url('/assets/cs/icons/external-link.svg'), $white, 20px, 20px, cover);
+    margin: -2px -4px 0 12px;
     vertical-align: middle;
   }
 }

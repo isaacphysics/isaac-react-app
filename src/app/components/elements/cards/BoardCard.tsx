@@ -263,7 +263,21 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             <ShareLink linkUrl={boardLink} gameboardId={board.id} innerClassName="btn-keyline" outline clickAwayClose />
                         </div>
                     </td>}
-                    <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
+                    {siteSpecific(<td className={"text-center align-middle"}>
+                        <IconButton icon={{name: "icon-bin", size: "sm", color: siteSpecific("tertiary", "primary")}} color={siteSpecific("", "keyline")} className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
+                    </td>,
+                    <td className={"text-center align-middle overflow-hidden"}>
+                        <Input
+                            id={`board-delete-${board.id}`}
+                            type="checkbox"
+                            color="secondary"
+                            className={"isaac-checkbox me-n2"}
+                            checked={board && selectedBoards?.some(e => e.id === board.id)}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                board && updateBoardSelection(board, event.target.checked)
+                            } aria-label="Delete quiz"
+                        />
+                    </td>)}
                 </>}
         </tr>)
         :
@@ -333,7 +347,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         </Col>
                     </Row>
                     <CardFooter className={"text-end p-3 mt-3"}>
-                        <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
+                        <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
                         <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={toggleAssignModal}>
                             Assign{hasAssignedGroups && " / Unassign"}

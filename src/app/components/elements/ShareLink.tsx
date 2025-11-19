@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {isAda, isMobile, isPhy, isTutorOrAbove, PATHS, siteSpecific, useOutsideCallback} from "../../services";
+import {isMobile, isPhy, isTutorOrAbove, PATHS, siteSpecific, useOutsideCallback} from "../../services";
 import {selectors, useAppSelector} from "../../state";
 import classNames from "classnames";
 import { IconButton, IconButtonProps } from "./AffixButton";
@@ -64,9 +64,9 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
             </a>
         </div>}
         <IconButton
-            icon={{name: "icon-share icon-color-black-hoverable", size: "sm", color: "white"}}
+            icon={{name: "icon-share icon-color-black-hoverable", size: "sm", color: outline ? "" : "white"}}
             className={classNames(innerClassName, "w-max-content h-max-content action-button", {"icon-button-sm": size == "sm"})}
-            aria-label="Share page"
+            aria-label={buttonAriaLabel}
             title="Share page"
             color="tint"
             data-bs-theme="neutral"
