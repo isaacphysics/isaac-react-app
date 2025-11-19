@@ -15,7 +15,7 @@ export const ReportButton = ({pageId} : {pageId?: string}) => {
     }
 
     return <IconButton
-        icon={{name: "icon-flag icon-color-black-hoverable", size: "sm", color: "white"}}
+        icon={{name: "icon-flag icon-color-black-hoverable", color: "white"}}
         className="w-max-content h-max-content action-button"
         aria-label="Report a problem (opens in new tab)" 
         title="Report a problem (opens in new tab)"

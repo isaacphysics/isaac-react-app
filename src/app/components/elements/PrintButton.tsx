@@ -43,7 +43,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                 </div>
             </div>}
             <IconButton
-                icon={{name: "icon-print icon-color-black-hoverable", size: "sm", color: "white"}}
+                icon={{name: "icon-print icon-color-black-hoverable", color: "white"}}
                 className={classNames("w-max-content h-max-content action-button", {"not-mobile": isAda})}
                 aria-label="Print page"
                 title="Print page"
@@ -54,7 +54,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
         </div>
         :
         <IconButton
-            icon={{name: "icon-print icon-color-black-hoverable", size: "sm", color: "white"}}
+            icon={{name: "icon-print icon-color-black-hoverable", color: "white"}}
             className={classNames("w-max-content h-max-content action-button", {"not-mobile": isAda})}
             aria-label="Print page"
             title="Print page"
