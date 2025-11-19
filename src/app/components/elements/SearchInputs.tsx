@@ -18,7 +18,7 @@ interface SearchInputProps {
 
 // HOC pattern for making different flavour search bars
 function withSearch(Component: React.FC<SearchInputProps>) {
-    const SearchComponent = ({className, inline, onSearch, initialValue}: {className?: string; inline?: boolean; onSearch?: (searchText: string) => void; initialValue?: string}) => {
+    const SearchComponent = ({className, inline, onSearch, initialValue, clearOnSearch}: {className?: string; inline?: boolean; onSearch?: (searchText: string) => void; initialValue?: string, clearOnSearch?: boolean}) => {
         const [searchText, setSearchText] = useState(initialValue ?? "");
         const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -27,8 +27,9 @@ function withSearch(Component: React.FC<SearchInputProps>) {
                 if (searchInputRef.current) searchInputRef.current.focus();
             } else {
                 onSearch?.(text);
+                if (clearOnSearch) setSearchText("");
             }
-        }, [onSearch]);
+        }, [onSearch, clearOnSearch]);
 
         useEffect(() => {
             // If the initial value changes, update the search text - allows the search input to reflect URL changes

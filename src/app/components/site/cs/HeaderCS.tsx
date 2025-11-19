@@ -55,6 +55,7 @@ export const HeaderCS = () => {
                     <AdaHeaderSearch className={"ms-nav-2 d-nav-inline-block d-block"} onSearch={(s) => {
                         history.push(`/search?query=${encodeURIComponent(s)}`);
                         closeWholeNavbar();
+                    }} clearOnSearch />
                 </Collapse>
                 <Collapse isOpen={isOpen} navbar>
                     <Nav navbar className={"w-100"}>
