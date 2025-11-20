@@ -3,6 +3,7 @@
 figure {
   background-color: white;
   img {
+    // must be kept in-line with content editor's ".figureRegionModalBody > :first-child img"!!
     max-width: 100%;
     padding: 1rem;
     padding-bottom: 2rem;

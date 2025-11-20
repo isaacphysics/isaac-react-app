@@ -20,8 +20,8 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = (html) => {
     const dropZones = htmlDom.querySelectorAll("span[id^='drop-region-']") as NodeListOf<HTMLElement>;
     if (dropZones.length === 0) return [html, () => []];
     for (let i = 0; i < dropZones.length; i++) {
-        const width = dropZones[i].dataset.width ?? "100";
-        const height = dropZones[i].dataset.height ?? "27";
+        const width = (dropZones[i].dataset.width ?? "100") + "px";
+        const height = (dropZones[i].dataset.height ?? "27") + "px";
 
         switch (dropRegionContext.questionType) {
             case "isaacClozeQuestion": {

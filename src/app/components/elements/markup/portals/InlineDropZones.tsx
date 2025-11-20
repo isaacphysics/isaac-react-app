@@ -51,8 +51,16 @@ export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable
     </Badge>;
 }
 
+interface InlineDropRegionProps {
+    divId: string;
+    zoneId: string | number;
+    emptyWidth?: string; // the width of the drop zone **when empty** – when filled the content determines the width
+    emptyHeight?: string; // as above for height
+    rootElement?: HTMLElement;
+}
+
 // Inline droppables rendered for each registered drop region
-function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement}: {divId: string; zoneId: string | number; emptyWidth?: string | number; emptyHeight?: string | number; rootElement?: HTMLElement}) {
+function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement}: InlineDropRegionProps) {
     const dropRegionContext = useContext(DragAndDropRegionContext);
     const deviceSize = useDeviceSize();
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -89,9 +97,9 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement}:
         data: { type: "drop-zone", itemId: item?.replacementId }
     });
 
-    const height = (item || !emptyHeight) ? "auto" : (emptyHeight + "px");
+    const height = (item || !emptyHeight) ? "auto" : emptyHeight;
     // Ada buttons have a fixed width that needs to be overriden
-    const width = (item || !emptyWidth) ? "auto" : (emptyWidth + "px");
+    const width = (item || !emptyWidth) ? "auto" : emptyWidth;
 
     const draggableDropZone = <span
         style={{minHeight: height, minWidth: width}}

@@ -47,16 +47,6 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
     const inlineRegionContext = useContext(InlineContext);
     const clozeDropRootElement = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
-    const [imageScaleFactor, setImageScaleFactor] = useState({x: 1, y: 1});
-
-    const recalculateImageScaleFactor = () => {
-        const newScaleFactor = imageRef.current ? {x: imageRef.current.width / imageRef.current.naturalWidth, y: imageRef.current.height / imageRef.current.naturalHeight} : {x: 1, y: 1};
-        setImageScaleFactor(newScaleFactor);
-    };
-
-
-    // TODO: switch "minWidth" and "minHeight" props in figure DZs to be "width" and "height", which specify a percentage width/height of the figure itself,
-    // and include a basic, unchangeable min-width and min-height on all dropzones (something like 100px / 30px).
 
     return <div className="figure-panel">
         <FigureNumberingContext.Consumer>
@@ -84,23 +74,27 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                                 return <div 
                                     className="position-absolute" id={parentId} key={i}
                                     style={{
-                                        left: `calc(${dropZone.left}% - (${parentElement?.clientWidth}px * ${(dropZone.left)/100})`,
-                                        top: `calc(${dropZone.top}% - (${parentElement?.clientHeight}px * ${(dropZone.top)/100})`
+                                        left: `calc(${dropZone.left}% - (max(${parentElement?.clientWidth}px, ${dropZone.minWidth}) * ${(dropZone.left)/100})`,
+                                        top: `calc(${dropZone.top}% - (${parentElement?.clientHeight}px * ${(dropZone.top)/100})`,
+                                        width: dropZone.width ? `${dropZone.width}%` : undefined,
+                                        minWidth: dropZone.minWidth,
+                                        height: dropRegionContext ? "24px" : "34px",
                                     }}
                                 >
                                     {dropRegionContext
                                         ? <InlineDropRegion 
                                             divId={parentId}
                                             zoneId={zoneId}
-                                            emptyWidth={dropZone.minWidth.endsWith("px") ? parseInt(dropZone.minWidth.replace("px", "")) * imageScaleFactor.x : undefined}
-                                            emptyHeight={dropZone.minHeight.endsWith("px") ? parseInt(dropZone.minHeight.replace("px", "")) * imageScaleFactor.y : undefined}
+                                            emptyWidth="100%"
+                                            emptyHeight="100%"
                                             rootElement={clozeDropRootElement.current || undefined}
                                         />
                                         : inlineRegionContext && <InlineEntryZoneBase
                                             inlineSpanId={parentId}
                                             className="figure-inline-region"
-                                            widthPx={dropZone.minWidth.endsWith("px") ? parseInt(dropZone.minWidth.replace("px", "")) * imageScaleFactor.x : undefined}
-                                            heightPx={dropZone.minHeight.endsWith("px") ? parseInt(dropZone.minHeight.replace("px", "")) * imageScaleFactor.y : undefined}
+                                            width="100%"
+                                            minWidth="100%" // on a figure, the input size is determined by the region size (i.e. the parent), so all sizes are 100%
+                                            height="100%"
                                             root={clozeDropRootElement.current || document.body}
                                         />
                                     }
@@ -108,8 +102,8 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                                 </div>; 
                             })}
 
-                            {!doc.clickUrl && <img src={path} alt={doc.altText} ref={imageRef} onLoad={recalculateImageScaleFactor} />}
-                            {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} ref={imageRef} onLoad={recalculateImageScaleFactor} /></a>}
+                            {!doc.clickUrl && <img src={path} alt={doc.altText} ref={imageRef} />}
+                            {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} ref={imageRef} /></a>}
                         </div>
                     </div>
                     <IsaacFigureCaption doc={doc} figId={figId} figureString={figureString} />

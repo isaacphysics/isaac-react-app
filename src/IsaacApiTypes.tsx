@@ -631,7 +631,7 @@ export interface GroupMembershipDTO {
 export interface DropZone {
     id: string;
     minWidth: string;
-    minHeight: string;
+    width: number;
     left: number;
     top: number;
 }

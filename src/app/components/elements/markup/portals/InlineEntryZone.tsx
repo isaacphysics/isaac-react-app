@@ -32,12 +32,13 @@ export interface InlineEntryZoneProps<T> extends InputProps {
 export interface InlineEntryZoneBaseProps {
     inlineSpanId: string, 
     className: string, 
-    widthPx?: number,
-    heightPx?: number,
+    width?: string, // since this is used for both in-text and in-figure inline zones, which use different units (px / %), assume that it has the correct unit appended already
+    minWidth?: string,
+    height?: string, // height is not intended to be dynamic, so no split between minHeight and height
     root: HTMLElement
 }
 
-const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, heightPx, root}: InlineEntryZoneBaseProps) => {
+const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, width, minWidth, height, root}: InlineEntryZoneBaseProps) => {
     
     const inlineContext = useContext(InlineContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
@@ -157,7 +158,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
                     questionDTO={questionDTO as IsaacNumericQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
-                    contentStyle={{width: widthPx, height: heightPx}}
+                    contentStyle={{width, minWidth, height}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
@@ -169,7 +170,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
                     questionDTO={questionDTO as IsaacStringMatchQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
-                    contentStyle={{width: widthPx, height: heightPx}}
+                    contentStyle={{width, minWidth, height}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
@@ -181,7 +182,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
                     questionDTO={questionDTO as IsaacMultiChoiceQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
-                    contentStyle={{width: widthPx, height: heightPx}}
+                    contentStyle={{width, minWidth, height}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
@@ -193,7 +194,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
                     questionDTO={questionDTO as IsaacRegexMatchQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
-                    contentStyle={{width: widthPx, height: heightPx}}
+                    contentStyle={{width, minWidth, height}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
