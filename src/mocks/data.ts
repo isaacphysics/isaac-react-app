@@ -4954,6 +4954,49 @@ export const mockConceptPage =
         "subtitle": "Mock concept page"
     };
 
+export const mockSearchResults = {
+    results: [{
+        id: "cooling_excalibur",
+        title: "Cooling Excalibur",
+        type: "isaacQuestionPage",
+        level: 6,
+        tags: ["chemistry", "entropy", "problem_solving", "physical"],
+        url: "/isaac-api/api/pages/questions/cooling_excalibur",
+        audience: [{"stage": ["university"], "difficulty": ["challenge_3"]}]
+    }, {
+        id: "cp_force",
+        title: "Force",
+        subtitle: "Newton's 2nd law, change in momentum, vectors",
+        type: "isaacConceptPage",
+        tags: ["dynamics", "physics", "mechanics"],
+        audience: [{ stage: ["a_level"]}, { stage: ["gcse"]}],
+        url: "/isaac-api/api/pages/concepts/cp_force"
+    }, {
+        id: "book_physics_skills_19",
+        title: "Essential Pre-University Physics",
+        subtitle: "By A. C. Machacek and J. J. Crowter, with extra questions written by L. C. Phillips",
+        type: "isaacBookIndexPage",
+        tags: ["physics", "physics_skills_19"],
+        url: "/isaac-api/api/pages/book_physics_skills_19"
+    }, {
+        id: "spc",
+        title: "Senior Physics Challenge (SPC)",
+        summary: "Learn more about our summer school for UK Y12 students.",
+        type: "page",
+        tags: ["search_result"],
+        url: "/isaac-api/api/pages/spc"
+    }, {
+        id: "topic_summary_number_representation",
+        title: "Representation of numbers",
+        type: "isaacTopicSummaryPage",
+        tags: ["computer_systems", "computer_science", "number_representation"],
+        url: "/isaac-api/api/pages/topic_summary_number_representation"
+    }],
+    get totalResults() {
+        return this.results.length;
+    }
+};
+
 const gameboardContents = {
     37: {
         id: "test-gameboard-2",
