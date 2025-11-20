@@ -26,7 +26,7 @@ function withSearch(Component: React.FC<SearchInputProps>) {
             if (text === "") {
                 if (searchInputRef.current) searchInputRef.current.focus();
             } else {
-                onSearch?.(text);
+                onSearch?.(encodeURIComponent(text));
                 if (clearOnSearch) setSearchText("");
             }
         }, [onSearch, clearOnSearch]);
