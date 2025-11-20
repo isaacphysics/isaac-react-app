@@ -121,6 +121,11 @@ $inline-feedback-padding: 2px;
   }
 }
 
+figure .inline-container {
+  display: flex;
+  height: 100%;
+}
+
 .inline-container {
   display: inline-flex;
   border-radius: $border-radius-lg;
@@ -248,6 +253,12 @@ $inline-feedback-padding: 2px;
 
     &:not(.is-valid):not(.is-invalid):not(.is-unanswered) {
       border: $gray-136 solid 1px;
+    }
+
+    > span {
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     > div {
