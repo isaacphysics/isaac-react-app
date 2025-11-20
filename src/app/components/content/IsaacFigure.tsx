@@ -54,7 +54,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                 const figureString = figId && Object.keys(figureNumbers).includes(figId) ?
                     `Figure\u00A0${figureNumbers[figId]}` : "Figure";
                 return <figure>
-                    <div className="w-100 d-flex justify-content-center" ref={clozeDropRootElement}>
+                    <div className="w-100 d-flex justify-content-center p-3 pb-5" ref={clozeDropRootElement}>
                         <div className="position-relative w-max-content">
                             <button className="figure-fullscreen" aria-label="Expand figure" onClick={() => {
                                 dispatch(openActiveModal(FigureModal({
