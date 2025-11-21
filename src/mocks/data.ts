@@ -6212,8 +6212,8 @@ export const mockProgress = {
                 "registeredContexts": [],
                 "id": 19
             },
-            "correctPartResults": null,
-            "incorrectPartResults": null,
+            "correctMarkResults": null,
+            "incorrectMarkResults": null,
             "questionResults": null,
             "questionPartResults": null,
         },
@@ -6231,13 +6231,13 @@ export const mockProgress = {
                 ],
                 "id": 9
             },
-            "correctPartResults": [
-                6,
-                1
+            "correctMarkResults": [
+                [1,1,1,1,1,1],
+                [1,0,0]
             ],
-            "incorrectPartResults": [
-                0,
-                2
+            "incorrectMarkResults": [
+                [0,0,0,0,0,0],
+                [0,1,1]
             ],
             "questionResults": [
                 "ALL_CORRECT",
@@ -6273,13 +6273,13 @@ export const mockProgress = {
                 ],
                 "id": 8
             },
-            "correctPartResults": [
-                0,
-                0
+            "correctMarkResults": [
+                [0,0,0,0,0,0],
+                [0,0,0]
             ],
-            "incorrectPartResults": [
-                6,
-                0
+            "incorrectMarkResults": [
+                [1,1,1,1,1,1],
+                [0,0,0]
             ],
             "questionResults": [
                 "ALL_INCORRECT",

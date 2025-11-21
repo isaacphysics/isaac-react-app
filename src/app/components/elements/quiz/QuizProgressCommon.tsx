@@ -30,18 +30,6 @@ export function formatMark(numerator: number, denominator: number, formatAsPerce
     return result;
 }
 
-export const generateCorrectnessIcon = (correct: number, incorrect: number, notAttempted: number, totalParts: number) => {
-    if (correct === totalParts) {
-        return ICON.correct;
-    } else if (notAttempted === totalParts) {
-        return ICON.notAttempted;
-    } else if (correct === 0) {
-        return ICON.incorrect;
-    } else {
-        return ICON.partial;
-    }
-};
-
 const getAssignmentQuestionCorrectnessIcon = (state: CompletionState, attemptedOrCorrect: "ATTEMPTED" | "CORRECT") => {
     if (attemptedOrCorrect === "CORRECT") {
         switch (state) {
@@ -70,17 +58,27 @@ const getAssignmentQuestionCorrectnessIcon = (state: CompletionState, attemptedO
 
 };
 
+export function markResultsToPartResults(markResults: number[][] = [], markTotals: number[][] = []): number[] {
+    return markResults.map((marks, i) => {
+        const markTotal = markTotals[i].reduce((acc, curr) => acc + curr, 0);
+        const markObtained = marks.reduce((acc, curr) => acc + curr, 0);
+        return Math.floor(markObtained / markTotal);
+    });
+};
+
 const getQuizQuestionCorrectnessIcon = (attemptedOrCorrect: "ATTEMPTED" | "CORRECT", studentProgress: AssignmentProgressDTO, questionIndex: number) => {
+    const questionCorrect = (markResultsToPartResults(studentProgress.correctMarkResults, studentProgress.markTotals))[questionIndex] === 1;
+    const questionIncorrect = (markResultsToPartResults(studentProgress.incorrectMarkResults, studentProgress.markTotals))[questionIndex] === 1;
     if (attemptedOrCorrect === "CORRECT") {
-        if ((studentProgress.correctPartResults || [])[questionIndex] === 1) {
+        if (questionCorrect) {
             return ICON.correct;
         }
-        else if ((studentProgress.incorrectPartResults || [])[questionIndex] === 1) {
+        else if (questionIncorrect) {
             return ICON.incorrect;
         }
         return ICON.notAttempted;
     } else {
-        if ((studentProgress.correctPartResults || [])[questionIndex] === 1 || (studentProgress.incorrectPartResults || [])[questionIndex] === 1) {
+        if (questionCorrect || questionIncorrect) {
             return ICON.correct;
         }
         return ICON.notAttempted;
@@ -195,10 +193,10 @@ export function ResultsTable<Q extends QuestionType>({
         switch (sortOrder) {
             case "name":
                 return sortByName(item);
-            case "totalPartPercentage":
-                return -item.correctQuestionPartsCount;
-            case "totalAttemptedPartPercentage":
-                return -(item.correctQuestionPartsCount + item.incorrectQuestionPartsCount);
+            case "totalMarkPercentage":
+                return -item.correctQuestionMarksCount;
+            case "totalAttemptedMarkPercentage":
+                return -(item.correctQuestionMarksCount + item.incorrectQuestionMarksCount);
             case "totalQuestionPercentage":
                 return -item.correctQuestionPagesCount;
             case "totalAttemptedQuestionPercentage":
@@ -206,7 +204,7 @@ export function ResultsTable<Q extends QuestionType>({
                 return item.notAttemptedPartResults?.reduce((acc, curr) => acc + curr, 0) || 0;
             default:
                 if (pageSettings?.attemptedOrCorrect === "CORRECT") {
-                    return -(item.correctPartResults || [])[sortOrder];
+                    return -(item.correctMarkResults || [])[sortOrder];
                 } else {
                     return (item.notAttemptedPartResults || [])[sortOrder];
                 }
@@ -273,35 +271,29 @@ export function ResultsTable<Q extends QuestionType>({
             pageSettings?.attemptedOrCorrect === "CORRECT"
                 ? <SortItemHeader<ProgressSortOrder>
                     className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
-                    defaultOrder={"totalPartPercentage"}
-                    reverseOrder={"totalPartPercentage"}
+                    defaultOrder={"totalMarkPercentage"}
+                    reverseOrder={"totalMarkPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={"Total correct parts"}
+                    label={pageSettings?.displayIndividualMarks ? "Total marks awarded" : "Total correct parts"}
                 >
-                    {siteSpecific(
-                        <div className="d-flex flex-column ps-3">
-                            <span>Parts</span>
-                            <small className="mt-n1 text-muted fw-normal">(total)</small>
-                        </div>,
-                        "Correct"
-                    )}
+                    <div className="d-flex flex-column ps-3">
+                        <span>{pageSettings?.displayIndividualMarks ? "Marks" : "Parts"}</span>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                    </div>
                 </SortItemHeader>
                 : <SortItemHeader<ProgressSortOrder>
                     className={classNames("pointer-cursor correct-attempted-header", {"sticky-ca-col": isPhy})}
-                    defaultOrder={"totalAttemptedPartPercentage"}
-                    reverseOrder={"totalAttemptedPartPercentage"}
+                    defaultOrder={"totalAttemptedMarkPercentage"}
+                    reverseOrder={"totalAttemptedMarkPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={"Total attempted parts"}
+                    label={pageSettings?.displayIndividualMarks ? "Total marks awarded" : "Total correct parts"}
                 >
-                    {siteSpecific(
-                        <div className="d-flex flex-column ps-3">
-                            <span>Parts</span>
-                            <small className="mt-n1 text-muted fw-normal">(total)</small>
-                        </div>,
-                        "Attempted"
-                    )}
+                    <div className="d-flex flex-column ps-3">
+                        <span>{pageSettings?.displayIndividualMarks ? "Marks" : "Parts"}</span>
+                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                    </div>
                 </SortItemHeader>
         )}
         {questions.map((_, index) =>
@@ -341,7 +333,7 @@ export function ResultsTable<Q extends QuestionType>({
                 const studentsWithAllAttempted = progress.reduce((acc, p) => acc + (isAuthorisedFullAccess(p) && !p.notAttemptedPartResults?.[index] ? 1 : 0), 0);
                 return [studentsWithAllAttempted, progress.length];
             } else {
-                const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (p.correctPartResults?.[index] ? 1 : 0), 0);
+                const studentsWithAllCorrect = progress.reduce((acc, p) => acc + (markResultsToPartResults(p.correctMarkResults, p.markTotals)?.[index] ? 1 : 0), 0);
                 return [studentsWithAllCorrect, progress.length];
             }
         }
@@ -375,6 +367,12 @@ export function ResultsTable<Q extends QuestionType>({
                         {sortedProgress.map((studentProgress, index) => {
                             const fullAccess = isAuthorisedFullAccess(studentProgress);
                             const internalCellSpacing = isPhy && isAssignment ? "py-1" : "py-3";
+
+                            const correctPartResults = studentProgress.questionPartResults?.map(statuses => statuses.reduce((acc, status) => acc + (status === "CORRECT" ? 1 : 0), 0)) || [];
+                            const incorrectPartResults = studentProgress.questionPartResults?.map(statuses => statuses.reduce((acc, status) => acc + (status === "INCORRECT" ? 1 : 0), 0)) || [];
+                            const correctPartOrMarkCount = (fullAccess && pageSettings?.displayIndividualMarks) ? studentProgress.correctQuestionMarksCount : correctPartResults.reduce((acc, curr) => acc + curr, 0);
+                            const incorrectPartOrMarkCount = (fullAccess && pageSettings?.displayIndividualMarks) ? studentProgress.incorrectQuestionMarksCount : incorrectPartResults.reduce((acc, curr) => acc + curr, 0);
+
                             return <tr key={studentProgress.user?.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
                                 <th className={`student-name sticky-left ps-2 ${internalCellSpacing} fw-bold`}>
                                     {fullAccess && pageSettings?.isTeacher ?
@@ -423,22 +421,24 @@ export function ResultsTable<Q extends QuestionType>({
                                                     ? studentProgress.correctQuestionPagesCount
                                                     : studentProgress.questionResults?.filter(r => r !== CompletionState.NOT_ATTEMPTED).length ?? 0
                                                 : pageSettings?.attemptedOrCorrect === "CORRECT"
-                                                    ? studentProgress.correctQuestionPartsCount
-                                                    : studentProgress.correctQuestionPartsCount + studentProgress.incorrectQuestionPartsCount,
+                                                    ? correctPartOrMarkCount
+                                                    : correctPartOrMarkCount + incorrectPartOrMarkCount,
                                             questions.length,
                                             !!pageSettings?.formatAsPercentage
                                         )
                                         : ""
                                     }
                                 </th>
-                                {/* total parts */}
+                                {/* total parts/marks */}
                                 {isPhy && isAssignment && <th title={fullAccess ? undefined : "Not Sharing"} className={classNames({"sticky-ca-col": isPhy})}>
                                     {fullAccess
                                         ? formatMark(
                                             pageSettings?.attemptedOrCorrect === "CORRECT"
-                                                ? studentProgress.correctQuestionPartsCount
-                                                : studentProgress.correctQuestionPartsCount + studentProgress.incorrectQuestionPartsCount,
-                                            assignmentTotalQuestionParts,
+                                                ? correctPartOrMarkCount
+                                                : correctPartOrMarkCount + incorrectPartOrMarkCount,
+                                            pageSettings?.displayIndividualMarks
+                                                ? studentProgress.markTotals?.reduce((acc, arr) => acc + arr.reduce((a, b) => a + b, 0), 0) ?? 0
+                                                : assignmentTotalQuestionParts,
                                             !!pageSettings?.formatAsPercentage
                                         )
                                         : ""
@@ -451,15 +451,21 @@ export function ResultsTable<Q extends QuestionType>({
                                     )}>
                                         {isAssignment
                                             ? (fullAccess
-                                                ? isPhy
-                                                    ? formatMark(
+                                                ? siteSpecific(
+                                                    formatMark(
                                                         pageSettings?.attemptedOrCorrect === "CORRECT"
-                                                            ? (studentProgress.correctPartResults || [])[index]
-                                                            : (studentProgress.correctPartResults || [])[index] + (studentProgress.incorrectPartResults || [])[index],
-                                                        questions[index].questionPartsTotal as number,
+                                                            ? pageSettings?.displayIndividualMarks 
+                                                                ? studentProgress.correctMarkResults![index].reduce((a, b) => a + b, 0) ?? 0
+                                                                : correctPartResults[index]
+                                                            : pageSettings?.displayIndividualMarks
+                                                                ? studentProgress.correctMarkResults![index].concat(studentProgress.incorrectMarkResults![index]).reduce((a, b) => a + b, 0) ?? 0
+                                                                : correctPartResults[index] + incorrectPartResults[index],
+                                                        pageSettings?.displayIndividualMarks
+                                                            ? studentProgress.markTotals![index].reduce((a, b) => a + b, 0) ?? 0
+                                                            : studentProgress.markTotals![index].length,
                                                         !!pageSettings?.formatAsPercentage
-                                                    )
-                                                    : getAssignmentQuestionCorrectnessIcon((studentProgress.questionResults || [])[index], pageSettings?.attemptedOrCorrect || "CORRECT")
+                                                    ),
+                                                    getAssignmentQuestionCorrectnessIcon((studentProgress.questionResults || [])[index], pageSettings?.attemptedOrCorrect || "CORRECT"))
                                                 : ""
                                             )
                                             : getQuizQuestionCorrectnessIcon(pageSettings?.attemptedOrCorrect || "CORRECT", studentProgress, index)
@@ -525,8 +531,8 @@ export function ResultsTablePartBreakdown({
         switch (sortOrder) {
             case "name":
                 return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
-            case "totalPartPercentage":
-            case "totalAttemptedPartPercentage":
+            case "totalMarkPercentage":
+            case "totalAttemptedMarkPercentage":
             case "totalQuestionPercentage":
             case "totalAttemptedQuestionPercentage":
                 return 0; // These sorts are not applicable for part breakdown
@@ -569,11 +575,11 @@ export function ResultsTablePartBreakdown({
                             defaultOrder={"totalQuestionPercentage"}
                             reverseOrder={"totalQuestionPercentage"}
                             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-                            label={"Total correct"}
+                            label={pageSettings?.displayIndividualMarks ? "Total marks awarded" : "Total correct"}
                         >
                             {siteSpecific(
                                 <div className="d-flex flex-column ps-3">
-                                    <span>Parts</span>
+                                    <span>{pageSettings?.displayIndividualMarks ? "Marks" : "Parts"}</span>
                                     <small className="mt-n1 text-muted fw-normal">(total)</small>
                                 </div>,
                                 "Correct"
@@ -584,11 +590,11 @@ export function ResultsTablePartBreakdown({
                             defaultOrder={"totalAttemptedQuestionPercentage"}
                             reverseOrder={"totalAttemptedQuestionPercentage"}
                             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-                            label={"Total attempted"}
+                            label={pageSettings?.displayIndividualMarks ? "Total marks attempted" : "Total correct"}
                         >
                             {siteSpecific(
                                 <div className="d-flex flex-column ps-3">
-                                    <span>Parts</span>
+                                    <span>{pageSettings?.displayIndividualMarks ? "Marks" : "Parts"}</span>
                                     <small className="mt-n1 text-muted fw-normal">(total)</small>
                                 </div>,
                                 "Attempted"
@@ -611,8 +617,23 @@ export function ResultsTablePartBreakdown({
                     )}
                 </thead>
                 <tbody>
-                    {sortedProgress.map((studentProgress, studentIndex) => (
-                        <tr key={studentIndex}>
+                    {sortedProgress.map((studentProgress, studentIndex) => {
+                        const markPartNumerator: number[] = pageSettings?.displayIndividualMarks
+                            ? pageSettings?.attemptedOrCorrect === "CORRECT" 
+                                ? studentProgress.correctMarkResults![questionIndex]
+                                : studentProgress.correctMarkResults![questionIndex].map((mark, partIndex) => 
+                                    mark + studentProgress.incorrectMarkResults![questionIndex][partIndex]
+                                )
+                            : studentProgress.questionPartResults![questionIndex].map(part => 
+                                (pageSettings?.attemptedOrCorrect === "CORRECT" 
+                                    ? part === "CORRECT" 
+                                    : part !== "NOT_ATTEMPTED"
+                                ) ? 1 : 0
+                            );
+                        const markPartDenominator: number[] = studentProgress.markTotals && pageSettings?.displayIndividualMarks
+                            ? studentProgress.markTotals[questionIndex]
+                            : Array(studentProgress.markTotals![questionIndex]?.length).fill(1);
+                        return <tr key={studentIndex}>
                             {/* student name */}
                             <th className="student-name sticky-left ps-2 py-3 fw-bold">
                                 <div className="d-flex align-items-center gap-2">
@@ -628,14 +649,8 @@ export function ResultsTablePartBreakdown({
                             {isPhy && studentProgress.questionPartResults && 
                                 <td className={classNames({"sticky-ca-col": isPhy})}>
                                     {formatMark(
-                                        studentProgress.questionPartResults[questionIndex].reduce((acc, questionPartResult) => {
-                                            if (pageSettings?.attemptedOrCorrect === "CORRECT") {
-                                                return acc + (questionPartResult === "CORRECT" ? 1 : 0);
-                                            } else {
-                                                return acc + (questionPartResult !== "NOT_ATTEMPTED" ? 1 : 0);
-                                            }
-                                        }, 0),
-                                        studentProgress.questionPartResults[questionIndex].length,
+                                        markPartNumerator.reduce((a, b) => a + b, 0), 
+                                        markPartDenominator.reduce((a, b) => a + b, 0),
                                         !!pageSettings?.formatAsPercentage
                                     )}
                                 </td>
@@ -643,12 +658,18 @@ export function ResultsTablePartBreakdown({
 
                             {/* main data */}
                             {studentProgress.questionPartResults &&
-                                studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => (
-                                    <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>
-                                ))
+                                studentProgress.questionPartResults[questionIndex].map((questionPartResult, questionPartIndex) => {
+                                    if (pageSettings?.displayIndividualMarks) {
+                                        const correctMarkResult = markPartNumerator[questionPartIndex] ?? 0;
+                                        const markTotal = markPartDenominator[questionPartIndex] ?? 0;
+                                        return <td key={questionPartIndex}>{formatMark(correctMarkResult, markTotal, !!pageSettings?.formatAsPercentage)}</td>;
+                                    } else {
+                                        return <td key={questionPartIndex}>{getQuizQuestionPartCorrectnessIcon(questionPartResult)}</td>;
+                                    }
+                                })
                             }
-                        </tr>
-                    ))}
+                        </tr>;
+                    })}
                 </tbody>
                 <tfoot className="sticky-bottom">
                     <tr>
