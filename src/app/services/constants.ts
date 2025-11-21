@@ -270,11 +270,12 @@ export enum STAGE {
     SCOTLAND_ADVANCED_HIGHER = "scotland_advanced_higher",
     CORE = "core",
     ADVANCED = "advanced",
+    POST_18 = "post_18",
     ALL = "all",
 }
 export const STAGE_NULL_OPTIONS = [STAGE.ALL];
 export const STAGES_PHY = [STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY] as const;
-export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.CORE, STAGE.ADVANCED] as const;
+export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.CORE, STAGE.ADVANCED, STAGE.POST_18] as const;
 export const stagesOrdered: Stage[] = [...siteSpecific(STAGES_PHY, STAGES_CS), STAGE.ALL];
 export const stageLabelMap: {[stage in Stage]: string} = {
     year_7_and_8: "Year\u00A07&8",
@@ -288,6 +289,7 @@ export const stageLabelMap: {[stage in Stage]: string} = {
     scotland_advanced_higher: "Adv Higher",
     core: "Core",
     advanced: "Advanced",
+    post_18: "Post-18",
     all: "All stages",
 };
 
@@ -323,6 +325,7 @@ export const CS_EXAM_BOARDS_BY_STAGE: {[stage in typeof STAGES_CS[number]]: Exam
     scotland_advanced_higher: [EXAM_BOARD.SQA],
     core: [EXAM_BOARD.ADA],
     advanced: [EXAM_BOARD.ADA],
+    post_18: [EXAM_BOARD.ADA],
 };
 
 export const EXAM_BOARD_NULL_OPTIONS = [EXAM_BOARD.ALL];
@@ -463,13 +466,14 @@ export const STAGE_TO_LEARNING_STAGE: {[stage in STAGE]: LearningStage | undefin
     scotland_advanced_higher: "a_level",
     core: "gcse",
     advanced: "a_level",
+    post_18: "university",
 };
 
 export const LEARNING_STAGE_TO_STAGES: {[stage in LearningStage]: STAGE[]} = {
     "11_14": [STAGE.YEAR_7_AND_8, STAGE.YEAR_9],
     gcse: [STAGE.GCSE, STAGE.SCOTLAND_NATIONAL_5, STAGE.CORE],
     a_level: [STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.ADVANCED],
-    university: [STAGE.UNIVERSITY],
+    university: [STAGE.UNIVERSITY, STAGE.POST_18],
 };
 
 export const HUMAN_STAGES: {[key: string]: string} = {
