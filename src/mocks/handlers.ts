@@ -21,7 +21,8 @@ import {
     mockConceptsResults,
     mockProgress,
     mockLLMMarkedRegressionTestQuestion,
-    mockLLMMarkedValidationResponse
+    mockLLMMarkedValidationResponse,
+    mockSearchResults
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -263,6 +264,11 @@ export const handlers = [
     }),
     http.get(API_PATH + "/events", () => {
         return HttpResponse.json({results: [], totalResults: 0}, {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/search", () => {
+        return HttpResponse.json(mockSearchResults, {
             status: 200,
         });
     }),
