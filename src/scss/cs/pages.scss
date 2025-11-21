@@ -44,7 +44,7 @@
 // My quizzes page
 .my-gameboard-table {
   thead {
-    background-color: rgba(0, 0, 0, 0.06);
+    background-color: $cs-list-outline-gray;
     tr, th, td {
       background-color: transparent !important;
     }
