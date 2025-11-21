@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { extractTeacherName, history, KEY, persistence } from "../../services";
 import { authorisationsApi, store, useLazyGetTokenOwnerQuery } from "../../state";
 import { UserSummaryWithEmailAddressDTO } from "../../../IsaacApiTypes";
+import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
 
 export const RegistrationGroupInvite = ()  => {
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
@@ -13,7 +14,7 @@ export const RegistrationGroupInvite = ()  => {
     const token =  urlParams.get("authToken") ?? "";
     const [authenticationToken, _] = useState<string>(token);
     const afterAuthPath = window.location.pathname;
-
+    
     const getGroupOwners = async (token: string | null) => {
         const sanitisedToken = token?.toUpperCase().replace(/ /g,'') ?? "";
         const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
@@ -38,40 +39,50 @@ export const RegistrationGroupInvite = ()  => {
     if(!isGroupValid){
         return <Container>
             <TitleAndBreadcrumb currentPageTitle={`Group not found`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
-            <Card className="my-7">
-                <CardBody>
-                    <p>You came here via a group join link, but the group code is invalid.</p>
-                    <Button color="keyline" onClick={() => {history.push("/account#teacherconnections");}}>
-                        Go to teacher connections
-                    </Button>
-                </CardBody>
-            </Card>
+            <SidebarLayout>
+                <SignupSidebar activeTab={3}/>
+                <MainContent>
+                    <Card className="my-7">
+                        <CardBody>
+                            <p>You came here via a group join link, but the group code is invalid.</p>
+                            <Button color="keyline" onClick={() => {history.push("/account#teacherconnections");}}>
+                                Go to teacher connections
+                            </Button>
+                        </CardBody>
+                    </Card>
+                </MainContent>
+            </SidebarLayout>
         </Container>;
     }
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Join group`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
-        <Card className="my-7">
-            <CardBody>
-                <p>You came here via a group join link. Are you happy to join the group and allow
-                these teachers to see your work and progress?</p>
-                <Table bordered>
-                    <tbody>
-                        {usersToGrantAccess?.map((member: any) => (<tr key={member.id}>
-                            <td>
-                                <span className="group-table-person" />
-                                {extractTeacherName(member)} - ({member.email})
-                            </td>
-                        </tr>))}
-                    </tbody>
-                </Table>
-                <Button color="keyline" onClick={() => {history.push("/account");}}>
-                    No, skip this
-                </Button>
-                {" "}
-                <Button color="solid" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
-                    Yes, join the group
-                </Button>
-            </CardBody>  
-        </Card>
+        <SidebarLayout>
+            <SignupSidebar activeTab={3}/>
+            <MainContent>
+                <Card className="my-7">
+                    <CardBody>
+                        <p>You came here via a group join link. Are you happy to join the group and allow
+                            these teachers to see your work and progress?</p>
+                        <Table bordered>
+                            <tbody>
+                                {usersToGrantAccess?.map((member: any) => (<tr key={member.id}>
+                                    <td>
+                                        <span className="group-table-person" />
+                                        {extractTeacherName(member)} - ({member.email})
+                                    </td>
+                                </tr>))}
+                            </tbody>
+                        </Table>
+                        <Button color="keyline" onClick={() => {history.push("/account");}}>
+                            No, skip this
+                        </Button>
+                        {" "}
+                        <Button color="solid" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
+                            Yes, join the group
+                        </Button>
+                    </CardBody>  
+                </Card>
+            </MainContent>
+        </SidebarLayout>
     </Container>;
 };

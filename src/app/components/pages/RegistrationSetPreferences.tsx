@@ -77,7 +77,7 @@ export const RegistrationSetPreferences = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Customise your account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
         <SidebarLayout>
-            <SignupSidebar activeTab={3}/>
+            <SignupSidebar activeTab={4}/>
             <MainContent>
                 <Card className="my-7">
                     <CardBody>

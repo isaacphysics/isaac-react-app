@@ -108,16 +108,10 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     };
 
     const goBack = () => {
-        if (isPhy || role === "STUDENT") {
-            confirmThen(
-                "Are you sure you want go back? Any information you have entered will be lost.",
-                () => history.push("age"));
-        }
-        else { // teachers skip age check on Ada
-            confirmThen(
-                "Are you sure you want go back? Any information you have entered will be lost.",
-                () => history.push("/register"));
-        }
+        const prevPath = (isPhy || role === "STUDENT") ? "age" : "/register"; // teachers skip age check on Ada
+        confirmThen(
+            "Are you sure you want go back? Any information you have entered will be lost.",
+            () => history.push(prevPath));
     };
 
     return <Container>
