@@ -4979,12 +4979,26 @@ export const mockSearchResults = {
         tags: ["physics", "physics_skills_19"],
         url: "/isaac-api/api/pages/book_physics_skills_19"
     }, {
+        id: "book_physics_skills_19__a1",
+        title: "Using and Rearranging Equations",
+        subtitle: "A1",
+        type: "isaacBookDetailPage",
+        tags: ["physics", "physics_skills_19"],
+        url: "/isaac-api/api/pages/book_physics_skills_19__a1"
+    }, {
         id: "spc",
         title: "Senior Physics Challenge (SPC)",
         summary: "Learn more about our summer school for UK Y12 students.",
         type: "page",
         tags: ["search_result"],
         url: "/isaac-api/api/pages/spc"
+    }, {
+        id: "d57ad3a6-6656-4ed7-81df-8d3f680839a6",
+        title: "Event regression test",
+        subtitle: "Open event with free spaces",
+        type: "isaacEventPage",
+        tags: ["regression_test", "student"],
+        url: "/isaac-api/api/pages/d57ad3a6-6656-4ed7-81df-8d3f680839a6"
     }, {
         id: "topic_summary_number_representation",
         title: "Representation of numbers",
