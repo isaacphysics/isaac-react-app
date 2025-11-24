@@ -403,13 +403,16 @@ export const ListView = <T extends {type?: string}, G extends "item" | "gameboar
                             case (DOCUMENT_TYPE.CONCEPT):
                                 return <ConceptListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             case (DOCUMENT_TYPE.TOPIC_SUMMARY):
-                                return <TopicListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                                if(isAda) return <TopicListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                                return <GenericListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             case (DOCUMENT_TYPE.EVENT):
                                 return <EventListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             case DOCUMENT_TYPE.BOOK_INDEX_PAGE:
-                                return <BookIndexListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                                if(isPhy) return <BookIndexListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                                return <GenericListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             case SEARCH_RESULT_TYPE.BOOK_DETAIL_PAGE:
-                                return <BookDetailListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                                if(isPhy) return <BookDetailListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                                return <GenericListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             default:
                                 return failedToRender(item);
                         }
