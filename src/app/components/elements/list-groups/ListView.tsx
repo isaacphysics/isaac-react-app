@@ -122,9 +122,12 @@ interface EventListViewItemProps extends Extract<AbstractListViewItemProps, {alv
 export const EventListViewItem = ({item, ...rest}: EventListViewItemProps) => {
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
+    const icon: TitleIconProps = isPhy
+        ? {type: "hex", icon: "icon-events", size: "lg"}
+        : {type: "img", icon: iconPath("event"), width: "32px", height: "32px", alt: "Event page icon", label: "Event"};
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-events", size: "lg"}}
+        icon={icon}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
@@ -259,11 +262,13 @@ export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutLis
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
-    const icon = (url.includes("concepts/") || !item.className?.includes("wildcard-list-view")) ? "icon-concept" : "icon-wildcard";
+    const icon: TitleIconProps = isPhy
+        ? {type: "hex", icon: (url.includes("concepts/") || !item.className?.includes("wildcard-list-view")) ? "icon-concept" : "icon-wildcard", size: "lg"}
+        : {type: "img", icon: iconPath("info-filled"), width: "32px", height: "32px", alt: "Shortcut page icon", label: "Shortcut"};
     const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: icon, size: "lg"}}
+        icon={icon}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={subtitle}
