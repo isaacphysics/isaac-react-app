@@ -220,8 +220,10 @@ const CurrentGroupManagersModal = ({ groupId, archived, userIsOwner, user }: Cur
   function setAdditionalManagerPrivileges(additionalManagerPrivileges: boolean) {
     if (group) {
       const updatedGroup = { ...group, additionalManagerPrivileges };
+      const message = "The group management privileges have been modified";
       updateGroup({
         updatedGroup,
+        message,
       });
     }
   }
