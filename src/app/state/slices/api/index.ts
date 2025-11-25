@@ -501,17 +501,23 @@ const isaacApi = createApi({
     }),
 
     updateGroup: build.mutation<void, { updatedGroup: AppGroup; message?: string }>({
-      query: ({ updatedGroup }) => ({
-        method: "POST",
-        url: `/groups/${updatedGroup.id}`,
-        body: { ...updatedGroup, members: undefined },
-      }),
+      query: ({ updatedGroup }) => {
+        const { members, ownerSummary, additionalManagers, ...updatableFields } = updatedGroup;
+
+        return {
+          method: "POST",
+          url: `/groups/${updatedGroup.id}`,
+          body: updatableFields,
+        };
+      },
       invalidatesTags: (_, error, { updatedGroup }) =>
         !isDefined(error) ? [{ type: "GroupAssignments", id: updatedGroup.id }] : [],
       onQueryStarted: onQueryLifecycleEvents({
         onQuerySuccess: ({ updatedGroup, message }, _, { dispatch }) => {
           if (message) {
             dispatch(showSuccessToast("Group saved successfully", message));
+          } else {
+            dispatch(showSuccessToast("Group saved successfully", "The group name has been updated."));
           }
           [true, false].forEach((archivedGroupsOnly) => {
             dispatch(

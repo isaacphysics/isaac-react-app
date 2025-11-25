@@ -210,10 +210,12 @@ describe("Groups", () => {
           rest.post(API_PATH + "/groups/:groupId", async (req, res, ctx) => {
             const { groupId } = req.params;
             const updatedGroup = await req.json();
+
+            const { ownerSummary, additionalManagers, ...groupToRenameWithoutExcluded } = groupToRename;
             if (
               parseInt(groupId as string) === groupToRename.id &&
               updatedGroup.groupName === newGroupName &&
-              isEqual(groupToRename, { ...updatedGroup, groupName: groupToRename.groupName })
+              isEqual(groupToRenameWithoutExcluded, { ...updatedGroup, groupName: groupToRename.groupName })
             ) {
               correctUpdateRequests++;
             }
@@ -326,10 +328,12 @@ describe("Groups", () => {
           const { groupId } = req.params;
           const updatedGroup = await req.json();
 
+          const { ownerSummary, additionalManagers, ...groupToModifyWithoutNestedObjects } = groupToModify;
+
           return (
             parseInt(groupId as string) === groupToModify.id &&
             updatedGroup.archived === newArchivedValue &&
-            isEqual(groupToModify, {
+            isEqual(groupToModifyWithoutNestedObjects, {
               ...updatedGroup,
               archived: !newArchivedValue,
             })
