@@ -103,30 +103,31 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const [collapsed, setCollapsed] = useState(false);
 
     return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": collapsed})}>
+        <div className="sticky-top">
+            <AdaSidebarCollapser collapsed={collapsed} setCollapsed={setCollapsed} />
 
-        <AdaSidebarCollapser collapsed={collapsed} setCollapsed={setCollapsed} />
-
-        {Object.entries(MyAdaTabs)
-            .filter(([_, tab]) => {
-                if (tab.user === "TEACHER") return isTeacherOrAbove(user);
-                if (tab.user === "STUDENT") return isStudent(user);
-                if (tab.user === "ALL") return true;
-                return false;
-            }).map(([key, tab]) => {
-                const isActive = history.location.pathname === tab.url;
-                return <StyledTabPicker
-                    key={key}
-                    id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
-                    checkboxTitle={<div className="d-flex align-items-center gap-2">
-                        <i className={classNames("icon icon-md", tab.icon, {"icon-color-black": isActive && collapsed})} aria-hidden="true" />
-                        <b>{tab.title}</b>
-                    </div>}
-                    checked={isActive}
-                    className="nav-link my-ada-tab"
-                    type="link"
-                    to={tab.url}
-                />;
-            })
-        }
+            {Object.entries(MyAdaTabs)
+                .filter(([_, tab]) => {
+                    if (tab.user === "TEACHER") return isTeacherOrAbove(user);
+                    if (tab.user === "STUDENT") return isStudent(user);
+                    if (tab.user === "ALL") return true;
+                    return false;
+                }).map(([key, tab]) => {
+                    const isActive = history.location.pathname === tab.url;
+                    return <StyledTabPicker
+                        key={key}
+                        id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
+                        checkboxTitle={<div className="d-flex align-items-center gap-2">
+                            <i className={classNames("icon icon-md", tab.icon, {"icon-color-black": isActive && collapsed})} aria-hidden="true" />
+                            <b>{tab.title}</b>
+                        </div>}
+                        checked={isActive}
+                        className="nav-link my-ada-tab"
+                        type="link"
+                        to={tab.url}
+                    />;
+                })
+            }
+        </div>
     </ContentSidebar>;
 };
