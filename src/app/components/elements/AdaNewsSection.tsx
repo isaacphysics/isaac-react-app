@@ -14,7 +14,7 @@ export const AdaNewsSection = ({isHomepage}: {isHomepage?: boolean}) => {
     const showNewsletterPrompts = !userPreferences?.EMAIL_PREFERENCE?.NEWS_AND_UPDATES;
     const {setLinkedSetting} = useLinkableSetting();
 
-    return ((news && news.length > 0) || showNewsletterPrompts) && <Container className={isHomepage ? "homepage-padding mw-1600" : "overview-padding mw-1600"}>
+    return ((news && news.length > 0) || showNewsletterPrompts) && <Container className={isHomepage ? "homepage-padding mw-1600" : "mw-1600"}>
         <h2 className={classNames({"font-size-1-75 mb-4": isHomepage})}>Tips, tools & support</h2>
         {news && news.length > 0 &&
             <>

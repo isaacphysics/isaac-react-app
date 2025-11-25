@@ -14,7 +14,6 @@ export const Overview = () => {
     return <PageContainer
         pageTitle={<PageTitle currentPageTitle={"Overview"} />}
         sidebar={<MyAdaSidebar />}
-        className="overview-padding mw-1600"
     >
         <section id="get-started" className="py-3">
             <GetStartedWithAda />

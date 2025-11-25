@@ -32,8 +32,8 @@ export const PageContainer = (props: PageContainerProps) => {
         // Ada
         <SidebarLayout>
             {sidebar}
-            <MainContent>
-                <Container {...rest}>
+            <MainContent className="overflow-x-auto">
+                <Container fluid {...rest} className="my-ada-container">
                     {pageTitle}
                     {children}
                 </Container>

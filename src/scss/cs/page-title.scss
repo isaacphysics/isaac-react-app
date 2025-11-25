@@ -11,3 +11,12 @@
         font-size: 32px;
     }
 }
+
+.title-breadcrumb-container {
+    @extend .pt-4;
+    @extend .pt-md-7;
+}
+
+.my-ada-container .title-breadcrumb-container {
+    @extend .pt-0;
+}

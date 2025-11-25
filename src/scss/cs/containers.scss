@@ -1,0 +1,8 @@
+.my-ada-container {
+  width: unset;
+  @extend .px-md-4;
+  @include media-breakpoint-up(xl) {
+    padding-left: 100px !important;
+    padding-right: 100px !important;
+  }
+}
