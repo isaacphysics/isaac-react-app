@@ -126,6 +126,19 @@ figure .inline-container {
   height: 100%;
 }
 
+.figure-dropzone-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 35%;
+  font-family: $secondary-font;
+  font-size: 1rem;
+  color: white;
+  background-color: var(--subject-color-700);
+  width: $figure-drop-zone-placeholder-size;
+  height: $figure-drop-zone-placeholder-size;
+}
+
 .inline-container {
   display: inline-flex;
   border-radius: $border-radius-lg;

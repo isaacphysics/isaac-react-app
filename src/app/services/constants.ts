@@ -1273,6 +1273,8 @@ export const NULL_CLOZE_ITEM: ItemDTO = {
     id: NULL_CLOZE_ITEM_ID
 };
 
+export const FIGURE_DROP_ZONE_PLACEHOLDER_SIZE = "24px";
+
 // Legacy matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
 // Matches: all legacy, [inline-question:questionId class="{classes}"]
 export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+)(?<params> *\| *(?<width>w-\d+)?(?<height>h-\d+)?| +class=(?:["']|&apos;|&[rl]?quot;)(?<classes>[a-zA-Z0-9 _-]+?)(?:["']|&apos;|&[rl]?quot;))?\]/g;
