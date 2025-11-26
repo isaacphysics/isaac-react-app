@@ -17,6 +17,38 @@ interface LLMFreeTextQuestionFeedbackViewProps {
     sentFeedback: boolean;
     setSentFeedback: (value: boolean) => void;
 }
+
+export interface LLMFormulaNode {
+    type: "LLMMarkingFunction" | "LLMMarkingVariable" | "LLMMarkingConstant";
+}
+
+export interface LLMFunctionNode extends LLMFormulaNode{
+    arguments: LLMFormulaNode[] | LLMFormulaNode;
+    name: string;
+    type: "LLMMarkingFunction";
+}
+
+export interface LLMVariableNode extends LLMFormulaNode {
+    name: string;
+    type: "LLMMarkingVariable";
+}
+
+export interface LLMConstantNode extends LLMFormulaNode {
+    value: number;
+    type: "LLMMarkingConstant";
+}
+
+// Type guards for LLMFormulaNode
+export function isLLMFunctionNode(node: LLMFormulaNode): node is LLMFunctionNode {
+    return node.type === "LLMMarkingFunction";
+}
+export function isLLMVariableNode(node: LLMFormulaNode): node is LLMVariableNode {
+    return node.type === "LLMMarkingVariable";
+}
+export function isLLMConstantNode(node: LLMFormulaNode): node is LLMConstantNode {
+    return node.type === "LLMMarkingConstant";
+}
+
 export default function LLMFreeTextQuestionFeedbackView({validationResponse, maxMarks, hasSubmitted, sentFeedback, setSentFeedback}: LLMFreeTextQuestionFeedbackViewProps) {
     const dispatch = useAppDispatch();
     const page = useAppSelector(selectors.doc.get);
@@ -29,6 +61,181 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, max
             feedbackPanelRef.current.scrollIntoView({behavior: "smooth"});
         }
     }, [hasSubmitted]);
+
+    const b: LLMFunctionNode = {
+        "type": "LLMMarkingFunction",
+        "name": "SUM",
+        "arguments": [
+            {
+                "type": "LLMMarkingFunction",
+                "name": "MAX",
+                "arguments": [
+                    {
+                        "type": "LLMMarkingVariable",
+                        "name": "protocolHTTP"
+                    },
+                    {
+                        "type": "LLMMarkingVariable",
+                        "name": "protocolHTTPS"
+                    },
+                    {
+                        "type": "LLMMarkingVariable",
+                        "name": "protocolFTP"
+                    },
+                    {
+                        "type": "LLMMarkingVariable",
+                        "name": "protocolSMTP"
+                    },
+                    {
+                        "type": "LLMMarkingVariable",
+                        "name": "protocolPOP"
+                    },
+                    {
+                        "type": "LLMMarkingVariable",
+                        "name": "protocolIMAP"
+                    },
+                    {
+                        "type": "LLMMarkingVariable",
+                        "name": "protocolDHCP"
+                    }
+                ]
+            } as LLMFunctionNode,
+            {
+                "type": "LLMMarkingFunction",
+                "name": "MAX",
+                "arguments": [
+                    {
+                        "type": "LLMMarkingFunction",
+                        "name": "MIN",
+                        "arguments": [
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "protocolHTTP"
+                            },
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "describeHTTP"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "LLMMarkingFunction",
+                        "name": "MIN",
+                        "arguments": [
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "protocolHTTPS"
+                            },
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "describeHTTPS"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "LLMMarkingFunction",
+                        "name": "MIN",
+                        "arguments": [
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "protocolFTP"
+                            },
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "describeFTP"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "LLMMarkingFunction",
+                        "name": "MIN",
+                        "arguments": [
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "protocolSMTP"
+                            },
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "describeSMTP"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "LLMMarkingFunction",
+                        "name": "MIN",
+                        "arguments": [
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "protocolPOP"
+                            },
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "describePOP"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "LLMMarkingFunction",
+                        "name": "MIN",
+                        "arguments": [
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "protocolDHCP"
+                            },
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "describeDHCP"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "LLMMarkingFunction",
+                        "name": "MIN",
+                        "arguments": [
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "protocolIMAP"
+                            },
+                            {
+                                "type": "LLMMarkingVariable",
+                                "name": "describeIMAP"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    };
+
+    function getBottomLevelGroupings(node: LLMFormulaNode): string[][] {
+        const results: string[][] = [];
+
+        function walk(n: LLMFormulaNode) {
+            if (!isLLMFunctionNode(n)) return;
+
+            const args = Array.isArray(n.arguments) ? n.arguments : [n.arguments];
+
+            if (args.every(a => !isLLMFunctionNode(a))) {
+                results.push(args.filter(a => isLLMVariableNode(a)).map(a => a.name));
+            }
+
+            for (const a of args) {
+                if (a.type === "LLMMarkingFunction") walk(a);
+            }
+        }
+
+        walk(node);
+        return results;
+    }
+
+    const defaultMarkingFormula: LLMFunctionNode = {type: "LLMMarkingFunction", name: "MIN", arguments: [
+        {type: "LLMMarkingVariable", name: "maxMarks"} as LLMVariableNode, 
+        {type: "LLMMarkingFunction", name: "SUM", arguments: [
+            {type: "LLMMarkingVariable", name: "x"} as LLMVariableNode,
+            {type: "LLMMarkingVariable", name: "y"} as LLMVariableNode,
+            {type: "LLMMarkingVariable", name: "z"} as LLMVariableNode
+        ]} as LLMFunctionNode
+    ]};
 
     return <div ref={feedbackPanelRef} className={classNames("llm-feedback question-component", siteSpecific("p-xl-7 p-5", "p-md-7"))}>
         <h4 className="mb-0">Do you agree with the LLM’s predicted marks?</h4>
@@ -50,7 +257,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, max
                         <th><span className='visually-hidden'>Predicted correct</span></th>
                     </tr>
                 </thead>
-                <tbody>
+                {/* <tbody>
                     {validationResponse.markBreakdown?.map(mark => <tr key={mark.jsonField}>
                         <td className="w-100">{mark.shortDescription}</td>
                         <td>
@@ -60,6 +267,33 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, max
                             </>}
                         </td>
                     </tr>)}
+                </tbody> */}
+                <tbody> {/* hello */}
+                    {getBottomLevelGroupings(b).map((group, i) => {
+                        const headerRow = (
+                            <tr key={i}>
+                                <td colSpan={2}>
+                                    <strong>Grouping:</strong> {group.join(", ")}
+                                </td>
+                            </tr>
+                        );
+
+                        const memberRows = group.map(markName => {
+                            const mark = validationResponse.markBreakdown?.find(mb => mb.jsonField === markName);
+                            
+                            if (mark) return <tr key={mark.jsonField}>
+                                <td className="w-100">{mark.shortDescription}</td>
+                                <td>
+                                    {mark.marks > 0 && <>
+                                        <span className="visually-hidden">Predicted as awarded</span>
+                                        <span className={siteSpecific("icon-inline icon-correct", "icon-feedback-tick")} />
+                                    </>}
+                                </td>
+                            </tr>;
+                        });
+
+                        return [headerRow, ...memberRows];
+                    })}
                 </tbody>
             </Table>
         </div>
