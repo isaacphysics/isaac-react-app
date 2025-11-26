@@ -70,7 +70,7 @@ export const SOCIAL_LINKS = siteSpecific(
     {
         youtube: {name: "YouTube", href: "https://www.youtube.com/user/isaacphysics"},
         bluesky: {name: "Bluesky", href: "https://bsky.app/profile/isaacphysics.org"},
-        linkedin: {name: "LinkedIn", href: "https://www.linkedin.com/company/isaac-physics"}
+        linkedin: {name: "LinkedIn", href: "https://www.linkedin.com/company/isaac-science"}
     },
     {
         facebook: {name: "Facebook", href: "https://www.facebook.com/RaspberryPiFoundation"},
