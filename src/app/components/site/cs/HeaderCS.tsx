@@ -80,7 +80,7 @@ export const HeaderCS = () => {
                             <LinkItem to="/teachers">Ada CS for teachers</LinkItem>
                             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             <LinkItem to="/pages/online_courses">Online courses</LinkItem>
-                            <LinkItem to="/pages/teacher_mentoring_2025">Mentoring programme</LinkItem>
+                            <LinkItem to="/teacher_mentoring">Mentoring programme</LinkItem>
                             <LinkItem to="/support/teacher">Support</LinkItem>
                         </NavigationSection>
 
