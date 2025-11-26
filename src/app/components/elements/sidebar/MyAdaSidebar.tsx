@@ -4,7 +4,7 @@ import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import classNames from "classnames";
 import { useHistory } from "react-router";
 import { selectors, useAppSelector } from "../../../state";
-import { isStudent, isTeacherOrAbove } from "../../../services";
+import { above, isStudent, isTeacherOrAbove, useDeviceSize } from "../../../services";
 
 interface MyAdaTab {
     title: string;
@@ -100,11 +100,12 @@ const AdaSidebarCollapser = ({collapsed, setCollapsed, ...rest}: AdaSidebarColla
 export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const history = useHistory();
     const user = useAppSelector(selectors.user.loggedInOrNull);
+    const deviceSize = useDeviceSize();
     const [collapsed, setCollapsed] = useState(false);
 
-    return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": collapsed})}>
+    return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": collapsed})} buttonTitle="My Ada">
         <div className="sticky-top">
-            <AdaSidebarCollapser collapsed={collapsed} setCollapsed={setCollapsed} />
+            {above['lg'](deviceSize) && <AdaSidebarCollapser collapsed={collapsed} setCollapsed={setCollapsed} />}
 
             {Object.entries(MyAdaTabs)
                 .filter(([_, tab]) => {

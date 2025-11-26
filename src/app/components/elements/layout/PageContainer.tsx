@@ -33,7 +33,7 @@ export const PageContainer = (props: PageContainerProps) => {
         <SidebarLayout>
             {sidebar}
             <MainContent className="overflow-x-auto">
-                <Container fluid {...rest} className="my-ada-container">
+                <Container fluid {...rest} className="my-ada-container mw-1600 px-md-4 px-lg-6">
                     {pageTitle}
                     {children}
                 </Container>

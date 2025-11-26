@@ -82,3 +82,7 @@ button.accordion-header {
   }
 }
 
+.accordion-flush-body {
+  --bs-accordion-body-padding-x: 0;
+  --bs-accordion-body-padding-y: 0;
+}

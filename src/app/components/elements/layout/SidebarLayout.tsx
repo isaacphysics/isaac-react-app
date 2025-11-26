@@ -1,11 +1,11 @@
 import React, { ChangeEvent, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from "react";
-import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form } from "reactstrap";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Form, Accordion, AccordionBody, AccordionHeader, AccordionItem, Container } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, CompletionState, ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard, QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO, SidebarDTO, SidebarEntryDTO, Stage } from "../../../../IsaacApiTypes";
 import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, EventStageMap,
     EventStatusFilter, EventTypeFilter, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getHumanContext, getThemeFromContextAndTags, HUMAN_STAGES,
-    ifKeyIsEnter, isAda, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
+    ifKeyIsEnter, isDefined, PHY_NAV_SUBJECTS, isTeacherOrAbove, QuizStatus, siteSpecific, TAG_ID, tags, STAGE, useDeviceSize, LearningStage, HUMAN_SUBJECTS, ArrayElement, isFullyDefinedContext, isSingleStageContext,
     stageLabelMap, extractTeacherName, determineGameboardSubjects, PATHS, getQuestionPlaceholder, getFilteredStageOptions, isPhy, ISAAC_BOOKS, BookHiddenState, TAG_LEVEL, VALID_APPS_CONTEXTS, getSearchPlaceholder,
     sortByStringValue,
     SUBJECT_SPECIFIC_CHILDREN_MAP,
@@ -48,7 +48,7 @@ export const SidebarLayout = (props: SidebarLayoutProps) => {
     const { className, site=true, ...rest } = props;
     return site
         ? <SidebarContext.Provider value={{sidebarPresent: true}}>
-            <Row {...rest} className={classNames("sidebar-layout", className, {"g-0": isAda})}/>
+            <Row {...rest} className={classNames("sidebar-layout flex-lg-nowrap", className)}/>
         </SidebarContext.Provider>
         : props.children;
 };
@@ -65,7 +65,7 @@ export const MainContent = (props: ColProps) => {
 
     if (!sidebarContext?.sidebarPresent) return rest.children;
 
-    return <Col id="page-content" {...rest} tabIndex={-1} className={classNames(className, "flex-grow-1 order-0 order-lg-1")} />;
+    return <Col id="page-content" {...rest} tabIndex={-1} className={classNames(className, "flex-grow-1 flex-shrink-1", {"order-0 order-lg-1": isPhy})} />;
 };
 
 interface QuestionLinkProps {
@@ -147,15 +147,17 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
     if (!sidebarContext?.sidebarPresent) return <></>; 
 
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
-    return siteSpecific(
-        // Sci
-        above['lg'](deviceSize)
-            ? <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />
-            : <>
+    return above['lg'](deviceSize)
+        ? siteSpecific(
+            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />,
+            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print g-md-0 ps-2 order-0", className)} />
+        )
+        : siteSpecific(
+            <>
                 {optionBar && <div className="d-flex align-items-center no-print flex-wrap py-3 gap-3">
                     <div className="flex-grow-1 d-inline-grid align-items-end">{optionBar}</div>
                 </div>}
-                {!hideButton && <SidebarButton buttonTitle={buttonTitle} className="my-3"/>}
+                {!hideButton && <SidebarButton buttonTitle={buttonTitle} className="my-3" />}
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={sidebarOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
                     <OffcanvasHeader toggle={toggleMenu} close={
                         <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
@@ -175,10 +177,21 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                     </OffcanvasBody>
                 </Offcanvas>
             </>,
-        
-        // Ada
-        <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print order-0", className)} />
-    );
+            <>
+                {!hideButton && <Container fluid className="my-ada-container w-100">
+                    <Accordion open={sidebarOpen ? ["myAda"] : []} toggle={toggleMenu} className="position-relative mx-2 mx-lg-3 my-3" tag="aside" data-testid="sidebar" aria-label="Sidebar">
+                        <AccordionItem className="border">
+                            <AccordionHeader targetId="myAda">
+                                <span className="fw-bold">{buttonTitle}</span>
+                            </AccordionHeader>
+                            <AccordionBody accordionId="myAda" className="accordion-flush-body">
+                                <Col {...rest} className={classNames("flex-column", className)} />
+                            </AccordionBody>
+                        </AccordionItem>
+                    </Accordion>
+                </Container>}
+            </>
+        );
 };
 
 const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
