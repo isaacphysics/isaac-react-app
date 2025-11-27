@@ -259,7 +259,7 @@ export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutLis
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
     const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
-    const iconName = isAda ? "info-filled" : (url.includes("concepts/") || !item.className?.includes("wildcard-list-view")) ? "icon-concept" : "icon-wildcard";
+    const iconName = isAda ? "icon-info-filled" : (url.includes("concepts/") || !item.className?.includes("wildcard-list-view")) ? "icon-concept" : "icon-wildcard";
 
     return <AbstractListViewItem
         icon={{type: "icon", icon: {name: iconName, size: "lg"}}}
