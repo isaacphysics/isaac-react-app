@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Form, Row, Col, Container, FormGroup, Label, Input } from "reactstrap";
-import { isaacApi, useAppSelector } from "../../../../state";
-import { selectors } from "../../../../state/selectors";
+import { isaacApi, useAppSelector, selectors } from "../../../../state";
 import { SchoolInput } from "../../../elements/inputs/SchoolInput";
 import FormInput from "./FormInput";
 import { useReserveUsersOnCompetition } from "./useReserveUsersOnCompetition";
@@ -10,6 +9,7 @@ import Select from "react-select";
 import CustomTooltip from "../../../elements/CustomTooltip";
 
 const COMPETITON_ID = "20251020_isaac_competition_form";
+
 interface CompetitionEntryFormProps {
   handleTermsClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
@@ -23,11 +23,17 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
   const [isLoadingMembers, setIsLoadingMembers] = useState(false);
   const activeGroups = useActiveGroups();
   const [getGroupMembers] = isaacApi.endpoints.getGroupMembers.useLazyQuery();
+  const [getCompetitionProjectTitles] = isaacApi.endpoints.getCompetitionProjectTitles.useLazyQuery();
   const targetUser = useAppSelector(selectors.user.orNull);
   const reserveUsersOnCompetition = useReserveUsersOnCompetition();
   const [memberSelectionError, setMemberSelectionError] = useState<string>("");
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [userToUpdate, setUserToUpdate] = useState(targetUser ? { ...targetUser, password: null } : { password: null });
+
+  // State for duplicate validation
+  const [existingProjectTitles, setExistingProjectTitles] = useState<Set<string>>(new Set());
+  const [isDuplicateTitle, setIsDuplicateTitle] = useState(false);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleUserUpdate = (user: any) => {
     setUserToUpdate(user);
@@ -63,6 +69,56 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
       setIsLoadingMembers(false);
     }
   }, [selectedGroup, getGroupMembers]);
+
+  // Fetch project titles when group is selected and members are loaded
+  useEffect(() => {
+    if (selectedGroup?.id && selectedGroup.members && selectedGroup.members.length > 0) {
+      const memberIds = selectedGroup.members.map((member) => member.id).filter((id): id is number => id !== undefined);
+
+      getCompetitionProjectTitles({ competitionId: COMPETITON_ID, userIds: memberIds })
+        .unwrap()
+        .then((response) => {
+          // Normalize titles to lowercase for case-insensitive comparison
+          // Filter out null/undefined/empty values first
+          const titles = new Set(
+            response.projectTitles
+              .filter((title: string | null) => title != null && title.trim() !== "")
+              .map((title: string) => title.toLowerCase().trim()),
+          );
+
+          setExistingProjectTitles(titles);
+        })
+        .catch((error) => {
+          console.error("Error fetching project titles:", error);
+        });
+    } else {
+      // Clear titles when no group is selected
+      setExistingProjectTitles(new Set());
+    }
+  }, [selectedGroup, getCompetitionProjectTitles]);
+
+  // Debounced validation for project title
+  useEffect(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    if (projectTitle.trim() === "") {
+      setIsDuplicateTitle(false);
+      return;
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      const normalizedTitle = projectTitle.toLowerCase().trim();
+      setIsDuplicateTitle(existingProjectTitles.has(normalizedTitle));
+    }, 500);
+
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, [projectTitle, existingProjectTitles]);
 
   useEffect(() => {
     setSelectedMembers([]);
@@ -122,13 +178,22 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
 
   const isSchoolValid = isSchoolValidForCompetition();
   const isSubmitDisabled =
-    !projectTitle || !projectLink || !selectedGroup || selectedMembers.length === 0 || !isSchoolValid;
+    !projectTitle ||
+    !projectLink ||
+    !selectedGroup ||
+    selectedMembers.length === 0 ||
+    !isSchoolValid ||
+    isDuplicateTitle;
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     setSubmissionAttempted(true);
 
     if (!isSchoolValid) {
+      return;
+    }
+
+    if (isDuplicateTitle) {
       return;
     }
 
@@ -147,6 +212,8 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
     setProjectLink("");
     setSelectedMembers([]);
     setSelectedGroupId(null);
+    setIsDuplicateTitle(false);
+    setExistingProjectTitles(new Set());
   };
 
   const getPlaceholderText = () => {
@@ -257,16 +324,40 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
             <h2 className="py-3 entry-form-section-title">Project details</h2>
             <Row>
               <Col lg={6}>
-                <FormInput
-                  label="Project title"
-                  type="text"
-                  id="projectTitle"
-                  required
-                  disabled={false}
-                  value={projectTitle}
-                  onChange={(e) => setProjectTitle(e.target.value)}
-                  placeholder="E.g., SmartLab"
-                />
+                <FormGroup>
+                  <Label className="entry-form-sub-title">
+                    Project title <span className="entry-form-asterisk">*</span>
+                  </Label>
+                  <Input
+                    type="text"
+                    id="projectTitle"
+                    required
+                    disabled={false}
+                    value={projectTitle}
+                    onChange={(e) => setProjectTitle(e.target.value)}
+                    placeholder="E.g., SmartLab"
+                    style={{
+                      border: isDuplicateTitle ? "2px solid #dc3545" : "1px solid #ced4da",
+                      borderRadius: "0.375rem",
+                    }}
+                  />
+                  {isDuplicateTitle && (
+                    <div className="entry-form-validation-tooltip" style={{ marginTop: "8px" }}>
+                      <div className="tooltip-content">
+                        <div className="tooltip-arrow"></div>
+                        <img src="/assets/warning_icon.svg" alt="duplicate title error" />
+                        <div className="tooltip-text" style={{ color: "#000" }}>
+                          A project with this title already exists. Please use a unique title for each submission. To
+                          update a previously submitted project,{" "}
+                          <a href="/contact" style={{ color: "#1D70B8", textDecoration: "underline" }}>
+                            contact us
+                          </a>
+                          .
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </FormGroup>
               </Col>
               <Col lg={6}>
                 <FormInput
@@ -310,6 +401,7 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                         setSelectedGroupId(selectedOption.value);
                       } else {
                         setSelectedGroupId(null);
+                        setExistingProjectTitles(new Set());
                       }
                     }}
                     options={activeGroups
@@ -465,10 +557,10 @@ export const CompetitionEntryForm = ({ handleTermsClick }: CompetitionEntryFormP
                 </Label>
               </Col>
             </Row>
-            <Row className="justify-content-center mb-5 pt-3">
+            <Row className="entry-form-button-label justify-content-center mb-5 pt-3">
               <div className="col-md-6">
                 <Input
-                  className="btn btn-block btn-secondary border-0 form-control entry-form-button"
+                  className="btn btn-block btn-secondary border-0 form-control"
                   type="submit"
                   disabled={isSubmitDisabled}
                   value="Submit competition entry"

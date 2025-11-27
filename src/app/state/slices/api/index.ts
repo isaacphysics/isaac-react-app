@@ -94,6 +94,15 @@ export const resultOrNotFound = <T>(result: T, error: FetchBaseQueryError | Seri
   return error && "status" in error && error.status === NOT_FOUND ? NOT_FOUND : result;
 };
 
+export interface GetCompetitionProjectTitlesRequest {
+  competitionId: string;
+  userIds: number[];
+}
+
+export interface GetCompetitionProjectTitlesResponse {
+  projectTitles: string[];
+}
+
 interface QueryLifecycleSpec<T, R> {
   onQueryStart?: (
     args: T,
@@ -569,6 +578,14 @@ const isaacApi = createApi({
         successTitle: "Status Updated",
         successMessage: "You have updated your membership status.",
         errorTitle: "Membership status update failed",
+      }),
+    }),
+
+    getCompetitionProjectTitles: build.query<GetCompetitionProjectTitlesResponse, GetCompetitionProjectTitlesRequest>({
+      query: ({ competitionId, userIds }) => ({
+        url: `/events/bookings/titles`,
+        method: "POST",
+        body: { competitionId, userIds },
       }),
     }),
 
