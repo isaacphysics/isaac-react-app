@@ -43,7 +43,7 @@ export const ProgrammeCard = ({ programme, ...rest}: ProgrammeCardProps) => {
             </CardText>}
             <div className="d-flex flex-column gap-1 mb-5">
                 {programme.date && <div className="d-flex gap-2 align-items-center">
-                    <i className="icon icon-md icon-events"/>
+                    <i className="icon icon-md icon-event"/>
                     <span>{programme.date}</span>
                 </div>}
                 {programme.applicableTo && <div className="d-flex gap-2 align-items-center">
