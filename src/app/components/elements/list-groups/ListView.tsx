@@ -118,9 +118,16 @@ interface EventListViewItemProps extends Extract<AbstractListViewItemProps, {alv
 export const EventListViewItem = ({item, ...rest}: EventListViewItemProps) => {
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
+    const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-events", size: "lg"}};
+
+    if (isAda) {
+        icon.label = "Event";
+        icon.alt = "Event page icon";
+        icon.icon.color = "tertiary";
+    }
 
     return <AbstractListViewItem
-        icon={{type: "icon", icon: {name: "icon-events", size: "lg"}}}
+        icon={icon}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
