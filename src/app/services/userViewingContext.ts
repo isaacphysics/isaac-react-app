@@ -228,6 +228,7 @@ const _STAGE_ITEM_OPTIONS = siteSpecific([ /* best not to export - use getFilter
     {label: "All Stages (Default)", value: STAGE.ALL},
     {label: "Core", value: STAGE.CORE},
     {label: "Advanced", value: STAGE.ADVANCED},
+    {label: "Post-18", value: STAGE.POST_18},
     {label: "GCSE", value: STAGE.GCSE},
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "National 5", value: STAGE.SCOTLAND_NATIONAL_5},
@@ -471,8 +472,8 @@ export function audienceStyle(audienceString: string): string {
             case stageLabelMap.scotland_advanced_higher:
                 return "stage-label-advanced";
 
+            case stageLabelMap.post_18:
             case stageLabelMap.scotland_higher:
-                // Scotland higher has a unique styling
                 return "stage-label-higher";
 
             default:
@@ -508,14 +509,15 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
         // - Advanced Higher
         // with intra-group separation by commas, inter-group separation by newlines
 
-        const coreOrAdvanced =  audienceStages.includes(STAGE.CORE) ? [STAGE.CORE] : [STAGE.ADVANCED];
-        const defaultStage = (audienceStages.includes(STAGE.CORE) && audienceStages.includes(STAGE.ADVANCED)) ? [STAGE.CORE, STAGE.ADVANCED] : coreOrAdvanced;
+        const adaStages = [STAGE.CORE, STAGE.ADVANCED, STAGE.POST_18];
+        const adaAudienceStages = audienceStages.filter(s => adaStages.includes(s as STAGE));
+
         stagesToView = userContext.hasDefaultPreferences || !intendedAudience
-            ? defaultStage
+            ? adaAudienceStages
             : stagesFilteredByUserContext.length > 0
                 ? stagesFilteredByUserContext
-                // only show Core and Advanced intentionally
-                : audienceStages.filter(s => ![STAGE.CORE, STAGE.ADVANCED].includes(s as STAGE));
+                // only show Ada exam board stages intentionally
+                : audienceStages.filter(s => !adaStages.includes(s as STAGE));
 
         const result = stagesToView.reduce((acc, label) => {
             if ([STAGE.GCSE, STAGE.A_LEVEL].includes(label as STAGE)) {
@@ -524,7 +526,7 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
                 acc[1].push(label);
             } else if ([STAGE.SCOTLAND_ADVANCED_HIGHER].includes(label as STAGE)) {
                 acc[2].push(label);
-            } else if ([STAGE.CORE, STAGE.ADVANCED].includes(label as STAGE)) {
+            } else if (adaStages.includes(label as STAGE)) {
                 acc[3].push(label);
             }
             return acc;

@@ -11,6 +11,7 @@ import {
     NavLink,
 } from "reactstrap";
 import {
+    above,
     below,
     filterAssignmentsByStatus,
     isAda,
@@ -58,17 +59,21 @@ export const NavigationSection = ({className, children, title, topLevelLink, to}
     const linkClasses = siteSpecific("p-3 mx-3 mx-md-0", classNames("mx-0 mx-nav-1 p-3 font-h4 link-light", {"open": isOpen}));
     const dropdownClasses = siteSpecific("ps-2 ps-md-0 nav-section", "p-3 m-0 nav-section");
     return <MenuOpenContext.Consumer>
-        {({setMenuOpen}) => <Dropdown className={className} nav inNavbar={below["md"](deviceSize)} isOpen={isOpen} toggle={toggle}>
-            {topLevelLink ?
-                <NavLink className={linkClasses} tag={Link} to={to} onClick={() => setMenuOpen(false)}>{title}</NavLink> :
-                <DropdownToggle nav tag={isPhy && below["md"](deviceSize) ? "button" : undefined} caret={isPhy} className={classNames(linkClasses, "d-flex w-100 text-start invert-underline align-items-center")}>
-                    {title}
-                    {isAda && <i className={classNames("icon icon-chevron-down icon-dropdown-180 icon-color-white float-end d-nav-none d-inline-block ms-auto", {"active": isOpen})}/>}
-                </DropdownToggle>}
-            {children && <DropdownMenu className={dropdownClasses} onClick={() => setMenuOpen(false)}>
-                <ul className="plain-list ps-0">{children}</ul>
-            </DropdownMenu>}
-        </Dropdown>}
+        {({setMenuOpen}) => {
+            return topLevelLink 
+                ? <li className={className}>
+                    <NavLink className={linkClasses} tag={Link} to={to} onClick={() => setMenuOpen(false)}>{title}</NavLink> 
+                </li>
+                : <Dropdown className={className} nav inNavbar={below["md"](deviceSize)} isOpen={isOpen} toggle={above["lg"](deviceSize) ? toggle : () => {}}>
+                    <DropdownToggle nav tag={isPhy && below["md"](deviceSize) ? "button" : undefined} caret={isPhy} onClick={below["md"](deviceSize) ? toggle : () => {}} className={classNames(linkClasses, "d-flex w-100 text-start invert-underline align-items-center")}>
+                        {title}
+                        {isAda && <i className={classNames("icon icon-chevron-down icon-dropdown-180 icon-color-white float-end d-nav-none d-inline-block ms-auto", {"active": isOpen})}/>}
+                    </DropdownToggle>
+                    <DropdownMenu className={dropdownClasses} onClick={() => setMenuOpen(false)}>
+                        <ul className="plain-list ps-0">{children}</ul>
+                    </DropdownMenu>
+                </Dropdown>;
+        }}
     </MenuOpenContext.Consumer>;
 };
 

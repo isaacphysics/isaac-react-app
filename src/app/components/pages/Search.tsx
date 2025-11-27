@@ -110,7 +110,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     return (
         <Container id="search-page">
             <TitleAndBreadcrumb currentPageTitle="Search" icon={{type: "icon", icon: "icon-finder"}} />
-            <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={urlQuery ?? ""} onSearch={setQueryState} />
+            <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={decodeURIComponent(urlQuery ?? "")} onSearch={setQueryState} />
             <Card className="my-4">
                 <CardHeader className="search-header p-3">
                     <Col xs={12}>
@@ -142,7 +142,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                         </Form>
                     </Col>
                 </CardHeader>
-                {urlQuery !== "" && <CardBody>
+                {urlQuery !== "" && <CardBody className={classNames({"p-0 m-0": isAda})}>
                     <ShowLoadingQuery
                         query={searchResult}
                         defaultErrorTitle="Failed to search. Please try again later."
@@ -150,7 +150,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                             const shortcutAndFilteredSearchResults = shortcutAndFilterResults(results);
                             return shortcutAndFilteredSearchResults.length > 0
                                 ? <ListView type="item" items={shortcutAndFilteredSearchResults} hasCaret={isAda}/>
-                                : <em>No results found</em>;
+                                : <div className={classNames({"p-4": isAda})}><em>No results found</em></div>;
                         }}
                     />
                 </CardBody>}

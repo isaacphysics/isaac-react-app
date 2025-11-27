@@ -190,7 +190,7 @@ interface RelatedContentSidebarProps extends SidebarProps {
 
 const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "concept" | "question" | "page"}) => {
     const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage").sort(sortByStringValue("title"));
-    const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage").sort(sortByStringValue("title"));
+    const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage" || c.type === "isaacFastTrackQuestionPage").sort(sortByStringValue("title"));
 
     const pageContext = useAppSelector(selectors.pageContext.context);
     const pageContextStage = useAppSelector(selectors.pageContext.stage);
@@ -1084,7 +1084,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
                 <div className="section-divider"/>
 
                 <div className="d-flex flex-column sidebar-key">
-                Key
+                    Key
                     <ul>
                         <KeyItem icon="not-started" text="Section not started"/>
                         <KeyItem icon="in-progress" text="Section in progress"/>

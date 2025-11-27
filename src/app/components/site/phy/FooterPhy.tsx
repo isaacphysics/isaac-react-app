@@ -13,15 +13,14 @@ export const FooterPhy = () => (
                     <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='footer-org-logo' />
                 </a>
                 <div className="logo-text">
-                    Funded by {' '} <ExternalLink href="https://www.cam.ac.uk/" className="d-inline">
+                    Supported by the {' '} <ExternalLink href="https://www.cam.ac.uk/" className="d-inline">
                         <u>University of Cambridge</u>
-                    </ExternalLink>.
+                    </ExternalLink> and <ExternalLink href="https://www.ogdentrust.com/" className="d-inline">
+                        <u>The&nbsp;Ogden&nbsp;Trust</u>.
+                    </ExternalLink>
                     <br />
-                    Supported by {' '} <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education" className="d-inline">
-                        <u>Department for Education</u>
-                    </ExternalLink> and {' '}
-                    <ExternalLink href="https://www.ogdentrust.com/" className="d-inline">
-                        <u>The&nbsp;Ogden&nbsp;Trust</u>
+                    Founded in collaboration with the {' '} <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education" className="d-inline">
+                        <u>Department for Education England</u>
                     </ExternalLink>.
                 </div>
             </Col>

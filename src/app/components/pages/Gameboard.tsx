@@ -75,7 +75,7 @@ export const Gameboard = withRouter(({ location }) => {
                 thenRender={(gameboard) => {
                     return <>
                         <TitleAndBreadcrumb
-                            currentPageTitle={siteSpecific("Question deck", gameboard && gameboard.title || "Filter Generated Quiz")} icon={{type: "icon", icon: "icon-question-deck"}}
+                            currentPageTitle={gameboard && gameboard.title || siteSpecific("Question deck", "Filter Generated Quiz")} icon={{type: "icon", icon: "icon-question-deck"}}
                             intermediateCrumbs={isPhy && thisGameboardAssignments && thisGameboardAssignments.length ? [{title: "Assignments", to: "/assignments"}] : []}
                         />
                         <SidebarLayout>
