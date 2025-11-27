@@ -65,6 +65,10 @@
   @include svg-icon-raw('/assets/common/icons/correctness-not-attempted.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
+.icon-bin {
+  @include svg-icon('/assets/cs/icons/bin.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
+}
+
 .icon-initials {
   // background hex
   @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), $color-brand-400, 28px, 28px, 100%);
@@ -125,6 +129,10 @@
 .icon-feedback-tick {
   @include svg-icon-raw('/assets/cs/icons/tick-rp-green.svg', 20px, 20px);
   margin-bottom: -5px;
+}
+
+.icon-plus {
+  @include svg-icon('/assets/phy/icons/redesign/plus.svg', 12px, 12px, 100%);
 }
 
 

@@ -88,7 +88,7 @@ export const Programmes = () => {
     }, [programmes]);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "hex", icon: "icon-events"}} />
+        <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "icon", icon: "icon-events"}} />
         <SidebarLayout>
             <ProgrammesSidebar programmes={programmes} />
             <MainContent>

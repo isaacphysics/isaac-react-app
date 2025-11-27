@@ -109,7 +109,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
 
     return (
         <Container id="search-page">
-            <TitleAndBreadcrumb currentPageTitle="Search" icon={{type: "hex", icon: "icon-finder"}} />
+            <TitleAndBreadcrumb currentPageTitle="Search" icon={{type: "icon", icon: "icon-finder"}} />
             <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={decodeURIComponent(urlQuery ?? "")} onSearch={setQueryState} />
             <Card className="my-4">
                 <CardHeader className="search-header p-3">

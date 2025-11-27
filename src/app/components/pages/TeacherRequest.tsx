@@ -117,7 +117,7 @@ export const TeacherRequest = () => {
     );
 
     return <Container id="contact-page" className="pb-7">
-        <TitleAndBreadcrumb currentPageTitle="Teacher Account request" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle="Teacher Account request" icon={{type: "icon", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>
                 <Col size={9}>

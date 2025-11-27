@@ -27,7 +27,7 @@ export const EventManager = ({user}: {user: PotentialUser}) => {
     const {data: userIdToSchoolMapping} = useAdminGetUserIdsSchoolLookupQuery(eventBookingUserIds?.length ? eventBookingUserIds : skipToken);
 
     return  <Container>
-        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin" icon={{type: "hex", icon: "icon-events"}}/>
+        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin" icon={{type: "icon", icon: "icon-events"}}/>
         <div className="my-7">
             <EventOverviews user={user} setSelectedEventId={setSelectedEventId} />
             <div className="mt-3" ref={selectedEventRef}/>

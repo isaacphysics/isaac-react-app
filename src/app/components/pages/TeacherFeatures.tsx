@@ -33,7 +33,7 @@ export const TeacherFeatures = () => {
     const isDisabled = !isLoggedIn(user) || !isTeacherOrAbove(user);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Teacher features"} icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={"Teacher features"} icon={{type: "icon", icon: "icon-account"}}/>
         <PageMetadata noTitle>
             {isDisabled && <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"} className="float-end">
                 {isLoggedIn(user) ? "Upgrade my account" : "Get a teacher account"}

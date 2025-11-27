@@ -34,7 +34,7 @@ export const ResetPasswordHandler = () => {
     }
 
     return <Container id="password-reset" className={"mb-7"}>
-        <TitleAndBreadcrumb breadcrumbTitleOverride="Password reset" currentPageTitle="Reset your password" icon={{type: "hex", icon: "icon-account"}} className="mb-4" />
+        <TitleAndBreadcrumb breadcrumbTitleOverride="Password reset" currentPageTitle="Reset your password" icon={{type: "icon", icon: "icon-account"}} className="mb-4" />
         {isLoading && <div>Verifying reset token...</div>}
         <div>
             {(!!tokenVerifyError || !!passwordResetError) &&

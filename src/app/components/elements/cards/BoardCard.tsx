@@ -37,6 +37,7 @@ import {Link} from "react-router-dom";
 import {BoardAssignee, Boards} from "../../../../IsaacAppTypes";
 import indexOf from "lodash/indexOf";
 import { GameboardCard, GameboardLinkLocation } from "./GameboardCard";
+import { IconButton } from "../AffixButton";
 
 
 interface HexagonGroupsButtonProps {
@@ -227,13 +228,13 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         Assign{hasAssignedGroups && "\u00a0/ Unassign"}
                     </Button>
                 </td>
-                {isAda && <td className={basicCellClasses}>
+                {isAda && <td className={"align-middle text-center"}>
                     <div className="table-share-link">
-                        <ShareLink linkUrl={boardLink} gameboardId={board.id} outline={isAda} clickAwayClose={isAda} />
+                        <ShareLink linkUrl={boardLink} gameboardId={board.id} innerClassName="btn-keyline" outline clickAwayClose />
                     </div>
                 </td>}
-                {isAda && <td className={basicCellClasses}>
-                    <Button color="keyline" className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                {isAda && <td className={"align-middle text-center"}>
+                    <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
                 </td>}
             </> 
                 : 
@@ -257,31 +258,26 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
                         )}
                     </td>
-                    {isAda && <td className={basicCellClasses}>
+                    {isAda && <td className={"align-middle text-center"}>
                         <div className="table-share-link">
-                            <ShareLink linkUrl={boardLink} gameboardId={board.id} outline={isAda} clickAwayClose={isAda} />
+                            <ShareLink linkUrl={boardLink} gameboardId={board.id} innerClassName="btn-keyline" outline clickAwayClose />
                         </div>
                     </td>}
-                    {siteSpecific(
-                        <td className={"text-center align-middle"}>
-                            <Button outline color="solid" className={"bin-icon d-inline-block outline"} style={{
-                                width: "20px",
-                                minWidth: "20px",
-                            }} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
-                        </td>,
-                        <td className={"text-center align-middle overflow-hidden"}>
-                            <Input
-                                id={`board-delete-${board.id}`}
-                                type="checkbox"
-                                color="secondary"
-                                className={"isaac-checkbox me-n2"}
-                                checked={board && selectedBoards?.some(e => e.id === board.id)}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                    board && updateBoardSelection(board, event.target.checked)
-                                } aria-label="Delete quiz"
-                            />
-                        </td>
-                    )}
+                    {siteSpecific(<td className={"text-center align-middle"}>
+                        <IconButton icon={{name: "icon-bin", size: "sm", color: siteSpecific("tertiary", "primary")}} color={siteSpecific("", "keyline")} className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
+                    </td>,
+                    <td className={"text-center align-middle overflow-hidden"}>
+                        <Input
+                            id={`board-delete-${board.id}`}
+                            type="checkbox"
+                            color="secondary"
+                            className={"isaac-checkbox me-n2"}
+                            checked={board && selectedBoards?.some(e => e.id === board.id)}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                board && updateBoardSelection(board, event.target.checked)
+                            } aria-label="Delete quiz"
+                        />
+                    </td>)}
                 </>}
         </tr>)
         :
@@ -351,8 +347,8 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         </Col>
                     </Row>
                     <CardFooter className={"text-end p-3 mt-3"}>
-                        <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
-                        <Button color="keyline" className={"me-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                        <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
+                        <IconButton icon={{name: "icon-bin", size: "sm"}} color="keyline" className="action-button" aria-label="Delete quiz" title="Delete quiz" onClick={confirmDeleteBoard}/>
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={toggleAssignModal}>
                             Assign{hasAssignedGroups && " / Unassign"}
                         </Button>}

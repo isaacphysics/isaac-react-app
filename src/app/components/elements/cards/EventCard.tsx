@@ -19,7 +19,7 @@ const IconText = ({icon, children}: {icon: string, children: React.ReactNode}) =
 const PhysicsCardContents = ({event}: {event: AugmentedEvent}) => {
     const {location} = event;
     return <>
-        <IconText icon="icon-event">
+        <IconText icon="icon-events">
             <span>{formatEventCardDateSlim(event)}</span>
         </IconText>
         {location && location.address && <IconText icon="icon-location">

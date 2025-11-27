@@ -19,7 +19,7 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 
 export const TeacherOrTutorRequest = ({user}: {user: RegisteredUserDTO}) => {
     return <Container id="contact-page" className="pb-7">
-        <TitleAndBreadcrumb currentPageTitle="Request Account Upgrade" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle="Request Account Upgrade" icon={{type: "icon", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>
                 <Col size={9}>

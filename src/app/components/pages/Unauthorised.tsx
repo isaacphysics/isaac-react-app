@@ -7,7 +7,7 @@ export const Unauthorised = () => {
     const {pathname, state} = useLocation<{overridePathname?: string}>();
     return <Container>
         <div>
-            <TitleAndBreadcrumb breadcrumbTitleOverride="Unauthorised" currentPageTitle="Access denied" icon={{type: "hex", icon: "icon-error"}} />
+            <TitleAndBreadcrumb breadcrumbTitleOverride="Unauthorised" currentPageTitle="Access denied" icon={{type: "icon", icon: "icon-error"}} />
             <h3 className="my-4">
                 <small>
                     {"You do not have authorisation to access the page: "}

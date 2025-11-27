@@ -93,7 +93,7 @@ export const StudentResources = () => {
                     </TextBlock>
                     {featuredStudentChallengePod ? <IconCard card={{
                         title: featuredStudentChallengePod.title ?? "",
-                        icon: {src: "/assets/cs/icons/lightbulb-cyan.svg"},
+                        icon: {name: "icon-lightbulb-empty", color: "secondary"},
                         bodyText: featuredStudentChallengePod.value ?? "",
                         tag: featuredStudentChallengePod.subtitle ?? "",
                         clickUrl: featuredStudentChallengePod.url ?? "",
@@ -101,7 +101,7 @@ export const StudentResources = () => {
                         buttonStyle: "link",
                     }}/> : <IconCard card={{
                         title: "There are no active challenges at the moment.",
-                        icon: {src: "/assets/cs/icons/lightbulb-cyan.svg"},
+                        icon: {name: "icon-lightbulb-empty", color: "secondary"},
                         bodyText: "Check back soon!",
                     }}/>}
                 </ColumnSlice>

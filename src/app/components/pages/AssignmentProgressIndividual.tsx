@@ -376,15 +376,15 @@ export const ProgressDetails = ({assignment}: { assignment: EnhancedAssignmentWi
         <Card className="my-4">
             <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className={`icon ${assignment.dueDate && assignment.dueDate < new Date() ? "icon-event-completed" : "icon-event-upcoming"} icon-md me-2`} color="secondary"/>
+                    <i className={classNames("icon me-2", assignment.dueDate && assignment.dueDate < new Date() ? "icon-event-complete" : "icon-event-upcoming", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
                     Due: {formatDate(assignment.dueDate)}
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className="icon icon-group icon-md me-2" color="secondary"/>
+                    <i className={classNames("icon icon-group me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
                     {numStudentsAttemptedAll} of {progress.length} attempted all questions
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className="icon icon-task-complete icon-md me-2" color="secondary"/>
+                    <i className={classNames("icon icon-task-complete me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
                     {numStudentsCompletedAll} of {progress.length} got full marks
                 </div>
             </CardBody>
