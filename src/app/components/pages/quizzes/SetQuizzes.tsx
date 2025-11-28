@@ -1,11 +1,12 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {
-    showSetQuizzesModal,
     useAppDispatch,
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
     useCancelQuizAssignmentMutation,
-    useUpdateQuizAssignmentMutation
+    useUpdateQuizAssignmentMutation,
+    openActiveModal,
+    closeActiveModal
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -44,6 +45,7 @@ import { MainContent, ManageQuizzesSidebar, SetQuizzesSidebar, SidebarLayout } f
 import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
 import { AffixButton } from "../../elements/AffixButton";
 import { PageMetadata } from "../../elements/PageMetadata";
+import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -175,7 +177,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                             <AffixButton size="sm" affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }} className="me-3"
                                 onClick={(e) => {
                                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                    assignment.quizSummary && dispatch(showSetQuizzesModal(assignment.quizSummary));
+                                    assignment.quizSummary && dispatch(openActiveModal(SetQuizzesModal({quiz: assignment.quizSummary})));
                                     e.stopPropagation();}}>
                                 Set test
                             </AffixButton>
@@ -204,7 +206,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                         <Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
                             onClick={(e) => {
                                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                assignment.quizSummary && dispatch(showSetQuizzesModal(assignment.quizSummary));
+                                assignment.quizSummary && dispatch(openActiveModal(SetQuizzesModal({quiz: assignment.quizSummary})));
                                 e.stopPropagation();
                             }}
                         >
@@ -422,7 +424,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                     </div>
                                                 </Col>
                                                 <Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
-                                                    <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(showSetQuizzesModal(quiz))}>
+                                                    <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))}>
                                                         Set test
                                                     </Button>
                                                 </Col>
@@ -437,7 +439,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                             Actions
                                                         </DropdownToggle>
                                                         <DropdownMenu>
-                                                            <DropdownItem onClick={() => dispatch(showSetQuizzesModal(quiz))} style={{zIndex: '1'}}>
+                                                            <DropdownItem onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: quiz})))} style={{zIndex: '1'}}>
                                                                 Set test
                                                             </DropdownItem>
                                                             <DropdownItem divider />

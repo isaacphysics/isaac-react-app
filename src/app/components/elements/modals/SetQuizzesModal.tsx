@@ -18,7 +18,7 @@ import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {StyledSelect} from "../inputs/StyledSelect";
 import {Button, Form, FormFeedback, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
-import { AppGroup } from "../../../../IsaacAppTypes";
+import { ActiveModalProps, AppGroup } from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 
 
@@ -48,7 +48,7 @@ interface SetQuizzesModalProps {
     allowedToSchedule?: boolean;
 }
 
-export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: SetQuizzesModalProps) {
+function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: SetQuizzesModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
     const user = useAppSelector(selectors.user.loggedInOrNull);
@@ -233,3 +233,12 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
         </div>
     </Form>;
 }
+
+export const SetQuizzesModal = (props: SetQuizzesModalProps): ActiveModalProps => {
+    const {quiz} = props;
+
+    return {
+        title: `Setting test '${quiz.title ?? quiz.id}'`,
+        body: <SetQuizzesModalContent {...props}/>
+    };
+};

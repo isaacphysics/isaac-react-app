@@ -1,28 +1,13 @@
-import React, {Dispatch} from "react";
+import {Dispatch} from "react";
 import {Action} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, api} from "../../services";
 import {
-    AppDispatch,
     AppState,
-    closeActiveModal,
     extractMessage,
-    openActiveModal,
     selectors,
     showAxiosErrorToastIfNeeded
 } from "../index";
-import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
-import {SetQuizzesModal} from "../../components/elements/modals/SetQuizzesModal";
 import debounce from "lodash/debounce";
-
-export const showSetQuizzesModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: Date, scheduledStartDate?: Date, feedbackMode?: QuizFeedbackMode) => (dispatch: AppDispatch) => {
-    dispatch(openActiveModal({
-        closeAction: () => {
-            dispatch(closeActiveModal());
-        },
-        title: `Setting test '${quiz.title ?? quiz.id}'`,
-        body: <SetQuizzesModal quiz={quiz} dueDate={dueDate} scheduledStartDate={scheduledStartDate} feedbackMode={feedbackMode}/>
-    }));
-};
 
 export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST, quizAssignmentId});
