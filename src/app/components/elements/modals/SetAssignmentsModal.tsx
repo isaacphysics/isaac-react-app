@@ -160,7 +160,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
             </Label>}
         </FormGroup>
         
-        <Button className="my-2" block color={siteSpecific("keyline", "solid")} type="submit">
+        <Button className="my-2" block color="solid" type="submit">
             Assign to group{selectedGroups.length > 1 && "s"}
         </Button>
     </Form>;
