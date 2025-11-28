@@ -98,8 +98,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
                 setDueDate(addDays(6, nthUtcHourOf(0, scheduledDate)));
             }
         } else {
-            setScheduledStartDate(null as unknown as Date);
-            {/* DANGER here with force-casting Date|null to Date */}
+            setScheduledStartDate(undefined);
         }
     }
 
@@ -145,7 +144,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
             <Label data-testid="modal-due-date-selector" className="w-100 pb-2">
                 <span className="form-required">Due date:</span>
                 <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} invalid={validationAttempted && (dueDateInvalid || !dueDate)}
-                    onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date);}}/> {/* DANGER here with force-casting Date|null to Date */}
+                    onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate ?? undefined);}}/>
                 <FormFeedback>{!dueDate && `Due dates are required for assignments.`}</FormFeedback>
                 <FormFeedback>{dueDateInvalid && "Due date must be on or after start date and in the future."}</FormFeedback>
             </Label>
