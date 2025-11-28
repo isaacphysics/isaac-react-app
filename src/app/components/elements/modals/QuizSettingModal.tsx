@@ -117,18 +117,10 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
 
                         return <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
                             <StyledSelect isMulti placeholder="Select groups"
-                                closeMenuOnSelect={false}
-                                options={groupOptions}
-                                onChange={(s) => {
-                                    selectOnChange(setSelectedGroups, false)(s);
-                                }}
                                 value={selectedGroups}
-                                isSearchable
-                                menuPortalTarget={document.body}
-                                styles={{
-                                    control: (styles) => ({...styles, ...(validationAttempted && groupInvalid ? {borderColor: '#dc3545'} : {})}),
-                                    menuPortal: base => ({...base, zIndex: 9999}),
-                                }}
+                                closeMenuOnSelect={false}
+                                onChange={selectOnChange(setSelectedGroups, false)}
+                                options={groupOptions}
                             />
                         </div>;
                     }}
@@ -158,11 +150,6 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                             }
                         }}
                         options={feedbackOptionsList}
-                        menuPortalTarget={document.body}
-                        styles={{
-                            control: (styles) => ({...styles, ...(validationAttempted && feedbackModeInvalid ? {borderColor: '#dc3545'} : {})}),
-                            menuPortal: base => ({...base, zIndex: 9999}),
-                        }}
                     />
                 </div>
                 <FormFeedback>Please select a feedback mode</FormFeedback>

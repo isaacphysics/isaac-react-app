@@ -114,7 +114,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
             <Label data-testid="modal-groups-selector" className="w-100 pb-2">
                 <span className="form-required">Groups:</span>
                 <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
-                    <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
+                    <StyledSelect inputId="groups-to-assign" isMulti placeholder="None"
                         value={selectedGroups}
                         closeMenuOnSelect={false}
                         onChange={selectOnChange(setSelectedGroups, false)}
