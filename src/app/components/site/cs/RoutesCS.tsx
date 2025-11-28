@@ -37,6 +37,7 @@ import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
 import {StudentChallenges} from "../../pages/StudentChallenges";
 import { QuizView } from "../../pages/quizzes/QuizView";
 import {Overview} from "../../pages/Overview";
+import { TeacherMentoring } from "../../pages/TeacherMentoring";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -134,5 +135,8 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/equality" ifUser={isStaff} component={Equality} />,
 
     <TrackedRoute key={key++} exact path={"/student_challenges"} component={StudentChallenges} />,
-    <Redirect key={key++} from={"/pages/student_challenges"} to={"/student_challenges"} />
+    <Redirect key={key++} from={"/pages/student_challenges"} to={"/student_challenges"} />,
+
+    <TrackedRoute key={key++} exact path="/teacher_mentoring" component={TeacherMentoring} />,
+    <Redirect key={key++} from={"/pages/teacher_mentoring_2025"} to={"/teacher_mentoring"} />,
 ];
