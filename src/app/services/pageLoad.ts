@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { AppState, mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../state";
 import { scrollTopOnPageLoad } from "./scrollManager";
-import { history } from "./";
+import { history, isPhy } from "./";
 import { Action, Location } from "history";
 import { useReducedMotion } from "./accessibility";
 import { focusMainContent } from "./focus";
@@ -16,8 +16,8 @@ export const OnPageLoad = () => {
 
     const onPageLoad = useCallback((location: Location, action: Action) => {
         if (loadedPathname !== location.pathname) {
-            // this should only run on initial page load or when the pathname changes, not query params or hash changes
-            dispatch(sidebarSlice.actions.setOpen(false));
+            // reset sidebar state for physics -- this should only run on initial page load or when the pathname changes, not query params or hash changes
+            if (isPhy) dispatch(sidebarSlice.actions.setOpen(false));
             scrollTop(loadedPathname, location.pathname, action);
             setLoadedPathname(location.pathname);
             dispatch(mainContentIdSlice.actions.clear()); // reset so that if the new page sets it to the same element id, it still triggers a focus

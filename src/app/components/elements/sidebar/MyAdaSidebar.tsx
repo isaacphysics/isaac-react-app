@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { ContentSidebar, ContentSidebarProps } from "../layout/SidebarLayout";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import classNames from "classnames";
 import { useHistory } from "react-router";
-import { selectors, useAppSelector } from "../../../state";
+import { selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
 import { above, isStudent, isTeacherOrAbove, useDeviceSize } from "../../../services";
 
 interface MyAdaTab {
@@ -81,15 +81,15 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
 
 interface AdaSidebarCollapserProps extends React.HTMLAttributes<HTMLButtonElement> {
     collapsed: boolean;
-    setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+    toggleSidebar: () => void;
 }
 
-const AdaSidebarCollapser = ({collapsed, setCollapsed, ...rest}: AdaSidebarCollapserProps) => {
+const AdaSidebarCollapser = ({collapsed, toggleSidebar, ...rest}: AdaSidebarCollapserProps) => {
     return <button
         {...rest}
         type="button"
         className={classNames("bg-transparent w-100 d-flex justify-content-center align-items-center px-3 my-ada-tab", rest.className)}
-        onClick={() => setCollapsed(c => !c)}
+        onClick={toggleSidebar}
     >
         <b className="flex-grow-1 text-start">My Ada</b>
         <i className={classNames("icon icon-md icon-md", collapsed ? "icon-chevron-right" : "icon-chevron-left")} aria-hidden="true" />
@@ -99,13 +99,16 @@ const AdaSidebarCollapser = ({collapsed, setCollapsed, ...rest}: AdaSidebarColla
 
 export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const history = useHistory();
+    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.loggedInOrNull);
     const deviceSize = useDeviceSize();
-    const [collapsed, setCollapsed] = useState(false);
+
+    const collapsed = useAppSelector(selectors.sidebar.open);
+    const toggleSidebar = () => dispatch(sidebarSlice.actions.toggle());
 
     return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": collapsed})} buttonTitle="My Ada">
         <div className="sticky-top">
-            {above['lg'](deviceSize) && <AdaSidebarCollapser collapsed={collapsed} setCollapsed={setCollapsed} />}
+            {above['lg'](deviceSize) && <AdaSidebarCollapser collapsed={collapsed} toggleSidebar={toggleSidebar} />}
 
             {Object.entries(MyAdaTabs)
                 .filter(([_, tab]) => {
