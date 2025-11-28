@@ -14,6 +14,7 @@ interface CoordinateInputProps {
     placeholderValues: string[];
     useBrackets: boolean;
     separator: string;
+    prefixes?: string[];
     suffixes?: string[];
     numberOfDimensions: number;
     onChange: (value: Immutable<CoordinateItemDTO>) => void;
@@ -89,11 +90,12 @@ const cleanItem = function (item: Immutable<CoordinateItemDTO>) {
 };
 
 const CoordinateInput = (props: CoordinateInputProps) => {
-    const {value, placeholderValues, useBrackets, separator, suffixes, numberOfDimensions, onChange, readonly, remove} = props;
+    const {value, placeholderValues, useBrackets, separator, prefixes, suffixes, numberOfDimensions, onChange, readonly, remove} = props;
     return <span className="coordinate-input">
         {useBrackets ? "(" : ""}
         {[...Array(numberOfDimensions)].map((_, i) =>
             <span key={i}>
+                {prefixes && prefixes[i] && <Markup encoding="latex">{prefixes[i]}</Markup>}
                 <Input
                     type="text"
                     className="force-print"
@@ -155,6 +157,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                     placeholderValues={doc.placeholderValues ?? []}
                     useBrackets={doc.useBrackets ?? true}
                     separator={doc.separator ?? ","}
+                    prefixes={doc.prefixes}
                     suffixes={doc.suffixes}
                     numberOfDimensions={numberOfDimensions}
                     value={currentAttempt?.items?.[index] ?? getEmptyCoordItem()}
@@ -169,6 +172,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                             placeholderValues={doc.placeholderValues ?? []}
                             useBrackets={doc.useBrackets ?? true}
                             separator={doc.separator ?? ","}
+                            prefixes={doc.prefixes}
                             suffixes={doc.suffixes}
                             numberOfDimensions={numberOfDimensions}
                             value={item}
@@ -183,6 +187,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                     placeholderValues={doc.placeholderValues ?? []}
                     useBrackets={doc.useBrackets ?? true}
                     separator={doc.separator ?? ","}
+                    prefixes={doc.prefixes}
                     suffixes={doc.suffixes}
                     numberOfDimensions={numberOfDimensions}
                     value={getEmptyCoordItem()}

@@ -181,6 +181,6 @@ form:has(> .question-component), div.quiz-question-container:has(> .question-com
   }
 }
 
-.coordinate-input-separator, .coordinate-input input + span {
+.coordinate-input-separator, .coordinate-input > span {
   font-size: 1.2rem;
 }
