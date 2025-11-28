@@ -71,7 +71,7 @@ img[aria-disabled="true"] {
 
 .icon-chevron-right {
   // use for dropdowns, tabs, etc. prefer arrow-right for links.
-  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 35% 50%);
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 65% 50%);
 }
 
 .icon-chevron-down {
@@ -87,7 +87,7 @@ img[aria-disabled="true"] {
 }
 
 .icon-chevron-up {
-  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 35% 50%);
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 65% 50%);
   rotate: -90deg;
 }
 
