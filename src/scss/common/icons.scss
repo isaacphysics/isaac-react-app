@@ -104,18 +104,6 @@ img[aria-disabled="true"] {
   @include svg-icon('/assets/common/icons/search-icon.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
-.icon-file {
-  @include svg-icon('/assets/common/icons/file.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
-.icon-person {
-  @include svg-icon('/assets/common/icons/person.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
-.icon-school {
-  @include svg-icon('/assets/common/icons/school.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
-}
-
 .icon-event-upcoming {
   @include svg-icon('/assets/common/icons/event-upcoming.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
