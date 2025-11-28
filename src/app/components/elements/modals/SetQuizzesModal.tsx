@@ -11,7 +11,7 @@ import {
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
 } from "../../../state";
-import {assignMultipleQuiz, isDefined, Item, selectOnChange, siteSpecific, TODAY, UTC_MIDNIGHT_IN_SIX_DAYS} from "../../../services";
+import {addDays, assignMultipleQuiz, isDefined, Item, nthUtcHourOf, selectOnChange, siteSpecific, TODAY, UTC_MIDNIGHT_IN_SIX_DAYS} from "../../../services";
 import range from "lodash/range";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -58,6 +58,7 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
     const [validationAttempted, setValidationAttempted] = useState(false);
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date | undefined>(initialDueDate ?? UTC_MIDNIGHT_IN_SIX_DAYS);
+    const [userSelectedDueDate, setUserSelectedDueDate] = useState<boolean>(false);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date | undefined>(initialScheduledStartDate);
     const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | undefined>(initialFeedbackMode);
     const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery();
@@ -84,12 +85,29 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(undefined);
+                setUserSelectedDueDate(false);
                 setScheduledStartDate(undefined);
                 setFeedbackMode(undefined);
                 dispatch(closeActiveModal());
                 changePage("/set_tests#manage");
             }
         });
+    }
+
+    function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
+        const utcDate = e.target.valueAsDate;
+        if (utcDate) {
+            const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
+            // Sets the scheduled date to 7AM in the timezone of the browser.
+            setScheduledStartDate(scheduledDate);
+
+            if (!userSelectedDueDate) {
+                // Sets the due date to 6 days after the scheduled start date at UTC midnight (if the user hasn't already selected a due date).
+                setDueDate(addDays(6, nthUtcHourOf(0, scheduledDate)));
+            }
+        } else {
+            setScheduledStartDate(undefined);
+        }
     }
 
     const currentAssignments = quizAssignments?.filter(assignment => assignment.quizId === quiz.id) ?? [];
@@ -103,7 +121,7 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
 
     const scheduledQuizHelpTooltipId = "scheduled-quiz-help-tooltip";
 
-    return <Form className="mb-4" onSubmit={(e) => {e.preventDefault(); attemptAssign();}}>
+    return <Form className="mb-4" onSubmit={e => {e.preventDefault(); attemptAssign();}}>
         <FormGroup>
             <Label className="w-100">
                 <span className="form-required">Set test to the following group(s):</span>
@@ -166,7 +184,7 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
                     value={scheduledStartDate}
                     invalid={validationAttempted && scheduledStartDateInvalid}
                     yearRange={yearRange}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate ?? undefined)}
+                    onChange={setScheduledStartDateAtSevenAM}
                 />
                 <UncontrolledTooltip placement="top" autohide={false} target={scheduledQuizHelpTooltipId}>
                     You can schedule a test to appear in the future by setting a start date.
@@ -184,7 +202,7 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
                     invalid={validationAttempted && dueDateInvalid} 
                     value={dueDate} 
                     yearRange={yearRange}
-                    onChange={(e) => setDueDate(e.target.valueAsDate ?? undefined)}
+                    onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate ?? undefined);}}
                 />
                 <FormFeedback>
                     {!isDefined(dueDate) 
