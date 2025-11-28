@@ -28,6 +28,7 @@ export function useAssignmentProgressAccessibilitySettings({user}: {user: Regist
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
     const [attemptedOrCorrect, setAttemptedOrCorrect] = useState<"ATTEMPTED" | "CORRECT">("CORRECT");
+    const [displayIndividualMarks, setDisplayIndividualMarks] = useState(false);
     const [assignmentOrder, setAssignmentOrder] = useState<AssignmentOrderSpec>(AssignmentOrder.startDateDescending);
     const [groupSortOrder, setGroupSortOrder] = useState<GroupSortOrder>(GroupSortOrder.Alphabetical);
 
@@ -35,6 +36,7 @@ export function useAssignmentProgressAccessibilitySettings({user}: {user: Regist
         colourBlind, setColourBlind,
         formatAsPercentage, setFormatAsPercentage,
         attemptedOrCorrect, setAttemptedOrCorrect,
+        displayIndividualMarks, setDisplayIndividualMarks,
         assignmentOrder, setAssignmentOrder,
         groupSortOrder, setGroupSortOrder,
         isTeacher: isTeacherOrAbove(user),
