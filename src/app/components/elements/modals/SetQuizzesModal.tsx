@@ -11,7 +11,7 @@ import {
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
 } from "../../../state";
-import {assignMultipleQuiz, isDefined, Item, selectOnChange, siteSpecific, TODAY} from "../../../services";
+import {assignMultipleQuiz, isDefined, Item, selectOnChange, siteSpecific, TODAY, UTC_MIDNIGHT_IN_SIX_DAYS} from "../../../services";
 import range from "lodash/range";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -57,9 +57,9 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
 
     const [validationAttempted, setValidationAttempted] = useState(false);
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
-    const [dueDate, setDueDate] = useState<Date | null>(initialDueDate ?? null);
-    const [scheduledStartDate, setScheduledStartDate] = useState<Date | null>(initialScheduledStartDate ?? null);
-    const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | null>(initialFeedbackMode ?? null);
+    const [dueDate, setDueDate] = useState<Date | undefined>(initialDueDate ?? UTC_MIDNIGHT_IN_SIX_DAYS);
+    const [scheduledStartDate, setScheduledStartDate] = useState<Date | undefined>(initialScheduledStartDate);
+    const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | undefined>(initialFeedbackMode);
     const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery();
 
     const yearRange = range(currentYear, currentYear + 5);
@@ -76,16 +76,16 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
         dispatch(assignMultipleQuiz({
             quizId: quiz?.id as string,
             groups: selectedGroups,
-            dueDate: dueDate ?? undefined,
-            scheduledStartDate: scheduledStartDate ?? undefined,
-            quizFeedbackMode: feedbackMode ?? undefined,
+            dueDate: dueDate,
+            scheduledStartDate: scheduledStartDate,
+            quizFeedbackMode: feedbackMode,
             userId: user?.id
         })).then(success => {
             if (success) {
                 setSelectedGroups([]);
-                setDueDate(null);
-                setScheduledStartDate(null);
-                setFeedbackMode(null);
+                setDueDate(undefined);
+                setScheduledStartDate(undefined);
+                setFeedbackMode(undefined);
                 dispatch(closeActiveModal());
                 changePage("/set_tests#manage");
             }
@@ -97,7 +97,7 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
     const alreadyAssignedToAGroup = selectedGroups.some(group => currentAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
 
     const groupInvalid = selectedGroups.length === 0 || alreadyAssignedToAGroup;
-    const feedbackModeInvalid = feedbackMode === null;
+    const feedbackModeInvalid = !isDefined(feedbackMode);
     const dueDateInvalid = !isDefined(dueDate) || (scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false) || dueDate.valueOf() < Date.now();
     const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() < TODAY().valueOf(); // optional, so undefined is valid
 
@@ -142,7 +142,7 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
                 <span className="form-required">What level of feedback should students get:</span>
                 <div className={classNames({"is-invalid": validationAttempted && feedbackModeInvalid})}>
                     <StyledSelect
-                        value={feedbackMode ? feedbackOptionsMap[feedbackMode] : null}
+                        value={feedbackMode && feedbackOptionsMap[feedbackMode]}
                         onChange={(s) => {
                             if (s && (s as QuizFeedbackOption).value) {
                                 const item = s as QuizFeedbackOption;
@@ -163,10 +163,10 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
                     <i id={scheduledQuizHelpTooltipId} className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help")}/>
                 </div>
                 <DateInput 
-                    value={scheduledStartDate ?? undefined} 
+                    value={scheduledStartDate}
                     invalid={validationAttempted && scheduledStartDateInvalid}
                     yearRange={yearRange}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate ?? undefined)}
                 />
                 <UncontrolledTooltip placement="top" autohide={false} target={scheduledQuizHelpTooltipId}>
                     You can schedule a test to appear in the future by setting a start date.
@@ -182,9 +182,9 @@ export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDa
                 <span className="form-required">Due date:</span>
                 <DateInput 
                     invalid={validationAttempted && dueDateInvalid} 
-                    value={dueDate ?? undefined} 
+                    value={dueDate} 
                     yearRange={yearRange}
-                    onChange={(e) => setDueDate(e.target.valueAsDate)}
+                    onChange={(e) => setDueDate(e.target.valueAsDate ?? undefined)}
                 />
                 <FormFeedback>
                     {!isDefined(dueDate) 
