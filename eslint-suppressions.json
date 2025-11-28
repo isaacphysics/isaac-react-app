@@ -440,7 +440,7 @@
       "count": 2
     }
   },
-  "src/app/components/elements/modals/QuizSettingModal.tsx": {
+  "src/app/components/elements/modals/SetQuizzesModal.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
