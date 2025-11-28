@@ -14,7 +14,7 @@ export const TeacherMentoring = () => {
     const {data: groupMemberships} = useGetGroupMembershipsQuery(userId);
     const userInGroup = groupMemberships?.some(gm => gm.group.id == groupId);
 
-    const groupJoinPrompt = <div className="bg-yellow-300 p-4">
+    const groupJoinPrompt = <div className="bg-yellow-300 p-4 mb-3">
         <span className="icon-help ms-0"/>
         {user?.loggedIn
             ? <>To participate in the programme, join the teacher mentoring group on Ada CS so we can set you questions. You can
@@ -27,12 +27,12 @@ export const TeacherMentoring = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Teacher mentoring programme"} />
-        <Row>
+        <Row className="mb-3">
             <Col lg={{size: 8, offset: 2}}>
                 <PageFragment fragmentId={"teacher_mentoring_2025_intro"} />
                 {!userInGroup && groupJoinPrompt}
                 <PageFragment fragmentId={"teacher_mentoring_2025_info"} />
-                {isTeacherOrAbove(user) && <PageFragment fragmentId={"teacher_mentoring_2025_tabs"} />}
+                {isTeacherOrAbove(user) ? <PageFragment fragmentId={"teacher_mentoring_2025_tabs"} /> : <b>You must be signed in with a teacher account to view the weekly resources.</b>}
             </Col>
         </Row>
     </Container>;
