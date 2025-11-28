@@ -41,11 +41,11 @@ const feedbackOptionsMap = feedbackOptionsList.reduce((obj, option) => {
 }, {} as {[key in QuizFeedbackMode]: QuizFeedbackOption});
 
 interface QuizSettingModalProps {
-    allowedToSchedule?: boolean;
     quiz: ContentSummaryDTO | IsaacQuizDTO;
     dueDate?: Date | null;
     scheduledStartDate?: Date | null;
     feedbackMode?: QuizFeedbackMode | null;
+    allowedToSchedule?: boolean;
 }
 
 export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
@@ -92,8 +92,9 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         });
     }
 
-    const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.quizId === quiz.id && assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() > Date.now() : true)) : false;
-    const alreadyAssignedToAGroup = selectedGroups.some(group => quizAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
+    const currentAssignments = quizAssignments?.filter(assignment => assignment.quizId === quiz.id) ?? [];
+    const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() > Date.now() : true)) : false;
+    const alreadyAssignedToAGroup = selectedGroups.some(group => currentAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
 
     const groupInvalid = selectedGroups.length === 0 || alreadyAssignedToAGroup;
     const feedbackModeInvalid = feedbackMode === null;
@@ -136,8 +137,12 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 />
                 {(selectedGroups.length === 0 
                     ? <FormFeedback>You must select a group</FormFeedback> 
-                    : <FormFeedback>{siteSpecific("You cannot reassign a test to this group(s) until the due date has passed.", 
-                        "This test has already been assigned to this group.")}</FormFeedback>
+                    : <FormFeedback>
+                        {`${siteSpecific(
+                            `You cannot reassign a question deck to ${selectedGroups.length === 1 ? "this group" : "the following groups"} until the due date has passed:`,
+                            `This quiz has already been assigned to ${selectedGroups.length === 1 ? "this group" : "the following groups"}:`)}
+                        ${selectedGroups.filter(g => currentAssignments.some(a => a.groupId === g.value)).map(g => g.label).join(", ")}`}
+                    </FormFeedback>
                 )}
             </Label>
         </FormGroup>
