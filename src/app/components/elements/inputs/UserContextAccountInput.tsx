@@ -145,14 +145,14 @@ export function UserContextAccountInput({
     const isAllStages = userContexts.length === 1 && userContexts[0].stage === STAGE.ALL;
 
     return <WithLinkableSetting id={"account-context"} className={className}>
-        <Label htmlFor="user-context-selector" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
-            {siteSpecific(
-                <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
-                <span>Show me content for...</span>
-            )}
-        </Label>
-        <React.Fragment>
-            <i id={`show-me-content-${componentId}`} className={classNames("mx-2 icon icon-info", siteSpecific("icon-color-grey", "icon-color-black icon-sm mb-n1"))} />
+        <div className="mb-2">
+            <Label htmlFor="user-context-selector" className={classNames("fw-bold mb-0", (required ? "form-required" : "form-optional"))}>
+                {siteSpecific(
+                    <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
+                    <span>Show me content for...</span>
+                )}
+            </Label>
+            <i id={`show-me-content-${componentId}`} className={classNames("icon icon-inline icon-info mx-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
             <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                 {siteSpecific(<>
                     {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
@@ -167,7 +167,7 @@ export function UserContextAccountInput({
                     }
                 </>)}
             </UncontrolledTooltip>
-        </React.Fragment>
+        </div>
         
         <div id="user-context-selector" className={classNames({"d-flex flex-wrap": isPhy})}>
 

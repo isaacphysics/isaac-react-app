@@ -222,9 +222,15 @@ img[aria-disabled="true"] {
   --mask-size: initial;
 }
 
-.icon-inline { // intended for inline 16px icons
+.icon-inline {
   --icon-size: 1lh;
-  --mask-size: 83%;
+  --mask-size: 16px;
+  vertical-align: bottom;
+}
+
+.icon-inline-sm {
+  --icon-size: 1lh;
+  --mask-size: 20px;
   vertical-align: bottom;
 }
 
