@@ -13,28 +13,21 @@ export const TeacherMentoring = () => {
     const {data: groupMemberships} = useGetGroupMembershipsQuery(userId);
     const userInGroup = groupMemberships?.some(gm => gm.group.id == groupId);
 
-    const groupJoinBanner = <Alert color={"warning"}>
-        <p>
-            To participate in the program you must:
-            <ul className="mt-2">
-                <li>
-                    <b>Have a teacher account</b> on Ada Computer Science.
-                    If you don&apos;t yet have an account, <Link to = "/register/teacher/details">sign up here</Link>.
-                </li>
-                <li>
-                    <b>Join the teacher mentoring group</b> on Ada CS so we can set you questions. You can
-                    <Link to={"/account?authToken=T33YVV"}> join the group here</Link>.
-                </li>
-            </ul>
-            All of our resources are completely free. <b>You can join (or leave) the programme at any time.</b>
-        </p>
+    const groupJoinPrompt = <Alert color={"warning"}> {/* a11y? */}
+        {user?.loggedIn
+            ? <>To participate in the program, join the teacher mentoring group on Ada CS so we can set you questions. You can
+                <Link to={"/account?authToken=T33YVV"}> join the group here</Link>.</>
+
+            : <><Link to={"/account?authToken=T33YVV"}>Log in or sign up</Link> to join the teacher mentoring group.</>
+        }
+        <p className="mt-2">All of our resources are completely free. You can join (or leave) the programme at any time.</p>
     </Alert>;
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Teacher mentoring programme"} />
         <Row>
             <Col lg={{size: 8, offset: 2}}>
-                {!userInGroup && groupJoinBanner}
+                {!userInGroup && groupJoinPrompt}
                 <PageFragment fragmentId={"teacher_mentoring_2025_fragment"} />
             </Col>
         </Row>
