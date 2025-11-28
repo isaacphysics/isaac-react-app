@@ -243,6 +243,7 @@ export interface IsaacCoordinateQuestionDTO extends QuestionDTO {
     placeholderValues?:  string[];
     useBrackets?: boolean;
     separator?: string;
+    prefixes?: string[];
     suffixes?: string[];
     buttonText?: string;
 }
