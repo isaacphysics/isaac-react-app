@@ -103,9 +103,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
 
     const scheduledQuizHelpTooltipId = "scheduled-quiz-help-tooltip";
 
-    return <Form 
-        className={classNames("mb-4")} 
-        onSubmit={(e) => {e.preventDefault(); attemptAssign();}}>
+    return <Form className="mb-4" onSubmit={(e) => {e.preventDefault(); attemptAssign();}}>
         <FormGroup>
             <Label className="w-100">
                 <span className="form-required">Set test to the following group(s):</span>
@@ -139,8 +137,8 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                     ? <FormFeedback>You must select a group</FormFeedback> 
                     : <FormFeedback>
                         {`${siteSpecific(
-                            `You cannot reassign a question deck to ${selectedGroups.length === 1 ? "this group" : "the following groups"} until the due date has passed:`,
-                            `This quiz has already been assigned to ${selectedGroups.length === 1 ? "this group" : "the following groups"}:`)}
+                            `You cannot reassign a test to ${selectedGroups.length === 1 ? "this group" : "the following groups"} until the due date has passed:`,
+                            `This test has already been assigned to ${selectedGroups.length === 1 ? "this group" : "the following groups"}:`)}
                         ${selectedGroups.filter(g => currentAssignments.some(a => a.groupId === g.value)).map(g => g.label).join(", ")}`}
                     </FormFeedback>
                 )}
@@ -179,7 +177,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 </div>
                 <DateInput 
                     value={scheduledStartDate ?? undefined} 
-                    invalid={scheduledStartDateInvalid || undefined}
+                    invalid={validationAttempted && scheduledStartDateInvalid}
                     yearRange={yearRange}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate)}
                 />
