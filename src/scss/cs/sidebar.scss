@@ -1,23 +1,51 @@
 .sidebar {
     background-color: $cs-white;
     border-right: 1px solid $cs-silver;
+    overflow: clip;
+
+    @include not-reduced-motion {
+        transition: all 0.3s ease-out;
+        
+        b {
+            transition: opacity 0.3s ease-out;
+            white-space: nowrap;
+        }
+    }
 
     &:not(.collapsed) {
         width: 220px;
         max-width: 220px;
         min-width: 220px;
+
+        b {
+            opacity: 1;
+        }
     }
 
     &.collapsed {
-        width: 72px;
-        max-width: 72px;
+        width: 69px; // 2*20px padding + 24px icon + 5px border
+        max-width: 69px;
+        min-width: 69px;
 
         b {
-            display: none;
+            opacity: 0;
+            max-width: 0;
         }
     }
 
     button i {
         --mask-size: 60%;
+    }
+}
+
+.my-ada-tab {
+  height: 58px;
+}
+
+button.my-ada-tab:first-child { // collapser tab
+    border-right: 5px solid transparent;
+
+    i {
+        margin-right: 3px;
     }
 }

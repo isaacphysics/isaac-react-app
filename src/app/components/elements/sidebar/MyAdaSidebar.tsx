@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { useHistory } from "react-router";
 import { selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
 import { above, isStudent, isTeacherOrAbove, useDeviceSize } from "../../../services";
+import { Spacer } from "../Spacer";
 
 interface MyAdaTab {
     title: string;
@@ -88,11 +89,12 @@ const AdaSidebarCollapser = ({collapsed, toggleSidebar, ...rest}: AdaSidebarColl
     return <button
         {...rest}
         type="button"
-        className={classNames("bg-transparent w-100 d-flex justify-content-center align-items-center px-3 my-ada-tab", rest.className)}
+        className={classNames("bg-transparent d-flex justify-content-between align-items-center w-100 px-3 my-ada-tab", rest.className)}
         onClick={toggleSidebar}
     >
-        <b className="flex-grow-1 text-start">My Ada</b>
-        <i className={classNames("icon icon-md icon-md", collapsed ? "icon-chevron-right" : "icon-chevron-left")} aria-hidden="true" />
+        <b>My Ada</b>
+        <Spacer />
+        <i className={classNames("icon icon-md", collapsed ? "icon-chevron-right" : "icon-chevron-left")} aria-hidden="true" />
     </button>;
 };
 
