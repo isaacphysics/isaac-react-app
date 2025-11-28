@@ -19,11 +19,6 @@
   width: 30px;
 }
 
-.icon-help-q {
-  @include svg-icon-raw('/assets/cs/icons/help.svg', 20px, 20px, 100%);
-  margin-right: 10px;
-}
-
 .icon-error {
   @include svg-icon-raw('/assets/cs/icons/error.svg', 24px, 24px);
   margin-bottom: -6px;
