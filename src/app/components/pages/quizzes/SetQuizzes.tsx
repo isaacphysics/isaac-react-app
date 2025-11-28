@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {
-    showQuizSettingModal,
+    showSetQuizzesModal,
     useAppDispatch,
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
@@ -175,7 +175,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                             <AffixButton size="sm" affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }} className="me-3"
                                 onClick={(e) => {
                                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                    assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
+                                    assignment.quizSummary && dispatch(showSetQuizzesModal(assignment.quizSummary));
                                     e.stopPropagation();}}>
                                 Set test
                             </AffixButton>
@@ -204,7 +204,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                         <Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
                             onClick={(e) => {
                                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
+                                assignment.quizSummary && dispatch(showSetQuizzesModal(assignment.quizSummary));
                                 e.stopPropagation();
                             }}
                         >
@@ -422,7 +422,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                     </div>
                                                 </Col>
                                                 <Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
-                                                    <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(showQuizSettingModal(quiz))}>
+                                                    <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(showSetQuizzesModal(quiz))}>
                                                         Set test
                                                     </Button>
                                                 </Col>
@@ -437,7 +437,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                             Actions
                                                         </DropdownToggle>
                                                         <DropdownMenu>
-                                                            <DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz))} style={{zIndex: '1'}}>
+                                                            <DropdownItem onClick={() => dispatch(showSetQuizzesModal(quiz))} style={{zIndex: '1'}}>
                                                                 Set test
                                                             </DropdownItem>
                                                             <DropdownItem divider />

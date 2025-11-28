@@ -7,7 +7,7 @@ import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
-import { selectors, showQuizSettingModal, useAppDispatch, useAppSelector } from "../../../state";
+import { selectors, showSetQuizzesModal, useAppDispatch, useAppSelector } from "../../../state";
 import { UnionToIntersection } from "@reduxjs/toolkit/dist/tsHelpers";
 import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
@@ -146,7 +146,7 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
     const dispatch = useAppDispatch();
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const quizButton = isQuizSetter ?
-        <AffixButton size="md" color="solid" onClick={() => (dispatch(showQuizSettingModal(item)))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color="solid" onClick={() => (dispatch(showSetQuizzesModal(item)))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
             Set test
         </AffixButton> :
         <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>

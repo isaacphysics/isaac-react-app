@@ -40,7 +40,7 @@ const feedbackOptionsMap = feedbackOptionsList.reduce((obj, option) => {
     return obj;
 }, {} as {[key in QuizFeedbackMode]: QuizFeedbackOption});
 
-interface QuizSettingModalProps {
+interface SetQuizzesModalProps {
     quiz: ContentSummaryDTO | IsaacQuizDTO;
     dueDate?: Date | null;
     scheduledStartDate?: Date | null;
@@ -48,7 +48,7 @@ interface QuizSettingModalProps {
     allowedToSchedule?: boolean;
 }
 
-export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
+export function SetQuizzesModal({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: SetQuizzesModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
     const user = useAppSelector(selectors.user.loggedInOrNull);

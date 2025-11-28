@@ -29,7 +29,7 @@ import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import {Alert, Button, Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
-import {closeActiveModal, openActiveModal, showQuizSettingModal, useAppDispatch,} from "../../../state";
+import {closeActiveModal, openActiveModal, showSetQuizzesModal, useAppDispatch,} from "../../../state";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import {EditContentButton} from "../EditContentButton";
 import {Markup} from "../markup";
@@ -124,7 +124,7 @@ function QuizDetails({attempt, sections, questions, pageLink}: QuizAttemptProps)
 function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewProps) {
     const dispatch = useAppDispatch();
     if (view) {
-        return isTeacherOrAbove(user) && <Button className="float-end ms-3 mb-3" onClick={() => dispatch(showQuizSettingModal(view.quiz!))}>Set test</Button>;
+        return isTeacherOrAbove(user) && <Button className="float-end ms-3 mb-3" onClick={() => dispatch(showSetQuizzesModal(view.quiz!))}>Set test</Button>;
     }
     else if (preview) {
         return <>
@@ -132,7 +132,7 @@ function QuizHeader({attempt, preview, view, user}: QuizAttemptProps | QuizViewP
             <div data-testid="quiz-action" className="d-flex">
                 <p>You are previewing this test.</p>
                 <Spacer />
-                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz!))}>Set test</Button>}
+                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showSetQuizzesModal(attempt.quiz!))}>Set test</Button>}
             </div>
         </>;
     } else if (isDefined(attempt.quizAssignment)) {
