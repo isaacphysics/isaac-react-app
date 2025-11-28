@@ -224,7 +224,7 @@ const AssignmentDisplay = ({board, currentAssignees, setCurrentAssignees, unassi
                                     : assignee.startDate).toDateString()}
                             </span>
                         </>}
-                        <button className="close bg-transparent" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>
+                        <button className={classNames("close bg-transparent", {"mt-n1": isPhy})} aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>
                             ×
                         </button>
                     </li>

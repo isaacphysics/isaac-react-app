@@ -134,7 +134,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                     }}
                 />
                 {(selectedGroups.length === 0 
-                    ? <FormFeedback>You must select a group</FormFeedback> 
+                    ? <FormFeedback>Please select a group</FormFeedback> 
                     : <FormFeedback>
                         {`${siteSpecific(
                             `You cannot reassign a test to ${selectedGroups.length === 1 ? "this group" : "the following groups"} until the due date has passed:`,
@@ -165,7 +165,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                         }}
                     />
                 </div>
-                <FormFeedback>You must select a feedback mode</FormFeedback>
+                <FormFeedback>Please select a feedback mode</FormFeedback>
             </Label>
         </FormGroup>
 
@@ -192,7 +192,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
 
         <FormGroup>
             <Label className="w-100">
-                <span className="form-required">Set a due date:</span>
+                <span className="form-required">Due date:</span>
                 <DateInput 
                     invalid={validationAttempted && dueDateInvalid} 
                     value={dueDate ?? undefined} 
