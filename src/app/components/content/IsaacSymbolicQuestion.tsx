@@ -254,13 +254,13 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             </Suspense>}
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                <InputGroup className="my-2 separate-input-group">
+                <InputGroup className="my-2 separate-input-group align-items-center">
                     <Input type="text" onChange={updateEquation} value={textInput}
                         placeholder="Type your formula here"/>
                     <>
                         {siteSpecific(
                             <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                            <span id={helpTooltipId} className="icon-help-q my-auto"/>
+                            <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3" />
                         )}
                         {<UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
