@@ -5,8 +5,7 @@ import {
     useGetQuizAssignmentsSetByMeQuery,
     useCancelQuizAssignmentMutation,
     useUpdateQuizAssignmentMutation,
-    openActiveModal,
-    closeActiveModal
+    openActiveModal
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -39,7 +38,7 @@ import {RenderNothing} from "../../elements/RenderNothing";
 import { useHistoryState } from "../../../state/actions/history";
 import classNames from "classnames";
 import { ExtendDueDateModal } from "../../elements/modals/ExtendDueDateModal";
-import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Container, ListGroup, ListGroupItem, Col, Alert, Input, UncontrolledDropdown, Label } from "reactstrap";
+import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Container, ListGroup, ListGroupItem, Col, Alert, Input, UncontrolledDropdown } from "reactstrap";
 import { ListView } from "../../elements/list-groups/ListView";
 import { MainContent, ManageQuizzesSidebar, SetQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
