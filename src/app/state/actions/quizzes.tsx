@@ -14,7 +14,7 @@ import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../IsaacA
 import {SetQuizzesModal} from "../../components/elements/modals/SetQuizzesModal";
 import debounce from "lodash/debounce";
 
-export const showSetQuizzesModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: Date | null, scheduledStartDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
+export const showSetQuizzesModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: Date, scheduledStartDate?: Date, feedbackMode?: QuizFeedbackMode) => (dispatch: AppDispatch) => {
     dispatch(openActiveModal({
         closeAction: () => {
             dispatch(closeActiveModal());

@@ -42,9 +42,9 @@ const feedbackOptionsMap = feedbackOptionsList.reduce((obj, option) => {
 
 interface SetQuizzesModalProps {
     quiz: ContentSummaryDTO | IsaacQuizDTO;
-    dueDate?: Date | null;
-    scheduledStartDate?: Date | null;
-    feedbackMode?: QuizFeedbackMode | null;
+    dueDate?: Date;
+    scheduledStartDate?: Date;
+    feedbackMode?: QuizFeedbackMode;
     allowedToSchedule?: boolean;
 }
 
