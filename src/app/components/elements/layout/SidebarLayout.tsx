@@ -150,7 +150,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
     return above['lg'](deviceSize)
         ? siteSpecific(
             <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />,
-            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print g-md-0 ps-2 order-0", className)} />
+            <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print order-0", className)} />
         )
         : siteSpecific(
             <>
