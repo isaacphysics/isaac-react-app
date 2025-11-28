@@ -133,6 +133,15 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
     }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem]);
 
+    const addCoord = useCallback(() => {
+        if (!isDefined(currentAttempt)) {
+            dispatchSetCurrentAttempt({type: "coordinateChoice", items: [getEmptyCoordItem(), getEmptyCoordItem()]});
+        }
+        else {
+            updateItem(currentAttempt?.items?.length ?? 1, getEmptyCoordItem());
+        }
+    }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem, updateItem]);
+
     return <div className="coordinate-question">
         <div className="question-content">
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
@@ -182,7 +191,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                 />
         }
         <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => answer.coordinates ?? []) ?? []} validator={coordinateInputValidator}/>
-        {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={() => updateItem(currentAttempt?.items?.length ?? 1, getEmptyCoordItem())}>
+        {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={addCoord}>
             <Markup encoding="latex">{buttonText}</Markup>
         </Button>}
     </div>;
