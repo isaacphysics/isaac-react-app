@@ -263,7 +263,7 @@ export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutLis
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
     const icon: TitleIconProps = isPhy
-        ? {type: "hex", icon: (url.includes("concepts/") || !item.className?.includes("wildcard-list-view")) ? "icon-concept" : "icon-wildcard", size: "lg"}
+        ? {type: "hex", icon: url.includes("concepts/") ? "icon-concept" : item.className?.includes("wildcard-list-view") ? "icon-wildcard" : "icon-info", size: "lg"}
         : {type: "img", icon: iconPath("info-filled"), width: "32px", height: "32px", alt: "Shortcut page icon", label: "Shortcut"};
     const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
 
