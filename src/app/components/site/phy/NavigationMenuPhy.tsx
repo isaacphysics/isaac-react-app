@@ -330,6 +330,9 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                                 <NavigationItemClose href="/groups">
                                     Manage groups
                                 </NavigationItemClose>
+                                <NavigationItemClose href="/question_deck_builder">
+                                    Create a question deck
+                                </NavigationItemClose>
                                 <NavigationItemClose href="/set_assignments">
                                     Set assignments
                                 </NavigationItemClose>
