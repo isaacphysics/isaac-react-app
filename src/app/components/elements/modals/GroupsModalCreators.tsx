@@ -282,7 +282,7 @@ Are you sure you want to promote this manager to group owner?\n
                     )}
                     <span>{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})</span>
                     <Spacer />
-                    {userIsOwner && above["lg"](deviceSize) && <Button className="d-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
+                    {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
                         Make owner
                     </Button>}
                     {(userIsOwner || user?.id === manager.id || group.additionalManagerPrivileges) && !(userIsOwner && below["md"](deviceSize)) &&
