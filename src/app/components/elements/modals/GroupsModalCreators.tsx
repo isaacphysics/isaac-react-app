@@ -297,7 +297,7 @@ Are you sure you want to promote this manager to group owner?\n
                             Actions
                         </DropdownToggle>
                         <DropdownMenu>
-                            {userIsOwner && <DropdownItem onClick={() => promoteManager(manager)}>Make owner</DropdownItem>}
+                            {<DropdownItem onClick={() => promoteManager(manager)}>Make owner</DropdownItem>}
                             <DropdownItem onClick={() => (user?.id === manager.id) ? removeSelf(manager) : removeManager(manager)}>Remove</DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>}
