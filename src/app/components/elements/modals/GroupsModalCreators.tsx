@@ -292,7 +292,7 @@ Are you sure you want to promote this manager to group owner?\n
                             Remove
                         </Button>}
 
-                    {userIsOwner && below["md"](deviceSize) && <UncontrolledDropdown className="d-inline d-lg-none ms-2">
+                    {userIsOwner && <UncontrolledDropdown className="d-inline d-lg-none ms-2">
                         <DropdownToggle caret className="d-flex align-items-center">
                             Actions
                         </DropdownToggle>
