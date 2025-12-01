@@ -18,13 +18,16 @@ import {
 } from "../../../state";
 import sortBy from "lodash/sortBy";
 import {
+    above,
+    below,
     history,
     isAda,
     isDefined,
     isTeacherOrAbove,
     PATHS,
     SITE_TITLE_SHORT,
-    siteSpecific
+    siteSpecific,
+    useDeviceSize
 } from "../../../services";
 import {Row, Col, Form, Input, Table, Alert, Label, FormFeedback, FormGroup, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown} from "reactstrap";
 import {Button} from "reactstrap";
@@ -152,6 +155,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
 
 const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {groupId: number, archived: boolean, userIsOwner: boolean, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
+    const deviceSize = useDeviceSize();
     const {data: groups} = useGetGroupsQuery(archived);
     const group = groups?.find(g => g.id === groupId);
     const [addGroupManager] = useAddGroupManagerMutation();
@@ -278,16 +282,17 @@ Are you sure you want to promote this manager to group owner?\n
                     )}
                     <span>{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})</span>
                     <Spacer />
-                    {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
+                    {userIsOwner && above["lg"](deviceSize) && <Button className="d-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
                         Make owner
                     </Button>}
-                    {(userIsOwner || user?.id === manager.id || group.additionalManagerPrivileges) && <Button className="d-none d-lg-inline ms-2" size="sm" color={siteSpecific("tertiary", "secondary")}
-                        onClick={() => user?.id === manager.id ? removeSelf(manager) : removeManager(manager)}
-                    >
-                        Remove
-                    </Button>}
+                    {(userIsOwner || user?.id === manager.id || group.additionalManagerPrivileges) && !(userIsOwner && below["md"](deviceSize)) &&
+                        <Button className="d-inline ms-2" size="sm" color={siteSpecific("tertiary", "secondary")}
+                            onClick={() => user?.id === manager.id ? removeSelf(manager) : removeManager(manager)}
+                        >
+                            Remove
+                        </Button>}
 
-                    <UncontrolledDropdown className="d-inline d-lg-none ms-2">
+                    {userIsOwner && below["md"](deviceSize) && <UncontrolledDropdown className="d-inline d-lg-none ms-2">
                         <DropdownToggle caret className="d-flex align-items-center">
                             Actions
                         </DropdownToggle>
@@ -295,7 +300,7 @@ Are you sure you want to promote this manager to group owner?\n
                             {userIsOwner && <DropdownItem onClick={() => promoteManager(manager)}>Make owner</DropdownItem>}
                             <DropdownItem onClick={() => (user?.id === manager.id) ? removeSelf(manager) : removeManager(manager)}>Remove</DropdownItem>
                         </DropdownMenu>
-                    </UncontrolledDropdown>
+                    </UncontrolledDropdown>}
                 </li>
             )}
         </ul>
