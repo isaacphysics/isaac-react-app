@@ -281,8 +281,8 @@ Are you sure you want to promote this manager to group owner?\n
                     {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
                         Make owner
                     </Button>}
-                    {(userIsOwner || user?.id === manager.id) && <Button className="d-none d-lg-inline ms-2" size="sm" color={siteSpecific("tertiary", "secondary")}
-                        onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}
+                    {(userIsOwner || user?.id === manager.id || group.additionalManagerPrivileges) && <Button className="d-none d-lg-inline ms-2" size="sm" color={siteSpecific("tertiary", "secondary")}
+                        onClick={() => user?.id === manager.id ? removeSelf(manager) : removeManager(manager)}
                     >
                         Remove
                     </Button>}
@@ -292,8 +292,8 @@ Are you sure you want to promote this manager to group owner?\n
                             Actions
                         </DropdownToggle>
                         <DropdownMenu>
-                            <DropdownItem onClick={() => promoteManager(manager)}>Make owner</DropdownItem>
-                            <DropdownItem onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}>Remove</DropdownItem>
+                            {userIsOwner && <DropdownItem onClick={() => promoteManager(manager)}>Make owner</DropdownItem>}
+                            <DropdownItem onClick={() => (user?.id === manager.id) ? removeSelf(manager) : removeManager(manager)}>Remove</DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>
                 </li>
@@ -330,7 +330,7 @@ Are you sure you want to promote this manager to group owner?\n
             }
         </Alert>}
 
-        {userIsOwner && <>
+        {(userIsOwner || group.additionalManagerPrivileges) && <>
             <h4 className="mt-3">Add additional managers</h4>
             <p>Enter the email of another {SITE_TITLE_SHORT} teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
             <Form onSubmit={addManager}>
