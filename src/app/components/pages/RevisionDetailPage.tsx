@@ -10,6 +10,7 @@ import { convertToALVIGameboards, ListView } from "../elements/list-groups/ListV
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 import { MetadataContainer, MetadataContainerLink } from "../elements/panels/MetadataContainer";
 import { PageMetadata } from "../elements/PageMetadata";
+import { isPhy } from "../../services";
 
 interface RevisionProps {
     match: { params: { pageId: string } };
@@ -32,7 +33,7 @@ export const RevisionPage = ({match: {params: {pageId}}}: RevisionProps) => {
             defaultErrorTitle="Unable to load revision page."
             maintainOnRefetch // allows keeping sidebar content intact while refetching
             thenRender={(page, isStale) => {
-                return <SidebarLayout>
+                return <SidebarLayout site={isPhy}>
                     <ContentControlledSidebar sidebar={revisionPageQuery.data?.sidebar} />
                     <MainContent>
                         {isStale ? <LoadingPlaceholder /> : <RevisionPageInternal page={page} />}

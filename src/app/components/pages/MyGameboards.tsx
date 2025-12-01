@@ -18,6 +18,7 @@ import {
     BoardLimit,
     BoardViews,
     isAda,
+    isPhy,
     isTutorOrAbove, 
     siteSpecific,
     useGameboards} from "../../services";
@@ -192,7 +193,7 @@ export const MyGameboards = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <MyGameboardsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}
                 displayLimit={boardLimit} setDisplayLimit={setBoardLimit}

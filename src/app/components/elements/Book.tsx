@@ -3,7 +3,7 @@ import {Container} from "reactstrap";
 import {ContentControlledSidebar, MainContent, SidebarLayout} from "./layout/SidebarLayout";
 import {Markup} from "./markup";
 import {TitleAndBreadcrumb} from "./TitleAndBreadcrumb";
-import {BOOK_DETAIL_ID_SEPARATOR, BOOKS_CRUMB, useContextFromContentObjectTags} from "../../services";
+import {BOOK_DETAIL_ID_SEPARATOR, BOOKS_CRUMB, isPhy, useContextFromContentObjectTags} from "../../services";
 import {useHistory} from "react-router";
 import {useGetBookDetailPageQuery, useGetBookIndexPageQuery} from "../../state/slices/api/booksApi";
 import {BookPage} from "./BookPage";
@@ -49,7 +49,7 @@ export const Book = ({match: {params: {bookId}}}: BookProps) => {
             icon={{type: "hex", icon: "icon-book"}}
             intermediateCrumbs={pageId !== undefined && book?.title ? [BOOKS_CRUMB, {title: book.title, to: `/books/${bookId}`}] : [BOOKS_CRUMB]}
         />
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <ShowLoadingQuery
                 query={bookIndexPageQuery}
                 defaultErrorTitle="Unable to load book contents"

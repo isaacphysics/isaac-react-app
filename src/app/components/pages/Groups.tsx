@@ -67,6 +67,8 @@ import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
 import { MainContent, GroupsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
 import { PageMetadata } from "../elements/PageMetadata";
+import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
+import { PageContainer } from "../elements/layout/PageContainer";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -599,7 +601,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
     const GroupsPhy = <Container>
         <TitleAndBreadcrumb currentPageTitle="Manage groups" icon={{type: "hex", icon: "icon-group"}}/>
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
-            <SidebarLayout>
+            <SidebarLayout site={isPhy}>
                 <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
                     showArchived={showArchived} setShowArchived={setShowArchived}
                     hideButton
@@ -619,8 +621,10 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
         </ShowLoadingQuery>
     </Container>;
 
-    const GroupsAda = <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />
+    const GroupsAda = <PageContainer
+        pageTitle={<TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />}
+        sidebar={<MyAdaSidebar />}
+    >
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             {!isEmptyState ?
                 <>
@@ -646,13 +650,13 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
                         <br />
                         You need a student group before you can assign quizzes and tests in {SITE_TITLE_SHORT}.
                     </p>
-                    <Button onClick={() => {dispatch(showCreateGroupModal({user}));}}>
-                       Create a group
+                    <Button onClick={() => void dispatch(showCreateGroupModal({user}))}>
+                        Create a group
                     </Button>
                 </div>
             }
         </ShowLoadingQuery>
-    </Container>;
+    </PageContainer>;
 
     return siteSpecific(GroupsPhy, GroupsAda);
 };

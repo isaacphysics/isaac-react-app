@@ -147,7 +147,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                 intermediateCrumbs={crumb ? [crumb] : undefined}
                 icon={{type: "hex", icon: "icon-concept"}}
             />
-            <SidebarLayout>
+            <SidebarLayout site={isPhy}>
                 {pageContext?.subject 
                     ? <SubjectSpecificConceptListSidebar {...sidebarProps} hideButton /> 
                     : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>

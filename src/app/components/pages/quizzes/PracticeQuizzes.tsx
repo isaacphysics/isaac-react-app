@@ -94,7 +94,7 @@ const PracticeQuizzesComponent = () => {
             icon={{"type": "hex", "icon": "icon-tests"}}
             intermediateCrumbs={crumb ? [crumb] : []}
         />
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <PracticeQuizzesSidebar {...sidebarProps} hideButton />
             <MainContent className="mb-4">
                 <PageMetadata noTitle showSidebarButton>

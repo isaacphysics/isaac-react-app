@@ -429,7 +429,7 @@ export const QuestionFinder = withRouter(() => {
             icon={{type: "hex", icon: "icon-finder"}}
         />
 
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <QuestionFinderSidebar
                 searchText={searchQuery} setSearchText={debouncedSearchHandler}
                 questionFinderFilterPanelProps={{

@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
 import {SeguePageDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
-import {isAda, useUrlHashValue} from "../../services";
+import {isAda, isPhy, useUrlHashValue} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -88,7 +88,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                     icon={{type: "hex", icon: "icon-generic"}}
                 /> 
                 <MetaDescription description={doc.summary} />
-                <SidebarLayout>
+                <SidebarLayout site={isPhy}>
                     {sidebar}
                     <MainContent>
                         {/* on generic pages, the actual doc.title is used as the super-title, unlike e.g. questions which use "Question". 

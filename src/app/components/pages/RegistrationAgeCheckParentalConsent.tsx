@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Card, CardBody, Col, Container, Input, Label, Row} from "reactstrap";
-import {history, siteSpecific} from "../../services";
+import {history, isPhy, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { Link } from "react-router-dom";
 import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
@@ -17,7 +17,7 @@ export const RegistrationAgeCheckParentalConsent = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Additional information"} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <SignupSidebar activeTab={1}/>
             <MainContent>
                 <Card className="my-7">

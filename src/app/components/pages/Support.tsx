@@ -4,7 +4,7 @@ import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history, ifKeyIsEnter, isAda, isDefined, siteSpecific} from "../../services";
+import {history, ifKeyIsEnter, isAda, isDefined, isPhy, siteSpecific} from "../../services";
 import fromPairs from "lodash/fromPairs";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
@@ -137,7 +137,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
             icon={{type: "hex", icon: "icon-finder"}}
         />  {/* TODO replace this icon */}
         {isAda && isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <FAQSidebar hideButton>
                 {Object.values(section.categories).map((category, index) => 
                     <StyledTabPicker
