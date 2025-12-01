@@ -480,7 +480,7 @@ export interface EmailTemplateDTO extends ContentDTO {
 }
 
 export interface FigureDTO extends ImageDTO {
-    dropZones?: DropZone[];
+    figureRegions?: FigureRegion[];
     condensedMaxWidth?: string;
 }
 
@@ -629,7 +629,7 @@ export interface GroupMembershipDTO {
     created?: Date;
 }
 
-export interface DropZone {
+export interface FigureRegion {
     id: string;
     minWidth: string;
     width: number;

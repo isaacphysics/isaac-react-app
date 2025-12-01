@@ -29,14 +29,6 @@ polygon.fill-secondary {
   fill: $secondary;
 }
 
-.dropzone-dropdown {
-  position: absolute;
-  align-self: center;
-  right: 5px;
-  @extend .icon-dropdown-180;
-  opacity: 0.3;
-}
-
 @mixin icon-dropdown($deg) {
   transform: rotate($deg);
   -webkit-transform: rotate($deg);

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import {DropZone, FigureDTO} from "../../../IsaacApiTypes";
+import {FigureRegion, FigureDTO} from "../../../IsaacApiTypes";
 import {ALPHABET, apiHelper, FIGURE_DROP_ZONE_PLACEHOLDER_SIZE} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {DragAndDropRegionContext, FigureNumberingContext, InlineContext} from "../../../IsaacAppTypes";
@@ -44,23 +44,23 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
 
     const figId = doc.id && extractFigureId(doc.id);
 
-    const generateFigureDropZones = useCallback(({dropZones, contextType, root, style, label}: {
-        dropZones: DropZone[], 
+    const generateFigureRegionObjects = useCallback(({figureRegions, contextType, root, style, label}: {
+        figureRegions: FigureRegion[], 
         contextType: ContextType, 
         root?: HTMLElement | null, 
-        style?: (dropZone: DropZone, index: number) => React.CSSProperties,
-        label?: (dropZone: DropZone, index: number) => React.ReactNode
+        style?: (figureRegion: FigureRegion, index: number) => React.CSSProperties,
+        label?: (figureRegion: FigureRegion, index: number) => React.ReactNode
     }) => {
-        return dropZones.map((dropZone, i) => {
-            const zoneId = dropZone.id;
+        return figureRegions.map((figureRegion, i) => {
+            const zoneId = figureRegion.id;
             const parentId = contextType === 'dropRegion' ? `figure-drop-target-${zoneId}` : `inline-question-${zoneId}`;
 
             const Wrapper = label ? 'div' : React.Fragment;
 
             return <Wrapper className="d-flex gap-2 align-items-center" key={i}>
-                {label?.(dropZone, i)}
+                {label?.(figureRegion, i)}
                 <div 
-                    id={parentId} style={style?.(dropZone, i)}
+                    id={parentId} style={style?.(figureRegion, i)}
                 >
                     {contextType === 'dropRegion'
                         ? <InlineDropRegion 
@@ -84,15 +84,15 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
         });
     }, []);
 
-    const generateFigureDZPlaceholders = useCallback(({dropZones, style}: {
-        dropZones: DropZone[],
-        style?: (dropZone: DropZone, index: number) => React.CSSProperties,
+    const generateFigureRegionObjectPlaceholders = useCallback(({figureRegions, style}: {
+        figureRegions: FigureRegion[],
+        style?: (figureRegion: FigureRegion, index: number) => React.CSSProperties,
     }) => {
-        return dropZones.map((dropZone, i) => {
+        return figureRegions.map((figureRegion, i) => {
             return <div 
                 key={i}
-                style={style ? style(dropZone, i) : {}}
-                className="figure-dropzone-placeholder"
+                style={style ? style(figureRegion, i) : {}}
+                className="figure-region-placeholder"
             >
                 {ALPHABET[i % ALPHABET.length]}
             </div>;
@@ -136,27 +136,27 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                             }}>
                                 <i className="icon icon-fullscreen icon-md" />
                             </button>
-                            {doc.dropZones && contextType && path && (
+                            {doc.figureRegions && contextType && path && (
                                 !isCondensed
-                                    ? generateFigureDropZones({
-                                        dropZones: doc.dropZones, 
+                                    ? generateFigureRegionObjects({
+                                        figureRegions: doc.figureRegions, 
                                         contextType,
                                         root: clozeDropRootElement.current, 
-                                        style: (dropZone: DropZone) => ({
+                                        style: (region: FigureRegion) => ({
                                             position: 'absolute',
-                                            left: `calc(${dropZone.left}% - (max(${dropZone.width}%, ${dropZone.minWidth}) * ${(dropZone.left)/100})`,
-                                            top: `calc(${dropZone.top}% - (${dropZone.width}% * ${(dropZone.top)/100})`,
-                                            width: dropZone.width ? `${dropZone.width}%` : undefined,
-                                            minWidth: dropZone.minWidth,
+                                            left: `calc(${region.left}% - (max(${region.width}%, ${region.minWidth}) * ${(region.left)/100})`,
+                                            top: `calc(${region.top}% - (${region.width}% * ${(region.top)/100})`,
+                                            width: region.width ? `${region.width}%` : undefined,
+                                            minWidth: region.minWidth,
                                             height: contextType === 'dropRegion' ? "24px" : "34px",
                                         })
                                     })
-                                    : generateFigureDZPlaceholders({
-                                        dropZones: doc.dropZones,
-                                        style: (dropZone) => ({
+                                    : generateFigureRegionObjectPlaceholders({
+                                        figureRegions: doc.figureRegions,
+                                        style: (region) => ({
                                             position: 'absolute',
-                                            left: `calc(${dropZone.left}% - (${dropZone.width}% * ${dropZone.left/100}) + ((${dropZone.width}% - ${FIGURE_DROP_ZONE_PLACEHOLDER_SIZE}) / 2))`, 
-                                            top: `calc(${dropZone.top}% - (${contextType === 'dropRegion' ? "24px" : "34px"} * ${dropZone.top/100}) + ((${contextType === 'dropRegion' ? "24px" : "34px"} - ${FIGURE_DROP_ZONE_PLACEHOLDER_SIZE}) / 2))`,
+                                            left: `calc(${region.left}% - (${region.width}% * ${region.left/100}) + ((${region.width}% - ${FIGURE_DROP_ZONE_PLACEHOLDER_SIZE}) / 2))`, 
+                                            top: `calc(${region.top}% - (${contextType === 'dropRegion' ? "24px" : "34px"} * ${region.top/100}) + ((${contextType === 'dropRegion' ? "24px" : "34px"} - ${FIGURE_DROP_ZONE_PLACEHOLDER_SIZE}) / 2))`,
                                         })
                                     })
                             )}
@@ -164,22 +164,22 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                             {!doc.clickUrl && <img src={path} alt={doc.altText} ref={imageRef} />}
                             {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} ref={imageRef} /></a>}
                         </div>
-                        {doc.dropZones && contextType && path && (
+                        {doc.figureRegions && contextType && path && (
                             isCondensed 
                                 ? <>
                                     <hr />
                                     <div className="d-flex flex-column gap-2 mt-3">
-                                        {generateFigureDropZones({
-                                            dropZones: doc.dropZones, 
+                                        {generateFigureRegionObjects({
+                                            figureRegions: doc.figureRegions, 
                                             contextType,
                                             root: clozeDropRootElement.current, 
-                                            style: (dropZone) => ({
+                                            style: (region) => ({
                                                 position: 'relative',
                                                 width: "10rem", // the usual "% of figure width" has no meaning here, so replace with a fixed width
-                                                minWidth: dropZone.minWidth,
+                                                minWidth: region.minWidth,
                                                 height: contextType === 'dropRegion' ? "24px" : "34px",
                                             }),
-                                            label: (_, index) => <div className="figure-dropzone-placeholder">{ALPHABET[index % ALPHABET.length]}</div>,
+                                            label: (_, index) => <div className="figure-region-placeholder">{ALPHABET[index % ALPHABET.length]}</div>,
                                         })}
                                     </div>
                                 </>
