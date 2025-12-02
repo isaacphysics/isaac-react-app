@@ -9,10 +9,21 @@ interface IsaacVideoProps {
   doc: VideoDTO;
 }
 
-function rewrite(src: string) {
+export function rewrite(src: string) {
+  // Detect platform
+  if (src.includes('youtube.com') || src.includes('youtu.be')) {
+    return rewriteYouTube(src);
+  } else if (src.includes('wistia.com') || src.includes('wistia.net')) {
+    return rewriteWistia(src);
+  }
+  return undefined;
+}
+
+function rewriteYouTube(src: string) {
   const possibleVideoId = /(v=|\/embed\/|\/)([^?&/.]{11})/.exec(src);
   const possibleStartTime = /[?&](t|start)=([0-9]+)/.exec(src);
   const possibleEndTime = /[?&]end=([0-9]+)/.exec(src);
+  
   if (possibleVideoId) {
     const videoId = possibleVideoId[2];
     const optionalStart = possibleStartTime ? `&start=${possibleStartTime[2]}` : "";
@@ -21,6 +32,16 @@ function rewrite(src: string) {
       `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&rel=0&fs=1&modestbranding=1` +
       `${optionalStart}${optionalEnd}&origin=${window.location.origin}`
     );
+  }
+}
+
+function rewriteWistia(src: string) {
+  // Match video ID from various Wistia URL formats
+  const possibleVideoId = /\/(?:embed\/iframe|medias)\/([a-zA-Z0-9]+)/.exec(src);
+  
+  if (possibleVideoId) {
+    const videoId = possibleVideoId[1];
+    return `https://fast.wistia.net/embed/iframe/${videoId}?web_component=true&seo=true`;
   }
 }
 
