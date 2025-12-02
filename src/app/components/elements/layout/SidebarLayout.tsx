@@ -113,13 +113,13 @@ const NavigationSidebar = (props: SidebarProps) => {
     return <Col tag="aside" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("sidebar no-print p-4 order-1 order-lg-0", className)} />;
 };
 
-interface ContentSidebarProps extends SidebarProps {
+export interface ContentSidebarProps extends SidebarProps {
     buttonTitle?: string;
     hideButton?: boolean; // if true, the sidebar will not be collapsible on small screens
     optionBar?: React.JSX.Element;
 }
 
-const ContentSidebar = (props: ContentSidebarProps) => {
+export const ContentSidebar = (props: ContentSidebarProps) => {
     // A content sidebar is used to interact with the main content, e.g. filters or search boxes, or for in-page nav (e.g. lessons and revision);
     // the content in such a sidebar will collapse into a button accessible from above the main content on smaller screens
     const deviceSize = useDeviceSize();

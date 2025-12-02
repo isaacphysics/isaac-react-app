@@ -8,16 +8,12 @@ import {
     simpleDifficultyLabelMap,
     SITE_TITLE,
     siteSpecific,
-    STAGE,
     stageLabelMap,
     useUserViewingContext
 } from "../../services";
 import {
-    AppState,
     mainContentIdSlice,
-    useAppDispatch,
-    useAppSelector
-} from "../../state";
+    useAppDispatch} from "../../state";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
