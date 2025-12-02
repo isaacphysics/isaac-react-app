@@ -1,4 +1,4 @@
-import {AbstractBaseTagService, subject, TAG_ID, TAG_LEVEL} from "./";
+import {AbstractBaseTagService, getTagFromPath, TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag, Tag} from "../../IsaacAppTypes";
 import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 
@@ -201,7 +201,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Extract the subject tag from a tag array,
         // defaulting to the current site subject if no tags
         // and intelligently choosing if more than one subject tag.
-        const globalSubjectTagId = subject.id;
+        const globalSubjectTagId = getTagFromPath();
         if (tagArray == null || tagArray.length == 0) {
             return globalSubjectTagId ? this.getById(globalSubjectTagId) : undefined;
         }
