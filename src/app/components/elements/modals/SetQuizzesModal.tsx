@@ -11,14 +11,14 @@ import {
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
 } from "../../../state";
-import {assignMultipleQuiz, isDefined, Item, selectOnChange, siteSpecific, TODAY} from "../../../services";
+import {addDays, assignMultipleQuiz, isDefined, Item, nthUtcHourOf, selectOnChange, siteSpecific, TODAY, UTC_MIDNIGHT_IN_SIX_DAYS} from "../../../services";
 import range from "lodash/range";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {StyledSelect} from "../inputs/StyledSelect";
 import {Button, Form, FormFeedback, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
-import { AppGroup } from "../../../../IsaacAppTypes";
+import { ActiveModalProps, AppGroup } from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 
 
@@ -40,15 +40,15 @@ const feedbackOptionsMap = feedbackOptionsList.reduce((obj, option) => {
     return obj;
 }, {} as {[key in QuizFeedbackMode]: QuizFeedbackOption});
 
-interface QuizSettingModalProps {
-    allowedToSchedule?: boolean;
+interface SetQuizzesModalProps {
     quiz: ContentSummaryDTO | IsaacQuizDTO;
-    dueDate?: Date | null;
-    scheduledStartDate?: Date | null;
-    feedbackMode?: QuizFeedbackMode | null;
+    dueDate?: Date;
+    scheduledStartDate?: Date;
+    feedbackMode?: QuizFeedbackMode;
+    allowedToSchedule?: boolean;
 }
 
-export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
+function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: SetQuizzesModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
     const user = useAppSelector(selectors.user.loggedInOrNull);
@@ -57,9 +57,10 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
 
     const [validationAttempted, setValidationAttempted] = useState(false);
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
-    const [dueDate, setDueDate] = useState<Date | null>(initialDueDate ?? null);
-    const [scheduledStartDate, setScheduledStartDate] = useState<Date | null>(initialScheduledStartDate ?? null);
-    const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | null>(initialFeedbackMode ?? null);
+    const [dueDate, setDueDate] = useState<Date | undefined>(initialDueDate ?? UTC_MIDNIGHT_IN_SIX_DAYS);
+    const [userSelectedDueDate, setUserSelectedDueDate] = useState<boolean>(false);
+    const [scheduledStartDate, setScheduledStartDate] = useState<Date | undefined>(initialScheduledStartDate);
+    const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | undefined>(initialFeedbackMode);
     const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery();
 
     const yearRange = range(currentYear, currentYear + 5);
@@ -76,35 +77,51 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         dispatch(assignMultipleQuiz({
             quizId: quiz?.id as string,
             groups: selectedGroups,
-            dueDate: dueDate ?? undefined,
-            scheduledStartDate: scheduledStartDate ?? undefined,
-            quizFeedbackMode: feedbackMode ?? undefined,
+            dueDate: dueDate,
+            scheduledStartDate: scheduledStartDate,
+            quizFeedbackMode: feedbackMode,
             userId: user?.id
         })).then(success => {
             if (success) {
                 setSelectedGroups([]);
-                setDueDate(null);
-                setScheduledStartDate(null);
-                setFeedbackMode(null);
+                setDueDate(undefined);
+                setUserSelectedDueDate(false);
+                setScheduledStartDate(undefined);
+                setFeedbackMode(undefined);
                 dispatch(closeActiveModal());
                 changePage("/set_tests#manage");
             }
         });
     }
 
-    const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.quizId === quiz.id && assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() > Date.now() : true)) : false;
-    const alreadyAssignedToAGroup = selectedGroups.some(group => quizAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
+    function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
+        const utcDate = e.target.valueAsDate;
+        if (utcDate) {
+            const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
+            // Sets the scheduled date to 7AM in the timezone of the browser.
+            setScheduledStartDate(scheduledDate);
+
+            if (!userSelectedDueDate) {
+                // Sets the due date to 6 days after the scheduled start date at UTC midnight (if the user hasn't already selected a due date).
+                setDueDate(addDays(6, nthUtcHourOf(0, scheduledDate)));
+            }
+        } else {
+            setScheduledStartDate(undefined);
+        }
+    }
+
+    const currentAssignments = quizAssignments?.filter(assignment => assignment.quizId === quiz.id) ?? [];
+    const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() > Date.now() : true)) : false;
+    const alreadyAssignedToAGroup = selectedGroups.some(group => currentAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
 
     const groupInvalid = selectedGroups.length === 0 || alreadyAssignedToAGroup;
-    const feedbackModeInvalid = feedbackMode === null;
+    const feedbackModeInvalid = !isDefined(feedbackMode);
     const dueDateInvalid = !isDefined(dueDate) || (scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false) || dueDate.valueOf() < Date.now();
     const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() < TODAY().valueOf(); // optional, so undefined is valid
 
     const scheduledQuizHelpTooltipId = "scheduled-quiz-help-tooltip";
 
-    return <Form 
-        className={classNames("mb-4")} 
-        onSubmit={(e) => {e.preventDefault(); attemptAssign();}}>
+    return <Form className="mb-4" onSubmit={e => {e.preventDefault(); attemptAssign();}}>
         <FormGroup>
             <Label className="w-100">
                 <span className="form-required">Set test to the following group(s):</span>
@@ -118,26 +135,22 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
 
                         return <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
                             <StyledSelect isMulti placeholder="Select groups"
-                                closeMenuOnSelect={false}
-                                options={groupOptions}
-                                onChange={(s) => {
-                                    selectOnChange(setSelectedGroups, false)(s);
-                                }}
                                 value={selectedGroups}
-                                isSearchable
-                                menuPortalTarget={document.body}
-                                styles={{
-                                    control: (styles) => ({...styles, ...(validationAttempted && groupInvalid ? {borderColor: '#dc3545'} : {})}),
-                                    menuPortal: base => ({...base, zIndex: 9999}),
-                                }}
+                                closeMenuOnSelect={false}
+                                onChange={selectOnChange(setSelectedGroups, false)}
+                                options={groupOptions}
                             />
                         </div>;
                     }}
                 />
                 {(selectedGroups.length === 0 
-                    ? <FormFeedback>You must select a group</FormFeedback> 
-                    : <FormFeedback>{siteSpecific("You cannot reassign a test to this group(s) until the due date has passed.", 
-                        "This test has already been assigned to this group.")}</FormFeedback>
+                    ? <FormFeedback>Please select a group</FormFeedback> 
+                    : <FormFeedback>
+                        {`${siteSpecific(
+                            `You cannot reassign a test to ${selectedGroups.length === 1 ? "this group" : "the following groups"} until the due date has passed:`,
+                            `This test has already been assigned to ${selectedGroups.length === 1 ? "this group" : "the following groups"}:`)}
+                        ${selectedGroups.filter(g => currentAssignments.some(a => a.groupId === g.value)).map(g => g.label).join(", ")}`}
+                    </FormFeedback>
                 )}
             </Label>
         </FormGroup>
@@ -147,7 +160,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 <span className="form-required">What level of feedback should students get:</span>
                 <div className={classNames({"is-invalid": validationAttempted && feedbackModeInvalid})}>
                     <StyledSelect
-                        value={feedbackMode ? feedbackOptionsMap[feedbackMode] : null}
+                        value={feedbackMode && feedbackOptionsMap[feedbackMode]}
                         onChange={(s) => {
                             if (s && (s as QuizFeedbackOption).value) {
                                 const item = s as QuizFeedbackOption;
@@ -155,14 +168,9 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                             }
                         }}
                         options={feedbackOptionsList}
-                        menuPortalTarget={document.body}
-                        styles={{
-                            control: (styles) => ({...styles, ...(validationAttempted && feedbackModeInvalid ? {borderColor: '#dc3545'} : {})}),
-                            menuPortal: base => ({...base, zIndex: 9999}),
-                        }}
                     />
                 </div>
-                <FormFeedback>You must select a feedback mode</FormFeedback>
+                <FormFeedback>Please select a feedback mode</FormFeedback>
             </Label>
         </FormGroup>
 
@@ -173,10 +181,10 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                     <i id={scheduledQuizHelpTooltipId} className={classNames("icon icon-info icon-inline ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
                 </div>
                 <DateInput 
-                    value={scheduledStartDate ?? undefined} 
-                    invalid={scheduledStartDateInvalid || undefined}
+                    value={scheduledStartDate}
+                    invalid={validationAttempted && scheduledStartDateInvalid}
                     yearRange={yearRange}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate)}
+                    onChange={setScheduledStartDateAtSevenAM}
                 />
                 <UncontrolledTooltip placement="top" autohide={false} target={scheduledQuizHelpTooltipId}>
                     You can schedule a test to appear in the future by setting a start date.
@@ -189,12 +197,12 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
 
         <FormGroup>
             <Label className="w-100">
-                <span className="form-required">Set a due date:</span>
+                <span className="form-required">Due date:</span>
                 <DateInput 
                     invalid={validationAttempted && dueDateInvalid} 
-                    value={dueDate ?? undefined} 
+                    value={dueDate} 
                     yearRange={yearRange}
-                    onChange={(e) => setDueDate(e.target.valueAsDate)}
+                    onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate ?? undefined);}}
                 />
                 <FormFeedback>
                     {!isDefined(dueDate) 
@@ -225,3 +233,12 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         </div>
     </Form>;
 }
+
+export const SetQuizzesModal = (props: SetQuizzesModalProps): ActiveModalProps => {
+    const {quiz} = props;
+
+    return {
+        title: `Setting test '${quiz.title ?? quiz.id}'`,
+        body: <SetQuizzesModalContent {...props}/>
+    };
+};

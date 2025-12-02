@@ -7,11 +7,12 @@ import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
-import { selectors, showQuizSettingModal, useAppDispatch, useAppSelector } from "../../../state";
+import { openActiveModal, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { UnionToIntersection } from "@reduxjs/toolkit/dist/tsHelpers";
 import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
 import { IconProps } from "../svg/HexIcon";
+import { SetQuizzesModal } from "../modals/SetQuizzesModal";
 
 function getBreadcrumb(tagIds: TAG_ID[] = []): string[] {
     return tags.getByIdsAsHierarchy(tagIds).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title);
@@ -146,7 +147,7 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
     const dispatch = useAppDispatch();
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const quizButton = isQuizSetter ?
-        <AffixButton size="md" color="solid" onClick={() => (dispatch(showQuizSettingModal(item)))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: item})))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
             Set test
         </AffixButton> :
         <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
@@ -267,7 +268,7 @@ export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutLis
     const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
     const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
     const icon: TitleIconProps = isPhy ?
-        {type: "icon", icon: {name: (url.includes("concepts/") || !item.className?.includes("wildcard-list-view")) ? "icon-concept" : "icon-wildcard", size: "lg"}} :
+        {type: "icon", icon: {name: url.includes("concepts/") ? "icon-concept" : item.className?.includes("wildcard-list-view") ? "icon-wildcard" : "icon-info", size: "lg"}} :
         {type: "icon", icon: {name: "icon-info-filled", size: "lg", color: "tertiary"}, label: "Shortcut", alt: "Shortcut page icon" };
 
     return <AbstractListViewItem
