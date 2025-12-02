@@ -76,7 +76,6 @@ $question-font-size: 1.125rem;
 $question-font-weight: 600;
 
 // forms
-$border-color: black;
 
 $enable-negative-margins: true;
 
@@ -303,7 +302,7 @@ $container-max-widths: (
 
 $enable-negative-margins: true;
 
-$border-color: #dee2e6;
+$border-color: $color-neutral-200;
 $border-width: 1px;
 $border-color-translucent: rgba(0, 0, 0, 0.1);
 

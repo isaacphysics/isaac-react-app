@@ -3,7 +3,7 @@ import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Dropdown, Dro
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
-import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PATHS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, Subject, above, below, ifKeyIsEnter, isFullyDefinedContext, isSingleStageContext, isTutor, isTutorOrAbove, isValidStageSubjectPair, useDeviceSize } from "../../../services";
+import { HUMAN_STAGES, HUMAN_SUBJECTS, LearningStage, PATHS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, Subject, above, below, ifKeyIsEnter, isFullyDefinedContext, isSingleStageContext, isStudent, isTutor, isTutorOrAbove, isValidStageSubjectPair, useDeviceSize } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
@@ -294,10 +294,21 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
     const profileTabContents = <>
         {user?.loggedIn
             ? <div>
-                <div className="d-flex flex-column flex-sm-row gap-sm-7 gap-md-0">
-                    <div>
-                        {isTutorOrAbove(user) && <h5>STUDENT</h5>}
-                        <ul className="plain-list">
+                <div className="d-flex flex-column flex-sm-row">
+                    <div className="d-flex flex-column flex-grow-1">
+
+                        {deviceSize === "xs" && isTutorOrAbove(user) && <>
+                            <h5 className="mt-2">ACCOUNT</h5>
+                            <ul className="plain-list">
+                                <NavigationItemClose href="/account">
+                                    My account
+                                </NavigationItemClose>
+                            </ul>
+                            <div className="section-divider" />
+                        </>}
+
+                        {isTutorOrAbove(user) && <h5 className="pt-2 pt-sm-0">STUDENT</h5>}
+                        <ul className="plain-list flex-grow-1">
                             <NavigationItemClose href={PATHS.MY_GAMEBOARDS}>
                                 My question decks
                             </NavigationItemClose>
@@ -313,11 +324,27 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                                 My progress
                             </NavigationItemClose>
                         </ul>
+
+                        {(above['sm'](deviceSize) || isStudent(user)) && <>
+                            {isTutorOrAbove(user) 
+                                ? <>
+                                    <div className="section-divider me-n2" />
+                                    <Spacer />
+                                    <h5 className="mt-2">ACCOUNT</h5>
+                                </>
+                                : <div className="section-divider" />
+                            }
+                            <ul className="plain-list">
+                                <NavigationItemClose href="/account">
+                                    My account
+                                </NavigationItemClose>
+                            </ul>
+                        </>}
                     </div>
 
                     {isTutorOrAbove(user) && <>
                         <div className={above["sm"](deviceSize) ? "section-divider-y" : "section-divider"}/>
-                        <div>
+                        <div className="flex-grow-1">
                             <h5 className="pt-2 pt-sm-0">{isTutor(user) ? "TUTOR" : "TEACHER"}</h5>
                             <ul className="plain-list">
                                 {isTutor(user)
@@ -329,6 +356,9 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                                     </NavigationItemClose>}
                                 <NavigationItemClose href="/groups">
                                     Manage groups
+                                </NavigationItemClose>
+                                <NavigationItemClose href="/question_deck_builder">
+                                    Create a question deck
                                 </NavigationItemClose>
                                 <NavigationItemClose href="/set_assignments">
                                     Set assignments
@@ -347,16 +377,6 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
                         </div>
                     </>}
                 </div>
-
-                <div className="section-divider" />
-                <ul className="plain-list">
-                    <NavigationItemClose href="/account">
-                        My account
-                    </NavigationItemClose>
-                    <NavigationItemClose href="/logout">
-                        Log out
-                    </NavigationItemClose>
-                </ul>
             </div>
             : <div className="px-4">
                 <span>You&apos;re not currently logged in. Log in or sign up for free below!</span>
