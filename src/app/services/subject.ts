@@ -7,6 +7,8 @@ if (document.location.host === "localhost:8004" || document.location.host.includ
     id = "computer_science" as TAG_ID;
 } else if (document.location.host.includes("/physics/")) {
     id = TAG_ID.physics;
+} else if (document.location.host.includes("/maths/")) {
+    id = TAG_ID.maths;
 } else if (document.location.host.includes("/chemistry/")) {
     id = TAG_ID.chemistry;
 } else if (document.location.host.includes("/biology/")) {
