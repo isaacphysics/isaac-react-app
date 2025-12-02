@@ -236,7 +236,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                     <>
                         {siteSpecific(
                             <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>,
-                            <span id={helpTooltipId} className="icon-help-q my-auto ms-2"/>
+                            <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
                         )}
                         <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />

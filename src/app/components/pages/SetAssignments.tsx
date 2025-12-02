@@ -159,11 +159,11 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         <th>Groups</th>
         <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
-            setOrder={setBoardOrder}>
+            setOrder={setBoardOrder} alignment="start">
             Quiz name
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
-            Stages and Difficulties <span id={`difficulties-help`} className="ms-2 icon icon-info icon-color-black icon-sm mb-n1" />
+            Stages and Difficulties <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black" />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br/>
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}

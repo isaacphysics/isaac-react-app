@@ -136,15 +136,15 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         <Card className="my-4">
             <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className={"icon icon-group icon-md me-2"} color="secondary"/>
+                    <i className={"icon icon-group icon-sm me-2"} color="secondary"/>
                     {groupMembers?.length ? `${groupMembers?.length} student${groupMembers?.length !== 1 ? "s" : ""}` : "Unknown"}
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className={classNames("icon icon-file me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                    <i className={"icon icon-file icon-sm me-2"} color="secondary"/>
                     {groupBoardAssignments?.length} assignment{groupBoardAssignments?.length !== 1 ? "s" : ""}
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className={classNames("icon icon-school me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
+                    <i className={"icon icon-school icon-sm me-2"} color="secondary"/>
                     {groupQuizAssignments?.length} test{groupQuizAssignments?.length !== 1 ? "s" : ""}
                 </div>
             </CardBody>
