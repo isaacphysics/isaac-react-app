@@ -1,19 +1,21 @@
 import {TAG_ID} from "./";
 
 let id;
-if (["localhost:8000", "localhost:8004"].includes(document.location.host) || document.location.host.includes("isaacphysics") || document.location.host.includes("isaacscience")) {
+if (document.location.host === "localhost:8004" || document.location.host.includes("isaacscience")) {
+    id = undefined;
+} else if (document.location.host === "localhost:8003" || document.location.host.includes("adacomputerscience")) {
+    id = "computer_science" as TAG_ID;
+} else if (document.location.host.includes("/physics/")) {
     id = TAG_ID.physics;
-} else if (document.location.host == "localhost:8001" || document.location.host.includes("isaacchemistry")) {
+} else if (document.location.host.includes("/chemistry/")) {
     id = TAG_ID.chemistry;
-} else if (document.location.host == "localhost:8002" || document.location.host.includes("isaacbiology")) {
+} else if (document.location.host.includes("/biology/")) {
     id = TAG_ID.biology;
-} else if (document.location.host == "localhost:8003" || document.location.host.includes("adacomputerscience")) {
-    id = "computer_science";
 } else {
-    id = "unknown";
+    id = undefined;
 }
 
-const title = id[0].toUpperCase() + id.split("_").join(" ").substring(1);
+const title = id ? id[0].toUpperCase() + id.split("_").join(" ").substring(1) : undefined;
 
 export const subject = {
     id: id,
