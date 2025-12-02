@@ -462,27 +462,9 @@ $failed-bg-size: 25%;
     }
   }
 
-  .progress-table-header-footer button {
-    background: none;
-    border: none;
-    padding: 0;
+  .progress-table-header-footer .sortable-item-header .sort {
     margin-left: 0.5rem;
     font-size: 10px;
-    z-index: 1;
-    line-height: initial;
-
-    span {
-      opacity: 0.3;
-      display: block;
-    }
-  }
-
-  .progress-table-header-footer .reverse .arrow {
-    transform: rotate(180deg);
-  }
-
-  .progress-table-header-footer .sorted .arrow {
-    opacity: 1;
   }
 
   td, th {
