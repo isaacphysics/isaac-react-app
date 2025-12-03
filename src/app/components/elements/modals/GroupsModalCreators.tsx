@@ -319,8 +319,8 @@ Are you sure you want to promote this manager to group owner?\n
                         <li>Modify or delete <b>all assignments</b>, including those set by the owner</li>
                         <li>Remove group members</li>
                         <li>Archive and rename the group</li>
+                        <li>Add or remove other managers</li>
                     </ul>
-                    Additional managers cannot add or remove other managers. <br/>
                     Un-tick the above box if you would like to remove these additional privileges.
                 </>
                 : <>
@@ -329,6 +329,7 @@ Are you sure you want to promote this manager to group owner?\n
                         <li>Modify or delete <b>all assignments</b>, including those set by the owner</li>
                         <li>Remove group members</li>
                         <li>Archive and rename the group</li>
+                        <li>Add or remove other managers</li>
                     </ul>
                 </>
             }
