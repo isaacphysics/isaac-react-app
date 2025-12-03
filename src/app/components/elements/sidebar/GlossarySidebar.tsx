@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router";
-import { Tag } from "reactstrap";
 import { Stage } from "../../../../IsaacApiTypes";
 import { stageLabelMap, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS, HUMAN_STAGES } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
 import { GlossarySearch } from "../../pages/Glossary";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
+import { Tag } from "../../../../IsaacAppTypes";
 
 interface GlossarySidebarProps extends ContentSidebarProps {
     searchText: string;

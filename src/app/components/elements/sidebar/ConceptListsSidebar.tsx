@@ -1,8 +1,9 @@
 import React, { useEffect, ChangeEvent } from "react";
-import { Tag, Input } from "reactstrap";
+import { Input } from "reactstrap";
 import { tags, TAG_ID, getSearchPlaceholder, isDefined } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
 import { ContentSidebarProps, ContentSidebar, FilterCheckbox } from "../layout/SidebarLayout";
+import { Tag } from "../../../../IsaacAppTypes";
 
 export interface ConceptListSidebarProps extends ContentSidebarProps {
     searchText: string | null;
