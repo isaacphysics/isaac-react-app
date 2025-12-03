@@ -336,23 +336,24 @@ def get_target_api_version_from_app_image(ctx):
 
 if __name__ == '__main__':
     assert_using_a_tty()
-    context = vars(parse_command_line_arguments())
-    context = validate_args(context)
+    initial_context = vars(parse_command_line_arguments())
+    initial_context = validate_args(initial_context)
 
-    EXEC = context['exec']
+    EXEC = initial_context['exec']
 
-    context['live'] = context['env'] == 'live' # As env changes during live deployment
-    context['subject'] = 'ada' if context['site'] == Site.ADA else 'phy'
+    initial_context['live'] = initial_context['env'] == 'live' # As env changes during live deployment
 
-    get_target_api_version_from_app_image(context)
+    get_target_api_version_from_app_image(initial_context)
 
     check_repos_are_up_to_date()
 
-    check_running_servers(context)
+    check_running_servers(initial_context)
 
-    sites = [Site.ADA, Site.SCI] if context['site'] == Site.BOTH else [context['site']]
+    sites = [Site.ADA, Site.SCI] if initial_context['site'] == Site.BOTH else [initial_context['site']]
     for site in sites:
+        context = initial_context.copy()
         context['site'] = site
+        context['subject'] = 'ada' if context['site'] == Site.ADA else 'phy'
         if context['env'] == 'test' and volume_exists(context):
             deploy_test(context)
         elif context['env'] in ('staging', 'dev') and volume_exists(context):
