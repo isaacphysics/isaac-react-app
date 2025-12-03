@@ -53,7 +53,7 @@ import {BoardAssignee, AssignmentBoardOrder, Boards} from "../../../IsaacAppType
 import {BoardCard} from "../elements/cards/BoardCard";
 import {RenderNothing} from "../elements/RenderNothing";
 import {SortItemHeader} from "../elements/SortableItemHeader";
-import {MainContent, SetAssignmentsSidebar, SidebarLayout} from "../elements/layout/SidebarLayout";
+import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
@@ -61,6 +61,7 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { SetAssignmentsModal } from "../elements/modals/SetAssignmentsModal";
 import { PageFragment } from "../elements/PageFragment";
 import { useHistoryState } from "../../state/actions/history";
+import { SetAssignmentsSidebar } from "../elements/sidebar/SetAssignmentsSidebar";
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;

@@ -4,9 +4,10 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
-import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
+import { SidebarLayout, MainContent } from "../elements/layout/SidebarLayout";
 import { MicrosoftSignInButton } from "../elements/MicrosoftSignInButton";
 import { SsoHelpLink } from "./LogIn";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 
 export const RegistrationStart = () => {
 

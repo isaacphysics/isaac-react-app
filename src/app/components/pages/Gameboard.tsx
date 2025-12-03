@@ -29,9 +29,10 @@ import {Redirect} from "react-router";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {GameboardSidebar, MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
+import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {PageMetadata} from "../elements/PageMetadata";
 import {ListView} from "../elements/list-groups/ListView";
+import { GameboardSidebar } from "../elements/sidebar/GameboardSidebar";
 
 export const Gameboard = withRouter(({ location }) => {
     const dispatch = useAppDispatch();

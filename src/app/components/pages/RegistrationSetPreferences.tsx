@@ -26,8 +26,9 @@ import {ProgrammingLanguageInput} from "../elements/inputs/ProgrammingLanguageIn
 import {useEmailPreferenceState, UserEmailPreferencesInput} from "../elements/inputs/UserEmailPreferencesInput";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import classNames from "classnames";
-import {MainContent, SidebarLayout, SignupSidebar} from "../elements/layout/SidebarLayout";
+import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {SignupTab} from "../elements/panels/SignupTab";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 
 export const RegistrationSetPreferences = () => {
 

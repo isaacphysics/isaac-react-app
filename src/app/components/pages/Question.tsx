@@ -31,7 +31,7 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
-import { GameboardContentSidebar, MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
@@ -39,6 +39,8 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
 import { QuestionMetaData } from "../elements/QuestionMetadata";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
+import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
+import { QuestionSidebar } from "../elements/sidebar/RelatedContentSidebar";
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
     match: match & { params: { questionId: string } };

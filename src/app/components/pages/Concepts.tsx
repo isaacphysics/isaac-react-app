@@ -7,7 +7,7 @@ import {getFilteredStageOptions, isPhy, isRelevantToPageContext, matchesAllWords
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import { ListView } from "../elements/list-groups/ListView";
-import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { getHumanContext, isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
 import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
@@ -16,6 +16,8 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { PageMetadata } from "../elements/PageMetadata";
 import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
 import { FilterSummary } from "./QuestionFinder";
+import { SubjectSpecificConceptListSidebar } from "../elements/sidebar/ConceptListsSidebar";
+import { GenericConceptsSidebar } from "../elements/sidebar/GenericConceptsSidebar";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,

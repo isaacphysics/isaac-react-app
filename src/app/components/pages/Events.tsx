@@ -18,7 +18,8 @@ import {
 import {RenderNothing} from "../elements/RenderNothing";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { Container, Row, Button, Form, Input, Label, Col } from "reactstrap";
-import { EventsSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { EventsSidebar } from "../elements/sidebar/EventsSidebar";
 
 export interface EventsPageQueryParams {
     show_booked_only?: boolean;
