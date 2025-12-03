@@ -293,7 +293,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                 <div>
                     <Form className="form-inline" onSubmit={saveUpdatedGroup}>
                         <Label htmlFor="groupName" className={"form-required fw-bold"}>
-                            {isUserGroupOwner ? "Rename group" : "Group name" }
+                            {isUserGroupOwner || group.additionalManagerPrivileges ? "Rename group" : "Group name" }
                         </Label>
                         <InputGroup className="flex-column flex-md-row align-items-center gap-2 stackable-input-group w-100">
                             <Input
@@ -346,7 +346,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                         {isTeacherOrAbove(user) &&
                             <div>
                                 <Button className="w-100 d-inline-block text-nowrap" color="keyline" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
-                                    {isUserGroupOwner ?
+                                    {(isUserGroupOwner || group.additionalManagerPrivileges) ?
                                         `${additionalManagers.length > 1 ? "Edit" : "Add"} group managers` : `More information`
                                     }
                                 </Button>
