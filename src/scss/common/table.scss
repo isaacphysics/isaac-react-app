@@ -50,9 +50,9 @@
   }
 }
 
-.my-quizzes-table .my-quizzes-table-header, .my-gameboard-table .my-gameboard-table-header {
-    th {
-       border-top: none;
-       white-space: nowrap;
-    }
+.my-quizzes-table thead.my-quizzes-table-header, .my-gameboard-table thead.my-gameboard-table-header {
+  th {
+    border-top: none;
+    white-space: nowrap;
+  }
 }
