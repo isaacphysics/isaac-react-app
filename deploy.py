@@ -127,7 +127,7 @@ def get_old_versions(ctx):
     app_name_prefix = f"{ctx['site']}-app-live-"
     previous_app_version = ""
 
-    if 'old_app' not in ctx or ctx['old_api'] is None:
+    if 'old_app' not in ctx or ctx['old_api'] is None or ('old_app_site' in ctx and ctx['old_app_site'] != ctx['site']):
         print("# Find the previous app version")
         while previous_app_version == "":
             previous_app_version = ask_to_run_command(
@@ -141,7 +141,9 @@ def get_old_versions(ctx):
                 previous_app_version = input(f"Enter old APP version (e.g. v1.2.3) for {ctx['site']} {ctx['env']}: ")
 
         ctx['old_app'] = previous_app_version
+        ctx['old_app_site'] = ctx['site']
     else:
+        print(f"Inferring previous app version as {ctx['old_app']}")
         previous_app_version = ctx['old_app']
 
     if 'old_api' not in ctx or ctx['old_api'] is None:
