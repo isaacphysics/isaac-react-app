@@ -7,6 +7,7 @@ import { calculateSidebarLink, isSidebarGroup, containsActiveTab } from "../../.
 import { CollapsibleList } from "../CollapsibleList";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { Markup } from "../markup";
+import { History } from "history";
 
 const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: History }) => {
     const isActive = history.location.pathname === calculateSidebarLink(entry);

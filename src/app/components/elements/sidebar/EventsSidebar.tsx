@@ -6,6 +6,7 @@ import { useAppSelector, selectors } from "../../../state";
 import { EventsPageQueryParams } from "../../pages/Events";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar, SidebarProps } from "../layout/SidebarLayout";
+import queryString from "query-string";
 
 export const EventsSidebar = (props: SidebarProps) => {
     const deviceSize = useDeviceSize();

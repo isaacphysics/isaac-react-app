@@ -6,6 +6,7 @@ import { useDeviceSize, TAG_ID, isDefined, below, isPhy } from "../../../service
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar, KeyItem, Pill } from "../layout/SidebarLayout";
 import { SectionProgress, QuizView, QuizRubricButton } from "../quiz/QuizContentsComponent";
+import { tags as tagsService } from "../../../services";
 
 interface QuizSidebarProps {
     viewingAsSomeoneElse: boolean;

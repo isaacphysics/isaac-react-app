@@ -2,7 +2,7 @@ import React, { useEffect, ChangeEvent } from "react";
 import { Input } from "reactstrap";
 import { tags, TAG_ID, getSearchPlaceholder, isDefined } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
-import { ContentSidebarProps, ContentSidebar, FilterCheckbox } from "../layout/SidebarLayout";
+import { ContentSidebarProps, ContentSidebar, FilterCheckbox, AllFiltersCheckbox } from "../layout/SidebarLayout";
 import { Tag } from "../../../../IsaacAppTypes";
 
 export interface ConceptListSidebarProps extends ContentSidebarProps {
