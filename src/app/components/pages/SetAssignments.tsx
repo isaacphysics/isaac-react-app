@@ -96,7 +96,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
             .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())));
     }, [boards, boardTitleFilter, boardCreator, boardSubject, user]);
 
-    const tableHeader = <tr className="my-gameboard-table-header">
+    const tableHeader = <tr>
         <th className="text-center align-middle"><span className="ps-2 pe-2">Groups</span></th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
@@ -124,8 +124,8 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
     return <Card className="mt-2 mb-7">
         <CardBody id="boards-table">
             <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
-                <Table className="mb-0">
-                    <thead>
+                <Table className="mb-0 my-gameboard-table">
+                    <thead className="my-gameboard-table-header">
                         {tableHeader}
                     </thead>
                     <tbody>
@@ -155,7 +155,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         groupsByGameboard, openAssignModal
     } = props;
 
-    const tableHeader = <tr className="my-gameboard-table-header">
+    const tableHeader = <tr>
         <th>Groups</th>
         <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
@@ -209,7 +209,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         </Row>
         <HorizontalScroller enabled={boards ? boards.boards.length > 6 : false}>
             <Table className="mt-3 my-gameboard-table">
-                <thead>
+                <thead className="my-gameboard-table-header">
                     {tableHeader}
                 </thead>
                 <tbody>

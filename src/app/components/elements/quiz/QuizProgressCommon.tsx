@@ -223,7 +223,7 @@ export function ResultsTable<Q extends QuestionType>({
     ), [progress, reverseOrder, sortBySelectedSortOrder, sortOrder]);
 
 
-    const tableHeaderFooter = <tr className="progress-table-header-footer fw-bold">
+    const tableHeaderFooter = <tr className="fw-bold">
         <SortItemHeader<ProgressSortOrder>
             className="student-name sticky-left ps-3 py-3"
             defaultOrder={"name"}
@@ -351,7 +351,7 @@ export function ResultsTable<Q extends QuestionType>({
         {progress && progress.length > 0 ? <>
             <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
                 <table ref={tableRef} className="progress-table w-100">
-                    <thead className="sticky-top">
+                    <thead className="progress-table-header-footer sticky-top">
                         {tableHeaderFooter}
                         {isPhy && selectedQuestionIndex !== undefined && <tr>
                             <th className="py-2" colSpan={2 + questions.length}>
@@ -554,61 +554,63 @@ export function ResultsTablePartBreakdown({
         ? <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
             <table {...rest} className={classNames("progress-table assignment-progress-progress w-100", rest.className)}>
                 <thead className="progress-table-header-footer fw-bold">
-                    <SortItemHeader<ProgressSortOrder>
-                        className="student-name sticky-left ps-3 py-3"
-                        defaultOrder={"name"}
-                        reverseOrder={"name"}
-                        currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-                        alignment={"start"}
-                    >
-                        Name
-                    </SortItemHeader>
-                    {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
-                        ? <SortItemHeader<ProgressSortOrder>
-                            className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
-                            defaultOrder={"totalQuestionPercentage"}
-                            reverseOrder={"totalQuestionPercentage"}
-                            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-                            label={"Total correct"}
-                        >
-                            {siteSpecific(
-                                <div className="d-flex flex-column ps-3">
-                                    <span>Parts</span>
-                                    <small className="mt-n1 text-muted fw-normal">(total)</small>
-                                </div>,
-                                "Correct"
-                            )}
-                        </SortItemHeader>
-                        : <SortItemHeader<ProgressSortOrder>
-                            className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
-                            defaultOrder={"totalAttemptedQuestionPercentage"}
-                            reverseOrder={"totalAttemptedQuestionPercentage"}
-                            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-                            label={"Total attempted"}
-                        >
-                            {siteSpecific(
-                                <div className="d-flex flex-column ps-3">
-                                    <span>Parts</span>
-                                    <small className="mt-n1 text-muted fw-normal">(total)</small>
-                                </div>,
-                                "Attempted"
-                            )}
-                        </SortItemHeader>
-                    )}
-                    {sortedProgress.find(p => !!p.questionPartResults)?.questionPartResults?.[questionIndex]?.map((_, i) =>
-                        // <th key={i} className="text-center">
+                    <tr>
                         <SortItemHeader<ProgressSortOrder>
-                            defaultOrder={i}
-                            reverseOrder={i}
-                            currentOrder={sortOrder}
-                            setOrder={toggleSort}
-                            reversed={reverseOrder}
-                            key={i}
+                            className="student-name sticky-left ps-3 py-3"
+                            defaultOrder={"name"}
+                            reverseOrder={"name"}
+                            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                            alignment={"start"}
                         >
-                            Part {i + 1}
+                            Name
                         </SortItemHeader>
-                        // </th>
-                    )}
+                        {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
+                            ? <SortItemHeader<ProgressSortOrder>
+                                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                                defaultOrder={"totalQuestionPercentage"}
+                                reverseOrder={"totalQuestionPercentage"}
+                                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                                label={"Total correct"}
+                            >
+                                {siteSpecific(
+                                    <div className="d-flex flex-column ps-3">
+                                        <span>Parts</span>
+                                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                                    </div>,
+                                    "Correct"
+                                )}
+                            </SortItemHeader>
+                            : <SortItemHeader<ProgressSortOrder>
+                                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                                defaultOrder={"totalAttemptedQuestionPercentage"}
+                                reverseOrder={"totalAttemptedQuestionPercentage"}
+                                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                                label={"Total attempted"}
+                            >
+                                {siteSpecific(
+                                    <div className="d-flex flex-column ps-3">
+                                        <span>Parts</span>
+                                        <small className="mt-n1 text-muted fw-normal">(total)</small>
+                                    </div>,
+                                    "Attempted"
+                                )}
+                            </SortItemHeader>
+                        )}
+                        {sortedProgress.find(p => !!p.questionPartResults)?.questionPartResults?.[questionIndex]?.map((_, i) =>
+                            // <th key={i} className="text-center">
+                            <SortItemHeader<ProgressSortOrder>
+                                defaultOrder={i}
+                                reverseOrder={i}
+                                currentOrder={sortOrder}
+                                setOrder={toggleSort}
+                                reversed={reverseOrder}
+                                key={i}
+                            >
+                                Part {i + 1}
+                            </SortItemHeader>
+                            // </th>
+                        )}
+                    </tr>
                 </thead>
                 <tbody>
                     {sortedProgress.map((studentProgress, studentIndex) => (
