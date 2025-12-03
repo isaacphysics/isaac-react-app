@@ -49,3 +49,10 @@
     transform: rotate(180deg);
   }
 }
+
+.my-quizzes-table .my-quizzes-table-header, .my-gameboard-table .my-gameboard-table-header {
+    th {
+       border-top: none;
+       white-space: nowrap;
+    }
+}
