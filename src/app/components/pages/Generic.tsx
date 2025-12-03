@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
-import {SeguePageDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardDTO, SeguePageDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
-import {isAda, useUrlHashValue} from "../../services";
+import {isAda, isPhy, useUrlHashValue} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -19,6 +19,7 @@ import { NotFound } from "./NotFound";
 import { PageMetadata } from "../elements/PageMetadata";
 import { useGetGameboardByIdQuery } from "../../state";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { NewsSidebar } from "../elements/sidebar/NewsSidebar";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -34,13 +35,21 @@ const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
 };
 
 // Overrides for physics pages which shouldn't use the default GenericPageSidebar
-// TODO this should also consider page tags (for events/news etc)
-const PHY_SIDEBAR = new Map<string, () => React.JSX.Element>([
-    ["privacy_policy", () => <PolicyPageSidebar />],
-    ["terms_of_use", () => <PolicyPageSidebar />],
-    ["cookie_policy", () => <PolicyPageSidebar />],
-    ["accessibility_statement", () => <PolicyPageSidebar />]
-]);
+const SciSidebar = ({pageId, tags, gameboard, relatedContent, ...sidebarProps}: {pageId: string, tags?: string[], gameboard?: GameboardDTO, relatedContent?: ContentSummaryDTO[]} & React.HTMLAttributes<HTMLDivElement>) => {
+    if (["privacy_policy", "terms_of_use", "cookie_policy", "accessibility_statement"].includes(pageId)) {
+        return <PolicyPageSidebar {...sidebarProps} />;
+    }
+    if (tags?.includes("news")) {
+        return <NewsSidebar {...sidebarProps} />;
+    }
+    if (gameboard?.id && gameboard.wildCard?.url === window.location.pathname) {
+        return <GameboardContentSidebar id={gameboard.id} title={gameboard.title || ""} questions={gameboard.contents || []} wildCard={gameboard.wildCard} currentContentId={pageId} {...sidebarProps} />;
+    }
+    if (relatedContent) {
+        return <GenericSidebarWithRelatedContent relatedContent={relatedContent} {...sidebarProps} />;
+    }
+    return <GenericPageSidebar {...sidebarProps} />;
+};
 
 export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
     const pageId = pageIdOverride || params.pageId;
@@ -70,30 +79,29 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
         thenRender={supertypedDoc => {
             const doc = supertypedDoc as SeguePageDTO & DocumentSubject;
 
+            const isNews = doc.tags?.includes("news") || false;
+
             const sidebar = doc.sidebar
                 ? <ContentControlledSidebar sidebar={doc.sidebar} />
-                : React.cloneElement(PHY_SIDEBAR.has(pageId) 
-                    ? PHY_SIDEBAR.get(pageId)!() 
-                    : gameboard?.id && gameboard.wildCard?.url === window.location.pathname 
-                        ? <GameboardContentSidebar id={gameboard.id} title={gameboard.title || ""} questions={gameboard.contents || []} wildCard={gameboard.wildCard} currentContentId={pageId}/>
-                        : doc.relatedContent
-                            ? <GenericSidebarWithRelatedContent relatedContent={doc.relatedContent} />
-                            : <GenericPageSidebar/>,
-                );
+                : <SciSidebar pageId={pageId} tags={doc.tags} gameboard={gameboard} relatedContent={doc.relatedContent} />;
 
             return <Container data-bs-theme={doc.subjectId}>
                 <TitleAndBreadcrumb 
                     currentPageTitle={doc.title as string} 
-                    subTitle={doc.subtitle} 
-                    icon={{type: "hex", icon: "icon-generic"}}
+                    subTitle={doc.subtitle}
+                    displayTitleOverride={isPhy && isNews ? "News" : undefined}
+                    icon={{type: "hex", icon: isNews ? "icon-news" : "icon-generic"}}
                 /> 
                 <MetaDescription description={doc.summary} />
                 <SidebarLayout>
                     {sidebar}
                     <MainContent>
-                        {/* on generic pages, the actual doc.title is used as the super-title, unlike e.g. questions which use "Question". 
+                        {/* on non-news generic pages, the actual doc.title is used as the super-title, unlike e.g. questions which use "Question". 
                             as such, we promote a generic page's subtitle to be the regular title. */}
-                        <PageMetadata doc={{...doc, subtitle: undefined}} title={doc.subtitle} noTitle={!doc.subtitle} />
+                        {isNews 
+                            ? <PageMetadata doc={doc} />
+                            : <PageMetadata doc={{...doc, subtitle: undefined}} title={doc.subtitle} noTitle={!doc.subtitle} />
+                        }
 
                         <Row className="generic-content-container">
                             <Col className={classNames("pb-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId], "pt-4": isAda})}>
