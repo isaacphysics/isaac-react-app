@@ -202,14 +202,6 @@
       "count": 1
     }
   },
-  "src/app/components/elements/PageTitle.tsx": {
-    "react-hooks/exhaustive-deps": {
-      "count": 1
-    },
-    "semi": {
-      "count": 1
-    }
-  },
   "src/app/components/elements/RelatedContent.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -803,7 +795,7 @@
   },
   "src/app/components/pages/GameboardBuilder.tsx": {
     "@stylistic/indent": {
-      "count": 5
+      "count": 3
     },
     "@typescript-eslint/no-floating-promises": {
       "count": 4
@@ -1003,11 +995,6 @@
   "src/app/components/pages/quizzes/SetQuizzes.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/app/components/site/cs/HomepageCS.tsx": {
-    "@stylistic/indent": {
-      "count": 3
     }
   },
   "src/app/components/site/cs/RoutesCS.tsx": {

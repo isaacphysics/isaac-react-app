@@ -6,8 +6,9 @@ import { sortByStringValue, determineAudienceViews, isFullyDefinedContext, getHu
 import { useAppSelector, selectors } from "../../../state";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { AffixButton } from "../AffixButton";
-import { CompletionKey, NavigationSidebar, QuestionLink } from "../layout/SidebarLayout";
+import { NavigationSidebar } from "../layout/SidebarLayout";
 import { Markup } from "../markup";
+import { QuestionLink, CompletionKey } from "./SidebarElements";
 
 interface RelatedContentSidebarProps {
     relatedContent: ContentSummaryDTO[] | undefined;

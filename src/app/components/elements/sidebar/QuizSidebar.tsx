@@ -4,9 +4,10 @@ import { Row, Col } from "reactstrap";
 import { QuizAttemptDTO } from "../../../../IsaacApiTypes";
 import { useDeviceSize, TAG_ID, isDefined, below, isPhy } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
-import { ContentSidebar, KeyItem, Pill } from "../layout/SidebarLayout";
+import { ContentSidebar } from "../layout/SidebarLayout";
 import { SectionProgress, QuizView, QuizRubricButton } from "../quiz/QuizContentsComponent";
 import { tags as tagsService } from "../../../services";
+import { Pill, KeyItem } from "./SidebarElements";
 
 interface QuizSidebarProps {
     viewingAsSomeoneElse: boolean;

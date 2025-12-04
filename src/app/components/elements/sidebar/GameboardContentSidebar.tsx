@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import { GameboardItem, IsaacWildcard } from "../../../../IsaacApiTypes";
 import { isAppLink, PATHS } from "../../../services";
 import { ExternalLink } from "../ExternalLink";
-import { NavigationSidebar, CompletionKey, QuestionLink } from "../layout/SidebarLayout";
+import { NavigationSidebar } from "../layout/SidebarLayout";
 import { Markup } from "../markup";
+import { QuestionLink, CompletionKey } from "./SidebarElements";
 
 interface GameboardContentSidebarProps {
     id: string;

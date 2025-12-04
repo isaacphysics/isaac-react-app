@@ -15,7 +15,7 @@ interface GroupsSidebarProps extends ContentSidebarProps {
 }
 
 export const GroupsSidebar = (props: GroupsSidebarProps) => {
-    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, createNewGroup, ...rest } = props;
+    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, ...rest } = props;
     return <ContentSidebar buttonTitle="Select or create a group" {...rest}>
         <div className="section-divider"/>
         <h5>Select or create a group</h5>

@@ -2,7 +2,8 @@ import React from "react";
 import { GameboardDTO, AssignmentDTO } from "../../../../IsaacApiTypes";
 import { determineGameboardSubjects, isDefined, TAG_ID, tags, HUMAN_SUBJECTS, extractTeacherName } from "../../../services";
 import { getFriendlyDaysUntil } from "../DateString";
-import { ContentSidebarProps, Pill, ContentSidebar, CompletionKey } from "../layout/SidebarLayout";
+import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
+import { Pill, CompletionKey } from "./SidebarElements";
 
 interface GameboardSidebarProps extends ContentSidebarProps {
     gameboard: GameboardDTO;

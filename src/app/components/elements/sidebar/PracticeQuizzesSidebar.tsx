@@ -7,8 +7,9 @@ import { tags, TAG_ID, PHY_NAV_SUBJECTS, isSingleStageContext, getFilteredStageO
 import { useAppSelector, selectors } from "../../../state";
 import { AffixButton } from "../AffixButton";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
-import { ContentSidebarProps, ContentSidebar, FilterCheckbox, AllFiltersCheckbox } from "../layout/SidebarLayout";
+import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import { Tag } from "../../../../IsaacAppTypes";
+import { FilterCheckbox, AllFiltersCheckbox } from "./SidebarElements";
 
 interface PracticeQuizzesSidebarProps extends ContentSidebarProps {
     filterText: string;
