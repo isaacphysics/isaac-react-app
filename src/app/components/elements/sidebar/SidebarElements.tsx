@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { Link } from "react-router-dom";
-import { Tag } from "reactstrap";
 import { ContentSummaryDTO, GameboardItem, CompletionState } from "../../../../IsaacApiTypes";
 import { TAG_LEVEL, tags, SUBJECT_SPECIFIC_CHILDREN_MAP, isDefined, filterAudienceViewsByProperties, determineAudienceViews, AUDIENCE_DISPLAY_FIELDS, getThemeFromContextAndTags } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
@@ -9,6 +8,7 @@ import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { Markup } from "../markup";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
+import { Tag } from "../../../../IsaacAppTypes";
 
 export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
     const { icon, text, ...rest } = props;
