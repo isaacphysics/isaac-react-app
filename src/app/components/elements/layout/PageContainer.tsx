@@ -2,6 +2,7 @@ import React from "react";
 import { Container, ContainerProps } from "reactstrap";
 import { siteSpecific } from "../../../services";
 import { MainContent, SidebarLayout } from "./SidebarLayout";
+import classNames from "classnames";
 
 interface PageContainerProps extends Omit<ContainerProps, "pageTitle"> {
     pageTitle?: React.ReactNode;
@@ -33,7 +34,7 @@ export const PageContainer = (props: PageContainerProps) => {
         <SidebarLayout className="g-md-0">
             {sidebar}
             <MainContent className="overflow-x-auto">
-                <Container fluid {...rest} className="my-ada-container mw-1600 px-md-4 px-lg-6">
+                <Container fluid {...rest} className={classNames("my-ada-container mw-1600 px-md-4 px-lg-6 mb-7", rest.className)}>
                     {pageTitle}
                     {children}
                 </Container>
