@@ -70,7 +70,7 @@ export const SortItemHeader = <T,>(props: SortItemHeaderProps<NonUndefined<T>>) 
     </button>;
 
     return <th {...rest}
-        className={classNames(props.className, "user-select-none", sortClass(defaultOrder, reverseOrder, currentOrder, reversed))}
+        className={classNames(props.className, "user-select-none sortable-item-header", sortClass(defaultOrder, reverseOrder, currentOrder, reversed))}
         onClick={() => {
             toggleSort(defaultOrder, reverseOrder, currentOrder, setOrder);
             onClick?.();

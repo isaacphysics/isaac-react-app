@@ -284,7 +284,7 @@ export const QuestionSearchModal = (
             <HorizontalScroller enabled className="my-4">
                 <Table bordered className="my-0">
                     <thead>
-                        <tr className="search-modal-table-header">
+                        <tr>
                             <th className="w-5"> </th>
                             <SortItemHeader<SortOrder>
                                 className={siteSpecific("w-40", "w-30")}

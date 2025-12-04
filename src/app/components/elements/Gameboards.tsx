@@ -55,7 +55,7 @@ const CSTable = (props: GameboardsTableProps) => {
         boardOrder, setBoardOrder
     } = props;
 
-    const tableHeader = <tr className="my-gameboard-table-header">
+    const tableHeader = <tr>
         <SortItemHeader<AssignmentBoardOrder> colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
             {siteSpecific("Question deck name", "Quiz name")}
         </SortItemHeader>
@@ -102,7 +102,7 @@ const CSTable = (props: GameboardsTableProps) => {
     return <div className={siteSpecific("", "mb-7")}>
         <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
             <Table className={classNames("my-gameboard-table", {"mb-0" : isPhy})}>
-                <thead>
+                <thead className="my-gameboard-table-header">
                     {tableHeader}
                 </thead>
                 <tbody>
