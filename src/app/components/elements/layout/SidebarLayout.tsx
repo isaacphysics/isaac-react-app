@@ -146,8 +146,10 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
     const sidebarContext = useContext(SidebarContext);
     if (!sidebarContext?.sidebarPresent) return <></>; 
 
+    const breakpoint = siteSpecific("lg", "md");
+
     const { className, buttonTitle, hideButton, optionBar, ...rest } = props;
-    return above['lg'](deviceSize)
+    return above[breakpoint](deviceSize)
         ? siteSpecific(
             <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar no-print p-4 order-0", className)} />,
             <Col tag="aside" data-testid="sidebar" aria-label="Sidebar" {...rest} className={classNames("flex-column sidebar no-print order-0", className)} />

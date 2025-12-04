@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import { isAda } from "./siteConstants";
 
 const MOBILE_WINDOW_WIDTH = 768;
 
@@ -32,7 +33,8 @@ const descDeviceSizes = [DeviceSize.XXXL, DeviceSize.XXL, DeviceSize.XL, DeviceS
 
 export const useDeviceSize = () => {
     const getSize = (): DeviceSize => {
-        const width = window.innerWidth;
+        const shouldIncludeSidebar = isAda;
+        const width = window.innerWidth - (shouldIncludeSidebar ? 220 : 0);
         if (width >= 1800) return DeviceSize.XXXL;
         else if (width >= 1400) return DeviceSize.XXL;
         else if (width >= 1200) return DeviceSize.XL;

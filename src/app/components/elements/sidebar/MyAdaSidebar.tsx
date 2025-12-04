@@ -110,7 +110,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
 
     return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": collapsed})} buttonTitle="My Ada">
         <div className="sticky-top">
-            {above['lg'](deviceSize) && <AdaSidebarCollapser collapsed={collapsed} toggleSidebar={toggleSidebar} />}
+            {above['md'](deviceSize) && <AdaSidebarCollapser collapsed={collapsed} toggleSidebar={toggleSidebar} />}
 
             {Object.entries(MyAdaTabs)
                 .filter(([_, tab]) => {
