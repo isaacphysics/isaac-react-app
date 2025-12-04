@@ -146,7 +146,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             <TitleAndBreadcrumb 
                 currentPageTitle="Concepts" 
                 intermediateCrumbs={crumb ? [crumb] : undefined}
-                icon={{type: "hex", icon: "icon-concept"}}
+                icon={{type: "icon", icon: "icon-concept"}}
             />
             <SidebarLayout>
                 {pageContext?.subject 

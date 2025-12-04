@@ -108,7 +108,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}/>
+        <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}/>
         <SidebarLayout>
             <MyAssignmentsSidebar
                 {...myAssignmentOptionProps}

@@ -106,7 +106,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         <TitleAndBreadcrumb
             currentPageTitle={group?.groupName ?? "Group progress"}
             intermediateCrumbs={[{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}]}
-            icon={{type: "hex", icon: "icon-group"}}
+            icon={{type: "icon", icon: "icon-group"}}
         />
 
         {isPhy && <Link to={PATHS.ASSIGNMENT_PROGRESS} className={classNames("d-flex align-items-center mb-2 mt-4 d-md-none")}>
@@ -136,15 +136,15 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         <Card className="my-4">
             <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className="icon icon-group icon-md me-2" color="secondary"/>
+                    <i className={"icon icon-group icon-sm me-2"} color="secondary"/>
                     {groupMembers?.length ? `${groupMembers?.length} student${groupMembers?.length !== 1 ? "s" : ""}` : "Unknown"}
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className="icon icon-file icon-md me-2" color="secondary"/>
+                    <i className={"icon icon-file icon-sm me-2"} color="secondary"/>
                     {groupBoardAssignments?.length} assignment{groupBoardAssignments?.length !== 1 ? "s" : ""}
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
-                    <i className="icon icon-school icon-md me-2" color="secondary"/>
+                    <i className={"icon icon-school icon-sm me-2"} color="secondary"/>
                     {groupQuizAssignments?.length} test{groupQuizAssignments?.length !== 1 ? "s" : ""}
                 </div>
             </CardBody>

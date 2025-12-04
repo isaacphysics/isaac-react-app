@@ -160,11 +160,11 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         <th>Groups</th>
         <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
-            setOrder={setBoardOrder}>
+            setOrder={setBoardOrder} alignment="start">
             Quiz name
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
-            Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1"/>
+            Stages and Difficulties <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black" />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br/>
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
@@ -376,7 +376,7 @@ export const SetAssignments = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
-            icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
+            icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}
         />
         <SidebarLayout>
             <SetAssignmentsSidebar
@@ -423,7 +423,7 @@ export const SetAssignments = () => {
                         <PromptBanner
                             card={{
                                 title: "You need a student group before you can assign a quiz to students.",
-                                icon: {src: "/assets/cs/icons/group.svg"},
+                                icon: "icon-group",
                                 bodyText: "",
                                 color: "yellow",
                                 buttons: {

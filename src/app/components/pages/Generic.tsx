@@ -95,7 +95,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                     currentPageTitle={doc.title as string} 
                     subTitle={doc.subtitle}
                     displayTitleOverride={isPhy && isNews ? "News" : undefined}
-                    icon={{type: "hex", icon: isNews ? "icon-news" : "icon-generic"}}
+                    icon={{type: "icon", icon: isNews ? "icon-news" : "icon-generic"}}
                 /> 
                 <MetaDescription description={doc.summary} />
                 <SidebarLayout>

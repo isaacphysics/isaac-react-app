@@ -17,7 +17,7 @@ export const RegistrationAgeCheckParentalConsent = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Additional information"} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={"Additional information"} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         <SidebarLayout>
             <SignupSidebar activeTab={1}/>
             <MainContent>
