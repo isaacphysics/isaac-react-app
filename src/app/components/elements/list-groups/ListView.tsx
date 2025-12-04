@@ -2,7 +2,7 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, isAda, isPhy, PATHS, SEARCH_RESULT_TYPE, siteSpecific, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
@@ -11,11 +11,8 @@ import { openActiveModal, selectors, useAppDispatch, useAppSelector } from "../.
 import { UnionToIntersection } from "@reduxjs/toolkit/dist/tsHelpers";
 import classNames from "classnames";
 import { TitleIconProps } from "../PageTitle";
+import { IconProps } from "../svg/HexIcon";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
-
-function iconPath(name: string): string {
-    return `/assets/${siteSpecific("phy", "cs")}/icons/${name}.svg`;
-}
 
 function getBreadcrumb(tagIds: TAG_ID[] = []): string[] {
     return tags.getByIdsAsHierarchy(tagIds).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title);
@@ -42,17 +39,13 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "");
+    const state = item.state ?? CompletionState.NOT_ATTEMPTED;
 
-    const icon: TitleIconProps = isPhy
-        ? {type: "hex", icon: "icon-question", size: "lg"}
-        : [CompletionState.IN_PROGRESS, CompletionState.ALL_ATTEMPTED].includes(item.state as CompletionState)
-            ? {type: "img", icon: iconPath("status-in-progress"), width: "24px", height: "24px", alt: "In progress question icon", label: "In progress"}
-            : item.state === CompletionState.ALL_CORRECT
-                ? {type: "img", icon: iconPath("status-correct"), width: "24px", height: "24px", alt: "Complete question icon", label: "Correct"}
-                : item.state === CompletionState.ALL_INCORRECT
-                    ? {type: "img", icon: iconPath("status-incorrect"), width: "24px", height: "24px", alt: "Incorrect question icon", label: "Incorrect"}
-                    : {type: "img", icon: iconPath("status-not-started"), width: "24px", height: "24px", alt: "Not attempted question icon", label: linkedBoardId ? "Not started" : "Question"};
-    if (hideIconLabel) icon.label = undefined;
+    const icon: TitleIconProps = { type: "icon", label: hideIconLabel ? undefined : linkedBoardId ? HUMAN_STATUS[state] : "Question",
+        icon: isPhy
+            ? {name: "icon-question", size: "lg"}
+            : {name: QUESTION_STATUS_TO_ICON[state], size: hideIconLabel ? "md" : "lg", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary", raw: true}
+    };
 
     return <AbstractListViewItem
         {...rest}
@@ -78,10 +71,13 @@ export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) =
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
-
-    const icon: TitleIconProps = isPhy
-        ? {type: "hex", icon: "icon-concept", size: "lg"}
-        : {type: "img", icon: iconPath("concept"), width: "32px", height: "32px", alt: "Concept page icon", label: "Concept"};
+    const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-concept", size: "lg"}};
+    
+    if (isAda) {
+        icon.label = "Concept";
+        icon.alt = "Concept page icon";
+        icon.icon.color = "tertiary";
+    }
 
     return <AbstractListViewItem
         icon={icon}
@@ -103,7 +99,7 @@ export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
-    const icon: TitleIconProps = {type: "img", icon: iconPath("topic"), width: "32px", height: "32px", alt: "Topic summary page icon", label: "Topic"};
+    const icon: TitleIconProps = {type: "icon", label: "Topic", icon: {name: "icon-topic", size: "lg", altText: "Topic summary page icon", color: "tertiary"}};
 
     return <AbstractListViewItem
         icon={icon}
@@ -123,9 +119,13 @@ interface EventListViewItemProps extends Extract<AbstractListViewItemProps, {alv
 export const EventListViewItem = ({item, ...rest}: EventListViewItemProps) => {
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
-    const icon: TitleIconProps = isPhy
-        ? {type: "hex", icon: "icon-events", size: "lg"}
-        : {type: "img", icon: iconPath("event"), width: "32px", height: "32px", alt: "Event page icon", label: "Event"};
+    const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-events", size: "lg"}};
+
+    if (isAda) {
+        icon.label = "Event";
+        icon.alt = "Event page icon";
+        icon.icon.color = "tertiary";
+    }
 
     return <AbstractListViewItem
         icon={icon}
@@ -154,7 +154,7 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
             Take the test
         </AffixButton>;
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-tests", size: "lg"}}
+        icon={{type: "icon", icon: {name: "icon-tests", size: "lg"}}}
         title={item.title ?? ""}
         subject={itemSubject}
         previewQuizUrl={useViewQuizLink ? `/test/view/${item.id}` : `/test/preview/${item.id}`}
@@ -190,7 +190,7 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question-deck", size: "lg"}}
+        icon={{type: "icon", icon: {name: "icon-question-deck", size: "lg"}}}
         title={item.title ?? "no title"}
         subject={questionSubjects.length === 1 ? questionSubjects[0].id as Subject : undefined}
         breadcrumb={breadcrumb}
@@ -211,7 +211,7 @@ export const QuickQuizListViewItem = ({item, ...rest}: QuickQuizListViewItemProp
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question", size: "lg"}}
+        icon={{type: "icon", icon: {name: "icon-question", size: "lg"}}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
@@ -233,10 +233,13 @@ export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) =
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
+    const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-info", size: "lg", color: "secondary"}};
 
-    const icon: TitleIconProps = isPhy
-        ? {type: "hex", icon: "icon-info", size: "lg"}
-        : {type: "img", icon: iconPath("info-filled"), width: "32px", height: "32px", alt: "Generic page icon", label: "Info"};
+    if (isAda) {
+        icon.label = "Info";
+        icon.alt = "Generic page icon";
+        icon.icon.color = "tertiary";
+    }
 
     return <AbstractListViewItem
         icon={icon}
@@ -263,10 +266,10 @@ export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutLis
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
-    const icon: TitleIconProps = isPhy
-        ? {type: "hex", icon: url.includes("concepts/") ? "icon-concept" : item.className?.includes("wildcard-list-view") ? "icon-wildcard" : "icon-info", size: "lg"}
-        : {type: "img", icon: iconPath("info-filled"), width: "32px", height: "32px", alt: "Shortcut page icon", label: "Shortcut"};
     const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
+    const icon: TitleIconProps = isPhy ?
+        {type: "icon", icon: {name: url.includes("concepts/") ? "icon-concept" : item.className?.includes("wildcard-list-view") ? "icon-wildcard" : "icon-info", size: "lg"}} :
+        {type: "icon", icon: {name: "icon-info-filled", size: "lg", color: "tertiary"}, label: "Shortcut", alt: "Shortcut page icon" };
 
     return <AbstractListViewItem
         icon={icon}
@@ -293,7 +296,7 @@ export const BookIndexListViewItem = ({item, ...rest}: BookIndexListViewItemProp
 
     return <AbstractListViewItem
         {...item}
-        icon={{type: "hex", icon: "icon-book", size: "lg"}}
+        icon={{type: "icon", icon: {name: "icon-book", size: "lg"}}}
         url={`/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${item.id?.slice("book_".length)}`}
         subject={itemSubject}
         state={undefined}
@@ -311,7 +314,7 @@ export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemPr
 
     return <AbstractListViewItem
         {...item}
-        icon={{type: "hex", icon: "icon-generic", size: "lg"}}
+        icon={{type: "icon", icon: {name: "icon-generic", size: "lg"}}}
         title={`${item.subtitle ? (item.subtitle + " ") : ""}${item.title}`}
         subtitle={itemBook?.title}
         url={itemBook ? `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${item.id?.replace(BOOK_DETAIL_ID_SEPARATOR, "/").slice("book_".length)}` : undefined}

@@ -178,7 +178,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
             <Label className="w-100">
                 <div className={siteSpecific("d-flex align-items-center", "")}>
                     <span className="form-optional">Start date:</span>
-                    <i id={scheduledQuizHelpTooltipId} className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help")}/>
+                    <i id={scheduledQuizHelpTooltipId} className={classNames("icon icon-info icon-inline ms-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
                 </div>
                 <DateInput 
                     value={scheduledStartDate}

@@ -108,6 +108,10 @@ main {
   }
 }
 
+.my-gameboard-table-header th {
+  text-align: center;
+}
+
 .context-picker-container select {
   @include media-breakpoint-up(md) {
     width: 200px;

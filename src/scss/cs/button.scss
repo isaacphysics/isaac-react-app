@@ -136,99 +136,28 @@
   }
 }
 
-.share-link-icon {
-  position: relative;
-  button {
-    &:not(.outline) {
-      @include ada-icon-button-base(48px, 48px, false);
-      background-position: 48% 50%;
-      background-image: url("/assets/cs/icons/share.svg");
-    }
-    &.outline {
-      @include ada-icon-button-base(48px, 48px, true);
-      background-position: 48% 50%;
-      &:active {
-        background-color: $cs-white !important;
-      }
-      background-color: $cs-white !important;
-      background-image: url("/assets/cs/icons/share-pink.svg");
-    }
-    position: relative;
-    z-index: 2;
+.action-button {
+  &:not(.outline) {
+    @include ada-icon-button-base(48px, 48px, false);
   }
-}
+  &.outline {
+    @include ada-icon-button-base(48px, 48px, true);
+  }
 
-.print-icon {
+  &:disabled, &.disabled {
+    filter: grayscale(100%);
+  }
+
   position: relative;
   z-index: 2;
-  &:not(.outline) {
-    @include ada-icon-button-base(48px, 48px, false);
-  }
-  &.outline {
-    @include ada-icon-button-base(48px, 48px, true);
-  }
-  background-image: url("/assets/cs/icons/print.svg");
-}
 
-.report-icon {
-  &:not(.outline) {
-    @include ada-icon-button-base(48px, 48px, false);
-  }
-  &.outline {
-    @include ada-icon-button-base(48px, 48px, true);
-  }
-  background-image: url("/assets/cs/icons/flag.svg");
-}
-
-.undo-icon {
-  &:not(.outline) {
-    @include ada-icon-button-base(48px, 48px, false);
-  }
-  &.outline {
-    @include ada-icon-button-base(48px, 48px, true);
-  }
-  background-image: url("/assets/cs/icons/undo-pink.svg");
-  
-  &:disabled, &.disabled {
-    filter: grayscale(100%);
-  }
-}
-
-.redo-icon {
-  &:not(.outline) {
-    @include ada-icon-button-base(48px, 48px, false);
-  }
-  &.outline {
-    @include ada-icon-button-base(48px, 48px, true);
-  }
-  background-image: url("/assets/cs/icons/redo-pink.svg");
-  
-  &:disabled, &.disabled {
-    filter: grayscale(100%);
-  }
-}
-
-.bin-icon {
-  &:not(.outline) {
-    @include ada-icon-button-base(48px, 48px, false);
-    background-image: url("/assets/cs/icons/bin.svg");
-  }
-  &.outline {
-    @include ada-icon-button-base(48px, 48px, true);
-    background-image: url("/assets/cs/icons/bin-pink.svg");
-  }
-  margin-right: 7.5px;
-  margin-left: 7.5px;
-}
-
-.bin-icon-small {
-  &:not(.outline) {
-    @include ada-icon-button-base(30px, 30px, false);
-    background-image: url("/assets/cs/icons/bin.svg");
-  }
-  &.outline {
-    @include ada-icon-button-base(30px, 30px, true);
-    background-image: url("/assets/cs/icons/bin-pink.svg");
+  &.action-button-small {
+    &:not(.outline) {
+      @include ada-icon-button-base(30px, 30px, false);
+    }
+    &.outline {
+      @include ada-icon-button-base(30px, 30px, true);
+    }
   }
 }
 

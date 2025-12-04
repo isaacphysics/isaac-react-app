@@ -23,7 +23,7 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <h4><span className="icon-lock"/> You must be logged in to answer this question</h4>
+        <h4>{isAda && <i className="icon icon-inline-sm icon-lock me-1"/>} You must be logged in to answer this question</h4>
         <p>
             We use a large language model (LLM) to mark free-text questions like this one.
             The model typically returns a predicted mark in under 10 seconds, along with the mark scheme.

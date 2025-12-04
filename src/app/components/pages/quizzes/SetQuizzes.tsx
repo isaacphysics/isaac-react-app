@@ -41,7 +41,7 @@ import { ExtendDueDateModal } from "../../elements/modals/ExtendDueDateModal";
 import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Container, ListGroup, ListGroupItem, Col, Alert, Input, UncontrolledDropdown } from "reactstrap";
 import { ListView } from "../../elements/list-groups/ListView";
 import { MainContent, ManageQuizzesSidebar, SetQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
-import { PhyHexIcon } from "../../elements/svg/PhyHexIcon";
+import { HexIcon } from "../../elements/svg/HexIcon";
 import { AffixButton } from "../../elements/AffixButton";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
@@ -168,7 +168,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                 <>
                     <Row className="w-100 ms-0 d-flex flex-row">
                         <Col className="d-flex align-items-center col-7 col-sm-8 col-md-6">
-                            <PhyHexIcon size="lg" icon="icon-tests" subject={subject as Subject} className="d-none d-sm-block assignment-hex"/>
+                            <HexIcon icon={{name: "icon-tests", size: "lg"}} subject={subject as Subject} className="d-none d-sm-block assignment-hex"/>
 
                             <span className="manage-quiz-title me-3">{quizTitle}</span>
                         </Col>
@@ -387,7 +387,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </div>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-tests"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-tests"}} help={pageHelp} />
         <SidebarLayout>
             {activeTab === MANAGE_QUIZ_TAB.set
                 ? <SetQuizzesSidebar titleFilter={titleFilter} setTitleFilter={setTitleFilter} hideButton />

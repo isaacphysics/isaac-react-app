@@ -2,9 +2,10 @@ import React, { ReactNode } from "react";
 import { Button, ButtonProps } from "reactstrap";
 import { Spacer } from "./Spacer";
 import classNames from "classnames";
+import { IconProps } from "./svg/HexIcon";
 
 interface AffixProps {
-    affix: ReactNode;
+    affix: ReactNode | IconProps;
     position: "prefix" | "suffix" | "center";
     type: "text" | "icon" | "icon-img";
     affixClassName?: string;
@@ -14,14 +15,14 @@ export interface AffixButtonProps extends ButtonProps {
     affix: AffixProps;
 }
 
-const renderAffix = (affix: AffixProps, className?: string) => {
-    switch (affix.type) {
-        case "text":
-            return <span className={classNames(className)}>{affix.affix}</span>;
-        case "icon":
-            return <i className={classNames("icon", affix.affix as string, className)}/>;
-        case "icon-img":
-            return <img src={affix.affix as string} className={classNames(className)} alt=""/>;
+const renderAffix = (affix: AffixProps, className?: string) => {         
+    if (affix.type === "text") {
+        return <span className={classNames(className)}>{affix.affix as ReactNode}</span>;
+    } else if (affix.type === "icon") {
+        const {name, altText, size, color, raw} = typeof affix.affix === "string" ? {name: affix.affix} : affix.affix as IconProps;
+        return <i className={classNames(className, "icon", size ? `icon-${size}` : "", {"icon-raw": raw}, name)} color={color} aria-label={altText}/>;
+    } else {
+        return <img src={affix.affix as string} className={classNames(className)} alt=""/>;
     }
 };
 
@@ -45,7 +46,7 @@ export const AffixButton = (props: AffixButtonProps) => {
 };
 
 export interface IconButtonProps extends ButtonProps {
-    icon: string;
+    icon: IconProps | string;
     affixClassName?: string;
 }
 

@@ -110,7 +110,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                 <Col xs={12} className="d-flex flex-column flex-md-row">
                     <div className="d-flex flex-column numeric-value w-100 w-md-50 mb-2">
                         Value
-                        <InputGroup className={"feedback-zone nq-feedback separate-input-group flex-grow-1"}>
+                        <InputGroup className={"feedback-zone nq-feedback separate-input-group flex-grow-1 align-items-center"}>
                             <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
                                 onChange={e => {
                                     updateValue(e);
@@ -119,7 +119,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                             {currentAttemptValueWrong && <div className={"feedback-box"}>
                                 <span className={"feedback incorrect"}><b>!</b></span>
                             </div>}
-                            {!readonly && isAda && <span ref={helpTooltip} className="icon-help-q my-auto ms-3"/>}
+                            {!readonly && isAda && <i ref={helpTooltip} className="icon icon-info icon-sm h-100 ms-3" />}
                             {!readonly && isPhy && !above['md'](deviceSize) && <Button type="button" className="numeric-help" size="sm" innerRef={helpTooltip}>?</Button>}
                             {!readonly && !(isPhy && above['md'](deviceSize)) && tooltip}
                         </InputGroup>

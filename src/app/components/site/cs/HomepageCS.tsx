@@ -125,7 +125,7 @@ export const HomepageCS = () => {
                         <TextBlock className="backslash-left text-white">
                             <h2 className={"font-size-1-75"}>
                                 &ldquo;
-                                    I love Ada CS! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.
+                                I love Ada CS! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.
                                 &rdquo;
                             </h2>
                             <span>– Computer science student</span>
@@ -143,7 +143,7 @@ export const HomepageCS = () => {
                     <ColumnSlice breakpoint="md">
                         <IconCard card={{
                             title: "In the UK",
-                            icon: {src: "/assets/cs/icons/location-on-cyan.svg"},
+                            icon: {name: "icon-location-on", color: "secondary"},
                             clickUrl: "/exam_specifications",
                             buttonText: "See more",
                             buttonStyle: "link",
@@ -157,7 +157,7 @@ export const HomepageCS = () => {
                         </IconCard>
                         <IconCard card={{
                             title: "Teaching outside the UK",
-                            icon: {src: "/assets/cs/icons/globe-cyan.svg"},
+                            icon: {name: "icon-globe", color: "secondary"},
                             clickUrl: "/exam_specifications_ada",
                             buttonText: "See more",
                             buttonStyle: "link",
