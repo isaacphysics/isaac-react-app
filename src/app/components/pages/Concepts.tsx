@@ -16,8 +16,7 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { PageMetadata } from "../elements/PageMetadata";
 import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
 import { FilterSummary } from "./QuestionFinder";
-import { SubjectSpecificConceptListSidebar } from "../elements/sidebar/ConceptListsSidebar";
-import { GenericConceptsSidebar } from "../elements/sidebar/GenericConceptsSidebar";
+import { GenericConceptsListingSidebar, SubjectSpecificConceptsListingSidebar } from "../elements/sidebar/ConceptsListingSidebar";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
@@ -151,8 +150,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             />
             <SidebarLayout>
                 {pageContext?.subject 
-                    ? <SubjectSpecificConceptListSidebar {...sidebarProps} hideButton /> 
-                    : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>
+                    ? <SubjectSpecificConceptsListingSidebar {...sidebarProps} hideButton /> 
+                    : <GenericConceptsListingSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>
                 }
                 <MainContent>
                     <PageMetadata noTitle showSidebarButton>
