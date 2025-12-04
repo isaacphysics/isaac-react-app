@@ -123,8 +123,8 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
                     return <StyledTabPicker
                         key={key}
                         id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
-                        checkboxTitle={<div className={classNames("d-flex align-items-center gap-2")}>
-                            <i className={classNames("icon icon-md", tab.icon, {"icon-color-black": isActive && collapsed})} aria-hidden="true" />
+                        checkboxTitle={<div className={classNames("d-flex align-items-center gap-3")}>
+                            <i className={classNames("icon icon-sm", tab.icon, {"icon-color-black": isActive && collapsed})} aria-hidden="true" />
                             <b>{tab.title}</b>
                         </div>}
                         checked={isActive}
