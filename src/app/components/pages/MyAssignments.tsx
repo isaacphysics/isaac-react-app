@@ -110,7 +110,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}/>
+            <TitleAndBreadcrumb currentPageTitle="My assignments" icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}/>
         }
         sidebar={siteSpecific(
             <MyAssignmentsSidebar

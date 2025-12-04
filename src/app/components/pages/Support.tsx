@@ -134,7 +134,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
     return <Container>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific(type[0].toUpperCase() + type.slice(1) + " FAQs", section.title)}
-            icon={{type: "hex", icon: "icon-finder"}}
+            icon={{type: "icon", icon: "icon-finder"}}
         />  {/* TODO replace this icon */}
         {isAda && isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
         <SidebarLayout site={isPhy}>

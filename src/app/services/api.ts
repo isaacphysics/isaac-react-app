@@ -3,7 +3,7 @@ import {API_PATH, IMAGE_PATH, securePadCredentials, TAG_ID} from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {AuthenticationProvider, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
-import {Choice, CredentialsAuthDTO, QuestionSearchQuery} from "../../IsaacAppTypes";
+import {Choice, CredentialsAuthDTO} from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state";
 import {Immutable} from "immer";
 
@@ -123,11 +123,6 @@ export const api = {
         }
     },
     questions: {
-        search: (query: QuestionSearchQuery): AxiosPromise<ApiTypes.SearchResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
-            return endpoint.get(`/pages/questions/`, {
-                params: query,
-            });
-        },
         answer: (id: string, answer: Immutable<ApiTypes.ChoiceDTO>): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
         },

@@ -192,7 +192,7 @@ export const MyGameboards = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My question decks", "My quizzes")} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
         <SidebarLayout site={isPhy}>
             <MyGameboardsSidebar
                 displayMode={boardView} setDisplayMode={setBoardView}

@@ -72,7 +72,7 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
             pageTitle={
                 <TitleAndBreadcrumb
                     currentPageTitle={siteSpecific("Assignment progress", "Markbook")}
-                    icon={{type: "hex", icon: "icon-revision"}}
+                    icon={{type: "icon", icon: "icon-revision"}}
                 />
             }
             sidebar={siteSpecific(null, <MyAdaSidebar />)}

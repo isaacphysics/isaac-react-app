@@ -105,7 +105,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
     return <PageContainer id="my-progress"
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-progress"}} disallowLaTeX />
+            <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-progress"}} disallowLaTeX />
         }
         sidebar={siteSpecific(null, <MyAdaSidebar />)}
     >

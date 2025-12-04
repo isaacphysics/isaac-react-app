@@ -8,23 +8,17 @@ import {
     simpleDifficultyLabelMap,
     SITE_TITLE,
     siteSpecific,
-    STAGE,
     stageLabelMap,
     useUserViewingContext
 } from "../../services";
-import {
-    AppState,
-    mainContentIdSlice,
-    useAppDispatch,
-    useAppSelector
-} from "../../state";
+import { mainContentIdSlice, useAppDispatch } from "../../state";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
 import { Difficulty } from "../../../IsaacApiTypes";
-import { PhyHexIcon, PhyHexIconProps } from "./svg/PhyHexIcon";
+import { HexIcon, HexIconProps, IconProps } from "./svg/HexIcon";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserViewingContext();
@@ -36,15 +30,15 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
 
     return <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
         {/* Show all stage/difficulty combinations for Phy, but just the first difficulty for Ada */}
-        {siteSpecific(filteredViews, [{difficulty: difficulties[0], stage: undefined}]).map((view, i) => {
-            return <div key={`${view.difficulty} ${view.stage}`} className={classNames("d-flex d-sm-block", {"ms-sm-2": i > 0})}>
+        {siteSpecific(filteredViews, [{difficulty: difficulties[0], stage: undefined}]).map((view, i) => 
+            <div key={`${view.difficulty} ${view.stage}`} className={classNames("d-flex d-sm-block", {"ms-sm-2": i > 0})}>
                 <div className={classNames("text-center align-self-center", {"fw-regular": isAda})}>
                     {siteSpecific(view.stage && stageLabelMap[view.stage], view.difficulty && simpleDifficultyLabelMap[view.difficulty])}
                 </div>
                 {view.difficulty && <div className="ms-2 ms-sm-0 text-center">
                     <DifficultyIcons difficulty={view.difficulty}/>
                 </div>}
-            </div>})}
+            </div>)}
     </div>;
 }
 
@@ -63,13 +57,15 @@ export const placeholderIcon = (props: IconPlaceholderProps): TitleIconProps => 
     };
 };
 
-export interface TitleIconProps extends PhyHexIconProps {
-    type: "img" | "hex" | "placeholder";
+export type TitleIconProps = Omit<HexIconProps, "icon"> & {
     height?: string;
     width?: string;
     alt?: string;
     label?: string;
-}
+} & (
+    { type: "icon"; icon: IconProps | string } |
+    { type: "img" | "placeholder"; icon?: string }
+);
 
 export interface PageTitleProps {
     currentPageTitle: string;
@@ -89,7 +85,7 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
     useEffect(() => {
         if (preview) return; // Don't set the main content ID if we're in preview mode
         dispatch(mainContentIdSlice.actions.set({id: "main-heading", priority: 1}));
-    }, []);
+    }, [dispatch, preview]);
 
     useEffect(() => {
         if (preview) return; // Don't set the document title if we're in preview mode
@@ -100,7 +96,7 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
         <div className="d-flex w-100" data-testid={"main-heading"}>
             {isPhy && icon && (
                 icon.type === "img" ? <img src={icon.icon} alt={icon.alt ?? ""} height={icon.height} width={icon.width} className="me-3"/> 
-                    : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/> 
+                    : icon.type === "icon" ? <HexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/> 
                         : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/>
                             : undefined
             )}

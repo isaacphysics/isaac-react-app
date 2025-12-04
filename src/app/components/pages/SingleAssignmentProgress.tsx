@@ -51,7 +51,7 @@ export const SingleAssignmentProgress = ({user, group}: {user: RegisteredUserDTO
                 intermediateCrumbs={groupCrumb ? [ASSIGNMENT_PROGRESS_CRUMB, groupCrumb] : [ASSIGNMENT_PROGRESS_CRUMB]}
                 currentPageTitle={assignment?.gameboard?.title ?? siteSpecific("Assignment progress", "Markbook")}
                 className="mb-4"
-                icon={{type: "hex", icon: "icon-revision"}}
+                icon={{type: "icon", icon: "icon-revision"}}
             />
         }
         sidebar={siteSpecific(null, <MyAdaSidebar />)}

@@ -11,6 +11,7 @@
       z-index: 2;
       .select__option.select__option--is-focused {
         background-color: $primary;
+        color: $color-neutral-white;
       }
     }
   }

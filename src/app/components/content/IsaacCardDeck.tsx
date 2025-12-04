@@ -23,10 +23,9 @@ export const IsaacCardDeck = ({doc, className, containerClassName}: IsaacCardDec
         {
             siteSpecific(
                 <Row xs={12} className={classNames(`d-flex flex-row card-deck row-cols-1 row-cols-sm-2 row-cols-xl-${noCards} justify-content-between isaac-cards-body`, className)}>
-                    {/* TODO: move Containers into Cards for Physics */}
-                    {doc?.cards?.map((props, i) => <Container key={i} className="card-container p-3"> 
+                    {doc?.cards?.map((props, i) => <div key={i} className="card-container p-3"> 
                         <IsaacCard doc={props} imageClassName={props.imageClassName}/>
-                    </Container>)}
+                    </div>)}
                 </Row>
                 ,
                 <Row className={classNames(`d-flex flex-row card-deck row-cols-1 row-cols-md-2 justify-content-between my-3`, className)}>

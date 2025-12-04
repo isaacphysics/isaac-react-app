@@ -338,7 +338,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
 
     return <PageContainer id="account-page"
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-account"}} className="mb-3"/>
+            <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-account"}} className="mb-3"/>
         }
         sidebar={siteSpecific(
             <MyAccountSidebar editingOtherUser={editingOtherUser} activeTab={activeTab} setActiveTab={setActiveTab}/>,

@@ -243,6 +243,7 @@ export interface IsaacCoordinateQuestionDTO extends QuestionDTO {
     placeholderValues?:  string[];
     useBrackets?: boolean;
     separator?: string;
+    prefixes?: string[];
     suffixes?: string[];
     buttonText?: string;
 }
@@ -615,7 +616,7 @@ export interface GroupMembershipDTO {
     created?: Date;
 }
 
-export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "core" | "advanced" | "all";
+export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "core" | "advanced" | "post_18" | "all";
 
 export type ExamBoard = "aqa" | "cie" | "edexcel" | "eduqas" | "ocr" | "wjec" | "sqa" | "ada" | "all";
 

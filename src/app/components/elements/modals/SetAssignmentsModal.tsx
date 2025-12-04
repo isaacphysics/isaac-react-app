@@ -98,8 +98,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
                 setDueDate(addDays(6, nthUtcHourOf(0, scheduledDate)));
             }
         } else {
-            setScheduledStartDate(null as unknown as Date);
-            {/* DANGER here with force-casting Date|null to Date */}
+            setScheduledStartDate(undefined);
         }
     }
 
@@ -114,7 +113,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
             <Label data-testid="modal-groups-selector" className="w-100 pb-2">
                 <span className="form-required">Groups:</span>
                 <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
-                    <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
+                    <StyledSelect inputId="groups-to-assign" isMulti placeholder="None"
                         value={selectedGroups}
                         closeMenuOnSelect={false}
                         onChange={selectOnChange(setSelectedGroups, false)}
@@ -145,7 +144,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
             <Label data-testid="modal-due-date-selector" className="w-100 pb-2">
                 <span className="form-required">Due date:</span>
                 <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} invalid={validationAttempted && (dueDateInvalid || !dueDate)}
-                    onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate as Date);}}/> {/* DANGER here with force-casting Date|null to Date */}
+                    onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate ?? undefined);}}/>
                 <FormFeedback>{!dueDate && `Due dates are required for assignments.`}</FormFeedback>
                 <FormFeedback>{dueDateInvalid && "Due date must be on or after start date and in the future."}</FormFeedback>
             </Label>
@@ -160,7 +159,7 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
             </Label>}
         </FormGroup>
         
-        <Button className="my-2" block color={siteSpecific("keyline", "solid")} type="submit">
+        <Button className="my-2" block color="solid" type="submit">
             Assign to group{selectedGroups.length > 1 && "s"}
         </Button>
     </Form>;
@@ -205,7 +204,7 @@ const AssignmentDisplay = ({board, currentAssignees, setCurrentAssignees, unassi
         <div className="py-2 d-flex flex-column">
             <span className={classNames("mb-2", {"d-flex align-items-center": isPhy})}>
                 Pending {siteSpecific("assignments", "quiz assignments")}:
-                <i className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help mx-1")}
+                <i className={classNames("icon icon-info icon-inline ms-2", siteSpecific("icon-color-grey", "icon-color-black"))}
                     id={`pending-assignments-help-${board?.id}`}/>
             </span>
             <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
@@ -224,7 +223,7 @@ const AssignmentDisplay = ({board, currentAssignees, setCurrentAssignees, unassi
                                     : assignee.startDate).toDateString()}
                             </span>
                         </>}
-                        <button className="close bg-transparent" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>
+                        <button className={classNames("close bg-transparent", {"mt-n1": isPhy})} aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>
                             ×
                         </button>
                     </li>

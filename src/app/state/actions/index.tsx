@@ -19,7 +19,6 @@ import {
     CredentialsAuthDTO,
     FreeTextRule,
     InlineContext,
-    QuestionSearchQuery,
     UserSnapshot,
     ValidatedChoice,
 } from "../../../IsaacAppTypes";
@@ -481,29 +480,6 @@ export function setCurrentAttempt<T extends ChoiceDTO>(questionId: string, attem
     });
 }
 
-let questionSearchCounter = 0;
-
-export const searchQuestions = (query: QuestionSearchQuery, searchId?: string) => async (dispatch: Dispatch<Action>) => {
-    const searchCount = ++questionSearchCounter;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
-    try {
-        const questionsResponse = await api.questions.search(query);
-        // Because some searches might take longer to return that others, check this is the most recent search still.
-        // Otherwise, we just discard the data.
-        if (searchCount === questionSearchCounter) {
-            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: questionsResponse.data, searchId});
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to search for questions", e));
-    }
-};
-
-export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
-    questionSearchCounter++;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: {results: [], totalResults: 0}});
-};
-
 export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST});
     try {
@@ -580,20 +556,6 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
     } catch (e) {
         dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE});
         dispatch(showAxiosErrorToastIfNeeded("Failed to test question", e));
-    }
-};
-
-// Search
-export const fetchSearch = (query: string, types: string | undefined) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query, types});
-    try {
-        if (query === "") {
-            return;
-        }
-        const searchResponse = await api.search.get(query, types);
-        dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Search failed", e));
     }
 };
 
