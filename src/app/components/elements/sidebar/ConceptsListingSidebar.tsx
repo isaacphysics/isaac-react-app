@@ -31,6 +31,7 @@ export const SubjectSpecificConceptsListingSidebar = (props: SubjectSpecificConc
             const remainingFilters = conceptFilters.filter(tag => tagCounts[tag.id] > 0);
             setConceptFilters(remainingFilters.length ? remainingFilters : [subjectTag]);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchText]);
 
     return <ContentSidebar {...rest}>

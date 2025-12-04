@@ -55,6 +55,7 @@ interface MyAssignmentsSidebarProps extends ContentSidebarProps {
     setSetByFilter: React.Dispatch<React.SetStateAction<string>>;
     sortOrder: MyAssignmentsOrder;
     setSortOrder: React.Dispatch<React.SetStateAction<MyAssignmentsOrder>>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     assignmentQuery: any;
 }
 

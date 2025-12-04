@@ -37,7 +37,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                                     query.show_booked_only = statusValue === EventStatusFilter["My booked events"] ? true : undefined;
                                     query.show_reservations_only = statusValue === EventStatusFilter["My event reservations"] ? true : undefined;
                                     query.event_status = statusValue === EventStatusFilter["All events"] ? "all" : undefined;
-                                    history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                                    history.push({pathname: location.pathname, search: queryString.stringify(query)});
                                 }}
                             />
                         </li>
@@ -56,7 +56,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                             checked={query.types ? query.types === typeValue : typeValue === EventTypeFilter["All groups"]}
                             onChange={() => {
                                 query.types = typeValue !== EventTypeFilter["All groups"] ? typeValue : undefined;
-                                history.push({pathname: location.pathname, search: queryString.stringify(query as any)});}}
+                                history.push({pathname: location.pathname, search: queryString.stringify(query)});}}
                         />
                     </li>
                 )
@@ -74,7 +74,7 @@ export const EventsSidebar = (props: SidebarProps) => {
                             checked={query.show_stage_only ? query.show_stage_only === value : value === STAGE.ALL}
                             onChange={() => {
                                 query.show_stage_only = value !== STAGE.ALL ? value : undefined;
-                                history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                                history.push({pathname: location.pathname, search: queryString.stringify(query)});
                             }}
                         />
                     </li>

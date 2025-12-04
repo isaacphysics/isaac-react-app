@@ -50,7 +50,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             const remainingStages = filterStages?.filter(stage => stageCounts[stage]);
             setFilterStages(remainingStages?.length ? remainingStages : undefined);
         }
-    }, [filterSubject, searchText]);
+    }, [filterSubject, searchText, filterStages, setFilterStages, stageCounts]);
 
     return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>

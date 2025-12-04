@@ -40,7 +40,7 @@ export const PracticeQuizzesSidebar = (props: PracticeQuizzesSidebarProps) => {
     // Clear stage filters on subject change, since previous stages may not be visible to deselect
     useEffect(() => {
         setFilterStages(undefined);
-    }, [filterTags]);
+    }, [filterTags, setFilterStages]);
 
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
