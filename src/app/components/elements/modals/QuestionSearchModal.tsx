@@ -283,7 +283,7 @@ export const QuestionSearchModal = (
         <Col className="col-12 col-xl-9">
             <HorizontalScroller enabled className="my-4">
                 <Table bordered className="my-0">
-                    <thead className="search-modal-table-header">
+                    <thead>
                         <tr>
                             <th className="w-5"> </th>
                             <SortItemHeader<SortOrder>
