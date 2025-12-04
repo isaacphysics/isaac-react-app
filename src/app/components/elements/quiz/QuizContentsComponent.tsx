@@ -38,7 +38,7 @@ import { MainContent, QuizSidebar, QuizSidebarAttemptProps, QuizSidebarViewProps
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
 
 type PageLinkCreator = (page?: number) => string;
-export type QuizView = { quiz?: DetailedQuizSummaryDTO & { subjectId: SUBJECTS | TAG_ID }, quizId: string | undefined };
+export type QuizView = { quiz?: DetailedQuizSummaryDTO & { subjectId?: SUBJECTS | TAG_ID }, quizId: string | undefined };
 
 interface QuizProps {
     user: RegisteredUserDTO;

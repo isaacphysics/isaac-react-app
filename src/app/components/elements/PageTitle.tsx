@@ -11,10 +11,7 @@ import {
     stageLabelMap,
     useUserViewingContext
 } from "../../services";
-import {
-    mainContentIdSlice,
-    useAppDispatch,
-} from "../../state";
+import { mainContentIdSlice, useAppDispatch } from "../../state";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
