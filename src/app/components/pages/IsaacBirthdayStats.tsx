@@ -49,7 +49,7 @@ export const IsaacStats = () => {
     return <Container>
         <TitleAndBreadcrumb
             currentPageTitle="Isaac 11th birthday stats"
-            icon={{"type": "hex", "icon": "icon-progress"}}
+            icon={{"type": "icon", "icon": "icon-progress"}}
         />
         <PageMetadata title={<>Happy <span className="text-brand">11th</span> birthday to Isaac Science!</>} />
         

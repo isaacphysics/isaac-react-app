@@ -9,7 +9,7 @@ type State = { errorMessage?: string, provider?: string, providerErrors: ReturnT
 
 export const AuthError = ({location: {state}}: {location: {state?: State}}) => {
     return <Container role="region" aria-label="Authentication Error">
-        <TitleAndBreadcrumb currentPageTitle="Authentication error" breadcrumbTitleOverride="Authentication error" icon={{type: "hex", icon: "icon-error"}}/>
+        <TitleAndBreadcrumb currentPageTitle="Authentication error" breadcrumbTitleOverride="Authentication error" icon={{type: "icon", icon: "icon-error"}}/>
         <Row className="pt-4">
             <Col md={{size: 8, offset: 2}}>
                 <ErrorMessage state={state}/>
