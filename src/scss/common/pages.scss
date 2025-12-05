@@ -108,44 +108,8 @@ main {
   }
 }
 
-.my-gameboard-table-header, .search-modal-table-header {
-    th {
-        position: relative;
-        padding-right: 8px;
-        white-space: nowrap;
-        border-top: none;
-    }
-
-    .sort {
-        background: none;
-        border: none;
-        padding: 0;
-
-        position: relative;
-        right: -2px;
-        font-size: 9px;
-        top: 3px;
-        z-index: 1;
-
-        line-height: initial;
-        span {
-            opacity: 0.5;
-            display: block;
-        }
-        .up {
-            padding-top: 4px;
-        }
-        .down {
-            padding-bottom: 10px;
-        }
-    }
-
-    .sorted.forward .up {
-        opacity: 1;
-    }
-    .sorted.reverse .down {
-        opacity: 1;
-    }
+.my-gameboard-table-header th {
+  text-align: center;
 }
 
 .context-picker-container select {

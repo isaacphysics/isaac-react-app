@@ -34,9 +34,10 @@ import {ExigentAlert} from "../elements/ExigentAlert";
 import classNames from "classnames";
 import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
 import {DobInput} from "../elements/inputs/DobInput";
-import {MainContent, SidebarLayout, SignupSidebar} from "../elements/layout/SidebarLayout";
+import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {SignupTab} from "../elements/panels/SignupTab";
 import {scheduleTeacherOnboardingModalForNextOverviewVisit} from "../elements/modals/AdaTeacherOnboardingModal";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 
 interface RegistrationSetDetailsProps {
     role: UserRole
@@ -121,7 +122,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         <SidebarLayout>
             <SignupSidebar activeTab={2}/>
             <MainContent>

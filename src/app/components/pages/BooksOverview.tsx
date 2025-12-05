@@ -2,10 +2,11 @@ import React from "react";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { PageFragment } from "../elements/PageFragment";
-import { BooksOverviewSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { BookHiddenState, BookInfo, ISAAC_BOOKS } from "../../services";
 import { Link } from "react-router-dom";
 import { PageMetadata } from "../elements/PageMetadata";
+import { BooksOverviewSidebar } from "../elements/sidebar/BooksOverviewSidebar";
 
 export const BookCard = (book: BookInfo) => {
     return <Link to={book.path} className="book-container d-flex p-2 gap-3">
@@ -26,7 +27,7 @@ export const BooksOverview = () => {
     return <Container>
         <TitleAndBreadcrumb 
             currentPageTitle="Our books"
-            icon={{type: "hex", icon: "icon-book"}}
+            icon={{type: "icon", icon: "icon-book"}}
         />
         <SidebarLayout>
             <BooksOverviewSidebar hideButton />

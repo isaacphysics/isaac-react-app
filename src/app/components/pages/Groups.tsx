@@ -64,9 +64,11 @@ import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
-import { MainContent, GroupsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
 import { PageMetadata } from "../elements/PageMetadata";
+import { GroupsSidebar } from "../elements/sidebar/GroupsSidebar";
+import { IconButton } from "../elements/AffixButton";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -293,7 +295,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                 <div>
                     <Form className="form-inline" onSubmit={saveUpdatedGroup}>
                         <Label htmlFor="groupName" className={"form-required fw-bold"}>
-                            {isUserGroupOwner ? "Rename group" : "Group name" }
+                            {isUserGroupOwner || group.additionalManagerPrivileges ? "Rename group" : "Group name" }
                         </Label>
                         <InputGroup className="flex-column flex-md-row align-items-center gap-2 stackable-input-group w-100">
                             <Input
@@ -346,7 +348,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                         {isTeacherOrAbove(user) &&
                             <div>
                                 <Button className="w-100 d-inline-block text-nowrap" color="keyline" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
-                                    {isUserGroupOwner ?
+                                    {(isUserGroupOwner || group.additionalManagerPrivileges) ?
                                         `${additionalManagers.length > 1 ? "Edit" : "Add"} group managers` : `More information`
                                     }
                                 </Button>
@@ -534,9 +536,10 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                     <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
                                         {g.groupName}
                                     </Button>
-                                    {showArchived &&
+                                    {showArchived && (isPhy ?
                                         <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, g);}}
-                                            aria-label="Delete group" className={classNames("ms-1", siteSpecific("icon-close", "bin-icon"))} title={"Delete group"}/>
+                                            aria-label="Delete group" className="ms-1 icon-close" title={"Delete group"}/> :
+                                        <IconButton icon={{name: "icon-bin", color: "white"}} className="action-button" affixClassName="icon-sm" aria-label="Delete group" title="Delete group" onClick={() => confirmDeleteGroup(dispatch, deleteGroup, user, g)}/>)
                                     }
                                 </div>
                                 {isAda && selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
@@ -597,7 +600,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
     </span>;
 
     const GroupsPhy = <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage groups" icon={{type: "hex", icon: "icon-group"}}/>
+        <TitleAndBreadcrumb currentPageTitle="Manage groups" icon={{type: "icon", icon: "icon-group"}}/>
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <SidebarLayout>
                 <GroupsSidebar user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}

@@ -32,11 +32,12 @@ import {NOT_FOUND_TYPE, PageContextState, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {useHistory} from "react-router";
-import { GlossarySidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
 import debounce from "lodash/debounce";
 import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
+import { GlossarySidebar } from "../elements/sidebar/GlossarySidebar";
 
 type FilterParams = "subjects" | "stages" | "query";
 
@@ -354,7 +355,7 @@ export const Glossary = () => {
         <Container data-bs-theme={pageContext?.subject}>
             <TitleAndBreadcrumb 
                 currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? `${getHumanContext(pageContext)} Glossary` : "Glossary"}
-                icon={{type: "hex", subject: pageContext?.subject, icon: "icon-tests"}}
+                icon={{type: "icon", subject: pageContext?.subject, icon: "icon-tests"}}
                 intermediateCrumbs={crumb ? [crumb] : []}
             />
             <MetaDescription description={metaDescription} />

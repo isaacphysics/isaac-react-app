@@ -322,7 +322,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="gameboard-builder">
         <div ref={sentinel}/>
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question deck", "Quiz")} builder`} icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Question deck", "Quiz")} builder`} icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp} />
         <PageMetadata helpModalId="help_modal_gameboard_builder" />
         <Card className="p-3 mt-4 mb-7">
             <CardBody>
@@ -337,7 +337,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <Col>
                             <Label className={"fw-bold form-required"} htmlFor="gameboard-builder-name">Title</Label>
                             <p className="d-block input-description mb-2">
-                               This will be visible to your students.
+                                This will be visible to your students.
                             </p>
                             <FormGroup>
                                 <Input id="gameboard-builder-name"
@@ -415,14 +415,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             </p>
                         </div>
                         <div className={"d-flex flex-row gap-2"}>
-                            {siteSpecific(
-                                <IconButton icon="icon-undo" className="icon-button-sm" {...undoButtonProps} disabled={!canUndo}/>,
-                                <Button className={"undo-icon btn-action outline"} {...undoButtonProps} disabled={!canUndo} />
-                            )}
-                            {siteSpecific(
-                                <IconButton icon="icon-redo" className="icon-button-sm" {...redoButtonProps} disabled={!canRedo}/>,
-                                <Button className={"redo-icon btn-action outline"} {...redoButtonProps} disabled={!canRedo} />
-                            )}
+                            <IconButton icon="icon-undo" className="icon-button-sm action-button outline" {...undoButtonProps} disabled={!canUndo}/>
+                            <IconButton icon="icon-redo" className="icon-button-sm action-button outline" {...redoButtonProps} disabled={!canRedo}/>
                         </div>
                     </div>
 
@@ -511,11 +505,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     }));
                                 }}
                             >
-                                    Add questions
-                                {siteSpecific(<img src={"/assets/phy/icons/redesign/plus.svg"} height={"12px"}
-                                    className={"ms-2"} alt=""/>,
-                                <img className={"plus-icon"}
-                                    src={"/assets/cs/icons/add-circle-outline-pink.svg"} alt=""/>)}
+                                Add questions <i className={classNames("icon ms-2", siteSpecific("icon-plus icon-color-black-hoverable", "icon-sm icon-add-circle"))}/>
                             </Button>
                         </ShowLoading>
                         <Button

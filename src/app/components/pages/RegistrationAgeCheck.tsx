@@ -14,8 +14,9 @@ import {
 } from "reactstrap";
 import {confirmThen, history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import { MainContent, SidebarLayout, SignupSidebar } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 
 type AgePermission = "denied" | "additional_info" | "allowed";
 
@@ -48,7 +49,7 @@ export const RegistrationAgeCheck = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}} />
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         <SidebarLayout>
             <SignupSidebar activeTab={1}/>
             <MainContent>

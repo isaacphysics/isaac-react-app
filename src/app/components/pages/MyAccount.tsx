@@ -58,10 +58,11 @@ import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesIn
 import {UserProfile} from '../elements/panels/UserProfile';
 import {UserContent} from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
-import {MainContent, MyAccountSidebar, SidebarLayout} from '../elements/layout/SidebarLayout';
+import {MainContent, SidebarLayout} from '../elements/layout/SidebarLayout';
 import {Loading} from '../handlers/IsaacSpinner';
 import {UserAccessibilitySettings} from '../elements/panels/UserAccessibilitySettings';
 import {showEmailChangeModal} from "../elements/modals/EmailChangeModal";
+import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
@@ -334,7 +335,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
     }, [activeTab]);
 
     return <Container id="account-page" className="mb-7">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "icon-account"}} className="mb-3"/>
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "icon", icon: "icon-account"}} className="mb-3"/>
         {isAda && <h3 className="d-md-none text-center text-muted m-3">
             <small>
                 {`Update your Ada Computer Science account, or `}

@@ -17,7 +17,7 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
 import queryString from "query-string";
-import { ConceptSidebar, GameboardContentSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { useGetConceptQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
@@ -25,6 +25,8 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
+import { ConceptSidebar } from "../elements/sidebar/RelatedContentSidebar";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -77,7 +79,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                         collectionType={navigation.collectionType}
                         subTitle={siteSpecific(undefined, doc.subtitle as string)}
                         preview={preview}
-                        icon={{type: "hex", subject: doc.subjectId as Subject, icon: "icon-concept"}}
+                        icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-concept"}}
                     />
                     {!preview && <>
                         <MetaDescription description={doc.summary} />
@@ -86,7 +88,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     <SidebarLayout>
                         {isDefined(gameboardId) 
                             ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={gameboard?.wildCard} currentContentId={doc.id}/>
-                            : <ConceptSidebar relatedContent={doc.relatedContent} />
+                            : <ConceptSidebar relatedContent={doc.relatedContent}/>
                         }
                         <MainContent>
                             <PageMetadata doc={doc} />

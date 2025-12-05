@@ -3,10 +3,11 @@ import React from "react";
 import {Button, Card, CardBody, CardFooter, CardTitle, Container, ContainerProps} from "reactstrap";
 import { isAppLink } from "../../../services";
 import { Link } from "react-router-dom";
+import { IconProps } from "../svg/HexIcon";
 
 export interface IconCardContentProps {
     title: string;
-    icon: {src: string, altText?: string, className?: string};
+    icon: IconProps | string;
     bodyText?: string;
     tag?: string;
     clickUrl?: string;
@@ -23,9 +24,11 @@ export interface IconCardProps extends ContainerProps {
 
 export const IconCard = ({card, children, ...props}: IconCardProps) => {
     const {title, icon, bodyText, tag, clickUrl, onButtonClick, buttonText, disabled, buttonStyle} = card;
+    const {name, altText, size, color, raw} = typeof icon === "string" ? {name: icon} : icon;
+
     return <Container {...props} className={classNames("icon-card-container px-3 my-3", props?.className ?? "")}>
         <Card className={classNames("icon-card border-0", card.className)} tag={buttonStyle === "card" ? Link : Card} to={clickUrl}>
-            <img src={icon.src} alt={icon.altText ?? ""} className={icon.className ?? ""}/>
+            <i className={classNames(`icon icon-${size ?? "md"}`, {"icon-raw": raw}, name)} color={color ?? "tertiary"} aria-label={altText}/>
             {tag && <div className="icon-card-tag">
                 <span><b>{tag}</b></span>
             </div>}

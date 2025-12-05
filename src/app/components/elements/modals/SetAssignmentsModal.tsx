@@ -204,7 +204,7 @@ const AssignmentDisplay = ({board, currentAssignees, setCurrentAssignees, unassi
         <div className="py-2 d-flex flex-column">
             <span className={classNames("mb-2", {"d-flex align-items-center": isPhy})}>
                 Pending {siteSpecific("assignments", "quiz assignments")}:
-                <i className={siteSpecific("icon icon-info icon-color-grey ms-2", "icon-help mx-1")}
+                <i className={classNames("icon icon-info icon-inline ms-2", siteSpecific("icon-color-grey", "icon-color-black"))}
                     id={`pending-assignments-help-${board?.id}`}/>
             </span>
             <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
