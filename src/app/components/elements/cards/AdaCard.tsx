@@ -4,7 +4,6 @@ import {Button, Card, CardBody, CardFooter, CardImg, CardTitle} from "reactstrap
 import { isAppLink } from "../../../services";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "../ExternalLink";
-import { AffixButton } from "../AffixButton";
 
 export interface AdaCardContentProps {
     title: string;

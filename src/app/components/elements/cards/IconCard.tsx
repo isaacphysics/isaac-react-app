@@ -4,7 +4,6 @@ import {Button, Card, CardBody, CardFooter, CardTitle, Container, ContainerProps
 import { isAppLink } from "../../../services";
 import { Link } from "react-router-dom";
 import { IconProps } from "../svg/HexIcon";
-import { AffixButton } from "../AffixButton";
 import { ExternalLink } from "../ExternalLink";
 
 export interface IconCardContentProps {

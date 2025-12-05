@@ -5,9 +5,9 @@ interface ExternalLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
     asButton?: boolean;
 }
 
-export const ExternalLink = ({children, asButton, href, ...rest}: ExternalLinkProps) => {
+export const ExternalLink = ({href, children, asButton, ...rest}: ExternalLinkProps) => {
     return asButton ?
-        <AffixButton affix={{type: "icon", affix: {name: "icon-external-link", color: "white"}, position: "suffix"}} tag={({children, className}) => ExternalLink({href: href, children, className})}> 
+        <AffixButton affix={{type: "icon", affix: {name: "icon-external-link", color: "white"}, position: "suffix"}} tag={({children, className}) => ExternalLink({...rest, href, children, className})}> 
             {children}
         </AffixButton> :
         <a {...rest} href={href} target="_blank" rel="noopener">
