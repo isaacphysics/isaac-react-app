@@ -147,7 +147,7 @@ export const StudentResources = () => {
                     <ImageBlock>
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/isaac-subject-logos.svg" alt=""/>
                     </ImageBlock>
-                    <TextBlock className="">
+                    <TextBlock>
                         <h2>Studying science or maths?</h2>
                         <p>Check out Isaac Science, our partner platform packed with free tools and resources to help you learn physics, chemistry, biology and maths.</p>
                         <ExternalLink asButton href='https://isaacscience.org'>
