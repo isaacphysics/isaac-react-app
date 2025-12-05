@@ -216,9 +216,9 @@ export const TeacherResources = () => {
                     <TextBlock className="">
                         <h2>Teaching science or maths?</h2>
                         <p>Check out Isaac Science, our partner platform packed with free tools and resources to help you teach physics, chemistry, biology and maths.</p>
-                        <Button className="external-link" tag={({ children, className }) => ExternalLink({ href: 'https://isaacscience.org', children, className })}>
+                        <ExternalLink asButton href='https://isaacscience.org'>
                             Go to Isaac Science
-                        </Button>
+                        </ExternalLink>
                     </TextBlock>
                 </ColumnSlice>
             </Container>
