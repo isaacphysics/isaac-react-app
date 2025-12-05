@@ -1,7 +1,16 @@
-import React from "react";
+import React, { AnchorHTMLAttributes } from "react";
+import { AffixButton } from "./AffixButton";
 
-export const ExternalLink = ({href, children, className = ""}: { href: string; children: any; className?: string }) => (
-    <a href={href} target="_blank" rel="noopener" className={className}>
-        {children}
-    </a>
-);
+interface ExternalLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+    asButton?: boolean;
+}
+
+export const ExternalLink = ({href, children, asButton, ...rest}: ExternalLinkProps) => {
+    return asButton ?
+        <AffixButton affix={{type: "icon", affix: {name: "icon-external-link", color: "white"}, position: "suffix"}} tag={({children, className}) => ExternalLink({...rest, href, children, className})}> 
+            {children}
+        </AffixButton> :
+        <a {...rest} href={href} target="_blank" rel="noopener">
+            {children}
+        </a>;
+};

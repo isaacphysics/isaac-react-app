@@ -4,6 +4,7 @@ import {Button, Card, CardBody, CardFooter, CardTitle, Container, ContainerProps
 import { isAppLink } from "../../../services";
 import { Link } from "react-router-dom";
 import { IconProps } from "../svg/HexIcon";
+import { ExternalLink } from "../ExternalLink";
 
 export interface IconCardContentProps {
     title: string;
@@ -40,9 +41,14 @@ export const IconCard = ({card, children, ...props}: IconCardProps) => {
                     {children ?? <p className="mb-0">{bodyText}</p>}
                 </CardBody>}
                 {clickUrl && buttonStyle !== "card" && <CardFooter className={"border-top-0 p-4 pt-3"}>
-                    <Button onClick={onButtonClick} className={classNames("text-start", {"d-flex align-items-center" : buttonStyle === "link"}, {"external-link": !isAppLink(clickUrl)})} disabled={disabled} outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} tag={Link} to={clickUrl}>
-                        {buttonText || "See more"}
-                    </Button>
+                    {isAppLink(clickUrl) ? 
+                        <Button onClick={onButtonClick} className={classNames("text-start", {"d-flex align-items-center": buttonStyle === "link"})} disabled={disabled} outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} tag={Link} to={clickUrl}>
+                            {buttonText || "See more"}
+                        </Button> :
+                        <ExternalLink asButton href={clickUrl}>
+                            {buttonText || "See more"}
+                        </ExternalLink>
+                    }
                 </CardFooter>}
             </div>
         </Card>
