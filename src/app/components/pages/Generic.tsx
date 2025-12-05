@@ -12,7 +12,7 @@ import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
 import queryString from "query-string";
 import { useUntilFound } from "./Glossary";
-import { MainContent, SidebarLayout, GenericPageSidebar, PolicyPageSidebar, ContentControlledSidebar, GenericSidebarWithRelatedContent, GameboardContentSidebar } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { useGetGenericPageQuery } from "../../state/slices/api/genericApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
@@ -20,6 +20,11 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { useGetGameboardByIdQuery } from "../../state";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { NewsSidebar } from "../elements/sidebar/NewsSidebar";
+import { ContentControlledSidebar } from "../elements/sidebar/ContentControlledSidebar";
+import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
+import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
+import { PolicyPageSidebar } from "../elements/sidebar/PolicyPageSidebar";
+import { GenericSidebarWithRelatedContent } from "../elements/sidebar/RelatedContentSidebar";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;

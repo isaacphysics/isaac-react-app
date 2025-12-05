@@ -1,5 +1,5 @@
 import React from "react";
-import {Col, Container, Row, TabContent, TabPane} from "reactstrap";
+import {Container, TabContent, TabPane} from "reactstrap";
 import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
@@ -9,9 +9,10 @@ import fromPairs from "lodash/fromPairs";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
 import {MetaDescription} from "../elements/MetaDescription";
-import { FAQSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
 import { PageMetadata } from "../elements/PageMetadata";
+import { FAQSidebar } from "../elements/sidebar/FAQSidebar";
 
 type SupportType = "student" | "teacher" | "tutor";
 

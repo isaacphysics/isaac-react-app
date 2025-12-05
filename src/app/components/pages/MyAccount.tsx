@@ -58,10 +58,11 @@ import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesIn
 import {UserProfile} from '../elements/panels/UserProfile';
 import {UserContent} from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
-import {MainContent, MyAccountSidebar, SidebarLayout} from '../elements/layout/SidebarLayout';
+import {MainContent, SidebarLayout} from '../elements/layout/SidebarLayout';
 import {Loading} from '../handlers/IsaacSpinner';
 import {UserAccessibilitySettings} from '../elements/panels/UserAccessibilitySettings';
 import {showEmailChangeModal} from "../elements/modals/EmailChangeModal";
+import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));

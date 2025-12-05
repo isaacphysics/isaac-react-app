@@ -26,9 +26,10 @@ import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { GameboardsCards, GameboardsCardsProps, GameboardsTable, GameboardsTableProps } from "../elements/Gameboards";
 import classNames from "classnames";
-import { MainContent, MyGameboardsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { PageMetadata } from "../elements/PageMetadata";
 import { useHistoryState } from "../../state/actions/history";
+import { MyGameboardsSidebar } from "../elements/sidebar/MyGameboardsSidebar";
 
 export interface GameboardsDisplaySettingsProps {
     boardView: BoardViews,

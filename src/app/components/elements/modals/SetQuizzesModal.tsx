@@ -74,7 +74,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
     }
 
     function assign() {
-        dispatch(assignMultipleQuiz({
+        void dispatch(assignMultipleQuiz({
             quizId: quiz?.id as string,
             groups: selectedGroups,
             dueDate: dueDate,

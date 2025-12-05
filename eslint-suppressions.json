@@ -202,17 +202,6 @@
       "count": 1
     }
   },
-  "src/app/components/elements/PageTitle.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 3
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 1
-    },
-    "semi": {
-      "count": 1
-    }
-  },
   "src/app/components/elements/RelatedContent.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -240,11 +229,6 @@
     },
     "react-hooks/exhaustive-deps": {
       "count": 3
-    }
-  },
-  "src/app/components/elements/SearchInputs.tsx": {
-    "react-hooks/exhaustive-deps": {
-      "count": 1
     }
   },
   "src/app/components/elements/StageAndDifficultySummaryIcons.tsx": {
@@ -349,17 +333,6 @@
       "count": 1
     }
   },
-  "src/app/components/elements/layout/SidebarLayout.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 3
-    }
-  },
   "src/app/components/elements/markup/index.tsx": {
     "no-case-declarations": {
       "count": 1
@@ -438,11 +411,6 @@
   "src/app/components/elements/modals/QuestionSearchModal.tsx": {
     "react-hooks/exhaustive-deps": {
       "count": 2
-    }
-  },
-  "src/app/components/elements/modals/SetQuizzesModal.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
     }
   },
   "src/app/components/elements/modals/RequiredAccountInformationModal.tsx": {
@@ -827,7 +795,7 @@
   },
   "src/app/components/pages/GameboardBuilder.tsx": {
     "@stylistic/indent": {
-      "count": 5
+      "count": 3
     },
     "@typescript-eslint/no-floating-promises": {
       "count": 4
@@ -958,11 +926,6 @@
       "count": 1
     }
   },
-  "src/app/components/pages/Search.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/app/components/pages/SetAssignments.tsx": {
     "@stylistic/indent": {
       "count": 2
@@ -978,11 +941,6 @@
     }
   },
   "src/app/components/pages/SubjectOverviewPage.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
-    }
-  },
-  "src/app/components/pages/Support.tsx": {
     "@typescript-eslint/no-unused-vars": {
       "count": 2
     }
@@ -1037,14 +995,6 @@
   "src/app/components/pages/quizzes/SetQuizzes.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
-  "src/app/components/site/cs/HomepageCS.tsx": {
-    "@stylistic/indent": {
-      "count": 3
     }
   },
   "src/app/components/site/cs/RoutesCS.tsx": {
@@ -1348,7 +1298,7 @@
   },
   "src/test/state/actions.test.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 11
+      "count": 9
     },
     "@typescript-eslint/no-unused-vars": {
       "count": 1

@@ -40,11 +40,12 @@ import { TrLink } from "../../elements/tables/TableLinks";
 import { StyledSelect } from "../../elements/inputs/StyledSelect";
 import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 import { FilterCount } from "../../elements/svg/FilterCount";
-import { MainContent, MyQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { HexIcon } from "../../elements/svg/HexIcon";
 import { CardGrid } from "../../elements/CardGrid";
 import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 import { PageMetadata } from "../../elements/PageMetadata";
+import { MyQuizzesSidebar } from "../../elements/sidebar/MyQuizzesSidebar";
 
 export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
