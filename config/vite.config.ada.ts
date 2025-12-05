@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import { generateConfig } from "./vite.config.common.ts";
+import { generateConfig } from "./vite.config.common.js";
 
 export default defineConfig(
     generateConfig("ada")

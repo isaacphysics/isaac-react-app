@@ -1,11 +1,7 @@
-import { dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import type { Plugin, UserConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import htmlPurge from 'vite-plugin-html-purgecss'
-import fs from 'fs/promises'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
+import type { Plugin, UserConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import htmlPurge from 'vite-plugin-html-purgecss';
+import fs from 'fs/promises';
 
 const resolveSiteSpecificIndexPlugin = (site: "sci" | "ada") => ({
     /*
@@ -19,19 +15,27 @@ const resolveSiteSpecificIndexPlugin = (site: "sci" | "ada") => ({
     }
 }) as Plugin;
 
-export const generateConfig = (site: "sci" | "ada") => (env: any) => {
-    let isProd = env['prod'] ?? false;
-    let isRenderer = env['isRenderer'] ?? false;
+export const generateConfig = (site: "sci" | "ada") => (env: Record<string, any>) => {
+    const isRenderer = env['isRenderer'] ?? false;
     
     return {
         plugins: [
             resolveSiteSpecificIndexPlugin(site),
-            react(),
+            react({}),
             htmlPurge() as Plugin,
         ],
 
         build: {
             target: 'es2015', // maximal backwards compatibility
+        },
+
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    // https://github.com/twbs/bootstrap/issues/40962 – should be able to remove when Bootstrap 6 is available
+                    silenceDeprecations: ['mixed-decls'],
+                },
+            },
         },
 
         define: {
