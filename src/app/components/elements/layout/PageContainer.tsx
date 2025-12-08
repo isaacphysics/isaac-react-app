@@ -10,9 +10,9 @@ interface PageContainerProps extends Omit<ContainerProps, "pageTitle"> {
 }
 
 export const PageContainer = (props: PageContainerProps) => {
-    const { children, sidebar, pageTitle, ...rest } = props;
+    const { children, sidebar, pageTitle, id, ...rest } = props;
     if (!sidebar) {
-        return <Container {...rest} className={classNames("mb-7", rest.className)}>
+        return <Container {...rest} id={id} className={classNames("mb-7", rest.className)}>
             {pageTitle}
             {children}
         </Container>;
@@ -20,7 +20,7 @@ export const PageContainer = (props: PageContainerProps) => {
 
     return siteSpecific(
         // Sci
-        <Container {...rest} className={classNames("mb-7", rest.className)}>
+        <Container {...rest} id={id} className={classNames("mb-7", rest.className)}>
             {pageTitle}
             <SidebarLayout>
                 {sidebar}
@@ -31,7 +31,10 @@ export const PageContainer = (props: PageContainerProps) => {
         </Container>,
 
         // Ada
-        <SidebarLayout className="g-md-0">
+        // The ID is applied to the top-level component here to ensure #id:before / :after background elements cover the entire page.
+        // Slightly annoying since the className feels like it should be on the Container, leaving this awkward split.
+        // Maybe revisit this when we have more use cases?
+        <SidebarLayout className="g-md-0" id={id}>
             {sidebar}
             <MainContent className="overflow-x-auto">
                 <Container fluid {...rest} className={classNames("my-ada-container mw-1600 px-md-4 px-lg-6 mb-7", rest.className)}>
