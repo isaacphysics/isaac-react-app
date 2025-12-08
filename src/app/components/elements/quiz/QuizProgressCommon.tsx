@@ -356,6 +356,10 @@ export function ResultsTable<Q extends QuestionType>({
                         {isPhy && selectedQuestionIndex !== undefined && <tr>
                             <th className="py-2" colSpan={2 + questions.length}>
                                 <div className="progress-table-question-link">
+                                    <Button color="tertiary" disabled={selectedQuestionIndex == 0}
+                                        // on OSX chrome, the left- and right- pointing triangles are different, so construct these by flipping the same one
+                                        className="flip-x"
+                                        onClick={() => setSelectedQuestionIndex(selectedQuestionIndex - 1)}>►</Button>
                                     {isAssignment
                                         ? <a href={`/questions/${questions[selectedQuestionIndex]?.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
                                             <Markup encoding="latex">
@@ -366,6 +370,8 @@ export function ResultsTable<Q extends QuestionType>({
                                             {`Q${selectedQuestionIndex + 1}${questionTitle ? ` : ${questionTitle}` : ""}`}
                                         </Markup>
                                     }
+                                    <Button color="tertiary" disabled={selectedQuestionIndex === questions.length - 1}
+                                        onClick={() => setSelectedQuestionIndex(selectedQuestionIndex + 1)}>►</Button>
                                 </div>
                                 &nbsp;
                             </th>
