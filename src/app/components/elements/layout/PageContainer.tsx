@@ -12,7 +12,7 @@ interface PageContainerProps extends Omit<ContainerProps, "pageTitle"> {
 export const PageContainer = (props: PageContainerProps) => {
     const { children, sidebar, pageTitle, ...rest } = props;
     if (!sidebar) {
-        return <Container {...rest}>
+        return <Container {...rest} className={classNames("mb-7", rest.className)}>
             {pageTitle}
             {children}
         </Container>;
@@ -20,7 +20,7 @@ export const PageContainer = (props: PageContainerProps) => {
 
     return siteSpecific(
         // Sci
-        <Container {...rest}>
+        <Container {...rest} className={classNames("mb-7", rest.className)}>
             {pageTitle}
             <SidebarLayout>
                 {sidebar}

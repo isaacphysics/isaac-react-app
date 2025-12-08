@@ -293,7 +293,7 @@ $sidebar-width: 220px;
 
 $grid-breakpoints: (
   xs: 0,
-  sm: calc(576px + $sidebar-width),
+  sm: 576px, // sidebar only appears at md and above; sm remains the same
   md: calc(768px + $sidebar-width),
   lg: calc(992px + $sidebar-width),
   xl: calc(1200px + $sidebar-width),

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, Container, Accordion, AccordionItem, AccordionHeader, AccordionBody } from "reactstrap";
 import classNames from "classnames";
-import { above, isAda, siteSpecific, useDeviceSize } from "../../../services";
+import { above, siteSpecific, useDeviceSize } from "../../../services";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
 import { ContentSidebarContext, SidebarContext } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
@@ -15,7 +15,7 @@ export const SidebarLayout = (props: SidebarLayoutProps) => {
     const { className, site=true, ...rest } = props;
     return site
         ? <SidebarContext.Provider value={{sidebarPresent: true}}>
-            <Row {...rest} className={classNames("sidebar-layout flex-lg-nowrap", className)}/>
+            <div {...rest} className={classNames("d-flex flex-column flex-md-row sidebar-layout", className)}/>
         </SidebarContext.Provider>
         : props.children;
 };
@@ -100,7 +100,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
             </>,
             <>
                 {!hideButton && <Container fluid className="my-ada-container w-100">
-                    <Accordion open={sidebarOpen ? ["myAda"] : []} toggle={toggleMenu} className="position-relative mx-2 mx-lg-3 my-3" tag="aside" data-testid="sidebar" aria-label="Sidebar">
+                    <Accordion open={sidebarOpen ? ["myAda"] : []} toggle={toggleMenu} className="position-relative mx-lg-3 my-3" tag="aside" data-testid="sidebar" aria-label="Sidebar">
                         <AccordionItem className="border">
                             <AccordionHeader targetId="myAda">
                                 <span className="fw-bold">{buttonTitle}</span>
