@@ -5,7 +5,7 @@ import fs from 'fs/promises';
 
 const resolveSiteSpecificIndexPlugin = (site: "sci" | "ada") => ({
     /*
-        Vite requires an index.html file at the project root by default. Since we have two sites and each needs its own index.html,
+        Vite requires an index.html file at the project root. Since we have two sites and each needs its own index.html,
         we use this plugin to load the appropriate site-specific index.html file to replace the default one.
     */
     name: 'site-specific-index-html',
