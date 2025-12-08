@@ -272,7 +272,7 @@ const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...
         <CollapsibleContainer expanded={isOpen}>
             <div className="pb-2">
                 {/* nested divs required for clean table border when scrolling :/ */}
-                <div className="overflow-auto ms-2 pe-2 results-table-container">
+                <div className="ms-2 pe-2 results-table-container">
                     <ResultsTablePartBreakdown
                         progress={progress}
                         questionIndex={questionIndex}

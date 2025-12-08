@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useMemo, useRef, useState} from "react";
+import React, {useCallback, useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
 import {isAda, isAuthorisedFullAccess, isPhy, siteSpecific, TODAY} from "../../../services";
@@ -347,6 +347,35 @@ export function ResultsTable<Q extends QuestionType>({
         }
     }) : [];
 
+    useLayoutEffect(() => {
+        const table = tableRef.current;
+        if (table) {
+            const parentElement = table.parentElement as HTMLElement;
+            const firstRow = (table.firstChild as HTMLTableSectionElement).firstChild as HTMLTableRowElement;
+            const questionTH = firstRow.children[(selectedQuestionIndex ?? 0) + 1] as HTMLTableHeaderCellElement;
+
+            const offsetLeft = questionTH.offsetLeft;
+            const parentScrollLeft = parentElement.scrollLeft;
+            const parentLeft = parentScrollLeft + parentElement.offsetLeft + 130;
+            const width = questionTH.offsetWidth;
+
+            let newScrollLeft;
+
+            if (offsetLeft < parentLeft) {
+                newScrollLeft = parentScrollLeft + offsetLeft - parentLeft - width / 2;
+            } else {
+                const offsetRight = offsetLeft + width;
+                const parentRight = parentLeft + parentElement.offsetWidth - 260;
+                if (offsetRight > parentRight) {
+                    newScrollLeft = parentScrollLeft + offsetRight - parentRight + width / 2;
+                }
+            }
+            if (newScrollLeft != undefined) {
+                parentElement.scrollLeft = newScrollLeft;
+            }
+        }
+    }, [selectedQuestionIndex]);
+
     return <div className="assignment-progress-progress">
         {progress && progress.length > 0 ? <>
             <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
@@ -557,9 +586,9 @@ export function ResultsTablePartBreakdown({
     }) ?? [];
 
     return sortedProgress?.length
-        ? <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
-            <table {...rest} className={classNames("progress-table assignment-progress-progress w-100", rest.className)}>
-                <thead className="progress-table-header-footer fw-bold">
+        ? <div className="assignment-progress-progress"><div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
+            <table {...rest} className={classNames("progress-table w-100", rest.className)}>
+                <thead className="progress-table-header-footer fw-bold sticky-top">
                     <tr>
                         <SortItemHeader<ProgressSortOrder>
                             className="student-name sticky-left ps-3 py-3"
@@ -673,7 +702,7 @@ export function ResultsTablePartBreakdown({
                     </tr>
                 </tfoot>
             </table>
-        </div>
+        </div></div>
         : <div className="w-100 text-center p-3">
             This group is empty, so has no progress data available. You can invite users through the <Link to="/groups">Manage groups</Link> page.
         </div>;
