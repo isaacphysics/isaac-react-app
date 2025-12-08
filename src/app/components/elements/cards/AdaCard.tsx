@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import {Button, Card, CardBody, CardFooter, CardImg, CardTitle, Container, ContainerProps} from "reactstrap";
+import {Button, Card, CardBody, CardFooter, CardImg, CardTitle} from "reactstrap";
 import { isAppLink } from "../../../services";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "../ExternalLink";
@@ -37,14 +37,17 @@ export const AdaCard = ({card, ...props}: AdaCardProps) => {
                     }
                 </CardBody>
                 {clickUrl && buttonStyle !== "card" && <CardFooter className={"border-top-0 p-4"}>
-                    <Button 
-                        className={classNames({"d-flex align-items-center" : buttonStyle === "link"}, {"external-link": !isAppLink(clickUrl)})} 
-                        disabled={disabled} outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} 
-                        tag={isAppLink(clickUrl) ? Link : ({children, className}) => ExternalLink({href: clickUrl, children, className})} to={clickUrl}
-                        aria-label={buttonAltText}
-                    >
-                        {buttonText || "See more"}
-                    </Button>
+                    {isAppLink(clickUrl) ? 
+                        <Button className={classNames({"d-flex align-items-center" : buttonStyle === "link"})} disabled={disabled}
+                            outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} 
+                            tag={Link} to={clickUrl} aria-label={buttonAltText}
+                        >
+                            {buttonText || "See more"}
+                        </Button> :
+                        <ExternalLink asButton href={clickUrl}>
+                            {buttonText || "See more"}
+                        </ExternalLink>
+                    }
                 </CardFooter>}
             </div>
         </Card>
