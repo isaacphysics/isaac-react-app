@@ -3,8 +3,9 @@ import {Button, Card, CardBody, Col, Container, Input, Label, Row} from "reactst
 import {history, isPhy, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { Link } from "react-router-dom";
-import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
+import { SidebarLayout, MainContent } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 
 export const RegistrationAgeCheckParentalConsent = () => {
 

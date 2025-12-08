@@ -52,7 +52,7 @@ import {BoardAssignee, AssignmentBoardOrder, Boards} from "../../../IsaacAppType
 import {BoardCard} from "../elements/cards/BoardCard";
 import {RenderNothing} from "../elements/RenderNothing";
 import {SortItemHeader} from "../elements/SortableItemHeader";
-import {SetAssignmentsSidebar} from "../elements/layout/SidebarLayout";
+import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
@@ -62,6 +62,7 @@ import { PageFragment } from "../elements/PageFragment";
 import { useHistoryState } from "../../state/actions/history";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
+import { SetAssignmentsSidebar } from "../elements/sidebar/SetAssignmentsSidebar";
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -97,7 +98,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
             .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())));
     }, [boards, boardTitleFilter, boardCreator, boardSubject, user]);
 
-    const tableHeader = <tr className="my-gameboard-table-header">
+    const tableHeader = <tr>
         <th className="text-center align-middle"><span className="ps-2 pe-2">Groups</span></th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
@@ -125,8 +126,8 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
     return <Card className="mt-2 mb-7">
         <CardBody id="boards-table">
             <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
-                <Table className="mb-0">
-                    <thead>
+                <Table className="mb-0 my-gameboard-table">
+                    <thead className="my-gameboard-table-header">
                         {tableHeader}
                     </thead>
                     <tbody>
@@ -156,7 +157,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         groupsByGameboard, openAssignModal
     } = props;
 
-    const tableHeader = <tr className="my-gameboard-table-header">
+    const tableHeader = <tr>
         <th>Groups</th>
         <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
@@ -210,7 +211,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         </Row>
         <HorizontalScroller enabled={boards ? boards.boards.length > 6 : false}>
             <Table className="mt-3 my-gameboard-table">
-                <thead>
+                <thead className="my-gameboard-table-header">
                     {tableHeader}
                 </thead>
                 <tbody>

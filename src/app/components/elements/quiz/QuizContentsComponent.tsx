@@ -34,8 +34,9 @@ import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChil
 import {EditContentButton} from "../EditContentButton";
 import {Markup} from "../markup";
 import classNames from "classnames";
-import { MainContent, QuizSidebar, QuizSidebarAttemptProps, QuizSidebarViewProps, SidebarLayout } from "../layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 import { SetQuizzesModal } from "../modals/SetQuizzesModal";
+import { QuizSidebar, QuizSidebarAttemptProps, QuizSidebarViewProps } from "../sidebar/QuizSidebar";
 
 type PageLinkCreator = (page?: number) => string;
 export type QuizView = { quiz?: DetailedQuizSummaryDTO & { subjectId?: SUBJECTS | TAG_ID }, quizId: string | undefined };

@@ -7,7 +7,8 @@ import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {isPhy, NEWS_PODS_PER_PAGE, siteSpecific} from "../../services";
 import { IsaacPodDTO } from "../../../IsaacApiTypes";
-import { GenericPageSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
 
 export const News = () => {
     const [page, setPage] = React.useState(0);

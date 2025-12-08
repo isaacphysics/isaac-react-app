@@ -40,13 +40,15 @@ import classNames from "classnames";
 import { ExtendDueDateModal } from "../../elements/modals/ExtendDueDateModal";
 import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Container, ListGroup, ListGroupItem, Col, Alert, Input, UncontrolledDropdown } from "reactstrap";
 import { ListView } from "../../elements/list-groups/ListView";
-import { MainContent, ManageQuizzesSidebar, SetQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { HexIcon } from "../../elements/svg/HexIcon";
 import { AffixButton } from "../../elements/AffixButton";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { PageContainer } from "../../elements/layout/PageContainer";
 import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
 import { SetQuizzesModal } from "../../elements/modals/SetQuizzesModal";
+import { SetQuizzesSidebar } from "../../elements/sidebar/SetQuizzesSidebar";
+import { ManageQuizzesSidebar } from "../../elements/sidebar/ManageQuizzesSidebar";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;

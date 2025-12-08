@@ -3,7 +3,7 @@ import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getThemeFromTags } from "../../services/pageContext";
 import { useGetRevisionPageQuery } from "../../state/slices/api/revisionApi";
-import { ContentControlledSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { LoadingPlaceholder, ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { IsaacRevisionDetailPageDTO, QuizSummaryDTO } from "../../../IsaacApiTypes";
 import { convertToALVIGameboards, ListView } from "../elements/list-groups/ListView";
@@ -11,6 +11,7 @@ import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChild
 import { MetadataContainer, MetadataContainerLink } from "../elements/panels/MetadataContainer";
 import { PageMetadata } from "../elements/PageMetadata";
 import { isPhy } from "../../services";
+import { ContentControlledSidebar } from "../elements/sidebar/ContentControlledSidebar";
 
 interface RevisionProps {
     match: { params: { pageId: string } };

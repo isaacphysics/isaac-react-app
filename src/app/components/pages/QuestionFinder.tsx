@@ -47,7 +47,7 @@ import queryString from "query-string";
 import {Button, CardBody, Col, Container, Label, Row} from "reactstrap";
 import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {TierID} from "../elements/svg/HierarchyFilter";
-import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ListView } from "../elements/list-groups/ListView";
 import { PageFragment } from "../elements/PageFragment";
 import { RenderNothing } from "../elements/RenderNothing";
@@ -60,6 +60,7 @@ import { ResultsListContainer, ResultsListHeader } from "../elements/ListResults
 import { QuestionSearchQuery } from "../../../IsaacAppTypes";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
+import { QuestionFinderSidebar } from "../elements/sidebar/QuestionFinderSidebar";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses", "randomSeed"] as const;

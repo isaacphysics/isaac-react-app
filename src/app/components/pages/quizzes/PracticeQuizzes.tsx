@@ -8,12 +8,13 @@ import { Tag} from "../../../../IsaacAppTypes";
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { useGetAvailableQuizzesQuery } from "../../../state/slices/api/quizApi";
 import { PageFragment } from "../../elements/PageFragment";
-import { MainContent, PracticeQuizzesSidebar, SidebarLayout } from "../../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { isFullyDefinedContext, useUrlPageTheme } from "../../../services/pageContext";
 import { selectors, useAppSelector } from "../../../state";
 import { ListView } from "../../elements/list-groups/ListView";
 import classNames from "classnames";
 import { PageMetadata } from "../../elements/PageMetadata";
+import { PracticeQuizzesSidebar } from "../../elements/sidebar/PracticeQuizzesSidebar";
 
 const PracticeQuizzesComponent = () => {
     const pageContext = useUrlPageTheme();

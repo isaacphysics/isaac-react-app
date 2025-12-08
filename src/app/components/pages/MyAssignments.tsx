@@ -7,12 +7,13 @@ import {filterAssignmentsByProperties, filterAssignmentsByStatus, getDistinctAss
 import {Assignments} from "../elements/Assignments";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {PageFragment} from "../elements/PageFragment";
-import { MyAssignmentsSidebar } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { MyAssignmentsOrder } from "../../../IsaacAppTypes";
 import sortBy from "lodash/sortBy";
 import { PageMetadata } from "../elements/PageMetadata";
 import classNames from "classnames";
 import { PageContainer } from "../elements/layout/PageContainer";
+import { MyAssignmentsSidebar } from "../elements/sidebar/MyAssignmentsSidebar";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 
 const INITIAL_NO_ASSIGNMENTS = 10;

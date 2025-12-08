@@ -1,0 +1,35 @@
+import React from "react";
+import { useHistory } from "react-router";
+import { IsaacProgrammeDTO } from "../cards/ProgrammeCard";
+import { StyledTabPicker } from "../inputs/StyledTabPicker";
+import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
+
+interface ProgrammesSidebarProps extends ContentSidebarProps {
+    programmes?: IsaacProgrammeDTO[];
+}
+
+export const ProgrammesSidebar = ({programmes, ...rest}: ProgrammesSidebarProps) => {
+    const history = useHistory();
+
+    return <ContentSidebar buttonTitle="Explore programmes" {...rest}>
+        <div className="section-divider"/>
+        <h5>Our programmes</h5>
+        <ul>
+            <li>
+                {programmes?.map((programme) =>
+                    <StyledTabPicker
+                        key={programme.id}
+                        checkboxTitle={programme.title}
+                        checked={false}
+                        onClick={() => {
+                            if (programme.id) {
+                                history.replace({pathname: history.location.pathname, hash: `${programme.id.slice(programme.id.indexOf("_") + 1)}`});
+                                document.getElementById(programme.id.slice(programme.id.indexOf("_") + 1))?.scrollIntoView({behavior: "smooth"});
+                            }
+                        }}
+                    />
+                )}
+            </li>
+        </ul>
+    </ContentSidebar>;
+};

@@ -2,9 +2,10 @@ import React from "react";
 import { Container } from "reactstrap";
 import { generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isPhy, isSingleStageContext, useUrlPageTheme, VALID_APPS_CONTEXTS } from "../../services";
-import { AnvilAppsListingSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { PageMetadata } from "../elements/PageMetadata";
 import { PageFragment } from "../elements/PageFragment";
+import { AnvilAppsListingSidebar } from "../elements/sidebar/AnvilAppsListingSidebar";
 
 export const AnvilAppsListing = () => {
     const pageContext = useUrlPageTheme();

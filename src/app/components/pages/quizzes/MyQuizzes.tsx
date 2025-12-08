@@ -40,12 +40,13 @@ import { TrLink } from "../../elements/tables/TableLinks";
 import { StyledSelect } from "../../elements/inputs/StyledSelect";
 import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 import { FilterCount } from "../../elements/svg/FilterCount";
-import { MyQuizzesSidebar } from "../../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../../elements/layout/SidebarLayout";
 import { HexIcon } from "../../elements/svg/HexIcon";
 import { CardGrid } from "../../elements/CardGrid";
 import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { PageContainer } from "../../elements/layout/PageContainer";
+import { MyQuizzesSidebar } from "../../elements/sidebar/MyQuizzesSidebar";
 import { MyAdaSidebar } from "../../elements/sidebar/MyAdaSidebar";
 
 export interface QuizzesPageProps extends RouteComponentProps {
@@ -190,7 +191,7 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                 <col className={"col-md-2"}/>
                 <col className={"col-md-1"}/>
             </colgroup>
-            <thead className="card-header">
+            <thead className="my-quizzes-table-header">
                 <tr>
                     <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
                     <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setBy} reverseOrder={QuizzesBoardOrder["-setBy"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Set by</SortItemHeader>
@@ -241,7 +242,7 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
                 <col className={"col-md-2"}/>
                 <col className={"col-md-1"}/>
             </colgroup>
-            <thead className="card-header">
+            <thead className="my-quizzes-table-header">
                 <tr>
                     <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
                     <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.startDate} reverseOrder={QuizzesBoardOrder["-startDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Start Date</SortItemHeader>
@@ -484,10 +485,12 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                         <div className="d-flex flex-column">
                             {tabTopContent}
                             {displayMode === "table" ? <Card>
-                                <AssignedQuizTable
-                                    quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                                    emptyMessage={emptyAssignedMessage}
-                                />
+                                <CardBody>
+                                    <AssignedQuizTable
+                                        quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                        emptyMessage={emptyAssignedMessage}
+                                    />
+                                </CardBody>
                             </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} emptyMessage={emptyAssignedMessage}/>}
                         </div>
                     </ShowLoading>,
@@ -499,10 +502,12 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                         <div className="d-flex flex-column">
                             {tabTopContent}
                             {displayMode === "table" ? <Card>
-                                <PracticeQuizTable
-                                    quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                                    emptyMessage={emptyPracticeMessage}
-                                />
+                                <CardBody>
+                                    <PracticeQuizTable
+                                        quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                        emptyMessage={emptyPracticeMessage}
+                                    />
+                                </CardBody>
                             </Card> : <QuizGrid quizzes={sortedPracticeQuizzes} emptyMessage={emptyPracticeMessage}/>}
                         </div>
                     </ShowLoading>,
