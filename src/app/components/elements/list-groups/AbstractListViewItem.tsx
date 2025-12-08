@@ -183,7 +183,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                         : icon.type === "icon" ? <HexIcon icon={icon.icon} subject={icon.subject} className={icon.className}/>
                             : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}} /> 
                                 : undefined}
-                    {icon.label && above['sm'](deviceSize) && <div className="icon-title mt-1">{icon.label}</div>}
+                    {icon.label && isAda && above['sm'](deviceSize) && <div className="icon-title mt-1">{icon.label}</div>}
                 </div>}
                 {isPhy && isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
                     <StatusDisplay status={typedProps.status} showText={false} />

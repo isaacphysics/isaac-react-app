@@ -41,7 +41,7 @@ export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "");
     const state = item.state ?? CompletionState.NOT_ATTEMPTED;
 
-    const icon: TitleIconProps = { type: "icon", label: (isPhy || hideIconLabel) ? undefined : linkedBoardId ? HUMAN_STATUS[state] : "Question",
+    const icon: TitleIconProps = { type: "icon", label: hideIconLabel ? undefined : linkedBoardId ? HUMAN_STATUS[state] : "Question",
         icon: isPhy
             ? {name: "icon-question", size: "lg"}
             : {name: QUESTION_STATUS_TO_ICON[state], size: hideIconLabel ? "md" : "lg", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary", raw: true}
