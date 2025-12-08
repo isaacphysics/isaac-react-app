@@ -52,6 +52,11 @@
   border-radius: 8px;
 }
 
+.assignment-progress-table-wrapper {
+  overflow: auto;
+  max-height: max(200px, 65vh);
+}
+
 .progress-table {
   @include respond-above(sm) {
     tbody td, tbody th {
