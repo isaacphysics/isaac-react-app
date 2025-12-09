@@ -52,7 +52,6 @@ import {BoardAssignee, AssignmentBoardOrder, Boards} from "../../../IsaacAppType
 import {BoardCard} from "../elements/cards/BoardCard";
 import {RenderNothing} from "../elements/RenderNothing";
 import {SortItemHeader} from "../elements/SortableItemHeader";
-import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
@@ -83,10 +82,8 @@ interface SetAssignmentsTableProps {
 
 const PhyTable = (props: SetAssignmentsTableProps) => {
     const {
-        user,
-        boards, boardSubject, setBoardSubject,
-        boardView, boardTitleFilter, setBoardTitleFilter,
-        boardCreator, setBoardCreator,
+        user, boards, boardSubject,
+        boardView, boardTitleFilter, boardCreator,
         boardOrder, setBoardOrder,
         groupsByGameboard, openAssignModal
     } = props;

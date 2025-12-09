@@ -9,7 +9,7 @@ import {
     useAppSelector
 } from "../../state";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { Card, CardBody, Col, Container, Row } from "reactstrap";
+import { Card, CardBody, Col, Row } from "reactstrap";
 import {
     below,
     BookHiddenState,

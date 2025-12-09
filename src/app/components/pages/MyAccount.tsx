@@ -2,7 +2,7 @@ import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import classNames from "classnames";
-import {Button, Container, Form, Input, Nav, NavItem, NavLink, TabContent, TabPane,} from "reactstrap";
+import {Button, Form, Input, Nav, NavItem, NavLink, TabContent, TabPane,} from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {
     AppDispatch,
@@ -59,7 +59,6 @@ import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesIn
 import {UserProfile} from '../elements/panels/UserProfile';
 import {UserContent} from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
-import {MainContent, SidebarLayout} from '../elements/layout/SidebarLayout';
 import {Loading} from '../handlers/IsaacSpinner';
 import {UserAccessibilitySettings} from '../elements/panels/UserAccessibilitySettings';
 import {showEmailChangeModal} from "../elements/modals/EmailChangeModal";
