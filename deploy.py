@@ -343,8 +343,6 @@ if __name__ == '__main__':
 
     initial_context['live'] = initial_context['env'] == 'live' # As env changes during live deployment
 
-    get_target_api_version_from_app_image(initial_context)
-
     check_repos_are_up_to_date()
 
     check_running_servers(initial_context)
@@ -354,6 +352,7 @@ if __name__ == '__main__':
         context = initial_context.copy()
         context['site'] = site
         context['subject'] = 'ada' if context['site'] == Site.ADA else 'phy'
+        get_target_api_version_from_app_image(context)
         if context['env'] == 'test' and volume_exists(context):
             deploy_test(context)
         elif context['env'] in ('staging', 'dev') and volume_exists(context):
