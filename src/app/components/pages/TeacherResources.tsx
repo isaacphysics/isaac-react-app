@@ -213,12 +213,12 @@ export const TeacherResources = () => {
                     <ImageBlock>
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/isaac-subject-logos.svg" alt=""/>
                     </ImageBlock>
-                    <TextBlock className="">
+                    <TextBlock>
                         <h2>Teaching science or maths?</h2>
                         <p>Check out Isaac Science, our partner platform packed with free tools and resources to help you teach physics, chemistry, biology and maths.</p>
-                        <Button className="external-link" tag={({ children, className }) => ExternalLink({ href: 'https://isaacscience.org', children, className })}>
+                        <ExternalLink asButton href='https://isaacscience.org'>
                             Go to Isaac Science
-                        </Button>
+                        </ExternalLink>
                     </TextBlock>
                 </ColumnSlice>
             </Container>
