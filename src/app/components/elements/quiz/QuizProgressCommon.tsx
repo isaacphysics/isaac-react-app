@@ -158,7 +158,7 @@ export function ResultsTable<Q extends QuestionType>({
     const [returnQuizToStudent, {isLoading: returningQuizToStudent}] = useReturnQuizToStudentMutation();
     const returnToStudent = (userId?: number) => {
         const confirm = () => {
-            returnQuizToStudent({quizAssignmentId: assignmentId as number, userId: userId as number})
+            void returnQuizToStudent({quizAssignmentId: assignmentId as number, userId: userId as number})
                 .then(() => dispatch(closeActiveModal()));
         };
         dispatch(openActiveModal({
