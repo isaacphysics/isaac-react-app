@@ -628,7 +628,7 @@ export function ResultsTablePartBreakdown({
 
                             {/* total correct/attempted */}
                             {isPhy && studentProgress.questionPartResults && 
-                                <td className={classNames({"sticky-ca-col": isPhy})}>
+                                <th className={classNames({"sticky-ca-col": isPhy})}>
                                     {formatMark(
                                         studentProgress.questionPartResults[questionIndex].reduce((acc, questionPartResult) => {
                                             if (pageSettings?.attemptedOrCorrect === "CORRECT") {
@@ -640,7 +640,7 @@ export function ResultsTablePartBreakdown({
                                         studentProgress.questionPartResults[questionIndex].length,
                                         !!pageSettings?.formatAsPercentage
                                     )}
-                                </td>
+                                </th>
                             }
 
                             {/* main data */}

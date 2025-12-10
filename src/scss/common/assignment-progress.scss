@@ -453,6 +453,7 @@ $failed-bg-size: 25%;
   }
 
   tfoot th, tfoot td {
+    box-shadow: inset 0 1px 0 $gray-118;
   }
 
   @include respond-below(xs) {
