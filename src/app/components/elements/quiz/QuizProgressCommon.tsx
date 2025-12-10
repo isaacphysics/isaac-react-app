@@ -354,7 +354,7 @@ export function ResultsTable<Q extends QuestionType>({
                     <thead className="progress-table-header-footer sticky-top">
                         {tableHeaderFooter}
                         {isPhy && selectedQuestionIndex !== undefined && <tr>
-                            <th className="py-2" colSpan={2 + questions.length}>
+                            <th className="py-2" colSpan={3 + questions.length}>
                                 <div className="progress-table-question-link">
                                     {isAssignment
                                         ? <a href={`/questions/${questions[selectedQuestionIndex]?.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
