@@ -20,10 +20,9 @@ $table-selected-border: 2px solid rgb(75, 157, 252);
 
 .progress-table {
   .selected {
-    border-left: $table-selected-border;
-    border-right: $table-selected-border;
     background: $table-selected-background;
     background-clip: padding-box;
+    box-shadow: inset 1px 0 #4b9dfc, inset -1px 0 #4b9dfc;
   }
 
   .progress-table-question-link {
@@ -39,8 +38,6 @@ $table-selected-border: 2px solid rgb(75, 157, 252);
   }
 
   background-color: $gray-103;
-  // :is(thead, tfoot) tr :is(td, th) {
-  // }
 
   tbody tr:nth-of-type(even) {
     background: $gray-103;
@@ -66,18 +63,17 @@ $table-selected-border: 2px solid rgb(75, 157, 252);
       background: $table-selected-background;
       background-clip: padding-box;
     }
-    
-    thead tr:first-of-type th:not(.selected) {
+
+    // This must be a box-shadow rather than a border so that it scrolls with the sticky table content
+    .progress-table-question-header {
+      box-shadow: 0 1px #4b9dfc, 0 -1px #4b9dfc;
+    }
+
+    // Horizontally sticky headers appear above the question-header's box-shadow
+    // Border-bottom is usable here since it completes the line at the top of the table, then box-shadow handles the rest when scrolling
+    thead th.student-name, thead th.correct-attempted-header {
       border-bottom: $table-selected-border;
-    }
-
-    tbody tr:first-of-type td:not(.selected), tbody tr:first-of-type th {
-      border-top: $table-selected-border;
-    }
-
-    thead:has(tr:first-of-type .selected:last-of-type) tr:nth-of-type(2) th {
-      // apply a selected border over the last column if selected
-      border-right: $table-selected-border;
+      box-shadow: none;
     }
   }
 }

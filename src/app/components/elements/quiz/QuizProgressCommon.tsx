@@ -353,7 +353,7 @@ export function ResultsTable<Q extends QuestionType>({
                 <table ref={tableRef} className="progress-table w-100">
                     <thead className="progress-table-header-footer sticky-top">
                         {tableHeaderFooter}
-                        {isPhy && selectedQuestionIndex !== undefined && <tr>
+                        {isPhy && selectedQuestionIndex !== undefined && <tr className="progress-table-question-header">
                             <th className="py-2" colSpan={3 + questions.length}>
                                 <div className="progress-table-question-link">
                                     {isAssignment
