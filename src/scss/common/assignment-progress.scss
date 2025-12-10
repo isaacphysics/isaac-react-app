@@ -504,6 +504,7 @@ $failed-bg-size: 25%;
     }
     width: var(--correct-attempted-width);
     min-width: var(--correct-attempted-width);
+    max-width: var(--correct-attempted-width);
   }
 
   .sticky-ca-col {
