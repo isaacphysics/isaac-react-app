@@ -1,7 +1,9 @@
 .sidebar {
     background-color: $cs-white;
-    border-right: 1px solid $cs-silver;
-    overflow: clip;
+}
+
+:not(.offcanvas-body) > .sidebar {
+    background-color: $cs-white;
 
     @include not-reduced-motion {
         transition: all 0.3s ease-out;
@@ -51,4 +53,14 @@ button.my-ada-tab:first-child { // collapser tab
     i {
         margin-right: 3px;
     }
+}
+
+.sidebar-toggle {
+    position: relative;
+    padding: 1.5rem;
+    background-color: $cs-white;
+    border: 1px solid $cs-dark-silver;
+    border-radius: 1rem;
+    font-weight: 600;
+    text-align: left;
 }

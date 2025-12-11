@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader, Container, Accordion, AccordionItem, AccordionHeader, AccordionBody } from "reactstrap";
+import { Col, ColProps, RowProps, Offcanvas, OffcanvasBody, OffcanvasHeader, Container } from "reactstrap";
 import classNames from "classnames";
 import { above, siteSpecific, useDeviceSize } from "../../../services";
 import { mainContentIdSlice, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
@@ -99,7 +99,10 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                 </Offcanvas>
             </>,
             <>
-                {!hideButton && <Container fluid className="my-ada-container w-100">
+                {/* I have kept the code for both around to allow RPF design to pick which they prefer – please delete the one they decide against! */}
+
+                {/* Ada attempt 1 – dropdown */}
+                {/* {!hideButton && <Container fluid className="my-ada-container w-100">
                     <Accordion open={sidebarOpen ? ["myAda"] : []} toggle={toggleMenu} className="position-relative mx-lg-3 my-3" tag="aside" data-testid="sidebar" aria-label="Sidebar">
                         <AccordionItem className="border">
                             <AccordionHeader targetId="myAda">
@@ -110,7 +113,30 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                             </AccordionBody>
                         </AccordionItem>
                     </Accordion>
+                </Container>} */}
+                
+                {/* Ada attempt 2 – offcanvas */}
+                {!hideButton && <Container fluid className="my-ada-container w-100">
+                    <SidebarButton buttonTitle={buttonTitle} className="my-3" />
                 </Container>}
+                <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={sidebarOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
+                    <OffcanvasHeader toggle={toggleMenu} close={
+                        <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
+                            <AffixButton color="keyline" size="lg" onClick={toggleMenu} data-testid="close-sidebar-button" affix={{
+                                affix: "icon-close",
+                                position: "suffix",
+                                type: "icon"
+                            }}>
+                                Close
+                            </AffixButton>
+                        </div>
+                    }/>
+                    <OffcanvasBody className="p-0">
+                        <ContentSidebarContext.Provider value={{toggle: toggleMenu, close: closeMenu}}>
+                            <Col {...rest} className={classNames("sidebar pt-0", className)} />
+                        </ContentSidebarContext.Provider>
+                    </OffcanvasBody>
+                </Offcanvas>
             </>
         );
 };
