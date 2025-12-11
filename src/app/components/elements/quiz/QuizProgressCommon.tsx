@@ -553,7 +553,7 @@ export function ResultsTablePartBreakdown({
     return sortedProgress?.length
         ? <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
             <table {...rest} className={classNames("progress-table assignment-progress-progress w-100", rest.className)}>
-                <thead className="progress-table-header-footer fw-bold">
+                <thead className="progress-table-header-footer sticky-top fw-bold">
                     <tr>
                         <SortItemHeader<ProgressSortOrder>
                             className="student-name sticky-left ps-3 py-3"
