@@ -116,7 +116,7 @@ const GameboardBuilderRow = (
                         {question.subtitle && <>
                             <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
                         </>}
-                        {question.tags?.includes("cross_topic") && <div className="ms-n1 my-2 mb-lg-0">
+                        {isAda && question.tags?.includes("cross_topic") && <div className="ms-n1 my-2 mb-lg-0">
                             <CrossTopicQuestionIndicator small />
                         </div>}
                         {question.tags?.includes("llm_question_page") && <div className="ms-n1 my-2 mb-lg-0">
