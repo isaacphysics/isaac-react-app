@@ -105,12 +105,12 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const user = useAppSelector(selectors.user.loggedInOrNull);
     const deviceSize = useDeviceSize();
 
-    const collapsed = useAppSelector(selectors.sidebar.open);
+    const isOpen = useAppSelector(selectors.sidebar.open);
     const toggleSidebar = () => dispatch(sidebarSlice.actions.toggle());
 
-    return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": collapsed})} buttonTitle="My Ada">
+    return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": !isOpen})} buttonTitle="My Ada">
         <div className="sticky-top">
-            {above['md'](deviceSize) && <AdaSidebarCollapser collapsed={collapsed} toggleSidebar={toggleSidebar} />}
+            {above['md'](deviceSize) && <AdaSidebarCollapser collapsed={!isOpen} toggleSidebar={toggleSidebar} />}
 
             {Object.entries(MyAdaTabs)
                 .filter(([_, tab]) => {
@@ -124,7 +124,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
                         key={key}
                         id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
                         checkboxTitle={<div className={classNames("d-flex align-items-center gap-3")}>
-                            <i className={classNames("icon icon-sm", tab.icon, {"icon-color-black": isActive && collapsed})} aria-hidden="true" />
+                            <i className={classNames("icon icon-sm", tab.icon, {"icon-color-black": isActive && !isOpen})} aria-hidden="true" />
                             <b>{tab.title}</b>
                         </div>}
                         checked={isActive}
