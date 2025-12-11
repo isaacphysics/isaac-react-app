@@ -14,6 +14,7 @@ import type { Location } from 'history';
 import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
 import { LLMFreeTextQuestionIndicator } from './LLMFreeTextQuestionIndicator';
+import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -62,6 +63,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle, pageContainsLLMFreeTextQuestion } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const isConcept = doc?.type === "isaacConceptPage";
+    const isCrossTopic = doc?.tags?.includes("cross_topic");
     const location = useLocation();
     const deviceSize = useDeviceSize();
 
@@ -78,6 +80,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                     </div>
                 </div>
                 {isAda && <div className="d-flex align-items-center">
+                    {isCrossTopic && <CrossTopicQuestionIndicator className="me-3"/>}
                     {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator className="me-3"/>}
                     <EditContentButton doc={doc} />
                 </div>}
@@ -100,6 +103,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
                         {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
                     </div>}
                     {isAda && <div className="d-flex align-items-center">
+                        {isCrossTopic && <CrossTopicQuestionIndicator className="me-3"/>}
                         {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator className="me-3"/>}
                         <EditContentButton doc={doc} />
                     </div>}
