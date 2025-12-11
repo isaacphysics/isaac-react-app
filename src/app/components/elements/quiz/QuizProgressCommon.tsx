@@ -566,7 +566,7 @@ export function ResultsTablePartBreakdown({
                         </SortItemHeader>
                         {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
                             ? <SortItemHeader<ProgressSortOrder>
-                                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                                className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
                                 defaultOrder={"totalQuestionPercentage"}
                                 reverseOrder={"totalQuestionPercentage"}
                                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -581,7 +581,7 @@ export function ResultsTablePartBreakdown({
                                 )}
                             </SortItemHeader>
                             : <SortItemHeader<ProgressSortOrder>
-                                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                                className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
                                 defaultOrder={"totalAttemptedQuestionPercentage"}
                                 reverseOrder={"totalAttemptedQuestionPercentage"}
                                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
