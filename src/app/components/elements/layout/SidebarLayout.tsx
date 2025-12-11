@@ -102,7 +102,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                 {/* I have kept the code for both around to allow RPF design to pick which they prefer – please delete the one they decide against! */}
 
                 {/* Ada attempt 1 – dropdown */}
-                {/* {!hideButton && <Container fluid className="my-ada-container w-100">
+                {/* {!hideButton && <Container fluid className="w-100">
                     <Accordion open={sidebarOpen ? ["myAda"] : []} toggle={toggleMenu} className="position-relative mx-lg-3 my-3" tag="aside" data-testid="sidebar" aria-label="Sidebar">
                         <AccordionItem className="border">
                             <AccordionHeader targetId="myAda">
@@ -116,7 +116,7 @@ export const ContentSidebar = (props: ContentSidebarProps) => {
                 </Container>} */}
                 
                 {/* Ada attempt 2 – offcanvas */}
-                {!hideButton && <Container fluid className="my-ada-container w-100">
+                {!hideButton && <Container fluid className="w-100">
                     <SidebarButton buttonTitle={buttonTitle} className="my-3" />
                 </Container>}
                 <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={sidebarOpen} toggle={toggleMenu} container="#root" data-bs-theme={pageTheme ?? "neutral"}>
