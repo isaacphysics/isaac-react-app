@@ -6,13 +6,13 @@ import { GetStartedWithAda } from "../elements/panels/GetStartedWithAda";
 import { AdaNewsSection } from "../elements/AdaNewsSection";
 import { MyAdaSidebar } from "../elements/sidebar/MyAdaSidebar";
 import { PageContainer } from "../elements/layout/PageContainer";
-import { PageTitle } from "../elements/PageTitle";
+import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 
 export const Overview = () => {
     useTeacherOnboardingModal();    
 
     return <PageContainer
-        pageTitle={<PageTitle currentPageTitle={"Overview"} className="mt-3" />}
+        pageTitle={<TitleAndBreadcrumb currentPageTitle={"Overview"} />}
         sidebar={<MyAdaSidebar />}
         id="overview"
     >
