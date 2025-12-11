@@ -481,22 +481,22 @@ $failed-bg-size: 25%;
   }
 
   --student-name-width: 16rem;
-  --correct-attempted-width: 8rem;
+  --correct-attempted-width: 9rem;
 
-  &.assignment-table {
+  &:has(thead tr th.narrow-header) {
     --correct-attempted-width: 7rem;
   }
 
   @include respond-below(md) {
     --student-name-width: 12rem;
 
-    &.assignment-table {
+    &:has(thead tr th.narrow-header) {
       --correct-attempted-width: 6rem;
     }
   }
 
   @include respond-below(sm) {
-    --correct-attempted-width: 7rem;
+    --correct-attempted-width: 8rem;
     --student-name-width: 8rem;
   }
 

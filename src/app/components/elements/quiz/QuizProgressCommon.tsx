@@ -237,7 +237,7 @@ export function ResultsTable<Q extends QuestionType>({
         </SortItemHeader>
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
-                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy, "narrow-header": isAssignment || isAda})}
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -253,7 +253,7 @@ export function ResultsTable<Q extends QuestionType>({
                 )}
             </SortItemHeader>
             : <SortItemHeader<ProgressSortOrder>
-                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy, "narrow-header": isAssignment || isAda})}
                 defaultOrder={"totalAttemptedQuestionPercentage"}
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -272,7 +272,7 @@ export function ResultsTable<Q extends QuestionType>({
         {isPhy && isAssignment && (
             pageSettings?.attemptedOrCorrect === "CORRECT"
                 ? <SortItemHeader<ProgressSortOrder>
-                    className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                    className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
                     defaultOrder={"totalPartPercentage"}
                     reverseOrder={"totalPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -288,7 +288,7 @@ export function ResultsTable<Q extends QuestionType>({
                     )}
                 </SortItemHeader>
                 : <SortItemHeader<ProgressSortOrder>
-                    className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                    className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
                     defaultOrder={"totalAttemptedPartPercentage"}
                     reverseOrder={"totalAttemptedPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -350,7 +350,7 @@ export function ResultsTable<Q extends QuestionType>({
     return <div className="assignment-progress-progress">
         {progress && progress.length > 0 ? <>
             <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
-                <table ref={tableRef} className={classNames("progress-table w-100", {"assignment-table": isAssignment})}>
+                <table ref={tableRef} className="progress-table w-100">
                     <thead className="progress-table-header-footer sticky-top">
                         {tableHeaderFooter}
                         {isPhy && selectedQuestionIndex !== undefined && <tr className="progress-table-question-header">
