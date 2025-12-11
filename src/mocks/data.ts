@@ -4,11 +4,13 @@ import {DAYS_AGO, SOME_FIXED_FUTURE_DATE, SOME_FIXED_PAST_DATE} from "../test/da
 import {
     BookingStatus,
     CompletionState,
+    ContentSummaryDTO,
     DetailedQuizSummaryDTO,
     EmailVerificationStatus,
     EventStatus,
     IsaacQuizDTO,
     QuizAttemptDTO,
+    SearchResultsWrapper,
     USER_ROLES,
     UserRole,
     UserSummaryWithGroupMembershipDTO
@@ -4489,14 +4491,14 @@ export const mockQuestionFinderResults = {
             "title": "A Bag of Flour",
             "subtitle": "Step into Physics: Weight 6",
             "type": "isaacQuestionPage",
-            "level": 0,
+            "level": "0",
             "tags": [
                 "physics",
                 "problem_solving",
                 "mechanics"
             ],
             "url": "/api/pages/questions/itsp24_weight_class_q6",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4529,14 +4531,14 @@ export const mockQuestionFinderResults = {
             "title": "A Bungee Jumper",
             "subtitle": "Step into Physics: Force and Motion Practice 9",
             "type": "isaacQuestionPage",
-            "level": 0,
+            "level": "0",
             "tags": [
                 "physics",
                 "problem_solving",
                 "mechanics"
             ],
             "url": "/api/pages/questions/itsp24_forcemotion_hw_q9",
-            "state": "ALL_CORRECT",
+            "state": CompletionState.ALL_CORRECT,
             "audience": [
                 {
                     "stage": [
@@ -4569,14 +4571,14 @@ export const mockQuestionFinderResults = {
             "title": "A Car Leaving Town",
             "subtitle": "Step into Physics: Acceleration 11",
             "type": "isaacQuestionPage",
-            "level": 0,
+            "level": "0",
             "tags": [
                 "physics",
                 "problem_solving",
                 "mechanics"
             ],
             "url": "/api/pages/questions/itsp24_accel_class_q11",
-            "state": "IN_PROGRESS",
+            "state": CompletionState.IN_PROGRESS,
             "audience": [
                 {
                     "stage": [
@@ -4609,7 +4611,7 @@ export const mockQuestionFinderResults = {
             "title": "A Car on a Motorway",
             "subtitle": "Step into Physics: Calculating Speed 3",
             "type": "isaacQuestionPage",
-            "level": 0,
+            "level": "0",
             "tags": [
                 "physics",
                 "problem_solving",
@@ -4649,14 +4651,14 @@ export const mockQuestionFinderResults = {
             "title": "A Cat, Cyclist, Aeroplane and Cow",
             "subtitle": "Step into Physics: Acceleration Practice 1",
             "type": "isaacQuestionPage",
-            "level": 0,
+            "level": "0",
             "tags": [
                 "physics",
                 "problem_solving",
                 "mechanics"
             ],
             "url": "/api/pages/questions/itsp24_accel_hw_q1",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4687,7 +4689,7 @@ export const mockQuestionFinderResults = {
     ],
     "nextSearchOffset": 5,
     "totalResults": 5
-};
+} satisfies SearchResultsWrapper<ContentSummaryDTO>;
 
 export const mockQuestionFinderResultsWithMultipleStages = {
     "results": [
@@ -4704,7 +4706,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "fields"
             ],
             "url": "/api/pages/questions/phys_linking_22_q5",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4729,7 +4731,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "mechanics"
             ],
             "url": "/api/pages/questions/gcse_ch2_13_q12",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4762,7 +4764,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "wave_motion"
             ],
             "url": "/api/pages/questions/phys19_k1_q4",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4787,7 +4789,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "phys_book_step_up"
             ],
             "url": "/api/pages/questions/step_up_35_q7",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4820,7 +4822,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "electricity"
             ],
             "url": "/api/pages/questions/phys_linking_33_q1",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4845,7 +4847,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
                 "nuclear"
             ],
             "url": "/api/pages/questions/gcse_ch6_51_q2_r1",
-            "state": "NOT_ATTEMPTED",
+            "state": CompletionState.NOT_ATTEMPTED,
             "audience": [
                 {
                     "stage": [
@@ -4868,7 +4870,7 @@ export const mockQuestionFinderResultsWithMultipleStages = {
     ],
     "nextSearchOffset": 6,
     "totalResults": 6
-};
+} satisfies SearchResultsWrapper<ContentSummaryDTO>;
 
 export const mockConceptsResults = {
     results: [{
@@ -4929,6 +4931,9 @@ export const mockConceptPage =
                         "id": "_mock_accordion_",
                         "audience": [
                             {
+                                "examBoard": [
+                                    "aqa"
+                                ],
                                 "stage": [
                                     "a_level"
                                 ]
@@ -4951,6 +4956,63 @@ export const mockConceptPage =
         ],
         "subtitle": "Mock concept page"
     };
+
+export const mockSearchResults = {
+    results: [{
+        id: "cooling_excalibur",
+        title: "Cooling Excalibur",
+        type: "isaacQuestionPage",
+        level: 6,
+        tags: ["chemistry", "entropy", "problem_solving", "physical"],
+        url: "/isaac-api/api/pages/questions/cooling_excalibur",
+        audience: [{"stage": ["university"], "difficulty": ["challenge_3"]}]
+    }, {
+        id: "cp_force",
+        title: "Force",
+        subtitle: "Newton's 2nd law, change in momentum, vectors",
+        type: "isaacConceptPage",
+        tags: ["dynamics", "physics", "mechanics"],
+        audience: [{ stage: ["a_level"]}, { stage: ["gcse"]}],
+        url: "/isaac-api/api/pages/concepts/cp_force"
+    }, {
+        id: "book_physics_skills_19",
+        title: "Essential Pre-University Physics",
+        subtitle: "By A. C. Machacek and J. J. Crowter, with extra questions written by L. C. Phillips",
+        type: "isaacBookIndexPage",
+        tags: ["physics", "physics_skills_19"],
+        url: "/isaac-api/api/pages/book_physics_skills_19"
+    }, {
+        id: "book_physics_skills_19__a1",
+        title: "Using and Rearranging Equations",
+        subtitle: "A1",
+        type: "isaacBookDetailPage",
+        tags: ["physics", "physics_skills_19"],
+        url: "/isaac-api/api/pages/book_physics_skills_19__a1"
+    }, {
+        id: "spc",
+        title: "Senior Physics Challenge (SPC)",
+        summary: "Learn more about our summer school for UK Y12 students.",
+        type: "page",
+        tags: ["search_result"],
+        url: "/isaac-api/api/pages/spc"
+    }, {
+        id: "d57ad3a6-6656-4ed7-81df-8d3f680839a6",
+        title: "Event regression test",
+        subtitle: "Open event with free spaces",
+        type: "isaacEventPage",
+        tags: ["regression_test", "student"],
+        url: "/isaac-api/api/pages/d57ad3a6-6656-4ed7-81df-8d3f680839a6"
+    }, {
+        id: "topic_summary_number_representation",
+        title: "Representation of numbers",
+        type: "isaacTopicSummaryPage",
+        tags: ["computer_systems", "computer_science", "number_representation"],
+        url: "/isaac-api/api/pages/topic_summary_number_representation"
+    }],
+    get totalResults() {
+        return this.results.length;
+    }
+};
 
 const gameboardContents = {
     37: {

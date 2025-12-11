@@ -10,7 +10,7 @@ import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
 import {MemoryRouter} from "react-router";
-import {fireEvent, screen, waitFor, within, act} from "@testing-library/react";
+import {fireEvent, screen, waitFor, within, act, renderHook, RenderHookResult} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
@@ -49,10 +49,7 @@ interface RenderTestEnvironmentOptions {
 export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
     history.replace({ pathname: '/', search: '' });
-    store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
-    store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
-    store.dispatch(isaacApi.util.resetApiState());
-    store.getState().toasts?.forEach(toast => toast.id && store.dispatch(removeToast(toast.id)));
+    resetStore();
     server.resetHandlers();
     if (role || modifyUser) {
         server.use(
@@ -97,6 +94,28 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
             }
         </div>
     </Provider>);
+};
+
+export const renderTestHook = <Result, Props>(
+    render: (initialProps: Props) => Result,
+    { extraEndpoints }: { extraEndpoints?: HttpHandler[] } = {}
+): RenderHookResult<Result, Props> => {
+    resetStore();
+    server.resetHandlers();
+    if (extraEndpoints) {
+        server.use(...extraEndpoints);
+    }
+    
+    return renderHook(render, {
+        wrapper: ({children}) => <Provider store={store}>{children}</Provider>
+    });
+};
+
+export const resetStore = () => {
+    store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
+    store.dispatch({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
+    store.dispatch(isaacApi.util.resetApiState());
+    store.getState().toasts?.forEach(toast => toast.id && store.dispatch(removeToast(toast.id)));
 };
 
 // Clicks on the given navigation menu entry, allowing navigation around the app as a user would
@@ -154,12 +173,22 @@ export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     await userEvent.click(tabLink);
 };
 
-export const clickOn = async (text: string | RegExp, container?: Promise<HTMLElement>) => {
-    const [target] = await (container ? within(await container).findAllByText(text).then(e => e) : screen.findAllByText(text));
+export const clickOn = async (e: string | RegExp | HTMLElement, container?: Promise<HTMLElement>) => {
+    const target = await identify(e, container);
     if (target.hasAttribute('disabled')) {
         throw new Error(`Can't click on disabled button ${target.textContent}`);
     }
     await userEvent.click(target);
+};
+
+const identify = async (e: string | RegExp | HTMLElement, container?: Promise<HTMLElement>): Promise<HTMLElement> => {
+    if (e instanceof HTMLElement) {
+        return e;
+    } else if (container) {
+        return within(await container).getByText(e);
+    } else {
+        return screen.getByText(e);
+    }
 };
 
 export const enterInput = async (placeholder: string, input: string) => {
@@ -172,6 +201,7 @@ export const enterInput = async (placeholder: string, input: string) => {
 
 export const waitForLoaded = () => waitFor(() => {
     expect(screen.queryAllByText("Loading...")).toHaveLength(0);
+    expect(screen.queryAllByText("Searching...")).toHaveLength(0);
 });
 
 export const expectUrl = (text: string) => waitFor(() => {
@@ -252,7 +282,8 @@ export const expectLinkWithEnabledBackwardsNavigation = async (text: string | un
     if (text === undefined) {
         throw new Error("Target text is undefined");
     }
-    await clickOn(text);
+    const container = isPhy ? screen.findByRole("link", { name: text}) : undefined;
+    await clickOn(text, container);
     await expectUrl(targetHref);
     goBack();
     await expectUrl(originalHref);

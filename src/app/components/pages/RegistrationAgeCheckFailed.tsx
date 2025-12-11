@@ -2,7 +2,8 @@ import React from "react";
 import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {history, isAda, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
+import { SidebarLayout, MainContent } from "../elements/layout/SidebarLayout";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 
 export const RegistrationAgeCheckFailed = () => {
 
@@ -12,7 +13,7 @@ export const RegistrationAgeCheckFailed = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         <SidebarLayout>
             <SignupSidebar activeTab={1}/>
             <MainContent>

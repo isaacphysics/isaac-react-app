@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from "react";
+import React, {useCallback} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {CoordinateChoiceDTO, CoordinateItemDTO, IsaacCoordinateQuestionDTO} from "../../../IsaacApiTypes";
 import {Button, Input} from "reactstrap";
@@ -6,11 +6,16 @@ import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Immutable} from "immer";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
+import { Markup } from "../elements/markup";
 
 // Custom input component for coordinates
 interface CoordinateInputProps {
     value: Immutable<CoordinateItemDTO>;
     placeholderValues: string[];
+    useBrackets: boolean;
+    separator: string;
+    prefixes?: string[];
+    suffixes?: string[];
     numberOfDimensions: number;
     onChange: (value: Immutable<CoordinateItemDTO>) => void;
     readonly?: boolean;
@@ -85,20 +90,25 @@ const cleanItem = function (item: Immutable<CoordinateItemDTO>) {
 };
 
 const CoordinateInput = (props: CoordinateInputProps) => {
-    const {value, placeholderValues, numberOfDimensions, onChange, readonly, remove} = props;
-    return <span className="coordinate-input">({[...Array(numberOfDimensions)].map((_, i) =>
-        <span key={i}>
-            <Input
-                type="text"
-                className="force-print"
-                placeholder={placeholderValues[i] ?? ""}
-                value={coordItemToValue(value, i)}
-                onChange={event => onChange(updateCoordItem(value, event.target.value, i, numberOfDimensions))}
-                readOnly={readonly}
-            />
-            {(i < numberOfDimensions - 1) && <span className="coordinate-input-separator">,&nbsp;</span>}
-        </span>)})
-    {remove && <Button className="ms-3" size="sm" onClick={remove}>Delete</Button>}
+    const {value, placeholderValues, useBrackets, separator, prefixes, suffixes, numberOfDimensions, onChange, readonly, remove} = props;
+    return <span className="coordinate-input">
+        {useBrackets ? "(" : ""}
+        {[...Array(numberOfDimensions)].map((_, i) =>
+            <span key={i}>
+                {prefixes && prefixes[i] && <Markup encoding="latex">{prefixes[i]}</Markup>}
+                <Input
+                    type="text"
+                    className="force-print"
+                    placeholder={placeholderValues[i] ?? ""}
+                    value={coordItemToValue(value, i)}
+                    onChange={event => onChange(updateCoordItem(value, event.target.value, i, numberOfDimensions))}
+                    readOnly={readonly}
+                />
+                {suffixes && suffixes[i] && <Markup encoding="latex">{suffixes[i]}</Markup>}
+                {(i < numberOfDimensions - 1) && <Markup encoding="latex" className="coordinate-input-separator">{separator}</Markup>}
+            </span>)}
+        {useBrackets ? ")" : ""}
+        {remove && <Button className="ms-3" size="sm" onClick={remove}>Delete</Button>}
     </span>;
 };
 
@@ -107,16 +117,11 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<CoordinateChoiceDTO>(questionId);
 
     const numberOfDimensions = doc.numberOfDimensions ?? 2;
+    const buttonText = doc.buttonText ?? "Add coordinate";
 
     const getEmptyCoordItem = useCallback((): CoordinateItemDTO => {
         return {type: "coordinateItem", coordinates: Array<string>(numberOfDimensions).fill("")};
     }, [numberOfDimensions]);
-
-    useEffect(() => {
-        if (!isDefined(currentAttempt)) {
-            dispatchSetCurrentAttempt({type: "coordinateChoice", items: [getEmptyCoordItem()]});
-        }
-    }, [dispatchSetCurrentAttempt, currentAttempt, getEmptyCoordItem]);
 
     const updateItem = useCallback((index: number, value: Immutable<CoordinateItemDTO>) => {
         const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : getEmptyCoordItem());
@@ -130,6 +135,15 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
     }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem]);
 
+    const addCoord = useCallback(() => {
+        if (!isDefined(currentAttempt)) {
+            dispatchSetCurrentAttempt({type: "coordinateChoice", items: [getEmptyCoordItem(), getEmptyCoordItem()]});
+        }
+        else {
+            updateItem(currentAttempt?.items?.length ?? 1, getEmptyCoordItem());
+        }
+    }, [currentAttempt, dispatchSetCurrentAttempt, getEmptyCoordItem, updateItem]);
+
     return <div className="coordinate-question">
         <div className="question-content">
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
@@ -141,6 +155,10 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                 <CoordinateInput
                     key={index}
                     placeholderValues={doc.placeholderValues ?? []}
+                    useBrackets={doc.useBrackets ?? true}
+                    separator={doc.separator ?? ","}
+                    prefixes={doc.prefixes}
+                    suffixes={doc.suffixes}
                     numberOfDimensions={numberOfDimensions}
                     value={currentAttempt?.items?.[index] ?? getEmptyCoordItem()}
                     readonly={readonly}
@@ -152,6 +170,10 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                         <CoordinateInput
                             key={index}
                             placeholderValues={doc.placeholderValues ?? []}
+                            useBrackets={doc.useBrackets ?? true}
+                            separator={doc.separator ?? ","}
+                            prefixes={doc.prefixes}
+                            suffixes={doc.suffixes}
                             numberOfDimensions={numberOfDimensions}
                             value={item}
                             readonly={readonly}
@@ -163,6 +185,10 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                 : <CoordinateInput
                     key={0}
                     placeholderValues={doc.placeholderValues ?? []}
+                    useBrackets={doc.useBrackets ?? true}
+                    separator={doc.separator ?? ","}
+                    prefixes={doc.prefixes}
+                    suffixes={doc.suffixes}
                     numberOfDimensions={numberOfDimensions}
                     value={getEmptyCoordItem()}
                     readonly={readonly}
@@ -170,7 +196,9 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                 />
         }
         <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => answer.coordinates ?? []) ?? []} validator={coordinateInputValidator}/>
-        {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={() => updateItem(currentAttempt?.items?.length ?? 1, getEmptyCoordItem())}>Add coordinate</Button>}
+        {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={addCoord}>
+            <Markup encoding="latex">{buttonText}</Markup>
+        </Button>}
     </div>;
 };
 export default IsaacCoordinateQuestion;

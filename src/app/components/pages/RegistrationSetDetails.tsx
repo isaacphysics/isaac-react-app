@@ -20,7 +20,7 @@ import {
     validateName,
     validateUserSchool
 } from "../../services";
-import {errorSlice, registerNewUser, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {getRTKQueryErrorMessage, selectors, useAppSelector, useCreateNewMutation} from "../../state";
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../IsaacAppTypes";
 import {SchoolInput} from "../elements/inputs/SchoolInput";
@@ -30,21 +30,20 @@ import {UserRole} from "../../../IsaacApiTypes";
 import {FamilyNameInput, GivenNameInput} from "../elements/inputs/NameInput";
 import {EmailInput} from "../elements/inputs/EmailInput";
 import {GenderInput} from "../elements/inputs/GenderInput";
-import {extractErrorMessage} from "../../services/errors";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import classNames from "classnames";
 import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
 import {DobInput} from "../elements/inputs/DobInput";
-import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
-import { SignupTab } from "../elements/panels/SignupTab";
-import { scheduleTeacherOnboardingModalForNextOverviewVisit } from "../elements/modals/AdaTeacherOnboardingModal";
+import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
+import {SignupTab} from "../elements/panels/SignupTab";
+import {scheduleTeacherOnboardingModalForNextOverviewVisit} from "../elements/modals/AdaTeacherOnboardingModal";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 
 interface RegistrationSetDetailsProps {
     role: UserRole
 }
 
 export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
-    const dispatch = useAppDispatch();
 
     // todo: before, this was probably used to keep the details from the initial login screen (if any). Possibly still useful for SSO. Remove?
     const user = useAppSelector(selectors.user.orNull);
@@ -61,6 +60,8 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         })
     );
 
+    const [createNewUser, {error: createNewUserError}] = useCreateNewMutation();
+
     const [passwordValid, setPasswordValid] = useState(false);
     const [tosAccepted, setTosAccepted] = useState(false);
 
@@ -70,10 +71,8 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     const schoolIsValid = validateUserSchool(registrationUser);
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
     const dobValidOrUnset = !isPhy || !registrationUser.dateOfBirth || isDobOldEnoughForSite(registrationUser.dateOfBirth);
-    const error = useAppSelector((state) => state?.error);
-    const errorMessage = extractErrorMessage(error);
 
-    const register = (event: React.FormEvent<HTMLFormElement>) => {
+    const register = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
@@ -91,8 +90,14 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
 
             setAttemptedSignUp(true);
             Object.assign(registrationUser, {loggedIn: false});
-            dispatch(errorSlice.actions.clearError());
-            dispatch(registerNewUser(registrationUser, {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS}, undefined, null));
+
+            await createNewUser({
+                newUser: registrationUser,
+                newUserPreferences: {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
+                newUserContexts: undefined,
+                passwordCurrent: null
+            });
+
             trackEvent("registration", {
                 props:
                         {
@@ -117,16 +122,16 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         <SidebarLayout>
             <SignupSidebar activeTab={2}/>
             <MainContent>
                 <Card className="my-7">
                     <CardBody>
-                        {errorMessage &&
-                            <ExigentAlert color={"warning"}>
+                        {createNewUserError &&
+                            <ExigentAlert color="warning">
                                 <p className="alert-heading fw-bold">Unable to create your account</p>
-                                <p>{errorMessage}</p>
+                                <p>{getRTKQueryErrorMessage(createNewUserError).message}</p>
                             </ExigentAlert>
                         }
                         <SignupTab
@@ -209,16 +214,16 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                         label={<span className={classNames({"form-required": isPhy})}>I accept the <a href="/terms" target="_blank">terms of use</a>.</span>}
                                     />
                                     <FormFeedback className="mt-0">
-                                    You must accept the terms to continue.
+                                        You must accept the terms to continue.
                                     </FormFeedback>
                                 </FormGroup>
                                 {isAda && <hr className="text-center"/>}
                                 <Row className="justify-content-end">
                                     <Col className="d-flex justify-content-end" xs={12} sm={siteSpecific(3,4)} lg={6}>
-                                        <Button className="mt-2 w-100" color={siteSpecific("solid", "keyline")} onClick={goBack}>Back</Button>
+                                        <Button className="mt-2 w-100" color="keyline" onClick={goBack}>Back</Button>
                                     </Col>
                                     <Col xs={12} sm={siteSpecific(4,5)} lg={6}>
-                                        <Button type="submit" value="Continue" className="mt-2 w-100">Continue</Button>
+                                        <Button type="submit" value="Continue" className="mt-2 w-100" color="solid">Continue</Button>
                                     </Col>
                                 </Row>
                             </Form>}

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { MainContent, ProgrammesSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { IsaacProgrammeDTO, ProgrammeCard } from "../elements/cards/ProgrammeCard";
 import { ContentDTO } from "../../../IsaacApiTypes";
+import { ProgrammesSidebar } from "../elements/sidebar/ProgrammesSidebar";
 
 const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
     new Promise((resolve) =>
@@ -88,7 +89,7 @@ export const Programmes = () => {
     }, [programmes]);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "hex", icon: "icon-events"}} />
+        <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "icon", icon: "icon-events"}} />
         <SidebarLayout>
             <ProgrammesSidebar programmes={programmes} />
             <MainContent>

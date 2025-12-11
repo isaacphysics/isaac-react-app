@@ -6,9 +6,10 @@ import { isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "..
 import { PageFragment } from "../elements/PageFragment";
 import { Loading } from "../handlers/IsaacSpinner";
 import { PageContextState } from "../../../IsaacAppTypes";
-import { MainContent, QuestionDecksSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ArrayElement, LEARNING_STAGE, PHY_NAV_SUBJECTS } from "../../services";
 import { PageMetadata } from "../elements/PageMetadata";
+import { QuestionDecksSidebar } from "../elements/sidebar/QuestionDecksSidebar";
 
 export const QuestionDecks = withRouter((props: RouteComponentProps) => {
     const pageContext = useUrlPageTheme();
@@ -32,7 +33,7 @@ export const QuestionDecks = withRouter((props: RouteComponentProps) => {
         <TitleAndBreadcrumb
             currentPageTitle="Question decks by topic"
             icon={pageContext?.subject ? {
-                type: "hex",
+                type: "icon",
                 subject: pageContext.subject,
                 icon: "icon-finder"
             } : undefined}

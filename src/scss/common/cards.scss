@@ -198,3 +198,14 @@
       flex-direction: column;
   }
 }
+
+.card {
+  .card-header {
+    // If the card body is empty, remove the header's bottom-styling
+    &:not(:has(~ :not(.d-none))), &:only-child, .no-body {
+      border-bottom-left-radius: inherit;
+      border-bottom-right-radius: inherit;
+      border-bottom: none;
+    }
+  }
+}

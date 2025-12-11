@@ -2,14 +2,21 @@ import React from "react";
 import { AbstractListViewItem, AbstractListViewItemProps } from "./AbstractListViewItem";
 import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, ISAAC_BOOKS, PATHS, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { BOOK_DETAIL_ID_SEPARATOR, DOCUMENT_TYPE, documentTypePathPrefix, getThemeFromContextAndTags, HUMAN_STATUS, ISAAC_BOOKS, isAda, isPhy, PATHS, QUESTION_STATUS_TO_ICON, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItem, ListGroupProps } from "reactstrap";
 import { AffixButton } from "../AffixButton";
-import { ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
+import { CompletionState, ContentSummaryDTO, GameboardDTO, IsaacWildcard, QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
-import { selectors, showQuizSettingModal, useAppDispatch, useAppSelector } from "../../../state";
+import { openActiveModal, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { UnionToIntersection } from "@reduxjs/toolkit/dist/tsHelpers";
 import classNames from "classnames";
+import { TitleIconProps } from "../PageTitle";
+import { IconProps } from "../svg/HexIcon";
+import { SetQuizzesModal } from "../modals/SetQuizzesModal";
+
+function getBreadcrumb(tagIds: TAG_ID[] = []): string[] {
+    return tags.getByIdsAsHierarchy(tagIds).filter((_t, i) => !isAda || i !== 0).map(tag => tag.title);
+}
 
 type ListViewCardItemProps = Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "card"}>;
 
@@ -21,20 +28,28 @@ export const ListViewCardItem = (props: ListViewCardItemProps) => {
 
 interface QuestionListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
     item: ContentSummaryDTO;
+    hideIconLabel?: boolean;
     linkedBoardId?: string;
 }
 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
-    const { item, linkedBoardId, ...rest } = props;
-    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const { item, hideIconLabel, linkedBoardId, ...rest } = props;
+    const breadcrumb = (isPhy || props.hasCaret) ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}` + (linkedBoardId ? `?board=${linkedBoardId}` : "");
+    const state = item.state ?? CompletionState.NOT_ATTEMPTED;
+
+    const icon: TitleIconProps = { type: "icon", label: hideIconLabel ? undefined : linkedBoardId ? HUMAN_STATUS[state] : "Question",
+        icon: isPhy
+            ? {name: "icon-question", size: "lg"}
+            : {name: QUESTION_STATUS_TO_ICON[state], size: hideIconLabel ? "md" : "lg", altText: classNames(HUMAN_STATUS[state], "question icon"), color: "tertiary", raw: true}
+    };
 
     return <AbstractListViewItem
         {...rest}
-        icon={{type: "hex", icon: "icon-question", size: "lg"}}
+        icon={icon}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
         tags={item.tags}
@@ -54,13 +69,44 @@ interface ConceptListViewItemProps extends Extract<AbstractListViewItemProps, {a
 export const ConceptListViewItem = ({item, ...rest}: ConceptListViewItemProps) => {
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
+    const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
+    const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-concept", size: "lg"}};
+    
+    if (isAda) {
+        icon.label = "Concept";
+        icon.alt = "Concept page icon";
+        icon.icon.color = "tertiary";
+    }
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-concept", size: "lg"}}
+        icon={icon}
         title={item.title ?? ""}
         subject={itemSubject !== "neutral" ? itemSubject : undefined}
         subtitle={item.summary ?? item.subtitle}
+        breadcrumb={breadcrumb}
+        url={url}
+        {...rest}
+    />;
+};
+
+interface TopicListViewItemProps extends Extract<AbstractListViewItemProps, {alviType: "item", alviLayout: "list"}> {
+    item: ContentSummaryDTO;
+}
+
+export const TopicListViewItem = ({item, ...rest}: TopicListViewItemProps) => {
+    const pageSubject = useAppSelector(selectors.pageContext.subject);
+    const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
+    const breadcrumb = rest.hasCaret ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
+    const icon: TitleIconProps = {type: "icon", label: "Topic", icon: {name: "icon-topic", size: "lg", altText: "Topic summary page icon", color: "tertiary"}};
+
+    return <AbstractListViewItem
+        icon={icon}
+        title={item.title ?? ""}
+        subject={itemSubject !== "neutral" ? itemSubject : undefined}
+        subtitle={item.subtitle}
+        breadcrumb={breadcrumb}
         url={url}
         {...rest}
     />;
@@ -73,9 +119,16 @@ interface EventListViewItemProps extends Extract<AbstractListViewItemProps, {alv
 export const EventListViewItem = ({item, ...rest}: EventListViewItemProps) => {
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
+    const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-events", size: "lg"}};
+
+    if (isAda) {
+        icon.label = "Event";
+        icon.alt = "Event page icon";
+        icon.icon.color = "tertiary";
+    }
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-events", size: "lg"}}
+        icon={icon}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
@@ -94,14 +147,14 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
     const dispatch = useAppDispatch();
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const quizButton = isQuizSetter ?
-        <AffixButton size="md" color="solid" onClick={() => (dispatch(showQuizSettingModal(item)))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color="solid" onClick={() => dispatch(openActiveModal(SetQuizzesModal({quiz: item})))} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
             Set test
         </AffixButton> :
         <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/attempt/${item.id}`} tag={Link} affix={{ affix: "icon-arrow-right", position: "suffix", type: "icon" }}>
             Take the test
         </AffixButton>;
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-tests", size: "lg"}}
+        icon={{type: "icon", icon: {name: "icon-tests", size: "lg"}}}
         title={item.title ?? ""}
         subject={itemSubject}
         previewQuizUrl={useViewQuizLink ? `/test/view/${item.id}` : `/test/preview/${item.id}`}
@@ -137,7 +190,7 @@ export const QuestionDeckListViewItem = ({item, ...rest}: QuestionDeckListViewIt
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question-deck", size: "lg"}}
+        icon={{type: "icon", icon: {name: "icon-question-deck", size: "lg"}}}
         title={item.title ?? "no title"}
         subject={questionSubjects.length === 1 ? questionSubjects[0].id as Subject : undefined}
         breadcrumb={breadcrumb}
@@ -152,13 +205,13 @@ interface QuickQuizListViewItemProps extends Extract<AbstractListViewItemProps, 
 }
 
 export const QuickQuizListViewItem = ({item, ...rest}: QuickQuizListViewItemProps) => {
-    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${PATHS.GAMEBOARD}#${item.id}`;
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-question", size: "lg"}}
+        icon={{type: "icon", icon: {name: "icon-question", size: "lg"}}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
@@ -176,13 +229,20 @@ interface GenericListViewItemProps extends Extract<AbstractListViewItemProps, {a
 }
 
 export const GenericListViewItem = ({item, ...rest}: GenericListViewItemProps) => {
-    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
+    const icon: TitleIconProps & {icon: IconProps} = {type: "icon", icon: {name: "icon-info", size: "lg", color: "secondary"}};
+
+    if (isAda) {
+        icon.label = "Info";
+        icon.alt = "Generic page icon";
+        icon.icon.color = "tertiary";
+    }
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: "icon-info", size: "lg"}}
+        icon={icon}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.summary ?? item.subtitle}  // summary more useful than subtitle, if present.
@@ -202,15 +262,17 @@ interface ShortcutListViewItemProps extends Extract<AbstractListViewItemProps, {
 }
 
 export const ShortcutListViewItem = ({item, linkedBoardId, ...rest}: ShortcutListViewItemProps) => {
-    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const breadcrumb = getBreadcrumb(item.tags as TAG_ID[]);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
     const url = `${item.url}${linkedBoardId ? `?board=${linkedBoardId}` : ""}${item.hash ? `#${item.hash}` : ""}`;
-    const icon = (url.includes("concepts/") || !item.className?.includes("wildcard-list-view")) ? "icon-concept" : "icon-wildcard";
     const subtitle = (item as IsaacWildcard).description ?? item.summary ?? item.subtitle;
+    const icon: TitleIconProps = isPhy ?
+        {type: "icon", icon: {name: url.includes("concepts/") ? "icon-concept" : item.className?.includes("wildcard-list-view") ? "icon-wildcard" : "icon-info", size: "lg"}} :
+        {type: "icon", icon: {name: "icon-info-filled", size: "lg", color: "tertiary"}, label: "Shortcut", alt: "Shortcut page icon" };
 
     return <AbstractListViewItem
-        icon={{type: "hex", icon: icon, size: "lg"}}
+        icon={icon}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={subtitle}
@@ -234,7 +296,7 @@ export const BookIndexListViewItem = ({item, ...rest}: BookIndexListViewItemProp
 
     return <AbstractListViewItem
         {...item}
-        icon={{type: "hex", icon: "icon-book", size: "lg"}}
+        icon={{type: "icon", icon: {name: "icon-book", size: "lg"}}}
         url={`/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${item.id?.slice("book_".length)}`}
         subject={itemSubject}
         state={undefined}
@@ -252,7 +314,7 @@ export const BookDetailListViewItem = ({item, ...rest}: BookDetailListViewItemPr
 
     return <AbstractListViewItem
         {...item}
-        icon={{type: "hex", icon: "icon-generic", size: "lg"}}
+        icon={{type: "icon", icon: {name: "icon-generic", size: "lg"}}}
         title={`${item.subtitle ? (item.subtitle + " ") : ""}${item.title}`}
         subtitle={itemBook?.title}
         url={itemBook ? `/${documentTypePathPrefix[DOCUMENT_TYPE.BOOK_INDEX_PAGE]}/${item.id?.replace(BOOK_DETAIL_ID_SEPARATOR, "/").slice("book_".length)}` : undefined}
@@ -286,6 +348,7 @@ type ListViewItemProps =
 type ListViewProps<T, G extends "item" | "gameboard" | "quiz"> = {
     className?: string;
     fullWidth?: boolean;
+    hasCaret?: boolean;
 } & (
     {
         items: Required<T> extends Required<Extract<ListViewItemProps, {alviType: G}>['item']> ? T[] : never;
@@ -328,7 +391,7 @@ export const ListView = <T extends {type?: string}, G extends "item" | "gameboar
         return null;
     };
 
-    return <ListGroup className={`link-list list-group-links ${className}`}>
+    return <ListGroup className={classNames("link-list list-group-links", className)}>
         {(() => {
             switch (type) {
                 case "item":
@@ -343,12 +406,17 @@ export const ListView = <T extends {type?: string}, G extends "item" | "gameboar
                                 return <QuestionListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             case (DOCUMENT_TYPE.CONCEPT):
                                 return <ConceptListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                            case (DOCUMENT_TYPE.TOPIC_SUMMARY):
+                                if(isAda) return <TopicListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                                return <GenericListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             case (DOCUMENT_TYPE.EVENT):
                                 return <EventListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             case DOCUMENT_TYPE.BOOK_INDEX_PAGE:
-                                return <BookIndexListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                                if(isPhy) return <BookIndexListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                                return <GenericListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             case SEARCH_RESULT_TYPE.BOOK_DETAIL_PAGE:
-                                return <BookDetailListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                                if(isPhy) return <BookDetailListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
+                                return <GenericListViewItem key={index} {...rest} item={item} alviType={type} alviLayout="list"/>;
                             default:
                                 return failedToRender(item);
                         }

@@ -31,7 +31,7 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
-import { GameboardContentSidebar, MainContent, QuestionSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { NotFound } from "./NotFound";
@@ -39,6 +39,8 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { InaccessibleContentWarningBanner } from "../navigation/InaccessibleContentWarningBanner";
 import { QuestionMetaData } from "../elements/QuestionMetadata";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
+import { GameboardContentSidebar } from "../elements/sidebar/GameboardContentSidebar";
+import { QuestionSidebar } from "../elements/sidebar/RelatedContentSidebar";
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
     match: match & { params: { questionId: string } };
@@ -82,7 +84,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                         intermediateCrumbs={navigation.breadcrumbHistory}
                         collectionType={navigation.collectionType}
                         audienceViews={siteSpecific(undefined, determineAudienceViews(doc.audience, navigation.creationContext))}
-                        preview={preview} icon={{type: "hex", subject: doc.subjectId as Subject, icon: "icon-question"}}
+                        preview={preview} icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-question"}}
                     />
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                     <SidebarLayout>

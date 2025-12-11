@@ -18,18 +18,20 @@ import {
 } from "../../../state";
 import sortBy from "lodash/sortBy";
 import {
+    below,
     history,
     isAda,
     isDefined,
     isTeacherOrAbove,
     PATHS,
     SITE_TITLE_SHORT,
-    siteSpecific
+    siteSpecific,
+    useDeviceSize
 } from "../../../services";
 import {Row, Col, Form, Input, Table, Alert, Label, FormFeedback, FormGroup, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
-import {ActiveModal, AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
+import {ActiveModalProps, AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {Loading} from "../../handlers/IsaacSpinner";
 import classNames from "classnames";
@@ -54,14 +56,14 @@ export const additionalManagerSelfRemovalModal = (group: AppGroup, user: Registe
     buttons: [
         <Row key={0}>
             <Col>
-                <Button block color={siteSpecific("solid", "keyline")} onClick={() => {
+                <Button block color="keyline" onClick={() => {
                     store.dispatch(closeActiveModal());
                 }}>
                     Cancel
                 </Button>
             </Col>
             <Col>
-                <Button block color={siteSpecific("keyline", "solid")} onClick={() => {
+                <Button block color="solid" onClick={() => {
                     if (group.id && user.id) {
                         store.dispatch(groupsApi.endpoints.deleteGroupManager.initiate({groupId: group.id, managerUserId: user.id}));
                     }
@@ -152,6 +154,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
 
 const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {groupId: number, archived: boolean, userIsOwner: boolean, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
+    const deviceSize = useDeviceSize();
     const {data: groups} = useGetGroupsQuery(archived);
     const group = groups?.find(g => g.id === groupId);
     const [addGroupManager] = useAddGroupManagerMutation();
@@ -281,21 +284,22 @@ Are you sure you want to promote this manager to group owner?\n
                     {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={siteSpecific("tertiary", "keyline")} onClick={() => promoteManager(manager)}>
                         Make owner
                     </Button>}
-                    {(userIsOwner || user?.id === manager.id) && <Button className="d-none d-lg-inline ms-2" size="sm" color={siteSpecific("tertiary", "secondary")}
-                        onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}
-                    >
-                        Remove
-                    </Button>}
+                    {(userIsOwner || user?.id === manager.id || group.additionalManagerPrivileges) && !(userIsOwner && below["md"](deviceSize)) &&
+                        <Button className="d-inline ms-2" size="sm" color={siteSpecific("tertiary", "secondary")}
+                            onClick={() => user?.id === manager.id ? removeSelf(manager) : removeManager(manager)}
+                        >
+                            Remove
+                        </Button>}
 
-                    <UncontrolledDropdown className="d-inline d-lg-none ms-2">
+                    {userIsOwner && <UncontrolledDropdown className="d-inline d-lg-none ms-2">
                         <DropdownToggle caret className="d-flex align-items-center">
                             Actions
                         </DropdownToggle>
                         <DropdownMenu>
                             <DropdownItem onClick={() => promoteManager(manager)}>Make owner</DropdownItem>
-                            <DropdownItem onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}>Remove</DropdownItem>
+                            <DropdownItem onClick={() => (user?.id === manager.id) ? removeSelf(manager) : removeManager(manager)}>Remove</DropdownItem>
                         </DropdownMenu>
-                    </UncontrolledDropdown>
+                    </UncontrolledDropdown>}
                 </li>
             )}
         </ul>
@@ -315,8 +319,8 @@ Are you sure you want to promote this manager to group owner?\n
                         <li>Modify or delete <b>all assignments</b>, including those set by the owner</li>
                         <li>Remove group members</li>
                         <li>Archive and rename the group</li>
+                        <li>Add or remove other managers</li>
                     </ul>
-                    Additional managers cannot add or remove other managers. <br/>
                     Un-tick the above box if you would like to remove these additional privileges.
                 </>
                 : <>
@@ -325,12 +329,13 @@ Are you sure you want to promote this manager to group owner?\n
                         <li>Modify or delete <b>all assignments</b>, including those set by the owner</li>
                         <li>Remove group members</li>
                         <li>Archive and rename the group</li>
+                        <li>Add or remove other managers</li>
                     </ul>
                 </>
             }
         </Alert>}
 
-        {userIsOwner && <>
+        {(userIsOwner || group.additionalManagerPrivileges) && <>
             <h4 className="mt-3">Add additional managers</h4>
             <p>Enter the email of another {SITE_TITLE_SHORT} teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
             <Form onSubmit={addManager}>
@@ -427,7 +432,7 @@ const GroupCreateModal = ({user}: GroupCreateModalProps) => {
     </>;
 };
 
-export const groupCreateModal = (user: RegisteredUserDTO): ActiveModal => ({
+export const groupCreateModal = (user: RegisteredUserDTO): ActiveModalProps => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: "Create a group",
     body: <GroupCreateModal user={user}/>,
@@ -442,10 +447,10 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
         <p>Are you sure you want to archive &quot;{group.groupName}&quot;? You will no longer be able to set assignments or tests to this group, and the group will not be visible {siteSpecific(<>on the <strong>Assignment progress</strong> or <strong>Assignment schedule</strong> pages.</>, <>in the Markbook.</>)}</p>
         <p>A group can be unarchived at any time by navigating to the group in the &quot;Archived&quot; section of this page and clicking &quot;Unarchive group&quot;.</p>
         <div className="text-end">
-            <Button color="secondary" className="me-2" onClick={() => dispatch(closeActiveModal())}>
+            <Button color="keyline" className="me-2" onClick={() => dispatch(closeActiveModal())}>
                 Cancel
             </Button>
-            <Button color={siteSpecific("danger", "keyline")} onClick={() => {
+            <Button color="solid" onClick={() => {
                 toggleArchived();
                 dispatch(closeActiveModal());
             }}>
@@ -455,7 +460,7 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
     </div>;
 };
 
-export const groupArchiveModal = (group: AppGroup, toggleArchived: () => void): ActiveModal => ({
+export const groupArchiveModal = (group: AppGroup, toggleArchived: () => void): ActiveModalProps => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: "Archive group",
     body: <GroupArchiveModal group={group} toggleArchived={toggleArchived} />,

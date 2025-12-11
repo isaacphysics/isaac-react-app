@@ -10,7 +10,7 @@ export const extendUrl = (context: NonNullable<Required<PageContextState>>, page
 const QuestionFinderCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     title: "Question finder",
     subtitle: `Find ${getHumanContext(context)} questions to try by topic and difficulty level.`,
-    icon: {type: "hex", icon: "icon-finder"},
+    icon: {type: "icon", icon: "icon-finder"},
     subject: context.subject,
     linkTags: [{tag: "Find questions", url: extendUrl(context, 'questions')}]
 });
@@ -18,7 +18,7 @@ const QuestionFinderCard = (context: NonNullable<Required<PageContextState>>): L
 const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     title: "Concepts",
     subtitle: `Review the key concepts for ${getHumanContext(context)}.`,
-    icon: {type: "hex", icon: "icon-concept"},
+    icon: {type: "icon", icon: "icon-concept"},
     subject: context.subject,
     linkTags: [{tag: "Explore concepts", url: extendUrl(context, 'concepts')}]
 });
@@ -26,7 +26,7 @@ const ConceptPageCard = (context: NonNullable<Required<PageContextState>>): List
 const PracticeTestsCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     title: context.stage.includes("university") ? "Practice admissions tests" : "Tests",
     subtitle: `Use tests to ${context.stage.includes("university") ? "prepare for university admissions tests" : "practise a range of topics"}. These tests are available for you to freely attempt.`,
-    icon: {type: "hex", icon: "icon-tests"},
+    icon: {type: "icon", icon: "icon-tests"},
     subject: context.subject,
     linkTags: [{tag: "Find a test", url: extendUrl(context, 'practice_tests')}]
 });
@@ -36,7 +36,7 @@ const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): Li
     subtitle: context.subject === "chemistry" && context.stage.includes("university")
         ? "Consolidate your chemistry understanding with these questions by topic."
         : "Practise specific topics by using our ready-made question decks.",
-    icon: {type: "hex", icon: "icon-question-deck"},
+    icon: {type: "icon", icon: "icon-question-deck"},
     subject: context.subject,
     linkTags: [{tag: "View topic question decks", url: extendUrl(context, 'question_decks')}],
     state: context.stage.includes("university") ? AbstractListViewItemState.COMING_SOON : undefined,
@@ -46,7 +46,7 @@ const BoardsByTopicCard = (context: NonNullable<Required<PageContextState>>): Li
 const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     title: "Revision",
     subtitle: "Revise with our summary videos, topic tests and question decks.",
-    icon: {type: "hex", icon: "icon-revision"},
+    icon: {type: "icon", icon: "icon-revision"},
     subject: context.subject,
     linkTags: [{tag: "List of revision areas", url: `/pages/revision_${context.stage[0].replace("_", "")}_${context.subject}`}],
     state: (context.subject.includes("physics") && ["gcse", "a_level"].includes(context.stage[0])) ? undefined : AbstractListViewItemState.COMING_SOON,
@@ -55,7 +55,7 @@ const LessonsAndRevisionCard = (context: NonNullable<Required<PageContextState>>
 const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     title: "Glossary",
     subtitle: `Use the glossary to understand the vocabulary you need for ${getHumanContext(context)}.`,
-    icon: {type: "hex", icon: "icon-tests"},
+    icon: {type: "icon", icon: "icon-tests"},
     subject: context.subject,
     linkTags: [{tag: "Browse the glossary", url: extendUrl(context, 'glossary')}]
 });
@@ -63,7 +63,7 @@ const GlossaryCard = (context: NonNullable<Required<PageContextState>>): ListVie
 const BookCard = (book: BookInfo, description: string) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     title: book.title,
     subtitle: description,
-    icon: {type: "hex", icon: "icon-book"},
+    icon: {type: "icon", icon: "icon-book"},
     subject: context.subject,
     linkTags: [{tag: book.title, url: book.path}]
 });
@@ -74,7 +74,7 @@ const StepUpPhyCard = BookCard(ISAAC_BOOKS_BY_TAG["phys_book_step_up"], "Build a
 const ArbitraryPageLinkCard = (title: string, subtitle: string, linkTags: ListViewTagProps[], state?: AbstractListViewItemState) => (context: NonNullable<Required<PageContextState>>): ListViewCardProps => ({
     title,
     subtitle,
-    icon: {type: "hex", icon: "icon-revision"},
+    icon: {type: "icon", icon: "icon-revision"},
     subject: context.subject,
     linkTags,
     state,

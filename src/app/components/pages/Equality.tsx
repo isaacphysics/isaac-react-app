@@ -247,7 +247,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
         <Container>
             <Row>
                 <Col>
-                    <TitleAndBreadcrumb currentPageTitle="Equation editor demo page" icon={{type: "hex", icon: "icon-concept"}} />
+                    <TitleAndBreadcrumb currentPageTitle="Equation editor demo page" icon={{type: "icon", icon: "icon-concept"}} />
                 </Col>
             </Row>
             <Row>
@@ -272,13 +272,13 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                 <Col md={8} className="pb-4 pt-md-4 question-panel">
                     {allowTextInput && <div className="eqn-editor-input mt-md-4">
                         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                        <InputGroup className="my-2">
+                        <InputGroup className="my-2 align-items-center">
                             <Input className="py-4" type="text" onChange={updateEquation} value={textInput}
                                 placeholder="Type your expression here"/>
                             <>
                                 {siteSpecific(
                                     <Button type="button" className="eqn-editor-help d-flex align-items-center" id="inequality-help" size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                                    <span id={"inequality-help"} className="icon-help-q my-auto ms-2"/>
+                                    <i id={"inequality-help"} className="icon icon-info icon-sm h-100 ms-3" />
                                 )}
                                 <UncontrolledTooltip placement="top" autohide={false} target='inequality-help'>
                                     Here are some examples of expressions you can type:<br />

@@ -25,7 +25,7 @@ import {skipToken} from "@reduxjs/toolkit/query";
 export const AdminUserManager = () => {
     const dispatch = useAppDispatch();
 
-    const [searchUsers, {isUninitialized: searchNotRequested}] = useAdminSearchUsersMutation();
+    const [searchUsers, {isUninitialized: searchNotRequested, isLoading: searchLoading}] = useAdminSearchUsersMutation();
     const searchResults = useAppSelector(selectors.admin.userSearch);
     const [searchQuery, setSearchQuery] = useState<AdminSearchEndpointParams>({
         postcodeRadius: "FIVE_MILES",
@@ -151,7 +151,7 @@ export const AdminUserManager = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager" icon={{type: "icon", icon: "icon-account"}}/>
 
         {/* Search */}
         <Card className="mt-7">
@@ -312,7 +312,7 @@ export const AdminUserManager = () => {
                 {/* Results */}
                 {!searchNotRequested &&
                     <ShowLoading
-                        until={searchResults}
+                        until={searchLoading ? undefined : searchResults}
                         thenRender={searchResults => {
                             return searchResults.length > 0 ?
                                 <div className="overflow-auto">

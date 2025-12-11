@@ -5,8 +5,8 @@ import { ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Badge, Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
-import { below, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
-import { PhyHexIcon } from "../svg/PhyHexIcon";
+import { above, below, isAda, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
+import { HexIcon } from "../svg/HexIcon";
 import { TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
 import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetGroupsQuery, useLazyGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
@@ -161,9 +161,10 @@ export type AbstractListViewItemProps = {
     url?: string;
     state?: AbstractListViewItemState;
     className?: string;
+    hasCaret?: boolean;
 } & ALVIType & ALVILayout;
 
-export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, fullWidth, url, state, className, ...typedProps}: AbstractListViewItemProps) => { 
+export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb, tags, fullWidth, url, state, className, hasCaret, ...typedProps}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
 
@@ -176,19 +177,20 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     fullWidth = fullWidth || below["sm"](deviceSize) || (isItem && !(typedProps.status || typedProps.audienceViews));
     const cardBody = <div className="w-100 d-flex flex-row">
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
-            <div className="position-relative">
-                {icon && (
-                    icon.type === "img" ? <img src={icon.icon} alt="" width={icon.width} height={icon.height} className={classNames(icon.className, "me-3")} /> 
-                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size} className={icon.className} />
+            <div className={classNames("position-relative", {"question-progress-icon": isAda})}>
+                {icon && <div className="inner-progress-icon">
+                    {icon.type === "img" ? <img src={icon.icon} alt={icon.alt ?? ""} width={icon.width} height={icon.height} className={classNames(icon.className, {"me-3": isPhy})} /> 
+                        : icon.type === "icon" ? <HexIcon icon={icon.icon} subject={icon.subject} className={icon.className}/>
                             : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}} /> 
-                                : undefined
-                )}
-                {isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
+                                : undefined}
+                    {icon.label && isAda && above['sm'](deviceSize) && <div className="icon-title mt-1">{icon.label}</div>}
+                </div>}
+                {isPhy && isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">
                     <StatusDisplay status={typedProps.status} showText={false} />
                 </div>}
                 {isGameboard && typedProps.board?.contents && <ItemCount count={typedProps.board.contents.length} />}
             </div>
-            <div className="align-content-center text-overflow-ellipsis pe-2">
+            <div className={classNames("align-content-center text-overflow-ellipsis", siteSpecific("pe-2", "py-3"))}>
                 <div className="d-flex text-wrap mt-n1">
                     {url && !isDisabled
                         ? (url.startsWith("http")
@@ -205,7 +207,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                     }
                     {isItem && <>
                         {typedProps.quizTag && <span className="quiz-level-1-tag ms-sm-2">{typedProps.quizTag}</span>}
-                        {isPhy && <QuestionPropertyTags className="ms-2 justify-self-end" supersededBy={typedProps.supersededBy} tags={tags} />}
+                        <QuestionPropertyTags className="ms-2 justify-self-end" supersededBy={typedProps.supersededBy} tags={tags} />
                     </>}
                 </div>
                 {subtitle && <div className="small text-muted text-wrap">
@@ -217,10 +219,10 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 {isItem && fullWidth && typedProps.audienceViews && <div className="d-flex mt-1"> 
                     <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
                 </div>}
-                {tags?.includes("llm_question_page") && <div className="mt-2">
+                {tags?.includes("llm_question_page") && <div className={classNames("mt-1", {"mt-2": isPhy || !fullWidth})}>
                     <LLMFreeTextQuestionIndicator small />
                 </div>}
-                {isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
+                {isPhy && isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
                     <StatusDisplay status={typedProps.status} showText className="py-1" />
                 }
                 {isGameboard && fullWidth && isTeacherOrAbove(user) && <div className="d-flex pt-3">
@@ -236,9 +238,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
         </Col>
         {!fullWidth &&
             <>
-                {isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
+                {isPhy && isItem && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT && <StatusDisplay status={typedProps.status} showText className="ms-2 me-3" />}
                 {isItem && typedProps.audienceViews && <div className={classNames("d-none d-md-flex justify-content-end wf-13", {"list-view-border": typedProps.audienceViews.length > 0})}>
-                    <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className="w-100"/> 
+                    <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack className={siteSpecific("w-100", "py-3 pe-3")}/> 
                 </div>}
                 {isGameboard && isTeacherOrAbove(user) && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
                     <GameboardAssign board={typedProps.board} />
@@ -248,11 +250,15 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 </Col>}
             </>
         }
+        {hasCaret && <div className="list-caret align-content-center" aria-hidden="true">
+            <i className="icon icon-chevron-right" aria-hidden="true"/>
+        </div>}
     </div>;
 
     return <ListGroupItem
         className={classNames("content-summary-item", {"correct": isItem && typedProps.status === CompletionState.ALL_CORRECT}, className, state)} 
         data-bs-theme={subject && !isDisabled ? subject : "neutral"}
+        data-testid={"list-view-item"}
     >
         {cardBody}
     </ListGroupItem>;

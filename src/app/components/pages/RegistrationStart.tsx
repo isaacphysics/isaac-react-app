@@ -4,9 +4,10 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
-import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
+import { SidebarLayout, MainContent } from "../elements/layout/SidebarLayout";
 import { MicrosoftSignInButton } from "../elements/MicrosoftSignInButton";
 import { SsoHelpLink } from "./LogIn";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 
 export const RegistrationStart = () => {
 
@@ -22,7 +23,7 @@ export const RegistrationStart = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         <SidebarLayout>
             <SignupSidebar activeTab={0}/>
             <MainContent>

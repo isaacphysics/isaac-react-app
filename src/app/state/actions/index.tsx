@@ -5,15 +5,13 @@ import {
     API_REQUEST_FAILURE_MESSAGE,
     FIRST_LOGIN_STATE,
     history,
+    isAda,
     isNotPartiallyLoggedIn,
-    isFirstLoginInPersistence,
     isTeacherOrAbove,
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     trackEvent,
-    siteSpecific,
-    isAda,
 } from "../../services";
 import {
     Action,
@@ -21,12 +19,8 @@ import {
     CredentialsAuthDTO,
     FreeTextRule,
     InlineContext,
-    PotentialUser,
-    QuestionSearchQuery,
-    UserPreferencesDTO,
     UserSnapshot,
     ValidatedChoice,
-    ValidationUser,
 } from "../../../IsaacAppTypes";
 import {
     AuthenticationProvider,
@@ -35,7 +29,7 @@ import {
     IsaacQuestionPageDTO,
     QuestionDTO,
     TestCaseDTO,
-    UserContext, UserRole
+    UserRole
 } from "../../../IsaacApiTypes";
 import {AxiosError} from "axios";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
@@ -53,7 +47,6 @@ import {
     store,
 } from "../index";
 import {Immutable} from "immer";
-import { Button } from "reactstrap";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError<{errorMessage?: string}, unknown> {
@@ -214,132 +207,6 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
 
 export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE, userSnapshot: newUserSnapshot});
-};
-
-export const registerNewUser = (
-    newUser: Immutable<ValidationUser>,
-    newUserPreferences: UserPreferencesDTO,
-    newUserContexts: UserContext[] | undefined,
-    passwordCurrent: string | null,
-) => async (dispatch: Dispatch<Action>) => {
-
-    try {
-        // Create the user
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-        const currentUser = await api.users.updateCurrent(newUser, newUserPreferences, passwordCurrent, newUserContexts);
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        await dispatch(requestCurrentUser() as any);
-
-        if (isTeacherOrAbove(newUser)) {
-            // Redirect to email verification page
-            history.push('/verifyemail');
-        } else {
-            history.push(siteSpecific('/register/preferences', '/register/connect'));
-        }
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const updateCurrentUser = (
-    updatedUser: Immutable<ValidationUser>,
-    updatedUserPreferences: UserPreferencesDTO,
-    userContexts: UserContext[] | undefined,
-    passwordCurrent: string | null,
-    currentUser: Immutable<PotentialUser>,
-    redirect: boolean
-) => async (dispatch: Dispatch<Action>) => {
-
-    function showEmailChangeModal() {
-        dispatch(openActiveModal({
-            title: `Editing your email address`,
-            body: <div>
-                <p>
-                    You have changed your account email address. This new email address won&#39;t be used until you click the verification link sent to it.
-                    Until then, we will use the old email address and you will still need to use that when logging in by email and password.
-                </p>
-                <p> Would you like to continue? </p>
-                <div className="w-100">
-                    <Button
-                        className={"float-start mb-4"}
-                        color={siteSpecific("tertiary", "keyline")}
-                        onClick={() => { cancelSettingsUpdate(); dispatch(closeActiveModal() as any); }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        className={"float-end mb-4"}
-                        onClick={() => { continueSettingsUpdate(); dispatch(closeActiveModal() as any); }}
-                    >
-                        OK
-                    </Button>
-                </div>
-            </div>
-        }) as any);
-    }
-
-    function cancelSettingsUpdate() {
-        dispatch(showToast({
-            title: "Account settings not updated",
-            body: "Your account settings update was cancelled.",
-            color: "danger",
-            timeout: 5000,
-            closable: false,
-        }) as any);
-    }
-
-    async function continueSettingsUpdate() {
-        const editingOtherUser = currentUser.loggedIn && currentUser.id != updatedUser.id;
-
-        try {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-            const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-
-            await dispatch(requestCurrentUser() as any);
-
-            if (!editingOtherUser) {
-            // Invalidate tagged caches that are dependent on the current user's settings
-                dispatch(questionsApi.util.invalidateTags(['CanAttemptQuestionType']) as any);
-            }
-
-            const isFirstLogin = isFirstLoginInPersistence() || false;
-            if (isFirstLogin) {
-                persistence.session.remove(KEY.FIRST_LOGIN);
-                if (redirect) {
-                    continueToAfterAuthPath({loggedIn: true, ...currentUser.data});
-                }
-            } else if (!editingOtherUser) {
-                dispatch(showToast({
-                    title: "Account settings updated",
-                    body: "Your account settings were updated successfully.",
-                    color: "success",
-                    timeout: 5000,
-                    closable: false,
-                }) as any);
-            } else if (editingOtherUser) {
-                if (redirect) {
-                    history.push('/');
-                }
-                dispatch(showToast({
-                    title: "Account settings updated",
-                    body: "The user's account settings were updated successfully.",
-                    color: "success",
-                    timeout: 5000,
-                    closable: false,
-                }) as any);
-            }
-        } catch (e: any) {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-        }
-    }
-
-    // Confirm email change
-    if (currentUser.loggedIn && currentUser.id == updatedUser.id && currentUser.email !== updatedUser.email) {
-        showEmailChangeModal();
-    } else {
-        continueSettingsUpdate();
-    }
 };
 
 export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
@@ -613,29 +480,6 @@ export function setCurrentAttempt<T extends ChoiceDTO>(questionId: string, attem
     });
 }
 
-let questionSearchCounter = 0;
-
-export const searchQuestions = (query: QuestionSearchQuery, searchId?: string) => async (dispatch: Dispatch<Action>) => {
-    const searchCount = ++questionSearchCounter;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
-    try {
-        const questionsResponse = await api.questions.search(query);
-        // Because some searches might take longer to return that others, check this is the most recent search still.
-        // Otherwise, we just discard the data.
-        if (searchCount === questionSearchCounter) {
-            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: questionsResponse.data, searchId});
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to search for questions", e));
-    }
-};
-
-export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
-    questionSearchCounter++;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: {results: [], totalResults: 0}});
-};
-
 export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST});
     try {
@@ -712,20 +556,6 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
     } catch (e) {
         dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE});
         dispatch(showAxiosErrorToastIfNeeded("Failed to test question", e));
-    }
-};
-
-// Search
-export const fetchSearch = (query: string, types: string | undefined) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query, types});
-    try {
-        if (query === "") {
-            return;
-        }
-        const searchResponse = await api.search.get(query, types);
-        dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Search failed", e));
     }
 };
 

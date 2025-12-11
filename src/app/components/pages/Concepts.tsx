@@ -7,8 +7,7 @@ import {getFilteredStageOptions, isPhy, isRelevantToPageContext, matchesAllWords
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import { ListView } from "../elements/list-groups/ListView";
-import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
-import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { getHumanContext, isFullyDefinedContext, useUrlPageTheme } from "../../services/pageContext";
 import { useListConceptsQuery } from "../../state/slices/api/conceptsApi";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
@@ -17,6 +16,7 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { PageMetadata } from "../elements/PageMetadata";
 import { ResultsListContainer, ResultsListHeader } from "../elements/ListResultsContainer";
 import { FilterSummary } from "./QuestionFinder";
+import { GenericConceptsListingSidebar, SubjectSpecificConceptsListingSidebar } from "../elements/sidebar/ConceptsListingSidebar";
 
 const subjectToTagMap = {
     physics: TAG_ID.physics,
@@ -146,12 +146,12 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             <TitleAndBreadcrumb 
                 currentPageTitle="Concepts" 
                 intermediateCrumbs={crumb ? [crumb] : undefined}
-                icon={{type: "hex", icon: "icon-concept"}}
+                icon={{type: "icon", icon: "icon-concept"}}
             />
             <SidebarLayout>
                 {pageContext?.subject 
-                    ? <SubjectSpecificConceptListSidebar {...sidebarProps} hideButton /> 
-                    : <GenericConceptsSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>
+                    ? <SubjectSpecificConceptsListingSidebar {...sidebarProps} hideButton /> 
+                    : <GenericConceptsListingSidebar {...sidebarProps} searchStages={searchStages} setSearchStages={setSearchStages} stageCounts={stageCounts} hideButton/>
                 }
                 <MainContent>
                     <PageMetadata noTitle showSidebarButton>
@@ -180,12 +180,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                                     </ResultsListHeader>}
 
                                     {shortcutAndFilteredSearchResults.length
-                                        ? isPhy
-                                            ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
-                                            : <LinkToContentSummaryList 
-                                                items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
-                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                            />
+                                        ? <ListView type="item" items={shortcutAndFilteredSearchResults}/>
                                         : <em>No results found</em>
                                     }
                                 </>;

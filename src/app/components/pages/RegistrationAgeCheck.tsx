@@ -14,8 +14,9 @@ import {
 } from "reactstrap";
 import {confirmThen, history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import { MainContent, SidebarLayout, SignupSidebar } from "../elements/layout/SidebarLayout";
+import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
+import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
 
 type AgePermission = "denied" | "additional_info" | "allowed";
 
@@ -48,7 +49,7 @@ export const RegistrationAgeCheck = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "hex", icon: "icon-account"}} />
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         <SidebarLayout>
             <SignupSidebar activeTab={1}/>
             <MainContent>
@@ -102,10 +103,10 @@ export const RegistrationAgeCheck = () => {
                             {isAda && <hr/>}
                             <Row className="justify-content-end">
                                 <Col sm={siteSpecific(3,4)} lg={3} className="d-flex justify-content-end mb-1 mb-sm-0">
-                                    <Button className="w-100 h-100" color={siteSpecific("solid", "keyline")} onClick={goBack}>Back</Button>
+                                    <Button className="w-100 h-100" color="keyline" onClick={goBack}>Back</Button>
                                 </Col>
                                 <Col sm={siteSpecific(4,5)} lg={3}>
-                                    <Button type="submit" className="w-100 h-100">Continue</Button>
+                                    <Button type="submit" color="solid" className="w-100 h-100">Continue</Button>
                                 </Col>
                             </Row>
                         </Form>

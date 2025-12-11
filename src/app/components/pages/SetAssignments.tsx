@@ -53,7 +53,7 @@ import {BoardAssignee, AssignmentBoardOrder, Boards} from "../../../IsaacAppType
 import {BoardCard} from "../elements/cards/BoardCard";
 import {RenderNothing} from "../elements/RenderNothing";
 import {SortItemHeader} from "../elements/SortableItemHeader";
-import {MainContent, SetAssignmentsSidebar, SidebarLayout} from "../elements/layout/SidebarLayout";
+import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {HorizontalScroller} from "../elements/inputs/HorizontalScroller";
 import classNames from "classnames";
 import {PromptBanner} from "../elements/cards/PromptBanner";
@@ -61,6 +61,7 @@ import { PageMetadata } from "../elements/PageMetadata";
 import { SetAssignmentsModal } from "../elements/modals/SetAssignmentsModal";
 import { PageFragment } from "../elements/PageFragment";
 import { useHistoryState } from "../../state/actions/history";
+import { SetAssignmentsSidebar } from "../elements/sidebar/SetAssignmentsSidebar";
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -96,7 +97,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
             .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())));
     }, [boards, boardTitleFilter, boardCreator, boardSubject, user]);
 
-    const tableHeader = <tr className="my-gameboard-table-header">
+    const tableHeader = <tr>
         <th className="text-center align-middle"><span className="ps-2 pe-2">Groups</span></th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
@@ -124,8 +125,8 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
     return <Card className="mt-2 mb-7">
         <CardBody id="boards-table">
             <HorizontalScroller enabled={filteredBoards ? filteredBoards.length > 6 : false}>
-                <Table className="mb-0">
-                    <thead>
+                <Table className="mb-0 my-gameboard-table">
+                    <thead className="my-gameboard-table-header">
                         {tableHeader}
                     </thead>
                     <tbody>
@@ -155,15 +156,15 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         groupsByGameboard, openAssignModal
     } = props;
 
-    const tableHeader = <tr className="my-gameboard-table-header">
+    const tableHeader = <tr>
         <th>Groups</th>
         <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
-            setOrder={setBoardOrder}>
+            setOrder={setBoardOrder} alignment="start">
             Quiz name
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
-            Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1"/>
+            Stages and Difficulties <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black" />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br/>
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
@@ -209,7 +210,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         </Row>
         <HorizontalScroller enabled={boards ? boards.boards.length > 6 : false}>
             <Table className="mt-3 my-gameboard-table">
-                <thead>
+                <thead className="my-gameboard-table-header">
                     {tableHeader}
                 </thead>
                 <tbody>
@@ -298,8 +299,8 @@ export const SetAssignments = () => {
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(isAda && above["lg"](deviceSize) ? BoardViews.table : BoardViews.card, BoardLimit.six);
 
-    const isGroupsEmptyState = !(groups && groups.length > 0);
-    const isBoardsEmptyState = !(boards && boards.boards?.length > 0);
+    const isGroupsEmptyState = groups && groups.length === 0;
+    const isBoardsEmptyState = boards && boards.boards?.length === 0;
     const switchView = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setBoardView(e.target.value as BoardViews);
     }, [setBoardView]);
@@ -375,7 +376,7 @@ export const SetAssignments = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
-            icon={{type: "hex", icon: "icon-question-deck"}} help={pageHelp}
+            icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}
         />
         <SidebarLayout>
             <SetAssignmentsSidebar
@@ -422,7 +423,7 @@ export const SetAssignments = () => {
                         <PromptBanner
                             card={{
                                 title: "You need a student group before you can assign a quiz to students.",
-                                icon: {src: "/assets/cs/icons/group.svg"},
+                                icon: "icon-group",
                                 bodyText: "",
                                 color: "yellow",
                                 buttons: {
@@ -438,9 +439,9 @@ export const SetAssignments = () => {
                     <h3>Your quizzes</h3>
                     <div
                         className={classNames("mb-4", "d-flex", "flex-column", "flex-lg-row", "align-items-center", {"justify-content-start": isBoardsEmptyState}, {"justify-content-between": !isBoardsEmptyState})}>
-                        {!(boards && boards.totalResults === 0) &&
+                        {boards && boards.totalResults > 0 &&
                             <div>
-                                <p className={"d-none d-lg-block my-auto"}>{`You have ${boards?.boards.length} created quiz${boards && boards.boards?.length > 1 ? "zes" : ""}.`}</p>
+                                <p className={"d-none d-lg-block my-auto"}>{`You have ${boards.boards.length} created quiz${boards.boards.length > 1 ? "zes" : ""}.`}</p>
                             </div>
                         }
                         <div className={"w-100 w-lg-auto"}>
