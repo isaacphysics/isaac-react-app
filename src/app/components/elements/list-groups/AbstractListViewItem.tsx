@@ -15,6 +15,7 @@ import { SetAssignmentsModal } from "../modals/SetAssignmentsModal";
 import { ExternalLink } from "../ExternalLink";
 import { QuestionPropertyTags } from "../ContentPropertyTags";
 import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
+import { CrossTopicQuestionIndicator } from "../CrossTopicQuestionIndicator";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -173,7 +174,10 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
     const isQuiz = typedProps.alviType === "quiz";
     const isCard = typedProps.alviLayout === "card";
     const isDisabled = state && [AbstractListViewItemState.COMING_SOON, AbstractListViewItemState.DISABLED].includes(state);
-    
+
+    const isCrossTopic = isAda && tags?.includes("cross_topic");
+    const isLLM = tags?.includes("llm_question_page");
+
     fullWidth = fullWidth || below["sm"](deviceSize) || (isItem && !(typedProps.status || typedProps.audienceViews));
     const cardBody = <div className="w-100 d-flex flex-row">
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
@@ -219,8 +223,9 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 {isItem && fullWidth && typedProps.audienceViews && <div className="d-flex mt-1"> 
                     <StageAndDifficultySummaryIcons audienceViews={typedProps.audienceViews} stack/> 
                 </div>}
-                {tags?.includes("llm_question_page") && <div className={classNames("mt-1", {"mt-2": isPhy || !fullWidth})}>
-                    <LLMFreeTextQuestionIndicator small />
+                {(isCrossTopic || isLLM) && <div className={classNames("d-flex flex-wrap gap-2 mt-1", {"mt-2": isPhy || !fullWidth})}>
+                    {isCrossTopic && <CrossTopicQuestionIndicator small />}
+                    {isLLM && <LLMFreeTextQuestionIndicator small />}
                 </div>}
                 {isPhy && isItem && fullWidth && typedProps.status && typedProps.status !== CompletionState.ALL_CORRECT &&
                     <StatusDisplay status={typedProps.status} showText className="py-1" />
