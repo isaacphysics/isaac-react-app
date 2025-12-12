@@ -237,7 +237,7 @@ export function ResultsTable<Q extends QuestionType>({
         </SortItemHeader>
         {pageSettings?.attemptedOrCorrect === "CORRECT"
             ? <SortItemHeader<ProgressSortOrder>
-                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy, "narrow-header": isAssignment || isAda})}
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -253,7 +253,7 @@ export function ResultsTable<Q extends QuestionType>({
                 )}
             </SortItemHeader>
             : <SortItemHeader<ProgressSortOrder>
-                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy, "narrow-header": isAssignment || isAda})}
                 defaultOrder={"totalAttemptedQuestionPercentage"}
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -272,7 +272,7 @@ export function ResultsTable<Q extends QuestionType>({
         {isPhy && isAssignment && (
             pageSettings?.attemptedOrCorrect === "CORRECT"
                 ? <SortItemHeader<ProgressSortOrder>
-                    className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                    className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
                     defaultOrder={"totalPartPercentage"}
                     reverseOrder={"totalPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -288,7 +288,7 @@ export function ResultsTable<Q extends QuestionType>({
                     )}
                 </SortItemHeader>
                 : <SortItemHeader<ProgressSortOrder>
-                    className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                    className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
                     defaultOrder={"totalAttemptedPartPercentage"}
                     reverseOrder={"totalAttemptedPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -353,8 +353,8 @@ export function ResultsTable<Q extends QuestionType>({
                 <table ref={tableRef} className="progress-table w-100">
                     <thead className="progress-table-header-footer sticky-top">
                         {tableHeaderFooter}
-                        {isPhy && selectedQuestionIndex !== undefined && <tr>
-                            <th className="py-2" colSpan={2 + questions.length}>
+                        {isPhy && selectedQuestionIndex !== undefined && <tr className="progress-table-question-header">
+                            <th className="py-2" colSpan={3 + questions.length}>
                                 <div className="progress-table-question-link">
                                     {isAssignment
                                         ? <a href={`/questions/${questions[selectedQuestionIndex]?.id}` + (boardId ? `?board=${boardId}` : "")} target="_blank">
@@ -553,7 +553,7 @@ export function ResultsTablePartBreakdown({
     return sortedProgress?.length
         ? <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
             <table {...rest} className={classNames("progress-table assignment-progress-progress w-100", rest.className)}>
-                <thead className="progress-table-header-footer fw-bold">
+                <thead className="progress-table-header-footer sticky-top fw-bold">
                     <tr>
                         <SortItemHeader<ProgressSortOrder>
                             className="student-name sticky-left ps-3 py-3"
@@ -566,7 +566,7 @@ export function ResultsTablePartBreakdown({
                         </SortItemHeader>
                         {isPhy && (pageSettings?.attemptedOrCorrect === "CORRECT"
                             ? <SortItemHeader<ProgressSortOrder>
-                                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                                className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
                                 defaultOrder={"totalQuestionPercentage"}
                                 reverseOrder={"totalQuestionPercentage"}
                                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -581,7 +581,7 @@ export function ResultsTablePartBreakdown({
                                 )}
                             </SortItemHeader>
                             : <SortItemHeader<ProgressSortOrder>
-                                className={classNames("correct-attempted-header", {"sticky-ca-col": isPhy})}
+                                className={classNames("correct-attempted-header narrow-header", {"sticky-ca-col": isPhy})}
                                 defaultOrder={"totalAttemptedQuestionPercentage"}
                                 reverseOrder={"totalAttemptedQuestionPercentage"}
                                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
@@ -628,7 +628,7 @@ export function ResultsTablePartBreakdown({
 
                             {/* total correct/attempted */}
                             {isPhy && studentProgress.questionPartResults && 
-                                <td className={classNames({"sticky-ca-col": isPhy})}>
+                                <th className={classNames({"sticky-ca-col": isPhy})}>
                                     {formatMark(
                                         studentProgress.questionPartResults[questionIndex].reduce((acc, questionPartResult) => {
                                             if (pageSettings?.attemptedOrCorrect === "CORRECT") {
@@ -640,7 +640,7 @@ export function ResultsTablePartBreakdown({
                                         studentProgress.questionPartResults[questionIndex].length,
                                         !!pageSettings?.formatAsPercentage
                                     )}
-                                </td>
+                                </th>
                             }
 
                             {/* main data */}
