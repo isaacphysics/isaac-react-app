@@ -22,7 +22,7 @@ export const GetStartedWithAda = () => {
         <AccordionItem>
             <AccordionHeader targetId="1">
                 <span className="fw-bold">Get started with Ada CS</span>
-                {getStartedTasks && Object.values(getStartedTasks).every(Boolean) && <i className="icon icon-tick icon-md mx-3" />}
+                {getStartedTasks && Object.values(getStartedTasks).every(Boolean) && <i className="icon icon-tick icon-sm mx-3" />}
             </AccordionHeader>
             <AccordionBody accordionId="1">
                 <ShowLoading

@@ -10,7 +10,7 @@ import {
     mockGroups,
     mockUser
 } from "../../mocks/data";
-import {ACCOUNT_TAB, API_PATH, extractTeacherName, isDefined, siteSpecific} from "../../app/services";
+import {ACCOUNT_TAB, API_PATH, extractTeacherName, isDefined, isPhy, siteSpecific} from "../../app/services";
 import difference from "lodash/difference";
 import isEqual from "lodash/isEqual";
 import userEvent from "@testing-library/user-event";
@@ -72,14 +72,22 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
         return email === newManager.email;
     });
     // Expect that new additional manager is shown in modal
+    const managerElements = within(groupManagersModal as HTMLElement).queryAllByTestId("group-manager");
     await waitFor(() => {
-        const managerElements = within(groupManagersModal as HTMLElement).queryAllByTestId("group-manager");
         expect(managerElements).toHaveLength(1);
         expect(managerElements[0]).toHaveTextContent(newManager.email);
-        // User should be able to see the remove button, since they are the owner
+    });
+    // User should be able to see the remove button, since they are the owner
+    if (isPhy) {
         const removeButton = within(managerElements[0]).getByRole("button", {name: "Remove"});
         expect(removeButton).toBeVisible();
-    });
+    } else {
+        // The available space is narrower on Ada so the remove button is inside a dropdown
+        const actionsButton = within(managerElements[0]).getByRole("button", {name: "Actions"});
+        await userEvent.click(actionsButton);
+        const removeButton = await screen.findByRole("menuitem", {name: "Remove"});
+        expect(removeButton).toBeVisible();
+    }
     await closeActiveModal(groupManagersModal);
 };
 

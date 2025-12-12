@@ -5,6 +5,7 @@ import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { IsaacProgrammeDTO, ProgrammeCard } from "../elements/cards/ProgrammeCard";
 import { ContentDTO } from "../../../IsaacApiTypes";
+import { isPhy } from "../../services";
 import { ProgrammesSidebar } from "../elements/sidebar/ProgrammesSidebar";
 
 const mockFetchProgrammes = (): Promise<IsaacProgrammeDTO[]> =>
@@ -90,7 +91,7 @@ export const Programmes = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Programmes"} icon={{type: "icon", icon: "icon-events"}} />
-        <SidebarLayout>
+        <SidebarLayout site={isPhy}>
             <ProgrammesSidebar programmes={programmes} />
             <MainContent>
                 <ShowLoading until={programmes} thenRender={(programmes) => {
