@@ -87,7 +87,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
             </>
             : <>
                 {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
-                <div className={classNames("d-flex align-items-center gap-3", {"mt-3": isPhy})}>
+                <div className={classNames("d-flex gap-3", siteSpecific("mt-3 align-items-center", "align-items-end"))}>
                     {isPhy && <div>
                         <div className="d-flex align-items-center gap-3">
                             <h3 className="text-theme-dark">
@@ -102,11 +102,11 @@ export const PageMetadata = (props: PageMetadataProps) => {
                         </div>
                         {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
                     </div>}
-                    {isAda && <div className="d-flex align-items-center">
+                    {isAda && <> <div className="d-lg-flex align-items-center">
                         {isCrossTopic && <CrossTopicQuestionIndicator className="me-3"/>}
                         {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator className="me-3"/>}
-                        <EditContentButton doc={doc} />
-                    </div>}
+                    </div>
+                    <EditContentButton doc={doc} /> </>}
                     <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>
                 </div>
                 {children}
