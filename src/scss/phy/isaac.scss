@@ -227,6 +227,9 @@ $isaac-color-palettes: (
   )
 );
 
+/* constants */
+$figure-drop-zone-placeholder-size: 24px;
+
 /* fonts */
 // TODO: the mapping from Figma to CSS font weights is not precise, cross-check these against designs when more pages are ready
 $typography-font-weights-headings-bold: 700;
