@@ -70,7 +70,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
     return <>
         {noTitle 
             ? <>
-                <div className={classNames("d-flex align-items-start gap-3 no-print", {"mt-3": isPhy})}>
+                <div className={classNames("d-flex gap-3 align-items-start no-print", {"mt-3": isPhy})}>
                     <div className="w-100">
                         <ActionButtons 
                             location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}

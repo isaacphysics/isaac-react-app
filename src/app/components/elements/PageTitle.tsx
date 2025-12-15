@@ -17,14 +17,12 @@ import { HexIcon, HexIconProps, IconProps } from "./svg/HexIcon";
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const difficulty = audienceViews.map(v => v.difficulty).filter(d => d !== undefined)[0];
 
-    return difficulty && <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex align-items-center">
-        <div className="d-flex d-sm-block h-max-content">
-            <div className="text-center align-self-center fw-regular">
-                {simpleDifficultyLabelMap[difficulty]}
-            </div>
-            <div className="ms-2 ms-sm-0 text-center">
-                <DifficultyIcons difficulty={difficulty}/>
-            </div>
+    return difficulty && <div className="h-subtitle pt-sm-0 mb-sm-0 d-flex d-sm-block align-content-center">
+        <div className="fw-regular align-self-center">
+            {simpleDifficultyLabelMap[difficulty]}
+        </div>
+        <div className="ms-2 ms-sm-0">
+            <DifficultyIcons difficulty={difficulty}/>
         </div>
     </div>;
 }
