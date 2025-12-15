@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {AppState, useAppSelector, useSearchQuestionsQuery} from "../../state";
+import {AppState, selectors, useAppSelector, useSearchQuestionsQuery} from "../../state";
 import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
@@ -133,12 +133,17 @@ interface FilterSummaryProps {
 }
 
 export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: FilterSummaryProps) => {
+    const pageContext = useAppSelector(selectors.pageContext.context);
+    // On GCSE & university question finders, there is only one stage which cannot be cleared
+    const isUniqueStage = (tagValue: string) => {return tagValue === "gcse" || tagValue === "university";};
+    const isClearable = (tagValue: string) => {return !(isUniqueStage(tagValue) && isFullyDefinedContext(pageContext));};
+
     return <div className="d-flex flex-wrap mt-2">
         {filterTags.map(t => <div key={t.value} data-bs-theme="neutral" data-testid={`filter-tag-${t.value}`} className="filter-tag me-2 mt-1 d-flex align-items-center">
             {t.label}
-            <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label="Close"/>
+            {isClearable(t.value) && <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label="Close"/>}
         </div>)}
-        {filterTags.length > 0 && <button className="text-black py-0 mt-1 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
+        {filterTags.length > 0 && filterTags.some(t => isClearable(t.value)) && <button className="text-black py-0 mt-1 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
             Clear all filters
         </button>}
     </div>;
