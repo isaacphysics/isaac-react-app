@@ -80,7 +80,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                     <TitleAndBreadcrumb
                         currentPageTitle={generateQuestionTitle(doc)}
                         displayTitleOverride={siteSpecific("Question", undefined)}
-                        subTitle={siteSpecific(undefined, doc.subtitle)}
+                        subTitle={doc.subtitle}
                         intermediateCrumbs={navigation.breadcrumbHistory}
                         collectionType={navigation.collectionType}
                         audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
