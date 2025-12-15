@@ -5,6 +5,7 @@ import {
     isPhy,
     simpleDifficultyLabelMap,
     SITE_TITLE,
+    siteSpecific,
 } from "../../services";
 import { mainContentIdSlice, useAppDispatch } from "../../state";
 import {ViewingContext} from "../../../IsaacAppTypes";
@@ -75,13 +76,10 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
     }, [currentPageTitle, preview]);
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-2 mb-0": isPhy}, className)}>
-        <div className="d-flex w-100" data-testid={"main-heading"}>
+        <div className={classNames("d-flex", {"flex-column w-100": isAda})} data-testid="main-heading">
             {isPhy && icon && <TitleIcon icon={icon} />}
-            <div className="d-flex flex-column justify-content-center">
-                {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX)}
-                {/* in the new isaac designs, subtitles should only ever exist in the page title, not alongside this super-title */}
-                {isAda && subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
-            </div>
+            {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX, siteSpecific("align-self-center", undefined))}
+            {isAda && subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
         </div>
 
         {isAda && audienceViews && <AudienceViewer audienceViews={audienceViews} />}
@@ -96,4 +94,4 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
     </h1>;
 };
 
-export const formatPageTitle = (currentPageTitle: string, disallowLaTeX?: boolean) => <Markup encoding={disallowLaTeX ? "plaintext" : "latex"}>{currentPageTitle}</Markup>;
+export const formatPageTitle = (currentPageTitle: string, disallowLaTeX?: boolean, className?: string) => <Markup encoding={disallowLaTeX ? "plaintext" : "latex"} className={className}>{currentPageTitle}</Markup>;
