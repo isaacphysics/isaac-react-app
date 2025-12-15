@@ -67,19 +67,6 @@ export type TitleIconProps = Omit<HexIconProps, "icon"> & {
     { type: "img" | "placeholder"; icon?: string }
 );
 
-const PageIcon = ({icon}: {icon: TitleIconProps}) => {
-    switch (icon.type) {
-        case "img":
-            return <img src={icon.icon} alt={icon.alt ?? ""} height={icon.height} width={icon.width} className="me-3"/>;
-        case "icon":
-            return typeof icon.icon === "string"
-                ? <HexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/>
-                : <HexIcon {...icon} />;
-        case "placeholder":
-            return <div style={{width: icon.width, height: icon.height}}/>;
-    }
-};
-
 export interface PageTitleProps {
     currentPageTitle: string;
     displayTitleOverride?: string;
@@ -91,7 +78,6 @@ export interface PageTitleProps {
     preview?: boolean;
     icon?: TitleIconProps;
 }
-
 export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, help, className, audienceViews, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
     const headerRef = useRef<HTMLHeadingElement>(null);
@@ -108,21 +94,26 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-2 mb-0": isPhy}, className)}>
         <div className="d-flex w-100" data-testid={"main-heading"}>
-            {isPhy && icon && <PageIcon icon={icon} />}
+            {isPhy && icon && (
+                icon.type === "img" ? <img src={icon.icon} alt={icon.alt ?? ""} height={icon.height} width={icon.width} className="me-3"/> 
+                    : icon.type === "icon" ? <HexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/> 
+                        : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}}/>
+                            : undefined
+            )}
             <div className="d-flex flex-column justify-content-center">
                 {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX)}
                 {/* in the new isaac designs, subtitles should only ever exist in the page title, not alongside this super-title */}
                 {isAda && subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
             </div>
         </div>
-
-        {isAda && audienceViews && <AudienceViewer audienceViews={audienceViews} />}
-        {isAda && help && <div id="title-help" className="title-help">Help</div>}
-        <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>
-
         <Helmet>
             <meta property="og:title" content={currentPageTitle} />
         </Helmet>
+        {audienceViews && <AudienceViewer audienceViews={audienceViews} />}
+        {isAda && help && <React.Fragment>
+            <div id="title-help" className="title-help">Help</div>
+            <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>
+        </React.Fragment>}
     </h1>;
 };
 
