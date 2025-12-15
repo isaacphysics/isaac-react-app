@@ -104,8 +104,10 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
         </div>
 
         {isAda && audienceViews && <AudienceViewer audienceViews={audienceViews} />}
-        {isAda && help && <div id="title-help" className="title-help">Help</div>}
-        <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>
+        {isAda && help && <>
+            <div id="title-help" className="title-help">Help</div>
+            <UncontrolledTooltip target="title-help" placement="bottom">{help}</UncontrolledTooltip>
+        </>}
 
         <Helmet>
             <meta property="og:title" content={currentPageTitle} />
