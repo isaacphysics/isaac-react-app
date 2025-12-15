@@ -78,7 +78,9 @@
 }
 
 .question-tag-indicator {
-  background-color: $cyan-700;
+    &.cross-topic { background-color: $pink-700; }  
+    &.llm { background-color: $cyan-700;}
+
     color: $cs-jet;
     border: 1px solid $cs-silver;
 
