@@ -52,13 +52,17 @@ const closeActiveModal = async (modal: HTMLElement) => {
 };
 
 // Reusable test for adding a manager in the additional manager modal
-const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver, newManager: any) => {
+const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver, newManager: any, isOwner: boolean) => {
     let groupManagersModal: HTMLElement | undefined;
     await waitFor(() => {
         groupManagersModal = screen.getByTestId("active-modal");
-        expect(groupManagersModal).toHaveModalTitle("Share your group");
+        expect(groupManagersModal).toHaveModalTitle(isOwner ? "Share your group" : "Shared group");
     });
     if (!groupManagersModal) fail(); // Shouldn't happen because of the above `waitFor`
+
+    // Check how many managers are shown initially for comparison afterwards
+    const initialManagerCount = within(groupManagersModal).queryAllByTestId("group-manager").length;
+
     const addManagerInput = within(groupManagersModal).getByPlaceholderText("Enter email address here");
     await userEvent.type(addManagerInput, newManager.email);
     const addManagerButton = within(groupManagersModal).getByRole("button", {name: "Add group manager"});
@@ -74,8 +78,9 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
     // Expect that new additional manager is shown in modal
     await waitFor(() => {
         const managerElements = within(groupManagersModal as HTMLElement).queryAllByTestId("group-manager");
-        expect(managerElements).toHaveLength(1);
-        expect(managerElements[0]).toHaveTextContent(newManager.email);
+        expect(managerElements).toHaveLength(initialManagerCount + 1);
+        expect(managerElements.some(e => e.textContent.includes(newManager.email))).toBeTruthy();
+
         // User should be able to see the remove button, since they are the owner
         const removeButton = within(managerElements[0]).getByRole("button", {name: "Remove"});
         expect(removeButton).toBeVisible();
@@ -366,7 +371,7 @@ describe("Groups", () => {
             const groupEditor = await screen.findByTestId("group-editor");
             const addManagersButton = within(groupEditor).getByRole("button", {name: "Add group managers"});
             await userEvent.click(addManagersButton);
-            await testAddAdditionalManagerInModal(existingGroupManagerHandler, mockNewManager);
+            await testAddAdditionalManagerInModal(existingGroupManagerHandler, mockNewManager, true);
         });
 
         it(`does not allow tutor owners of a group to add new group managers to an existing ${activeOrArchived} group`, async () => {
@@ -508,7 +513,7 @@ describe("Groups", () => {
         // Expect the "add group managers" button to be shown on the modal
         const addGroupManagersButton = await within(inviteModal).findByRole("button", {name: "Add group managers"});
         await userEvent.click(addGroupManagersButton);
-        await testAddAdditionalManagerInModal(newGroupManagerHandler, mockNewManager);
+        await testAddAdditionalManagerInModal(newGroupManagerHandler, mockNewManager, true);
     });
 
     it("does not allow tutors to add new group managers in the modal after creating a new group", async () => {
