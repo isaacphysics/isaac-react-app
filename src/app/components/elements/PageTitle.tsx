@@ -29,21 +29,6 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     </div>;
 }
 
-interface IconPlaceholderProps extends React.HTMLAttributes<HTMLDivElement> {
-    width: string;
-    height: string;
-}
-
-export const placeholderIcon = (props: IconPlaceholderProps): TitleIconProps => {
-    const {width, height} = props;
-    return {
-        type: "placeholder",
-        icon: undefined,
-        height,
-        width,
-    };
-};
-
 export type TitleIconProps = Omit<HexIconProps, "icon"> & {
     height?: string;
     width?: string;
