@@ -1,15 +1,10 @@
 import React, {ReactElement, useEffect, useRef} from "react";
 import {UncontrolledTooltip} from "reactstrap";
 import {
-    AUDIENCE_DISPLAY_FIELDS,
-    filterAudienceViewsByProperties,
     isAda,
     isPhy,
     simpleDifficultyLabelMap,
     SITE_TITLE,
-    siteSpecific,
-    stageLabelMap,
-    useUserViewingContext
 } from "../../services";
 import { mainContentIdSlice, useAppDispatch } from "../../state";
 import {ViewingContext} from "../../../IsaacAppTypes";
@@ -17,28 +12,20 @@ import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
-import { Difficulty } from "../../../IsaacApiTypes";
 import { HexIcon, HexIconProps, IconProps } from "./svg/HexIcon";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
-    const userContext = useUserViewingContext();
-    const viewsWithMyStage = audienceViews.filter(vc => userContext.contexts.some(uc => uc.stage === vc.stage));
-    // If there is a possible audience view that is correct for our user context, show that specific one
-    const viewsToUse = viewsWithMyStage.length > 0 ? viewsWithMyStage.slice(0, 1) : audienceViews;
-    const filteredViews = filterAudienceViewsByProperties(viewsToUse, AUDIENCE_DISPLAY_FIELDS);
-    const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
+    const difficulty = audienceViews.map(v => v.difficulty).filter(d => d !== undefined)[0];
 
-    return <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
-        {/* Show all stage/difficulty combinations for Phy, but just the first difficulty for Ada */}
-        {siteSpecific(filteredViews, [{difficulty: difficulties[0], stage: undefined}]).map((view, i) => 
-            <div key={`${view.difficulty} ${view.stage}`} className={classNames("d-flex d-sm-block", {"ms-sm-2": i > 0})}>
-                <div className={classNames("text-center align-self-center", {"fw-regular": isAda})}>
-                    {siteSpecific(view.stage && stageLabelMap[view.stage], view.difficulty && simpleDifficultyLabelMap[view.difficulty])}
-                </div>
-                {view.difficulty && <div className="ms-2 ms-sm-0 text-center">
-                    <DifficultyIcons difficulty={view.difficulty}/>
-                </div>}
-            </div>)}
+    return difficulty && <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex align-items-center">
+        <div className="d-flex d-sm-block h-max-content">
+            <div className="text-center align-self-center fw-regular">
+                {simpleDifficultyLabelMap[difficulty]}
+            </div>
+            <div className="ms-2 ms-sm-0 text-center">
+                <DifficultyIcons difficulty={difficulty}/>
+            </div>
+        </div>
     </div>;
 }
 
