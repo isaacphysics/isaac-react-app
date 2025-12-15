@@ -6,8 +6,7 @@ import classNames from "classnames";
 import { Badge, Button, Col, ListGroupItem } from "reactstrap";
 import { CompletionState, GameboardDTO } from "../../../../IsaacApiTypes";
 import { above, below, isAda, isDefined, isPhy, isTeacherOrAbove, siteSpecific, Subject, useDeviceSize } from "../../../services";
-import { HexIcon } from "../svg/HexIcon";
-import { TitleIconProps } from "../PageTitle";
+import { TitleIcon, TitleIconProps } from "../PageTitle";
 import { Markup } from "../markup";
 import { closeActiveModal, openActiveModal, selectors, useAppDispatch, useAppSelector, useLazyGetGroupsQuery, useLazyGetMySetAssignmentsQuery, useUnassignGameboardMutation } from "../../../state";
 import { getAssigneesByBoard } from "../../pages/SetAssignments";
@@ -183,10 +182,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
         <Col className={classNames("d-flex flex-grow-1", {"mt-3": isCard, "mb-3": isCard && !typedProps.linkTags?.length})}>
             <div className={classNames("position-relative", {"question-progress-icon": isAda})}>
                 {icon && <div className="inner-progress-icon">
-                    {icon.type === "img" ? <img src={icon.icon} alt={icon.alt ?? ""} width={icon.width} height={icon.height} className={classNames(icon.className, {"me-3": isPhy})} /> 
-                        : icon.type === "icon" ? <HexIcon icon={icon.icon} subject={icon.subject} className={icon.className}/>
-                            : icon.type === "placeholder" ? <div style={{width: icon.width, height: icon.height}} /> 
-                                : undefined}
+                    <TitleIcon icon={icon} />
                     {icon.label && isAda && above['sm'](deviceSize) && <div className="icon-title mt-1">{icon.label}</div>}
                 </div>}
                 {isPhy && isItem && typedProps.status && typedProps.status === CompletionState.ALL_CORRECT && <div className="list-view-status-indicator">

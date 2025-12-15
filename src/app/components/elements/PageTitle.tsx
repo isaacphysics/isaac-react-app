@@ -39,14 +39,12 @@ export type TitleIconProps = Omit<HexIconProps, "icon"> & {
     { type: "img" | "placeholder"; icon?: string }
 );
 
-const PageIcon = ({icon}: {icon: TitleIconProps}) => {
+export const TitleIcon = ({icon}: {icon: TitleIconProps}) => {
     switch (icon.type) {
         case "img":
-            return <img src={icon.icon} alt={icon.alt ?? ""} height={icon.height} width={icon.width} className="me-3"/>;
+            return <img src={icon.icon} alt={icon.alt ?? ""} height={icon.height} width={icon.width} className={classNames(icon.className, {"me-3": isPhy})}/>;
         case "icon":
-            return typeof icon.icon === "string"
-                ? <HexIcon icon={icon.icon} subject={icon.subject} style={{"height": icon.height, "width": icon.width}}/>
-                : <HexIcon {...icon} />;
+            return <HexIcon icon={icon.icon} subject={icon.subject} className={icon.className}/>;
         case "placeholder":
             return <div style={{width: icon.width, height: icon.height}}/>;
     }
@@ -80,7 +78,7 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-2 mb-0": isPhy}, className)}>
         <div className="d-flex w-100" data-testid={"main-heading"}>
-            {isPhy && icon && <PageIcon icon={icon} />}
+            {isPhy && icon && <TitleIcon icon={icon} />}
             <div className="d-flex flex-column justify-content-center">
                 {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX)}
                 {/* in the new isaac designs, subtitles should only ever exist in the page title, not alongside this super-title */}
