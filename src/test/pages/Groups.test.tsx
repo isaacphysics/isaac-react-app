@@ -659,6 +659,7 @@ describe("Groups", () => {
         };
 
         const existingGroupManagerHandler = buildNewManagerHandler(mockGroup, mockNewManager);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const removeAdditionalManagerHandler = (managerToRemove: any) => jest.fn(() => {
             return HttpResponse.json({
                 ...mockGroup,
