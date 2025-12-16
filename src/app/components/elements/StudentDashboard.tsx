@@ -60,6 +60,8 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
     </UncontrolledTooltip>;
 
     const remainingToAnswer = 10 - (streakRecord?.weeklyStreakRecord?.currentActivity || 0);
+    const streakLength = (streakRecord?.weeklyStreakRecord?.currentStreak || 0);
+    const inStreakFreezeRange = new Date(1766361600000) <= new Date() && new Date() <= new Date(1767571200000);
 
     return <div className='w-100 dashboard-panel'>
         <h4>Build your weekly streak</h4>
@@ -67,9 +69,12 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
             <DashboardStreakGauge streakRecord={streakRecord}/>
         </div>
         <div className="streak-text mb-2">
-            {remainingToAnswer <= 0
-                ? `You've maintained your streak for this week!`
-                : `Only ${remainingToAnswer} more question parts to answer correctly this week!`
+            {streakLength >= 1 && inStreakFreezeRange
+                ? "Enjoy your festive two week streak freeze from 22nd Dec to 4th Jan!"
+                : remainingToAnswer <= 0
+                    ? `You've maintained your streak for this week!`
+                    : `Only ${remainingToAnswer} more question parts to answer correctly this week!`
+
             }
         </div>
         <Spacer/>
