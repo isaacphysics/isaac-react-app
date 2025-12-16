@@ -647,17 +647,18 @@ describe("Groups", () => {
 
     (["with", "without"] as const).forEach(async (permission) => {it(`${permission === "with" ? "allows" : "does not allow"} additional group managers ${permission} privileges to add and remove other managers`, async () => {
         const mockOwner = buildMockTeacher(2);
-        const mockOtherManager = buildMockTeacher(3);
+        const mockAdditionalManager = buildMockTeacher(3);
+        const mockNewManager = buildMockTeacher(4);
         const additionalManagerPrivileges = permission === "with";
+
         const mockGroup = {
             ...mockActiveGroups[0],
             ownerId: mockOwner.id,
-            additionalManagers: [buildMockUserSummary(mockOtherManager, true)],
+            additionalManagers: [buildMockUserSummary(mockAdditionalManager, true)],
             additionalManagerPrivileges: additionalManagerPrivileges,
         };
-        const mockNewManager = buildMockTeacher(4);
-        const existingGroupManagerHandler = buildNewManagerHandler(mockGroup, mockNewManager);
 
+        const existingGroupManagerHandler = buildNewManagerHandler(mockGroup, mockNewManager);
         const removeAdditionalManagerHandler = (managerToRemove: any) => jest.fn(() => {
             return HttpResponse.json({
                 ...mockGroup,
@@ -675,39 +676,35 @@ describe("Groups", () => {
                 http.delete(API_PATH + "/groups/:groupId/manager/:userId", removeAdditionalManagerHandler(mockNewManager))
             ]
         });
+
+        // Select group and check for "Edit group managers" button
         await navigateToGroups();
         const groups = await switchGroupsTab("active", [mockGroup]);
         const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
         await userEvent.click(selectGroupButton);
         const groupEditor = await screen.findByTestId("group-editor");
+        const editManagersButton = within(groupEditor).getByRole("button", {name: "Edit group managers"});
 
-        const addManagersButton = within(groupEditor).queryByRole("button", {name: "Edit group managers"});
         if (!additionalManagerPrivileges) {
-            expect(addManagersButton).toBeNull();
+            expect(editManagersButton).toBeNull();
         } else {
             // Add a new manager
-            expect(addManagersButton).toBeVisible();
-            await userEvent.click(addManagersButton!);
+            expect(editManagersButton).toBeVisible();
+            await userEvent.click(editManagersButton!);
             await testAddAdditionalManagerInModal(existingGroupManagerHandler, mockNewManager, false);
 
             // Remove the manager that was just added
-            const editManagersButton = within(groupEditor).getByRole("button", {name: "Edit group managers"});
-            await userEvent.click(editManagersButton);
+            await userEvent.click(editManagersButton!);
             const groupManagersModal = await screen.findByTestId("active-modal");
             const additionalManagerElements = within(groupManagersModal).getAllByTestId("group-manager");
-            await waitFor(() => {
-                const additionalManagerElements = within(groupManagersModal as HTMLElement).queryAllByTestId("group-manager");
-                expect(additionalManagerElements).toHaveLength(2);
-            });
-            const additionalManagerElement = additionalManagerElements.find(e => e.textContent?.includes(mockNewManager.email));
-            const removeButton = within(additionalManagerElement as HTMLElement).getByRole("button", {name: "Remove", hidden: false});
-            expect(removeButton).toBeVisible();
+            const initialManagerCount = additionalManagerElements.length;
+            const managerToRemove = additionalManagerElements.find(e => e.textContent?.includes(mockNewManager.email));
+            const removeButton = within(managerToRemove as HTMLElement).getByRole("button", {name: "Remove", hidden: false});
             await userEvent.click(removeButton);
             expect(window.confirm).toHaveBeenCalled();
-            await waitFor(() => {
-                const additionalManagerElements = within(groupManagersModal as HTMLElement).queryAllByTestId("group-manager");
-                expect(additionalManagerElements).toHaveLength(1);
-            });
+            const newAdditionalManagerElements = within(groupManagersModal).getAllByTestId("group-manager");
+            expect(newAdditionalManagerElements).toHaveLength(initialManagerCount - 1);
+            expect(newAdditionalManagerElements.some(e => e.textContent.includes(mockNewManager.email))).toBeFalsy();
         }
     });});
 
