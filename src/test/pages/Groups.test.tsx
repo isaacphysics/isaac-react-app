@@ -683,7 +683,7 @@ describe("Groups", () => {
         const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
         await userEvent.click(selectGroupButton);
         const groupEditor = await screen.findByTestId("group-editor");
-        const editManagersButton = within(groupEditor).getByRole("button", {name: "Edit group managers"});
+        const editManagersButton = within(groupEditor).queryByRole("button", {name: "Edit group managers"});
 
         if (!additionalManagerPrivileges) {
             expect(editManagersButton).toBeNull();
