@@ -85,7 +85,7 @@ interface MetadataTitleProps {
 }
 
 const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
-    return <>
+    return <div>
         <h3 className="text-theme-dark d-flex align-items-center gap-3">
             {title 
                 ? typeof title === "string"
@@ -96,7 +96,7 @@ const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
             {badges}
         </h3>
         {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
-    </>;
+    </div>;
 };
 
 export const PageMetadata = (props: PageMetadataProps) => {
@@ -107,16 +107,16 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const deviceSize = useDeviceSize();
 
     return <>
-        {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
+        {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
 
         <div className={classNames("d-flex", siteSpecific("mt-3 align-items-center", "align-items-end"))}>
-            {isPhy && (noTitle ? children : <MetadataTitle doc={doc}title={title} subtitle={subtitle} badges={badges} />)}
-            {isAda && <TagStack doc={doc} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion} />}
-            <Spacer/>
-            <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}/>
+            {isPhy && (noTitle ? children : <MetadataTitle doc={doc}title={title} subtitle={subtitle} badges={badges}/>)}
+            {isAda && <TagStack doc={doc} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}/>}
+            {isAda && <Spacer/>}
+            <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className={classNames({"float-end ms-3 mb-3": isPhy})}/>
         </div>
 
-        {!noTitle && children}
+        {(isAda || !noTitle) && children}
         {isPhy && showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
 
         {isPhy && <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})}/>}
