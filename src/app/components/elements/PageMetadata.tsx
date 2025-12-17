@@ -69,7 +69,7 @@ const TagStack = ({doc, pageContainsLLMFreeTextQuestion}: TagStackProps) => {
     const isCrossTopic = doc?.tags?.includes("cross_topic");
 
     return <>
-        {isCrossTopic || pageContainsLLMFreeTextQuestion && <div className="d-lg-flex align-items-center gap-3 me-3">
+        {(isCrossTopic || pageContainsLLMFreeTextQuestion) && <div className="d-lg-flex align-items-center gap-3 me-3">
             {isAda && isCrossTopic && <CrossTopicQuestionIndicator/>}
             {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator/>}
         </div>}
