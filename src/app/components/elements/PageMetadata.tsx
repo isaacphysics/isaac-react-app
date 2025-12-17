@@ -109,12 +109,16 @@ export const PageMetadata = (props: PageMetadataProps) => {
     return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
 
-        <div className={classNames("d-flex", siteSpecific("mt-3 align-items-center", "align-items-end"))}>
-            {isPhy && (noTitle ? children : <MetadataTitle doc={doc}title={title} subtitle={subtitle} badges={badges}/>)}
-            {isAda && <TagStack doc={doc} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}/>}
-            {isAda && <Spacer/>}
-            <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className={classNames({"float-end ms-3 mb-3": isPhy})}/>
-        </div>
+        {isPhy && <div className="mt-3 align-items-center">
+            <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-3"/>
+            {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}
+        </div>}
+        
+        {isAda && <div className="d-flex align-items-end">
+            <TagStack doc={doc} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}/>
+            <Spacer/>
+            <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}/>
+        </div>}
 
         {(isAda || !noTitle) && children}
         {isPhy && showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
