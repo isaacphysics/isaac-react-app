@@ -113,7 +113,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
             {isPhy && (noTitle ? children : <MetadataTitle doc={doc}title={title} subtitle={subtitle} badges={badges} />)}
             {isAda && <TagStack doc={doc} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion} />}
             <Spacer/>
-            <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className={classNames("")}/>
+            <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}/>
         </div>
 
         {!noTitle && children}
