@@ -9,7 +9,7 @@ import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { HelpButton } from './HelpButton';
-import { above, below, isAda, isPhy, siteSpecific, useDeviceSize } from '../../services';
+import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
@@ -113,7 +113,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
             <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-3"/>
             {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}
         </div>}
-        
+
         {isAda && <div className="d-flex align-items-end">
             <TagStack doc={doc} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}/>
             <Spacer/>
