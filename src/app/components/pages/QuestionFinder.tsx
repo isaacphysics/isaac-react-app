@@ -239,13 +239,15 @@ export const QuestionFinder = withRouter(() => {
                 });
             }
 
+            const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
+
             setSearchParams({
                 querySource: "questionFinder",
                 searchString: searchString || undefined,
                 tags: choiceTreeLeaves.join(",") || undefined,
                 topics: siteSpecific(undefined, [...topics].filter((query) => query != "").join(",") || undefined),
                 books: (!excludeBooks && book.join(",")) || undefined,
-                stages: stages.join(",") || undefined,
+                stages: filteredStages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
                 examBoards: examBoards.join(",") || undefined,
                 questionCategories: isPhy
@@ -258,7 +260,7 @@ export const QuestionFinder = withRouter(() => {
                 randomSeed
             });
         }, 250, { leading: true }),
-    [pageContext]);
+    [pageContext, searchStages]);
 
 
     const filteringByStatus = Object.values(searchStatuses).some(v => v) && !Object.values(searchStatuses).every(v => v);
@@ -266,9 +268,8 @@ export const QuestionFinder = withRouter(() => {
     const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
 
-        const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
         debouncedSearch({
-            searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages: filteredStages,
+            searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages,
             searchDifficulties, selections, excludeBooks, searchStatuses, startIndex: 0, randomSeed
         });
 
