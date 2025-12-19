@@ -47,8 +47,8 @@ export const Gameboard = withRouter(({ location }) => {
     const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
     const wildCard: ContentSummaryDTO = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT, tags: [], className: "wildcard-list-view"} as ContentSummaryDTO;
     const displayQuestions = (gameboard?.wildCard && gameboard && showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
-    const getSubject = (question: ContentSummaryDTO) => {return question.tags?.find(tag => Object.values<string>(SUBJECTS).includes(tag));};
-    const singleSubject = gameboard?.contents?.length && gameboard.contents.map(q => getSubject(q)).every(s => s === getSubject(gameboard.contents![0])) ? getSubject(gameboard.contents[0]) : undefined;
+    const questionThemes = gameboard?.contents?.map(q => getThemeFromTags(q.tags)).filter((v, i, a) => a.indexOf(v) === i);
+    const singleSubject = questionThemes?.length === 1 ? questionThemes[0] : undefined;
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
