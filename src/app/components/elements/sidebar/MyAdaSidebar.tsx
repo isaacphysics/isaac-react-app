@@ -4,7 +4,7 @@ import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import classNames from "classnames";
 import { useHistory } from "react-router";
 import { selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../../../state";
-import { above, isStudent, isTeacherOrAbove, useDeviceSize } from "../../../services";
+import { above, below, isStudent, isTeacherOrAbove, useDeviceSize } from "../../../services";
 import { Spacer } from "../Spacer";
 
 interface MyAdaTab {
@@ -109,7 +109,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
     const toggleSidebar = () => dispatch(sidebarSlice.actions.toggle());
 
     return <ContentSidebar {...props} className={classNames(props.className, {"collapsed": !isOpen})} buttonTitle="My Ada">
-        <div className="sticky-top">
+        <div className="sticky-top overflow-x-hidden">
             {above['md'](deviceSize) && <AdaSidebarCollapser collapsed={!isOpen} toggleSidebar={toggleSidebar} />}
 
             {Object.entries(MyAdaTabs)
@@ -124,7 +124,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
                         key={key}
                         id={`tab-${tab.title.replace(" ", "-").toLowerCase()}`}
                         checkboxTitle={<div className={classNames("d-flex align-items-center gap-3")}>
-                            <i className={classNames("icon icon-sm", tab.icon, {"icon-color-black": isActive && !isOpen})} aria-hidden="true" />
+                            <i className={classNames("icon icon-sm ms-1", tab.icon, {"icon-color-black": isActive && !isOpen})} aria-hidden="true" />
                             <b>{tab.title}</b>
                         </div>}
                         checked={isActive}
