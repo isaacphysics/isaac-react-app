@@ -129,6 +129,7 @@ export const MyAdaSidebar = (props: ContentSidebarProps) => {
                         </div>}
                         checked={isActive}
                         className={classNames("nav-link my-ada-tab ps-1")}
+                        onClick={() => below['md'](deviceSize) && isOpen && toggleSidebar()}
                         type="link"
                         to={tab.url}
                     />;
