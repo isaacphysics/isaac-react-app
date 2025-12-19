@@ -14,6 +14,7 @@ import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     convertGameboardItemToContentSummary,
+    getThemeFromTags,
     isAda,
     isDefined,
     isFound,
@@ -23,8 +24,7 @@ import {
     PATHS,
     SEARCH_RESULT_TYPE,
     showWildcard,
-    siteSpecific,
-    SUBJECTS,
+    siteSpecific
 } from "../../services";
 import {Redirect} from "react-router";
 import classNames from "classnames";
