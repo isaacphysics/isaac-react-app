@@ -147,9 +147,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         (doc.type === "isaacClozeQuestion" && [true, false].every(
             b => (validationResponse as ApiTypes.ItemValidationResponseDTO)?.itemsCorrect?.includes(b))                        // cloze (detailedFeedback only)
         ) ||
-        (doc.type === "isaacDndQuestion" && [true, false].every(
-            b => Object.values((validationResponse as ApiTypes.DndValidationResponseDTO)?.dropZonesCorrect || {}).includes(b)) // dnd (detailedFeedback only)
-        )
+        (doc.type === "isaacDndQuestion" &&
+            Object.values((validationResponse as ApiTypes.DndValidationResponseDTO)?.dropZonesCorrect || {})
+                .includes(true)) // dnd (detailedFeedback only)
     );
 
     // Determine Action Buttons
