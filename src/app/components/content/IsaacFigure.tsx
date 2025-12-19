@@ -112,6 +112,8 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
     const imageRef = useRef<HTMLImageElement>(null);
     const [isCondensed, setIsCondensed] = useState(false);
 
+    const regionHeight = contextType === 'dropRegion' ? "24px" : "34px";
+
     useEffect(() => {
         if (doc.condensedMaxWidth && imageRef.current) {
             const resizeObserver = new ResizeObserver(() => {
@@ -129,18 +131,18 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                 const figureString = figId && Object.keys(figureNumbers).includes(figId) ?
                     `Figure\u00A0${figureNumbers[figId]}` : "Figure";
                 return <figure>
-                    <div className="w-100 d-flex flex-column justify-content-center p-3 pb-5" ref={clozeDropRootElement}>
-                        <div className="position-relative">
-                            <button className="figure-fullscreen" aria-label="Expand figure" onClick={() => {
-                                dispatch(openActiveModal(FigureModal({
-                                    path, 
-                                    altText: doc.altText,
-                                    caption: <IsaacFigureCaption doc={doc} figId={figId} figureString={figureString} />,
-                                    toggle: () => dispatch(closeActiveModal())
-                                })));
-                            }}>
-                                <i className="icon icon-fullscreen icon-md" />
-                            </button>
+                    <div className="w-100 d-flex flex-column justify-content-center position-relative p-3 pb-5" ref={clozeDropRootElement}>
+                        <button className="figure-fullscreen" aria-label="Expand figure" type="button" onClick={() => {
+                            dispatch(openActiveModal(FigureModal({
+                                path, 
+                                altText: doc.altText,
+                                caption: <IsaacFigureCaption doc={doc} figId={figId} figureString={figureString} />,
+                                toggle: () => dispatch(closeActiveModal())
+                            })));
+                        }}>
+                            <i className="icon icon-fullscreen icon-md" />
+                        </button>
+                        <div className="position-relative w-fit-content align-self-center">
                             {doc.figureRegions && contextType && path && (
                                 !isCondensed
                                     ? generateFigureRegionObjects({
@@ -150,10 +152,10 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                                         style: (region: FigureRegion) => ({
                                             position: 'absolute',
                                             left: `calc(${region.left}% - (max(${region.width}%, ${region.minWidth}) * ${(region.left)/100})`,
-                                            top: `calc(${region.top}% - (${region.width}% * ${(region.top)/100})`,
+                                            top: `calc(${region.top}% - (${regionHeight} * ${(region.top)/100})`,
                                             width: region.width ? `${region.width}%` : undefined,
                                             minWidth: region.minWidth,
-                                            height: contextType === 'dropRegion' ? "24px" : "34px",
+                                            height: regionHeight,
                                         })
                                     })
                                     : generateFigureRegionObjectPlaceholders({
@@ -161,7 +163,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                                         style: (region) => ({
                                             position: 'absolute',
                                             left: `calc(${region.left}% - (${region.width}% * ${region.left/100}) + ((${region.width}% - ${FIGURE_DROP_ZONE_PLACEHOLDER_SIZE}) / 2))`, 
-                                            top: `calc(${region.top}% - (${contextType === 'dropRegion' ? "24px" : "34px"} * ${region.top/100}) + ((${contextType === 'dropRegion' ? "24px" : "34px"} - ${FIGURE_DROP_ZONE_PLACEHOLDER_SIZE}) / 2))`,
+                                            top: `calc(${region.top}% - (${regionHeight} * ${region.top/100}) + ((${regionHeight} - ${FIGURE_DROP_ZONE_PLACEHOLDER_SIZE}) / 2))`,
                                         })
                                     })
                             )}
