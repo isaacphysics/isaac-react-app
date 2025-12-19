@@ -24,6 +24,7 @@ import {
     SEARCH_RESULT_TYPE,
     showWildcard,
     siteSpecific,
+    SUBJECTS,
 } from "../../services";
 import {Redirect} from "react-router";
 import classNames from "classnames";
@@ -46,6 +47,8 @@ export const Gameboard = withRouter(({ location }) => {
     const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];
     const wildCard: ContentSummaryDTO = {...gameboard?.wildCard, type: SEARCH_RESULT_TYPE.SHORTCUT, tags: [], className: "wildcard-list-view"} as ContentSummaryDTO;
     const displayQuestions = (gameboard?.wildCard && gameboard && showWildcard(gameboard)) ? [wildCard, ...contentSummary] : contentSummary;
+    const getSubject = (question: ContentSummaryDTO) => {return question.tags?.find(tag => Object.values<string>(SUBJECTS).includes(tag));};
+    const singleSubject = gameboard?.contents?.length && gameboard.contents.map(q => getSubject(q)).every(s => s === getSubject(gameboard.contents![0])) ? getSubject(gameboard.contents[0]) : undefined;
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
@@ -68,7 +71,7 @@ export const Gameboard = withRouter(({ location }) => {
     </>;
     return !gameboardId
         ? <Redirect to={PATHS.QUESTION_FINDER} />
-        : <Container className="mb-7">
+        : <Container className="mb-7" data-bs-theme={singleSubject}>
             <ShowLoadingQuery
                 query={gameboardQuery}
                 defaultErrorTitle={`Error fetching ${siteSpecific("question deck", "quiz")} with id: ${gameboardId}`}
