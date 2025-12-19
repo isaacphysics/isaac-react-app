@@ -374,7 +374,7 @@ export interface ItemValidationResponseDTO extends QuestionValidationResponseDTO
 }
 
 export interface DndValidationResponseDTO extends QuestionValidationResponseDTO {
-    itemsCorrect?: Record<string, boolean>;
+    dropZonesCorrect?: Record<string, boolean>;
 }
 
 export interface InlineRegionValidationResponseDTO extends QuestionValidationResponseDTO {
