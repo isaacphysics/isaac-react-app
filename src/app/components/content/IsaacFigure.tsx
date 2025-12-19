@@ -55,32 +55,37 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
             const zoneId = figureRegion.id;
             const parentId = contextType === 'dropRegion' ? `figure-drop-target-${zoneId}` : `inline-question-${zoneId}`;
 
-            const Wrapper = label ? 'div' : React.Fragment;
+            const region = <div 
+                id={parentId} style={style?.(figureRegion, i)}
+            >
+                {contextType === 'dropRegion'
+                    ? <InlineDropRegion 
+                        divId={parentId}
+                        zoneId={zoneId}
+                        emptyWidth="100%"
+                        emptyHeight="100%"
+                        rootElement={root || undefined}
+                    />
+                    : <InlineEntryZoneBase
+                        inlineSpanId={parentId}
+                        className="figure-inline-region"
+                        width="100%"
+                        minWidth="100%" // on a figure, the input size is determined by the region size (i.e. the parent), so all sizes are 100%
+                        height="100%"
+                        root={root || document.body}
+                    />
+                }
+            </div>;
 
-            return <Wrapper className="d-flex gap-2 align-items-center" key={i}>
-                {label?.(figureRegion, i)}
-                <div 
-                    id={parentId} style={style?.(figureRegion, i)}
-                >
-                    {contextType === 'dropRegion'
-                        ? <InlineDropRegion 
-                            divId={parentId}
-                            zoneId={zoneId}
-                            emptyWidth="100%"
-                            emptyHeight="100%"
-                            rootElement={root || undefined}
-                        />
-                        : <InlineEntryZoneBase
-                            inlineSpanId={parentId}
-                            className="figure-inline-region"
-                            width="100%"
-                            minWidth="100%" // on a figure, the input size is determined by the region size (i.e. the parent), so all sizes are 100%
-                            height="100%"
-                            root={root || document.body}
-                        />
-                    }
-                </div>
-            </Wrapper>;
+            return <React.Fragment key={i}>
+                {label 
+                    ? <div className="d-flex gap-2 align-items-center">
+                        {label(figureRegion, i)}
+                        {region}
+                    </div>
+                    : region    
+                }
+            </React.Fragment>;
         });
     }, []);
 
