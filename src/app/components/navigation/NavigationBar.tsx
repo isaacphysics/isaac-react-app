@@ -64,8 +64,8 @@ export const NavigationSection = ({className, children, title, topLevelLink, to}
                 ? <li className={className}>
                     <NavLink className={linkClasses} tag={Link} to={to} onClick={() => setMenuOpen(false)}>{title}</NavLink> 
                 </li>
-                : <Dropdown className={className} nav inNavbar={below["md"](deviceSize)} isOpen={isOpen} toggle={above["lg"](deviceSize) ? toggle : () => {}}>
-                    <DropdownToggle nav tag={isPhy && below["md"](deviceSize) ? "button" : undefined} caret={isPhy} onClick={below["md"](deviceSize) ? toggle : () => {}} className={classNames(linkClasses, "d-flex w-100 text-start invert-underline align-items-center")}>
+                : <Dropdown className={className} nav inNavbar={below["lg"](deviceSize)} isOpen={isOpen} toggle={above["lg"](deviceSize) ? toggle : () => {}}>
+                    <DropdownToggle nav tag={isPhy && below["lg"](deviceSize) ? "button" : undefined} caret={isPhy} onClick={below["lg"](deviceSize) ? toggle : () => {}} className={classNames(linkClasses, "d-flex w-100 text-start invert-underline align-items-center")}>
                         {title}
                         {isAda && <i className={classNames("icon icon-chevron-down icon-dropdown-180 icon-color-white float-end d-nav-none d-inline-block ms-auto", {"active": isOpen})}/>}
                     </DropdownToggle>
