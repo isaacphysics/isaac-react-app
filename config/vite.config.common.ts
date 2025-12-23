@@ -17,6 +17,8 @@ const resolveSiteSpecificIndexPlugin = (site: "sci" | "ada", renderer?: boolean)
 
 export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env: Record<string, any>) => {
     const isRenderer = env['isRenderer'] ?? false;
+    // TODO: rename more phy => sci; bottleneck on nginx config
+    const oldStyleSite = site === "sci" ? "phy" : "ada";
     
     return {
         plugins: [
@@ -27,7 +29,7 @@ export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env:
 
         build: {
             target: 'es2015', // maximal backwards compatibility
-            outDir: renderer ? `build-${site}-renderer` : `build-${site}`,
+            outDir: renderer ? `build-${oldStyleSite}-renderer` : `build-${oldStyleSite}`,
             emptyOutDir: true,
         },
 
