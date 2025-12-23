@@ -11,7 +11,7 @@ const resolveSiteSpecificIndexPlugin = (site: "sci" | "ada"): Plugin => ({
     name: 'site-specific-index-html',
     enforce: 'pre',
     async transformIndexHtml() {
-        return await fs.readFile(`./index-${site}.html`, 'utf-8');
+        return await fs.readFile(`./public/index-${site}.html`, 'utf-8');
     }
 });
 
