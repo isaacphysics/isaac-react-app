@@ -11,8 +11,6 @@ import {
     NavLink,
 } from "reactstrap";
 import {
-    above,
-    below,
     filterAssignmentsByStatus,
     isAda,
     isFound,
@@ -21,7 +19,6 @@ import {
     isPhy,
     partitionCompleteAndIncompleteQuizzes,
     siteSpecific,
-    useDeviceSize,
     useNavbarExpanded
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
