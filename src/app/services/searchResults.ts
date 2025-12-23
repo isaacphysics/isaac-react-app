@@ -244,7 +244,7 @@ const subjects = /(physics|maths|chemistry|biology)/;
 const stageAndSubject = new RegExp(`${stages.source} ${subjects.source}|${subjects.source} ${stages.source}`);
 
 export function shortcuts(term: string) {
-    const lterm = term.toLowerCase();
+    const lterm = decodeURIComponent(term).toLowerCase();
     const response = [];
     if (group.test(term)) {
         response.push({

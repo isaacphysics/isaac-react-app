@@ -18,7 +18,7 @@ export const StudentChallenges = () => {
         <Row>
             <Col lg={{size: 8, offset: 2}}>
                 <PageFragment fragmentId={"student_challenges_intro"} />
-                {isError ?
+                {!isError ?
                     <PageFragment fragmentId={liveChallengeId} />
                     :
                     <>

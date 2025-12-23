@@ -1,9 +1,5 @@
 @import "../common/header";
 
-header {
-  background-color: $cs-black;
-}
-
 div.header-progress {
   justify-content: center !important;
   padding-left: 15% !important;
@@ -74,6 +70,7 @@ div.header-progress {
 
 header {
   position: relative;
+  background-color: $cs-black;
   z-index: 20;
 
   --focus-outline-color: #{$cyan-300};

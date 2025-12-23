@@ -589,6 +589,23 @@ p > .katex, .katex-display {
   }
 }
 
+.question-tag-indicator {
+    position: relative;
+    display: flex;
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+
+    &.small {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+
 // Could be used to display draggables when using drop zones in text or code (if we got rid of the purple blocks)
 //.cloze-item & .minimal {
 //  text-decoration: underline dashed $secondary;

@@ -9,11 +9,12 @@ import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { HelpButton } from './HelpButton';
-import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
+import { above, below, isAda, isPhy, siteSpecific, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
 import { LLMFreeTextQuestionIndicator } from './LLMFreeTextQuestionIndicator';
+import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -62,6 +63,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle, pageContainsLLMFreeTextQuestion } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const isConcept = doc?.type === "isaacConceptPage";
+    const isCrossTopic = doc?.tags?.includes("cross_topic");
     const location = useLocation();
     const deviceSize = useDeviceSize();
 
@@ -78,13 +80,14 @@ export const PageMetadata = (props: PageMetadataProps) => {
                     </div>
                 </div>
                 {isAda && <div className="d-flex align-items-center">
+                    {isCrossTopic && <CrossTopicQuestionIndicator className="me-3"/>}
                     {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator className="me-3"/>}
                     <EditContentButton doc={doc} />
                 </div>}
             </>
             : <>
                 {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
-                <div className={classNames("d-flex align-items-center gap-3", {"mt-3": isPhy})}>
+                <div className={classNames("d-flex gap-3", siteSpecific("mt-3 align-items-center", "align-items-end"))}>
                     {isPhy && <div>
                         <div className="d-flex align-items-center gap-3">
                             <h3 className="text-theme-dark">
@@ -99,10 +102,11 @@ export const PageMetadata = (props: PageMetadataProps) => {
                         </div>
                         {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
                     </div>}
-                    {isAda && <div className="d-flex align-items-center">
+                    {isAda && <> <div className="d-lg-flex align-items-center">
+                        {isCrossTopic && <CrossTopicQuestionIndicator className="me-3"/>}
                         {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator className="me-3"/>}
-                        <EditContentButton doc={doc} />
-                    </div>}
+                    </div>
+                    <EditContentButton doc={doc} /> </>}
                     <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>
                 </div>
                 {children}
