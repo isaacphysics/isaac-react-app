@@ -42,8 +42,7 @@ export const generateConfig = (site: "sci" | "ada") => (env: Record<string, any>
             REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
             ENV_QUIZ_FEATURE_FLAG: process.env.QUIZ_FEATURE && process.env.QUIZ_FEATURE.trim() === "true",
             EDITOR_PREVIEW: JSON.stringify(isRenderer),
-
-            ISAAC_SITE: JSON.stringify(site === 'sci' ? 'physics' : 'ada'),
+            ISAAC_SITE: JSON.stringify(site),
         }
     } satisfies UserConfig;
 };
