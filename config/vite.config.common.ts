@@ -27,6 +27,8 @@ export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env:
 
         build: {
             target: 'es2015', // maximal backwards compatibility
+            outDir: renderer ? `build-${site}-renderer` : `build-${site}`,
+            emptyOutDir: true,
         },
 
         css: {
