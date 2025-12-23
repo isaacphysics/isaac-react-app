@@ -30,7 +30,7 @@ def run(site: str, update_baselines: bool, cypress_args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run visual regression tests')
-    parser.add_argument('site', type=str, choices=["ada", "phy"])
+    parser.add_argument('site', type=str, choices=["ada", "sci"])
     parser.add_argument(
         '--update-baselines',
         action="store_true",
