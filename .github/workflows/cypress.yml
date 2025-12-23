@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        site: [ "ada", "phy" ]
+        site: [ "ada", "sci" ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -64,8 +64,8 @@ jobs:
         uses: actions/download-artifact@v4
         continue-on-error: true
         with:
-            name: phy
-            path: src/test/pages/__image_snapshots__/phy
+            name: sci
+            path: src/test/pages/__image_snapshots__/sci
       - name: VRT update - create or update branch
         id: cypress-create-branch
         run: |
