@@ -19,8 +19,5 @@ import './commands';
 // Import styles
 import '../../src/scss/phy/isaac.scss';
 
-// Start Mock Service Worker - we use this instead of Cypress API mocking
-import { worker } from '../../src/mocks/browser';
-Cypress.on('test:before:run:async', async () => {
-  await worker.start();
-});
+import './msw';
+

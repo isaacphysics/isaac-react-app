@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import htmlPurge from 'vite-plugin-html-purgecss';
 import fs from 'fs/promises';
 
-const resolveSiteSpecificIndexPlugin = (site: "sci" | "ada") => ({
+const resolveSiteSpecificIndexPlugin = (site: "sci" | "ada"): Plugin => ({
     /*
         Vite requires an index.html file at the project root. Since we have two sites and each needs its own index.html,
         we use this plugin to load the appropriate site-specific index.html file to replace the default one.
@@ -13,7 +13,7 @@ const resolveSiteSpecificIndexPlugin = (site: "sci" | "ada") => ({
     async transformIndexHtml() {
         return await fs.readFile(`./index-${site}.html`, 'utf-8');
     }
-}) as Plugin;
+});
 
 export const generateConfig = (site: "sci" | "ada") => (env: Record<string, any>) => {
     const isRenderer = env['isRenderer'] ?? false;
