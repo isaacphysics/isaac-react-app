@@ -19,6 +19,8 @@ def run(site: str, update_baselines: bool, cypress_args):
         "-v", f"{os.path.abspath('./cypress')}:/tests/cypress",
         "-v", f"{os.path.abspath('./config')}:/tests/config",
         "-v", f"{os.path.abspath('./public')}:/tests/public",
+        "-v", f"{os.path.abspath('./index-sci.html')}:/tests/index-sci.html",
+        "-v", f"{os.path.abspath('./index-ada.html')}:/tests/index-ada.html",
         "-e", f"CYPRESS_SITE={site}",
         "-e", f"CYPRESS_UPDATE_BASELINE={'true' if update_baselines else 'false'}",
         "-e", "CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT=300000",
