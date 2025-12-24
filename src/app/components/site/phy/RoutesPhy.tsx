@@ -27,7 +27,6 @@ import {RegistrationSetDetails} from "../../pages/RegistrationSetDetails";
 import {RegistrationTeacherConnect} from "../../pages/RegistrationTeacherConnect";
 import {RegistrationSuccess} from "../../pages/RegistrationSuccess";
 import {RegistrationSetPreferences} from "../../pages/RegistrationSetPreferences";
-import {RegistrationGroupInvite} from "../../pages/RegistrationGroupInvite";
 import {PracticeQuizzes} from "../../pages/quizzes/PracticeQuizzes";
 import {SubjectLandingPage} from "../../pages/SubjectLandingPage";
 import {QuestionFinder} from "../../pages/QuestionFinder";
@@ -79,7 +78,6 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/register/student/additional_info" component={RegistrationAgeCheckParentalConsent} />,
     <TrackedRoute key={key++} exact path="/register/student/age_denied" component={RegistrationAgeCheckFailed} />,
     <TrackedRoute key={key++} exact path="/register/student/details" component={RegistrationSetDetails} componentProps={{'role': 'STUDENT'}} />,
-    <TrackedRoute key={key++} exact path="/register/group_invitation" component={RegistrationGroupInvite} />,
     <TrackedRoute key={key++} exact path="/register/connect" ifUser={isLoggedIn} component={RegistrationTeacherConnect} />,
     <TrackedRoute key={key++} exact path="/register/preferences" ifUser={isLoggedIn} component={RegistrationSetPreferences} />,
     <TrackedRoute key={key++} exact path="/register/success" ifUser={isLoggedIn} component={RegistrationSuccess} />,
