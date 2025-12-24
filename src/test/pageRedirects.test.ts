@@ -12,9 +12,9 @@ describe('pageRedirects', () => {
     ];
 
     const redirectTestCases: TestCase[]  = [
-        { site: SITE.PHY, from: "/physics_skills_14", to: "/books/physics_skills_19", handlers},
-        { site: SITE.PHY, from: "/book", to: "/books/physics_skills_19", handlers},
-        { site: SITE.PHY, from: "/books/physics_skills_14", to: "/books/physics_skills_19", handlers},
+        { site: SITE.SCI, from: "/physics_skills_14", to: "/books/physics_skills_19", handlers},
+        { site: SITE.SCI, from: "/book", to: "/books/physics_skills_19", handlers},
+        { site: SITE.SCI, from: "/books/physics_skills_14", to: "/books/physics_skills_19", handlers},
     ] as const;
 
     const isCurrentSite = (tc: TestCase) => tc.site === SITE_SUBJECT;

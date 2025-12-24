@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!-- Note: this needs to remain synchronised with index-sci.html -->
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/assets/phy/favicon/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" href="/assets/phy/favicon/favicon-96x96.png"   sizes="96x96" />
+    <link rel="icon" href="/assets/phy/favicon/favicon-32x32.png"   sizes="32x32" />
+    <link rel="apple-touch-icon" href="/assets/phy/favicon/apple-touch-icon-180x180.png" sizes="180x180">
+    <link rel="apple-touch-icon" href="/assets/phy/favicon/apple-touch-icon-76x76.png"   sizes="76x76">
+    <link rel="apple-touch-icon" href="/assets/phy/favicon/apple-touch-icon-precomposed.png">
+    <link rel="manifest" href="/manifest-phy.json" />
+    <link rel="preload" href="/assets/phy/fonts/exo-2-variable-wght.woff2" as="font" crossorigin="anonymous" />
+    <link rel="preload" as="image" href="/assets/phy/logo.svg">
+    <link rel="preload" as="image" href="/assets/phy/line.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="application-name" content="Isaac Science" />
+    <meta name="description" content="Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists." data-react-helmet="true" />
+    <meta property="og:site_name" content="Isaac Science" />
+    <meta property="og:title" content="Isaac Science" data-react-helmet="true" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists." data-react-helmet="true" />
+    <meta property="og:image" content="https://cdn.isaacscience.org/isaac/logos/isaacphysics-favicon-500px.png" />
+    <meta property="fb:app_id" content="760382960667256" />
+    <title>Isaac Science</title>
+    <script type="module" src="http://localhost:5173/@vite/client"></script>
+    <script type="module">
+        // https://vite.dev/guide/backend-integration.html
+        import RefreshRuntime from 'http://localhost:5173/@react-refresh'
+        RefreshRuntime.injectIntoGlobalHook(window)
+        window.$RefreshReg$ = () => {}
+        window.$RefreshSig$ = () => (type) => type
+        window.__vite_plugin_react_preamble_installed__ = true
+
+        // cypress' dev-server config ignores `define` in vite config (:/), so set globals here
+        // note that this can't even be in the component tsx, as that's loaded too late
+        export const ISAAC_SITE="sci";
+    </script>
+</head>
+<body data-bs-theme="neutral">
+<div data-cy-root id="root" data-reduced-motion="true"></div>
+</body>
+</html>
