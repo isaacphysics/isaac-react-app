@@ -64,19 +64,6 @@ header {
   box-shadow: 0 2px 30px 0 $shadow-08;
 }
 
-.title-help {
-  display: flex;
-  align-items: center;
-  cursor: help;
-  font-size: 1.25rem !important;
-  line-height: 1.2 !important;
-  min-height: 50px !important;
-}
-
-.title-help-modal {
-  cursor: pointer !important;
-}
-
 .h-subtitle {
   padding-top: 5px;
   margin-bottom: -5px;
