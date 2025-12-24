@@ -93,7 +93,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }
             }
         }
-    }, [hash, anchorId]);
+    }, [hash, anchorId, setOpen]);
 
     function getPage() {
         if (page && page != NOT_FOUND) {
