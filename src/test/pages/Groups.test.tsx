@@ -10,7 +10,7 @@ import {
     mockGroups,
     mockUser
 } from "../../mocks/data";
-import {ACCOUNT_TAB, API_PATH, extractTeacherName, isDefined, isPhy, siteSpecific} from "../../app/services";
+import {ACCOUNT_TAB, API_PATH, extractTeacherName, isDefined, siteSpecific} from "../../app/services";
 import difference from "lodash/difference";
 import isEqual from "lodash/isEqual";
 import userEvent from "@testing-library/user-event";
