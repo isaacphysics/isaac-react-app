@@ -82,8 +82,11 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
         expect(managerElements.some(e => e.textContent.includes(newManager.email))).toBeTruthy();
 
     });
-    // User should be able to see the remove button, since they are the owner
-    if (isPhy) {
+
+    const actionsExist = within(managerElements[0]).queryByRole("button", {name: "Actions"}) !== null;
+    // at md, the actions button appears instead; since this is different per site, actionsExist is used to determine which variant to test
+    if (!actionsExist) {
+        // User should be able to see the remove button, since they are the owner
         const removeButton = within(managerElements[0]).getByRole("button", {name: "Remove"});
         expect(removeButton).toBeVisible();
     } else {
