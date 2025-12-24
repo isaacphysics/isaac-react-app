@@ -221,7 +221,7 @@ export const BOARD_ORDER_NAMES: {[key in AssignmentBoardOrder]: string} = {
 const BOARD_SORT_FUNCTIONS = {
     [AssignmentBoardOrder.visited]: (b: GameboardDTO) => b.lastVisited?.valueOf(),
     [AssignmentBoardOrder.created]: (b: GameboardDTO) => b.creationDate?.valueOf(),
-    [AssignmentBoardOrder.title]: (b: GameboardDTO) => b.title,
+    [AssignmentBoardOrder.title]: (b: GameboardDTO) => b.title?.trim().toLowerCase(),
     [AssignmentBoardOrder.attempted]: (b: GameboardDTO) => b.percentageAttempted,
     [AssignmentBoardOrder.correct]: (b: GameboardDTO) => b.percentageCorrect
 };
@@ -231,94 +231,61 @@ const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: B
         ? BoardLimit.All
         : parseInt(limit, 10);
 
-export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit) => {
-    const dispatch = useAppDispatch();
-    const [ loadGameboards ] = useLazyGetGameboardsQuery();
+export const useGameboards = (initialView: BoardViews) => {
+    const [ loadGameboards, { isFetching } ] = useLazyGetGameboardsQuery();
     const boards = useAppSelector(selectors.boards.boards);
 
     const [boardOrder, setBoardOrder] = useHistoryState<AssignmentBoardOrder>("boardOrder", AssignmentBoardOrder.visited);
     const [boardView, setBoardView] = useHistoryState<BoardViews>("boardView", (boards && boards.boards.length > 6) ? BoardViews.table : initialView);
-    const [boardLimit, setBoardLimit] = useHistoryState<BoardLimit>("boardLimit", initialLimit);
+    const [boardLimit, setBoardLimit] = useHistoryState<BoardLimit>("boardLimit", boardView == BoardViews.table ? BoardLimit.All : BoardLimit.six);
     const [boardTitleFilter, setBoardTitleFilter] = useHistoryState<string>("boardTitle", "");
 
-    const [loading, setLoading] = useState(false);
-
-    const [numberOfBoards, setNumberOfBoards] = useState<NumberOfBoards>(parseBoardLimitAsNumber(boardLimit));
+    const [displayedBoards, setDisplayedBoards] = useState<NumberOfBoards | undefined>(undefined);
 
     const haveAllBoards = boards && boards.totalResults === boards.boards.length;
 
-    // Fetch gameboards from server, no aggregation since we want a fresh list
-    const loadInitial = useCallback((limit: NumberOfBoards) => {
-        loadGameboards({startIndex: 0, limit, sort: boardOrder}, false);
-        setLoading(true);
-    }, [loadGameboards, setLoading, boardOrder]);
-
-    // Refetches the boards when the limit changes - should fetch as many boards
-    // as the new value of boardLimit
-    useEffect(() => loadInitial(parseBoardLimitAsNumber(boardLimit)), [boardLimit]);
-
-    // Refetches the boards when the order changes - should fetch the same
-    // number as is currently on screen
+    // refetch the boards (if not all obtained) when any of the main parameters change
     useEffect(() => {
-        // Only refetch if we cannot reorder the boards in the frontend (we need all the boards to reorder them)
         if (!haveAllBoards) {
-            loadInitial(numberOfBoards);
+            // Fetch gameboards from server, no aggregation since we want a fresh list
+            void loadGameboards({startIndex: 0, limit: parseBoardLimitAsNumber(boardLimit), sort: boardOrder}, false);
         }
-    }, [boardOrder]);
+    }, [boardLimit, boardOrder, loadGameboards]);
 
-    // Change board limit when view changes between table and cards
+    // if the limit changes, we may need to reduce the number of displayed boards – but do not refetch
     useEffect(() => {
-        if (boardView == BoardViews.table) {
-            setBoardLimit(BoardLimit.All);
-        } else if (boardView == BoardViews.card && !haveAllBoards) {
-            setBoardLimit(BoardLimit.six);
-        }
-    }, [boardView]);
+        setDisplayedBoards(parseBoardLimitAsNumber(boardLimit));
+    }, [boardLimit]);
 
     // Fetch boardLimit *more* boards from the server, unless we have all boards already
     const viewMore = useCallback(() => {
         const increment = parseBoardLimitAsNumber(boardLimit);
-        if (increment != "ALL" && numberOfBoards != "ALL") {
-            loadGameboards({startIndex: numberOfBoards, limit: increment, sort: boardOrder});
-            setLoading(true);
+        if (increment != "ALL" && boardLimit != "ALL") {
+            void loadGameboards({startIndex: boards?.boards.length ?? 0, limit: increment, sort: boardOrder});
+            setDisplayedBoards(db => db !== "ALL" ? (db ?? 0) + increment : db);
         }
-    }, [dispatch, setLoading, numberOfBoards, boardLimit, boardOrder]);
+    }, [boardLimit, loadGameboards, boards?.boards.length, boardOrder]);
 
-    // When we get a new set of boards, record the new number
-    // Ask for some more boards if we have zero
-    useEffect(() => {
-        if (boards) {
-            const wasLoading = loading;
-            setLoading(false);
-            if (boards.boards) {
-                setNumberOfBoards(boards.boards.length);
-                if (!wasLoading && boards.boards.length == 0) {
-                    // Through deletion or something we have ended up with no boards, so fetch more.
-                    loadInitial(parseBoardLimitAsNumber(boardLimit));
-                }
-                return;
-            }
-        }
-        setNumberOfBoards(0);
-    }, [boards]);
-
-    // If we have all the users boards already, order them client-side
     const orderedBoards = useMemo<Boards | null>(() => {
+        // If we don't have all the boards, rely on the server-side ordering
         if (boards == null || !haveAllBoards) {
             return boards;
         }
+        // If we have all the boards already, order them client-side
         const boardOrderNegative = boardOrder.at(0) == "-";
         const boardOrderKind = (boardOrderNegative ? boardOrder.slice(1) : boardOrder) as "created" | "visited" | "attempted" | "correct" | "title";
         const orderedBoards = sortBy(boards?.boards, BOARD_SORT_FUNCTIONS[boardOrderKind]);
         if (["visited", "created", "-attempted", "-correct", "-title"].includes(boardOrder)) orderedBoards.reverse();
         return {
             totalResults: boards?.totalResults ?? 0,
-            boards: orderedBoards
+            boards: displayedBoards === "ALL" 
+                ? orderedBoards
+                : orderedBoards.slice(0, displayedBoards ?? boards?.boards.length)
         };
-    }, [boards, boardLimit, boardOrder, boardView]);
+    }, [boards, haveAllBoards, boardOrder, displayedBoards]);
 
     return {
-        boards: orderedBoards, loading, viewMore,
+        boards: orderedBoards, loading: isFetching, viewMore,
         boardOrder, setBoardOrder,
         boardView, setBoardView,
         boardLimit, setBoardLimit,
