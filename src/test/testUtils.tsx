@@ -125,9 +125,13 @@ export const followHeaderNavLink = async (menu: string, linkName: string) => {
     await userEvent.click(navLink);
     // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
     // related to a given title
-    const adminMenuSectionParent = navLink.closest("li[class*='nav-item']") as HTMLLIElement | null;
-    if (!adminMenuSectionParent) fail(`Missing NavigationSection parent - cannot locate entries in ${menu} navigation menu.`);
-    const link = await within(adminMenuSectionParent).findByRole("menuitem", {name: linkName});
+    const menuDropdownParent = navLink.closest("li[class*='nav-item']") as HTMLLIElement | null;
+    if (!menuDropdownParent) fail(`Missing NavigationSection parent - cannot locate entries in ${menu} navigation menu.`);
+
+    const link = isPhy
+        ? await within(menuDropdownParent).findByRole("menuitem", {name: linkName})
+        : await within(menuDropdownParent).findByText(new RegExp(linkName, 'g'));
+
     await userEvent.click(link);
 };
 
