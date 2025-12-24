@@ -360,7 +360,7 @@ export const Glossary = () => {
             />
             <MetaDescription description={metaDescription} />
 
-            <SidebarLayout>
+            <SidebarLayout site={isPhy}>
                 <GlossarySidebar 
                     searchText={searchText} setSearchText={debouncedSearchHandler} filterSubject={filterSubject} setFilterSubject={setFilterSubject}
                     filterStages={filterStages} setFilterStages={setFilterStages} subjects={subjects} stages={stages} stageCounts={stageCounts}

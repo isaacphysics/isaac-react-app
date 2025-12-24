@@ -387,9 +387,14 @@ iframe.email-html {
   }
 }
 
-.tab-picker {
+@mixin tab-picker($indicator-position: left, $indicator-thickness: 2px, $active-color: var(--subject-color-100)) {
   cursor: pointer;
-  border-left: solid 2px transparent;
+
+  @if $indicator-position == left {
+    border-left: solid $indicator-thickness transparent;
+  } @else if $indicator-position == right {
+    border-right: solid $indicator-thickness transparent;
+  }
 
   .badge.rounded-pill {
     background-color: white;
@@ -397,12 +402,18 @@ iframe.email-html {
   }
 
   background-size: 205% 100%;
-  background-image: linear-gradient(90deg, var(--subject-color-100) 50%, transparent 50%);
+  background-image: linear-gradient(90deg, $active-color 50%, transparent 50%);
   background-position: 100% 0%;
+  background-origin: border-box;
   transition: background-position 0.3s ease-in-out;
   
-  &:has(> input:checked) {
-    border-left: solid 2px var(--tab-active);
+  &:has(> input:checked), // checkbox/radio inputs
+  &:is(a.checked) { // links
+    @if $indicator-position == left {
+      border-left: solid $indicator-thickness var(--tab-active);
+    } @else if $indicator-position == right {
+      border-right: solid $indicator-thickness var(--tab-active);
+    }
     background-position: 0% 0%;
     
     .badge.rounded-pill {
@@ -411,11 +422,17 @@ iframe.email-html {
     }
   }
 
-  &:hover:not(:has(> input:checked, > input:disabled)) {
-    border-left: solid 2px var(--tab-hover);
+  &:not(:is(a)):hover:not(:has(> input:checked, > input:disabled)), 
+  &:is(a):not(.checked):hover {
+    @if $indicator-position == left {
+      border-left: solid $indicator-thickness var(--tab-hover);
+    } @else if $indicator-position == right {
+      border-right: solid $indicator-thickness var(--tab-hover);
+    }
   }
 
-  &:has(> input:disabled) {
+  &:has(> input:disabled),
+  &:is(a.disabled) {
     color: var(--sidebar-tab-disabled);
     cursor: not-allowed;
   }
@@ -434,7 +451,11 @@ iframe.email-html {
 
   @supports not selector(:has(a, b)) {
     &.checked {
-      border-left: solid 2px var(--tab-active);
+      @if $indicator-position == left {
+        border-left: solid $indicator-thickness var(--tab-active);
+      } @else if $indicator-position == right {
+        border-right: solid $indicator-thickness var(--tab-active);
+      }
       background-position: 0% 0%;
       
       .badge.rounded-pill {
