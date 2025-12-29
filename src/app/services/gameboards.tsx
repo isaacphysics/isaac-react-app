@@ -257,6 +257,13 @@ export const useGameboards = (initialView: BoardViews) => {
         setDisplayedBoards(parseBoardLimitAsNumber(boardLimit));
     }, [boardLimit]);
 
+    // fix the order if not all boards are present – relies on sort input being disabled if !haveAllBoards
+    useEffect(() => {
+        if (!haveAllBoards) {
+            setBoardOrder(AssignmentBoardOrder.visited);
+        }
+    }, [haveAllBoards, setBoardOrder]);
+
     // Fetch boardLimit *more* boards from the server, unless we have all boards already
     const viewMore = useCallback(() => {
         const increment = parseBoardLimitAsNumber(boardLimit);
@@ -289,6 +296,7 @@ export const useGameboards = (initialView: BoardViews) => {
         boardOrder, setBoardOrder,
         boardView, setBoardView,
         boardLimit, setBoardLimit,
-        boardTitleFilter, setBoardTitleFilter
+        boardTitleFilter, setBoardTitleFilter,
+        haveAllBoards
     };
 };

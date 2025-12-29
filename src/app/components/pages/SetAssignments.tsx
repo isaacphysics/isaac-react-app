@@ -296,7 +296,8 @@ export const SetAssignments = () => {
         boardOrder, setBoardOrder,
         boardView, setBoardView,
         boardLimit, setBoardLimit,
-        boardTitleFilter, setBoardTitleFilter
+        boardTitleFilter, setBoardTitleFilter,
+        haveAllBoards
     } = useGameboards(isAda && above["lg"](deviceSize) ? BoardViews.table : BoardViews.card);
 
     const isGroupsEmptyState = groups && groups.length === 0;
@@ -374,7 +375,7 @@ export const SetAssignments = () => {
             .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))),
     [boards, user, boardTitleFilter, boardCreator, boardSubject]);
 
-    const sortDisabled = !!boards && boards.boards.length !== boards.totalResults;
+    const sortDisabled = !haveAllBoards;
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
@@ -492,7 +493,7 @@ export const SetAssignments = () => {
                                             {sortDisabled && <>
                                                 <i id="sortHelpTooltip" className="icon icon-info icon-color-grey ms-2"/>
                                                 <UncontrolledTooltip placement="auto" autohide target="sortHelpTooltip">
-                                                    Sorting is disabled if some question decks are hidden. Increase the display limit to show all question decks.
+                                                    Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks.
                                                 </UncontrolledTooltip>
                                             </>}
                                         </div>
