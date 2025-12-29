@@ -21,7 +21,8 @@ import {
     mockProgress,
     mockLLMMarkedRegressionTestQuestion,
     mockLLMMarkedValidationResponse,
-    mockSearchResults
+    mockSearchResults,
+    mockGameboards
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -31,6 +32,24 @@ import { errorResponses } from "../test/test-factory";
 export const handlers = [
     http.get(API_PATH + "/content/units", () => {
         return HttpResponse.json(["m", "cm", "mm"], {
+            status: 200,
+        });
+    }),
+
+    http.get(API_PATH + "/gameboards/user_gameboards", ({request}) => {
+        const url = new URL(request.url);
+        const startIndexStr = url.searchParams.get("start_index");
+        const startIndex = (startIndexStr && parseInt(startIndexStr)) || 0;
+        const limitStr = url.searchParams.get("limit");
+        const limit = (limitStr && parseInt(limitStr)) || mockGameboards.totalResults;
+
+        const limitedGameboards = produce(mockGameboards, g => {
+            if (startIndex === 0 && limitStr === "ALL") return g;
+            g.results = g.results.slice(startIndex, Math.min(startIndex + limit, mockGameboards.totalResults));
+            g.totalNotStarted = g.results.length;
+        });
+
+        return HttpResponse.json(limitedGameboards, {
             status: 200,
         });
     }),
