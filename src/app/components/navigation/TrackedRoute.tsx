@@ -28,7 +28,8 @@ const FigureNumberingProvider = ({element}: {element: React.ReactNode}) => {
 };
 
 // support for element, children and component, but element preferred stylistically (https://reactrouter.com/6.30.2/upgrading/v5#advantages-of-route-element)
-export const TrackedRoute = function({element, children, Component, ifUser, ...rest}: TrackedRouteProps) {
+export const TrackedRoute = function(props: TrackedRouteProps) {
+    const {element, children, Component, ifUser, ...rest} = props;
     // Store react-router's location, rather than window's location, during the react render to track changes in history so that we
     // can ensure it handles the location correctly even if there is a react-router <Redirect ...> before the useEffect is called.
     const location = useLocation();
@@ -41,9 +42,14 @@ export const TrackedRoute = function({element, children, Component, ifUser, ...r
 
     const user = useAppSelector(selectors.user.orNull);
 
+    if (children) {
+        // children is reserved for nested Routes (https://reactrouter.com/6.30.2/upgrading/v5#advantages-of-route-element). beyond the initial tracking, we do nothing special.
+        return <Route {...props} />;
+    }
+
     if (!ifUser) {
         return <Route {...rest} element={
-            <FigureNumberingProvider element={element || children || (Component && <Component />)} />
+            <FigureNumberingProvider element={element || (Component && <Component />)} />
         } />;
     }
 

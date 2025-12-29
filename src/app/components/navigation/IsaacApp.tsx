@@ -28,7 +28,6 @@ import {Admin} from "../pages/Admin";
 import {
     checkForWebSocket,
     closeWebSocket,
-    history,
     isAdminOrEventManager,
     isEventLeader,
     isLoggedIn,
