@@ -14,7 +14,6 @@ import {API_PATH, isAda, isPhy, PATHS, siteSpecific, STAGE, stageLabelMap} from 
 import {http, HttpHandler, HttpResponse} from "msw";
 import {AssignmentDTO} from "../../IsaacApiTypes";
 import {buildPostHandler} from "../../mocks/handlers";
-import produce from "immer";
 
 const expectedPhysicsTopLinks = {
     "our books": null,
