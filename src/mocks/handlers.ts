@@ -3,7 +3,6 @@ import {
     buildMockUserSummary,
     mockAssignmentsGroup2,
     mockAssignmentsGroup6, mockFragment,
-    mockGameboards,
     mockGroups,
     mockMyAssignments,
     mockNewsPods, buildMockPage,

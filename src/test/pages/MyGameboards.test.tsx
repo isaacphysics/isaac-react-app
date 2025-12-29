@@ -9,7 +9,7 @@ import produce from "immer";
 
 describe("MyGameboards", () => {
 
-    const renderMyGameboards = (dataOverride?: any) => {
+    const renderMyGameboards = (dataOverride?: object) => {
         renderTestEnvironment({
             PageComponent: MyGameboards,
             initalRouteEntries: [PATHS.MY_GAMEBOARDS],

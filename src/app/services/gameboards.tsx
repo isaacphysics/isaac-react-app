@@ -16,7 +16,6 @@ import {
 import {AssignmentBoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards} from "../../IsaacAppTypes";
 import {
     selectors,
-    useAppDispatch,
     useAppSelector,
     useLazyGetGameboardsQuery
 } from "../state";
