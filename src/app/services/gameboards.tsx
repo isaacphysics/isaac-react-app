@@ -242,7 +242,7 @@ export const useGameboards = (initialView: BoardViews) => {
 
     const [displayedBoards, setDisplayedBoards] = useState<NumberOfBoards | undefined>(undefined);
 
-    const haveAllBoards = boards && boards.totalResults === boards.boards.length;
+    const haveAllBoards = useMemo(() => boards && boards.totalResults === boards.boards.length, [boards]);
 
     // refetch the boards (if not all obtained) when any of the main parameters change
     useEffect(() => {
@@ -263,6 +263,13 @@ export const useGameboards = (initialView: BoardViews) => {
             setBoardOrder(AssignmentBoardOrder.visited);
         }
     }, [haveAllBoards, setBoardOrder]);
+
+    // increase the limit if switching to table view
+    useEffect(() => {
+        if (boardView === BoardViews.table) {
+            setBoardLimit(BoardLimit.All);
+        }
+    }, [boardView, setBoardLimit]);
 
     // Fetch boardLimit *more* boards from the server, unless we have all boards already
     const viewMore = useCallback(() => {
