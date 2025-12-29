@@ -14,6 +14,7 @@ import {API_PATH, isAda, isPhy, PATHS, siteSpecific, STAGE, stageLabelMap} from 
 import {http, HttpHandler, HttpResponse} from "msw";
 import {AssignmentDTO} from "../../IsaacApiTypes";
 import {buildPostHandler} from "../../mocks/handlers";
+import produce from "immer";
 
 const expectedPhysicsTopLinks = {
     "our books": null,
@@ -38,7 +39,26 @@ describe("SetAssignments", () => {
 
     const renderSetAssignments = async ({endpoints = []}: { endpoints?: HttpHandler[], path?: string } = {}) => {
         renderTestEnvironment({
-            extraEndpoints: endpoints
+            extraEndpoints: [
+                http.get(API_PATH + "/gameboards/user_gameboards", ({request}) => {
+                    const url = new URL(request.url);
+                    const startIndexStr = url.searchParams.get("start_index");
+                    const startIndex = (startIndexStr && parseInt(startIndexStr)) || 0;
+                    const limitStr = url.searchParams.get("limit");
+                    const limit = (limitStr && parseInt(limitStr)) || mockGameboards.totalResults;
+
+                    const limitedGameboards = produce(mockGameboards, g => {
+                        if (startIndex === 0 && limitStr === "ALL") return g;
+                        g.results = g.results.slice(startIndex, Math.min(startIndex + limit, mockGameboards.totalResults));
+                        g.totalNotStarted = g.results.length;
+                    });
+
+                    return HttpResponse.json(limitedGameboards, {
+                        status: 200,
+                    });
+                }),
+                ...endpoints,
+            ],
         });
         await navigateToSetAssignments();
     };
