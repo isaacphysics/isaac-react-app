@@ -38,7 +38,7 @@ import {
 } from "../../services";
 import {Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {useHistory, withRouter} from "react-router";
+import {useLocation, useNavigate} from "react-router";
 import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
@@ -151,10 +151,11 @@ const loadingPlaceholder = <ResultsListContainer>
     </div>
 </ResultsListContainer>;
 
-export const QuestionFinder = withRouter(() => {
+export const QuestionFinder = () => {
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
-    const history = useHistory();
+    const navigate = useNavigate();
+    const location = useLocation();
     const pageContext = useUrlPageTheme();
     const [selections, setSelections] = useState<ChoiceTree[]>(processTagHierarchy(
         tags,
@@ -307,7 +308,7 @@ export const QuestionFinder = withRouter(() => {
         }
         if (randomSeed !== undefined) params.randomSeed = randomSeed.toString();
 
-        history.replace({search: queryString.stringify(params, {encode: false}), state: history.location.state});
+        void navigate({...location, search: queryString.stringify(params, {encode: false})}, {state: location.state, replace: true});
     }, [searchStages, pageContext, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, filteringByStatus, history, randomSeed]);
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
@@ -596,4 +597,4 @@ export const QuestionFinder = withRouter(() => {
             </MainContent>
         </SidebarLayout>
     </Container>;
-});
+};

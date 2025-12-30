@@ -14,7 +14,7 @@ export function useHashState<T>(defaultState: T & string, typeGuard: TypeGuard<T
     // Updates the hash, given a new state
     const setHash = (newState: T & string) => {
         try {
-            navigate({...location, hash: newState});
+            void navigate({...location, hash: newState});
         } catch (e) {}
     };
     // Updates the state, given a new hash

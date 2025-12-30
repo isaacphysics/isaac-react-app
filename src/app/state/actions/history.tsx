@@ -1,21 +1,24 @@
 import { useCallback, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function useHistoryState<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
-    const history = useHistory();
-    const existingState = (history.location.state as object)?.[key as keyof typeof history.location.state];
+    const navigate = useNavigate();
+    const location = useLocation();
+    const existingState = location.state?.[key as keyof typeof location.state];
     const [state, setState] = useState<T>(existingState ?? initialValue);
 
     const setHistoryAndState = useCallback((value: React.SetStateAction<T>) => {
-        history.replace({
-            ...history.location,
+        void navigate({
+            ...location,
+        }, {
             state: {
-                ...history.location.state as Array<string>,
+                ...location.state as Array<string>,
                 [key]: value
-            }
+            },
+            replace: true 
         });
         setState(value);
-    }, [history, key]);
+    }, [navigate, location, key]);
 
     return [state, setHistoryAndState];
 }

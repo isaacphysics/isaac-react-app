@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { SidebarDTO, SidebarEntryDTO } from "../../../../IsaacApiTypes";
 import { ContentSidebarProps, ContentSidebar } from "../layout/SidebarLayout";
 import classNames from "classnames";
@@ -7,12 +7,12 @@ import { calculateSidebarLink, isSidebarGroup, containsActiveTab } from "../../.
 import { CollapsibleList } from "../CollapsibleList";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { Markup } from "../markup";
-import { History } from "history";
 
-const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: History }) => {
-    const isActive = history.location.pathname === calculateSidebarLink(entry);
-    const [isOpen, setIsOpen] = useState(isSidebarGroup(entry) && containsActiveTab(entry, history.location.pathname));
-
+const SidebarEntries = ({ entry }: { entry: SidebarEntryDTO }) => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const isActive = location.pathname === calculateSidebarLink(entry);
+    const [isOpen, setIsOpen] = useState(isSidebarGroup(entry) && containsActiveTab(entry, location.pathname));
     return isSidebarGroup(entry)
         ? <CollapsibleList
             title={<div className="d-flex flex-column gap-2 chapter-title">
@@ -26,7 +26,7 @@ const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: H
         >
             <ul>
                 {entry.sidebarEntries?.map((subEntry, subIndex) =>
-                    <SidebarEntries key={subIndex} entry={subEntry} history={history} />
+                    <SidebarEntries key={subIndex} entry={subEntry} />
                 )}
             </ul>
         </CollapsibleList>
@@ -37,19 +37,17 @@ const SidebarEntries = ({ entry, history }: { entry: SidebarEntryDTO, history: H
                     <span className="flex-grow-1"><Markup encoding="latex">{entry.title}</Markup></span>
                 </div>}
                 checked={isActive}
-                onClick={(() => history.push(calculateSidebarLink(entry) ?? ""))}
+                onClick={(() => navigate(calculateSidebarLink(entry) ?? ""))}
             />
         </li>;
 };
 
 export const ContentControlledSidebar = ({sidebar, ...rest}: ContentSidebarProps & {sidebar?: SidebarDTO}) => {
-    const history = useHistory();
-
     return <ContentSidebar buttonTitle={sidebar?.subtitle} {...rest}>
         <div className="section-divider"/>
         <ul>
             {sidebar?.sidebarEntries?.map((entry, index) => (
-                <SidebarEntries key={index} entry={entry} history={history}/>
+                <SidebarEntries key={index} entry={entry} />
             ))}
         </ul>
     </ContentSidebar>;

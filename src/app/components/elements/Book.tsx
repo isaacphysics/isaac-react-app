@@ -4,7 +4,7 @@ import {MainContent, SidebarLayout} from "./layout/SidebarLayout";
 import {Markup} from "./markup";
 import {TitleAndBreadcrumb} from "./TitleAndBreadcrumb";
 import {BOOK_DETAIL_ID_SEPARATOR, BOOKS_CRUMB, useContextFromContentObjectTags} from "../../services";
-import {useHistory, useParams} from "react-router";
+import {useLocation, useParams} from "react-router";
 import {useGetBookDetailPageQuery, useGetBookIndexPageQuery} from "../../state/slices/api/booksApi";
 import {BookPage} from "./BookPage";
 import {skipToken} from "@reduxjs/toolkit/query";
@@ -25,12 +25,12 @@ export const Book = () => {
 
     const { data: book } = bookIndexPageQuery;
 
-    const history = useHistory();
+    const location = useLocation();
 
     const pageContext = useContextFromContentObjectTags(book);
 
     useEffect(() => {
-        const section = history.location.pathname.split("/")[3];
+        const section = location.pathname.split("/")[3];
 
         if (!book?.id || !section) {
             setPageId(undefined);
@@ -39,7 +39,7 @@ export const Book = () => {
 
         const fragmentId = book?.id + BOOK_DETAIL_ID_SEPARATOR + section;
         setPageId(fragmentId);
-    }, [book?.id, history.location.pathname]);
+    }, [book?.id, location.pathname]);
 
     return <Container data-bs-theme={pageContext?.subject ?? "neutral"}>
         <TitleAndBreadcrumb

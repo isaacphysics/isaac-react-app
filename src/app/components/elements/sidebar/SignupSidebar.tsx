@@ -1,16 +1,16 @@
 import React from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import { confirmThen } from "../../../services";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar } from "../layout/SidebarLayout";
 
 export const SignupSidebar = ({activeTab} : {activeTab: number}) => {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const goBack = (path: string) => {
         confirmThen(
             "Are you sure you want go back? Any information you have entered will be lost.",
-            () => history.push(path));
+            () => navigate(path));
     };
 
     return <ContentSidebar buttonTitle="Create an account">
