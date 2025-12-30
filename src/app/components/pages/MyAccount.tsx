@@ -1,20 +1,19 @@
 import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
-import {connect} from "react-redux";
 import classnames from "classnames";
 import classNames from "classnames";
 import {Button, Container, Form, Input, Nav, NavItem, NavLink, TabContent, TabPane,} from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {
     AppDispatch,
-    AppState,
     closeActiveModal,
     getChosenUserAuthSettings,
     getRTKQueryErrorMessage,
     openActiveModal,
-    resetPassword,
+    selectors,
     showErrorToast,
     useAdminGetUserQuery,
     useAppDispatch,
+    useAppSelector,
     useUpdateCurrentMutation
 } from "../../state";
 import {
@@ -33,7 +32,6 @@ import {
     ACCOUNT_TABS,
     ACCOUNT_TABS_ALIASES,
     allRequiredInformationIsPresent,
-    history,
     ifKeyIsEnter,
     isAda,
     isDefined,
@@ -47,7 +45,7 @@ import {
     validatePassword
 } from "../../services";
 import queryString from "query-string";
-import {Link, withRouter} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -66,27 +64,6 @@ import { MyAccountSidebar } from '../elements/sidebar/MyAccountSidebar';
 
 // Avoid loading the (large) QRCode library unless necessary:
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
-
-// TODO: work out which of these `any`s can be specified
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const stateToProps = (state: AppState, props: any) => {
-    const {location: {search, hash}} = props;
-    const searchParams = queryString.parse(search);
-    return {
-        userAuthSettings: state?.userAuthSettings ?? null,
-        userPreferences: state?.userPreferences ?? null,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
-        hashAnchor: hash?.slice(1) ?? null,
-        authToken: searchParams?.authToken as string ?? null,
-        userOfInterest: searchParams?.userId as string ?? null
-    };
-};
-
-const dispatchToProps = {
-    resetPassword,
-    getChosenUserAuthSettings,
-};
 
 interface AccountPageProps {
     user: PotentialUser;
@@ -140,8 +117,16 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
     }));
 };
 
-const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings, userPreferences, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
+export const MyAccount = ({user}: AccountPageProps) => {
     const dispatch = useAppDispatch();
+    const location = useLocation();
+
+    const searchParams = queryString.parse(location.search);
+    const userPreferences = useAppSelector(selectors.user.preferences);
+    const userAuthSettings = useAppSelector(selectors.user.authSettings);
+    const hashAnchor = location.hash?.slice(1) ?? null;
+    const authToken = searchParams?.authToken as string ?? null;
+    const userOfInterest = searchParams?.userId as string ?? null;
 
     const [updateCurrentUser, {error: updateCurrentUserError}] = useUpdateCurrentMutation();
 
@@ -163,6 +148,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
     const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
 
     // - Copy of user to store changes before saving
+    // TODO fix this type! what on earth is it? LoggedInValidationUser & {password: string} & ...?
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [userToUpdate, setUserToUpdate] = useState<any>(
         editingOtherUser && userToEdit ?
@@ -263,9 +249,11 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
     }
 
     const accountInfoChanged = contextsChanged || userChanged || otherPreferencesChanged || (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
+
+    // TODO: blocking
     useEffect(() => {
         if (accountInfoChanged && !isFirstLoginInPersistence() && !saving) {
-            return history.block("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?");
+            // return history.block("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?");
         }
     }, [accountInfoChanged, saving]);
 
@@ -426,7 +414,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
                                     <Suspense fallback={<Loading/>}>
                                         <UserMFA
                                             userAuthSettings={userAuthSettings}
-                                            userToUpdate={userToUpdate}
+                                            userToUpdate={userToUpdate as any}
                                             editingOtherUser={editingOtherUser}
                                         />
                                     </Suspense>
@@ -453,5 +441,3 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
         </ShowLoading>
     </Container>;
 };
-
-export const MyAccount = withRouter(connect(stateToProps, dispatchToProps)(AccountPageComponent));

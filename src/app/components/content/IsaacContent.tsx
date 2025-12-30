@@ -11,7 +11,6 @@ import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 import {IsaacTabs, isTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
-import {RouteComponentProps, withRouter} from "react-router-dom";
 import {QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
@@ -22,6 +21,7 @@ import {IsaacCodeTabs} from "./IsaacCodeTabs";
 import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 import {IsaacCallout} from "./IsaacCallout";
 import InlineContextProvider from "../elements/InlineContextProvider";
+import { useLocation, useParams } from "react-router";
 
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
@@ -35,13 +35,14 @@ const classBasedLayouts = {
     clearfix: "clearfix w-100"
 };
 
-export interface IsaacContentProps extends RouteComponentProps {
+export interface IsaacContentProps {
     doc: ContentDTO,
     contentIndex?: number
 }
 
-export const IsaacContent = withRouter((props: IsaacContentProps) => {
-    const {doc: {type, layout, encoding, value, children}, match} = props;
+export const IsaacContent = (props: IsaacContentProps) => {
+    const {doc: {type, layout, encoding, value, children}} = props;
+    const location = useLocation();
     const keyedProps = {...props, key: props.doc.id};
     {/*
         Each IsaacContent is assumed to be independent, not sharing state with any other.
@@ -58,7 +59,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
     let tempSelectedComponent;
     if (isQuestion(props.doc)) {
         // FIXME: Someday someone will remove /quiz/ and this comment too.
-        if (match.path.startsWith("/quiz/") || match.path.startsWith("/test/")) {
+        if (location.pathname?.startsWith("/quiz/") || location.pathname?.startsWith("/test/")) {
             tempSelectedComponent = <QuizQuestion {...keyedProps} />;
         } else {
             tempSelectedComponent = <IsaacQuestion {...keyedProps} />;
@@ -108,4 +109,4 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
     } else {
         return selectedComponent;
     }
-});
+};

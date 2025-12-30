@@ -8,7 +8,7 @@ import {
     useGetGameboardByIdQuery,
     useGetMyAssignmentsQuery
 } from "../../state";
-import {Link, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -26,7 +26,7 @@ import {
     showWildcard,
     siteSpecific
 } from "../../services";
-import {Redirect} from "react-router";
+import {Navigate, useLocation} from "react-router";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
@@ -35,8 +35,9 @@ import {PageMetadata} from "../elements/PageMetadata";
 import {ListView} from "../elements/list-groups/ListView";
 import { GameboardSidebar } from "../elements/sidebar/GameboardSidebar";
 
-export const Gameboard = withRouter(({ location }) => {
+export const Gameboard = () => {
     const dispatch = useAppDispatch();
+    const location = useLocation();
     const gameboardId = location.hash ? location.hash.slice(1) : null;
     const gameboardQuery = useGetGameboardByIdQuery(gameboardId || skipToken);
     const { data: gameboard } = gameboardQuery;
@@ -70,7 +71,7 @@ export const Gameboard = withRouter(({ location }) => {
         </h3>
     </>;
     return !gameboardId
-        ? <Redirect to={PATHS.QUESTION_FINDER} />
+        ? <Navigate to={PATHS.QUESTION_FINDER} />
         : <Container className="mb-7" data-bs-theme={singleSubject}>
             <ShowLoadingQuery
                 query={gameboardQuery}
@@ -118,4 +119,4 @@ export const Gameboard = withRouter(({ location }) => {
                 }}
             />
         </Container>;
-});
+};

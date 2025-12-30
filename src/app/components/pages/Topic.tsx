@@ -1,5 +1,5 @@
 import React from "react";
-import {Link, withRouter} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {selectors, useAppSelector, useGetTopicWithStateUpdateQuery} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
@@ -19,8 +19,9 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import { IntendedAudienceWarningBanner } from "../navigation/IntendedAudienceWarningBanner";
 
-export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
+export const Topic = () => {
     const user = useAppSelector(selectors.user.orNull);
+    const {topicName=null} = useParams();
     
     const { data: topicPage } = useGetTopicWithStateUpdateQuery(topicName);
 
@@ -86,4 +87,4 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             </Row>
         </Container>
     } />;
-});
+};
