@@ -7,51 +7,51 @@ export function isLoggedIn(user?: Immutable<PotentialUser> | null): user is Immu
     return user ? user.loggedIn : false;
 }
 
-export function isStudent(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
+export function isStudent(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): user is LoggedInUser {
     return isDefined(user) && (user.role === "STUDENT") && (user.loggedIn ?? true);
 }
 
-export function isTutor(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
+export function isTutor(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): user is LoggedInUser {
     return isDefined(user) && (user.role === "TUTOR") && (user.loggedIn ?? true);
 }
 
-export function isTutorOrAbove(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
+export function isTutorOrAbove(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): user is LoggedInUser {
     return isDefined(user) && isDefined(user.role) && (user.role !== "STUDENT") && (user.loggedIn ?? true);
 }
 
-export function isTeacherOrAbove(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
+export function isTeacherOrAbove(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): user is LoggedInUser {
     return isDefined(user) && isDefined(user.role) && (user.role !== "STUDENT") && (user.role !== "TUTOR") && (user.loggedIn ?? true);
 }
 
-export function isAdmin(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
+export function isAdmin(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): user is LoggedInUser {
     return isDefined(user) && (user.role === "ADMIN") && (user.loggedIn ?? true);
 }
 
-export function isEventManager(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
+export function isEventManager(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): user is LoggedInUser {
     return isDefined(user) && (user.role === "EVENT_MANAGER") && (user.loggedIn ?? true);
 }
 
-export function isStaff(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
+export function isStaff(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): user is LoggedInUser {
     return isDefined(user) && (user.role === "ADMIN" || user.role === "EVENT_MANAGER" || user.role === "CONTENT_EDITOR") && (user.loggedIn ?? true);
 }
 
-export function isEventLeader(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
+export function isEventLeader(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): user is LoggedInUser {
     return isDefined(user) && (user.role === "EVENT_LEADER") && (user.loggedIn ?? true);
 }
 
-export function isEventLeaderOrStaff(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
+export function isEventLeaderOrStaff(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): user is LoggedInUser {
     return isEventLeader(user) || isStaff(user);
 }
 
-export function isAdminOrEventManager(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
+export function isAdminOrEventManager(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): user is LoggedInUser {
     return isAdmin(user) || isEventManager(user);
 }
 
-export function isVerified(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly emailVerificationStatus?: string} | null): boolean {
+export function isVerified(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly emailVerificationStatus?: string} | null): user is LoggedInUser {
     return isDefined(user) && (user.emailVerificationStatus === "VERIFIED");
 }
 
-export function isTeacherAccountPending(user?: {readonly teacherAccountPending?: boolean} | null): boolean {
+export function isTeacherAccountPending(user?: {readonly teacherAccountPending?: boolean} | null): user is LoggedInUser {
     return isDefined(user) && user.teacherAccountPending === true;
 }
 
@@ -62,7 +62,7 @@ export function isTeacherAccountPending(user?: {readonly teacherAccountPending?:
 * Todo: For now this is specific to the Ada teacher flow. For Ada, teacher accounts where teacherAccountPending is true
 *  can only ever be partially logged-in.
 */
-export function isNotPartiallyLoggedIn(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly teacherAccountPending?: boolean, readonly EMAIL_VERIFICATION_REQUIRED?: boolean} | null): boolean {
+export function isNotPartiallyLoggedIn(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly teacherAccountPending?: boolean, readonly EMAIL_VERIFICATION_REQUIRED?: boolean} | null): user is LoggedInUser { // TODO this type guard is questionable, as non-logged in users pass this check. it seems to only be used as a "fully logged in" check though.
     return !(isAda && (isTeacherAccountPending(user) || user?.EMAIL_VERIFICATION_REQUIRED));
 }
 

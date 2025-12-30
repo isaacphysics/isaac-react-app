@@ -10,7 +10,7 @@ import {
     useAppSelector,
     useGetSegueEnvironmentQuery
 } from "../../state";
-import {BrowserRouter, Navigate, Route, Router, Routes, useLocation} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes, useLocation} from "react-router-dom";
 import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
@@ -80,6 +80,7 @@ import {SessionCookieExpired} from "../pages/SessionCookieExpired";
 import { AccountDeletion } from '../pages/AccountDeletion';
 import { AccountDeletionSuccess } from '../pages/AccountDeletionSuccess';
 import { IsaacScienceLaunchBanner } from './IsaacScienceLaunchBanner';
+import { RequireAuth } from './UserAuthentication';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -99,7 +100,7 @@ export const IsaacApp = () => {
     // Run once on component mount
     useEffect(() => {
         // We do not check the current user on the /auth/:provider:/callback page.
-        // We clear local storage on a failed check for current user, but on the callback page we need the stored afteAuthPath.
+        // We clear local storage on a failed check for current user, but on the callback page we need the stored afterAuthPath.
         // The auth callback will get the logged-in user for us.
         const pathname = window.location.pathname;
         if (!(pathname.includes("/auth/") && pathname.includes("/callback"))) {
@@ -173,7 +174,7 @@ export const IsaacApp = () => {
                         <Route path="/home" element={
                             <Navigate to="/" replace /> 
                         }/>
-                        <TrackedRoute path="/account" ifUser={isLoggedIn} element={<MyAccount />} />
+                        <TrackedRoute path="/account" element={<RequireAuth auth={isLoggedIn} element={<MyAccount />} /> } />
                         <TrackedRoute path="/search" element={<Search />} />
 
                         {/* deprecated route */}
@@ -182,49 +183,49 @@ export const IsaacApp = () => {
                         }/>
                         <TrackedRoute path="/pages/:pageId" element={<Generic />} />
                         <TrackedRoute path="/concepts/:conceptId" element={<Concept />} />
-                        <TrackedRoute path="/questions/:questionId" ifUser={isNotPartiallyLoggedIn} element={<Question />} />
+                        <TrackedRoute path="/questions/:questionId" element={<RequireAuth auth={isNotPartiallyLoggedIn} element={<Question />} />} />
                         <TrackedRoute path="/glossary" element={<Glossary />} />
 
                         <TrackedRoute path={PATHS.GAMEBOARD} element={<Gameboard />} />
-                        <TrackedRoute path={PATHS.GAMEBOARD_BUILDER} ifUser={isTutorOrAbove} element={<GameboardBuilder />} />
-                        <TrackedRoute path="/assignment/:gameboardId" ifUser={isLoggedIn} element={<RedirectToGameboard />} />
-                        <TrackedRoute path={`${PATHS.ADD_GAMEBOARD}/:gameboardId/:gameboardTitle?`} ifUser={isLoggedIn} element={<AddGameboard />} />
+                        <TrackedRoute path={PATHS.GAMEBOARD_BUILDER} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <GameboardBuilder user={authUser} />} />} />
+                        <TrackedRoute path="/assignment/:gameboardId" element={<RequireAuth auth={isLoggedIn} element={<RedirectToGameboard />} />} />
+                        <TrackedRoute path={`${PATHS.ADD_GAMEBOARD}/:gameboardId/:gameboardTitle?`} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <AddGameboard user={authUser} />} />} />
 
                         {/* Student pages */}
-                        <TrackedRoute path={PATHS.MY_ASSIGNMENTS} ifUser={isLoggedIn} element={<MyAssignments />} />
-                        <TrackedRoute path="/progress" ifUser={isLoggedIn} element={<MyProgress />} />
-                        <TrackedRoute path="/progress/:userIdOfInterest" ifUser={isLoggedIn} element={<MyProgress />} />
-                        <TrackedRoute path={PATHS.MY_GAMEBOARDS} ifUser={isLoggedIn} element={<MyGameboards />} />
+                        <TrackedRoute path={PATHS.MY_ASSIGNMENTS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyAssignments user={authUser} />} />} />
+                        <TrackedRoute path="/progress" element={<RequireAuth auth={isLoggedIn} element={<MyProgress />} />} />
+                        <TrackedRoute path="/progress/:userIdOfInterest" element={<RequireAuth auth={isLoggedIn} element={<MyProgress />} />} />
+                        <TrackedRoute path={PATHS.MY_GAMEBOARDS} element={<RequireAuth auth={isLoggedIn} element={<MyGameboards />} />} />
                         <TrackedRoute path={PATHS.QUESTION_FINDER} element={<QuestionFinder />} />
 
                         {/* Teacher pages */}
                         {/* Tutors can set and manage assignments, but not tests/quizzes */}
-                        <TrackedRoute path="/groups" ifUser={isTutorOrAbove} element={<Groups />} />
-                        <TrackedRoute path={PATHS.SET_ASSIGNMENTS} ifUser={isTutorOrAbove} element={<SetAssignments />} />
-                        <TrackedRoute path={PATHS.ASSIGNMENT_PROGRESS} ifUser={isTutorOrAbove} element={<AssignmentProgress />} />
-                        <TrackedRoute path={`${PATHS.ASSIGNMENT_PROGRESS}/:assignmentId`} ifUser={isTutorOrAbove} element={<AssignmentProgress />} />
-                        <TrackedRoute path={`${PATHS.ASSIGNMENT_PROGRESS}/group/:groupId`} ifUser={isTutorOrAbove} element={<AssignmentProgress />} />
+                        <TrackedRoute path="/groups" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <Groups user={authUser} />} />} />
+                        <TrackedRoute path={PATHS.SET_ASSIGNMENTS} element={<RequireAuth auth={isTutorOrAbove} element={<SetAssignments />} />} />
+                        <TrackedRoute path={PATHS.ASSIGNMENT_PROGRESS} element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentProgress user={authUser} />} />} />
+                        <TrackedRoute path={`${PATHS.ASSIGNMENT_PROGRESS}/:assignmentId`} element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentProgress user={authUser} />} />} />
+                        <TrackedRoute path={`${PATHS.ASSIGNMENT_PROGRESS}/group/:groupId`} element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentProgress user={authUser} />} />} />
 
                         {/* Admin */}
-                        <TrackedRoute path="/admin" ifUser={isStaff} element={<Admin />} />
-                        <TrackedRoute path="/admin/usermanager" ifUser={isAdminOrEventManager} element={<AdminUserManager />} />
-                        <TrackedRoute path="/admin/events" ifUser={user => isAdminOrEventManager(user) || isEventLeader(user)} element={<EventManager />} />
-                        <TrackedRoute path="/admin/stats" ifUser={isStaff} element={<AdminStats />} />
-                        <TrackedRoute path="/admin/content_errors" ifUser={user => segueEnvironment === "DEV" || isStaff(user)} element={<AdminContentErrors />} />
-                        <TrackedRoute path="/admin/emails" ifUser={isAdminOrEventManager} element={<AdminEmails location={location} />} />
-                        <TrackedRoute path="/admin/direct_emails" ifUser={isAdminOrEventManager} element={<ContentEmails location={location} />} />
+                        <TrackedRoute path="/admin" element={<RequireAuth auth={isStaff} element={(authUser) => <Admin user={authUser} />} />} />
+                        <TrackedRoute path="/admin/usermanager" element={<RequireAuth auth={isAdminOrEventManager} element={<AdminUserManager />} />} />
+                        <TrackedRoute path="/admin/events" element={<RequireAuth auth={user => isAdminOrEventManager(user) || isEventLeader(user)} element={(authUser) => <EventManager user={authUser} />} />} />
+                        <TrackedRoute path="/admin/stats" element={<RequireAuth auth={isStaff} element={<AdminStats />} />} />
+                        <TrackedRoute path="/admin/content_errors" element={<RequireAuth auth={user => segueEnvironment === "DEV" || isStaff(user)} element={<AdminContentErrors />} />} />
+                        <TrackedRoute path="/admin/emails" element={<RequireAuth auth={isAdminOrEventManager} element={<AdminEmails location={location} />} />} />
+                        <TrackedRoute path="/admin/direct_emails" element={<RequireAuth auth={isAdminOrEventManager} element={<ContentEmails location={location} />} />} />
                         {/* Authentication */}
                         <TrackedRoute path="/login" element={<LogIn />} />
                         <TrackedRoute path="/logout" element={<LogOutHandler />} />
                         <TrackedRoute path="/auth/:provider/callback" element={<ProviderCallbackHandler />} />
                         <TrackedRoute path="/resetpassword/:token" element={<ResetPasswordHandler />} />
-                        <TrackedRoute path="/deleteaccount" ifUser={isLoggedIn} element={<AccountDeletion />} />
+                        <TrackedRoute path="/deleteaccount" element={<RequireAuth auth={isLoggedIn} element={<AccountDeletion />} />} />
                         <TrackedRoute path="/deleteaccount/success" element={<AccountDeletionSuccess />} />
 
                         {/* Static pages */}
                         <TrackedRoute path="/contact" element={<Contact />} />
-                        {/*<TrackedRoute path="/request_account_upgrade" ifUser={isLoggedIn} element={<TeacherOrTutorRequest />} />*/}
-                        <TrackedRoute path="/tutor_account_request" ifUser={isLoggedIn} element={<TutorRequest />} />
+                        {/*<TrackedRoute path="/request_account_upgrade" element={<RequireAuth auth={isLoggedIn} element={<TeacherOrTutorRequest />} />} />*/}
+                        <TrackedRoute path="/tutor_account_request" element={<RequireAuth auth={isLoggedIn} element={<TutorRequest />} />} />
                         <StaticPageRoute path="/privacy" pageId="privacy_policy" />
                         <StaticPageRoute path="/terms" pageId="terms_of_use" />
                         <StaticPageRoute path="/cookies" pageId="cookie_policy" />
@@ -239,8 +240,8 @@ export const IsaacApp = () => {
                         */}
 
                         {/* Builder pages */}
-                        <TrackedRoute path="/markdown" ifUser={isStaff} element={<MarkdownBuilder />} />
-                        <TrackedRoute path="/free_text" ifUser={isStaff} element={<FreeTextBuilder />} />
+                        <TrackedRoute path="/markdown" element={<RequireAuth auth={isStaff} element={<MarkdownBuilder />} />} />
+                        <TrackedRoute path="/free_text" element={<RequireAuth auth={isStaff} element={<FreeTextBuilder />} />} />
 
                         {/* Support pages */}
                         <TrackedRoute path="/support/:type?/:category?" element={<Support />} />
@@ -252,5 +253,5 @@ export const IsaacApp = () => {
         </main>
         <ScrollToTop mainContent={mainContentRef}/>
         <SiteSpecific.Footer />
-    </Router>;
+    </BrowserRouter>;
 };
