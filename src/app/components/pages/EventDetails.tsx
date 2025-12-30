@@ -27,7 +27,6 @@ import {
     history,
     isDefined,
     isLoggedIn,
-    isStaff,
     isTeacherOrAbove,
     KEY,
     SITE_TITLE,
@@ -43,11 +42,10 @@ import {
     isPhy,
     userBookedReservedOrOnWaitingList, confirmThen,
     siteSpecific,
-    isAda
 } from "../../services";
 import {AdditionalInformation, AugmentedEvent, PotentialUser} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
-import {Link} from "react-router-dom";
+import {Link, useLocation, useParams} from "react-router-dom";
 import {EventBookingForm} from "../elements/EventBookingForm";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
@@ -351,12 +349,9 @@ const ImageAndMap = ({event}: EventBookingProps) => {
     </div>;
 };
 
-interface EventDetailsProps {
-    match: { params: { eventId: string } };
-    location: { pathname: string };
-}
-
-const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
+const EventDetails = () => {
+    const { eventId = "" } = useParams();
+    const location = useLocation();
     const user = useAppSelector(selectors.user.orNull);
     const eventQuery = useGetEventQuery(eventId || skipToken);
     const [bookingFormOpen, setBookingFormOpen] = useState(false);
@@ -372,7 +367,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             const hasExpired = event.hasExpired;
 
             const eventBookingProps : EventBookingProps = {
-                user, event, eventId, pathname, isVirtual,
+                user, event, eventId, pathname: location.pathname, isVirtual,
                 canMakeABooking, bookingFormOpen, setBookingFormOpen
             };
 

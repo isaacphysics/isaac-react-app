@@ -4,7 +4,7 @@ import {MainContent, SidebarLayout} from "./layout/SidebarLayout";
 import {Markup} from "./markup";
 import {TitleAndBreadcrumb} from "./TitleAndBreadcrumb";
 import {BOOK_DETAIL_ID_SEPARATOR, BOOKS_CRUMB, useContextFromContentObjectTags} from "../../services";
-import {useHistory} from "react-router";
+import {useHistory, useParams} from "react-router";
 import {useGetBookDetailPageQuery, useGetBookIndexPageQuery} from "../../state/slices/api/booksApi";
 import {BookPage} from "./BookPage";
 import {skipToken} from "@reduxjs/toolkit/query";
@@ -15,12 +15,9 @@ import { PageMetadata } from "./PageMetadata";
 import { WithFigureNumbering } from "./WithFigureNumbering";
 import { ContentControlledSidebar } from "./sidebar/ContentControlledSidebar";
 
-interface BookProps {
-    match: { params: { bookId: string } };
-}
+export const Book = () => {
 
-export const Book = ({match: {params: {bookId}}}: BookProps) => {
-
+    const { bookId } = useParams();
     const [pageId, setPageId] = useState<string | undefined>(undefined);
 
     const bookIndexPageQuery = useGetBookIndexPageQuery({id: `book_${bookId}`});
