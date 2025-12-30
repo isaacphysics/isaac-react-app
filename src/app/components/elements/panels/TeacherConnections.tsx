@@ -14,7 +14,6 @@ import {
 } from "../../../state";
 import {
     extractTeacherName,
-    history,
     isAda,
     isFirstLoginInPersistence,
     isLoggedIn,
@@ -117,7 +116,7 @@ export const authenticateWithTokenAfterPrompt = async (userId: number, token: st
         return;
     }
     else if (isPhy && isFirstLoginInPersistence()) {
-        history.push("/register/group_invitation?authToken=" + encodeURIComponent(sanitisedToken));
+        history.pushState(undefined, "", "/register/group_invitation?authToken=" + encodeURIComponent(sanitisedToken));
     }
     else {
         const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);

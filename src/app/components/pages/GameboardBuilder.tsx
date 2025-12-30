@@ -35,7 +35,6 @@ import {
     EXAM_BOARD,
     GAMEBOARD_UNDO_STACK_SIZE_LIMIT,
     getValue,
-    history,
     isAda,
     isDefined,
     isStaff,
@@ -255,10 +254,11 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         }
     }, [dispatch, concepts, baseGameboardId, cloneGameboard, generateTemporaryGameboard, userContext.contexts[0]]);
     useEffect(() => {
-        return history.block(() => {
-            logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
-            dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
-        });
+        // TODO blocking
+        // return history.block(() => {
+        //     logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
+        //     dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
+        // });
     }, []);
 
     const pageHelp = <span>

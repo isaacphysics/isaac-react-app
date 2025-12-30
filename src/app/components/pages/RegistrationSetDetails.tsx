@@ -5,7 +5,6 @@ import {
     confirmThen,
     EMAIL_PREFERENCE_DEFAULTS,
     FIRST_LOGIN_STATE,
-    history,
     isAda,
     isDobOldEnoughForSite,
     isPhy,
@@ -38,6 +37,7 @@ import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {SignupTab} from "../elements/panels/SignupTab";
 import {scheduleTeacherOnboardingModalForNextOverviewVisit} from "../elements/modals/AdaTeacherOnboardingModal";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
+import { useNavigate } from "react-router";
 
 interface RegistrationSetDetailsProps {
     role: UserRole
@@ -47,6 +47,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
 
     // todo: before, this was probably used to keep the details from the initial login screen (if any). Possibly still useful for SSO. Remove?
     const user = useAppSelector(selectors.user.orNull);
+    const navigate = useNavigate();
     const [attemptedSignUp, setAttemptedSignUp] = useState(false);
     const [registrationUser, setRegistrationUser] = useState<Immutable<ValidationUser>>(
         Object.assign({}, user,{
@@ -112,12 +113,12 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         if (isPhy || role === "STUDENT") {
             confirmThen(
                 "Are you sure you want go back? Any information you have entered will be lost.",
-                () => history.push("age"));
+                () => navigate("age"));
         }
         else { // teachers skip age check on Ada
             confirmThen(
                 "Are you sure you want go back? Any information you have entered will be lost.",
-                () => history.push("/register"));
+                () => navigate("/register"));
         }
     };
 

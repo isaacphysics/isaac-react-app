@@ -2,9 +2,9 @@ import React from "react";
 import {Container, TabContent, TabPane} from "reactstrap";
 import {Route} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Navigate, useParams} from "react-router";
+import {Navigate, useNavigate, useParams} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history, ifKeyIsEnter, isAda, isDefined, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isAda, isDefined, siteSpecific} from "../../services";
 import fromPairs from "lodash/fromPairs";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
@@ -98,6 +98,7 @@ function supportPath(type?: string, category?: string) {
 export const Support = () => {
 
     const { type, category } = useParams() as Params;
+    const navigate = useNavigate();
 
     if (type == undefined) {
         return <Navigate to={supportPath()} replace />;
@@ -121,7 +122,7 @@ export const Support = () => {
     }
 
     function activeTabChanged(tabIndex: number) {
-        history.push(supportPath(type, siteSpecific(categoryNames[tabIndex], categoryNames[tabIndex - 1])));
+        void navigate(supportPath(type, siteSpecific(categoryNames[tabIndex], categoryNames[tabIndex - 1])));
     }
 
     const metaDescriptionMap = siteSpecific(

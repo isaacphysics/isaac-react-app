@@ -4,7 +4,6 @@ import {
     api,
     API_REQUEST_FAILURE_MESSAGE,
     FIRST_LOGIN_STATE,
-    history,
     isAda,
     isNotPartiallyLoggedIn,
     isTeacherOrAbove,
@@ -283,7 +282,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
                 return;
             } else if (result.data.EMAIL_VERIFICATION_REQUIRED) {
                 // Email verification is required for this user
-                history.push("/verifyemail");
+                history.pushState(undefined, "", "/verifyemail");
                 // A partial login is still "successful", though we are unable to request user preferences and auth settings
                 dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
                 // We can, however, request the current user. This lets us set the session expiry time.
@@ -355,7 +354,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         // They will see the required account information modal either way on registration.
         const nextPage = persistence.pop(KEY.AFTER_AUTH_PATH);
         const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
-        history.push(nextPage || defaultNextPage);
+        history.pushState(undefined, "", nextPage || defaultNextPage);
     } catch (error: any) {
         const providerErrors = fetchErrorFromParameters(parameters);
         trackEvent("sign_in_failure", { props: {
@@ -366,7 +365,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             isaacError: error?.response?.data?.responseCode || error?.code || 'unknown',
             isaacErrorDescription: error?.response?.data?.errorMessage || error?.message || 'unknown'
         }});
-        history.push("/auth_error", { errorMessage: extractMessage(error), provider, providerErrors });
+        history.pushState({ errorMessage: extractMessage(error), provider, providerErrors }, "", "/auth_error");
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         if (!extractMessage(error).startsWith("You do not use") && !providerErrors.errorDescription?.startsWith("AADSTS65004")) {
             dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
@@ -507,7 +506,7 @@ export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (d
         dispatch(logAction({
             type: "VIEW_SUPERSEDED_BY_QUESTION", questionId: page.id, supersededBy: page.supersededBy
         }) as any);
-        history.push(`/questions/${page.supersededBy}`);
+        history.pushState(undefined, "", `/questions/${page.supersededBy}`);
     }
 };
 
@@ -528,7 +527,7 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
             ));
             dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
             dispatch(showToast({color: "success", title: "Test submitted", body: "Test submitted successfully", timeout: 3000}) as any);
-            history.push(generatePostQuizUrl(quizId));
+            history.pushState(undefined, "", generatePostQuizUrl(quizId));
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
@@ -544,7 +543,7 @@ export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<
             <strong>A submission has already been recorded for this test by your account.</strong>
         </div>
     }) as any);
-    history.push(generatePostQuizUrl(quizId));
+    history.pushState(undefined, "", generatePostQuizUrl(quizId));
 };
 
 // Question testing
@@ -575,7 +574,7 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
 // SERVICE ACTIONS (w/o dispatch)
 
 export const changePage = (path: string) => {
-    history.push(path);
+    history.pushState(undefined, "", path);
 };
 
 export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => {
@@ -586,7 +585,7 @@ export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readon
     } else if (user && isTeacherOrAbove(user) && isAda) {
         target = "/dashboard";
     }
-    history.push(target);
+    history.pushState(undefined, "", target);
 };
 
 // Hard redirect (refreshes page)

@@ -24,7 +24,6 @@ import {
     formatEventDetailsDate,
     formatMakeBookingButtonMessage,
     formatWaitingListBookingStatusMessage,
-    history,
     isDefined,
     isLoggedIn,
     isTeacherOrAbove,
@@ -178,7 +177,7 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
 const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFormOpen, setBookingFormOpen}: EventBookingProps) => {
     function loginAndReturn() {
         persistence.save(KEY.AFTER_AUTH_PATH, pathname);
-        history.push("/login");
+        history.pushState(undefined, "", "/login");
     }
 
     function stopBookingIfStudent() {

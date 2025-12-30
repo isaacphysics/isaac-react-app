@@ -4,7 +4,6 @@ import {API_PATH, isPhy} from "../../app/services";
 import {http} from "msw";
 import {act, screen} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {history} from "../../app/services";
 
 
 async function enterAndConfirmPassword(password: string) {
@@ -57,7 +56,7 @@ describe('PasswordResetHandler', () => {
         // Act
         // Navigate to reset page
         act(() => {
-            history.push("resetpassword/some_valid_token");
+            history.pushState(undefined, "", "resetpassword/some_valid_token");
         });
 
         // Enter and confirm new password, then submit
@@ -94,7 +93,7 @@ describe('PasswordResetHandler', () => {
         // Act
         // Navigate to reset page
         act(() => {
-            history.push("resetpassword/some_invalid_token");
+            history.pushState(undefined, "", "resetpassword/some_invalid_token");
         });
 
         // Enter and confirm new password, then attempt to submit (even though we expect the button to be disabled)
@@ -124,7 +123,7 @@ describe('PasswordResetHandler', () => {
         // Act
         // Navigate to reset page
         act(() => {
-            history.push("resetpassword/some_valid_token");
+            history.pushState(undefined, "", "resetpassword/some_valid_token");
         });
 
         // Enter new password, then attempt to submit
@@ -162,7 +161,7 @@ describe('PasswordResetHandler', () => {
             // Act
             // Navigate to reset page
             act(() => {
-                history.push("resetpassword/some_valid_token");
+                history.pushState(undefined, "", "resetpassword/some_valid_token");
             });
 
             // Enter new password, then attempt to submit

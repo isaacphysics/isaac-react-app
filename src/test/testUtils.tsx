@@ -14,7 +14,6 @@ import {fireEvent, screen, waitFor, within, act, renderHook, RenderHookResult} f
 import userEvent from "@testing-library/user-event";
 import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 import * as miscUtils from '../app/services/miscUtils';
-import { history } from "../app/services";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -48,7 +47,7 @@ interface RenderTestEnvironmentOptions {
 // defaults (those in handlers.ts).
 export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
-    history.replace({ pathname: '/', search: '' });
+    history.replaceState(undefined, "", '/');
     resetStore();
     server.resetHandlers();
     if (role || modifyUser) {
@@ -205,11 +204,11 @@ export const waitForLoaded = () => waitFor(() => {
 });
 
 export const expectUrl = (text: string) => waitFor(() => {
-    expect(history.location.pathname).toBe(text);
+    expect(location.pathname).toBe(text);
 });
 
 export const expectUrlParams = (text: SearchString | '') => waitFor(() => {
-    expect(history.location.search).toBe(text);
+    expect(location.search).toBe(text);
 });
 
 export const withSizedWindow = async (width: number, height: number, cb: () => void) => {
@@ -235,14 +234,14 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
 
 export type PathString = `/${string}`;
 export type SearchString = `?${string}`;
-export const setUrl = async (location: { pathname: PathString, search?: SearchString}) => {
+export const setUrl = async (location: URL) => {
     if (location.pathname.includes('?')) {
         throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
     }
-    return await act(async () => history.push(location));
+    return await act(async () => history.pushState(undefined, "", location));
 };
 
-export const goBack = () => history.goBack();
+export const goBack = () => history.back();
 
 export const withMockedRandom = async (fn: (randomSequence: (n: number[]) => void) => Promise<void>) => {
     const nextRandom = {

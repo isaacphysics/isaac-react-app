@@ -1,6 +1,6 @@
 import {renderTestEnvironment} from "../testUtils";
 import {screen, waitFor, within} from "@testing-library/react";
-import {history, isAda, isPhy, PATHS, siteSpecific, TEACHER_REQUEST_ROUTE} from "../../app/services";
+import {isAda, isPhy, PATHS, siteSpecific, TEACHER_REQUEST_ROUTE} from "../../app/services";
 
 const tutorOnlyRoutes = [PATHS.SET_ASSIGNMENTS, "/groups"];
 describe("Visiting a tutor-only page", () => {
@@ -10,9 +10,9 @@ describe("Visiting a tutor-only page", () => {
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of tutorOnlyRoutes) {
-            history.replace(route);
+            history.replaceState(null, "", route);
             await waitFor(() => {
-                expect(history.location.pathname).toEqual("/login");
+                expect(location.pathname).toEqual("/login");
             });
         }
     });
@@ -22,9 +22,9 @@ describe("Visiting a tutor-only page", () => {
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of tutorOnlyRoutes) {
-            history.replace(route);
+            history.replaceState(null, "", route);
             await waitFor(() => {
-                expect(history.location.pathname).toEqual(TEACHER_REQUEST_ROUTE);
+                expect(location.pathname).toEqual(TEACHER_REQUEST_ROUTE);
             });
         }
     });
@@ -34,9 +34,9 @@ describe("Visiting a tutor-only page", () => {
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of tutorOnlyRoutes) {
-            history.replace(route);
+            history.replaceState(null, "", route);
             await new Promise((r) => setTimeout(r, 100)); // Wait 100ms
-            expect(history.location.pathname).toEqual(route);
+            expect(location.pathname).toEqual(route);
         }
     });
 
@@ -45,9 +45,9 @@ describe("Visiting a tutor-only page", () => {
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of tutorOnlyRoutes) {
-            history.replace(route);
+            history.replaceState(null, "", route);
             await new Promise((r) => setTimeout(r, 100)); // Wait 100ms
-            expect(history.location.pathname).toEqual(route);
+            expect(location.pathname).toEqual(route);
         }
     });
 
@@ -56,9 +56,9 @@ describe("Visiting a tutor-only page", () => {
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of tutorOnlyRoutes) {
-            history.replace(route);
+            history.replaceState(null, "", route);
             await new Promise((r) => setTimeout(r, 100)); // Wait 100ms
-            expect(history.location.pathname).toEqual(route);
+            expect(location.pathname).toEqual(route);
         }
     });
 });
@@ -71,10 +71,10 @@ describe("Visiting a teacher-only page", () => {
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of teacherOnlyRoutes) {
-            history.replace(route);
+            history.replaceState(null, "", route);
             const titleElement = await screen.findByTestId("main-heading");
             await within(titleElement).findByText("Upgrade to a teacher account");
-            expect(history.location.pathname).toEqual("/teacher_account_request");
+            expect(location.pathname).toEqual("/teacher_account_request");
         }
     });
 
@@ -84,10 +84,10 @@ describe("Visiting a teacher-only page", () => {
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of teacherOnlyRoutes) {
-            history.replace(route);
+            history.replaceState(null, "", route);
             const titleElement = await screen.findByTestId("main-heading");
             await within(titleElement).findByText("Access denied");
-            expect(history.location.pathname).toEqual(route);
+            expect(location.pathname).toEqual(route);
         }
     });
 
@@ -96,9 +96,9 @@ describe("Visiting a teacher-only page", () => {
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of teacherOnlyRoutes) {
-            history.replace(route);
+            history.replaceState(null, "", route);
             await new Promise((r) => setTimeout(r, 100)); // Wait 100ms
-            expect(history.location.pathname).toEqual(route);
+            expect(location.pathname).toEqual(route);
         }
     });
 });
