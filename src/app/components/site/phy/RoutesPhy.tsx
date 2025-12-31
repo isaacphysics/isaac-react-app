@@ -143,12 +143,11 @@ export const RoutesPhy = [
         Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
             stages.forEach((stage) => {
                 const fullPath = `/${subject}/${stage}${path}`;
-                return <Route key={key++} path={fullPath} element={<Component />} />;
+                acc.push(<Route key={key++} path={fullPath} element={<Component />} />);
             });
             return acc;
         }, [] as React.ReactElement[])
     ))),
-
     // Subject overview landing pages
     ...(Object.keys(PHY_NAV_SUBJECTS).map((subject) => (
         <Route key={key++} path={`/${subject}`} element={<SubjectOverviewPage />} />
