@@ -67,13 +67,6 @@ const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
 interface AccountPageProps {
     user: PotentialUser;
-    userAuthSettings: UserAuthenticationSettingsDTO | null;
-    getChosenUserAuthSettings: (userid: number) => void;
-    userPreferences: UserPreferencesDTO | null;
-    firstLogin: boolean;
-    hashAnchor: string | null;
-    authToken: string | null;
-    userOfInterest: string | null;
 }
 
 // The order of the first two arguments doesn't matter really, but sticking to it helps with debugging when something

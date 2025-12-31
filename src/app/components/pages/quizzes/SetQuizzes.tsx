@@ -290,7 +290,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
     </>;
 }
 
-export const SetQuizzesPage = ({user}: SetQuizzesPageProps) => {
+export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;

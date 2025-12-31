@@ -28,7 +28,6 @@ import { GenericSidebarWithRelatedContent } from "../elements/sidebar/RelatedCon
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
-    match: {params: {pageId: string}};
 }
 
 // Used to decide whether a page should have huge gutters or not. Generic pages do by default, as most are textual,

@@ -2,7 +2,8 @@ import React from "react";
 import { mockUser } from "../../mocks/data";
 import { AssignmentProgress } from "../../app/components/pages/AssignmentProgressWrapper";
 import { PATHS } from "../../app/services";
-import { TrackedRoute } from "../../app/components/navigation/TrackedRoute";
+import { Route } from "react-router-dom";
+import { RegisteredUserDTO } from "../../IsaacApiTypes";
 
 describe('Assignment progress', () => {
     it('Groups listing should have no visual regressions', () => {
@@ -38,9 +39,8 @@ describe('Assignment progress', () => {
     });
 });
 
-const AssignmentProgressWithRoute = () => <TrackedRoute exact path={[
-    PATHS.ASSIGNMENT_PROGRESS,
-    `${PATHS.ASSIGNMENT_PROGRESS}/:assignmentId`,
-    `${PATHS.ASSIGNMENT_PROGRESS}/group/:groupId`,
-    // @ts-ignore
-]} component={() => <AssignmentProgress user={mockUser}/>} />;
+const AssignmentProgressWithRoute = () => <>
+    <Route path={PATHS.ASSIGNMENT_PROGRESS} element={<AssignmentProgress user={mockUser as unknown as RegisteredUserDTO}/>} />
+    <Route path={`${PATHS.ASSIGNMENT_PROGRESS}/:assignmentId`} element={<AssignmentProgress user={mockUser as unknown as RegisteredUserDTO}/>} />
+    <Route path={`${PATHS.ASSIGNMENT_PROGRESS}/group/:groupId`} element={<AssignmentProgress user={mockUser as unknown as RegisteredUserDTO}/>} />
+</>;
