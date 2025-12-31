@@ -21,7 +21,7 @@ module.exports = env => {
 
         plugins: [
             new HtmlWebpackPlugin({
-                template: 'public/index-phy.html',
+                template: 'public/index-sci.html',
             }),
             new webpack.DefinePlugin({
                ISAAC_SITE: '"physics"',
