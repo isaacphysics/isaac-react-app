@@ -234,11 +234,12 @@ export const withSizedWindow = async (width: number, height: number, cb: () => v
 
 export type PathString = `/${string}`;
 export type SearchString = `?${string}`;
-export const setUrl = async (location: URL) => {
-    if (location.pathname.includes('?')) {
-        throw new Error('When navigating using `setUrl`, supply the query string using a separate `search` argument');
-    }
-    return await act(async () => history.pushState(undefined, "", location));
+export const setUrl = async (location: Partial<URL>) => {
+    await act(async () => {
+        // push a new state, then go to it
+        history.pushState(undefined, "", `${location?.pathname}${location?.search ?? ''}${location?.hash ?? ''}`);
+        fireEvent(window, new PopStateEvent('popstate'));
+    });
 };
 
 export const goBack = () => history.back();

@@ -1,8 +1,8 @@
-import {renderTestEnvironment} from "../testUtils";
+import {renderTestEnvironment, setUrl} from "../testUtils";
 import {handlerThatReturns} from "../../mocks/handlers";
 import {API_PATH, isPhy} from "../../app/services";
 import {http} from "msw";
-import {act, screen} from "@testing-library/react";
+import {screen} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 
@@ -55,9 +55,7 @@ describe('PasswordResetHandler', () => {
 
         // Act
         // Navigate to reset page
-        act(() => {
-            history.pushState(undefined, "", "resetpassword/some_valid_token");
-        });
+        await setUrl({ pathname: "resetpassword/some_valid_token" });
 
         // Enter and confirm new password, then submit
         await enterAndConfirmPassword("validnewpassword");
@@ -92,9 +90,7 @@ describe('PasswordResetHandler', () => {
 
         // Act
         // Navigate to reset page
-        act(() => {
-            history.pushState(undefined, "", "resetpassword/some_invalid_token");
-        });
+        await setUrl({ pathname: "resetpassword/some_invalid_token" });
 
         // Enter and confirm new password, then attempt to submit (even though we expect the button to be disabled)
         await enterAndConfirmPassword("validnewpassword");
@@ -122,9 +118,7 @@ describe('PasswordResetHandler', () => {
 
         // Act
         // Navigate to reset page
-        act(() => {
-            history.pushState(undefined, "", "resetpassword/some_valid_token");
-        });
+        await setUrl({ pathname: "resetpassword/some_valid_token" });
 
         // Enter new password, then attempt to submit
         const passwordInput = await screen.findByLabelText("New password");
@@ -160,9 +154,7 @@ describe('PasswordResetHandler', () => {
 
             // Act
             // Navigate to reset page
-            act(() => {
-                history.pushState(undefined, "", "resetpassword/some_valid_token");
-            });
+            await setUrl({ pathname: "resetpassword/some_valid_token" });
 
             // Enter new password, then attempt to submit
             const passwordInput = await screen.findByLabelText("New password");
