@@ -1,6 +1,4 @@
 import React, {lazy} from "react";
-import {TrackedRoute} from "../../navigation/TrackedRoute";
-import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
@@ -47,6 +45,7 @@ import { IsaacStats } from "../../pages/IsaacBirthdayStats";
 import { Programmes } from "../../pages/Programmes";
 import { RequireAuth } from "../../navigation/UserAuthentication";
 import { Navigate, Route } from "react-router";
+import { Generic } from "../../pages/Generic";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -74,42 +73,42 @@ const old_books : Record<string, React.ComponentType<any>> = {
 let key = 0;
 export const RoutesPhy = [
     // Registration
-    <TrackedRoute key={key++} path="/register" element={<RegistrationStart />} />,
-    <TrackedRoute key={key++} path="/verifyemail" element={<EmailAlterHandler />}/>,
-    <TrackedRoute key={key++} path="/register/student/age" element={<RegistrationAgeCheck />} />,
-    <TrackedRoute key={key++} path="/register/student/additional_info" element={<RegistrationAgeCheckParentalConsent />} />,
-    <TrackedRoute key={key++} path="/register/student/age_denied" element={<RegistrationAgeCheckFailed />} />,
-    <TrackedRoute key={key++} path="/register/student/details" element={<RegistrationSetDetails role="STUDENT" />} />,
-    <TrackedRoute key={key++} path="/register/group_invitation" element={<RegistrationGroupInvite />} />,
-    <TrackedRoute key={key++} path="/register/connect" element={<RequireAuth auth={isLoggedIn} element={<RegistrationTeacherConnect />} />} />,
-    <TrackedRoute key={key++} path="/register/preferences" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSetPreferences />} />} />,
-    <TrackedRoute key={key++} path="/register/success" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSuccess />} />} />,
+    <Route key={key++} path="/register" element={<RegistrationStart />} />,
+    <Route key={key++} path="/verifyemail" element={<EmailAlterHandler />}/>,
+    <Route key={key++} path="/register/student/age" element={<RegistrationAgeCheck />} />,
+    <Route key={key++} path="/register/student/additional_info" element={<RegistrationAgeCheckParentalConsent />} />,
+    <Route key={key++} path="/register/student/age_denied" element={<RegistrationAgeCheckFailed />} />,
+    <Route key={key++} path="/register/student/details" element={<RegistrationSetDetails role="STUDENT" />} />,
+    <Route key={key++} path="/register/group_invitation" element={<RegistrationGroupInvite />} />,
+    <Route key={key++} path="/register/connect" element={<RequireAuth auth={isLoggedIn} element={<RegistrationTeacherConnect />} />} />,
+    <Route key={key++} path="/register/preferences" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSetPreferences />} />} />,
+    <Route key={key++} path="/register/success" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSuccess />} />} />,
 
     // Assignments
-    <TrackedRoute key={key++} path="/assignment_schedule" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentSchedule user={authUser} />} />} />,
+    <Route key={key++} path="/assignment_schedule" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentSchedule user={authUser} />} />} />,
 
     // Teacher test pages
-    <TrackedRoute key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={<SetQuizzes />} />} />,
+    <Route key={key++} path="/set_tests" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <SetQuizzes user={authUser} />} />} />,
     <Route key={key++} path="/set_quizzes" element={<Navigate to="/set_tests" replace />} />,
     // Student test pages
-    <TrackedRoute key={key++} path="/tests" element={<RequireAuth auth={isLoggedIn} element={<MyQuizzes />} />} />,
+    <Route key={key++} path="/tests" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyQuizzes user={authUser} />} />} />,
     <Route key={key++} path="/quizzes" element={<Navigate to="/tests" replace />} />,
-    <TrackedRoute key={key++} path="/practice_tests" element={<PracticeQuizzes />} />,
+    <Route key={key++} path="/practice_tests" element={<PracticeQuizzes />} />,
 
     // Quiz (test) pages
-    <TrackedRoute key={key++} path="/test/assignment/:quizAssignmentId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
-    <TrackedRoute key={key++} path="/test/assignment/:quizAssignmentId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
-    <TrackedRoute key={key++} path="/test/attempt/:quizAttemptId/feedback" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
-    <TrackedRoute key={key++} path="/test/attempt/:quizAttemptId/feedback/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
-    <TrackedRoute key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
-    <TrackedRoute key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
-    <TrackedRoute key={key++} path="/test/assignment/:quizAssignmentId/feedback" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizTeacherFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/assignment/:quizAssignmentId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
+    <Route key={key++} path="/test/assignment/:quizAssignmentId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoAssignment user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizAttemptId/feedback" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizAttemptId/feedback/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizAttemptFeedback user={authUser} />} />} />,
+    <Route key={key++} path="/test/assignment/:quizAssignmentId/feedback" element={<RequireAuth auth={isTeacherOrAbove} element={(authUser) => <QuizTeacherFeedback user={authUser} />} />} />,
     // Tutors can preview tests iff the test is student only
-    <TrackedRoute key={key++} path="/test/preview/:quizId" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <QuizPreview user={authUser} />} />} />,
-    <TrackedRoute key={key++} path="/test/preview/:quizId/page/:page" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <QuizPreview user={authUser} />} />} />,
-    <TrackedRoute key={key++} path="/test/attempt/:quizId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoFreeAttempt user={authUser} />} />} />,
-    <TrackedRoute key={key++} path="/test/attempt/:quizId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoFreeAttempt user={authUser} />} />} />,
-    <TrackedRoute key={key++} path="/test/view/:quizId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizView user={authUser} />} />} />,
+    <Route key={key++} path="/test/preview/:quizId" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <QuizPreview user={authUser} />} />} />,
+    <Route key={key++} path="/test/preview/:quizId/page/:page" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <QuizPreview user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoFreeAttempt user={authUser} />} />} />,
+    <Route key={key++} path="/test/attempt/:quizId/page/:page" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizDoFreeAttempt user={authUser} />} />} />,
+    <Route key={key++} path="/test/view/:quizId" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QuizView user={authUser} />} />} />,
     // The order of these redirects matters to prevent substring replacement
     <Route key={key++} path="/quiz/assignment/:quizAssignmentId/feedback" element={<Navigate to="/test/assignment/:quizAssignmentId/feedback" replace />} />,
     <Route key={key++} path="/quiz/assignment/:quizAssignmentId/page/:page" element={<Navigate to="/test/assignment/:quizAssignmentId/page/:page" replace />} />,
@@ -125,26 +124,26 @@ export const RoutesPhy = [
 
     // Books (old)
     ...(Object.entries(old_books).map(([path, Component]) => [
-        <TrackedRoute key={key++} path={path} element={<Component />} />,
-        <TrackedRoute key={key++} path={`${path}/:pageId`} element={<Component />} />,
+        <Route key={key++} path={path} element={<Component />} />,
+        <Route key={key++} path={`${path}/:pageId`} element={<Component />} />,
     ]).flat()),
     <Route key={key++} path="/books/physics_skills_14" element={<Navigate to="/books/physics_skills_19" replace />} />,
 
     // Books (new)
-    <TrackedRoute key={key++} path={"/books/:bookId"} element={<Book />} />,
-    <TrackedRoute key={key++} path={"/books/:bookId/:pageId"} element={<Book />} />,
-    <TrackedRoute key={key++} path={"/books"} element={<BooksOverview />} />,
+    <Route key={key++} path={"/books/:bookId"} element={<Book />} />,
+    <Route key={key++} path={"/books/:bookId/:pageId"} element={<Book />} />,
+    <Route key={key++} path={"/books"} element={<BooksOverview />} />,
 
     // Revision pages
-    // <TrackedRoute key={key++} path="/revision" element={<SubjectLandingPage />} />,
-    <TrackedRoute key={key++} path="/revision/:pageId" element={<RevisionPage />} />,
+    // <Route key={key++} path="/revision" element={<SubjectLandingPage />} />,
+    <Route key={key++} path="/revision/:pageId" element={<RevisionPage />} />,
 
     // Subject-stage pages -- see subjectSpecificPages, defined above
     ...(Object.entries(subjectStagePairPages).flatMap(([path, Component]) => (
         Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
             stages.forEach((stage) => {
                 const fullPath = `/${subject}/${stage}${path}`;
-                return <TrackedRoute key={key++} path={fullPath} element={<Component />} />;
+                return <Route key={key++} path={fullPath} element={<Component />} />;
             });
             return acc;
         }, [] as React.ReactElement[])
@@ -152,40 +151,40 @@ export const RoutesPhy = [
 
     // Subject overview landing pages
     ...(Object.keys(PHY_NAV_SUBJECTS).map((subject) => (
-        <TrackedRoute key={key++} path={`/${subject}`} element={<SubjectOverviewPage />} />
+        <Route key={key++} path={`/${subject}`} element={<SubjectOverviewPage />} />
     ))),
-    <TrackedRoute key={key++} path="/computer_science" element={<AdaCSOverviewPage />} />,
+    <Route key={key++} path="/computer_science" element={<AdaCSOverviewPage />} />,
 
     // Concepts List
-    <TrackedRoute key={key++} path="/concepts" element={<Concepts />} />,
+    <Route key={key++} path="/concepts" element={<Concepts />} />,
 
     // Static pages
-    <StaticPageRoute key={key++} path="/about" pageId="about_us_index" />,
-    <StaticPageRoute key={key++} path="/apply_uni" />,
-    <StaticPageRoute key={key++} path="/publications" />,
-    <StaticPageRoute key={key++} path="/books" pageId="books_overview" />,
-    <StaticPageRoute key={key++} path="/solving_problems" />,
-    <StaticPageRoute key={key++} path="/extraordinary_problems" pageId="extraordinary_problems_index" />,
-    <StaticPageRoute key={key++} path="/challenge_problems" pageId="challenge_problems_index" />,
-    <StaticPageRoute key={key++} path="/bios" />,
-    <StaticPageRoute key={key++} path="/why_physics" />,
-    <StaticPageRoute key={key++} path="/fast_track_14" pageId="fast_track_14_index" />,
-    <StaticPageRoute key={key++} path="/prize_draws" />,
-    <StaticPageRoute key={key++} path="/spc" />,
-    <StaticPageRoute key={key++} path="/pre_made_gameboards" />,
-    <StaticPageRoute key={key++} path="/chemistry" pageId="chemistry_landing_page" />,
-    <StaticPageRoute key={key++} path="/survey" />,
-    <StaticPageRoute key={key++} path="/book/question" pageId="book_question" />,
-    <StaticPageRoute key={key++} path="/exam_uni_help" />,
-    <StaticPageRoute key={key++} path="/coronavirus" pageId="2020_03_coronavirus" />,
-    <StaticPageRoute key={key++} path="/gameboards/new" pageId="question_finder_redirect" />,
-    <TrackedRoute key={key++} path="/teacher_features" element={<TeacherFeatures />}/>,
-    <TrackedRoute key={key++} path="/tutor_features" element={<TutorFeatures />}/>,
-    <TrackedRoute key={key++} path="/sketcher" element={<GraphSketcherPage />} />,
-    <TrackedRoute key={key++} path="/teacher_account_request" element={<RequireAuth auth={isLoggedIn} element={<TeacherRequest />} />} />,
-    <TrackedRoute key={key++} path="/programmes" element={<Programmes />} />,
-    <TrackedRoute key={key++} path="/news" element={<News />} />,
-    <TrackedRoute key={key++} path="/isaac_11" element={<IsaacStats />} />,
+    <Route key={key++} path="/about" element={<Generic pageIdOverride={"about_us_index"} />} />,
+    <Route key={key++} path="/apply_uni" />,
+    <Route key={key++} path="/publications" />,
+    <Route key={key++} path="/books" element={<Generic pageIdOverride={"books_overview"} />} />,
+    <Route key={key++} path="/solving_problems" />,
+    <Route key={key++} path="/extraordinary_problems" element={<Generic pageIdOverride={"extraordinary_problems_index"} />} />,
+    <Route key={key++} path="/challenge_problems" element={<Generic pageIdOverride={"challenge_problems_index"} />} />,
+    <Route key={key++} path="/bios" />,
+    <Route key={key++} path="/why_physics" />,
+    <Route key={key++} path="/fast_track_14" element={<Generic pageIdOverride={"fast_track_14_index"} />} />,
+    <Route key={key++} path="/prize_draws" />,
+    <Route key={key++} path="/spc" />,
+    <Route key={key++} path="/pre_made_gameboards" />,
+    <Route key={key++} path="/chemistry" element={<Generic pageIdOverride={"chemistry_landing_page"} />} />,
+    <Route key={key++} path="/survey" />,
+    <Route key={key++} path="/book/question" element={<Generic pageIdOverride={"book_question"} />} />,
+    <Route key={key++} path="/exam_uni_help" />,
+    <Route key={key++} path="/coronavirus" element={<Generic pageIdOverride={"2020_03_coronavirus"} />} />,
+    <Route key={key++} path="/gameboards/new" element={<Generic pageIdOverride={"question_finder_redirect"} />} />,
+    <Route key={key++} path="/teacher_features" element={<TeacherFeatures />}/>,
+    <Route key={key++} path="/tutor_features" element={<TutorFeatures />}/>,
+    <Route key={key++} path="/sketcher" element={<GraphSketcherPage />} />,
+    <Route key={key++} path="/teacher_account_request" element={<RequireAuth auth={isLoggedIn} element={<TeacherRequest />} />} />,
+    <Route key={key++} path="/programmes" element={<Programmes />} />,
+    <Route key={key++} path="/news" element={<News />} />,
+    <Route key={key++} path="/isaac_11" element={<IsaacStats />} />,
 
     // Legacy Routes
     <Route key={key++} path="/mission" element={<Navigate to="/about" replace />} />,
@@ -220,14 +219,14 @@ export const RoutesPhy = [
     <Route key={key++} path="/book16" element={<Navigate to="/books/chemistry_16" replace />} />,
 
     // Teacher Pages
-    <StaticPageRoute key={key++} ifUser={isTutorOrAbove} path="/teachermentoring_gcse" pageId="fragments/teacher_mentoring_gcse_page_frag" />,
-    <StaticPageRoute key={key++} ifUser={isTutorOrAbove} path="/teachermentoring_alevel" pageId="fragments/teacher_mentoring_alevel_page_frag" />,
-    <StaticPageRoute key={key++} ifUser={isTutorOrAbove} path="/teacher_emails" pageId="fragments/teacher_emails_frag"/>,
+    <Route key={key++} path="/teachermentoring_gcse" element={<RequireAuth auth={isTeacherOrAbove} element={<Generic pageIdOverride={"fragments/teacher_mentoring_gcse_page_frag"} />} />} />,
+    <Route key={key++} path="/teachermentoring_alevel" element={<RequireAuth auth={isTeacherOrAbove} element={<Generic pageIdOverride={"fragments/teacher_mentoring_alevel_page_frag"} />} />} />,
+    <Route key={key++} path="/teacher_emails" element={<RequireAuth auth={isTeacherOrAbove} element={<Generic pageIdOverride={"fragments/teacher_emails_frag"} />} />} />,
 
     // Events
-    <TrackedRoute key={key++} path='/events' element={<Events />}/>,
-    <TrackedRoute key={key++} path='/events/:eventId' element={<EventDetails />}/>,
-    <TrackedRoute key={key++} path='/eventbooking/:eventId' element={<RequireAuth auth={isLoggedIn} element={<RedirectToEvent />} />} />,
+    <Route key={key++} path='/events' element={<Events />}/>,
+    <Route key={key++} path='/events/:eventId' element={<EventDetails />}/>,
+    <Route key={key++} path='/eventbooking/:eventId' element={<RequireAuth auth={isLoggedIn} element={<RedirectToEvent />} />} />,
 
-    <TrackedRoute key={key++} path="/equality" element={<Equality />} />,
+    <Route key={key++} path="/equality" element={<Equality />} />,
 ];

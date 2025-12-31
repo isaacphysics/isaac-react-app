@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import { AppState, mainContentIdSlice, registerPageChange, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../state";
+import { AppState, docSlice, mainContentIdSlice, registerPageChange, selectors, sidebarSlice, useAppDispatch, useAppSelector } from "../state";
 import { scrollTopOnPageLoad } from "./scrollManager";
 import { Location } from "history";
 import { useReducedMotion } from "./accessibility";
 import { focusMainContent } from "./focus";
 import { useLocation } from "react-router";
+import { trackPageview } from "./constants";
 
 export const OnPageLoad = () => {
     const dispatch = useAppDispatch();
+    // Use react-router's location, rather than window's location, track changes in history so that we can ensure it handles
+    // the location correctly even if there is a react-router <Redirect ...> before the useEffect is called.
     const location = useLocation();
     const reducedMotion = useReducedMotion();
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
@@ -18,6 +21,8 @@ export const OnPageLoad = () => {
     const onPageLoad = useCallback((location: Location) => {
         if (loadedPathname !== location.pathname) {
             // this should only run on initial page load or when the pathname changes, not query params or hash changes
+            trackPageview({ url: window.location.origin + location.pathname + location.search + location.hash }); // record pageview on each page load
+            dispatch(docSlice.actions.resetPage()); // reset redux's doc after any page change
             dispatch(sidebarSlice.actions.setOpen(false));
             scrollTop(loadedPathname, location.pathname);
             setLoadedPathname(location.pathname);
