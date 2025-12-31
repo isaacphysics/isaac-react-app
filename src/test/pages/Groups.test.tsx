@@ -76,15 +76,26 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
         return email === newManager.email;
     });
     // Expect that new additional manager is shown in modal
+    const managerElements = within(groupManagersModal as HTMLElement).queryAllByTestId("group-manager");
     await waitFor(() => {
-        const managerElements = within(groupManagersModal as HTMLElement).queryAllByTestId("group-manager");
         expect(managerElements).toHaveLength(initialManagerCount + 1);
         expect(managerElements.some(e => e.textContent.includes(newManager.email))).toBeTruthy();
 
+    });
+
+    const actionsExist = within(managerElements[0]).queryByRole("button", {name: "Actions"}) !== null;
+    // at md, the actions button appears instead; since this is different per site, actionsExist is used to determine which variant to test
+    if (!actionsExist) {
         // User should be able to see the remove button, since they are the owner
         const removeButton = within(managerElements[0]).getByRole("button", {name: "Remove"});
         expect(removeButton).toBeVisible();
-    });
+    } else {
+        // The available space is narrower on Ada so the remove button is inside a dropdown
+        const actionsButton = within(managerElements[0]).getByRole("button", {name: "Actions"});
+        await userEvent.click(actionsButton);
+        const removeButton = await screen.findByRole("menuitem", {name: "Remove"});
+        expect(removeButton).toBeVisible();
+    }
     await closeActiveModal(groupManagersModal);
 };
 
