@@ -14,7 +14,7 @@ export const EditContentButton = ({doc, className}: EditContentButtonProps) => {
     if (segueEnvironment === "DEV" && doc?.canonicalSourceFile) {
         return <div className="not-mobile">
             <h4>
-                <ExternalLink href={EDITOR_URL + doc.canonicalSourceFile} className={className || ""}>
+                <ExternalLink href={EDITOR_URL + doc.canonicalSourceFile} className={className}>
                     {doc.published ? "Published" : "Unpublished"} ✎
                 </ExternalLink>
             </h4>

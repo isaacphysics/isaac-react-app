@@ -9,12 +9,13 @@ import { TeacherNotes } from './TeacherNotes';
 import { useLocation } from 'react-router';
 import { SidebarButton } from './SidebarButton';
 import { HelpButton } from './HelpButton';
-import { above, below, isAda, isPhy, siteSpecific, useDeviceSize } from '../../services';
+import { above, below, isAda, isPhy, useDeviceSize } from '../../services';
 import type { Location } from 'history';
 import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
 import { LLMFreeTextQuestionIndicator } from './LLMFreeTextQuestionIndicator';
 import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
+import { Spacer } from './Spacer';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -44,7 +45,7 @@ interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
     doc?: SeguePageDTO;
 }
 
-const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}: ActionButtonsProps) => {
+export const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}: ActionButtonsProps) => {
     const deviceSize = useDeviceSize();
 
     const anyActionButtonShown = isPhy && helpModalId || above['sm'](deviceSize) || doc?.id;
@@ -59,66 +60,77 @@ const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}: Action
     </div>;
 };
 
+interface TagStackProps {
+    doc?: SeguePageDTO;
+    pageContainsLLMFreeTextQuestion?: boolean;
+}
+
+const TagStack = ({doc, pageContainsLLMFreeTextQuestion}: TagStackProps) => {
+    const isCrossTopic = doc?.tags?.includes("cross_topic");
+
+    return <>
+        {(isCrossTopic || pageContainsLLMFreeTextQuestion) && <div className="d-lg-flex align-items-center gap-3 me-3">
+            {isAda && isCrossTopic && <CrossTopicQuestionIndicator/>}
+            {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator/>}
+        </div>}
+        <EditContentButton doc={doc}/>
+    </>;
+};
+
+interface MetadataTitleProps {
+    doc?: SeguePageDTO;
+    title: ReactNode;
+    subtitle?: string;
+    badges?: ReactNode;
+}
+
+const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
+    return <div>
+        <h3 className="text-theme-dark d-flex align-items-center gap-3">
+            {title 
+                ? typeof title === "string"
+                    ? <Markup encoding="latex">{title}</Markup>
+                    : title
+                : <Markup encoding="latex">{doc?.title}</Markup>
+            }
+            {badges}
+        </h3>
+        {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
+    </div>;
+};
+
 export const PageMetadata = (props: PageMetadataProps) => {
     const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle, pageContainsLLMFreeTextQuestion } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const isConcept = doc?.type === "isaacConceptPage";
-    const isCrossTopic = doc?.tags?.includes("cross_topic");
     const location = useLocation();
     const deviceSize = useDeviceSize();
 
     return <>
-        {noTitle 
-            ? <>
-                <div className={classNames("d-flex align-items-start gap-3 no-print", {"mt-3": isPhy})}>
-                    <div className="w-100">
-                        <ActionButtons 
-                            location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}
-                            className="float-end ms-3 mb-3"
-                        />
-                        {children}
-                    </div>
-                </div>
-                {isAda && <div className="d-flex align-items-center">
-                    {isCrossTopic && <CrossTopicQuestionIndicator className="me-3"/>}
-                    {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator className="me-3"/>}
-                    <EditContentButton doc={doc} />
-                </div>}
-            </>
-            : <>
-                {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute />}
-                <div className={classNames("d-flex gap-3", siteSpecific("mt-3 align-items-center", "align-items-end"))}>
-                    {isPhy && <div>
-                        <div className="d-flex align-items-center gap-3">
-                            <h3 className="text-theme-dark">
-                                {title 
-                                    ? typeof title === "string"
-                                        ? <Markup encoding="latex">{title}</Markup>
-                                        : title
-                                    : <Markup encoding="latex">{doc?.title}</Markup>
-                                }
-                            </h3>
-                            {badges}
-                        </div>
-                        {(subtitle || doc?.subtitle) && <h5><Markup encoding="latex">{subtitle ?? doc?.subtitle}</Markup></h5>}
-                    </div>}
-                    {isAda && <> <div className="d-lg-flex align-items-center">
-                        {isCrossTopic && <CrossTopicQuestionIndicator className="me-3"/>}
-                        {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator className="me-3"/>}
-                    </div>
-                    <EditContentButton doc={doc} /> </>}
-                    <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>
-                </div>
-                {children}
-            </>
-        }
+        {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
+
+        {isPhy && <div className={classNames("mt-3", {"d-flex align-items-center": !noTitle})}>
+            {noTitle && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-2"/>}
+            {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}
+            {!noTitle && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>}
+        </div>}
+
+        {isAda && <div className="d-flex align-items-end">
+            <TagStack doc={doc} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}/>
+            <Spacer/>
+            <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}/>
+        </div>}
+
+        {(isAda || !noTitle) && children}
         {isPhy && showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
-        <div className={classNames({"section-divider my-3": isPhy}, {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})} />
-        <div className="d-flex align-items-end">
-            {isPhy && pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator className="me-3"/>}
-            {isPhy && <EditContentButton doc={doc} />}
+
+        {isPhy && <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})}/>}
+
+        <div className="d-flex align-items-end gap-3">
+            {isPhy && <TagStack doc={doc} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}/>}
             {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
         </div>
+
         {isPhy && <TeacherNotes notes={doc?.teacherNotes} />}
     </>;
 };

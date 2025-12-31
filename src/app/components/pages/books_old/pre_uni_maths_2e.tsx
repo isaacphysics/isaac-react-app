@@ -17,7 +17,6 @@ export const PreUniMaths2e = () => {
                 <TitleAndBreadcrumb className="mb-7" currentPageTitle="Pre-University Mathematics for Sciences" 
                     help={pageHelp} 
                     // modalId="help_modal_maths_book"
-                    subTitle="2nd Edition"
                 />
                 <img className="book-cover" src="/assets/phy/books/pre_uni_maths_2e.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="pre_uni_maths_intro_2e"/>
