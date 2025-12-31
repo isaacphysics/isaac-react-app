@@ -3,7 +3,6 @@ import {
     buildMockUserSummary,
     mockAssignmentsGroup2,
     mockAssignmentsGroup6, mockFragment,
-    mockGameboards,
     mockGroups,
     mockMyAssignments,
     mockNewsPods, buildMockPage,
@@ -22,7 +21,8 @@ import {
     mockProgress,
     mockLLMMarkedRegressionTestQuestion,
     mockLLMMarkedValidationResponse,
-    mockSearchResults
+    mockSearchResults,
+    mockGameboards
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -35,7 +35,7 @@ export const handlers = [
             status: 200,
         });
     }),
-    
+
     http.get(API_PATH + "/gameboards/user_gameboards", ({request}) => {
         const url = new URL(request.url);
         const startIndexStr = url.searchParams.get("start_index");
@@ -47,13 +47,13 @@ export const handlers = [
             if (startIndex === 0 && limitStr === "ALL") return g;
             g.results = g.results.slice(startIndex, Math.min(startIndex + limit, mockGameboards.totalResults));
             g.totalNotStarted = g.results.length;
-            g.totalResults = g.results.length;
         });
 
         return HttpResponse.json(limitedGameboards, {
             status: 200,
         });
     }),
+    
     http.get(API_PATH + "/groups", ({request}) => {
         const url = new URL(request.url);
         const archived = url.searchParams.get("archived_groups_only") === "true";
