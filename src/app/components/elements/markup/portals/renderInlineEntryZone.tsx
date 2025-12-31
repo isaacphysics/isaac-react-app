@@ -17,26 +17,26 @@ export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
     const inlineZones = htmlDom.querySelectorAll("span[id^='inline-question-']") as NodeListOf<HTMLElement>;
     if (inlineZones.length === 0) return [html, () => []];
 
-    const inlineZoneConstructors: {id: string, className: string, widthPx?: number, heightPx?: number}[] = [];
+    const inlineZoneConstructors: {id: string, className: string, width?: string, height?: string}[] = [];
 
     for (let i = 0; i < inlineZones.length; i++) {
         inlineZoneConstructors.push({
             id: inlineZones[i].id, 
             className: classNames("inline-data-target", (inlineZones[i].dataset.classes ?? "")), 
-            widthPx: inlineZones[i].dataset.width ? parseInt(inlineZones[i].dataset.width as string) : undefined,
-            heightPx: inlineZones[i].dataset.height ? parseInt(inlineZones[i].dataset.height as string) : undefined,
+            width: inlineZones[i].dataset.width ? `${inlineZones[i].dataset.width as string}px` : undefined,
+            height: inlineZones[i].dataset.height ? `${inlineZones[i].dataset.height as string}px` : undefined
         });
     }
     
     return [
         htmlDom.innerHTML,
-        (ref?: HTMLElement) => ref ? inlineZoneConstructors.map(({id, className, widthPx, heightPx}) =>
+        (ref?: HTMLElement) => ref ? inlineZoneConstructors.map(({id, className, width, height}) =>
             <InlineEntryZoneBase
                 key={id}
                 className={className}
                 inlineSpanId={id}
-                widthPx={widthPx}
-                heightPx={heightPx}
+                width={width}
+                height={height}
                 root={ref}
             />
         ) : []
