@@ -31,7 +31,7 @@ import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {extractErrorMessage} from '../../services/errors';
 import { StyledCheckbox } from '../elements/inputs/StyledCheckbox';
 import { MicrosoftSignInButton } from '../elements/MicrosoftSignInButton';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -41,6 +41,7 @@ import { Link, Navigate } from 'react-router-dom';
 export const useLoginLogic = () => {
 
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const totpChallengePending = useAppSelector((state: AppState) => state?.totpChallengePending);
     const error = useAppSelector((state: AppState) => state?.error);
@@ -64,7 +65,7 @@ export const useLoginLogic = () => {
 
     const signUp = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.pushState({email: email, password: password}, "", "/register");
+        void navigate("/register", { state: { email: email, password: password } });
     };
 
     const attemptLogIn = () => {

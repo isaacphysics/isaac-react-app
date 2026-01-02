@@ -46,6 +46,7 @@ import {
     store,
 } from "../index";
 import {Immutable} from "immer";
+import { NavigateFunction } from "react-router";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError<{errorMessage?: string}, unknown> {
@@ -329,7 +330,7 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider, is
     // TODO MT handle case when user is already logged in
 };
 
-export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
+export const handleProviderCallback = async (dispatch: Dispatch<Action>, navigate: NavigateFunction, provider: AuthenticationProvider, parameters: string) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
@@ -354,7 +355,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         // They will see the required account information modal either way on registration.
         const nextPage = persistence.pop(KEY.AFTER_AUTH_PATH);
         const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
-        history.pushState(undefined, "", nextPage || defaultNextPage);
+        await navigate(nextPage || defaultNextPage);
     } catch (error: any) {
         const providerErrors = fetchErrorFromParameters(parameters);
         trackEvent("sign_in_failure", { props: {
@@ -365,7 +366,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             isaacError: error?.response?.data?.responseCode || error?.code || 'unknown',
             isaacErrorDescription: error?.response?.data?.errorMessage || error?.message || 'unknown'
         }});
-        history.pushState({ errorMessage: extractMessage(error), provider, providerErrors }, "", "/auth_error");
+        await navigate("/auth_error", { state: { errorMessage: extractMessage(error), provider, providerErrors } });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         if (!extractMessage(error).startsWith("You do not use") && !providerErrors.errorDescription?.startsWith("AADSTS65004")) {
             dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
