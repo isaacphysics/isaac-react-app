@@ -2,7 +2,7 @@ import React from "react";
 import { mockUser } from "../../mocks/data";
 import { AssignmentProgress } from "../../app/components/pages/AssignmentProgressWrapper";
 import { PATHS } from "../../app/services";
-import { Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { RegisteredUserDTO } from "../../IsaacApiTypes";
 
 describe('Assignment progress', () => {
@@ -39,8 +39,8 @@ describe('Assignment progress', () => {
     });
 });
 
-const AssignmentProgressWithRoute = () => <>
+const AssignmentProgressWithRoute = () => <Routes>
     <Route path={PATHS.ASSIGNMENT_PROGRESS} element={<AssignmentProgress user={mockUser as unknown as RegisteredUserDTO}/>} />
     <Route path={`${PATHS.ASSIGNMENT_PROGRESS}/:assignmentId`} element={<AssignmentProgress user={mockUser as unknown as RegisteredUserDTO}/>} />
     <Route path={`${PATHS.ASSIGNMENT_PROGRESS}/group/:groupId`} element={<AssignmentProgress user={mockUser as unknown as RegisteredUserDTO}/>} />
-</>;
+</Routes>;
