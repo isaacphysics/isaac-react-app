@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Row, Col } from "reactstrap";
 import { QuizAttemptDTO } from "../../../../IsaacApiTypes";
 import { useDeviceSize, TAG_ID, isDefined, below, isPhy } from "../../../services";
@@ -30,12 +30,12 @@ export interface QuizSidebarViewProps extends QuizSidebarProps {
 export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProps) => {
     const { attempt, view, viewingAsSomeoneElse, totalSections, currentSection, sectionStates, sectionTitles} = props;
     const deviceSize = useDeviceSize();
-    const history = useHistory();
-    const location = history.location.pathname;
+    const navigate = useNavigate();
+    const location = useLocation();
     const rubricPath =
-        viewingAsSomeoneElse ? location.split("/").slice(0, 6).join("/") :
-            attempt && attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
-                location.split("/page")[0];
+        viewingAsSomeoneElse ? location.pathname.split("/").slice(0, 6).join("/") :
+            attempt && attempt.feedbackMode ? location.pathname.split("/").slice(0, 5).join("/") :
+                location.pathname.split("/page")[0];
     const hasSections = totalSections > 0;
     const tags = attempt ? attempt.quiz?.tags : view.quiz?.tags;
     const subjects = tagsService.getSubjectTags(tags as TAG_ID[]);
@@ -51,10 +51,10 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
 
     const switchToPage = (page: string) => {
         if (viewingAsSomeoneElse || attempt && attempt.feedbackMode) {
-            history.push(rubricPath.concat("/", page));
+            void navigate(rubricPath.concat("/", page));
         }
         else {
-            history.push(rubricPath.concat("/page/", page));
+            void navigate(rubricPath.concat("/page/", page));
         }
     };
 
@@ -76,7 +76,7 @@ export const QuizSidebar = (props: QuizSidebarAttemptProps | QuizSidebarViewProp
                 <h5 className="mb-3">Sections</h5>
                 <ul>
                     <li>
-                        <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
+                        <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => navigate(rubricPath)}/>
                     </li>
                     {Array.from({length: totalSections}, (_, i) => i).map(section =>
                         <li key={section}>

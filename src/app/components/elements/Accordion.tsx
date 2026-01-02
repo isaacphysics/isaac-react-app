@@ -1,10 +1,9 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import {
     above,
     ALPHABET,
     audienceStyle,
-    below,
     calculateQuestionSetCompletionState,
     DOCUMENT_TYPE,
     isAda,
@@ -32,7 +31,7 @@ import { CompletionState } from "../../../IsaacApiTypes";
 import { StatusDisplay } from "./list-groups/AbstractListViewItem";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
 
-interface AccordionsProps extends RouteComponentProps {
+interface AccordionsProps {
     id?: string;
     trustedTitle?: string;
     index?: number;
@@ -45,8 +44,9 @@ interface AccordionsProps extends RouteComponentProps {
 
 let nextClientId = 0;
 
-export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, location: {hash}}: AccordionsProps) => {
+export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString}: AccordionsProps) => {
     const dispatch = useAppDispatch();
+    const location = useLocation();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const page = useAppSelector(selectors.doc.get);
 
@@ -72,8 +72,8 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     }
 
     useEffect(() => {
-        if (hash.includes("#")) {
-            const hashAnchor = hash.slice(1);
+        if (location.hash.includes("#")) {
+            const hashAnchor = location.hash.slice(1);
             const element = document.getElementById(hashAnchor);
             if (element) { // exists on page
                 if (hashAnchor === anchorId) {
@@ -84,7 +84,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }
             }
         }
-    }, [hash, anchorId]);
+    }, [location.hash, anchorId]);
 
     function getPage() {
         if (page && page != NOT_FOUND) {
@@ -232,4 +232,4 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             </AccordionSectionContext.Provider>
         </Collapse>
     </div>;
-});
+};

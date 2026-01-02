@@ -1,34 +1,34 @@
-import {History} from "history";
 import {DOCUMENT_TYPE, isDefined, isStaff, PHY_NAV_SUBJECTS, SEARCH_RESULT_TYPE, SearchableDocumentType, Subject, TAG_ID} from ".";
 import {ContentSummaryDTO, Stage} from "../../IsaacApiTypes";
 import {PotentialUser} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {Immutable} from "immer";
 import pickBy from "lodash/pickBy";
+import { NavigateFunction } from "react-router-dom";
 
-export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: SearchableDocumentType[]) {
-    const previousQuery = queryString.parse(history.location.search);
+export const pushSearchToHistory = function(navigate: NavigateFunction, searchQuery: string, typesFilter: SearchableDocumentType[]) {
+    const previousQuery = queryString.parse(location.search);
     const newQueryOptions = {
         query: encodeURI(searchQuery),
         types: typesFilter.map(encodeURI).join(",") || undefined,
     };
-    history.push({
+    void navigate({
         pathname: "/search",
         search: queryString.stringify({...previousQuery, ...newQueryOptions}, {encode: false}),
     });
 };
 
-export const pushConceptsToHistory = function(history: History, searchText: string, subjects: TAG_ID[], stages: Stage[]) {
+export const pushConceptsToHistory = function(navigate: NavigateFunction, searchText: string, subjects: TAG_ID[], stages: Stage[]) {
     const queryOptions = {
         "query": encodeURIComponent(searchText),
         "types": subjects.join(","),
         "stages": stages.join(","),
     };
 
-    history.replace({ // concepts (phy-only) has no "apply filters" button to imply a single search; as such we prefer replace
-        pathname: history.location.pathname,
+    void navigate({ // concepts (phy-only) has no "apply filters" button to imply a single search; as such we prefer replace
+        pathname: location.pathname,
         search: queryString.stringify(pickBy(queryOptions), {encode: false}),
-    });
+    }, { replace: true });
 };
 
 export const searchResultIsPublic = function(content: ContentSummaryDTO, user?: Immutable<PotentialUser> | null) {

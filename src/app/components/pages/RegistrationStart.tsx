@@ -3,23 +3,25 @@ import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
-import {history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
+import {isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import { SidebarLayout, MainContent } from "../elements/layout/SidebarLayout";
 import { MicrosoftSignInButton } from "../elements/MicrosoftSignInButton";
 import { SsoHelpLink } from "./LogIn";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
+import { useNavigate } from "react-router";
 
 export const RegistrationStart = () => {
+    const navigate = useNavigate();
 
     const emailSignUp = (event: React.MouseEvent) => {
         event.preventDefault();
         // TODO: push /register/role on both sites when teacher registration is implemented on phy
-        history.push(siteSpecific("register/student/age", "/register/role"));
+        void navigate(siteSpecific("register/student/age", "/register/role"));
     };
 
     const login = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/login");
+        void navigate("/login");
     };
 
     return <Container>

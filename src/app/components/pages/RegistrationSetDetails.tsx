@@ -5,7 +5,6 @@ import {
     confirmThen,
     EMAIL_PREFERENCE_DEFAULTS,
     FIRST_LOGIN_STATE,
-    history,
     isAda,
     isDobOldEnoughForSite,
     isPhy,
@@ -38,15 +37,17 @@ import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {SignupTab} from "../elements/panels/SignupTab";
 import {scheduleTeacherOnboardingModalForNextOverviewVisit} from "../elements/modals/AdaTeacherOnboardingModal";
 import { SignupSidebar } from "../elements/sidebar/SignupSidebar";
+import { useNavigate } from "react-router";
 
 interface RegistrationSetDetailsProps {
-    role: UserRole
+    userRole: UserRole
 }
 
-export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
+export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) => {
 
     // todo: before, this was probably used to keep the details from the initial login screen (if any). Possibly still useful for SSO. Remove?
     const user = useAppSelector(selectors.user.orNull);
+    const navigate = useNavigate();
     const [attemptedSignUp, setAttemptedSignUp] = useState(false);
     const [registrationUser, setRegistrationUser] = useState<Immutable<ValidationUser>>(
         Object.assign({}, user,{
@@ -55,7 +56,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             password: null,
             familyName: undefined,
             givenName: undefined,
-            role: role,
+            role: userRole,
             teacherAccountPending: undefined
         })
     );
@@ -78,10 +79,10 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
 
         if (familyNameIsValid && givenNameIsValid && passwordValid && emailIsValid &&
             (!isAda || countryCodeIsValid) && (!isPhy || dobValidOrUnset) &&
-            ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
+            ((userRole == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             
-            if (isAda && isTeacherOrAbove({ role })) {
+            if (isAda && isTeacherOrAbove({ role: userRole })) {
                 scheduleTeacherOnboardingModalForNextOverviewVisit();
             }
 
@@ -109,15 +110,15 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     };
 
     const goBack = () => {
-        if (isPhy || role === "STUDENT") {
+        if (isPhy || userRole === "STUDENT") {
             confirmThen(
                 "Are you sure you want go back? Any information you have entered will be lost.",
-                () => history.push("age"));
+                () => navigate("age"));
         }
         else { // teachers skip age check on Ada
             confirmThen(
                 "Are you sure you want go back? Any information you have entered will be lost.",
-                () => history.push("/register"));
+                () => navigate("/register"));
         }
     };
 
@@ -135,7 +136,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                             </ExigentAlert>
                         }
                         <SignupTab
-                            leftColumn = {<div className={siteSpecific("h4", "h3")}>Create your{siteSpecific("", ` ${role.toLowerCase()}`)} account</div>}
+                            leftColumn = {<div className={siteSpecific("h4", "h3")}>Create your{siteSpecific("", ` ${userRole.toLowerCase()}`)} account</div>}
                             rightColumn = {<Form onSubmit={register}>
                                 <div className={siteSpecific("row row-cols-2", "")}>
                                     <GivenNameInput
@@ -179,13 +180,13 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                     submissionAttempted={attemptedSignUp}
                                     required={true}
                                 />}
-                                <hr className={classNames({"d-none": role == 'TEACHER'}, siteSpecific("section-divider", "my-4 text-center"))} />
+                                <hr className={classNames({"d-none": userRole == 'TEACHER'}, siteSpecific("section-divider", "my-4 text-center"))} />
                                 <SchoolInput
                                     className="my-4"
                                     userToUpdate={registrationUser}
                                     setUserToUpdate={setRegistrationUser}
                                     submissionAttempted={attemptedSignUp}
-                                    required={role == 'TEACHER'}
+                                    required={userRole == 'TEACHER'}
                                 />
                                 {isPhy &&
                                 <DobInput
@@ -194,7 +195,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                     submissionAttempted={attemptedSignUp}
                                 />
                                 }
-                                <hr className={classNames({"d-none": role != 'TEACHER'}, siteSpecific("section-divider", "my-4"))} />
+                                <hr className={classNames({"d-none": userRole != 'TEACHER'}, siteSpecific("section-divider", "my-4"))} />
                                 <GenderInput
                                     className="mt-4 mb-7"
                                     userToUpdate={registrationUser}

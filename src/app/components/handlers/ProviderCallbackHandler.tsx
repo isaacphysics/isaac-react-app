@@ -1,17 +1,15 @@
 import React, {useEffect} from 'react';
 import {handleProviderCallback, useAppDispatch} from "../../state";
-import {withRouter} from "react-router-dom";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "./IsaacSpinner";
+import { useLocation, useNavigate, useParams } from 'react-router';
 
-interface ProviderCallbackHandlerProps {
-    match: {params: {provider: AuthenticationProvider}};
-    location: {search: string};
-}
-export const ProviderCallbackHandler = withRouter((props: ProviderCallbackHandlerProps) => {
-    const {match: {params: {provider}}, location: {search}} = props;
+export const ProviderCallbackHandler = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const {provider} = useParams<{provider: AuthenticationProvider}>();
     const dispatch = useAppDispatch();
-    useEffect(() => {dispatch(handleProviderCallback(provider, search));}, [dispatch, provider, search]);
+    useEffect(() => provider && void handleProviderCallback(dispatch, navigate, provider, location.search), [dispatch, navigate, provider, location.search]);
 
     return <React.Fragment>
         <div className="w-100 text-center">
@@ -19,4 +17,4 @@ export const ProviderCallbackHandler = withRouter((props: ProviderCallbackHandle
             <IsaacSpinner />
         </div>
     </React.Fragment>;
-});
+};

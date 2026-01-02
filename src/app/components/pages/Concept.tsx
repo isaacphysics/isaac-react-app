@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {withRouter} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import {selectors, useAppSelector, useGetGameboardByIdQuery} from "../../state";
 import {Col, Container, Row} from "reactstrap";
 import {IsaacContent} from "../content/IsaacContent";
@@ -30,13 +30,13 @@ import { ConceptSidebar } from "../elements/sidebar/RelatedContentSidebar";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
-    match: {params: {conceptId: string}};
-    location: {search: string};
     preview?: boolean;
 }
 
-export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride, preview}: ConceptPageProps) => {
-    const conceptId = conceptIdOverride || params.conceptId;
+export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
+    const params = useParams();
+    const location = useLocation();
+    const conceptId = conceptIdOverride || params.conceptId || "";
     const user = useAppSelector(selectors.user.orNull);
     const conceptQuery = useGetConceptQuery(conceptId);
     const {data: doc, isLoading} = conceptQuery;
@@ -46,7 +46,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     const pageContext = usePreviousPageContext(user && user.loggedIn && user.registeredContexts || undefined, doc && !isLoading ? doc : undefined);
     const accessibilitySettings = useAccessibilitySettings();
 
-    const query = queryString.parse(search);
+    const query = queryString.parse(location.search);
     const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
     const {data: gameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
 
@@ -123,4 +123,4 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
             </GameboardContext.Provider>;
         }}
     />; 
-});
+};

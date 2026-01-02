@@ -31,7 +31,7 @@ import {
 import {NOT_FOUND_TYPE, PageContextState, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
-import {useHistory} from "react-router";
+import {useLocation, useNavigate} from "react-router";
 import { MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
 import debounce from "lodash/debounce";
@@ -148,7 +148,8 @@ export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps)
 
 export const Glossary = () => {
     const dispatch = useAppDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
+    const location = useLocation();
     const pageContext = useUrlPageTheme();
     const params = useQueryParams<FilterParams, false>(false);
     
@@ -199,7 +200,7 @@ export const Glossary = () => {
             if (filterStages) params.stages = filterStages.join(',');
         }
         if (searchText) params.query = searchText;
-        history.replace({search: queryString.stringify(params, {encode: false}), state: history.location.state, hash: history.location.hash});
+        void navigate({...location, search: queryString.stringify(params, {encode: false})}, {state: location.state, replace: true});
     }, [filterSubject, filterStages, searchText, pageContext]);
 
     const searchTextFilteredTerms = useMemo(() => {

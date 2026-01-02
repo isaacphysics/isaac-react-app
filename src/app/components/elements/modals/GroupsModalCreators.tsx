@@ -19,7 +19,6 @@ import {
 import sortBy from "lodash/sortBy";
 import {
     below,
-    history,
     isAda,
     isDefined,
     isTeacherOrAbove,
@@ -40,6 +39,7 @@ import {useDispatch} from "react-redux";
 import {ReadonlyClipboardInput} from "../inputs/ReadonlyClipboardInput";
 import { Spacer } from "../Spacer";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
+import { useNavigate } from "react-router";
 
 // Avoid loading the (large) QRCode library unless necessary:
 const GroupQRPanel = lazy(() => import("../panels/GroupQRPanel").catch(() => ({default: () => <i>Failed to load QR code panel.</i>})));
@@ -124,30 +124,37 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
         />
     </div>;
 };
+
+const GroupInvitationModalButtons = ({firstTime, group, user}: {firstTime: boolean, group: AppGroup, user: RegisteredUserDTO}) => {
+    const navigate = useNavigate();
+
+    return <Row key={0} className="w-100">
+        <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+            <Button block color="primary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
+                store.dispatch(closeActiveModal());
+                void navigate(PATHS.SET_ASSIGNMENTS);
+            }}>
+                Set an assignment
+            </Button>
+        </Col>
+        {/* Only teachers are allowed to add additional managers to a group. */}
+        {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+            <Button outline block color="secondary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
+                void store.dispatch(closeActiveModal());
+                void store.dispatch(showGroupManagersModal({group, user}));
+            }}>
+                Add group managers
+            </Button>
+        </Col>}
+    </Row>;
+};
+
 export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, firstTime: boolean, backToCreateGroup?: () => void) => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: firstTime ? "Group created" : "Invite users",
     body: <CurrentGroupInviteModal group={group} firstTime={firstTime} />,
     buttons: [
-        <Row key={0} className="w-100">
-            <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button block color="primary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
-                    store.dispatch(closeActiveModal());
-                    history.push(PATHS.SET_ASSIGNMENTS);
-                }}>
-                    Set an assignment
-                </Button>
-            </Col>
-            {/* Only teachers are allowed to add additional managers to a group. */}
-            {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pb-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button outline block color="secondary" className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
-                    store.dispatch(closeActiveModal());
-                    store.dispatch(showGroupManagersModal({group, user}));
-                }}>
-                    Add group managers
-                </Button>
-            </Col>}
-        </Row>
+        <GroupInvitationModalButtons key={0} firstTime={firstTime} group={group} user={user} />
     ],
     bodyContainerClassName: "mb-0 pb-0"
 });

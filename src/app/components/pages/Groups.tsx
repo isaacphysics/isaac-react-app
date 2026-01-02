@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
-import {connect} from "react-redux";
 import {
     Button,
     ButtonDropdown,
@@ -23,10 +22,9 @@ import {
     UncontrolledButtonDropdown,
     UncontrolledTooltip
 } from "reactstrap";
-import {Link, withRouter} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {
     AppDispatch,
-    AppState,
     resetMemberPassword,
     showAdditionalManagerSelfRemovalModal,
     showCreateGroupModal,
@@ -556,14 +554,11 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
     </Card>;
 };
 
-const stateToProps = (_state: AppState, props: any): {hashAnchor: string | null} => {
-    const {location: {hash}} = props;
-    return {hashAnchor: hash?.slice(1) ?? null};
-};
-
-const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAnchor: string | null}) => {
+export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
+    const location = useLocation();
+    const hashAnchor = location.hash ? location.hash.slice(1) : null;
 
     const [showArchived, setShowArchived] = useState(false);
     const groupQuery = useGetGroupsQuery(showArchived);
@@ -659,5 +654,3 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
 
     return siteSpecific(GroupsPhy, GroupsAda);
 };
-
-export const Groups = withRouter(connect(stateToProps)(GroupsComponent));

@@ -1,13 +1,13 @@
 import {screen, waitFor} from "@testing-library/react";
 import {renderTestEnvironment} from "../testUtils";
-import {history, isPhy} from "../../app/services";
+import {isPhy} from "../../app/services";
 
 describe("IsaacApp", () => {
 
     it('should open on the home page', async () => {
         renderTestEnvironment();
         await waitFor(() => {
-            expect(history.location.pathname).toBe("/");
+            expect(window.location.pathname).toBe("/");
         });
     });
 

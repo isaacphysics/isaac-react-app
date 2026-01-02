@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { RouteComponentProps, withRouter } from "react-router";
 import { Button, Col, Container, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { getHumanContext, isFullyDefinedContext, isSingleStageContext, useUrlPageTheme } from "../../services/pageContext";
@@ -185,7 +184,7 @@ export const LandingPageFooter = ({context}: {context: PageContextState}) => {
     />;
 };
 
-export const SubjectLandingPage = withRouter((_props: RouteComponentProps) => {
+export const SubjectLandingPage = () => {
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
 
@@ -214,4 +213,4 @@ export const SubjectLandingPage = withRouter((_props: RouteComponentProps) => {
 
 
     </Container>;
-});
+};
