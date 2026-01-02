@@ -107,7 +107,8 @@ function processQueryString(query: ListParams<FilterParams>, pageContext?: PageC
     const stageItems = stagesByValue(arrayFromPossibleCsv((query.stages ?? []) as string[] | string), stagesOrdered.slice(0,-1));
 
     return {
-        queryStages: stageItems, querySubjects: subjectItems
+        queryStages: stageItems, 
+        querySubjects: subjectItems
     };
 }
 
@@ -169,7 +170,7 @@ export const Glossary = () => {
                 gt.value = value.charAt(0).toUpperCase() + value.slice(1);
                 return gt;
             }
-        )
+        ), (l, r) => !!(l && r && l.length === r.length)
     );
 
     const debouncedSearchHandler = useMemo(() =>
@@ -352,7 +353,11 @@ export const Glossary = () => {
 
     const crumb = isPhy && isFullyDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
-    const thenRender = <div className="glossary-page">
+    if (!glossaryTerms) {
+        return <ShowLoading until={glossaryTerms} />;
+    }
+
+    return <div className="glossary-page">
         <Container data-bs-theme={pageContext?.subject}>
             <TitleAndBreadcrumb 
                 currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? `${getHumanContext(pageContext)} Glossary` : "Glossary"}
@@ -439,6 +444,4 @@ export const Glossary = () => {
             </SidebarLayout>
         </Container>
     </div>;
-
-    return <ShowLoading until={glossaryTerms} thenRender={() => thenRender}/>;
 };
