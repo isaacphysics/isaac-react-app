@@ -21,7 +21,7 @@ import {IsaacCodeTabs} from "./IsaacCodeTabs";
 import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 import {IsaacCallout} from "./IsaacCallout";
 import InlineContextProvider from "../elements/InlineContextProvider";
-import { useLocation, useParams } from "react-router";
+import { useLocation } from "react-router";
 
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 

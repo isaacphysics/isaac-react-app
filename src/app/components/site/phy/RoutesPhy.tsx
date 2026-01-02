@@ -78,7 +78,7 @@ export const RoutesPhy = [
     <Route key={key++} path="/register/student/age" element={<RegistrationAgeCheck />} />,
     <Route key={key++} path="/register/student/additional_info" element={<RegistrationAgeCheckParentalConsent />} />,
     <Route key={key++} path="/register/student/age_denied" element={<RegistrationAgeCheckFailed />} />,
-    <Route key={key++} path="/register/student/details" element={<RegistrationSetDetails role="STUDENT" />} />,
+    <Route key={key++} path="/register/student/details" element={<RegistrationSetDetails userRole="STUDENT" />} />,
     <Route key={key++} path="/register/group_invitation" element={<RegistrationGroupInvite />} />,
     <Route key={key++} path="/register/connect" element={<RequireAuth auth={isLoggedIn} element={<RegistrationTeacherConnect />} />} />,
     <Route key={key++} path="/register/preferences" element={<RequireAuth auth={isLoggedIn} element={<RegistrationSetPreferences />} />} />,

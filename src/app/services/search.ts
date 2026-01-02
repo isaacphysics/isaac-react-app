@@ -1,4 +1,3 @@
-import {History} from "history";
 import {DOCUMENT_TYPE, isDefined, isStaff, PHY_NAV_SUBJECTS, SEARCH_RESULT_TYPE, SearchableDocumentType, Subject, TAG_ID} from ".";
 import {ContentSummaryDTO, Stage} from "../../IsaacApiTypes";
 import {PotentialUser} from "../../IsaacAppTypes";

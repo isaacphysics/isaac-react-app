@@ -9,7 +9,6 @@ import {
     getRelatedDocs,
     isAda,
     PATHS,
-    TAG_ID,
 } from "../../services";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";

@@ -56,7 +56,8 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     const inlineContext = useContext(InlineContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const currentUser = useAppSelector(selectors.user.orNull);
-    const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
+    const inlinePart = useInlineRegionPart(pageQuestions);
+    const questionPart = (doc.type === "isaacInlineRegion") ? inlinePart : selectQuestionPart(pageQuestions, doc.id);
     const canAttemptQuestionType = useCanAttemptQuestionType(doc.type);
     const currentAttempt = questionPart?.currentAttempt;
     const validationResponse = questionPart?.validationResponse;

@@ -1,5 +1,4 @@
 import {decorate, isDefined} from "./";
-import { Action } from "history";
 
 const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: string, reducedMotion: boolean): boolean => {
     const prevPathnameParts = prevPathname?.split("/") || [];

@@ -2,7 +2,7 @@ import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import classnames from "classnames";
 import classNames from "classnames";
 import {Button, Container, Form, Input, Nav, NavItem, NavLink, TabContent, TabPane,} from "reactstrap";
-import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
+import {UserContext} from "../../../IsaacApiTypes";
 import {
     AppDispatch,
     closeActiveModal,
@@ -134,7 +134,6 @@ export const MyAccount = ({user}: AccountPageProps) => {
         if (userOfInterest) {
             getChosenUserAuthSettings(Number(userOfInterest));
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userOfInterest]);
 
     // - Admin user modification
@@ -407,7 +406,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                                     <Suspense fallback={<Loading/>}>
                                         <UserMFA
                                             userAuthSettings={userAuthSettings}
-                                            userToUpdate={userToUpdate as any}
+                                            userToUpdate={userToUpdate}
                                             editingOtherUser={editingOtherUser}
                                         />
                                     </Suspense>

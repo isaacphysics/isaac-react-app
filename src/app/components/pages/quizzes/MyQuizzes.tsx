@@ -414,7 +414,7 @@ export const MyQuizzes = ({user}: QuizzesPageProps) => {
         if (location.hash && anchorMap[location.hash as keyof typeof anchorMap]) {
             setTabOverride(anchorMap[location.hash as keyof typeof anchorMap]);
         }
-    }, [anchorMap]);
+    }, [anchorMap, location.hash]);
 
     // +!! converts a string to 0 if null or empty and 1 otherwise
     const filterCount = +!!quizTitleFilter + +!!quizCreatorFilter + quizStatusFilter.length;
