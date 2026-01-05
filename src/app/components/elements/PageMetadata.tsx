@@ -104,10 +104,10 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const deviceSize = useDeviceSize();
     const actionButtonsFloat = noTitle && children;
 
-    return <>
+    return <div className="page-metadata">
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
 
-        {isPhy && <div className={classNames("mt-3", {"d-flex align-items-center": !actionButtonsFloat})}>
+        {isPhy && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
             {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-2"/>}
             {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}
             {!actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>}
@@ -130,5 +130,5 @@ export const PageMetadata = (props: PageMetadataProps) => {
         </div>
 
         {isPhy && <TeacherNotes notes={doc?.teacherNotes} />}
-    </>;
+    </div>;
 };
