@@ -311,16 +311,18 @@ describe("SetAssignments", () => {
             });
 
             it('shows an error message when the due date is before the start date', async () => {
-                await withMockedDate(Date.parse("2025-01-01"), async () => { // Monday
+                const year = new Date().getFullYear();
+                const startOfYear = new Date(year, 0, 1).valueOf();
+                await withMockedDate(startOfYear, async () => {
                     await renderModal();
                     const modal = await screen.findByTestId("active-modal");
                     const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
 
                     // Set a start date in the future
-                    await inputDate("modal-start-date-selector", "1", "2", "2025");
+                    await inputDate("modal-start-date-selector", "1", "2", String(year));
 
                     // Set a due date before the start date
-                    await inputDate("modal-due-date-selector", "1", "1", "2025");
+                    await inputDate("modal-due-date-selector", "1", "1", String(year));
 
                     await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
                     expect(dueDateContainer.textContent).toContain("Due date must be on or after start date and in the future");
