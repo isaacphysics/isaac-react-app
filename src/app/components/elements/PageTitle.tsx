@@ -54,16 +54,12 @@ export interface PageTitleProps {
     displayTitleOverride?: string;
     subTitle?: string;
     disallowLaTeX?: boolean;
-    help?: ReactElement;
-    className?: string;
-    audienceViews?: ViewingContext[];
     preview?: boolean;
     icon?: TitleIconProps;
 }
 
-export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, help, className, audienceViews, preview, icon}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
-    const headerRef = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {
         if (preview) return; // Don't set the main content ID if we're in preview mode
@@ -75,23 +71,30 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
         document.title = currentPageTitle + " — " + SITE_TITLE;
     }, [currentPageTitle, preview]);
 
-    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-2 mb-0": isPhy}, className)}>
-        <div className={classNames("d-flex", {"flex-column w-100": isAda})} data-testid="main-heading">
-            {isPhy && icon && <TitleIcon icon={icon} />}
-            {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX, siteSpecific("align-self-center", undefined))}
-            {isAda && subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
-        </div>
-
-        {isAda && audienceViews && <AudienceViewer audienceViews={audienceViews} />}
-        {isAda && help && <>
-            <div id="title-help" className="title-help">Help</div>
-            <UncontrolledTooltip target="title-help" placement="bottom">{help}</UncontrolledTooltip>
-        </>}
+    return <h1 id="main-heading" data-testid="main-heading" className={classNames("h-title d-flex pb-0 mb-0", {"flex-column w-100": isAda})}>
+        {isPhy && icon && <TitleIcon icon={icon} />}
+        {formatPageTitle(displayTitleOverride ?? currentPageTitle, disallowLaTeX, siteSpecific("align-self-center", undefined))}
+        {isAda && subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
 
         <Helmet>
             <meta property="og:title" content={currentPageTitle} />
         </Helmet>
     </h1>;
+};
+
+export interface TitleMetadataProps {
+    audienceViews?: ViewingContext[];
+    help?: ReactElement;
+}
+
+export const TitleMetadata = ({audienceViews, help}: TitleMetadataProps) => {
+    return <>
+        {isAda && audienceViews && <AudienceViewer audienceViews={audienceViews} />}
+        {isAda && help && <>
+            <div id="title-help" className="title-help">Help</div>
+            <UncontrolledTooltip target="title-help" placement="bottom">{help}</UncontrolledTooltip>
+        </>}
+    </>;
 };
 
 export const formatPageTitle = (currentPageTitle: string, disallowLaTeX?: boolean, className?: string) => <Markup encoding={disallowLaTeX ? "plaintext" : "latex"} className={className}>{currentPageTitle}</Markup>;

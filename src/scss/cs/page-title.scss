@@ -1,4 +1,4 @@
-#main-heading > div:first-child {
+h1#main-heading {
     container: title-container / inline-size;
 }
 
@@ -19,4 +19,5 @@
   font-size: 1.25rem;
   color: $dark-pink-300;
   text-decoration: underline;
+  font-weight: 600;
 }
