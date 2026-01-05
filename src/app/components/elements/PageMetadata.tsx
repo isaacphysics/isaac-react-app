@@ -118,7 +118,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
 
         {isAda && <div className={classNames("title-action-bar", {"d-flex align-items-end": !children})}>
             {children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-3"/>}
-            <TagStack doc={doc} className={classNames({"mb-3": children})}/>
+            <TagStack doc={doc} className={classNames({"mb-3": children, "d-flex align-items-end": !children})}/>
             {children}
             {!children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>}
         </div>}
@@ -128,8 +128,8 @@ export const PageMetadata = (props: PageMetadataProps) => {
 
         {isPhy && <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})}/>}
 
-        <div className="d-flex align-items-end gap-3">
-            {isPhy && <TagStack doc={doc}/>}
+        <div className="d-flex align-items-end">
+            {isPhy && <TagStack doc={doc} className="d-flex align-items-end gap-3"/>}
             {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
         </div>
 
