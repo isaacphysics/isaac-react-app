@@ -15,7 +15,6 @@ import classNames from 'classnames';
 import { UserContextPicker } from './inputs/UserContextPicker';
 import { LLMFreeTextQuestionIndicator } from './LLMFreeTextQuestionIndicator';
 import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
-import { Spacer } from './Spacer';
 import { selectors, useAppSelector } from '../../state';
 
 type PageMetadataProps = {
@@ -61,17 +60,21 @@ export const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}:
     </div>;
 };
 
-const TagStack = ({doc}: {doc?: SeguePageDTO}) => {
-    const isCrossTopic = doc?.tags?.includes("cross_topic");
+interface TagStackProps extends React.HTMLAttributes<HTMLDivElement> {
+    doc?: SeguePageDTO;
+}
+
+const TagStack = ({doc, className}: TagStackProps) => {
+    const isCrossTopic = true; //doc?.tags?.includes("cross_topic");
     const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
 
-    return <>
+    return <div className={className}>
         {(isCrossTopic || pageContainsLLMFreeTextQuestion) && <div className="d-lg-flex align-items-center gap-3 me-3">
             {isAda && isCrossTopic && <CrossTopicQuestionIndicator/>}
             {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator/>}
         </div>}
         <EditContentButton doc={doc}/>
-    </>;
+    </div>;
 };
 
 interface MetadataTitleProps {
@@ -113,13 +116,14 @@ export const PageMetadata = (props: PageMetadataProps) => {
             {!actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>}
         </div>}
 
-        {isAda && <div className="d-flex align-items-end">
-            <TagStack doc={doc}/>
-            <Spacer/>
-            <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}/>
+        {isAda && <div className={classNames("title-action-bar", {"d-flex align-items-end": !children})}>
+            {children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-3"/>}
+            <TagStack doc={doc} className={classNames({"mb-3": children})}/>
+            {children}
+            {!children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>}
         </div>}
 
-        {(isAda || !noTitle) && children}
+        {isPhy && !noTitle && children}
         {isPhy && showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
 
         {isPhy && <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})}/>}
