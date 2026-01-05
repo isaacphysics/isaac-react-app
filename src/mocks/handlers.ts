@@ -311,7 +311,7 @@ export const buildAuthTokenHandler = (newGroup: any, token: string) => jest.fn((
 export const buildNewManagerHandler = (groupToAddManagerTo: any, newManager: any) => jest.fn(() => {
     return HttpResponse.json({
         ...groupToAddManagerTo,
-        additionalManagers: [buildMockUserSummary(newManager, true)]
+        additionalManagers: [...(groupToAddManagerTo.additionalManagers || []), buildMockUserSummary(newManager, true)]
     }, {
         status: 200,
     });
