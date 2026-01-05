@@ -95,7 +95,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                         <MainContent>
                             {!preview && <CanonicalHrefElement />}
 
-                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}>
+                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
                                 {isPhy && <QuestionMetaData 
                                     doc={doc} audienceViews={audienceViews} 
                                     allQuestionsCorrect={allQuestionsCorrect} 

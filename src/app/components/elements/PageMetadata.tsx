@@ -16,6 +16,7 @@ import { UserContextPicker } from './inputs/UserContextPicker';
 import { LLMFreeTextQuestionIndicator } from './LLMFreeTextQuestionIndicator';
 import { CrossTopicQuestionIndicator } from './CrossTopicQuestionIndicator';
 import { Spacer } from './Spacer';
+import { selectors, useAppSelector } from '../../state';
 
 type PageMetadataProps = {
     doc?: SeguePageDTO;
@@ -60,13 +61,9 @@ export const ActionButtons = ({location, isQuestion, helpModalId, doc, ...rest}:
     </div>;
 };
 
-interface TagStackProps {
-    doc?: SeguePageDTO;
-    pageContainsLLMFreeTextQuestion?: boolean;
-}
-
-const TagStack = ({doc, pageContainsLLMFreeTextQuestion}: TagStackProps) => {
+const TagStack = ({doc}: {doc?: SeguePageDTO}) => {
     const isCrossTopic = doc?.tags?.includes("cross_topic");
+    const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
 
     return <>
         {(isCrossTopic || pageContainsLLMFreeTextQuestion) && <div className="d-lg-flex align-items-center gap-3 me-3">
@@ -100,7 +97,7 @@ const MetadataTitle = ({doc, title, subtitle, badges}: MetadataTitleProps) => {
 };
 
 export const PageMetadata = (props: PageMetadataProps) => {
-    const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle, pageContainsLLMFreeTextQuestion } = props;
+    const { doc, title, subtitle, badges, children, noTitle, helpModalId, showSidebarButton, sidebarButtonText, sidebarInTitle } = props;
     const isQuestion = doc?.type === "isaacQuestionPage";
     const isConcept = doc?.type === "isaacConceptPage";
     const location = useLocation();
@@ -116,7 +113,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
         </div>}
 
         {isAda && <div className="d-flex align-items-end">
-            <TagStack doc={doc} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}/>
+            <TagStack doc={doc}/>
             <Spacer/>
             <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc}/>
         </div>}
@@ -127,7 +124,7 @@ export const PageMetadata = (props: PageMetadataProps) => {
         {isPhy && <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})}/>}
 
         <div className="d-flex align-items-end gap-3">
-            {isPhy && <TagStack doc={doc} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}/>}
+            {isPhy && <TagStack doc={doc}/>}
             {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
         </div>
 
