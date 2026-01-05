@@ -53,6 +53,7 @@ export const formatBreadcrumbItem = (currentPageTitle: string, disallowLaTeX?: b
 type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & TitleMetadataProps & {
     breadcrumbTitleOverride?: string;
     children?: ReactElement | boolean;
+    className?: string;
 };
 
 export const TitleAndBreadcrumb = ({children, breadcrumbTitleOverride, currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, className, audienceViews, help, collectionType, intermediateCrumbs, preview, icon}: TitleAndBreadcrumbProps) => {
