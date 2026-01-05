@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect, useRef} from "react";
+import React, {ReactElement, useEffect} from "react";
 import {UncontrolledTooltip} from "reactstrap";
 import {
     isAda,
