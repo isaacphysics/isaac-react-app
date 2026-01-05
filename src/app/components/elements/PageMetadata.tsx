@@ -65,7 +65,7 @@ interface TagStackProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const TagStack = ({doc, className}: TagStackProps) => {
-    const isCrossTopic = true; //doc?.tags?.includes("cross_topic");
+    const isCrossTopic = doc?.tags?.includes("cross_topic");
     const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
 
     return <div className={className}>
