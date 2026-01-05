@@ -1,4 +1,4 @@
-import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
+import React, {lazy, Suspense, useCallback, useEffect, useMemo, useState} from 'react';
 import classnames from "classnames";
 import classNames from "classnames";
 import {Button, Container, Form, Input, Nav, NavItem, NavLink, TabContent, TabPane,} from "reactstrap";
@@ -45,7 +45,7 @@ import {
     validatePassword
 } from "../../services";
 import queryString from "query-string";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useBlocker, useLocation} from "react-router-dom";
 import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -242,12 +242,19 @@ export const MyAccount = ({user}: AccountPageProps) => {
 
     const accountInfoChanged = contextsChanged || userChanged || otherPreferencesChanged || (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
 
-    // TODO: blocking
+    const blocker = useBlocker(
+        useCallback(() => accountInfoChanged && !isFirstLoginInPersistence() && !saving, [accountInfoChanged, saving]),
+    );
+
     useEffect(() => {
-        if (accountInfoChanged && !isFirstLoginInPersistence() && !saving) {
-            // return history.block("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?");
+        if (blocker.state === "blocked") {
+            if (window.confirm("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?")) {
+                blocker.proceed?.();
+            } else {
+                blocker.reset?.();
+            }
         }
-    }, [accountInfoChanged, saving]);
+    }, [blocker]);
 
     // Handling teachers changing school
     useEffect(() => {
