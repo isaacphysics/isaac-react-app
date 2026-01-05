@@ -45,9 +45,9 @@ interface RenderTestEnvironmentOptions {
 // Provider with the global store.
 // When called, the Redux store will be cleaned completely, and other the MSW server handlers will be reset to
 // defaults (those in handlers.ts).
-export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
+export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
-    history.replaceState(undefined, "", '/');
+    await setUrl({pathname: "/"});
     resetStore();
     server.resetHandlers();
     if (role || modifyUser) {
@@ -198,10 +198,13 @@ export const enterInput = async (placeholder: string, input: string) => {
     await userEvent.type(textBox, input);
 };
 
-export const waitForLoaded = () => waitFor(() => {
-    expect(screen.queryAllByText("Loading...")).toHaveLength(0);
-    expect(screen.queryAllByText("Searching...")).toHaveLength(0);
-});
+export const waitForLoaded = async () => {
+    await waitFor(async () => {
+        expect(screen.queryAllByText("Loading...")).toHaveLength(0);
+        expect(screen.queryAllByText("Searching...")).toHaveLength(0);
+        await new Promise(process.nextTick);
+    });
+};
 
 export const expectUrl = (text: string) => waitFor(() => {
     expect(location.pathname).toBe(text);
@@ -237,7 +240,7 @@ export type SearchString = `?${string}`;
 export const setUrl = async (location: Partial<URL>) => {
     await act(async () => {
         // push a new state, then go to it
-        history.pushState(undefined, "", `${location?.pathname}${location?.search ?? ''}${location?.hash ?? ''}`);
+        history.pushState({}, "", `${location?.pathname}${location?.search ?? ''}${location?.hash ?? ''}`);
         fireEvent(window, new PopStateEvent('popstate'));
     });
 };

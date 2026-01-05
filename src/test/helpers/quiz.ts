@@ -10,7 +10,7 @@ import {
 import {UserRole} from "../../IsaacApiTypes";
 
 export const renderQuizPage = (baseUrl: PathString) => async ({role, quizId}: {role: UserRole | "ANONYMOUS", quizId: string}) => {
-    renderTestEnvironment({ role });
+    await renderTestEnvironment({ role });
     await waitForLoaded();
     await setUrl({ pathname: `${baseUrl}/${quizId}` });
     await waitForLoaded();

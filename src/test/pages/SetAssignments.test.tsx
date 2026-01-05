@@ -24,7 +24,7 @@ const expectedPhysicsTopLinks = {
 describe("SetAssignments", () => {
 
     const renderSetAssignments = async ({endpoints = []}: { endpoints?: HttpHandler[], path?: string } = {}) => {
-        renderTestEnvironment({
+        await renderTestEnvironment({
             extraEndpoints: endpoints
         });
         await navigateToSetAssignments();

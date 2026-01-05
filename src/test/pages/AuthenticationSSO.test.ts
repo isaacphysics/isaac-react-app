@@ -12,7 +12,7 @@ describe("Microsoft SSO Authentication", () => {
     }
 
     const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
-        renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
+        await renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
         await setUrl({ pathname: '/auth/microsoft/callback', search });
     };
 
@@ -112,7 +112,7 @@ describe("Google SSO Authentication", () => {
     }
 
     const renderProviderCallback = async (endpoint: HttpHandler, search?: SearchString) => {
-        renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
+        await renderTestEnvironment({ extraEndpoints: [endpoint], role: "ANONYMOUS" });
         await setUrl({ pathname: '/auth/google/callback', search });
     };
 

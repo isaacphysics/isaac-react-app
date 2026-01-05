@@ -39,7 +39,7 @@ async function assertSuccessToastShown(assert: boolean) {
 describe('PasswordResetHandler', () => {
     it("should allow submission when token and password are valid and password confirmed", async () => {
         // Arrange
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: 'ANONYMOUS',
             extraEndpoints: [
                 http.get(API_PATH + '/users/resetpassword/some_valid_token', handlerThatReturns({
@@ -71,7 +71,7 @@ describe('PasswordResetHandler', () => {
 
     it("should disable submit button and prevent submission when token is invalid", async () => {
         // Arrange
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: 'ANONYMOUS',
             extraEndpoints: [
                 http.get(API_PATH + '/users/resetpassword/some_invalid_token', handlerThatReturns(
@@ -106,7 +106,7 @@ describe('PasswordResetHandler', () => {
 
     it("should show invalid password feedback if password is invalid", async () => {
         // Arrange
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: 'ANONYMOUS',
             extraEndpoints: [
                 http.get(API_PATH + '/users/resetpassword/some_valid_token', handlerThatReturns({
@@ -142,7 +142,7 @@ describe('PasswordResetHandler', () => {
 
     if(isPhy) {
         it("should show password confirmation feedback if passwords do not match", async () => {
-            renderTestEnvironment({
+            await renderTestEnvironment({
                 role: 'ANONYMOUS',
                 extraEndpoints: [
                     http.get(API_PATH + '/users/resetpassword/some_valid_token', handlerThatReturns({

@@ -7,15 +7,15 @@ import {isAda, isPhy, PATHS} from "../../app/services";
 
 describe("MyGameboards", () => {
 
-    const renderMyGameboards = () => {
-        renderTestEnvironment({
+    const renderMyGameboards = async () => {
+        await renderTestEnvironment({
             PageComponent: MyGameboards,
             initalRouteEntries: [PATHS.MY_GAMEBOARDS]
         });
     };
 
     it('should start in card view on phy and table view on Ada', async () => {
-        renderMyGameboards();
+        await renderMyGameboards();
         await waitFor(() => {
             expect(screen.queryAllByText("Loading...")).toHaveLength(0);
         });
@@ -30,7 +30,7 @@ describe("MyGameboards", () => {
     });
 
     it('should show all of my gameboards in table view', async () => {
-        renderMyGameboards();
+        await renderMyGameboards();
         if (isPhy) {
             // Change view to "Table View" on phy
             const viewDropdown = await screen.findByLabelText("Set display mode");
@@ -49,7 +49,7 @@ describe("MyGameboards", () => {
     });
 
     it('should initially fetch the first 6 gameboards in card view', async () => {
-        renderMyGameboards();
+        await renderMyGameboards();
         if (isAda) {
             // Change view to "Card View" on Ada
             const viewDropdown = await screen.findByLabelText("Display in");
@@ -64,7 +64,7 @@ describe("MyGameboards", () => {
     });
 
     it('should filter gameboards by title in table view', async () => {
-        renderMyGameboards();
+        await renderMyGameboards();
         if (isPhy) {
             // Change view to "Table View" on phy
             const viewDropdown = await screen.findByLabelText("Set display mode");
