@@ -139,14 +139,14 @@ export const navigateToGroups = async () => {
     isPhy ?
         await followHeaderNavLink("My Isaac", "Manage groups")
         :
-        await followHeaderNavLink("My Ada", "Teaching groups");
+        await followHeaderNavLink("My Ada", "Manage groups");
 };
 
 export const navigateToMyAccount = async () => {
     isPhy ?
         await followHeaderNavLink("My Isaac", "My account")
         :
-        await followHeaderNavLink("My Ada", "My account");
+        await followHeaderNavLink("My Ada", "Account");
 };
 
 export const navigateToUserManager = async () => {
