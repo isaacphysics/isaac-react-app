@@ -22,7 +22,8 @@ import {
     mockProgress,
     mockLLMMarkedRegressionTestQuestion,
     mockLLMMarkedValidationResponse,
-    mockSearchResults
+    mockSearchResults,
+    mockFreeAttempts
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -80,6 +81,11 @@ export const handlers = [
     }),
     http.get(API_PATH + "/quiz/assigned", () => {
         return HttpResponse.json([], {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/quiz/free_attempts", () => {
+        return HttpResponse.json(mockFreeAttempts, {
             status: 200,
         });
     }),
