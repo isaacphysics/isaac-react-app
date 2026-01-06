@@ -1,5 +1,5 @@
 import React, {ReactElement} from "react";
-import {PageTitle, PageTitleProps} from "./PageTitle";
+import {PageTitle, PageTitleProps, TitleMetadata, TitleMetadataProps} from "./PageTitle";
 import {Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {Link} from "react-router-dom";
 import {CollectionType, HOME_CRUMB, HUMAN_STAGES, HUMAN_SUBJECTS, isAda, isDefined, isPhy, isSingleStageContext, LinkInfo, siteSpecific} from "../../services";
@@ -50,10 +50,12 @@ export const formatBreadcrumbItem = (currentPageTitle: string, disallowLaTeX?: b
     </BreadcrumbItem>;
 };
 
-type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
+type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & TitleMetadataProps & {
     breadcrumbTitleOverride?: string;
     children?: ReactElement | boolean;
+    className?: string;
 };
+
 export const TitleAndBreadcrumb = ({children, breadcrumbTitleOverride, currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, className, audienceViews, help, collectionType, intermediateCrumbs, preview, icon}: TitleAndBreadcrumbProps) => {
     return <div id="page-title" className={classNames(className, {"title-breadcrumb-container": isPhy, "pt-4 pt-md-7": isAda})}>
         {isPhy && <div className="title-graphics"/>}
@@ -63,11 +65,14 @@ export const TitleAndBreadcrumb = ({children, breadcrumbTitleOverride, currentPa
             collectionType={collectionType}
         />
         {children}
-        <PageTitle
-            subTitle={subTitle} disallowLaTeX={disallowLaTeX} audienceViews={audienceViews}
-            currentPageTitle={currentPageTitle} displayTitleOverride={displayTitleOverride}
-            help={help} preview={preview} icon={icon}
-        />
+        <div tabIndex={-1} className={classNames("d-sm-flex", {"py-2": isPhy, "mb-2": isAda})}>
+            <PageTitle
+                subTitle={subTitle} disallowLaTeX={disallowLaTeX}
+                currentPageTitle={currentPageTitle} displayTitleOverride={displayTitleOverride}
+                preview={preview} icon={icon}
+            />
+            <TitleMetadata audienceViews={audienceViews} help={help} />
+        </div>
     </div>;
 };
 
