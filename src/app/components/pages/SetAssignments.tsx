@@ -375,7 +375,7 @@ export const SetAssignments = () => {
     [boards, user, boardTitleFilter, boardCreator, boardSubject]);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")}
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Quizzes")}
             icon={{type: "icon", icon: "icon-question-deck"}} help={pageHelp}
         />
         <SidebarLayout>

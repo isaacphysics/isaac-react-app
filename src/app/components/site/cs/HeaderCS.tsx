@@ -107,20 +107,20 @@ export const HeaderCS = () => {
                                     {isTutorOrAbove(user) ?
                                         <>
                                             <LinkItem to="/dashboard">Overview</LinkItem>
-                                            <LinkItem to="/groups">Teaching groups</LinkItem>
-                                            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Manage assignments</LinkItem>
-                                            <LinkItem to="/set_tests">Manage tests</LinkItem>
+                                            <LinkItem to="/groups">Manage groups</LinkItem>
+                                            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Quizzes</LinkItem>
+                                            <LinkItem to="/set_tests">Tests</LinkItem>
                                             <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
-                                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>Work to do {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
+                                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>Assigned to me {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
                                         </>
                                         :
                                         <>
-                                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
-                                            <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
-                                            <LinkItem to="/progress">My progress</LinkItem>
+                                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>Quizzes {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
+                                            <LinkItem to="/tests">Tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
+                                            <LinkItem to="/progress">Progress</LinkItem>
                                         </>
                                     }
-                                    <LinkItem to="/account">My account</LinkItem>
+                                    <LinkItem to="/account">Account</LinkItem>
                                 </NavigationSection>
                                 <div className={"navbar-separator d-nav-none d-block"}/>
                                 <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>

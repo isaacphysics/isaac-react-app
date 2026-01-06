@@ -159,7 +159,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
             if (isAdminOrEventManager(user)) {
-                alert(`Warning: You currently have groups assigned to this ${siteSpecific("question deck", "quiz")}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("question deck", "quiz")} on the ${siteSpecific("Set assignments", "Manage assignments")} page.`);
+                alert(`Warning: You currently have groups assigned to this ${siteSpecific("question deck", "quiz")}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("question deck", "quiz")} on the ${siteSpecific("Set assignments", "Quizzes")} page.`);
             } else {
                 dispatch(showErrorToast(`${siteSpecific("Question Deck", "Quiz")} Deletion Not Allowed`, `You have groups assigned to this gameboard. To delete this ${siteSpecific("question deck", "quiz")}, you must unassign all groups.`));
                 return;

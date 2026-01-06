@@ -200,7 +200,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                             : <div className={classNames("d-flex flex-column m-2 p-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
                                 <span>You haven&apos;t {activeTab === "assignments" ? "set any assignments" : "assigned any tests"} yet.</span>
                                 <strong><Link to={activeTab === "assignments" ? PATHS.SET_ASSIGNMENTS : "/set_tests"} className={classNames("btn btn-link", {"fw-bold": isPhy})}>
-                                    {activeTab === "assignments" ? "Manage assignments" : "Manage tests"}
+                                    {activeTab === "assignments" ? siteSpecific("Manage assignments", "Quizzes") : siteSpecific("Manage tests", "Tests")}
                                 </Link></strong>
                             </div>
                     }
