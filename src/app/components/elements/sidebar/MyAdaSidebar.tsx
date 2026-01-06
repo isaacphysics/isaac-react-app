@@ -45,22 +45,16 @@ const MyAdaTabs: Record<string, MyAdaTab> = {
         icon: "icon-done-all",
         user: "TEACHER"
     },
+
     assignedToMe: {
-        // exists under My Assignments for students
         title: "Assigned to me",
         url: "/assignments",
         icon: "icon-person-check",
-        user: "TEACHER"
+        user: "ALL"
     },
 
-    myAssignments: {
-        title: "My Assignments",
-        url: "/assignments",
-        icon: "icon-person-check",
-        user: "STUDENT"
-    },
     myTests: {
-        title: "My Tests",
+        title: "Tests to do",
         url: "/tests",
         icon: "icon-school",
         user: "STUDENT"
