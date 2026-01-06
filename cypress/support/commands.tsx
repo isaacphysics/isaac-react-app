@@ -62,7 +62,7 @@ import {createBrowserRouter, createRoutesFromElements, Route} from "react-router
 import { RouterProvider } from 'react-router-dom';
 import { fireEvent } from '@testing-library/dom';
 
-Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes[0], mountOptions) => {
+Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes?.[0], mountOptions) => {
     const router = createBrowserRouter(createRoutesFromElements(<>
         {routes?.length
             ? routes.map(route => <Route key={route} element={component} path={route} />)
