@@ -167,7 +167,7 @@ export const navigateToSetAssignments = async () => {
     isPhy ?
         await followHeaderNavLink("My Isaac", "Set assignments")
         :
-        await followHeaderNavLink("My Ada", "Manage assignments");
+        await followHeaderNavLink("My Ada", "Quizzes");
 };
 
 // Open a given tab in the account page.

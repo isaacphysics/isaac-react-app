@@ -202,7 +202,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, userAuthSettings
     }, [userToUpdate?.registeredContexts]);
     const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts?.length ? userToUpdate?.registeredContexts : [{}], userContextsToUpdate, {unorderedArrays: true}), [userContextsToUpdate, userToUpdate]);
 
-    const pageTitle = editingOtherUser ? "Edit user" : "My account";
+    const pageTitle = editingOtherUser ? "Edit user" : siteSpecific("My account", "Account");
 
     const formSpecificTabs = [ACCOUNT_TAB.passwordreset, ACCOUNT_TAB.teacherconnections];
 

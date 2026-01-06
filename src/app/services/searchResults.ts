@@ -5,8 +5,8 @@ import {Stage} from "../../IsaacApiTypes";
 const searchList: SearchShortcut[] = [
     {
         id: "assignments",
-        title: "My assignments",
-        terms: ["my assignments", "assignments", "assignment", "homework", "hw", "my assignment", "assign", "my isaac", ...(siteSpecific(["quiz", "quizzes"], []))],
+        title: siteSpecific("My assignments", "Assigned to me"),
+        terms: ["my assignments", "assignments", "assignment", "homework", "hw", "my assignment", "assign", "my isaac", "assigned", ...(siteSpecific(["quiz", "quizzes"], []))],
         summary: "View your assignments.",
         url: "/assignments",
         type: SEARCH_RESULT_TYPE.SHORTCUT
