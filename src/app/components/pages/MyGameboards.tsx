@@ -136,8 +136,7 @@ export const MyGameboards = () => {
         boardLimit, setBoardLimit,
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(
-        siteSpecific(BoardViews.card, BoardViews.table),
-        BoardLimit.six
+        siteSpecific(BoardViews.card, BoardViews.table)
     );
 
     function confirmDeleteMultipleBoards() {

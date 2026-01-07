@@ -2269,6 +2269,11 @@ export const mockGameboards = {
     totalResults: 7
 };
 
+export const mockGameboardsShort = {
+    results: mockGameboards.results.slice(0, 6),
+    totalResults: 6,
+};
+
 export const mockRubrics = recordOf<string, DetailedQuizSummaryDTO>()({
     a_level_1d_motion_test: {
         id: "a_level_1d_motion_test",

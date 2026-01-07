@@ -81,10 +81,10 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                     <TitleAndBreadcrumb
                         currentPageTitle={generateQuestionTitle(doc)}
                         displayTitleOverride={siteSpecific("Question", undefined)}
-                        subTitle={siteSpecific(undefined, doc.subtitle)}
+                        subTitle={doc.subtitle}
                         intermediateCrumbs={navigation.breadcrumbHistory}
                         collectionType={navigation.collectionType}
-                        audienceViews={siteSpecific(undefined, determineAudienceViews(doc.audience, navigation.creationContext))}
+                        audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
                         preview={preview} icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-question"}}
                     />
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
@@ -96,7 +96,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                         <MainContent>
                             {!preview && <CanonicalHrefElement />}
 
-                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)} pageContainsLLMFreeTextQuestion={pageContainsLLMFreeTextQuestion}>
+                            <PageMetadata doc={doc} title={generateQuestionTitle(doc)}>
                                 {isPhy && <QuestionMetaData 
                                     doc={doc} audienceViews={audienceViews} 
                                     allQuestionsCorrect={allQuestionsCorrect} 

@@ -166,7 +166,7 @@ export const QuestionFinder = () => {
     ));
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(pageContext.stage?.length ? pageStageToSearchStage(pageContext.stage) : arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the user
+    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the user
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
@@ -240,13 +240,15 @@ export const QuestionFinder = () => {
                 });
             }
 
+            const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
+
             setSearchParams({
                 querySource: "questionFinder",
                 searchString: searchString || undefined,
                 tags: choiceTreeLeaves.join(",") || undefined,
                 topics: siteSpecific(undefined, [...topics].filter((query) => query != "").join(",") || undefined),
                 books: (!excludeBooks && book.join(",")) || undefined,
-                stages: stages.join(",") || undefined,
+                stages: filteredStages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
                 examBoards: examBoards.join(",") || undefined,
                 questionCategories: isPhy
@@ -259,7 +261,7 @@ export const QuestionFinder = () => {
                 randomSeed
             });
         }, 250, { leading: true }),
-    [pageContext]);
+    [pageContext, searchStages]);
 
 
     const filteringByStatus = Object.values(searchStatuses).some(v => v) && !Object.values(searchStatuses).every(v => v);
@@ -267,9 +269,8 @@ export const QuestionFinder = () => {
     const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
 
-        const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
         debouncedSearch({
-            searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages: filteredStages,
+            searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages,
             searchDifficulties, selections, excludeBooks, searchStatuses, startIndex: 0, randomSeed
         });
 

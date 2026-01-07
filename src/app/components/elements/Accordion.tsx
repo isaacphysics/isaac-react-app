@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef} from "react";
 import {useLocation} from "react-router-dom";
 import {
     above,
@@ -30,6 +30,7 @@ import { Spacer } from "./Spacer";
 import { CompletionState } from "../../../IsaacApiTypes";
 import { StatusDisplay } from "./list-groups/AbstractListViewItem";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
+import { useHistoryState } from "../../state/actions/history";
 
 interface AccordionsProps {
     id?: string;
@@ -54,13 +55,22 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
 
     const isReducedMotion = useReducedMotion();
 
-    // Toggle
     const isFirst = index === 0;
     const openFirst = isAda || Boolean(page && page !== NOT_FOUND && page.type === DOCUMENT_TYPE.QUESTION);
-    const [open, setOpen] = useState(disabled ? false : (startOpen === undefined ? (openFirst && isFirst) : startOpen));
-
+    const [open, setOpen, loadedFromHistory] = useHistoryState<boolean>(
+        `accordion-${id ?? "unknown"}-${index ?? "unknown"}`,
+        disabled 
+            ? false 
+            : startOpen ?? (openFirst && isFirst)
+    );
+    
     // If start open changes we need to update whether or not the accordion section should be open
-    useEffect(() => {if (startOpen !== undefined) {setOpen(startOpen);}}, [setOpen, startOpen]);
+    useEffect(() => {
+        if (startOpen !== undefined && !loadedFromHistory) {
+            setOpen(startOpen);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [startOpen, setOpen]);
 
     // Hash anchoring
     let anchorId: string | null = null;
@@ -84,7 +94,7 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
                 }
             }
         }
-    }, [location.hash, anchorId]);
+    }, [location.hash, anchorId, setOpen]);
 
     function getPage() {
         if (page && page != NOT_FOUND) {
