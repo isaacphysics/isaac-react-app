@@ -31,8 +31,7 @@ describe("QuestionFinder", () => {
     };
 
     it('should render results in alphabetical order', async () => {
-        await renderQuestionFinderPage({ response: () => resultsResponse });
-        await toggleFilter(F.GCSE);
+        await renderQuestionFinderPage({ response: () => resultsResponse, queryParams: '?stages=gcse' });
         await expectQuestions(questions.slice(0, 30));
     });
 
@@ -127,8 +126,7 @@ describe("QuestionFinder", () => {
                         case '1': return startIndex === '0' ? shuffledResultsResponse : shuffledResultsResponsePage2;
                         default: throw new Error('Unexpected seed');
                     }
-                }});
-                await toggleFilter(F.GCSE);
+                }, queryParams: '?stages=gcse' });
                 await expectQuestions(questions.slice(0, 30));
                 await expectPageIndicator("Showing 30 of 40.");
 

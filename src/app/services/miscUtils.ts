@@ -218,6 +218,13 @@ export const interleave = <T>(...lists: T[][]): T[] => {
     return result;
 };
 
+export const nonemptyOrUndefined = <T>(arr: T[] | undefined): T[] | undefined => {
+    if (arr && arr.length === 0) {
+        return undefined;
+    }
+    return arr;
+};
+
 export const nextRandom = () => Math.random();
 
 export const nextSeed = () => Math.floor(Math.floor(nextRandom() * 10 ** 6));

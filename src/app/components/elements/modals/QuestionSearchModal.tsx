@@ -8,7 +8,7 @@ import {
 } from "../../../state";
 import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
-import {MultiValue} from "react-select";
+import {GroupBase, MultiValue} from "react-select";
 import {
     tags,
     DIFFICULTY_ICON_ITEM_OPTIONS,
@@ -36,7 +36,6 @@ import {
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, QuestionSearchQuery} from "../../../../IsaacAppTypes";
 import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
-import {GroupBase} from "react-select/dist/declarations/src/types";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { SortItemHeader } from "../SortableItemHeader";

@@ -27,6 +27,17 @@
     <meta property="og:description" content="Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions." data-react-helmet="true" />
     <meta property="og:image" content="https://cdn.adacomputerscience.org/ada/logos/ada-logo-aqua-500px.png">
     <title>Ada Computer Science</title>
+    <script type="module" src="http://localhost:5173/@vite/client"></script>
+    <script type="module">
+        import RefreshRuntime from 'http://localhost:5173/@react-refresh'
+        RefreshRuntime.injectIntoGlobalHook(window)
+        window.$RefreshReg$ = () => {}
+        window.$RefreshSig$ = () => (type) => type
+        window.__vite_plugin_react_preamble_installed__ = true
+
+        // cypress' dev-server config ignores `define` in vite config, so set globals here
+        export const ISAAC_SITE="ada";
+    </script>
   </head>
   <body>
     <div data-cy-root id="root" data-reduced-motion="true"></div>
