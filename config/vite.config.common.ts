@@ -1,6 +1,5 @@
 import type { Plugin, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { PurgeCSS, UserDefinedSafelist } from 'purgecss';
 import fs from 'fs/promises';
 
 // Vite requires an index.html file at the project root. Since we have two sites and each needs its own index.html,
@@ -15,29 +14,32 @@ const resolveSiteSpecificIndexPlugin = (site: "sci" | "ada", renderer?: boolean)
 
 // Plugin to remove unused CSS after build
 // inspired by https://www.npmjs.com/package/vite-plugin-css-sourcemap and https://www.jsdelivr.com/package/npm/vite-plugin-purgecss;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const purgeCssPlugin = (safeList?: UserDefinedSafelist): Plugin => {
-    return {
-        name: 'purgecss-plugin',
-        enforce: 'post',
-        async generateBundle(_options, bundle) {
-            const cssFiles = Object.keys(bundle).filter(key => key.endsWith('.css'));
-            if (!cssFiles) return;
-            for (const file of cssFiles) {
-                const css = bundle[file];
-                if (css.type !== "asset") continue;
-                console.log(css.source);
-                const purged = await new PurgeCSS().purge({
-                    content: ['index*.html', { raw: Object.values(bundle).map(v => { return (v.type === "chunk" ? v.code : ""); }).join("; "), extension: 'js' }],
-                    css: [{raw: css.source.toString()}],
-                    safelist: safeList || [],
-                    defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || []
-                });
-                (bundle[file] as any).source = purged[0].css;
-            }
-        }
-    };
-};
+// TODO this doesn't work for dynamic classnames that are only used in content (icon-lg is one example as of 01/2026). Can such a plugin ever work with our setup?
+
+// import { PurgeCSS, UserDefinedSafelist } from 'purgecss';
+
+// const purgeCssPlugin = (safeList?: UserDefinedSafelist): Plugin => {
+//     return {
+//         name: 'purgecss-plugin',
+//         enforce: 'post',
+//         async generateBundle(_options, bundle) {
+//             const cssFiles = Object.keys(bundle).filter(key => key.endsWith('.css'));
+//             if (!cssFiles) return;
+//             for (const file of cssFiles) {
+//                 const css = bundle[file];
+//                 if (css.type !== "asset") continue;
+//                 console.log(css.source);
+//                 const purged = await new PurgeCSS().purge({
+//                     content: ['index*.html', { raw: Object.values(bundle).map(v => { return (v.type === "chunk" ? v.code : ""); }).join("; "), extension: 'js' }],
+//                     css: [{raw: css.source.toString()}],
+//                     safelist: safeList || [],
+//                     defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || []
+//                 });
+//                 (bundle[file] as any).source = purged[0].css;
+//             }
+//         }
+//     };
+// };
 
 // Plugin to rename the output index HTML file to index.html for nginx
 // c.f. https://github.com/vitejs/vite/discussions/11575#discussioncomment-4594007
@@ -62,7 +64,7 @@ export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env:
         plugins: [
             !isBuild && resolveSiteSpecificIndexPlugin(site, renderer),
             react({}),
-            // purgeCssPlugin(), // TODO this doesn't work for dynamic classnames that are only used in content (icon-lg is one example as of 01/2026). Reconsider?
+            // purgeCssPlugin(), // see above
             renameIndexPlugin(indexPath),
         ],
 
