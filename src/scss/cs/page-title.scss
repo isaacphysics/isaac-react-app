@@ -1,4 +1,4 @@
-#main-heading > div:first-child {
+h1#main-heading {
     container: title-container / inline-size;
 }
 
@@ -10,4 +10,15 @@
     span {
         font-size: 32px;
     }
+}
+
+.title-help {
+  display: flex;
+  align-items: center;
+  cursor: help;
+  font-size: 1.25rem;
+  color: $dark-pink-300;
+  text-decoration: underline;
+  font-weight: 600;
+  min-height: 50px;
 }
