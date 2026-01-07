@@ -9,8 +9,8 @@ import produce from "immer";
 
 describe("MyGameboards", () => {
 
-    const renderMyGameboards = (dataOverride?: object) => {
-        renderTestEnvironment({
+    const renderMyGameboards = async (dataOverride?: object) => {
+        await renderTestEnvironment({
             PageComponent: MyGameboards,
             initalRouteEntries: [PATHS.MY_GAMEBOARDS],
             extraEndpoints: [
