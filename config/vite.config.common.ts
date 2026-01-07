@@ -15,7 +15,8 @@ const resolveSiteSpecificIndexPlugin = (site: "sci" | "ada", renderer?: boolean)
     }
 });
 
-// inspired by https://www.npmjs.com/package/vite-plugin-css-sourcemap and https://www.jsdelivr.com/package/npm/vite-plugin-purgecss, 
+// inspired by https://www.npmjs.com/package/vite-plugin-css-sourcemap and https://www.jsdelivr.com/package/npm/vite-plugin-purgecss;
+// plugin to remove unused CSS after build
 const purgeCssPlugin = (safeList?: UserDefinedSafelist): Plugin => {
     return {
         name: 'purgecss-plugin',
@@ -38,12 +39,13 @@ const purgeCssPlugin = (safeList?: UserDefinedSafelist): Plugin => {
     };
 };
 
-const renameIndexPlugin = (site: "sci" | "ada"): Plugin => {
+// Plugin to rename the output index HTML file to index.html for nginx
+const renameIndexPlugin = (indexPath: string): Plugin => {
     return {
         name: 'rename-index-html-plugin',
         enforce: 'post',
         async generateBundle(_options, bundle) {
-            bundle[`index-${site}.html`].fileName = bundle[`index-${site}.html`].fileName.replace(`index-${site}.html`, "index.html");
+            bundle[`${indexPath}`].fileName = bundle[`${indexPath}`].fileName.replace(`${indexPath}`, "index.html");
         }
     };
 };
@@ -53,13 +55,14 @@ export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env:
     // TODO: rename more phy => sci; bottleneck on router config
     const oldStyleSite = site === "sci" ? "phy" : "ada";
     const isBuild = env['command'] === 'build';
+    const indexPath = `index-${site}${renderer ? '-renderer' : ''}.html`;
     
     return {
         plugins: [
             !isBuild && resolveSiteSpecificIndexPlugin(site, renderer),
             react({}),
             purgeCssPlugin(),
-            renameIndexPlugin(site),
+            renameIndexPlugin(indexPath),
         ],
 
         build: {
@@ -68,7 +71,7 @@ export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env:
             emptyOutDir: true,
             rollupOptions: {
                 input: {
-                    main: `./index-${site}${renderer ? '-renderer' : ''}.html`,
+                    main: `./${indexPath}`,
                 },
                 output: {
                     entryFileNames: 'assets/[name].[hash].js',
