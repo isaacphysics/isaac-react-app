@@ -35,7 +35,7 @@ import { ListView } from "../elements/list-groups/ListView";
 import { ContentSummaryDTO } from "../../../IsaacApiTypes";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import { History } from "history";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { skipToken } from "@reduxjs/toolkit/query";
 
 interface Item<T> {
