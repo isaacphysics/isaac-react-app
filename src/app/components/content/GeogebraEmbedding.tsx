@@ -1,5 +1,6 @@
 import React from "react";
 import { GeogebraEmbeddingDTO } from "../../../IsaacApiTypes";
+import { GeogebraCookieHandler } from "../handlers/InterstitialCookieHandler";
 
 interface GeogebraEmbeddingProps {
     doc: GeogebraEmbeddingDTO;
@@ -10,17 +11,19 @@ export const GeogebraEmbedding = ({doc}: GeogebraEmbeddingProps) => {
     const baseURL = appId ? `https://geogebra.com/classic/${appId}?embed` : "https://geogebra.com/classic?embed";
 
     return <div className="figure-panel">
-        <figure>
-            <iframe
-                title={altText || "Geogebra Calculator"}
-                src={baseURL}
-                width="100%"
-                height="500px"
-                allowFullScreen
-            />
-            {altText && <figcaption className="text-center figure-caption">
-                {altText}
-            </figcaption>}
-        </figure>
+        <GeogebraCookieHandler afterAcceptedElement={
+            <figure>
+                <iframe
+                    title={altText || "Geogebra Calculator"}
+                    src={baseURL}
+                    width="100%"
+                    height="500px"
+                    allowFullScreen
+                />
+                {altText && <figcaption className="text-center figure-caption">
+                    {altText}
+                </figcaption>}
+            </figure>
+        } />
     </div>;
 };
