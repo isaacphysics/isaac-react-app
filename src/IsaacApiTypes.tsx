@@ -530,6 +530,14 @@ export interface MediaDTO extends ContentDTO {
     altText?: string;
 }
 
+export interface DesmosEmbeddingDTO extends MediaDTO {
+    calculatorId?: string;
+}
+
+export interface GeogebraEmbeddingDTO extends MediaDTO {
+    appId?: string;
+}
+
 export interface NotificationDTO extends ContentDTO {
     externalReference?: ExternalReference;
     expiry?: Date;

@@ -22,6 +22,8 @@ import {IsaacCodeTabs} from "./IsaacCodeTabs";
 import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 import {IsaacCallout} from "./IsaacCallout";
 import InlineContextProvider from "../elements/InlineContextProvider";
+import { DesmosEmbedding } from "./DesmosEmbedding";
+import { GeogebraEmbedding } from "./GeogebraEmbedding";
 
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
@@ -81,6 +83,8 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
             case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...keyedProps} />; break;
             case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...keyedProps} />; break;
             case "anvilApp": selectedComponent = <AnvilApp {...keyedProps} />; break;
+            case "desmosEmbedding": selectedComponent = <DesmosEmbedding {...keyedProps} />; break;
+            case "geogebraEmbedding": selectedComponent = <GeogebraEmbedding {...keyedProps} />; break;
             case "isaacCard": selectedComponent = <IsaacCard {...keyedProps} />; break;
             case "isaacCardDeck": selectedComponent = <IsaacCardDeck {...keyedProps} />; break;
             case "codeTabs": selectedComponent = <IsaacCodeTabs {...keyedProps} />; break;
