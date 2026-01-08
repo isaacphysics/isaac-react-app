@@ -72,6 +72,7 @@ export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env:
             target: 'es2015', // maximal backwards compatibility
             outDir: renderer ? `build-${oldStyleSite}-renderer` : `build-${oldStyleSite}`,
             emptyOutDir: true,
+            assetsInlineLimit: 0, // prevent inlining fonts (breaks content security policy)
             rollupOptions: {
                 input: {
                     main: `./${indexPath}`,
