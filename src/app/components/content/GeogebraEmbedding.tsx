@@ -8,13 +8,12 @@ interface GeogebraEmbeddingProps {
     doc: GeogebraEmbeddingDTO;
 }
 
-interface GeogebraPlainElementProps {
-    materialId?: string;
+interface GeogebraPlainElementProps extends GeogebraEmbeddingDTO {
     parentRef: React.RefObject<HTMLElement>;
 }
 
 const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
-    const { materialId, parentRef } = props;
+    const { materialId, appType, allowNewInputs, parentRef } = props;
     const [size, setSize] = useState<{width: number | undefined, height: number | undefined}>({width: undefined, height: undefined});
     const uuid = uuid_v4();
 
@@ -33,15 +32,17 @@ const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
     useEffect(() => {
         const params = {
             material_id: materialId, 
-            // appName: "classic" | "graphing" | "geometry" | "3d", // TODO make configurable if no material id
+            appName: appType,
             width: size.width, 
             height: Math.max(500, size.height ?? 0), 
+            showAlgebraInput: !materialId || allowNewInputs,
+            showMenuBar: true, // without this, the panel size sliding adjustments don't work..?
             showToolBar: false, 
-            showAlgebraInput: !materialId, // TODO: make configurable
-            showMenuBar: false,
+            enableFileFeatures: false,
             showZoomButtons: true,
             borderColor: "#FFFFFF00"
         };
+
         const app = new GGBApplet(params, true);
         app.inject("ggb-element-" + uuid);
     }, [size.height, materialId, uuid, size.width]);
@@ -50,13 +51,13 @@ const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
 };
 
 export const GeogebraEmbedding = ({doc}: GeogebraEmbeddingProps) => {
-    const { appId, altText } = doc;
+    const { materialId, appType, allowNewInputs, altText } = doc;
     const figureRef = useRef<HTMLElement>(null);
     
     return <div className="figure-panel">
         <GeogebraCookieHandler afterAcceptedElement={<>
             <figure className="position-relative" ref={figureRef}>
-                <GeogebraPlainElement materialId={appId} parentRef={figureRef} />
+                <GeogebraPlainElement materialId={materialId} appType={appType} allowNewInputs={allowNewInputs} parentRef={figureRef} />
 
                 {altText && <figcaption className="text-center figure-caption">
                     {altText}

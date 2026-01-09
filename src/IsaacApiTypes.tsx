@@ -535,7 +535,9 @@ export interface DesmosEmbeddingDTO extends MediaDTO {
 }
 
 export interface GeogebraEmbeddingDTO extends MediaDTO {
-    appId?: string;
+    materialId?: string;
+    appType?: string;
+    allowNewInputs?: boolean;
 }
 
 export interface NotificationDTO extends ContentDTO {
