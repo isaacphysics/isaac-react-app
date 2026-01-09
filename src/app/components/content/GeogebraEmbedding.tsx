@@ -60,7 +60,10 @@ const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
             borderColor: "#FFFFFF00"
         };
 
-        const app = new (window as any).GGBApplet(params, true);
+        const GGBApplet = (window as any).GGBApplet;
+        if (!GGBApplet) return;
+
+        const app = new GGBApplet(params, true);
         app.inject("ggb-element-" + uuid);
     }, [size.height, materialId, uuid, size.width, appType, allowNewInputs]);
 
