@@ -1,8 +1,25 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GeogebraEmbeddingDTO } from "../../../IsaacApiTypes";
 import { GeogebraCookieHandler } from "../handlers/InterstitialCookieHandler";
-import "../../services/external/geogebra/deployggb";
 import {v4 as uuid_v4} from "uuid";
+import { siteSpecific } from "../../services";
+
+const deployggbSrc = siteSpecific(
+    'https://cdn.isaacscience.org',
+    'https://cdn.adacomputerscience.org'
+) + "/vendor/geogebra/deployggb.js";
+
+function loadDeployggbIfNotPresent() {
+    const deployggbScriptId = "deployggb-script";
+    if (!('deployggb' in window) && !document.getElementById(deployggbScriptId)) {
+        const deployggbScript = document.createElement('script');
+        deployggbScript.id = deployggbScriptId;
+        deployggbScript.src = deployggbSrc;
+        deployggbScript.type = 'text/javascript';
+        deployggbScript.async = true;
+        document.head.appendChild(deployggbScript);
+    }
+}
 
 interface GeogebraEmbeddingProps {
     doc: GeogebraEmbeddingDTO;
@@ -43,9 +60,9 @@ const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
             borderColor: "#FFFFFF00"
         };
 
-        const app = new GGBApplet(params, true);
+        const app = new (window as any).GGBApplet(params, true);
         app.inject("ggb-element-" + uuid);
-    }, [size.height, materialId, uuid, size.width]);
+    }, [size.height, materialId, uuid, size.width, appType, allowNewInputs]);
 
     return <div id={"ggb-element-" + uuid} />;
 };
@@ -53,6 +70,8 @@ const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
 export const GeogebraEmbedding = ({doc}: GeogebraEmbeddingProps) => {
     const { materialId, appType, allowNewInputs, altText } = doc;
     const figureRef = useRef<HTMLElement>(null);
+
+    loadDeployggbIfNotPresent();
     
     return <div className="figure-panel">
         <GeogebraCookieHandler afterAcceptedElement={<>
