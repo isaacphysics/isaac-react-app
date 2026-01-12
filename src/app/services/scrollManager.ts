@@ -4,10 +4,12 @@ const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: 
     const prevPathnameParts = prevPathname?.split("/") || [];
     const pathnameParts = pathname.split("/");
 
-    // books and revision should only scroll to the page title, not the top of the page, when switching sections
     if (
+        // books and revision should only scroll to the page title, not the top of the page, when switching sections
         (prevPathnameParts[1] === "books" && pathnameParts[1] === "books" && pathnameParts[2] && prevPathnameParts[2] === pathnameParts[2]) ||
-        (prevPathnameParts[1] === "revision" && pathnameParts[1] === "revision")
+        (prevPathnameParts[1] === "revision" && pathnameParts[1] === "revision") || 
+        // same for sign-up flow
+        (prevPathnameParts[1] === "register" && pathnameParts[1] === "register")
     ) {
         if (reducedMotion) return true;
 
@@ -46,5 +48,5 @@ const safeScrollTo = decorate(window.scrollTo, original => {
         } catch {
             window.scrollTo(0, 0);
         }
-    }, 10);
+    }, 20);
 });

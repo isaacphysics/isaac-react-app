@@ -3,7 +3,7 @@ import { Col } from "reactstrap";
 import { Spacer } from "./Spacer";
 import { FilterCount } from "./svg/FilterCount";
 import classNames from "classnames";
-import { isAda, isPhy } from "../../services";
+import { isAda, isPhy, siteSpecific } from "../../services";
 
 export const CollapsibleContext = React.createContext<{expanded: boolean, recalculateHeight: () => void} | undefined>(undefined);
 
@@ -84,7 +84,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
                 {title && <span>{title}</span>}
                 <Spacer/>
                 {(props.numberSelected ?? 0) > 0
-                    && <FilterCount count={props.numberSelected ?? 0} className="me-2" />}
+                    && <FilterCount count={props.numberSelected ?? 0} className="me-2" widthPx={siteSpecific(25, 24)} />}
                 <i className={classNames("icon icon-chevron-right icon-dropdown-90", {"active": expanded})} aria-hidden="true" />
             </button>
         </div>
