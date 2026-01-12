@@ -19,18 +19,20 @@ def run(site: str, update_baselines: bool, cypress_args):
         "-v", f"{os.path.abspath('./cypress')}:/tests/cypress",
         "-v", f"{os.path.abspath('./config')}:/tests/config",
         "-v", f"{os.path.abspath('./public')}:/tests/public",
+        "-v", f"{os.path.abspath('./index-sci.html')}:/tests/index-sci.html",
+        "-v", f"{os.path.abspath('./index-ada.html')}:/tests/index-ada.html",
         "-e", f"CYPRESS_SITE={site}",
         "-e", f"CYPRESS_UPDATE_BASELINE={'true' if update_baselines else 'false'}",
         "-e", "CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT=300000",
         "-e", "CYPRESS_CACHE_FOLDER=/tests/.cache/Cypress",
-        "cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1",
+        "cypress/browsers:node-22.21.0-chrome-141.0.7390.107-1-ff-144.0-edge-141.0.3537.92-1",
         "/tests/docker-entrypoint-vrt.sh",
         *cypress_args
     ])
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run visual regression tests')
-    parser.add_argument('site', type=str, choices=["ada", "phy"])
+    parser.add_argument('site', type=str, choices=["ada", "sci"])
     parser.add_argument(
         '--update-baselines',
         action="store_true",
