@@ -60,6 +60,7 @@ const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
             borderColor: "#FFFFFF00"
         };
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const GGBApplet = (window as any).GGBApplet;
         if (!GGBApplet) return;
 
