@@ -14,7 +14,7 @@ import {
     Row
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {history, isAda, KEY, persistence, SITE_TITLE, siteSpecific} from "../../services";
+import {extractTeacherName, history, isAda, KEY, persistence, SITE_TITLE, siteSpecific} from "../../services";
 import {
     selectors,
     useAppDispatch,
@@ -42,7 +42,7 @@ export const RegistrationTeacherConnect = () => {
         if (event) {event.preventDefault(); event.stopPropagation();}
         setSubmissionAttempted(true);
         if (user && user.loggedIn && user.id && codeIsValid) {
-            authenticateWithTokenAfterPrompt(user.id, authenticationToken, dispatch, getTokenOwner);
+            void authenticateWithTokenAfterPrompt(user.id, authenticationToken, dispatch, getTokenOwner);
         }
     }
 
@@ -104,6 +104,16 @@ export const RegistrationTeacherConnect = () => {
                                         Please enter a valid code.
                                     </FormFeedback>
                                 </FormGroup>
+                                {activeAuthorisations && activeAuthorisations.length > 0 &&
+                                    <div className="mb-3">
+                                        <h5>Connected teachers:</h5>
+                                        <ul>
+                                            {activeAuthorisations.map((auth) => (
+                                                <li key={auth.id}>{extractTeacherName(auth)} - ({auth.email})</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                }
                             </Col>
                             <hr />
                             <Row className="justify-content-end">
@@ -122,7 +132,6 @@ export const RegistrationTeacherConnect = () => {
                                         </Col>
                                     </>
                                 )}
-                                
                             </Row>
                         </Form>
                     </CardBody>
