@@ -95,6 +95,11 @@ export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env:
             },
         },
 
+        // TODO: this fixes e.g. inequality locally when using yarn link. does this affect anything else?
+        resolve: {
+            preserveSymlinks: true,
+        },
+
         define: {
             REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
             ENV_QUIZ_FEATURE_FLAG: process.env.QUIZ_FEATURE && process.env.QUIZ_FEATURE.trim() === "true",
