@@ -30,7 +30,7 @@ type PageMetadataProps = {
     {
         showSidebarButton: true;
         sidebarButtonText?: string;
-        sidebarInTitle?: boolean; // if true, the sidebar button will be rendered in the title area, otherwise it will be rendered below the title. incompatible with `noTitle`.
+        sidebarInTitle?: boolean; // if true, the sidebar button will be rendered in the title area, otherwise it will be rendered below the title. best for pages with absolutely no content at the top. incompatible with `noTitle`.
     } | {
         showSidebarButton?: never;
         sidebarButtonText?: never;
@@ -107,32 +107,33 @@ export const PageMetadata = (props: PageMetadataProps) => {
     const deviceSize = useDeviceSize();
     const actionButtonsFloat = noTitle && children;
 
-    return <div className="page-metadata">
+    return <>
         {isPhy && showSidebarButton && sidebarInTitle && below['md'](deviceSize) && <SidebarButton buttonTitle={sidebarButtonText} absolute/>}
+        <div className="page-metadata">
+            {isPhy && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
+                {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-2"/>}
+                {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}
+                {!actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>}
+            </div>}
 
-        {isPhy && <div className={classNames("title-action-bar", {"d-flex align-items-center": !actionButtonsFloat})}>
-            {actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-2"/>}
-            {noTitle ? children : <MetadataTitle doc={doc} title={title} subtitle={subtitle} badges={badges}/>}
-            {!actionButtonsFloat && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>}
-        </div>}
+            {isAda && <div className={classNames("title-action-bar", {"d-flex align-items-end": !children})}>
+                {children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-3"/>}
+                <TagStack doc={doc} className={classNames({"mb-3": children, "d-flex align-items-end": !children})}/>
+                {children}
+                {!children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>}
+            </div>}
 
-        {isAda && <div className={classNames("title-action-bar", {"d-flex align-items-end": !children})}>
-            {children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="float-end ms-3 mb-3"/>}
-            <TagStack doc={doc} className={classNames({"mb-3": children, "d-flex align-items-end": !children})}/>
-            {children}
-            {!children && <ActionButtons location={location} isQuestion={isQuestion} helpModalId={helpModalId} doc={doc} className="ms-auto"/>}
-        </div>}
+            {isPhy && !noTitle && children}
 
-        {isPhy && !noTitle && children}
-        {isPhy && showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
+            {isPhy && <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})}/>}
 
-        {isPhy && <div className={classNames("section-divider my-3", {"no-print": noTitle || (showSidebarButton && sidebarInTitle)})}/>}
+            <div className="d-flex align-items-end">
+                {isPhy && <TagStack doc={doc} className="d-flex align-items-end gap-3"/>}
+                {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
+            </div>
 
-        <div className="d-flex align-items-end">
-            {isPhy && <TagStack doc={doc} className="d-flex align-items-end gap-3"/>}
-            {isConcept && <UserContextPicker className={classNames("flex-grow-1", {"mt-3": isAda})}/>}
+            {isPhy && <TeacherNotes notes={doc?.teacherNotes} />}
         </div>
-
-        {isPhy && <TeacherNotes notes={doc?.teacherNotes} />}
-    </div>;
+        {isPhy && showSidebarButton && !sidebarInTitle && below['md'](deviceSize) && <SidebarButton className="my-2" buttonTitle={sidebarButtonText}/>}
+    </>;
 };
