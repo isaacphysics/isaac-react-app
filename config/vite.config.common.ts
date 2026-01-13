@@ -81,6 +81,21 @@ export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env:
                     entryFileNames: 'assets/[name].[hash].js',
                     chunkFileNames: 'assets/[name].[hash].js',
                     assetFileNames: 'assets/[name].[hash].[ext]',
+                    manualChunks: (id) => {
+                        // We want to separate vendor code from main bundle for better caching, Rollup does not do this.
+                        // Only packages we _need_ on _every page_ should be here, otherwise we load them unnecessarily!
+                        const requiredPackages = [
+                            'core-js', 'axios', 'lodash', 'object-hash', 'react-dom', 
+                            'react-helmet', 'react-redux', '@reduxjs/toolkit', 'react-router', 
+                            'react-router-dom', 'react-select', 'reactstrap', 'remarkable',
+                            'katex', 'he', 'react-window', 'react-circular-progressbar',
+                            'regenerator-runtime', 'query-string', 'rand-seed', 'uuid',
+                            'plausible-tracker', 'js-cookie', 'react-error-boundary'
+                        ];
+                        // Need to ensure matches both node_modules and one of our patterns:
+                        const packageRegex = RegExp(`/node_modules/(${requiredPackages.join('|')})/`);
+                        return packageRegex.test(id) ? 'main.vendor' : undefined;
+                    }
                 },
             },
         },
@@ -93,6 +108,11 @@ export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env:
                     silenceDeprecations: ['mixed-decls'],
                 },
             },
+        },
+
+        // TODO: this fixes e.g. inequality locally when using yarn link. does this affect anything else?
+        resolve: {
+            preserveSymlinks: true,
         },
 
         define: {

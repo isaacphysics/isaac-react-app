@@ -35,7 +35,7 @@ export const QuestionMetaData = (props: QuestionMetaDataProps) => {
             <Col className="d-flex flex-column mw-max-content" id="metadata-subject-topics">
                 <span>Subject & topics</span>
                 <div className="d-flex align-items-center">
-                    <i className="icon icon-hexagon me-2"/>
+                    <i className="icon icon-hexagon-bullet me-2"/>
                     {getTags(doc.tags).map((tag, index, arr) => <React.Fragment key={tag.title}>
                         <span key={tag.title} className="text-theme">{tag.title}</span>
                         {index !== arr.length - 1 && <span className="mx-2">|</span>}
