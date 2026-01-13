@@ -4,7 +4,7 @@ import {TOTPSharedSecretDTO, UserContext} from "../../../../IsaacApiTypes";
 import {Immutable} from "immer";
 import {PotentialUser, UserPreferencesDTO, ValidationUser} from "../../../../IsaacAppTypes";
 import {showToast} from "../../actions/popups";
-import {history, isFirstLoginInPersistence, isTeacherOrAbove, KEY, persistence, siteSpecific} from "../../../services";
+import {history, isFirstLoginInPersistence, isTeacherOrAbove, KEY, persistence} from "../../../services";
 import {questionsApi} from "./questionsApi";
 import {continueToAfterAuthPath, requestCurrentUser} from "../../actions";
 
@@ -112,7 +112,7 @@ export const userApi = isaacApi.injectEndpoints({
                             // Redirect to email verification page
                             history.push('/verifyemail');
                         } else {
-                            history.push(siteSpecific('/register/preferences', '/register/connect'));
+                            history.push('/register/connect');
                         }
                     } catch {
                         // No-op - components may perform their own error handling using the hook

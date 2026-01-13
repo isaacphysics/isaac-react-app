@@ -645,7 +645,8 @@ export const VALID_APPS_CONTEXTS : Partial<Record<Subject, Partial<Record<LEARNI
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
-    'ft_further_stage2_2018',
+    'ft_further_stage2_2018', 'ft_core_2018_r1', 'ft_mech_year2_2018_r1',
+    'ft_further_stage1_2018_r1' , 'ft_further_stage2_2018_r1'
 ];
 
 export enum TAG_ID {
