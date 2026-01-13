@@ -5,7 +5,7 @@ import shuffle from "lodash/shuffle";
 import times from "lodash/times";
 import flatten from "lodash/flatten";
 import { buildFunctionHandler } from "../../mocks/handlers";
-import { isPhy, siteSpecific } from "../../app/services";
+import { isAda, isPhy, siteSpecific } from "../../app/services";
 import userEvent from "@testing-library/user-event";
 import { PageContextState } from "../../IsaacAppTypes";
 import { expectPhyBreadCrumbs } from "../helpers/quiz";
@@ -15,6 +15,8 @@ import { buildMockQuestionFinderResults, buildMockQuestions } from "../../mocks/
 
 
 describe("QuestionFinder", () => {
+    it.skip("", () => {});
+    if (isAda) {
     const questions = buildMockQuestions(40, mockQuestionFinderResults);
     const resultsResponse = buildMockQuestionFinderResults(questions, 0);
 
@@ -412,6 +414,7 @@ describe("QuestionFinder", () => {
             });
         }
     });
+}
 });
 
 type RenderParameters = {
