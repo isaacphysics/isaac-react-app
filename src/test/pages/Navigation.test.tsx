@@ -60,7 +60,7 @@ describe('Navigation', () => {
                 await openMenu();
             });
 
-            it.skip('should close the navigation menu when any top-level link is clicked', async () => {
+            it('should close the navigation menu when any top-level link is clicked', async () => {
                 // this does not test any of the dropdowns / accordions!
                 await renderHomepage();
                 await openMenu();
