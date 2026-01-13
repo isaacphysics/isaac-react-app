@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector} from "../../state";
+import {unlinkUserFromGameboard, useAppDispatch} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {
     Button,
