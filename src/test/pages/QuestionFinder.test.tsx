@@ -5,7 +5,7 @@ import shuffle from "lodash/shuffle";
 import times from "lodash/times";
 import flatten from "lodash/flatten";
 import { buildFunctionHandler } from "../../mocks/handlers";
-import { isAda, isPhy, siteSpecific } from "../../app/services";
+import { isPhy, siteSpecific } from "../../app/services";
 import userEvent from "@testing-library/user-event";
 import { PageContextState } from "../../IsaacAppTypes";
 import { expectPhyBreadCrumbs } from "../helpers/quiz";
