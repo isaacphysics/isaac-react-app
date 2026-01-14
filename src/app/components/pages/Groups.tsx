@@ -415,14 +415,14 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                 {canArchive && <>
                     {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                     <div>
-                        <Button className={classNames("w-100 w-md-auto", {"mt-n3 mb-2": isPhy})} color="keyline"
+                        <Button className={classNames("w-100 w-md-auto mb-2", {"mt-n3": isPhy})} color="keyline"
                             onClick={async () => {
                                 if (group.archived) toggleArchived();
                                 else await dispatch(showGroupArchiveModal({group, toggleArchived}));
                             }}>
                             {`${group.archived ? "Unarchive" : "Archive"} group`}
                         </Button>
-                        {group.archived && <Button className={classNames("w-100 w-md-auto ms-2", {"mt-n3 mb-2": isPhy})} color="solid"
+                        {group.archived && <Button className={classNames("w-100 w-md-auto ms-md-2 mb-2", {"mt-md-n3": isPhy})} color="solid"
                             onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(dispatch, deleteGroup, user, group);}}>
                             {"Delete group"}
                         </Button>}
