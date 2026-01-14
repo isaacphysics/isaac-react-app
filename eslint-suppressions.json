@@ -636,6 +636,9 @@
   "src/app/components/navigation/IsaacApp.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 3
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
     }
   },
   "src/app/components/navigation/ResearchNotificationBanner.tsx": {
@@ -1267,9 +1270,6 @@
     "@typescript-eslint/no-unused-expressions": {
       "count": 1
     },
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
   },
   "src/test/pages/MyAssignments.test.tsx": {
     "@typescript-eslint/no-explicit-any": {
