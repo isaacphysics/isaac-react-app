@@ -35,7 +35,7 @@ import { ContentSummaryDTO } from "../../../IsaacApiTypes";
 import { ShowLoadingQuery } from "../handlers/ShowLoadingQuery";
 import debounce from "lodash/debounce";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { NavigateFunction, useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 interface Item<T> {
     value: T;
