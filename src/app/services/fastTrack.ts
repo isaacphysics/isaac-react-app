@@ -1,5 +1,5 @@
 import {getRelatedConcepts} from "./topics";
-import {DOCUMENT_TYPE, PATHS, useUserViewingContext, UseUserContextReturnType} from "./";
+import {DOCUMENT_TYPE, PATHS, useUserViewingContext, UseUserContextReturnType, navigateComponentless} from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {ContentDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {AppState, selectors, useAppSelector} from "../state";

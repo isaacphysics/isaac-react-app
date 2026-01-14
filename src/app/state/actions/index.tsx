@@ -11,6 +11,7 @@ import {
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     trackEvent,
     isTeacherAuthResponsePendingVerification,
+    navigateComponentless,
 } from "../../services";
 import {
     Action,

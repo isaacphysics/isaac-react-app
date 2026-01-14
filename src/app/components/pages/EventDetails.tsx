@@ -41,6 +41,7 @@ import {
     isPhy,
     userBookedReservedOrOnWaitingList, confirmThen,
     siteSpecific,
+    navigateComponentless,
 } from "../../services";
 import {AdditionalInformation, AugmentedEvent, PotentialUser} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";

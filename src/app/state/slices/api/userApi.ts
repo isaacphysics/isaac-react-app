@@ -4,7 +4,7 @@ import {TOTPSharedSecretDTO, UserContext} from "../../../../IsaacApiTypes";
 import {Immutable} from "immer";
 import {PotentialUser, UserPreferencesDTO, ValidationUser} from "../../../../IsaacAppTypes";
 import {showToast} from "../../actions/popups";
-import {isFirstLoginInPersistence, isTeacherOrAbove, KEY, persistence} from "../../../services";
+import {isFirstLoginInPersistence, isTeacherOrAbove, KEY, navigateComponentless, persistence} from "../../../services";
 import {questionsApi} from "./questionsApi";
 import {continueToAfterAuthPath, requestCurrentUser} from "../../actions";
 

@@ -73,7 +73,6 @@ declare let ISAAC_SITE: string;
 declare let REACT_APP_API_VERSION: string;
 declare const ENV_QUIZ_FEATURE_FLAG: boolean;
 declare let EDITOR_PREVIEW: boolean;
-declare const navigateComponentless: (to: string, options?: { replace?: boolean; state?: any }) => Promise<void>;
 
 declare module "inequality-grammar" {
   export const parseMathsExpression: (exp: string) => (any[]) | ParsingError;
