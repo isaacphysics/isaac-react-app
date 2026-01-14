@@ -1269,7 +1269,7 @@
   "src/test/pages/IsaacApp.test.tsx": {
     "@typescript-eslint/no-unused-expressions": {
       "count": 1
-    },
+    }
   },
   "src/test/pages/MyAssignments.test.tsx": {
     "@typescript-eslint/no-explicit-any": {
