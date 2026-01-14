@@ -151,7 +151,7 @@ const routes = createRoutesFromElements(
         <Route path={PATHS.MY_ASSIGNMENTS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyAssignments user={authUser} />} />} />
         <Route path="/progress" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyProgress user={authUser} />} />} />
         <Route path="/progress/:userIdOfInterest" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyProgress user={authUser} />} />} />
-    <Route path={PATHS.MY_GAMEBOARDS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyGameboards user={authUser} />} />} />
+        <Route path={PATHS.MY_GAMEBOARDS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyGameboards user={authUser} />} />} />
         <Route path={PATHS.QUESTION_FINDER} element={<QuestionFinder />} />
 
         {/* Teacher pages */}
