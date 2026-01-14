@@ -290,12 +290,12 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
                 dispatch(requestCurrentUser() as any);
                 return;
             }
-            
-            // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
-            dispatch(requestCurrentUser() as any);
-            dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
-            continueToAfterAuthPath(result.data);
         }
+
+        // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
+        dispatch(requestCurrentUser() as any);
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
+        continueToAfterAuthPath(result.data);
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
