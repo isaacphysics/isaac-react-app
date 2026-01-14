@@ -62,7 +62,7 @@ export function isTeacherAccountPending(user?: {readonly teacherAccountPending?:
 * Todo: For now this is specific to the Ada teacher flow. For Ada, teacher accounts where teacherAccountPending is true
 *  can only ever be partially logged-in.
 */
-export function isNotTeacherPending(user?: Immutable<PotentialUser> | null): user is LoggedInUser {
+export function isTeacherPending(user?: Immutable<PotentialUser> | null): user is LoggedInUser {
     return isLoggedIn(user) && !!(isAda && isTeacherAccountPending(user));
 }
 

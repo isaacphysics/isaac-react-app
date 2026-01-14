@@ -18,7 +18,7 @@ import {
     isAda,
     isDefined,
     isFound,
-    isNotTeacherPending,
+    isTeacherPending,
     isPhy,
     isTutorOrAbove,
     PATHS,
@@ -42,7 +42,7 @@ export const Gameboard = () => {
     const gameboardQuery = useGetGameboardByIdQuery(gameboardId || skipToken);
     const { data: gameboard } = gameboardQuery;
     const user = useAppSelector(selectors.user.orNull);
-    const queryArg = user?.loggedIn && isNotTeacherPending(user) ? undefined : skipToken;
+    const queryArg = user?.loggedIn && !isTeacherPending(user) ? undefined : skipToken;
     const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const thisGameboardAssignments = isDefined(gameboardId) && isDefined(assignments) && isFound(assignments) && (assignments.filter(a => a.gameboardId?.includes(gameboardId)));
     const contentSummary: ContentSummaryDTO[] = gameboard?.contents?.map(q => { return {...convertGameboardItemToContentSummary(q), state: q.state}; }) || [];

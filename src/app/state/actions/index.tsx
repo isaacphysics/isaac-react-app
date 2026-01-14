@@ -5,7 +5,7 @@ import {
     API_REQUEST_FAILURE_MESSAGE,
     FIRST_LOGIN_STATE,
     isAda,
-    isNotTeacherPending,
+    isTeacherPending,
     isTeacherOrAbove,
     KEY,
     persistence,
@@ -189,7 +189,7 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
         // Request the user
         const currentUser = await api.users.getCurrent();
         // Now with that information request auth settings and preferences asynchronously
-        if (isNotTeacherPending(currentUser.data)) {
+        if (!isTeacherPending(currentUser.data)) {
             await Promise.all([
                 dispatch(getUserAuthSettings() as any),
                 dispatch(getUserPreferences() as any)
