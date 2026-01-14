@@ -310,7 +310,7 @@ export const QuestionFinder = () => {
         if (randomSeed !== undefined) params.randomSeed = randomSeed.toString();
 
         void navigate({...location, search: queryString.stringify(params, {encode: false})}, {state: location.state, replace: true});
-    }, [searchStages, pageContext?.subject, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, randomSeed, filteringByStatus, navigate, location]);
+    }, [searchStages, pageContext, debouncedSearch, searchQuery, searchTopics, searchExamBoards, searchBooks, searchDifficulties, selections, excludeBooks, searchStatuses, randomSeed, filteringByStatus, navigate, location]);
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     useEffect(() => {
@@ -352,8 +352,9 @@ export const QuestionFinder = () => {
             // on physics, we immediately update the search if filters change; on ada, we wait until "Apply filters" is clicked
             searchAndUpdateURL();
         }
-
-    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses, readingFromUrlParams, searchAndUpdateURL]);
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
 
     const clearFilters = useCallback(() => {
         setSearchDifficulties([]);
