@@ -284,7 +284,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
                 return;
             } else if ("EMAIL_VERIFICATION_REQUIRED" in result.data) {
                 // Email verification is required for this user
-                history.pushState(undefined, "", "/verifyemail");
+                void navigateComponentless("/verifyemail");
                 // A partial login is still "successful", though we are unable to request user preferences and auth settings
                 dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
                 // We can, however, request the current user. This lets us set the session expiry time.
@@ -512,7 +512,7 @@ export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (d
         dispatch(logAction({
             type: "VIEW_SUPERSEDED_BY_QUESTION", questionId: page.id, supersededBy: page.supersededBy
         }) as any);
-        history.pushState(undefined, "", `/questions/${page.supersededBy}`);
+        void navigateComponentless(`/questions/${page.supersededBy}`);
     }
 };
 
@@ -533,7 +533,7 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
             ));
             dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
             dispatch(showToast({color: "success", title: "Test submitted", body: "Test submitted successfully", timeout: 3000}) as any);
-            history.pushState(undefined, "", generatePostQuizUrl(quizId));
+            void navigateComponentless(generatePostQuizUrl(quizId));
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
@@ -549,7 +549,7 @@ export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<
             <strong>A submission has already been recorded for this test by your account.</strong>
         </div>
     }) as any);
-    history.pushState(undefined, "", generatePostQuizUrl(quizId));
+    void navigateComponentless(generatePostQuizUrl(quizId));
 };
 
 // Question testing
@@ -580,7 +580,7 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
 // SERVICE ACTIONS (w/o dispatch)
 
 export const changePage = (path: string) => {
-    history.pushState(undefined, "", path);
+    void navigateComponentless(path);
 };
 
 export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => {
@@ -591,7 +591,7 @@ export const continueToAfterAuthPath = (user?: {readonly role?: UserRole, readon
     } else if (user && isTeacherOrAbove(user) && isAda) {
         target = "/dashboard";
     }
-    history.pushState(undefined, "", target);
+    void navigateComponentless(target);
 };
 
 // Hard redirect (refreshes page)

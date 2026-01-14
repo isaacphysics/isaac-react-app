@@ -207,6 +207,7 @@ const routes = createRoutesFromElements(
 );
 
 const router = createBrowserRouter(routes);
+(window as any).navigateComponentless = router.navigate;
 
 export const IsaacApp = () => {
     // Redux state and dispatch
