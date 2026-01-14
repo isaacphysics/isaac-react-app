@@ -1,11 +1,10 @@
 import {useCallback, useEffect} from "react";
 import throttle from "lodash/throttle";
 import {requestCurrentUser, useAppDispatch} from "../state";
-import { DebouncedFunc } from "lodash";
 
 const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
 
-function teardown(throttledFn: DebouncedFunc<() => Promise<void>>) {
+function teardown(throttledFn: ReturnType<typeof throttle>) {
     throttledFn.cancel();
     events.forEach(event => {
         document.removeEventListener(event, throttledFn);

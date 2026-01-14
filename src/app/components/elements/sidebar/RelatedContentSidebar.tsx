@@ -1,4 +1,4 @@
-import { partition } from "lodash";
+import partition from "lodash/partition";
 import React from "react";
 import { Link } from "react-router-dom";
 import { ContentSummaryDTO } from "../../../../IsaacApiTypes";

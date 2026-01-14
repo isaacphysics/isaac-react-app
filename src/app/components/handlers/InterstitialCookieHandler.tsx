@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import classNames from 'classnames';
 import { interstitialCookieSlice, useAppDispatch } from '../../state';
-import { useUserConsent } from '../../services';
+import { SOCIAL_LINKS, useUserConsent } from '../../services';
 import { IsaacVideo } from '../content/IsaacVideo';
 
 const youtubeHomepageCookieText = <p className="text-muted m-0"><small>We use YouTube to show you videos on our website. By clicking the above, you agree to Google&apos;s <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer"><b>Cookie Policy</b></a> and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"><b>Privacy Policy</b></a>.</small></p>;
@@ -42,7 +42,7 @@ export const HomepageYoutubeCookieHandler = () => {
                 <div className="youtube-header w-100">
                     <div className="d-flex align-items-center">
                         {/* eslint-disable-next-line jsx-a11y/anchor-has-content -- content in css */}
-                        <a className="channel-icon" href="https://www.youtube.com/@isaacphysics"/>
+                        <a className="channel-icon" href={SOCIAL_LINKS.youtube.href}/>
                         <a className="video-name" href="https://www.youtube.com/watch?v=kWA2AISiHXQ">Why use Isaac Physics?</a>
                     </div>
                     <div className="copy-container d-flex flex-column align-items-center">
