@@ -659,10 +659,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     _id?: number;
 }
 
-export interface AuthenticationResponseDTO extends RegisteredUserDTO {
-    MFA_REQUIRED?: boolean;
-    EMAIL_VERIFICATION_REQUIRED?: boolean;
-}
+export type AuthenticationResponseDTO = RegisteredUserDTO | { MFA_REQUIRED?: boolean; } | { EMAIL_VERIFICATION_REQUIRED?: boolean; };
 
 export interface UserAuthenticationSettingsDTO extends AbstractSegueUserDTO {
     linkedAccounts?: AuthenticationProvider[];

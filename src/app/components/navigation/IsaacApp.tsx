@@ -29,7 +29,7 @@ import {
     isAdminOrEventManager,
     isEventLeader,
     isLoggedIn,
-    isNotPartiallyLoggedIn,
+    isNotTeacherPending,
     isStaff,
     isTutorOrAbove,
     KEY,
@@ -139,7 +139,7 @@ const routes = createRoutesFromElements(
         }/>
         <Route path="/pages/:pageId" element={<Generic />} />
         <Route path="/concepts/:conceptId" element={<Concept />} />
-        <Route path="/questions/:questionId" element={<RequireAuth auth={isNotPartiallyLoggedIn} element={<Question />} />} />
+        <Route path="/questions/:questionId" element={<RequireAuth auth={isNotTeacherPending} element={<Question />} />} />
         <Route path="/glossary" element={<Glossary />} />
 
         <Route path={PATHS.GAMEBOARD} element={<Gameboard />} />
@@ -228,7 +228,7 @@ export const IsaacApp = () => {
 
     const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {
-        if (loggedInUserId && isNotPartiallyLoggedIn(user)) {
+        if (loggedInUserId && isNotTeacherPending(user)) {
             void dispatch(requestNotifications());
             checkForWebSocket();
         }

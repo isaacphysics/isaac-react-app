@@ -66,7 +66,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
-    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
+    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; authResponse: ApiTypes.AuthenticationResponseDTO}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST}
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS}

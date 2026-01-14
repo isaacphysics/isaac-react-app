@@ -62,8 +62,8 @@ export function isTeacherAccountPending(user?: {readonly teacherAccountPending?:
 * Todo: For now this is specific to the Ada teacher flow. For Ada, teacher accounts where teacherAccountPending is true
 *  can only ever be partially logged-in.
 */
-export function isNotPartiallyLoggedIn(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly teacherAccountPending?: boolean, readonly EMAIL_VERIFICATION_REQUIRED?: boolean} | null): user is LoggedInUser { // TODO this type guard is questionable, as non-logged in users pass this check. it seems to only be used as a "fully logged in" check though.
-    return !(isAda && (isTeacherAccountPending(user) || user?.EMAIL_VERIFICATION_REQUIRED));
+export function isNotTeacherPending(user?: Immutable<PotentialUser> | null): user is LoggedInUser {
+    return isLoggedIn(user) && !!(isAda && isTeacherAccountPending(user));
 }
 
 export const roleRequirements: Record<UserRole, (u: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => boolean> = {

@@ -5,7 +5,7 @@ import {
     API_REQUEST_FAILURE_MESSAGE,
     FIRST_LOGIN_STATE,
     isAda,
-    isNotPartiallyLoggedIn,
+    isNotTeacherPending,
     isTeacherOrAbove,
     KEY,
     persistence,
@@ -163,7 +163,7 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
     try {
         const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
         // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
         await dispatch(requestCurrentUser() as any);
         continueToAfterAuthPath(result.data);
@@ -189,7 +189,7 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
         // Request the user
         const currentUser = await api.users.getCurrent();
         // Now with that information request auth settings and preferences asynchronously
-        if (isNotPartiallyLoggedIn(currentUser.data)) {
+        if (isNotTeacherPending(currentUser.data)) {
             await Promise.all([
                 dispatch(getUserAuthSettings() as any),
                 dispatch(getUserPreferences() as any)
@@ -277,24 +277,25 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
 
         if (result.status === 202) {
             // We haven't been fully authenticated, some additional action is required
-            if (result.data.MFA_REQUIRED) {
+            if ("MFA_REQUIRED" in result.data) {
                 // MFA is required for this user and user isn't logged in yet.
                 dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
                 return;
-            } else if (result.data.EMAIL_VERIFICATION_REQUIRED) {
+            } else if ("EMAIL_VERIFICATION_REQUIRED" in result.data) {
                 // Email verification is required for this user
                 history.pushState(undefined, "", "/verifyemail");
                 // A partial login is still "successful", though we are unable to request user preferences and auth settings
-                dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+                dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
                 // We can, however, request the current user. This lets us set the session expiry time.
                 dispatch(requestCurrentUser() as any);
                 return;
             }
+            
+            // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
+            dispatch(requestCurrentUser() as any);
+            dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: result.data});
+            continueToAfterAuthPath(result.data);
         }
-        // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
-        dispatch(requestCurrentUser() as any);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        continueToAfterAuthPath(result.data);
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -339,7 +340,7 @@ export const handleProviderCallback = async (dispatch: Dispatch<Action>, navigat
             dispatch(getUserAuthSettings() as any),
             dispatch(getUserPreferences() as any)
         ]);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, authResponse: providerResponse.data});
         trackEvent("sign_in_success", { props: { provider: provider.toLowerCase() }});
         if (providerResponse.data.firstLogin) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
