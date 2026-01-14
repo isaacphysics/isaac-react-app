@@ -37,7 +37,8 @@ const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAA
     {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion",
-            "isaacClozeQuestion", "isaacReorderQuestion", "isaacLLMFreeTextQuestion"
+            "isaacClozeQuestion", "isaacReorderQuestion", "isaacItemQuestion", "isaacStringMatchQuestion",
+            "isaacRegexMatchQuestion", "isaacGraphSketcherQuestion", "isaacCoordinateQuestion"
         ],
         questionCountByBookTag: {
             "phys_book_step_up": 432,
@@ -55,7 +56,8 @@ const siteSpecificStats: {questionCountByBookTag: {[bookTag in keyof typeof ISAA
     {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
-            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacLLMFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion"
+            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacLLMFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion",
+            "isaacReorderQuestion", "isaacRegexMatchQuestion"
         ],
         questionCountByBookTag: {},
     }
@@ -133,12 +135,12 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
                     <div className="mt-4">
                         <h4>Question parts correct by type</h4>
-                        <Row>
+                        <Row className="d-flex justify-content-center">
                             {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
                                 const correct = progress?.correctByType?.[qType] || null;
                                 const attempts = progress?.attemptsByType?.[qType] || null;
                                 const percentage = safePercentage(correct, attempts);
-                                return <Col key={qType} lg={siteSpecific(6, 4)} className="mt-2 type-progress-bar">
+                                return <Col key={qType} lg={4} className="mt-2 type-progress-bar">
                                     <div className={"p-2"}>
                                         {HUMAN_QUESTION_TYPES[qType]} questions
                                     </div>
