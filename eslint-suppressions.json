@@ -1228,7 +1228,7 @@
       "count": 29
     },
     "@typescript-eslint/no-explicit-any": {
-      "count": 5
+      "count": 6
     },
     "@typescript-eslint/triple-slash-reference": {
       "count": 1
@@ -1265,6 +1265,9 @@
   },
   "src/test/pages/IsaacApp.test.tsx": {
     "@typescript-eslint/no-unused-expressions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
