@@ -1,8 +1,8 @@
-import React, {useCallback, useContext, useMemo, useRef, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
-import {isAda, isAuthorisedFullAccess, isPhy, siteSpecific, TODAY} from "../../../services";
-import {Link} from "react-router-dom";
+import {isAda, isAuthorisedFullAccess, isPhy, scrollVerticallyIntoView, siteSpecific, TODAY} from "../../../services";
+import {Link, useHistory} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
 import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation } from "../../../state";
@@ -151,6 +151,8 @@ export function ResultsTable<Q extends QuestionType>({
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     const dispatch = useAppDispatch();
+    const history = useHistory(); // TODO replace with navigate when RR7!
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const [dropdownOpen, setDropdownOpen] = useState(progress?.map(() => false));
     const toggle = (index: number) => setDropdownOpen(dropdownOpen?.map((value, i) => i === index ? !value : value));
@@ -158,7 +160,8 @@ export function ResultsTable<Q extends QuestionType>({
     const [returnQuizToStudent, {isLoading: returningQuizToStudent}] = useReturnQuizToStudentMutation();
     const returnToStudent = (userId?: number) => {
         const confirm = () => {
-            returnQuizToStudent({quizAssignmentId: assignmentId as number, userId: userId as number})
+            history.replace({...history.location, hash: `${userId}`});
+            void returnQuizToStudent({quizAssignmentId: assignmentId as number, userId: userId as number})
                 .then(() => dispatch(closeActiveModal()));
         };
         dispatch(openActiveModal({
@@ -180,6 +183,16 @@ export function ResultsTable<Q extends QuestionType>({
 
     const [sortOrder, setSortOrder] = useState<ProgressSortOrder>("name");
     const [reverseOrder, setReverseOrder] = useState(false);
+
+    useEffect(() => {
+        // scroll to the student inside the table when the table reloads
+        const resetStudent = history.location.hash ? document.getElementById(history.location.hash.substring(1)) : null;
+        if (resetStudent && scrollContainerRef.current && resetStudent?.offsetTop !== undefined) {
+            scrollContainerRef.current.scrollTop = resetStudent.offsetTop - 64; // seems to scroll slightly too far; 64px offset to account
+            scrollVerticallyIntoView(scrollContainerRef.current);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(progress)]);
 
     function toggleSort(itemOrder: ProgressSortOrder) {
         setSortOrder(itemOrder);
@@ -349,7 +362,7 @@ export function ResultsTable<Q extends QuestionType>({
 
     return <div className="assignment-progress-progress">
         {progress && progress.length > 0 ? <>
-            <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})}>
+            <div className={classNames("assignment-progress-table-wrapper border", {"rounded-3": isAda})} ref={scrollContainerRef}>
                 <table ref={tableRef} className="progress-table w-100">
                     <thead className="progress-table-header-footer sticky-top">
                         {tableHeaderFooter}
@@ -375,7 +388,7 @@ export function ResultsTable<Q extends QuestionType>({
                         {sortedProgress.map((studentProgress, index) => {
                             const fullAccess = isAuthorisedFullAccess(studentProgress);
                             const internalCellSpacing = isPhy && isAssignment ? "py-1" : "py-3";
-                            return <tr key={studentProgress.user?.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
+                            return <tr key={studentProgress.user?.id} id={`${studentProgress.user?.id}`} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
                                 <th className={`student-name sticky-left ps-2 ${internalCellSpacing} fw-bold`}>
                                     {fullAccess && pageSettings?.isTeacher ?
                                         (

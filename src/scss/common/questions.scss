@@ -675,7 +675,7 @@ p > .katex, .katex-display {
       color: inherit;
       min-width: 176px;
       flex-basis: 100%;
-      @media (max-width: 576px) {
+      @media (max-width: 768px) {
         min-width: 0;
       }
       &:hover {
