@@ -1285,11 +1285,14 @@ export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+export const dndDropZoneRegex = /\[drop-zone:(?<id>[a-zA-Z0-9_-]+)(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?\]/g;
 export const NULL_CLOZE_ITEM_ID = "NULL_CLOZE_ITEM" as const;
 export const NULL_CLOZE_ITEM: ItemDTO = {
     type: "item",
     id: NULL_CLOZE_ITEM_ID
 };
+
+export const FIGURE_DROP_ZONE_PLACEHOLDER_SIZE = "24px";
 
 // Legacy matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
 // Matches: all legacy, [inline-question:questionId class="{classes}"]
