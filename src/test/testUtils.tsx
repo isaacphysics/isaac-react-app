@@ -80,7 +80,7 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
         server.use(...extraEndpoints);
     }
     if (isDefined(PageComponent) && PageComponent.name !== "IsaacApp") {
-        store.dispatch(requestCurrentUser());
+        await store.dispatch(requestCurrentUser());
     }
     render(<Provider store={store}>
         {/* #root usually exists in index-{phy|ada}.html, but this is not loaded in Jest */}

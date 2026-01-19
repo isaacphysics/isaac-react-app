@@ -391,7 +391,6 @@ export interface UserGroupDTO {
     additionalManagerPrivileges?: boolean;
     ownerSummary?: UserSummaryWithEmailAddressDTO;
     additionalManagers?: UserSummaryWithEmailAddressDTO[];
-    _id?: number;
 }
 
 export interface AnvilAppDTO extends ContentDTO {
@@ -656,7 +655,6 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     emailVerificationStatus?: EmailVerificationStatus;
     teacherAccountPending?: boolean;
     id?: number;
-    _id?: number;
 }
 
 export type AuthenticationResponseDTO = Immutable<RegisteredUserDTO> | { MFA_REQUIRED?: boolean; } | { EMAIL_VERIFICATION_REQUIRED?: boolean; };
