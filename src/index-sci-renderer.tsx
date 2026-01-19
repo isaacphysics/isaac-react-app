@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import {highlightJsService} from "./app/services/highlightJs";
 import {EditorRenderer} from "./app/components/elements/EditorRenderer";
 
-highlightJsService.registerLanguages();
+void highlightJsService.registerLanguages();
 
 const root = createRoot(document.getElementById('root')!);
 
