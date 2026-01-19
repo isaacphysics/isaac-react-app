@@ -51,7 +51,7 @@ fi
 API_NAME=$SITE-api-$ENV-$API_VERSION
 APP_NAME=$SITE-app-$ENV-$APP_VERSION
 PG_CONTAINER=$SUBJECT-pg-$ENV
-ES_CONTAINER=$SUBJECT-elasticsearch-live
+ES_CONTAINER=$SITE-elasticsearch-v8-live
 
 # The content repo is named differently for both sites in a non-standard way:
 if [ "$SUBJECT" == "ada" ]; then
