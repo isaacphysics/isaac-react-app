@@ -60,7 +60,6 @@ import {Provider} from "react-redux";
 import {store} from "../../src/app/state";
 import {createBrowserRouter, createRoutesFromElements, Route} from "react-router";
 import { RouterProvider } from 'react-router-dom';
-import { fireEvent } from '@testing-library/dom';
 
 Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes?.[0], mountOptions) => {
     const router = createBrowserRouter(createRoutesFromElements(<>
@@ -70,8 +69,7 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute
         }
     </>));
 
-    history.pushState({}, '', initialRoute || '/');
-    fireEvent(window, new PopStateEvent('popstate'));
+    router.navigate(initialRoute || '/');
 
     mount(
         <Provider store={store}>
