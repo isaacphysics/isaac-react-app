@@ -126,7 +126,7 @@ export const DesmosCookieHandler = ({afterAcceptedElement} : {afterAcceptedEleme
     />;
 };
 
-export const GeogebraCookieHandler = ({afterAcceptedElement} : {afterAcceptedElement: JSX.Element}) => {
+export const GeogebraCookieHandler = ({afterAcceptedElement, onAccepted} : {afterAcceptedElement: JSX.Element, onAccepted?: () => void}) => {
     const dispatch = useAppDispatch();
     const userConsent = useUserConsent();
     
@@ -138,6 +138,7 @@ export const GeogebraCookieHandler = ({afterAcceptedElement} : {afterAcceptedEle
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
                     dispatch(interstitialCookieSlice.actions.acceptGeogebraCookies());
+                    onAccepted?.();
                 }}>Accept</Button>
             </div>
         </div>}

@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GeogebraEmbeddingDTO } from "../../../IsaacApiTypes";
 import { GeogebraCookieHandler } from "../handlers/InterstitialCookieHandler";
 import {v4 as uuid_v4} from "uuid";
 import { siteSpecific } from "../../services";
+import { Button } from "reactstrap";
 
 const deployggbSrc = siteSpecific(
     'https://cdn.isaacscience.org',
@@ -27,11 +28,13 @@ interface GeogebraEmbeddingProps {
 
 interface GeogebraPlainElementProps extends GeogebraEmbeddingDTO {
     parentRef: React.RefObject<HTMLElement>;
+    startInert?: boolean;
 }
 
 const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
     const { materialId, appType, allowNewInputs, parentRef } = props;
     const [size, setSize] = useState<{width: number | undefined, height: number | undefined}>({width: undefined, height: undefined});
+    const [isInert, setIsInert] = useState(props.startInert ?? true);
     const uuid = useMemo(() => uuid_v4(), []);
 
     const recalculateSize = useCallback(() => {
@@ -68,19 +71,26 @@ const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
         app.inject("ggb-element-" + uuid);
     }, [size.height, materialId, uuid, size.width, appType, allowNewInputs]);
 
-    return <div id={"ggb-element-" + uuid} />;
+    return <>
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ /* the button maintains accessibility */}
+        {isInert && <div className="geogebra-embedding-wrapper" onClick={() => setIsInert(false)}>
+            <Button color="primary" onClick={() => setIsInert(false)}>Click to open GeoGebra content</Button>
+        </div>}
+        <div id={"ggb-element-" + uuid} {...{ inert: isInert ? '' : undefined }} />
+    </>;
 };
 
 export const GeogebraEmbedding = ({doc}: GeogebraEmbeddingProps) => {
     const { materialId, appType, allowNewInputs, altText } = doc;
     const figureRef = useRef<HTMLElement>(null);
+    const [justAcceptedCookie, setJustAcceptedCookie] = useState(false);
 
     loadDeployggbIfNotPresent();
     
     return <div className="figure-panel">
-        <GeogebraCookieHandler afterAcceptedElement={<>
+        <GeogebraCookieHandler onAccepted={() => setJustAcceptedCookie(true)} afterAcceptedElement={<>
             <figure className="position-relative" ref={figureRef}>
-                <GeogebraPlainElement materialId={materialId} appType={appType} allowNewInputs={allowNewInputs} parentRef={figureRef} />
+                <GeogebraPlainElement materialId={materialId} appType={appType} allowNewInputs={allowNewInputs} parentRef={figureRef} startInert={!justAcceptedCookie} />
 
                 {altText && <figcaption className="text-center figure-caption">
                     {altText}
