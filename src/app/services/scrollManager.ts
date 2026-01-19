@@ -1,4 +1,4 @@
-import {decorate, isDefined} from "./";
+import {decorate, isDefined, PATHS} from "./";
 import { Action } from "history";
 
 const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: string, reducedMotion: boolean): boolean => {
@@ -19,6 +19,12 @@ const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: 
         return true;
     }
 
+    if (pathnameParts[1] === PATHS.MY_GAMEBOARDS) {
+        // since we usually don't scroll if there is a hash, but gameboards use the hash to find what to show, scroll to top here
+        safeScrollTo({top: 0, left: 0, behavior: reducedMotion ? "instant" : "auto"});
+        return true;
+    }
+
     return false;
 };
 
@@ -30,6 +36,8 @@ export const scrollTopOnPageLoad = (reducedMotion: boolean) => (previousPathname
         }
         
         (window as any).followedAtLeastOneSoftLink = true;
+
+        if (window.location.hash) return;
 
         safeScrollTo({top: 0, left: 0, behavior: reducedMotion ? "instant" : "auto"});
     }
