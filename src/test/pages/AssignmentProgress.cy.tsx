@@ -5,6 +5,7 @@ import { PATHS } from "../../app/services";
 import { RegisteredUserDTO } from "../../IsaacApiTypes";
 
 const apRoutes = [
+    `${PATHS.ASSIGNMENT_PROGRESS}`,
     `${PATHS.ASSIGNMENT_PROGRESS}/:assignmentId`,
     `${PATHS.ASSIGNMENT_PROGRESS}/group/:groupId`
 ];
