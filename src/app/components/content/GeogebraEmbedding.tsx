@@ -32,7 +32,7 @@ interface GeogebraPlainElementProps extends GeogebraEmbeddingDTO {
 const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
     const { materialId, appType, allowNewInputs, parentRef } = props;
     const [size, setSize] = useState<{width: number | undefined, height: number | undefined}>({width: undefined, height: undefined});
-    const uuid = uuid_v4();
+    const uuid = useMemo(() => uuid_v4(), []);
 
     const recalculateSize = useCallback(() => {
         const width = parentRef.current?.clientWidth;
