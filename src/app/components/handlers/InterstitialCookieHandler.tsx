@@ -8,6 +8,8 @@ import { IsaacVideo } from '../content/IsaacVideo';
 const youtubeHomepageCookieText = <p className="text-muted m-0"><small>We use YouTube to show you videos on our website. By clicking the above, you agree to Google&apos;s <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer"><b>Cookie Policy</b></a> and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"><b>Privacy Policy</b></a>.</small></p>;
 const youtubeCookieText = <p>We use YouTube to show you videos on our website. We ask for your permission before loading the content, as YouTube may be using cookies to help them track usage and improve their services.<br/><br/>You may wish to read Google&apos;s <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer"><b>Cookie Policy</b></a> and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"><b>Privacy Policy</b></a> before accepting.</p>;
 const anvilCookieText = <p>We use Anvil to show you interactive content on our website. We ask for your permission before loading the content, as Anvil may be using cookies to help them track usage and improve their services.<br/><br/>You may wish to read Anvil&apos;s <a href="https://anvil.works/privacy" target="_blank" rel="noopener noreferrer"><b>Privacy Policy</b></a> before accepting.</p>;
+const desmosCookieText = <p>We use Desmos to show you interactive content on our website. We ask for your permission before loading the content, as Desmos may be using cookies or other monitoring tools to help them track usage and improve their services.<br/><br/>You may wish to read Desmos&apos;s <a href="https://www.desmos.com/privacy" target="_blank" rel="noopener noreferrer"><b>Privacy Policy</b></a> before accepting.</p>;
+const geogebraCookieText = <p>We use GeoGebra to show you interactive content on our website. We ask for your permission before loading the content, as GeoGebra may be using cookies or other monitoring tools to help them track usage and improve their services.<br/><br/>You may wish to read GeoGebra&apos;s <a href="https://www.geogebra.org/privacy" target="_blank" rel="noopener noreferrer"><b>Privacy Policy</b></a> before accepting.</p>;
 
 export interface InterstitialCookieHandlerProps {
     accepted: boolean;
@@ -98,6 +100,45 @@ export const AnvilCookieHandler = ({afterAcceptedElement} : {afterAcceptedElemen
             <div className="w-100 d-flex justify-content-center">
                 <Button onClick={() => {
                     dispatch(interstitialCookieSlice.actions.acceptAnvilCookies());
+                }}>Accept</Button>
+            </div>
+        </div>}
+        afterAccepted={<>{afterAcceptedElement}</>}
+    />;
+};
+
+export const DesmosCookieHandler = ({afterAcceptedElement} : {afterAcceptedElement: JSX.Element}) => {
+    const dispatch = useAppDispatch();
+    const userConsent = useUserConsent();
+    
+    return <InterstitialCookieHandler
+        accepted={userConsent.cookieConsent?.desmosCookieAccepted ?? false}
+        beforeAccepted={<div className="interstitial-cookie-page">
+            <h3>Allow Desmos content?</h3>
+            {desmosCookieText}
+            <div className="w-100 d-flex justify-content-center">
+                <Button onClick={() => {
+                    dispatch(interstitialCookieSlice.actions.acceptDesmosCookies());
+                }}>Accept</Button>
+            </div>
+        </div>}
+        afterAccepted={<>{afterAcceptedElement}</>}
+    />;
+};
+
+export const GeogebraCookieHandler = ({afterAcceptedElement, onAccepted} : {afterAcceptedElement: JSX.Element, onAccepted?: () => void}) => {
+    const dispatch = useAppDispatch();
+    const userConsent = useUserConsent();
+    
+    return <InterstitialCookieHandler
+        accepted={userConsent.cookieConsent?.geogebraCookieAccepted ?? false}
+        beforeAccepted={<div className="interstitial-cookie-page">
+            <h3>Allow GeoGebra content?</h3>
+            {geogebraCookieText}
+            <div className="w-100 d-flex justify-content-center">
+                <Button onClick={() => {
+                    dispatch(interstitialCookieSlice.actions.acceptGeogebraCookies());
+                    onAccepted?.();
                 }}>Accept</Button>
             </div>
         </div>}
