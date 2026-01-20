@@ -37,5 +37,4 @@ export default defineConfig({
         pluginVisualRegressionUpdateImages: UPDATE_BASELINE,
         pluginVisualRegressionCreateMissingImages: UPDATE_BASELINE,
     },
-    retries: 2,
 });

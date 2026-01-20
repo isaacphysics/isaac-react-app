@@ -99,12 +99,6 @@ export const generateConfig = (site: "sci" | "ada", renderer?: boolean) => (env:
                 },
             },
         },
-        
-        server: {
-            warmup: {
-                clientFiles: ['cypress/**/*'],
-            }
-        },
 
         css: {
             devSourcemap: true,
