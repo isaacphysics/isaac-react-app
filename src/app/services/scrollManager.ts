@@ -19,7 +19,7 @@ const hasPageGroupSpecificScroll = (prevPathname: string | undefined, pathname: 
         return true;
     }
 
-    if (pathnameParts[1] === PATHS.MY_GAMEBOARDS) {
+    if (pathnameParts[1] === PATHS.GAMEBOARD.slice(1)) {
         // since we usually don't scroll if there is a hash, but gameboards use the hash to find what to show, scroll to top here
         safeScrollTo({top: 0, left: 0, behavior: reducedMotion ? "instant" : "auto"});
         return true;
