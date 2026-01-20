@@ -33,8 +33,6 @@ jobs:
         with:
           component: true
           browser: chrome
-          start: yarn run test-${{ matrix.site }}-visual
-          wait-on: "http://localhost:5173"
         env:
           CYPRESS_SITE: ${{ matrix.site }}
       - name: Upload VRT actuals
