@@ -125,6 +125,26 @@ function currentAttemptPythonExpression(state?: InequalityState): string {
     return (state && state.result && state.result.python) || "";
 }
 
+export function useModalWithScroll({setModalVisible}: { setModalVisible: (v: boolean) => void; }) {
+    const scrollYRef = useRef<number>(0);
+
+    const openModal = () => {
+        scrollYRef.current = window.scrollY;
+        setModalVisible(true);
+    };
+
+    const closeModalAndReturnToScrollPosition = () => {
+        document.body.style.overflow = "initial";
+        setModalVisible(false);
+        window.scrollTo(0, scrollYRef.current);
+    };
+
+    return {
+        openModal,
+        closeModalAndReturnToScrollPosition,
+    };
+}
+
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<FormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = (currentAttempt && currentAttempt.value)
@@ -133,6 +153,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(currentAttemptValue), userInput: '', valid: true}));
     const [textInput, setTextInput] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+    const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
@@ -159,19 +180,6 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
-
-    const scrollYRef = useRef<number>(0);
-
-    const openModal = () => {
-        scrollYRef.current = window.scrollY;
-        setModalVisible(true);
-    };
-
-    const closeModalAndReturnToScrollPosition = () => {
-        document.body.style.overflow = "initial";
-        setModalVisible(false);
-        window.scrollTo(0, scrollYRef.current);
-    };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
