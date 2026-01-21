@@ -61,7 +61,6 @@ elif [ "$SUBJECT" == "phy" ]; then
 fi
 
 docker compose -p dc-${APP_NAME//./-} -f - $@ << EOF
-version: '2'
 services:
   $APP_NAME:
     container_name: $APP_NAME
@@ -103,8 +102,8 @@ services:
     restart: unless-stopped
 networks:
   default:
-    external:
-      name: isaac
+    name: isaac
+    external: true
 EOF
 
 exit 0
