@@ -106,16 +106,18 @@ export const symbolicInputValidator = (input: string) => {
     return errors;
 };
 
-/*export type InequalityState = {
+export type InequalityState = {
     result?: {
         tex?: string;
         python?: string;
         mathml?: string;
-        uniqueSymbols?: any[];
+        mhchem?: string;
+        uniqueSymbols?: string;
     };
     symbols?: any[];
+    textEntry?: boolean;
     userInput?: string;
-};*/
+};
 
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<FormulaDTO>(questionId);
@@ -125,7 +127,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const [textInput, setTextInput] = useState('');
 
-    let currentAttemptValue: any | undefined = undefined;
+    let currentAttemptValue: InequalityState | undefined = undefined;
 
     function currentAttemptPythonExpression(): string {
         return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
@@ -136,7 +138,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
 
-    const updateState = (state: any) => {
+    const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
         const pythonExpression = newState?.result?.python || "";
         if (state.userInput !== "" || modalVisible) {

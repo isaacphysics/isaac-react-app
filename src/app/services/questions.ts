@@ -4,6 +4,7 @@ import {ChoiceDTO, CompletionState, ContentDTO, ContentSummaryDTO, GameboardDTO}
 import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isNotPartiallyLoggedIn, wasTodayUTC, PHY_NAV_SUBJECTS, isSingleStageContext, isFullyDefinedContext} from './';
 import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
+import { InequalityState } from "../components/content/IsaacSymbolicQuestion";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
 const IsaacItemQuestion = lazy(() => import("../components/content/IsaacItemQuestion"));
 const IsaacReorderQuestion = lazy(() => import("../components/content/IsaacReorderQuestion"));
@@ -91,7 +92,7 @@ export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
 
 // Inequality specific functions
 
-export function sanitiseInequalityState(state: any) {
+export function sanitiseInequalityState(state: InequalityState): InequalityState {
     const saneState = JSON.parse(JSON.stringify(state));
     if (saneState.result?.tex) {
         saneState.result.tex = saneState.result.tex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP_LATEX[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP_LATEX[l] : l).join('');
