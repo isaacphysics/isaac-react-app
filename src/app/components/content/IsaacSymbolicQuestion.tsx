@@ -185,6 +185,43 @@ export const initialiseInequality = (editorMode: string, hiddenEditorRef: React.
     };
 };
 
+interface SymbolicTextInputProps {
+    inputState: {pythonExpression: string; userInput: string; valid: boolean};
+    setInputState: React.Dispatch<React.SetStateAction<{pythonExpression: string; userInput: string; valid: boolean}>>;
+    textInput: string;
+    setTextInput: React.Dispatch<React.SetStateAction<string>>;
+    initialEditorSymbols: React.MutableRefObject<any>;
+    dispatchSetCurrentAttempt: (attempt: {type: 'formula'; value: string; pythonExpression: string;}) => void;
+    sketchRef: React.MutableRefObject<Inequality | null | undefined>;
+}
+
+const SymbolicTextInput = ({inputState, setInputState, textInput, setTextInput, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef}: SymbolicTextInputProps) => {
+    const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        setTextInput(input);
+        setInputState({...inputState, pythonExpression: input, userInput: input}); // here
+
+        const parsedExpression = parseMathsExpression(input); // here
+        if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
+            if (input === '') {
+                const state = {result: {tex: "", python: "", mathml: ""}};
+                dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""}); // and here
+                initialEditorSymbols.current = [];
+            } else if (parsedExpression.length === 1) {
+                // This and the next one are using input instead of textInput because React will update the state whenever it sees fit
+                // so textInput will almost certainly be out of sync with input which is the current content of the text box.
+                sketchRef.current?.parseSubtreeObject(parsedExpression[0], true, true, input);
+            } else {
+                const sizes = parsedExpression.map(countChildren);
+                const i = sizes.indexOf(Math.max.apply(null, sizes));
+                sketchRef.current?.parseSubtreeObject(parsedExpression[i], true, true, input);
+            }
+        }
+    };
+
+    return <Input type="text" onChange={updateEquation} value={textInput} placeholder="Type your formula here"/>;
+};
+
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<FormulaDTO>(questionId);
     const currentAttemptValue: InequalityState | undefined = (currentAttempt && currentAttempt.value)
@@ -197,6 +234,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
+    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
     const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
@@ -221,40 +259,14 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
 
-    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
-
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
-
     useLayoutEffect(() => {
         if (readonly) return; // as the ref won't be defined
         
         initialiseInequality("maths", hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
-
-    const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const input = e.target.value;
-        setTextInput(input);
-        setInputState({...inputState, pythonExpression: input, userInput: textInput});
-
-        const parsedExpression = parseMathsExpression(input);
-        if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
-            if (input === '') {
-                const state = {result: {tex: "", python: "", mathml: ""}};
-                dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
-                initialEditorSymbols.current = [];
-            } else if (parsedExpression.length === 1) {
-                // This and the next one are using input instead of textInput because React will update the state whenever it sees fit
-                // so textInput will almost certainly be out of sync with input which is the current content of the text box.
-                sketchRef.current?.parseSubtreeObject(parsedExpression[0], true, true, input);
-            } else {
-                const sizes = parsedExpression.map(countChildren);
-                const i = sizes.indexOf(Math.max.apply(null, sizes));
-                sketchRef.current?.parseSubtreeObject(parsedExpression[i], true, true, input);
-            }
-        }
-    };
 
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
@@ -281,8 +293,15 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
-                    <Input type="text" onChange={updateEquation} value={textInput}
-                        placeholder="Type your formula here"/>
+                    <SymbolicTextInput
+                        inputState={inputState}
+                        setInputState={setInputState}
+                        textInput={textInput}
+                        setTextInput={setTextInput}
+                        initialEditorSymbols={initialEditorSymbols}
+                        dispatchSetCurrentAttempt={dispatchSetCurrentAttempt}
+                        sketchRef={sketchRef}
+                    />
                     <>
                         {siteSpecific(
                             <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
