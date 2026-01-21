@@ -243,6 +243,11 @@ export const useGameboards = (initialView: BoardViews) => {
 
     const haveAllBoards = useMemo(() => boards && boards.totalResults === boards.boards.length, [boards]);
 
+    useEffect(() => {
+        // on load, fetch initial boards – this will use cached data for this req unless it has been invalidated (e.g. by creating a new board)
+        void loadGameboards({startIndex: 0, limit: parseBoardLimitAsNumber(boardLimit), sort: boardOrder});
+    }, []);
+
     // refetch the boards (if not all obtained) when any of the main parameters change
     useEffect(() => {
         if (!haveAllBoards) {
