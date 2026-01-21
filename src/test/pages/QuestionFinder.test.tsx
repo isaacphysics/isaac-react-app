@@ -51,7 +51,7 @@ describe("QuestionFinder", () => {
         });
 
         const container = await screen.findByTestId("question-finder-results");
-        expect(container).toHaveTextContent("Select some filters");
+        expect(container).toHaveTextContent(siteSpecific("Select some filters", "Please select and apply filters"));
     });
 
     it('should show results on load when logged in with a single registered context', async () => {
@@ -63,14 +63,26 @@ describe("QuestionFinder", () => {
         expect(await findQuestions()).toHaveLength(30);
     });
 
-    it('should show results on load when logged in with multiple registered contexts', async () => {
-        await renderQuestionFinderPage({
-            response: () => resultsResponse,
-            modifyUser: (user) => ({...user, role: "TEACHER", registeredContexts: [{"stage": "gcse", "examBoard": "aqa"}, {"stage": "a_level", "examBoard": "aqa"}]}),
+    if (isPhy) {
+        it('should show results on load when logged in with multiple registered contexts', async () => {
+            await renderQuestionFinderPage({
+                response: () => resultsResponse,
+                modifyUser: (user) => ({...user, role: "TEACHER", registeredContexts: [{"stage": "gcse", "examBoard": "aqa"}, {"stage": "a_level", "examBoard": "aqa"}]}),
+            });
+            
+            expect(await findQuestions()).toHaveLength(30);
         });
+    } else {
+        it('should not show results on load when logged in with multiple registered contexts', async () => {
+            await renderQuestionFinderPage({
+                response: () => resultsResponse,
+                modifyUser: (user) => ({...user, role: "TEACHER", registeredContexts: [{"stage": "gcse", "examBoard": "aqa"}, {"stage": "a_level", "examBoard": "aqa"}]}),
+            });
 
-        expect(await findQuestions()).toHaveLength(30);
-    });
+            const container = await screen.findByTestId("question-finder-results");
+            expect(container).toHaveTextContent(siteSpecific("Select some filters", "Please select and apply filters"));
+        });
+    }
 
     it('should not show results on load when logged in with "ALL" as a registered context', async () => {
         await renderQuestionFinderPage({
@@ -78,10 +90,8 @@ describe("QuestionFinder", () => {
             modifyUser: (user) => ({...user, role: "TEACHER", registeredContexts: [{"stage": "all"}]}),
         });
 
-        await waitFor(async () => {
-            const container = await screen.findByTestId("question-finder-results");
-            expect(container).toHaveTextContent("Select some filters");
-        });
+        const container = await screen.findByTestId("question-finder-results");
+        expect(container).toHaveTextContent(siteSpecific("Select some filters", "Please select and apply filters"));
     });
 
     describe('Question shuffling', () => {

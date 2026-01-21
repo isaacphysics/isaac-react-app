@@ -191,7 +191,7 @@ export const QuestionFinder = withRouter(() => {
 
     const initialSearchStages = params.stages 
         ? arrayFromPossibleCsv(params.stages) as STAGE[] 
-        : isSubjectSpecificQF
+        : isAda || isSubjectSpecificQF
             ? getSearchStagesFromAccountSettings(user, pageContext)
             : [];
     
