@@ -114,29 +114,28 @@ export type InequalityState = {
         mhchem?: string;
         uniqueSymbols?: string;
     };
+    // The parser retuns a complex structure that isn't fully typed
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     symbols?: any[];
     textEntry?: boolean;
     userInput?: string;
 };
 
+function currentAttemptPythonExpression(state?: InequalityState): string {
+    return (state && state.result && state.result.python) || "";
+}
+
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
-    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<FormulaDTO>(questionId);
+    const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<FormulaDTO>(questionId);
+    const currentAttemptValue: InequalityState | undefined = (currentAttempt && currentAttempt.value)
+        ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) 
+        : undefined;
+    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(currentAttemptValue), userInput: '', valid: true}));
+    const [textInput, setTextInput] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
-    const [textInput, setTextInput] = useState('');
-
-    let currentAttemptValue: InequalityState | undefined = undefined;
-
-    function currentAttemptPythonExpression(): string {
-        return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
-    }
-
-    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
-    if (currentAttempt && currentAttempt.value) {
-        currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
-    }
 
     const updateState = (state: InequalityState) => {
         const newState = sanitiseInequalityState(state);
@@ -151,7 +150,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
 
     useEffect(() => {
         // Only update the text-entry box if the graphical editor is visible OR if this is the first load
-        const pythonExpression = currentAttemptPythonExpression();
+        const pythonExpression = currentAttemptPythonExpression(currentAttemptValue);
         if (modalVisible || textInput === '') {
             setTextInput(pythonExpression);
         }
@@ -161,15 +160,18 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
 
-    const closeModalAndReturnToScrollPosition = useCallback(function(previousYPosition: number) {
-        return function() {
-            document.body.style.overflow = "initial";
-            setModalVisible(false);
-            if (isDefined(previousYPosition)) {
-                window.scrollTo(0, previousYPosition);
-            }
-        };
-    }(window.scrollY), [modalVisible]);
+    const scrollYRef = useRef<number>(0);
+
+    const openModal = () => {
+        scrollYRef.current = window.scrollY;
+        setModalVisible(true);
+    };
+
+    const closeModalAndReturnToScrollPosition = () => {
+        document.body.style.overflow = "initial";
+        setModalVisible(false);
+        window.scrollTo(0, scrollYRef.current);
+    };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
@@ -293,7 +295,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div
                 role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
-                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
+                onClick={() => !readonly && openModal()} onKeyDown={ifKeyIsEnter(() => !readonly && openModal())}
                 dangerouslySetInnerHTML={{ __html: !inputState.valid ? "<small>or click to replace your typed answer</small>" :
                     previewText ? katex.renderToString(previewText) : '<small>or click here to drag and drop your answer</small>' }}
             />
