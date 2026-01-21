@@ -36,7 +36,7 @@ interface ChildrenMap {
     children: {[key: string]: ChildrenMap};
 }
 
-function countChildren(root: ChildrenMap) {
+export function countChildren(root: ChildrenMap) {
     let q = [root];
     let count = 1;
     while (q.length > 0) {
@@ -52,7 +52,7 @@ function countChildren(root: ChildrenMap) {
     return count;
 }
 
-function isError(p: ParsingError | any[]): p is ParsingError {
+export function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
@@ -106,10 +106,19 @@ export const symbolicInputValidator = (input: string) => {
     return errors;
 };
 
+/*export type InequalityState = {
+    result?: {
+        tex?: string;
+        python?: string;
+        mathml?: string;
+        uniqueSymbols?: any[];
+    };
+    symbols?: any[];
+    userInput?: string;
+};*/
+
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
-
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<FormulaDTO>(questionId);
-
     const [modalVisible, setModalVisible] = useState(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);

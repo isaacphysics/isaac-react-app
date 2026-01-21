@@ -1,5 +1,4 @@
 import React, {ChangeEvent, lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
-import {selectors, useAppSelector} from "../../state";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
@@ -16,37 +15,16 @@ import _flattenDeep from 'lodash/flattenDeep';
 import {Button, Input, InputGroup, UncontrolledTooltip} from 'reactstrap';
 import {v4 as uuid_v4} from "uuid";
 import {Inequality, makeInequality} from 'inequality';
-import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
+import {parseBooleanExpression} from 'inequality-grammar';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
+import { countChildren, isError } from "./IsaacSymbolicQuestion";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 // Magic starts here
-interface ChildrenMap {
-    children: {[key: string]: ChildrenMap};
-}
 
-function countChildren(root: ChildrenMap) {
-    let q = [root];
-    let count = 1;
-    while (q.length > 0) {
-        const e = q.shift();
-        if (!e) continue;
-
-        const c = Object.keys(e.children).length;
-        if (c > 0) {
-            count = count + c;
-            q = q.concat(Object.values(e.children));
-        }
-    }
-    return count;
-}
-
-function isError(p: ParsingError | any[]): p is ParsingError {
-    return p.hasOwnProperty("error");
-}
-
+// TODO: Create a more modular version of this to use across files
 export const symbolicLogicInputValidator = (input: string) => {
     const openBracketsCount = input.split('(').length - 1;
     const closeBracketsCount = input.split(')').length - 1;
@@ -76,15 +54,13 @@ export const symbolicLogicInputValidator = (input: string) => {
 };
 
 const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
-
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
-
     const [modalVisible, setModalVisible] = useState(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
-    const {preferredBooleanNotation} = useUserPreferences();
     const [textInput, setTextInput] = useState('');
-    const user = useAppSelector(selectors.user.orNull);
+    const {preferredBooleanNotation} = useUserPreferences();
 
     let currentAttemptValue: any | undefined = undefined;
 
@@ -136,7 +112,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
 
-    useLayoutEffect(() => {        
+    useLayoutEffect(() => {
         if (readonly) return; // as the ref won't be defined
 
         if (!isDefined(hiddenEditorRef.current)) {
