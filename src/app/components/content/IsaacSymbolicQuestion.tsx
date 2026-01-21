@@ -143,7 +143,47 @@ export function useModalWithScroll({setModalVisible}: { setModalVisible: (v: boo
         openModal,
         closeModalAndReturnToScrollPosition,
     };
-}
+};
+
+export const initialiseInequality = (editorMode: string, hiddenEditorRef: React.MutableRefObject<HTMLDivElement | null>, sketchRef: React.MutableRefObject<Inequality | null | undefined>, currentAttemptValue: InequalityState | undefined, updateState: (state: InequalityState) => void) => {
+    if (!isDefined(hiddenEditorRef.current)) {
+        throw new Error("Unable to initialise inequality; target element not found.");
+    }
+
+    const {sketch, p} = makeInequality(
+        hiddenEditorRef.current,
+        100,
+        0,
+        _flattenDeep((currentAttemptValue || { symbols: [] }).symbols),
+        {
+            editorMode,
+            textEntry: true,
+            fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
+            fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
+        }
+    );
+    if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
+
+    sketch.log = { initialState: [], actions: [] };
+    sketch.onNewEditorState = updateState;
+    sketch.onCloseMenus = () => undefined;
+    sketch.isUserPrivileged = () => true;
+    sketch.onNotifySymbolDrag = () => undefined;
+    sketch.isTrashActive = () => false;
+    sketch.editorMode = editorMode;
+
+    sketchRef.current = sketch;
+
+    return () => {
+        if (sketchRef.current) {
+            sketchRef.current.onNewEditorState = () => null;
+            sketchRef.current.onCloseMenus = () => null;
+            sketchRef.current.isTrashActive = () => false;
+            sketchRef.current = null;
+        }
+        p.remove();
+    };
+};
 
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<FormulaDTO>(questionId);
@@ -188,43 +228,8 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
 
     useLayoutEffect(() => {
         if (readonly) return; // as the ref won't be defined
-
-        if (!isDefined(hiddenEditorRef.current)) {
-            throw new Error("Unable to initialise inequality; target element not found.");
-        }
-
-        const {sketch, p} = makeInequality(
-            hiddenEditorRef.current,
-            100,
-            0,
-            _flattenDeep((currentAttemptValue || { symbols: [] }).symbols),
-            {
-                editorMode: "maths",
-                textEntry: true,
-                fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
-                fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
-            }
-        );
-        if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
-
-        sketch.log = { initialState: [], actions: [] };
-        sketch.onNewEditorState = updateState;
-        sketch.onCloseMenus = () => undefined;
-        sketch.isUserPrivileged = () => true;
-        sketch.onNotifySymbolDrag = () => undefined;
-        sketch.isTrashActive = () => false;
-
-        sketchRef.current = sketch;
-
-        return () => {
-            if (sketchRef.current) {
-                sketchRef.current.onNewEditorState = () => null;
-                sketchRef.current.onCloseMenus = () => null;
-                sketchRef.current.isTrashActive = () => false;
-                sketchRef.current = null;
-            }
-            p.remove();
-        };
+        
+        initialiseInequality("maths", hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
