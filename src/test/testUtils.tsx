@@ -1,4 +1,4 @@
-import {UserRole} from "../IsaacApiTypes";
+import {RegisteredUserDTO, UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {http, HttpResponse, HttpHandler} from "msw";
@@ -28,9 +28,9 @@ export const augmentErrorMessage = (message?: string) => (e: Error) => {
     return new Error(`${e.message}\n${message ? "Extra info: " + message : ""}`);
 };
 
-interface RenderTestEnvironmentOptions {
+export interface RenderTestEnvironmentOptions {
     role?: UserRole | "ANONYMOUS";
-    modifyUser?: (u: typeof mockUser) => typeof mockUser;
+    modifyUser?: <T extends typeof mockUser | RegisteredUserDTO>(u: T) => T;
     sessionExpires?: string;
     PageComponent?: React.FC<any>;
     initalRouteEntries?: string[];
