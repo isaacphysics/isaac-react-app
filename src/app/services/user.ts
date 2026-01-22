@@ -58,7 +58,7 @@ export function isTeacherAuthResponsePendingVerification(authResponse?: Authenti
 }
 
 /*
-* Returns false if the client is in a "partially logged in" (AKA caveat login) state, and needs to do something else for
+* Returns true if the client is in a "teacher pending verification" (AKA caveat login) state, and needs to do something else for
 *  full functionality (e.g. email verification).
 *
 * Todo: For now this is specific to the Ada teacher flow. For Ada, teacher accounts where teacherAccountPending is true
