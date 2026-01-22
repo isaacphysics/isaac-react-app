@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React, { useCallback, useMemo } from "react";
 import { useEffect, useRef, useState } from "react";
 import { isTouchDevice } from "../../../services";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 
 export interface HorizontalScrollerProps {
     children: React.ReactElement;

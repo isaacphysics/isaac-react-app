@@ -42,8 +42,9 @@ export const SidebarButton = ({ buttonTitle, absolute, ...rest }: SidebarButtonP
                 affix: "icon-sidebar",
                 position: "prefix",
                 type: "icon",
-            }}
-            style={{maxWidth: textRef?.current ? `${(!sticky ? textRef.current.clientWidth + 8 : 0) + 59}px` : "max-content"}}
+                affixClassName: "icon-inline me-2"
+        }}
+            style={{maxWidth: textRef?.current ? `${(!sticky ? textRef.current.clientWidth + 8 : 0) + 61}px` : "max-content"}}
         >
             <span ref={textRef}>{buttonTitle ?? "Search and filter"}</span>
         </AffixButton>,

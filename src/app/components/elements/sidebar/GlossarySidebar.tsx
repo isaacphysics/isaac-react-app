@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 import { Stage } from "../../../../IsaacApiTypes";
-import { stageLabelMap, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS, HUMAN_STAGES } from "../../../services";
+import { stageLabelMap, isFullyDefinedContext, isSingleStageContext, PHY_NAV_SUBJECTS, HUMAN_STAGES, nonemptyOrUndefined } from "../../../services";
 import { useAppSelector, selectors } from "../../../state";
 import { GlossarySearch } from "../../pages/Glossary";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
@@ -42,15 +42,12 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
         }
     };
 
-    
-
     // Deselect stage filters that no longer have results following a subject/search term change
     useEffect(() => {
         if (stageCounts["all"] > 0) {
-            const remainingStages = filterStages?.filter(stage => stageCounts[stage]);
-            setFilterStages(remainingStages?.length ? remainingStages : undefined);
+            setFilterStages(fs => nonemptyOrUndefined(fs?.filter(stage => stageCounts[stage])));
         }
-    }, [filterSubject, searchText, filterStages, setFilterStages, stageCounts]);
+    }, [filterSubject, searchText, setFilterStages, stageCounts]);
 
     return <ContentSidebar buttonTitle="Search glossary" optionBar={optionBar} {...rest}>
         <div className="section-divider"/>

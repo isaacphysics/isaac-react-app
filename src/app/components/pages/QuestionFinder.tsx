@@ -165,7 +165,7 @@ export const QuestionFinder = withRouter(() => {
     ));
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(pageContext.stage?.length ? pageStageToSearchStage(pageContext.stage) : arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the user
+    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]); // we can't fully populate this until we have the user
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
@@ -228,7 +228,7 @@ export const QuestionFinder = withRouter(() => {
             const choiceTreeLeaves = getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value);
             if (hierarchySelections.length > 1 && pageContext?.subject && pageContext.stage?.length === 1) {
                 SUBJECT_SPECIFIC_CHILDREN_MAP[pageContext?.subject][pageContext.stage[0]]?.forEach(tag => {
-                    if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.length === 0) {
+                    if (pageContext?.subject && !hierarchySelections[1][pageContext.subject]?.length) {
                         choiceTreeLeaves.push(tag);
                     } else if (pageContext?.subject && hierarchySelections[1][pageContext.subject]?.some((t: {value: TAG_ID}) => t.value === tag)) {
                         const index = choiceTreeLeaves.indexOf(pageContext?.subject as TAG_ID);
@@ -239,13 +239,15 @@ export const QuestionFinder = withRouter(() => {
                 });
             }
 
+            const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
+
             setSearchParams({
                 querySource: "questionFinder",
                 searchString: searchString || undefined,
                 tags: choiceTreeLeaves.join(",") || undefined,
                 topics: siteSpecific(undefined, [...topics].filter((query) => query != "").join(",") || undefined),
                 books: (!excludeBooks && book.join(",")) || undefined,
-                stages: stages.join(",") || undefined,
+                stages: filteredStages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
                 examBoards: examBoards.join(",") || undefined,
                 questionCategories: isPhy
@@ -258,7 +260,7 @@ export const QuestionFinder = withRouter(() => {
                 randomSeed
             });
         }, 250, { leading: true }),
-    [pageContext]);
+    [pageContext, searchStages]);
 
 
     const filteringByStatus = Object.values(searchStatuses).some(v => v) && !Object.values(searchStatuses).every(v => v);
@@ -266,9 +268,8 @@ export const QuestionFinder = withRouter(() => {
     const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
 
-        const filteredStages = !searchStages.length && pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : searchStages;
         debouncedSearch({
-            searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages: filteredStages,
+            searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages,
             searchDifficulties, selections, excludeBooks, searchStatuses, startIndex: 0, randomSeed
         });
 

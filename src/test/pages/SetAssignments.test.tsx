@@ -21,11 +21,24 @@ const expectedPhysicsTopLinks = {
     "create a question deck": PATHS.GAMEBOARD_BUILDER
 };
 
+const switchToCardView = async () => {
+    if (isPhy) {
+        const viewDropdown = await screen.findByLabelText("Set display mode");
+        await userEvent.selectOptions(viewDropdown, "Card View");
+
+        const limitDropdown = await screen.findByLabelText("Set display limit");
+        await userEvent.selectOptions(limitDropdown, "6");
+    } else {
+        const viewDropdown = await screen.findByLabelText("Display in");
+        await userEvent.selectOptions(viewDropdown, "Card View");
+    }
+};
+
 describe("SetAssignments", () => {
 
     const renderSetAssignments = async ({endpoints = []}: { endpoints?: HttpHandler[], path?: string } = {}) => {
         renderTestEnvironment({
-            extraEndpoints: endpoints
+            extraEndpoints: endpoints,
         });
         await navigateToSetAssignments();
     };
@@ -92,11 +105,7 @@ describe("SetAssignments", () => {
 
     it('should show all the correct information for a gameboard in card view', async () => {
         await renderSetAssignments();
-        if (!isPhy) {
-            // Change view to "Card View"
-            const viewDropdown = await screen.findByLabelText("Display in");
-            await userEvent.selectOptions(viewDropdown, "Card View");
-        }
+        await switchToCardView();
         const gameboards = await screen.findAllByTestId("gameboard-card");
 
         const gameboard = gameboards[0];
@@ -140,11 +149,7 @@ describe("SetAssignments", () => {
                 ),
             ]
         });
-        if (!isPhy) {
-            // Change view to "Card View"
-            const viewDropdown = await screen.findByLabelText("Display in");
-            await userEvent.selectOptions(viewDropdown, "Card View");
-        }
+        await switchToCardView();
         const gameboards = await screen.findAllByTestId("gameboard-card");
         const mockGameboard = mockGameboards.results[0];
 
@@ -206,11 +211,7 @@ describe("SetAssignments", () => {
     describe('modal', () => {
         const renderModal = async (endpoints: HttpHandler[] = []) => {
             await renderSetAssignments({endpoints});
-            if (!isPhy) {
-                // Change view to "Card View"
-                const viewDropdown = await screen.findByLabelText("Display in");
-                await userEvent.selectOptions(viewDropdown, "Card View");
-            }
+            await switchToCardView();
             const gameboards = await screen.findAllByTestId("gameboard-card");
             // Find and click assign gameboard button for the first gameboard
             const modalOpenButton = within(gameboards[0]).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
@@ -291,16 +292,18 @@ describe("SetAssignments", () => {
             });
 
             it('shows an error message when the due date is before the start date', async () => {
-                await withMockedDate(Date.parse("2025-01-01"), async () => { // Monday
+                const year = new Date().getFullYear();
+                const startOfYear = new Date(year, 0, 1).valueOf();
+                await withMockedDate(startOfYear, async () => {
                     await renderModal();
                     const modal = await screen.findByTestId("active-modal");
                     const dueDateContainer = within(modal).getByTestId("modal-due-date-selector");
 
                     // Set a start date in the future
-                    await inputDate("modal-start-date-selector", "1", "2", "2025");
+                    await inputDate("modal-start-date-selector", "1", "2", String(year));
 
                     // Set a due date before the start date
-                    await inputDate("modal-due-date-selector", "1", "1", "2025");
+                    await inputDate("modal-due-date-selector", "1", "1", String(year));
 
                     await userEvent.click(within(modal).getByRole("button", {name: "Assign to group"}));
                     expect(dueDateContainer.textContent).toContain("Due date must be on or after start date and in the future");
@@ -344,11 +347,7 @@ describe("SetAssignments", () => {
                 })
             ]
         });
-        if (!isPhy) {
-            // Change view to "Card View"
-            const viewDropdown = await screen.findByLabelText("Display in");
-            await userEvent.selectOptions(viewDropdown, "Card View");
-        }
+        await switchToCardView();
         const gameboards = await screen.findAllByTestId("gameboard-card");
 
         // Find and click assign gameboard button
@@ -391,11 +390,7 @@ describe("SetAssignments", () => {
                     })
                 ]
             });
-            if (!isPhy) {
-            // change view to "Card View"
-                const viewDropdown = await screen.findByLabelText("Display in");
-                await userEvent.selectOptions(viewDropdown, "Card View");
-            }
+            await switchToCardView();
             const gameboards = await screen.findAllByTestId("gameboard-card");
 
             // find and click assign gameboard button for the first gameboard

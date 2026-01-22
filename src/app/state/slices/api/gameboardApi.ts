@@ -2,13 +2,13 @@ import {isaacApi} from "./baseApi";
 import {AssignmentBoardOrder, Boards, NumberOfBoards} from "../../../../IsaacAppTypes";
 import {GameboardDTO, GameboardListDTO, IsaacWildcard} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
-import {isPhy, PATHS, QUESTION_CATEGORY, siteSpecific} from "../../../services";
+import {isPhy, QUESTION_CATEGORY, siteSpecific} from "../../../services";
 import {logAction} from "../../actions/logging";
 
 export const gameboardApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
 
-        getGameboards: build.query<Boards, {startIndex: number, limit: NumberOfBoards, sort: AssignmentBoardOrder}>({
+        getGameboards: build.query<Boards, {startIndex: number, limit: NumberOfBoards, sort?: AssignmentBoardOrder}>({
             query: ({startIndex, limit, sort}) => ({
                 url: "/gameboards/user_gameboards",
                 params: {"start_index": startIndex, limit, sort}
@@ -64,7 +64,8 @@ export const gameboardApi = isaacApi.injectEndpoints({
                     }
                 },
                 errorTitle: `Error creating ${siteSpecific("question deck", "quiz")}`
-            })
+            }),
+            invalidatesTags: ["AllGameboards"],
         }),
 
         generateTemporaryGameboard: build.mutation<GameboardDTO, {[key: string]: string}>({

@@ -77,7 +77,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                         currentPageTitle={doc.title as string}
                         displayTitleOverride={siteSpecific("Concept", undefined)}
                         collectionType={navigation.collectionType}
-                        subTitle={siteSpecific(undefined, doc.subtitle as string)}
+                        subTitle={doc.subtitle}
                         preview={preview}
                         icon={{type: "icon", subject: doc.subjectId as Subject, icon: "icon-concept"}}
                     />

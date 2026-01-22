@@ -1,4 +1,5 @@
-import {mapValues, union} from "lodash";
+import mapValues from "lodash/mapValues";
+import union from "lodash/union";
 import {questionDTOs, registeredUserDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services";
 import {Action, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";

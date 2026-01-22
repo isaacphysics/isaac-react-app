@@ -18,6 +18,7 @@ const IsaacSymbolicQuestion = lazy(() => import("../components/content/IsaacSymb
 const IsaacSymbolicChemistryQuestion = lazy(() => import("../components/content/IsaacSymbolicChemistryQuestion"));
 const IsaacGraphSketcherQuestion = lazy(() => import("../components/content/IsaacGraphSketcherQuestion"));
 const IsaacClozeQuestion = lazy(() => import("../components/content/IsaacClozeQuestion"));
+const IsaacDragAndDropQuestion = lazy(() => import("../components/content/IsaacDragAndDropQuestion"));
 const IsaacCoordinateQuestion = lazy(() => import("../components/content/IsaacCoordinateQuestion"));
 const IsaacInlineRegion = lazy(() => import("../components/content/IsaacInlineRegion"));
 
@@ -28,12 +29,13 @@ export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacParsonsQuestion": "Parsons",
     "isaacNumericQuestion": "Numeric",
     "isaacSymbolicQuestion": "Symbolic",
-    "isaacSymbolicChemistryQuestion": "Chemistry",
+    "isaacSymbolicChemistryQuestion": "Symbolic chemistry",
     "isaacStringMatchQuestion": "String match",
+    "isaacRegexMatchQuestion": "Regex match",
     "isaacFreeTextQuestion": "Free text",
     "isaacLLMFreeTextQuestion": "LLM-marked free text",
     "isaacSymbolicLogicQuestion": "Boolean logic",
-    "isaacGraphSketcherQuestion": "Graph Sketcher",
+    "isaacGraphSketcherQuestion": "Graph sketcher",
     "isaacClozeQuestion": "Cloze drag and drop",
     "isaacCoordinateQuestion": "Coordinate",
     "default": "Multiple choice"
@@ -54,6 +56,7 @@ export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, qu
     "isaacSymbolicLogicQuestion": IsaacSymbolicLogicQuestion,
     "isaacGraphSketcherQuestion": IsaacGraphSketcherQuestion,
     "isaacClozeQuestion": IsaacClozeQuestion,
+    "isaacDndQuestion": IsaacDragAndDropQuestion,
     "isaacCoordinateQuestion": IsaacCoordinateQuestion,
     "isaacInlineRegion": IsaacInlineRegion, // This exists in the question types list to wrap the inline questions into a single answerable component
     "default": IsaacMultiChoiceQuestion
