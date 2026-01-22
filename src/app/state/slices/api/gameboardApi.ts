@@ -64,7 +64,8 @@ export const gameboardApi = isaacApi.injectEndpoints({
                     }
                 },
                 errorTitle: `Error creating ${siteSpecific("question deck", "quiz")}`
-            })
+            }),
+            invalidatesTags: ["AllGameboards"],
         }),
 
         generateTemporaryGameboard: build.mutation<GameboardDTO, {[key: string]: string}>({
