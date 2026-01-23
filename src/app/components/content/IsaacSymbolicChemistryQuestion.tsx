@@ -19,7 +19,7 @@ import QuestionInputValidation from "../elements/inputs/QuestionInputValidation"
 import { v4 as uuid_v4 } from "uuid";
 import { Inequality, makeInequality } from "inequality";
 import { parseInequalityChemistryExpression, parseInequalityNuclearExpression, ParsingError } from "inequality-grammar";
-import { AppState, useAppSelector } from "../../state";
+import { AppState, selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
 import classNames from "classnames";
 
@@ -52,6 +52,7 @@ function isError(p: ParsingError | any[]): p is ParsingError {
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
+    const userPreferences = useAppSelector(selectors.user.preferences);
 
     const [modalVisible, setModalVisible] = useState(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -166,7 +167,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
 
-    const showTextEntry = !readonly && isStaff(user);
+    const showTextEntry = !readonly && (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY ?? false);
 
     useLayoutEffect(() => {
         if (!showTextEntry) return; // as the ref will not be defined

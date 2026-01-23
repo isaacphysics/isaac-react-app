@@ -43,6 +43,20 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                 <b><RevisionModeInput {...{displaySettings, setDisplaySettings}}/></b>
                 <p id="revision-helptext">{`This feature lets you answer questions ${siteSpecific("that you have answered before, without seeing your old answer.", "again, even if you've answered them before.")} It's useful if you are reviewing a topic before a test or exam.`}</p>
             </WithLinkableSetting>
+
+            <WithLinkableSetting id={"show-chem-text-entry"}>
+                <StyledCheckbox checked={displaySettings.CHEM_TEXT_ENTRY ?? false}
+                    onChange={e => {
+                        setDisplaySettings((oldDs) => ({...oldDs, CHEM_TEXT_ENTRY: e.target.checked}));
+                    }}
+                    label={<p><b>Enable text entry for chemistry questions</b></p>}
+                    id={"show-chem-text-entry-checkbox"}
+                    removeVerticalOffset
+                    aria-describedby="chem-text-entry-helptext"
+                />
+                <p id="chem-text-entry-helptext">{`This feature allows you to enter text-based answers (using mhchem chemical notation) for chemistry questions, as an alternative to the graphical equation editor.`}</p>
+            </WithLinkableSetting>
+
             {/* Temporarily staff-only until LLM-marked questions are properly configured (and won't work for staff immediately regardless) */}
             {(isStaff(user) || isAda) && <>
                 <div className="pt-2"/>
