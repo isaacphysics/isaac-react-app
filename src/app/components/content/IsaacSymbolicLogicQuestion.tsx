@@ -220,7 +220,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
                 className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": previewText && muteAnswerText})} 
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
-                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
+                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : '<small>Click to enter your expression</small>' }}
             />
             {modalVisible && <InequalityModal
                 close={closeModalAndReturnToScrollPosition}
@@ -237,10 +237,11 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             />}
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
+                {previewText && <i className="text-muted small">Click in either box below to edit your answer.</i>}
                 <InputGroup className="my-2 separate-input-group">
-                    <div className="position-relative">
+                    <div className="position-relative flex-grow-1">
                         <Input type="text" onChange={e => updateEquation(e.target.value)} value={textInput}
-                            placeholder="Type your formula here" className={classNames("h-100", {"text-body-tertiary": muteAnswerText})}
+                            placeholder="or type your formula here" className={classNames("h-100", {"text-body-tertiary": muteAnswerText})}
                         />
                         {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
                             updateEquation('');

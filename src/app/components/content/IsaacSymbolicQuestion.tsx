@@ -261,7 +261,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
-                    <div className="position-relative">
+                    <div className="position-relative flex-grow-1">
                         <Input type="text" onChange={e => updateEquation(e.target.value)} value={textInput}
                             placeholder="Type your formula here" className={classNames("h-100", {"text-body-tertiary": muteAnswerText})}
                         />
