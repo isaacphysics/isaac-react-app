@@ -313,6 +313,26 @@ figure .inline-container {
       padding: 0;
     }
   }
+
+  .eqn-editor-reset-text-input {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $gray-600;
+
+    &:hover {
+      color: $gray-800;
+    }
+  }
 }
 
 #inequality-help {

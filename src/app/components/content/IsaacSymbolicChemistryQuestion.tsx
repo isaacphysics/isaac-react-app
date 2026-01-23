@@ -57,7 +57,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
-    const [textInput, setTextInput] = useState(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.mhchem ?? '');
+    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.mhchem ?? '', [doc.formulaSeed]);
+    const [textInput, setTextInput] = useState(initialSeedText);
     const user = useAppSelector((state: AppState) => state && state.user);
 
     let currentAttemptValue: any | undefined;
@@ -158,7 +159,9 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
 
     const previewText = (currentAttemptValue && currentAttemptValue.result)
         ? currentAttemptValue.result.tex
+        // chemistry questions *should* show the seed in grey in the preview box if no attempt has been made
         : jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex;
+        // hide seed?: undefined;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
@@ -208,8 +211,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
-    const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const input = e.target.value;
+    const updateEquation = (input: string) => {
         setTextInput(input);
         setInputState({...inputState, mhchemExpression: input, userInput: textInput});
 
@@ -246,6 +248,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')//
         .replace('proton', '\\proton').replace(/(?<!anti)neutrino/, '\\neutrino').replace('antineutrino', '\\antineutrino');
 
+    const muteAnswerText = !currentAttemptValue || !currentAttemptValue.result || (initialSeedText && textInput === initialSeedText);
+
     return (
         <div className="symbolic-question">
             <div className="question-content">
@@ -256,9 +260,17 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             {showTextEntry && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
-                    <Input type="text" onChange={updateEquation} value={textInput}
-                        placeholder="Type your formula here" className={classNames({"text-body-tertiary": !currentAttemptValue || !currentAttemptValue.result})}
-                    />
+                    <div className="position-relative">
+                        <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput}
+                            placeholder="Type your formula here" className={classNames("h-100", {"text-body-tertiary": muteAnswerText})}
+                        />
+                        {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
+                            updateEquation('');
+                            setTextInput(initialSeedText);
+                        }}>
+                            ↺
+                        </button>}
+                    </div>
                     <>
                         {siteSpecific(
                             <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
@@ -293,7 +305,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div
                 role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
-                className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": !currentAttemptValue || !currentAttemptValue.result})} 
+                className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": previewText && muteAnswerText})} 
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
                 dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
             />

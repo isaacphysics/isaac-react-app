@@ -84,8 +84,8 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const {preferredBooleanNotation} = useUserPreferences();
-    const [textInput, setTextInput] = useState(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '');
-    const user = useAppSelector(selectors.user.orNull);
+    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]);
+    const [textInput, setTextInput] = useState(initialSeedText);
 
     let currentAttemptValue: any | undefined = undefined;
 
@@ -180,8 +180,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         };
     }, [hiddenEditorRef.current]);
 
-    const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const input = e.target.value;
+    const updateEquation = (input: string) => {
         setTextInput(input);
         setInputState({...inputState, pythonExpression: input, userInput: textInput});
 
@@ -206,6 +205,8 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid_v4()}`);
     const symbolList = doc.availableSymbols?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
+    const muteAnswerText = !currentAttemptValue || !currentAttemptValue.result || (initialSeedText && textInput === initialSeedText);
+
     return (
         <div className="symbolic-question">
             <div className="question-content">
@@ -217,7 +218,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div
                 role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
-                className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": !currentAttemptValue || !currentAttemptValue.result})} 
+                className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": previewText && muteAnswerText})} 
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
                 dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
             />
@@ -237,9 +238,17 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
-                    <Input type="text" onChange={updateEquation} value={textInput} placeholder="or type your expression here"
-                        className={classNames({"text-body-tertiary": !currentAttemptValue || !currentAttemptValue.result})}
-                    />
+                    <div className="position-relative">
+                        <Input type="text" onChange={e => updateEquation(e.target.value)} value={textInput}
+                            placeholder="Type your formula here" className={classNames("h-100", {"text-body-tertiary": muteAnswerText})}
+                        />
+                        {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
+                            updateEquation('');
+                            setTextInput(initialSeedText);
+                        }}>
+                            ↺
+                        </button>}
+                    </div>
                     <>
                         {siteSpecific(
                             <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>,

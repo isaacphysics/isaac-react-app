@@ -115,7 +115,8 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
-    const [textInput, setTextInput] = useState(jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '');
+    const initialSeedText = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.python ?? '', [doc.formulaSeed]);
+    const [textInput, setTextInput] = useState(initialSeedText);
 
     let currentAttemptValue: any | undefined = undefined;
 
@@ -163,7 +164,8 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
 
     const previewText = (currentAttemptValue && currentAttemptValue.result)
         ? currentAttemptValue.result.tex
-        : jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex;
+        : undefined;
+        // show seed?: jsonHelper.parseOrDefault(doc.formulaSeed, undefined)?.[0]?.expression?.latex;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
@@ -210,8 +212,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
-    const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const input = e.target.value;
+    const updateEquation = (input: string) => {
         setTextInput(input);
         setInputState({...inputState, pythonExpression: input, userInput: textInput});
 
@@ -236,6 +237,8 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
+    const muteAnswerText = !currentAttemptValue || !currentAttemptValue.result || (initialSeedText && textInput === initialSeedText);
+
     return (
         <div className="symbolic-question">
             <div className="question-content">
@@ -258,9 +261,17 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
-                    <Input type="text" onChange={updateEquation} value={textInput}
-                        placeholder="Type your formula here" className={classNames({"text-body-tertiary": !currentAttemptValue || !currentAttemptValue.result})}
-                    />
+                    <div className="position-relative">
+                        <Input type="text" onChange={e => updateEquation(e.target.value)} value={textInput}
+                            placeholder="Type your formula here" className={classNames("h-100", {"text-body-tertiary": muteAnswerText})}
+                        />
+                        {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
+                            updateEquation('');
+                            setTextInput(initialSeedText);
+                        }}>
+                            ↺
+                        </button>}
+                    </div>
                     <>
                         {siteSpecific(
                             <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
@@ -286,7 +297,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div
                 role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
-                className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": !currentAttemptValue || !currentAttemptValue.result})} 
+                className={classNames("eqn-editor-preview rounded", {"empty": !previewText, "text-body-tertiary": previewText && muteAnswerText})} 
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
                 dangerouslySetInnerHTML={{ __html: !inputState.valid ? "<small>or click to replace your typed answer</small>" :
                     previewText ? katex.renderToString(previewText) : '<small>or click here to drag and drop your answer</small>' }}
