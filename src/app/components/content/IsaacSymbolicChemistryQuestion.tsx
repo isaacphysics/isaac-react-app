@@ -261,34 +261,12 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 ? <i className="text-muted small">Click in either box below to edit your answer.</i>
                 : previewText && <i className="text-muted small">Click in the box below to edit your answer.</i>
             }
-            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-            <div
-                role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
-                className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && muteAnswerText})} 
-                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
-                dangerouslySetInnerHTML={{ __html: previewText 
-                    ? katex.renderToString(previewText) 
-                    : (showTextEntry ? '<small>Click here to drag and drop your answer</small>' : '<small>Click to enter your answer</small>')
-                }}
-            />
-            {modalVisible && <InequalityModal
-                close={closeModalAndReturnToScrollPosition}
-                onEditorStateChange={(state: any) => {
-                    dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" });
-                    initialEditorSymbols.current = state.symbols;
-                }}
-                availableSymbols={modifiedAvailableSymbols}
-                initialEditorSymbols={initialEditorSymbols.current}
-                editorSeed={editorSeed}
-                editorMode={doc.isNuclear ? "nuclear" : "chemistry"}
-                questionDoc={doc}
-            />}
             {showTextEntry && <div className="eqn-editor-input mb-2">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="mt-2 separate-input-group">
                     <div className="position-relative flex-grow-1">
                         <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput}
-                            placeholder="or type your formula here" className={classNames("h-100", {"text-body-tertiary": muteAnswerText})}
+                            placeholder="Type your formula here" className={classNames("h-100", {"text-body-tertiary": muteAnswerText})}
                         />
                         {initialSeedText && <button type="button" className="eqn-editor-reset-text-input" aria-label={"Reset to initial value"} onClick={() => {
                             updateEquation('');
@@ -328,6 +306,28 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}
             </div>}
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+            <div
+                role={readonly ? undefined : "button"} tabIndex={readonly ? undefined : 0}
+                className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && muteAnswerText})} 
+                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
+                dangerouslySetInnerHTML={{ __html: previewText 
+                    ? katex.renderToString(previewText) 
+                    : (showTextEntry ? '<small>or click here to drag and drop your answer</small>' : '<small>Click to enter your answer</small>')
+                }}
+            />
+            {modalVisible && <InequalityModal
+                close={closeModalAndReturnToScrollPosition}
+                onEditorStateChange={(state: any) => {
+                    dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" });
+                    initialEditorSymbols.current = state.symbols;
+                }}
+                availableSymbols={modifiedAvailableSymbols}
+                initialEditorSymbols={initialEditorSymbols.current}
+                editorSeed={editorSeed}
+                editorMode={doc.isNuclear ? "nuclear" : "chemistry"}
+                questionDoc={doc}
+            />}
         </div>
     );
 };
