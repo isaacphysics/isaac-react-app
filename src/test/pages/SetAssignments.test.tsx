@@ -37,8 +37,8 @@ const switchToCardView = async () => {
 describe("SetAssignments", () => {
 
     const renderSetAssignments = async ({endpoints = []}: { endpoints?: HttpHandler[], path?: string } = {}) => {
-        renderTestEnvironment({
-            extraEndpoints: endpoints,
+        await renderTestEnvironment({
+            extraEndpoints: endpoints
         });
         await navigateToSetAssignments();
     };
@@ -471,7 +471,7 @@ const inputDate = async (testIdText: string | RegExp, day: string, month: string
     await userEvent.selectOptions(dueMonthSelector, month);
     const dueYearSelector = within(dueDateContainer.children[1] as HTMLElement).getByRole("combobox", {name: "Year"});
     await userEvent.selectOptions(dueYearSelector, year);
-}
+};
 
 const parameterObserver = <T,>() => ({
     observedParams: null as T | null,

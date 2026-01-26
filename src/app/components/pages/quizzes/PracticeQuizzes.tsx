@@ -1,4 +1,3 @@
-import { withRouter } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Input, Col, Container } from "reactstrap";
 import { generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
@@ -16,7 +15,7 @@ import classNames from "classnames";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { PracticeQuizzesSidebar } from "../../elements/sidebar/PracticeQuizzesSidebar";
 
-const PracticeQuizzesComponent = () => {
+export const PracticeQuizzes = () => {
     const pageContext = useUrlPageTheme();
     const pageSubject = pageContext?.subject;
     const pageStage = pageContext?.stage ? pageContext.stage[0] : undefined;
@@ -128,5 +127,3 @@ const PracticeQuizzesComponent = () => {
         </SidebarLayout>
     </Container>;
 };
-
-export const PracticeQuizzes = withRouter(PracticeQuizzesComponent);

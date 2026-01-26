@@ -13,7 +13,7 @@ describe("SessionExpired", () => {
         redirectTo.mockImplementation(() => true);
 
         //  Set the session expiry to be now
-        renderTestEnvironment({role: "STUDENT", sessionExpires: new Date(NOW).toUTCString()});
+        await renderTestEnvironment({role: "STUDENT", sessionExpires: new Date(NOW).toUTCString()});
 
         //  Navigate to My Account (any page will do)
         await navigateToMyAccount();
@@ -39,7 +39,7 @@ describe("SessionExpired", () => {
         redirectTo.mockImplementation(() => true);
 
         //  Set the session expiry to in the future
-        renderTestEnvironment({role: "STUDENT", sessionExpires: new Date(SOME_FIXED_FUTURE_DATE).toUTCString()});
+        await renderTestEnvironment({role: "STUDENT", sessionExpires: new Date(SOME_FIXED_FUTURE_DATE).toUTCString()});
 
         //  Navigate to My Account (any page will do)
         await navigateToMyAccount();

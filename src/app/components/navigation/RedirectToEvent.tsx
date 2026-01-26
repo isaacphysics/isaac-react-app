@@ -1,6 +1,7 @@
 import React from "react";
-import {Redirect, RouteComponentProps} from "react-router";
+import {Navigate, useParams} from "react-router";
 
-export const RedirectToEvent = ({match: {params: {eventId}}}: RouteComponentProps<{eventId: string}>) => {
-    return <Redirect to={`/events/${eventId}`} />;
+export const RedirectToEvent = () => {
+    const {eventId} = useParams<{eventId: string}>();
+    return <Navigate to={`/events/${eventId}`} />;
 };
