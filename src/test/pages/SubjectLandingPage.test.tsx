@@ -11,7 +11,7 @@ describe("SubjectLandingPage", () => {
         const questions = mockQuestionFinderResults.results;
 
         const renderSubjectLandingPage = async ({questionsSearchResponse} : RenderParameters) => {
-            renderTestEnvironment({
+            await renderTestEnvironment({
                 role: 'ANONYMOUS',
                 extraEndpoints: [buildFunctionHandler('/pages/questions', ['randomSeed'], questionsSearchResponse)]
             });

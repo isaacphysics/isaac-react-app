@@ -8,7 +8,7 @@ describe("Concepts", () => {
         it('has no such page', () => {});
     } else {
         const renderConceptsPage = async ({context, query}: {context?: NonNullable<PageContextState>, query?: SearchString} = {}) => {
-            renderTestEnvironment();
+            await renderTestEnvironment();
             await waitForLoaded();
             const url: PathString = context ? `/${context.subject}/${context.stage?.[0]}/concepts` : '/concepts';
             await setUrl(query ? { pathname: url, search: query } : {pathname: url});

@@ -13,10 +13,9 @@ export const userSlice = createSlice({
     extraReducers: builder => {
         const loggingInMatcher = (action: any): action is {type: string} => action.type === ACTION_TYPE.USER_LOG_IN_REQUEST;
 
-        const loggedInMatcher = (action: any): action is {type: string, user: RegisteredUserDTO} => [
-            ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS,
-            ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS,
-        ].includes(action.type);
+        const currentUserMatcher = (action: any): action is {type: string, user: RegisteredUserDTO} => action.type === ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS;
+    
+        const loggedInMatcher = (action: any): action is {type: string, authResponse: RegisteredUserDTO} => action.type === ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS;
 
         const loggedOutMatcher = (action: any): action is {type: string} => [
             ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE,
@@ -31,6 +30,9 @@ export const userSlice = createSlice({
             () => ({loggedIn: false, requesting: true}),
         ).addMatcher(
             loggedInMatcher,
+            (_, action) => ({sessionExpiry: undefined, loggedIn: true, ...action.authResponse}),
+        ).addMatcher(
+            currentUserMatcher,
             (_, action) => ({sessionExpiry: undefined, loggedIn: true, ...action.user}),
         ).addMatcher(
             loggedOutMatcher,

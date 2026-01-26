@@ -14,7 +14,7 @@ describe('Overview page', () => {
         mockPersistence();
 
         const renderOverviewPage = async (role: UserRole | "ANONYMOUS" = 'TEACHER') => {
-            renderTestEnvironment({ role, initalRouteEntries: ['/dashboard'] });
+            await renderTestEnvironment({ role, initalRouteEntries: ['/dashboard'] });
             await waitForLoaded();
             await setUrl({ pathname: '/dashboard' });
             await waitForLoaded();

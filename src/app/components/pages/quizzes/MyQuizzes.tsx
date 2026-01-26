@@ -3,7 +3,7 @@ import {
     useGetAttemptedFreelyByMeQuery,
     useGetQuizAssignmentsAssignedToMeQuery
 } from "../../../state";
-import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
@@ -47,7 +47,7 @@ import { HorizontalScroller } from "../../elements/inputs/HorizontalScroller";
 import { PageMetadata } from "../../elements/PageMetadata";
 import { MyQuizzesSidebar } from "../../elements/sidebar/MyQuizzesSidebar";
 
-export interface QuizzesPageProps extends RouteComponentProps {
+export interface QuizzesPageProps {
     user: RegisteredUserDTO;
 }
 
@@ -349,9 +349,12 @@ export const PastTestsToggle = ({showCompleted, setShowCompleted, setQuizStatusF
     </div>;
 };
 
-const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
+export const MyQuizzes = ({user}: QuizzesPageProps) => {
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
     const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
+
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const [displayMode, setDisplayMode] = useState<"table" | "cards">("table");
     const [boardOrder, setBoardOrder] = useState<QuizzesBoardOrder>(QuizzesBoardOrder.dueDate);
@@ -405,14 +408,13 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         ({...acc, [anchor]: index + 1}), {} as Record<string, number>
     );
 
-    const history = useHistory();
     const [tabOverride, setTabOverride] = useState<number | undefined>(anchorMap[location.hash as keyof typeof anchorMap]);
 
     useEffect(() => {
         if (location.hash && anchorMap[location.hash as keyof typeof anchorMap]) {
             setTabOverride(anchorMap[location.hash as keyof typeof anchorMap]);
         }
-    }, [anchorMap]);
+    }, [anchorMap, location.hash]);
 
     // +!! converts a string to 0 if null or empty and 1 otherwise
     const filterCount = +!!quizTitleFilter + +!!quizCreatorFilter + quizStatusFilter.length;
@@ -467,7 +469,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                     <PageFragment fragmentId={isTutorOrAbove(user) ? "help_toptext_tests_teacher" : "help_toptext_tests_student"} ifNotFound={<div className={"mt-7"}/>} />
                 </PageMetadata>
                 <Tabs style="tabs" className="mb-7 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
-                    history.replace({...history.location, hash: tabAnchors[index - 1]});
+                    void navigate({...location, hash: tabAnchors[index - 1]}, {replace: true});
                     setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
                 }}>
                     {{
@@ -511,5 +513,3 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         </SidebarLayout>
     </Container>;
 };
-
-export const MyQuizzes = withRouter(MyQuizzesPageComponent);

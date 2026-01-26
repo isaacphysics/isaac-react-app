@@ -22,7 +22,7 @@ describe("QuestionFinder", () => {
     const resultsResponseWithMultipleStages = buildMockQuestionFinderResults(questionsWithMultipleStages, 0);
 
     const renderQuestionFinderPage = async ({response, queryParams, context, ...opts} : RenderParameters) => {
-        renderTestEnvironment({
+        await renderTestEnvironment({
             extraEndpoints: [buildFunctionHandler('/pages/questions', ['tags', 'stages', 'randomSeed', 'startIndex'], response)],
             ...opts
         });

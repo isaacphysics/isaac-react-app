@@ -10,7 +10,7 @@ import {
 import {UserRole} from "../../IsaacApiTypes";
 
 export const renderQuizPage = (baseUrl: PathString) => async ({role, quizId}: {role: UserRole | "ANONYMOUS", quizId: string}) => {
-    renderTestEnvironment({ role });
+    await renderTestEnvironment({ role });
     await waitForLoaded();
     await setUrl({ pathname: `${baseUrl}/${quizId}` });
     await waitForLoaded();
@@ -45,15 +45,15 @@ export const testSectionsHeader = () => screen.queryByRole('heading', {name: "Te
 export const expectPhyBreadCrumbs = ({href, text}: {href: string, text: string}) => {
     const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');
     expect(Array.from(breadcrumbs.children).map(e => e.innerHTML)).toEqual([
-        `<a class="breadcrumb-link" href="${href}"><span>${text}</span></a>`,
+        `<a class="breadcrumb-link" href="${href}" data-discover="true"><span>${text}</span></a>`,
     ]);
 };
 
 export const expectAdaBreadCrumbs = ([first, second, third]: [{href: string, text: string}, {href: string, text: string}, string | undefined]) => {
     const breadcrumbs = within(screen.getByRole('navigation', { name: 'breadcrumb' })).getByRole('list');
     expect(Array.from(breadcrumbs.children).map(e => e.innerHTML)).toEqual([
-        `<a class="breadcrumb-link" href="${first.href}"><span>${first.text}</span></a>`,
-        `<a class="breadcrumb-link" href="${second.href}"><span>${second.text}</span></a>`,
+        `<a class="breadcrumb-link" href="${first.href}" data-discover="true"><span>${first.text}</span></a>`,
+        `<a class="breadcrumb-link" href="${second.href}" data-discover="true"><span>${second.text}</span></a>`,
         `<span>${third}</span>`
     ]);
 };

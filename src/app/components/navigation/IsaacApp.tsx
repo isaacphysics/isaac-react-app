@@ -8,9 +8,8 @@ import {
     selectors,
     useAppDispatch,
     useAppSelector,
-    useGetSegueEnvironmentQuery
 } from "../../state";
-import {Route, Router, Switch} from "react-router-dom";
+import {createBrowserRouter, createRoutesFromElements, Navigate, Outlet, Route, RouterProvider} from "react-router-dom";
 import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
@@ -22,17 +21,15 @@ import {MyAccount} from "../pages/MyAccount";
 import {MyAssignments} from "../pages/MyAssignments";
 import {Gameboard} from "../pages/Gameboard";
 import {NotFound} from "../pages/NotFound";
-import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
 import {
     checkForWebSocket,
     closeWebSocket,
-    history,
     isAdminOrEventManager,
     isEventLeader,
     isLoggedIn,
-    isNotPartiallyLoggedIn,
+    isTeacherPending,
     isStaff,
     isTutorOrAbove,
     KEY,
@@ -65,14 +62,11 @@ import {EventManager} from "../pages/EventManager";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import SiteSpecific from "../site/siteSpecificComponents";
-import StaticPageRoute from "./StaticPageRoute";
-import {Redirect} from "react-router";
 import {notificationModal} from "../elements/modals/NotificationModal";
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ChunkOrClientError} from "../pages/ClientError";
 import {Loading} from "../handlers/IsaacSpinner";
-import {ExternalRedirect} from "../handlers/ExternalRedirect";
 import {TutorRequest} from "../pages/TutorRequest";
 import {AssignmentProgress} from "../pages/AssignmentProgressWrapper";
 import {MyGameboards} from "../pages/MyGameboards";
@@ -82,37 +76,161 @@ import {SessionCookieExpired} from "../pages/SessionCookieExpired";
 import { AccountDeletion } from '../pages/AccountDeletion';
 import { AccountDeletionSuccess } from '../pages/AccountDeletionSuccess';
 import { IsaacScienceLaunchBanner } from './IsaacScienceLaunchBanner';
+import { RequireAuth } from './UserAuthentication';
+import { FigureNumberingProvider } from '../elements/FigureNumberingProvider';
+import { QualtricsRedirect } from './external/QualtricsRedirect';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
 const GameboardBuilder = lazy(() => import('../pages/GameboardBuilder'));
 
+const RootLayout = () => {
+    const mainContentRef = useRef(null);
+    const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
+
+    return <>
+        <SiteSpecific.Header />
+        <Toasts />
+        <ActiveModals />
+        <IsaacScienceLaunchBanner />
+        <ResearchNotificationBanner />
+        <DowntimeWarningBanner />
+        <EmailVerificationBanner />
+        <OnPageLoad />
+        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-reduced-motion={accessibilitySettings?.REDUCED_MOTION ? "true" : "false"}>
+            <ErrorBoundary FallbackComponent={ChunkOrClientError}>
+                <FigureNumberingProvider>
+                    <Suspense fallback={<Loading/>}>
+                        <Outlet />
+                    </Suspense>
+                </FigureNumberingProvider>
+            </ErrorBoundary>
+        </main>
+        <ScrollToTop mainContent={mainContentRef}/>
+        <SiteSpecific.Footer />
+    </>;
+};
+
+// Render
+const routes = createRoutesFromElements(
+    <Route element={<RootLayout />}>
+        {/* Errors; these paths work but aren't really used */}
+        <Route path={"/error"} element={<ServerError />} />
+        <Route path={"/error_stale"} element={<SessionExpired />} />
+        <Route path={"/error_expired"} element={<SessionCookieExpired />} />
+        <Route path={"/auth_error"} element={<AuthError />} />
+        <Route path={"/consistency-error"} element={<ConsistencyError />} />
+
+        {/* Site specific pages */}
+        {SiteSpecific.Routes}
+
+        {/* Application pages */}
+        <Route path="/" element={<SiteSpecific.Homepage />} />
+        {/* historic route which might get reintroduced with the introduction of dashboards */}
+        <Route path="/home" element={
+            <Navigate to="/" replace /> 
+        }/>
+        <Route path="/account" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyAccount user={authUser} />} /> } />
+        <Route path="/search" element={<Search />} />
+
+        {/* deprecated route */}
+        <Route path="/pages/glossary" element={
+            <Navigate to="/glossary" replace /> 
+        }/>
+        <Route path="/pages/:pageId" element={<Generic />} />
+        <Route path="/concepts/:conceptId" element={<Concept />} />
+        <Route path="/questions/:questionId" element={<RequireAuth auth={(user) => !isTeacherPending(user)} element={<Question />} />} />
+        <Route path="/glossary" element={<Glossary />} />
+
+        <Route path={PATHS.GAMEBOARD} element={<Gameboard />} />
+        <Route path={PATHS.GAMEBOARD_BUILDER} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <GameboardBuilder user={authUser} />} />} />
+        <Route path="/assignment/:gameboardId" element={<RequireAuth auth={isLoggedIn} element={<RedirectToGameboard />} />} />
+        <Route path={`${PATHS.ADD_GAMEBOARD}/:gameboardId/:gameboardTitle?`} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <AddGameboard user={authUser} />} />} />
+
+        {/* Student pages */}
+        <Route path={PATHS.MY_ASSIGNMENTS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyAssignments user={authUser} />} />} />
+        <Route path="/progress" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyProgress user={authUser} />} />} />
+        <Route path="/progress/:userIdOfInterest" element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyProgress user={authUser} />} />} />
+        <Route path={PATHS.MY_GAMEBOARDS} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <MyGameboards user={authUser} />} />} />
+        <Route path={PATHS.QUESTION_FINDER} element={<QuestionFinder />} />
+
+        {/* Teacher pages */}
+        {/* Tutors can set and manage assignments, but not tests/quizzes */}
+        <Route path="/groups" element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <Groups user={authUser} />} />} />
+        <Route path={PATHS.SET_ASSIGNMENTS} element={<RequireAuth auth={isTutorOrAbove} element={<SetAssignments />} />} />
+        <Route path={PATHS.ASSIGNMENT_PROGRESS} element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentProgress user={authUser} />} />} />
+        <Route path={`${PATHS.ASSIGNMENT_PROGRESS}/:assignmentId`} element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentProgress user={authUser} />} />} />
+        <Route path={`${PATHS.ASSIGNMENT_PROGRESS}/group/:groupId`} element={<RequireAuth auth={isTutorOrAbove} element={(authUser) => <AssignmentProgress user={authUser} />} />} />
+
+        {/* Admin */}
+        <Route path="/admin" element={<RequireAuth auth={isStaff} element={(authUser) => <Admin user={authUser} />} />} />
+        <Route path="/admin/usermanager" element={<RequireAuth auth={isAdminOrEventManager} element={<AdminUserManager />} />} />
+        <Route path="/admin/events" element={<RequireAuth auth={user => isAdminOrEventManager(user) || isEventLeader(user)} element={(authUser) => <EventManager user={authUser} />} />} />
+        <Route path="/admin/stats" element={<RequireAuth auth={isStaff} element={<AdminStats />} />} />
+        <Route path="/admin/content_errors" element={<RequireAuth auth={user => isStaff(user)} element={<AdminContentErrors />} />} />
+        <Route path="/admin/emails" element={<RequireAuth auth={isAdminOrEventManager} element={<AdminEmails />} />} />
+        <Route path="/admin/direct_emails" element={<RequireAuth auth={isAdminOrEventManager} element={<ContentEmails />} />} />
+        {/* Authentication */}
+        <Route path="/login" element={<LogIn />} />
+        <Route path="/logout" element={<LogOutHandler />} />
+        <Route path="/auth/:provider/callback" element={<ProviderCallbackHandler />} />
+        <Route path="/resetpassword/:token" element={<ResetPasswordHandler />} />
+        <Route path="/deleteaccount" element={<RequireAuth auth={isLoggedIn} element={<AccountDeletion />} />} />
+        <Route path="/deleteaccount/success" element={<AccountDeletionSuccess />} />
+
+        {/* Static pages */}
+        <Route path="/contact" element={<Contact />} />
+        {/*<Route path="/request_account_upgrade" element={<RequireAuth auth={isLoggedIn} element={<TeacherOrTutorRequest />} />} />*/}
+        <Route path="/tutor_account_request" element={<RequireAuth auth={isLoggedIn} element={<TutorRequest />} />} />
+        <Route path="/privacy" element={<Generic pageIdOverride={"privacy_policy"} />} />
+        <Route path="/terms" element={<Generic pageIdOverride={"terms_of_use"} />} />
+        <Route path="/cookies" element={<Generic pageIdOverride={"cookie_policy"} />} />
+        <Route path="/accessibility" element={<Generic pageIdOverride={"accessibility_statement"} />} />
+        <Route path="/cyberessentials" />
+
+        {/* External redirects */}
+        <Route path={"/survey/:qId/:refNo?"} element={<RequireAuth auth={isLoggedIn} element={(authUser) => <QualtricsRedirect user={authUser} />} />} />
+
+        {/*
+        // TODO: schools and other admin stats
+        */}
+
+        {/* Builder pages */}
+        <Route path="/markdown" element={<RequireAuth auth={isStaff} element={<MarkdownBuilder />} />} />
+        <Route path="/free_text" element={<RequireAuth auth={isStaff} element={<FreeTextBuilder />} />} />
+
+        {/* Support pages */}
+        <Route path="/support/:type?/:category?" element={<Support />} />
+        {/* Error pages */}
+        <Route path="*" element={<NotFound />} />
+    </Route>
+);
+
+const router = createBrowserRouter(routes);
+(window as any).navigateComponentless = router.navigate;
+
 export const IsaacApp = () => {
     // Redux state and dispatch
     const dispatch = useAppDispatch();
-    const serverError = useAppSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
-    const goneAwayError = useAppSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
-    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
     const notifications = useAppSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
     const user = useAppSelector(selectors.user.orNull);
-    const mainContentRef = useRef(null);
 
     // Run once on component mount
     useEffect(() => {
         // We do not check the current user on the /auth/:provider:/callback page.
-        // We clear local storage on a failed check for current user, but on the callback page we need the stored afteAuthPath.
+        // We clear local storage on a failed check for current user, but on the callback page we need the stored afterAuthPath.
         // The auth callback will get the logged-in user for us.
         const pathname = window.location.pathname;
         if (!(pathname.includes("/auth/") && pathname.includes("/callback"))) {
-            dispatch(requestCurrentUser());
+            void dispatch(requestCurrentUser());
         }
-        dispatch(fetchGlossaryTerms());
+        void dispatch(fetchGlossaryTerms());
     }, [dispatch]);
 
     const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {
-        if (loggedInUserId && isNotPartiallyLoggedIn(user)) {
-            dispatch(requestNotifications());
+        if (loggedInUserId && !isTeacherPending(user)) {
+            void dispatch(requestNotifications());
             checkForWebSocket();
         }
         return () => {
@@ -142,114 +260,5 @@ export const IsaacApp = () => {
         };
     }, []);
 
-    const accessibilitySettings = useAppSelector((state: AppState) => state?.userPreferences?.ACCESSIBILITY) || {};
-
-    // Render
-    return <Router history={history}>
-        <SiteSpecific.Header />
-        <Toasts />
-        <ActiveModals />
-        <IsaacScienceLaunchBanner />
-        <ResearchNotificationBanner />
-        <DowntimeWarningBanner />
-        <EmailVerificationBanner />
-        <OnPageLoad />
-        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-reduced-motion={accessibilitySettings?.REDUCED_MOTION ? "true" : "false"}>
-            <ErrorBoundary FallbackComponent={ChunkOrClientError}>
-                <Suspense fallback={<Loading/>}>
-                    <Switch>
-                        {/* Errors; these paths work but aren't really used */}
-                        <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
-                        <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
-                        <Route exact path={"/error_expired"} component={SessionCookieExpired} />
-                        <TrackedRoute exact path={"/auth_error"} component={AuthError} />
-                        <TrackedRoute exact path={"/consistency-error"} component={ConsistencyError} />
-
-                        {/* Site specific pages */}
-                        {SiteSpecific.Routes}
-
-                        {/* Application pages */}
-                        <TrackedRoute exact path="/" component={SiteSpecific.Homepage} />
-                        <Redirect exact from="/home" to="/" /> {/* historic route which might get reintroduced with the introduction of dashboards */}
-                        <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
-                        <TrackedRoute exact path="/search" component={Search} />
-
-                        <Redirect exact from="/pages/glossary" to="/glossary" /> {/* deprecated route */}
-                        <TrackedRoute exact path="/pages/:pageId" component={Generic} />
-                        <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
-                        <TrackedRoute exact path="/questions/:questionId" ifUser={isNotPartiallyLoggedIn} component={Question} />
-                        <TrackedRoute exact path="/glossary" component={Glossary} />
-
-                        <TrackedRoute exact path={PATHS.GAMEBOARD} component={Gameboard} />
-                        <TrackedRoute exact path={PATHS.GAMEBOARD_BUILDER} ifUser={isTutorOrAbove} component={GameboardBuilder} />
-                        <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
-                        <TrackedRoute exact path={`${PATHS.ADD_GAMEBOARD}/:gameboardId/:gameboardTitle?`} ifUser={isLoggedIn} component={AddGameboard} />
-
-                        {/* Student pages */}
-                        <TrackedRoute exact path={PATHS.MY_ASSIGNMENTS} ifUser={isLoggedIn} component={MyAssignments} />
-                        <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
-                        <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
-                        <TrackedRoute exact path={PATHS.MY_GAMEBOARDS} ifUser={isLoggedIn} component={MyGameboards} />
-                        <TrackedRoute exact path={PATHS.QUESTION_FINDER} component={QuestionFinder} />
-
-                        {/* Teacher pages */}
-                        {/* Tutors can set and manage assignments, but not tests/quizzes */}
-                        <TrackedRoute exact path="/groups" ifUser={isTutorOrAbove} component={Groups} />
-                        <TrackedRoute exact path={PATHS.SET_ASSIGNMENTS} ifUser={isTutorOrAbove} component={SetAssignments} />
-                        <TrackedRoute exact path={[
-                            PATHS.ASSIGNMENT_PROGRESS,
-                            `${PATHS.ASSIGNMENT_PROGRESS}/:assignmentId`,
-                            `${PATHS.ASSIGNMENT_PROGRESS}/group/:groupId`,
-                        ]} ifUser={isTutorOrAbove} component={AssignmentProgress} />
-
-                        {/* Admin */}
-                        <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
-                        <TrackedRoute exact path="/admin/usermanager" ifUser={isAdminOrEventManager} component={AdminUserManager} />
-                        <TrackedRoute exact path="/admin/events" ifUser={user => isAdminOrEventManager(user) || isEventLeader(user)} component={EventManager} />
-                        <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
-                        <TrackedRoute exact path="/admin/content_errors" ifUser={user => segueEnvironment === "DEV" || isStaff(user)} component={AdminContentErrors} />
-                        <TrackedRoute exact path="/admin/emails" ifUser={isAdminOrEventManager} component={AdminEmails} />
-                        <TrackedRoute exact path="/admin/direct_emails" ifUser={isAdminOrEventManager} component={ContentEmails} />
-
-                        {/* Authentication */}
-                        <TrackedRoute exact path="/login" component={LogIn} />
-                        <TrackedRoute exact path="/logout" component={LogOutHandler} />
-                        <TrackedRoute exact path="/auth/:provider/callback" component={ProviderCallbackHandler} />
-                        <TrackedRoute exact path="/resetpassword/:token" component={ResetPasswordHandler}/>
-                        <TrackedRoute exact path="/deleteaccount" ifUser={isLoggedIn} component={AccountDeletion} />
-                        <TrackedRoute exact path="/deleteaccount/success" component={AccountDeletionSuccess} />
-
-                        {/* Static pages */}
-                        <TrackedRoute exact path="/contact" component={Contact}/>
-                        {/*<TrackedRoute exact path="/request_account_upgrade" ifUser={isLoggedIn} component={TeacherOrTutorRequest}/>*/}
-                        <TrackedRoute exact path="/tutor_account_request" ifUser={isLoggedIn} component={TutorRequest}/>
-                        <StaticPageRoute exact path="/privacy" pageId="privacy_policy" />
-                        <StaticPageRoute exact path="/terms" pageId="terms_of_use" />
-                        <StaticPageRoute exact path="/cookies" pageId="cookie_policy" />
-                        <StaticPageRoute exact path="/accessibility" pageId="accessibility_statement" />
-                        <StaticPageRoute exact path="/cyberessentials" />
-
-                        {/* External redirects */}
-                        <ExternalRedirect<{qId: string, refNo: string}> from={"/survey/:qId/:refNo?"} to={({qId, refNo}, user) => `https://cambridge.eu.qualtrics.com/jfe/form/${qId}?UID=${user.id}${refNo ? `&refno=${refNo}` : ''}`} ifUser={isLoggedIn} />
-
-                        {/*
-                        // TODO: schools and other admin stats
-                        */}
-
-                        {/* Builder pages */}
-                        <TrackedRoute exact path="/markdown" ifUser={isStaff} component={MarkdownBuilder} />
-                        <TrackedRoute exact path="/free_text" ifUser={isStaff} component={FreeTextBuilder} />
-
-                        {/* Support pages */}
-                        <TrackedRoute exact path="/support/:type?/:category?" component={Support} />
-
-                        {/* Error pages */}
-                        <TrackedRoute component={NotFound} />
-                    </Switch>
-                </Suspense>
-            </ErrorBoundary>
-        </main>
-        <ScrollToTop mainContent={mainContentRef}/>
-        <SiteSpecific.Footer />
-    </Router>;
+    return <RouterProvider router={router} />;
 };

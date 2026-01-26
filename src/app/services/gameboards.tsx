@@ -243,12 +243,19 @@ export const useGameboards = (initialView: BoardViews) => {
 
     const haveAllBoards = useMemo(() => boards && boards.totalResults === boards.boards.length, [boards]);
 
+    useEffect(() => {
+        // on load, fetch initial boards – this will use cached data for this req unless it has been invalidated (e.g. by creating a new board)
+        void loadGameboards({startIndex: 0, limit: parseBoardLimitAsNumber(boardLimit), sort: boardOrder});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     // refetch the boards (if not all obtained) when any of the main parameters change
     useEffect(() => {
         if (!haveAllBoards) {
             // Fetch gameboards from server, no aggregation since we want a fresh list
             void loadGameboards({startIndex: 0, limit: parseBoardLimitAsNumber(boardLimit), sort: boardOrder}, false);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [boardLimit, boardOrder, loadGameboards]);
 
     // if the limit changes, we may need to reduce the number of displayed boards – but do not refetch
