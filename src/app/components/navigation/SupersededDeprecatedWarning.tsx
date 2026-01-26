@@ -1,12 +1,47 @@
-import React from "react";
-import {SeguePageDTO} from "../../../IsaacApiTypes";
+import React, { useMemo } from "react";
+import {GameboardDTO, SeguePageDTO} from "../../../IsaacApiTypes";
 import {RenderNothing} from "../elements/RenderNothing";
 import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {isAQuestionLikeDoc, isStudent, isTutorOrAbove, siteSpecific} from "../../services";
-import { UncontrolledTooltip, Alert, Button } from "reactstrap";
+import {ISAAC_BOOKS_BY_TAG, isAQuestionLikeDoc, isStudent, isTutorOrAbove, PATHS, siteSpecific} from "../../services";
+import { UncontrolledTooltip, Alert, Button, AlertProps } from "reactstrap";
 import classNames from "classnames";
+import { Link } from "react-router";
 
-export function SupersededDeprecatedWarningBanner({doc}: {doc: SeguePageDTO}) {
+interface SupersededOrDeprecatedContentWarningProps extends AlertProps {
+    gameboard?: GameboardDTO;
+}
+
+// a warning banner to be used on / around gameboards that contain superseded or deprecated content
+export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDeprecatedContentWarningProps) => {
+    const {gameboard, ...rest} = props;
+
+    const containsSuperseded = useMemo(() => {
+        return Array.from(gameboard?.contents || []).some(content => content.supersededBy);
+    }, [gameboard?.contents]);
+
+    const containsDeprecated = useMemo(() => {
+        return Array.from(gameboard?.contents || []).some(content => content.deprecated);
+    }, [gameboard?.contents]);
+
+    const isBookBoard = Object.keys(ISAAC_BOOKS_BY_TAG).some(tag => gameboard?.tags?.includes(tag));
+
+    return (containsSuperseded || containsDeprecated) && <Alert {...rest} color="warning" className={classNames("mt-2 d-flex", props.className)}>
+        <i className="icon icon-warning icon-color-alert icon-sm me-3" />
+        <div>
+            <h5>{containsDeprecated ? "Deprecated content" : "Superseded content"}</h5>
+            <p className="small mb-0">
+                This assignment contains {containsDeprecated ? "content that we no longer maintain" : "content that has a newer version"}.{" "}
+                {isBookBoard
+                    ? <>If you want to set this work again, you should use the most up-to-date version from our book page.</>
+                    : <>You might wish to <Link to={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboard?.id}`}>duplicate and edit</Link> this assignment to {containsDeprecated ? "replace" : "update"} the content.</>
+                }
+            </p>
+        </div>
+    </Alert>;
+};
+
+// a warning banner to be used above *standalone content* such as individual questions or concept pages. 
+export function SupersededDeprecatedStandaloneContentWarning({doc}: {doc: SeguePageDTO}) {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
 

@@ -38,6 +38,7 @@ import {BoardAssignee, Boards} from "../../../../IsaacAppTypes";
 import indexOf from "lodash/indexOf";
 import { GameboardCard, GameboardLinkLocation } from "./GameboardCard";
 import { IconButton } from "../AffixButton";
+import { SupersededDeprecatedBoardContentWarning } from "../../navigation/SupersededDeprecatedWarning";
 
 
 interface HexagonGroupsButtonProps {
@@ -284,7 +285,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         siteSpecific(
             <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} data-testid="gameboard-card"
                 {...(isSetAssignments ? {'setAssignmentsDetails': {toggleAssignModal, groupCount: assignees.length}} : {})}>
-                <Row className="w-100">
+                <Row>
                     <Col>
                         {isDefined(board.creationDate) && <p className="mb-0" data-testid={"created-date"}>
                             Created <strong>{getFriendlyDaysUntil(board.creationDate)}</strong>
@@ -292,6 +293,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         {isDefined(board.lastVisited) && <p className="mb-0" data-testid={"last-visited"}>
                             Last visited <strong>{getFriendlyDaysUntil(board.lastVisited)}</strong>
                         </p>}
+                        <SupersededDeprecatedBoardContentWarning gameboard={board} />
                     </Col>
                 </Row>
             </GameboardCard>,
