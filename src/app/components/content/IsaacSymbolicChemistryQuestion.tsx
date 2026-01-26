@@ -5,7 +5,6 @@ import katex from "katex";
 import {
     ifKeyIsEnter,
     isDefined,
-    isStaff,
     jsonHelper,
     sanitiseInequalityState,
     siteSpecific,
@@ -19,7 +18,7 @@ import QuestionInputValidation from "../elements/inputs/QuestionInputValidation"
 import { v4 as uuid_v4 } from "uuid";
 import { Inequality, makeInequality } from "inequality";
 import { parseInequalityChemistryExpression, parseInequalityNuclearExpression, ParsingError } from "inequality-grammar";
-import { AppState, selectors, useAppSelector } from "../../state";
+import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
@@ -58,7 +57,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const [textInput, setTextInput] = useState('');
-    const user = useAppSelector((state: AppState) => state && state.user);
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
