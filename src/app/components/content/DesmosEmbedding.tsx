@@ -8,7 +8,7 @@ interface DesmosEmbeddingProps {
 
 export const DesmosEmbedding = ({doc}: DesmosEmbeddingProps) => {
     const { calculatorId, altText } = doc;
-    const baseURL = calculatorId ? `https://desmos.com/calculator/${calculatorId}?embed` : "https://desmos.com/calculator?embed";
+    const baseURL = calculatorId ? `https://www.desmos.com/calculator/${calculatorId}?embed` : "https://www.desmos.com/calculator?embed";
 
     return <div className="figure-panel">
         <DesmosCookieHandler afterAcceptedElement={
