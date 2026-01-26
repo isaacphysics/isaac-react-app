@@ -57,7 +57,7 @@ type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & TitleMeta
 };
 
 export const TitleAndBreadcrumb = ({children, breadcrumbTitleOverride, currentPageTitle, displayTitleOverride, subTitle, disallowLaTeX, className, audienceViews, help, collectionType, intermediateCrumbs, preview, icon}: TitleAndBreadcrumbProps) => {
-    return <div id="page-title" className={classNames(className, {"title-breadcrumb-container": isPhy, "pt-4 pt-md-7": isAda})}>
+    return <div id="page-title" className={classNames(className, "title-breadcrumb-container")}>
         {isPhy && <div className="title-graphics"/>}
         <BreadcrumbTrail
             currentPageTitle={breadcrumbTitleOverride ?? currentPageTitle}

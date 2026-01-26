@@ -12,6 +12,15 @@ h1#main-heading {
     }
 }
 
+.title-breadcrumb-container {
+    @extend .pt-4;
+    @extend .pt-md-7;
+}
+
+.my-ada-container .title-breadcrumb-container {
+    @extend .pt-0;
+}
+
 .title-help {
   display: flex;
   align-items: center;

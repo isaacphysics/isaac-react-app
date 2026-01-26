@@ -1,0 +1,63 @@
+.sidebar {
+    background-color: $cs-white;
+}
+
+:not(.offcanvas-body) > .sidebar {
+    background-color: $cs-white;
+
+    @include not-reduced-motion {
+        transition: all 0.3s ease-out;
+        
+        b {
+            transition: opacity 0.3s ease-out;
+            white-space: nowrap;
+        }
+    }
+
+    &:not(.collapsed) {
+        width: 220px;
+        max-width: 220px;
+        min-width: 220px;
+
+        b {
+            opacity: 1;
+        }
+    }
+
+    &.collapsed {
+        width: 69px; // 2*20px padding + 24px icon + 5px border
+        max-width: 69px;
+        min-width: 69px;
+
+        b {
+            opacity: 0;
+            max-width: 0;
+        }
+    }
+
+    button i {
+        --mask-size: 60%;
+    }
+}
+
+.my-ada-tab {
+  height: 58px;
+}
+
+button.my-ada-tab:first-child { // collapser tab
+    border-right: 5px solid transparent;
+
+    i {
+        margin-right: 3px;
+    }
+}
+
+.sidebar-toggle {
+    position: relative;
+    padding: 1.5rem;
+    background-color: $cs-white;
+    border: 1px solid $cs-dark-silver;
+    border-radius: 1rem;
+    font-weight: 600;
+    text-align: left;
+}

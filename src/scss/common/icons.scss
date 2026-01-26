@@ -63,23 +63,23 @@ img[aria-disabled="true"] {
 
 .icon-chevron-right {
   // use for dropdowns, tabs, etc. prefer arrow-right for links.
-  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 35% 50%);
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 65% 50%);
 }
 
 .icon-chevron-down {
-  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 35% 50%);
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 65% 50%);
   // we use `rotate: x` for image rotations, and `transform: rotate(x)` for individual element rotations.
   // this means we can reuse just one image for all directions, and animations can animate over transform oblivious to the image rotation.
   rotate: 90deg;
 }
 
 .icon-chevron-left {
-  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 35% 50%);
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 65% 50%);
   rotate: 180deg;
 }
 
 .icon-chevron-up {
-  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 35% 50%);
+  @include svg-icon('/assets/common/icons/chevron-right.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%), 65% 50%);
   rotate: -90deg;
 }
 

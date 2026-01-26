@@ -291,13 +291,15 @@ $theme-colour-overrides: (
 );
 $theme-colors: map-merge($theme-colors, $theme-colour-overrides);
 
+$sidebar-width: 220px;
+
 $grid-breakpoints: (
   xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  nav: 1256px,
+  sm: 576px, // sidebar only appears at md and above; sm remains the same
+  md: calc(768px + $sidebar-width),
+  lg: calc(992px + $sidebar-width),
+  xl: calc(1200px + $sidebar-width),
+  nav: 1256px, // nav expansion is independent of sidebar
   // xxl: 1400px // we don't need xxl
 );
 
@@ -376,8 +378,10 @@ $warning-border-subtle: #fffeee;
 // Atoms
 @import "fonts";
 @import "typography";
+@import "containers";
 @import "modals";
 @import "page-title";
+@import "sidebar";
 @import "questions";
 @import "forms";
 @import "elements";
