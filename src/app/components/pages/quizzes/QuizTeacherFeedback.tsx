@@ -17,7 +17,6 @@ import {
     UserSummaryDTO
 } from "../../../../IsaacApiTypes";
 import {
-    extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
     isAuthorisedFullAccess,
     isPhy,
