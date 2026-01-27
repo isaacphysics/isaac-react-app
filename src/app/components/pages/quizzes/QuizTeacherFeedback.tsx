@@ -94,7 +94,6 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
     const [settingsVisible, setSettingsVisible] = useState(true);
 
-    console.log(quizAssignment);
     const numStudentsSubmitted = quizAssignment?.userFeedback?.filter(p => p.feedback?.complete).length;
     const numStudentsCompletedAll = quizAssignment?.userFeedback?.filter(p => p.feedback?.overallMark?.correct && p.feedback?.overallMark?.correct === quizAssignment.quiz?.total).length;
 
