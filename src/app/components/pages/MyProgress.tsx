@@ -69,7 +69,7 @@ interface MyProgressProps {
 
 const MyProgress = ({user}: MyProgressProps) => {
     const { userIdOfInterest = "" } = useParams();
-    const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
+    const viewingOwnData = userIdOfInterest === "" || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
     const dispatch = useAppDispatch();
     const myProgress = useAppSelector(selectors.user.progress);
