@@ -142,9 +142,9 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                         }}>
                             <i className="icon icon-fullscreen icon-md" />
                         </button>
-                        <div className="position-relative w-fit-content align-self-center">
-                            {doc.figureRegions && contextType && path && (
-                                !isCondensed
+                        {(doc.figureRegions && contextType && path) 
+                            ? <div className="position-relative w-fit-content align-self-center">
+                                {!isCondensed
                                     ? generateFigureRegionObjects({
                                         figureRegions: doc.figureRegions, 
                                         contextType,
@@ -166,11 +166,17 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                                             top: `calc(${region.top}% - (${regionHeight} * ${region.top/100}) + ((${regionHeight} - ${FIGURE_DROP_ZONE_PLACEHOLDER_SIZE}) / 2))`,
                                         })
                                     })
-                            )}
+                                }
 
-                            {!doc.clickUrl && <img src={path} alt={doc.altText} ref={imageRef} />}
-                            {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} ref={imageRef} /></a>}
-                        </div>
+                                {!doc.clickUrl && <img src={path} alt={doc.altText} ref={imageRef} />}
+                                {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} ref={imageRef} /></a>}
+                            </div>
+                            : <>
+                                {!doc.clickUrl && <img src={path} alt={doc.altText} ref={imageRef} />}
+                                {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} ref={imageRef} /></a>}
+                            </>
+                        }
+
                         {doc.figureRegions && contextType && path && (
                             isCondensed 
                                 ? <>
