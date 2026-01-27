@@ -131,7 +131,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                 const figureString = figId && Object.keys(figureNumbers).includes(figId) ?
                     `Figure\u00A0${figureNumbers[figId]}` : "Figure";
                 return <figure>
-                    <div className="w-100 d-flex flex-column justify-content-center position-relative p-3 pb-5" ref={clozeDropRootElement}>
+                    <div className="w-100 d-flex flex-column align-items-center justify-content-center position-relative p-3 pb-5" ref={clozeDropRootElement}>
                         <button className="figure-fullscreen" aria-label="Expand figure" type="button" onClick={() => {
                             dispatch(openActiveModal(FigureModal({
                                 path, 
@@ -181,7 +181,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                             isCondensed 
                                 ? <>
                                     <hr />
-                                    <div className="d-flex flex-column gap-2 mt-3">
+                                    <div className="d-flex flex-column w-100 gap-2 mt-3">
                                         {generateFigureRegionObjects({
                                             figureRegions: doc.figureRegions, 
                                             contextType,
