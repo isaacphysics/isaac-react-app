@@ -46,7 +46,7 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Cypress {
         interface Chainable {
-            mountWithStoreAndRouter(component: ReactNode, routes: string[], mountOptions?: MountOptions): Chainable<Element>;
+            mountWithStoreAndRouter(component: ReactNode, routes: string[], initialRoute?: string, mountOptions?: MountOptions): Chainable<Element>;
 
             openSidebar(): Chainable<JQuery<HTMLElement>>;
             closeSidebar(): Chainable<JQuery<HTMLElement>>;
@@ -58,16 +58,24 @@ declare global {
 import React, {ReactNode} from "react";
 import {Provider} from "react-redux";
 import {store} from "../../src/app/state";
-import {MemoryRouter} from "react-router";
+import {createBrowserRouter, createRoutesFromElements, Route} from "react-router";
+import { RouterProvider } from 'react-router-dom';
 
-Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, mountOptions) => {
+Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute=routes?.[0], mountOptions) => {
+    const router = createBrowserRouter(createRoutesFromElements(<>
+        {routes?.length
+            ? routes.map(route => <Route key={route} element={component} path={route} />)
+            : <Route path="*" element={component} />
+        }
+    </>));
+
+    router.navigate(initialRoute || '/');
+
     mount(
         <Provider store={store}>
-            <MemoryRouter initialEntries={routes}>
-                {component}
-            </MemoryRouter>
-        </Provider>
-        , mountOptions
+            <RouterProvider router={router} />
+        </Provider>,
+        mountOptions
     );
 });
 

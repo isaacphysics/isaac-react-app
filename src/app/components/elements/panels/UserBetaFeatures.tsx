@@ -57,7 +57,7 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                 <p id="chem-text-entry-helptext">{`This feature allows you to enter text-based answers (using mhchem chemical notation) for chemistry questions, as an alternative to the graphical equation editor.`}</p>
             </WithLinkableSetting>}
 
-            {/* Temporarily staff-only until LLM-marked questions are properly configured (and won't work for staff immediately regardless) */}
+            {/* Enabled for staff on Isaac so they can test questions, but not being pursued further for now (these questions should not be published) */}
             {(isStaff(user) || isAda) && <>
                 <div className="pt-2"/>
                 <WithLinkableSetting id={"consent-to-openai-marking-feature"}>

@@ -91,7 +91,7 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
 describe("Groups", () => {
 
     (["TUTOR", "TEACHER"] as const).forEach(role => it(`displays all active groups on load if the user is a ${role.toLowerCase()}, and all archived groups when Archived tab is clicked`, async () => {
-        renderTestEnvironment({role});
+        await renderTestEnvironment({role});
         await navigateToGroups();
         // switchGroupsTab checks that the mock active groups we expect to be there are in fact there
         await switchGroupsTab("active", mockActiveGroups);
@@ -122,7 +122,7 @@ describe("Groups", () => {
         };
         const newGroupHandler = handlerThatReturns({data: mockNewGroup});
         const authTokenHandler = buildAuthTokenHandler(mockNewGroup, mockToken);
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TUTOR",
             extraEndpoints: [
                 http.post(API_PATH + "/groups", newGroupHandler),
@@ -166,7 +166,7 @@ describe("Groups", () => {
     it(`allows you to delete archived groups`, async () => {
         const groupToDelete = mockArchivedGroups[0];
         let correctDeleteRequests = 0;
-        renderTestEnvironment({
+        await renderTestEnvironment({
             extraEndpoints: [
                 http.delete(API_PATH + "/groups/:groupId", async ({params}) => {
                     const {groupId} = params;
@@ -210,7 +210,7 @@ describe("Groups", () => {
             const groupToRename = mockGroups[0];
             const newGroupName = "Test Group Renamed";
             let correctUpdateRequests = 0;
-            renderTestEnvironment({
+            await renderTestEnvironment({
                 extraEndpoints: [
                     http.post(API_PATH + "/groups/:groupId", async ({request, params}) => {
                         const {groupId} = params;
@@ -273,7 +273,7 @@ describe("Groups", () => {
                         status: 200,
                     });
                 });
-                renderTestEnvironment({
+                await renderTestEnvironment({
                     extraEndpoints: [
                         http.post(API_PATH + "/groups/:groupId", updateGroup),
                         // We need to handle when the Archived tab requests the list of archived groups, because in this case
@@ -357,7 +357,7 @@ describe("Groups", () => {
             };
             const mockNewManager = buildMockTeacher(2);
             const existingGroupManagerHandler = buildNewManagerHandler(mockGroup, mockNewManager);
-            renderTestEnvironment({
+            await renderTestEnvironment({
                 role: "TEACHER",
                 extraEndpoints: [
                     http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
@@ -380,7 +380,7 @@ describe("Groups", () => {
                 ownerId: mockUser.id,
                 ownerSummary: buildMockUserSummary(mockUser, false),
             };
-            renderTestEnvironment({
+            await renderTestEnvironment({
                 role: "TUTOR",
                 extraEndpoints: [
                     http.get(API_PATH + "/groups", buildGroupHandler([mockGroup]))
@@ -406,7 +406,7 @@ describe("Groups", () => {
             ownerSummary: buildMockUserSummary(mockUser, false),
         };
         let passwordResetSuccessfullySent = false;
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
                 http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
@@ -452,7 +452,7 @@ describe("Groups", () => {
             ownerId: mockUser.id,
             ownerSummary: buildMockUserSummary(mockUser, false),
         };
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TUTOR",
             extraEndpoints: [
                 http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
@@ -489,7 +489,7 @@ describe("Groups", () => {
         };
         const mockNewManager = buildMockTeacher(2);
         const newGroupManagerHandler = buildNewManagerHandler(mockNewGroup, mockNewManager);
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
                 http.post(API_PATH + "/groups", handlerThatReturns({data: mockNewGroup})),
@@ -526,7 +526,7 @@ describe("Groups", () => {
             ownerSummary: buildMockUserSummary(mockUser, false),
             archived: false
         };
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TUTOR",
             extraEndpoints: [
                 http.post(API_PATH + "/groups", handlerThatReturns({data: mockNewGroup})),
@@ -570,7 +570,7 @@ describe("Groups", () => {
                 status: 200,
             });
         });
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
                 http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
@@ -669,7 +669,7 @@ describe("Groups", () => {
             });
         });
 
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
                 http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
@@ -716,7 +716,7 @@ describe("Groups", () => {
             ownerId: mockUser.id,
             ownerSummary: buildMockUserSummary(mockUser, false),
         };
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
                 http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
@@ -800,7 +800,7 @@ describe("Groups", () => {
             });
         });
 
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "STUDENT",
             extraEndpoints: [
                 http.get(API_PATH + `/authorisations/token/:token/owner`, getGroupOwnerHandler),
@@ -875,7 +875,7 @@ describe("Groups", () => {
             });
         });
         const getGroupMembershipHandler = handlerThatReturns({data: mockGroup.members});
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
                 http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
