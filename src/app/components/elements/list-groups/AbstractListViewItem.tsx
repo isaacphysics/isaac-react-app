@@ -258,7 +258,7 @@ export const AbstractListViewItem = ({title, icon, subject, subtitle, breadcrumb
                 <i className="icon icon-chevron-right" aria-hidden="true"/>
             </div>}
         </div>
-        {isGameboard && isStaff(user) && <SupersededDeprecatedBoardContentWarning gameboard={typedProps.board} className="mt-4" />}
+        {isGameboard && isStaff(user) && <SupersededDeprecatedBoardContentWarning hideFullDetails gameboard={typedProps.board} className="mt-4" />}
     </>;
 
     return <ListGroupItem

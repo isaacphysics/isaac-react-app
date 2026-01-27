@@ -9,11 +9,12 @@ import { Link } from "react-router";
 
 interface SupersededOrDeprecatedContentWarningProps extends AlertProps {
     gameboard?: GameboardDTO;
+    hideFullDetails?: boolean;
 }
 
 // a warning banner to be used on / around gameboards that contain superseded or deprecated content
 export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDeprecatedContentWarningProps) => {
-    const {gameboard, ...rest} = props;
+    const {gameboard, hideFullDetails, ...rest} = props;
 
     const containsSuperseded = useMemo(() => {
         return Array.from(gameboard?.contents || []).some(content => content.supersededBy);
@@ -29,13 +30,15 @@ export const SupersededDeprecatedBoardContentWarning = (props: SupersededOrDepre
         <i className="icon icon-warning icon-color-alert icon-sm me-3" />
         <div>
             <h5>{containsDeprecated ? "Deprecated content" : "Superseded content"}</h5>
-            <p className="small mb-0">
+            {!hideFullDetails && <p className="small mb-0">
                 This assignment contains {containsDeprecated ? "content that we no longer maintain" : "content that has a newer version"}.{" "}
                 {isBookBoard
                     ? <>If you want to set this work again, you should use the most up-to-date version from our book page.</>
-                    : <>You might wish to <Link to={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboard?.id}`}>duplicate and edit</Link> this assignment to {containsDeprecated ? "replace" : "update"} the content.</>
+                    : containsDeprecated
+                        ? <>Please <Link to={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboard?.id}`}>duplicate and edit</Link> this assignment to remove or replace the deprecated question(s).</>
+                        : <>We recommend that you <Link to={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboard?.id}`}>duplicate and edit</Link> this assignment to replace them with their newer version.</>
                 }
-            </p>
+            </p>}
         </div>
     </Alert>;
 };
