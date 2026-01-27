@@ -193,10 +193,6 @@ export interface ShortcutResponse extends ContentSummaryDTO {
     hash?: string;
 }
 
-export interface UserBetaFeaturePreferences {
-    SCHEDULE_ASSIGNMENTS?: boolean;
-}
-
 export type UserEmailPreferences = {
     NEWS_AND_UPDATES?: boolean;
     ASSIGNMENTS?: boolean;
@@ -231,6 +227,7 @@ export interface BooleanNotation {
 
 export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
+    CHEM_TEXT_ENTRY?: boolean;
 }
 
 export interface AccessibilitySettings {
@@ -244,7 +241,6 @@ export interface UserConsent {
 }
 
 export interface UserPreferencesDTO {
-    BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
     PROGRAMMING_LANGUAGE?: ProgrammingLanguage;

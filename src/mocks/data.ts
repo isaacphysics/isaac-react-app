@@ -6241,9 +6241,6 @@ export const mockAssignmentsGroup6 = [
 ].filter(isDefined);
 
 export const mockUserPreferences = {
-    BETA_FEATURE: {
-        HIDE_QUESTION_ATTEMPTS: true
-    },
     EMAIL_PREFERENCE: {
         EVENTS: false,
         NEWS_AND_UPDATES: false,

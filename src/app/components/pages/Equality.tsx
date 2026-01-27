@@ -72,6 +72,7 @@ const equalityValidator = (input: string, editorMode: string) => {
 const Equality = () => {
     const location = useLocation();
     const queryParams = queryString.parse(location.search);
+    const userPreferences = useAppSelector(selectors.user.preferences);
 
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef<string[]>([]);
@@ -241,7 +242,7 @@ const Equality = () => {
     };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
-    const allowTextInput = editorMode === 'maths' || (isStaff(user) && ['chemistry', 'nuclear', 'logic'].includes(editorMode));
+    const allowTextInput = ['maths', 'logic'].includes(editorMode) || (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY && ['chemistry', 'nuclear'].includes(editorMode));
 
     return <div>
         <Container>
