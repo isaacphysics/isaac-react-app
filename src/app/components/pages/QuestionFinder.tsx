@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {AppState, useAppSelector, useSearchQuestionsQuery} from "../../state";
 import debounce from "lodash/debounce";
 import {
@@ -190,22 +190,24 @@ export const QuestionFinder = () => {
 
     const isSubjectSpecificQF = isPhy && isFullyDefinedContext(pageContext);
 
-    const initialSearchStages = params.stages 
+    const initialSearchStages = useRef(params.stages 
         ? arrayFromPossibleCsv(params.stages) as STAGE[] 
         : isAda || isSubjectSpecificQF
             ? getSearchStagesFromAccountSettings(user, pageContext)
-            : [];
+            : []
+    );
     
-    const initialExamBoards = params.examBoards
+    const initialExamBoards = useRef(params.examBoards
         ? arrayFromPossibleCsv(params.examBoards) as ExamBoard[]
         : isAda
             ? getSearchExamBoardsFromAccountSettings(user)
-            : [];
-
+            : []
+    );
+    
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(initialSearchStages);
-    const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(initialExamBoards);
+    const [searchStages, setSearchStages] = useState<STAGE[]>(initialSearchStages.current);
+    const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(initialExamBoards.current);
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
@@ -218,7 +220,7 @@ export const QuestionFinder = () => {
     useEffect(function updateFiltersFromAccountSettings() {
         // if the user object was not present at page load (hard link), we can only infer account settings now.
         // this (should!) only run if/when the user object updates (+on load), as all other dependencies are static values
-        const initialFiltersEmpty = initialSearchStages.length === 0 && initialExamBoards.length === 0;
+        const initialFiltersEmpty = initialSearchStages.current.length === 0 && initialExamBoards.current.length === 0;
         if (!readingFromUrlParams && initialFiltersEmpty && !isSubjectSpecificQF && isLoggedIn(user)) {
             const userStages = getSearchStagesFromAccountSettings(user, pageContext);
             const userExamBoards = getSearchExamBoardsFromAccountSettings(user);
@@ -226,7 +228,7 @@ export const QuestionFinder = () => {
             setSearchStages(userStages);
             setSearchExamBoards(userExamBoards);
         }
-    }, [isSubjectSpecificQF, pageContext, readingFromUrlParams, initialSearchStages.length, initialExamBoards.length, user]);
+    }, [isSubjectSpecificQF, pageContext, readingFromUrlParams, user]);
 
     const choices = useMemo(() => {
         return updateTopicChoices(selections, pageContext, getAllowedTags(pageContext));
