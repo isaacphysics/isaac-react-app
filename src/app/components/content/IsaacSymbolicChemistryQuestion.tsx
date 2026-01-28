@@ -20,6 +20,7 @@ import { Inequality, makeInequality } from "inequality";
 import { parseInequalityChemistryExpression, parseInequalityNuclearExpression, ParsingError } from "inequality-grammar";
 import { selectors, useAppSelector } from "../../state";
 import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
+import { initialiseInequality, InputState, SymbolicTextInput } from "./IsaacSymbolicQuestion";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -109,7 +110,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         return (currentAttemptValue?.result && currentAttemptValue.result.mhchem) || "";
     }
 
-    const [inputState, setInputState] = useState(() => ({
+    const [inputState, setInputState] = useState<InputState>(() => ({
         mhchemExpression: '',
         userInput: '',
         valid: true
@@ -155,77 +156,16 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     }(window.scrollY), [modalVisible]);
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
+    const showTextEntry = !readonly && (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY ?? false);
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
-
-    const showTextEntry = !readonly && (userPreferences?.DISPLAY_SETTING?.CHEM_TEXT_ENTRY ?? false);
-
     useLayoutEffect(() => {
-        if (!showTextEntry) return; // as the ref will not be defined
-
-        if (!isDefined(hiddenEditorRef.current)) {
-            throw new Error("Unable to initialise inequality; target element not found.");
-        }
-
-        const {sketch, p} = makeInequality(
-            hiddenEditorRef.current,
-            100,
-            0,
-            _flattenDeep((currentAttemptValue || { symbols: [] }).symbols),
-            {
-                editorMode: doc.isNuclear ? "nuclear" : "chemistry",
-                textEntry: true,
-                fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
-                fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
-            }
-        );
-        if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
-
-        sketch.log = { initialState: [], actions: [] };
-        sketch.onNewEditorState = updateState;
-        sketch.onCloseMenus = () => undefined;
-        sketch.isUserPrivileged = () => true;
-        sketch.onNotifySymbolDrag = () => undefined;
-        sketch.isTrashActive = () => false;
-        sketch.editorMode = doc.isNuclear ? "nuclear" : "chemistry";
-
-        sketchRef.current = sketch;
-
-        return () => {
-            if (sketchRef.current) {
-                sketchRef.current.onNewEditorState = () => null;
-                sketchRef.current.onCloseMenus = () => null;
-                sketchRef.current.isTrashActive = () => false;
-                sketchRef.current = null;
-            }
-            p.remove();
-        };
+        if (readonly) return; // as the ref won't be defined
+        
+        initialiseInequality(doc.isNuclear ? "nuclear" : "chemistry", hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
-
-    const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const input = e.target.value;
-        setTextInput(input);
-        setInputState({...inputState, mhchemExpression: input, userInput: textInput});
-
-        const parsedExpression = doc.isNuclear ? parseInequalityNuclearExpression(input) : parseInequalityChemistryExpression(input);
-        if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
-            if (input === '') {
-                const state = {result: {tex: "", python: "", mathml: ""}};
-                dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(sanitiseInequalityState(state)), mhchemExpression: ""});
-                initialEditorSymbols.current = [];
-            } else if (parsedExpression.length === 1) {
-                // This and the next one are using input instead of textInput because React will update the state whenever it sees fit
-                // so textInput will almost certainly be out of sync with input which is the current content of the text box.
-                sketchRef.current?.parseSubtreeObject(parsedExpression[0], true, true, input);
-            } else {
-                const sizes = parsedExpression.map(countChildren);
-                const i = sizes.indexOf(Math.max.apply(null, sizes));
-                sketchRef.current?.parseSubtreeObject(parsedExpression[i], true, true, input);
-            }
-        }
-    };
 
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
 
@@ -252,8 +192,16 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             {showTextEntry && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
-                    <Input type="text" onChange={updateEquation} value={textInput}
-                        placeholder="Type your formula here"/>
+                    <SymbolicTextInput
+                        editorMode={doc.isNuclear ? "nuclear" : "chemistry"}
+                        inputState={inputState}
+                        setInputState={setInputState}
+                        textInput={textInput}
+                        setTextInput={setTextInput}
+                        initialEditorSymbols={initialEditorSymbols}
+                        dispatchSetCurrentAttempt={dispatchSetCurrentAttempt}
+                        sketchRef={sketchRef}
+                    />
                     <>
                         {siteSpecific(
                             <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,

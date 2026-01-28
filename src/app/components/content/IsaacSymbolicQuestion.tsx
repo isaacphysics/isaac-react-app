@@ -2,7 +2,6 @@ import React, {
     ChangeEvent,
     lazy,
     Suspense,
-    useCallback,
     useEffect,
     useLayoutEffect,
     useMemo,
@@ -22,7 +21,7 @@ import {
     useCurrentQuestionAttempt
 } from "../../services";
 import {Inequality, makeInequality} from "inequality";
-import {parseMathsExpression, ParsingError} from "inequality-grammar";
+import {parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression, ParsingError} from "inequality-grammar";
 import _flattenDeep from 'lodash/flatMapDeep';
 import {v4 as uuid_v4} from "uuid";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
@@ -185,27 +184,42 @@ export const initialiseInequality = (editorMode: string, hiddenEditorRef: React.
     };
 };
 
+export interface InputState {
+    pythonExpression?: string;
+    mhchemExpression?: string;
+    userInput: string;
+    valid: boolean;
+}
+
 interface SymbolicTextInputProps {
-    inputState: {pythonExpression: string; userInput: string; valid: boolean};
-    setInputState: React.Dispatch<React.SetStateAction<{pythonExpression: string; userInput: string; valid: boolean}>>;
+    editorMode: "maths" | "chemistry" | "nuclear" | "logic";
+    inputState: InputState;
+    setInputState: React.Dispatch<React.SetStateAction<InputState>>;
     textInput: string;
     setTextInput: React.Dispatch<React.SetStateAction<string>>;
     initialEditorSymbols: React.MutableRefObject<any>;
-    dispatchSetCurrentAttempt: (attempt: {type: 'formula'; value: string; pythonExpression: string;}) => void;
+    dispatchSetCurrentAttempt: (attempt: {type: 'formula'; value: string; pythonExpression?: string; mhchemExpression?: string}) => void;
     sketchRef: React.MutableRefObject<Inequality | null | undefined>;
 }
 
-const SymbolicTextInput = ({inputState, setInputState, textInput, setTextInput, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef}: SymbolicTextInputProps) => {
+export const SymbolicTextInput = ({editorMode, inputState, setInputState, textInput, setTextInput, initialEditorSymbols, dispatchSetCurrentAttempt, sketchRef}: SymbolicTextInputProps) => {
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
         const input = e.target.value;
         setTextInput(input);
-        setInputState({...inputState, pythonExpression: input, userInput: input}); // here
+        setInputState({...inputState, userInput: input, ...(["maths", "logic"].includes(editorMode) ? {pythonExpression: input} : {mhchemExpression: input})});
 
-        const parsedExpression = parseMathsExpression(input); // here
+        const parsedExpression = editorMode === "maths"
+            ? parseMathsExpression(input) 
+            : editorMode === "chemistry"
+                ? parseInequalityChemistryExpression(input)
+                : editorMode === "nuclear"
+                    ? parseInequalityNuclearExpression(input)
+                    : parseBooleanExpression(input);
+
         if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
             if (input === '') {
                 const state = {result: {tex: "", python: "", mathml: ""}};
-                dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""}); // and here
+                dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), ...(["maths", "logic"].includes(editorMode) ? {pythonExpression: ""} : {mhchemExpression: ""})}); // and here
                 initialEditorSymbols.current = [];
             } else if (parsedExpression.length === 1) {
                 // This and the next one are using input instead of textInput because React will update the state whenever it sees fit
@@ -227,7 +241,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const currentAttemptValue: InequalityState | undefined = (currentAttempt && currentAttempt.value)
         ? jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}}) 
         : undefined;
-    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(currentAttemptValue), userInput: '', valid: true}));
+    const [inputState, setInputState] = useState<InputState>(() => ({pythonExpression: currentAttemptPythonExpression(currentAttemptValue), userInput: '', valid: true}));
     const [textInput, setTextInput] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const {openModal, closeModalAndReturnToScrollPosition} = useModalWithScroll({setModalVisible});
@@ -294,6 +308,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
                     <SymbolicTextInput
+                        editorMode="maths"
                         inputState={inputState}
                         setInputState={setInputState}
                         textInput={textInput}
