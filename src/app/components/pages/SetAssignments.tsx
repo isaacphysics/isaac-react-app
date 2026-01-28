@@ -107,7 +107,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <th colSpan={2} className="text-center align-middle">
             <div className="d-flex align-items-center">
                 Stages and Difficulties
-                <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2"/>
+                <i id="difficulties-help" className="icon icon-info icon-color-grey ms-2 position-relative"/>
             </div>
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br/>
@@ -164,7 +164,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             Quiz name
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
-            Stages and Difficulties <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black" />
+            Stages and Difficulties <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black position-relative" />
             <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br/>
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}

@@ -760,6 +760,7 @@ export interface GameboardItem {
     questionPartStates?: QuestionPartState[];
     boardId?: string;
     supersededBy?: string;
+    deprecated?: boolean;
 }
 
 export interface IsaacWildcard extends Content {

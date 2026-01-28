@@ -34,6 +34,7 @@ import {MainContent, SidebarLayout} from "../elements/layout/SidebarLayout";
 import {PageMetadata} from "../elements/PageMetadata";
 import {ListView} from "../elements/list-groups/ListView";
 import { GameboardSidebar } from "../elements/sidebar/GameboardSidebar";
+import { SupersededDeprecatedBoardContentWarning } from "../navigation/SupersededDeprecatedWarning";
 
 export const Gameboard = () => {
     const dispatch = useAppDispatch();
@@ -87,8 +88,8 @@ export const Gameboard = () => {
                             <GameboardSidebar gameboard={gameboard} assignments={thisGameboardAssignments} hideButton />
                             <MainContent>
                                 <PageMetadata title={gameboard.title} showSidebarButton sidebarButtonText="Details"/>
+                                <SupersededDeprecatedBoardContentWarning gameboard={gameboard} />
                                 <ListView type="item" items={displayQuestions} linkedBoardId={gameboardId} className={classNames("mt-3", {"col col-lg-10 offset-lg-1": isAda})} hasCaret={isAda}/>
-                                {/*  <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-7" /> */}
                                 {user && isTutorOrAbove(user)
                                     ? <Row>
                                         <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">

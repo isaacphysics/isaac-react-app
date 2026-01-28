@@ -33,7 +33,6 @@
 }
 
 .icon-person-active,
-.icon-warning,
 .icon-help,
 .icon-group-table-person
 {
@@ -138,6 +137,10 @@
 
 .icon-plus {
   @include svg-icon('/assets/phy/icons/redesign/plus.svg', 12px, 12px, 100%);
+}
+
+.icon-warning {
+  @include svg-icon('/assets/phy/icons/redesign/warning.svg', var(--icon-size), var(--icon-size), var(--mask-size, 60%));
 }
 
 
@@ -365,6 +368,10 @@ i.icon.icon-color-muted {
 
 i.icon.icon-color-white {
   @include icon-color-override($color-neutral-white);
+}
+
+i.icon.icon-color-alert {
+  @include icon-color-override(var(--bs-alert-color));
 }
 
 i.icon.icon-color-black-hoverable {
