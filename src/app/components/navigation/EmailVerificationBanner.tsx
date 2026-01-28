@@ -1,21 +1,20 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
-    EMAIL_VERIFICATION_WARNINGS_DISABLED,
     selectors,
     useAppSelector,
-    useCookie,
     useRequestEmailVerificationMutation
 } from "../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from 'reactstrap';
-import {SITE_TITLE_SHORT, siteSpecific, WEBMASTER_EMAIL} from "../../services";
+import {SITE_TITLE_SHORT, siteSpecific, useUserConsent, WEBMASTER_EMAIL} from "../../services";
 
 export const EmailVerificationBanner = () => {
     const [hidden, setHidden] = useState(false);
-    const [isHiddenViaCookie] = useCookie(EMAIL_VERIFICATION_WARNINGS_DISABLED);
+    const {cookieConsent} = useUserConsent();
+    const isHiddenViaCookie = cookieConsent?.disableEmailVerificationWarningCookiesAccepted ?? false;
     const user = useAppSelector(selectors.user.orNull);
     const status = user?.loggedIn && user?.emailVerificationStatus || null;
-    const show = user?.loggedIn && status != "VERIFIED" && !hidden && !isHiddenViaCookie;
+    const show = useMemo(() => user?.loggedIn && status != "VERIFIED" && !hidden && !isHiddenViaCookie, [user, status, hidden, isHiddenViaCookie]);
 
     const [sendVerificationEmail] = useRequestEmailVerificationMutation();
     function clickVerify() {

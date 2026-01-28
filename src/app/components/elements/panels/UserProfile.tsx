@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {MyAccountTab} from './MyAccountTab';
 import {FamilyNameInput, GivenNameInput} from '../inputs/NameInput';
 import {EmailInput} from '../inputs/EmailInput';
@@ -10,6 +10,7 @@ import {
     isTutorOrAbove,
     SITE_TITLE,
     siteSpecific,
+    useUserConsent,
     validateCountryCode,
     validateEmail,
     validateName
@@ -22,7 +23,7 @@ import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTy
 import {DobInput} from "../inputs/DobInput";
 import {AccountTypeMessage} from "../AccountTypeMessage";
 import { ConfirmAccountDeletionRequestModal } from '../modals/AccountDeletionModal';
-import { EMAIL_VERIFICATION_WARNINGS_DISABLED, openActiveModal, showSuccessToast, store, useAppDispatch, useConfirmAccountDeletionRequestMutation, useCookie, useRequestEmailVerificationMutation } from '../../../state';
+import { cookieConsentSlice, DISABLE_EMAIL_VERIFICATION_WARNING_COOKIE, openActiveModal, showSuccessToast, store, useAppDispatch, useConfirmAccountDeletionRequestMutation, useRequestEmailVerificationMutation } from '../../../state';
 import { Alert, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
@@ -50,7 +51,9 @@ export const UserProfile = (props: UserProfileProps) => {
     const [sendVerificationEmail, {isSuccess: isVerificationEmailSent}] = useRequestEmailVerificationMutation();
     const dispatch = useAppDispatch();
 
-    const [emailVerificationWarningsDisabled, disableEmailVerificationWarnings, restoreEmailVerificationWarnings, hasModifiedEmailVerificationState] = useCookie(EMAIL_VERIFICATION_WARNINGS_DISABLED);
+    const {cookieConsent} = useUserConsent();
+    const emailVerificationWarningsDisabled = cookieConsent?.disableEmailVerificationWarningCookiesAccepted ?? false;
+    const [hasModifiedEmailVerificationState, setHasModifiedEmailVerificationState] = useState(false);
 
     return <MyAccountTab
         leftColumn={<>
@@ -139,13 +142,14 @@ export const UserProfile = (props: UserProfileProps) => {
                             </p>
                             <Button disabled={hasModifiedEmailVerificationState} onClick={() => {
                                 if (emailVerificationWarningsDisabled) {
-                                    restoreEmailVerificationWarnings();
+                                    dispatch(cookieConsentSlice.actions.removeCookie(DISABLE_EMAIL_VERIFICATION_WARNING_COOKIE));
                                 } else {
-                                    disableEmailVerificationWarnings();
+                                    dispatch(cookieConsentSlice.actions.acceptCookie(DISABLE_EMAIL_VERIFICATION_WARNING_COOKIE));
                                 }
                                 dispatch(emailVerificationWarningsDisabled 
-                                    ? showSuccessToast("Warnings restored", "Email verification warnings have been restored. You may need to refresh the page for this to take effect.")
-                                    : showSuccessToast("Warnings disabled", "Email verification warnings have been disabled for this browser. You may need to refresh the page for this to take effect."));
+                                    ? showSuccessToast("Warnings restored", "Email verification warnings have been restored.")
+                                    : showSuccessToast("Warnings disabled", "Email verification warnings have been disabled for this browser."));
+                                setHasModifiedEmailVerificationState(true);
                             }}>
                                 {hasModifiedEmailVerificationState
                                     ? "Success!"
